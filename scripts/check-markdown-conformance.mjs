@@ -17,6 +17,8 @@ import {
   Schema,
 } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
+import { exportHTMLSource } from '../dist/html-source.js';
+import { createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from '../dist/html-inert.js';
 import { checkMarkdownFlowBoundaries } from './check-markdown-flow-boundaries.mjs';
 import { checkMarkdownCodeLabels } from './check-markdown-code-labels.mjs';
 import { checkMarkdownDelimiterNeighbors } from './check-markdown-delimiter-neighbors.mjs';
@@ -1056,8 +1058,8 @@ if (roundTripFailures.length) throw new Error(`Opaque HTML canonical round-trip 
   if (errors.length || regressions.length) profileRegressions.push(`Source-recovery corpus regressions: ${[...errors, ...regressions].join(', ')}`);
   if (gains.length && !reportOnly) throw new Error(`Review newly matching source-recovery examples: ${compressRanges(gains)}`);
 }
-for (const [preserveComments, preserveFlow, preserveAnchors] of [[false, false, false], [true, false, false], [true, true, false], ...(anchorReport ? [[true, true, true]] : [])]) {
-  const fixture = preserveFlow ? 'commonmark-anonymous-flow-v1.json' : preserveComments ? 'commonmark-comment-flow-v1.json' : 'commonmark-document-flow-v1.json';
+for (const [preserveComments, preserveFlow, preserveAnchors, sourceOutput] of [[false, false, false], [true, false, false], [true, true, false], ...(anchorReport ? [[true, true, true]] : []), [true, true, true, true]]) {
+  const fixture = sourceOutput ? 'commonmark-source-output-v1.json' : preserveFlow ? 'commonmark-anonymous-flow-v1.json' : preserveComments ? 'commonmark-comment-flow-v1.json' : 'commonmark-document-flow-v1.json';
   const documentBaseline = JSON.parse(readFileSync(new URL(`../tests/fixtures/markdown/${fixture}`, import.meta.url), 'utf8'));
   if (documentBaseline.projectionVersion !== baseline.projectionVersion) throw new Error('Document-flow comparator version differs from the default.');
   const required = expandRanges(documentBaseline.requiredMatchRanges);
@@ -1069,6 +1071,8 @@ for (const [preserveComments, preserveFlow, preserveAnchors] of [[false, false, 
     ...(preserveComments ? HTMLCommentExtension.nodes : {}),
     ...(preserveFlow ? HTMLFlowExtension.nodes : {}),
     ...(preserveAnchors ? HTMLAnchorExtension.nodes : {}),
+    ...(sourceOutput ? createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'warning', 'bab', 'c2c', 'b2', 'responsive-image'] }).nodes : {}),
+    ...(sourceOutput ? createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] }).nodes : {}),
   } });
   const counts = new Map();
   let retention = 0;
@@ -1084,16 +1088,18 @@ for (const [preserveComments, preserveFlow, preserveAnchors] of [[false, false, 
       return result.nodes;
     }, onHTMLFlowFallback: issue => fallbacks.push(issue) };
     const doc = MarkdownImporter.parse(source, documentSchema, options);
-    const actual = semanticProjection(HTMLExporter.export(doc, { document: false }));
+    const output = sourceOutput ? exportHTMLSource(doc, { document: false }) : undefined;
+    const actual = output ? output.ok ? semanticProjection(output.sourceHTML) : { refused: output.issues }
+      : semanticProjection(HTMLExporter.export(doc, { document: false }));
     const captured = MarkdownImporter.parseWithSource(source, documentSchema, options);
     if (MarkdownExporter.exportWithSource(captured.document, captured.source).markdown !== source) throw new Error(`Whole-document source changed: ${example.number}`);
     retention++;
     const matched = JSON.stringify(actual) === JSON.stringify(expected);
     if (matched) counts.set(example.number, (counts.get(example.number) ?? 0) + 1);
-    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, ...(preserveAnchors ? { preserveAnchors: true } : {}), number: example.number, ending, source, expected, actual, issues, fallbacks, matched } }));
+    if (documentFlowReport && ((!matched && showMismatches) || inspectedExamples.has(example.number))) console.log(JSON.stringify({ documentFlow: { preserveComments, preserveFlow, ...(preserveAnchors ? { preserveAnchors: true } : {}), ...(sourceOutput ? { sourceOutput: true, exportIssues: output.issues } : {}), number: example.number, ending, source, expected, actual, issues, fallbacks, matched } }));
   }
   const matches = [...counts].filter(([, count]) => count === 2).map(([number]) => number);
-  console.log(`Whole-document optional-container${preserveComments ? '+comment' : ''}${preserveFlow ? '+anonymous-flow' : ''}${preserveAnchors ? '+anchor (diagnostic)' : ''} profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
+  console.log(`${sourceOutput ? 'Explicit unsanitized source-output' : `Whole-document optional-container${preserveComments ? '+comment' : ''}${preserveFlow ? '+anonymous-flow' : ''}${preserveAnchors ? '+anchor (diagnostic)' : ''}`} profile: ${matches.length}/652; ${retention} separate exact-source checks.`);
   if (documentFlowReport) console.log(`Document-flow${preserveComments ? '+comment' : ''} matching ranges: ${compressRanges(matches)}`);
   const regressions = [...required].filter(number => counts.get(number) !== 2);
   if (regressions.length) profileRegressions.push(`Document-flow semantic regressions: ${compressRanges(regressions)}`);

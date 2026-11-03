@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { EditorView, StarterKit, composeExtensions, createEditor, EditorState, Schema,
   HTMLImporter, MarkdownImporter, MarkdownExporter, HTMLExporter, undo, redo,
-  type Editor, type MarkdownSourceSnapshot } from 'fountainjs-editor';
+  type Editor, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
+import { exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
 import { appendInertHTMLBlockParagraph, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import './html-container-workshop.css';
 
@@ -29,6 +30,7 @@ export function HTMLInertWorkshop() {
   const viewRef = useRef<EditorView | undefined>(undefined);
   const snapshot = useRef<MarkdownSourceSnapshot | undefined>(undefined);
   const [version, refresh] = useState(0);
+  const [sourceResult, setSourceResult] = useState<{ document: Node; result: HTMLSourceResult }>();
   const [input, setInput] = useState(samples.nested);
   const [inputFormat, setInputFormat] = useState<'Markdown' | 'HTML'>('Markdown');
   const [status, setStatus] = useState('Explicitly registered tags: foo, bar, lab.measurement and fountain-unsafe.');
@@ -149,6 +151,23 @@ export function HTMLInertWorkshop() {
       {(['Markdown', 'HTML', 'JSON'] as const).map(format => <button key={format} onClick={() => reopen(format)}>Export {format} and reopen</button>)}
     </div>
     <p role="status">{status}</p>
+    <details><summary>Reconstruct original HTML as source</summary>
+      <p>This separate source export can contain original scripts, styles, custom elements and event attributes. It is shown only as text here. Opening a downloaded HTML file elsewhere can activate them. The reader preview uses the safe fallback export.</p>
+      <button disabled={!editor} onClick={() => { if (editor) setSourceResult({ document: editor.state.doc, result: exportHTMLSource(editor.state.doc) }); }}>Inspect reconstructed HTML source</button>
+      {sourceResult && <section aria-label="HTML source export result">
+        {sourceResult.document !== editor?.state.doc && <p>Outdated source — inspect again after editing.</p>}
+        {sourceResult.result.ok ? <>
+          <p>Source structure and content were checked by reparsing. {sourceResult.result.modelRoundTrip === 'equal-except-source-tokens' ? 'Fountain document data also reopens unchanged except for old lexical tag tokens.' : 'Fountain document data differs on reimport; keep native JSON for exact retention.'} Canonical source spelling may differ. This is not sanitized reader HTML.</p>
+          <textarea aria-label="Reconstructed HTML source" readOnly rows={6} value={sourceResult.result.sourceHTML} />
+          <button disabled={sourceResult.document !== editor?.state.doc} onClick={() => {
+            if (!sourceResult.result.ok || sourceResult.document !== editor?.state.doc) return;
+            const url = URL.createObjectURL(new Blob([sourceResult.result.sourceHTML], { type: 'text/html;charset=utf-8' }));
+            const link = document.createElement('a'); link.href = url; link.download = 'fountain-reconstructed-source.html'; link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          }}>Download reconstructed HTML source</button>
+        </> : <><p>Source export refused. The editable document remains unchanged.</p><ul>{sourceResult.result.issues.map((issue, index) => <li key={index}>{issue.code}: {issue.message}</li>)}</ul></>}
+      </section>}
+    </details>
     <aside aria-label="Inert import diagnostics">
       <h3>Conversion diagnostics</h3>
       <p>These are parser/schema diagnostics, not a guarantee of original appearance or complete retention. Markdown refuses unfinished-tag conversion and keeps literal text; direct HTML import follows HTML parser repair and can omit unfinished tokens.</p>

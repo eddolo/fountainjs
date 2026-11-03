@@ -38,6 +38,7 @@ export default defineConfig({
         'structured-attributes': fileURLToPath(new URL('./src/structured-attributes/index.ts', import.meta.url)),
         'html-server': fileURLToPath(new URL('./src/html/server.ts', import.meta.url)),
         'html-inert': fileURLToPath(new URL('./src/html/inert.ts', import.meta.url)),
+        'html-source': fileURLToPath(new URL('./src/html/source.ts', import.meta.url)),
         widgets: fileURLToPath(new URL('./src/widgets/index.ts', import.meta.url)),
         'widgets-dom': fileURLToPath(new URL('./src/widgets/dom.ts', import.meta.url)),
         'react-widgets': fileURLToPath(new URL('./src/react/widgets.tsx', import.meta.url)),

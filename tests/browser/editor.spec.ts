@@ -50,6 +50,10 @@ import { conversionLabJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-journey';
 import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-text-journey';
+import { htmlSourceJourney } from './html-source-journey';
+test('inspects and downloads retained HTML source without activating it', async ({ page }, info) => {
+  await htmlSourceJourney(page, info);
+});
 test('retains authored carriage returns through raw source editing and reopening', async ({ page }, info) => {
   await htmlRawCarriageReturnJourney(page, info);
 });

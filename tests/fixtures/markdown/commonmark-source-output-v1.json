@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "standard": "CommonMark 0.31.2",
+  "projectionVersion": 12,
+  "profile": "Optional retained HTML adapters plus exportHTMLSource({ document: false }); unsanitized source DATA, never safe-reader output",
+  "requiredMatchRanges": "1-155,159-180,182-206,208-217,219-238,241-279,285-314,316-595,597,600,602-607,609-610,613-615,617-630,632-652",
+  "unresolvedRanges": "156-158,181,207,218,239-240,280-284,315,596,598-599,601,608,611-612,616,631",
+  "note": "629/652 configured source-output matches with the unchanged neutral comparator. Six remaining conversion gaps and seventeen existing intentional policies remain. Original-source retention is checked separately. Source output is validated against its intended canonical HTML tree; native model differences are reported, not silently equated. This does not promote the default 563 or safe optional 613 profiles."
+}

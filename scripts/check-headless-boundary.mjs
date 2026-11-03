@@ -10,6 +10,7 @@ const entries = [
   resolve('src/docx/index.ts'),
   resolve('src/html/inert.ts'),
   resolve('src/html/server.ts'),
+  resolve('src/html/source.ts'),
 ];
 const forbidden = [
   `${resolve('src/view')}${sep}`,

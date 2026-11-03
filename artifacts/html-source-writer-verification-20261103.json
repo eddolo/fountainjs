@@ -1,0 +1,313 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "2f7534d8ceec6a41d78b1d323e9b887b5d866a5c",
+  "feature": "Optional validated HTML source-data export and public inspection/download workflow",
+  "release": "Unreleased; no npm publication; performance gate remains unresolved",
+  "verification": {
+    "unit": {
+      "files": 226,
+      "tests": 3074,
+      "workers": 1
+    },
+    "browser": {
+      "tests": 6,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "workers": 1,
+      "retries": 0,
+      "headless": true,
+      "port": 4194,
+      "reusedServer": false,
+      "screenshotsInspected": 12,
+      "recording": "Videos/traces recorded locally; screenshots inspected, videos not claimed reviewed",
+      "scope": "Pointer/keyboard edits; stale source download; refusal without mutation; undo; downloaded bytes; safe-reader reopen; no source execution/network; exact CR retention"
+    },
+    "passed": [
+      "415 API declaration files",
+      "Packed ESM/CommonJS acceptance/refusal contracts",
+      "106-module DOM-free import graph and no-DOM consumer types",
+      "TypeScript/Svelte/Angular checks",
+      "Production site build",
+      "Shared-direction memory retention",
+      "Reviewed bundle ceilings"
+    ],
+    "commonmark": {
+      "default": 563,
+      "safeOptional": 613,
+      "explicitUnsanitizedSourceOutput": 629,
+      "total": 652,
+      "sourceRetentionChecksPerProfile": 1304,
+      "unchangedComparator": true,
+      "remainingPolicies": 17,
+      "remainingGaps": 6
+    },
+    "performance": {
+      "status": "failed",
+      "unchangedThreshold": 15,
+      "currentRemoteRatios": [
+        16.45,
+        23.04
+      ],
+      "isolatedParentRemoteRatio": 19.69,
+      "parentLocalRatio": 15.17,
+      "parentSmallHTMLP95Ms": 35.98,
+      "parentSmallHTMLLimitMs": 35,
+      "currentAbsoluteLatencyAndHeapCeilings": "passed",
+      "isolation": "git archive of baseCommit source/scripts/config; linked installed dependencies; separate Vite runtime build; same two-core BelowNormal process constraints",
+      "conclusion": "Baseline also fails on this machine. No all-green certification or causal no-regression claim; investigate separately."
+    },
+    "size": {
+      "sourceEntryBytes": {
+        "esm": 6099,
+        "commonjs": 4996
+      },
+      "newDependencies": 0,
+      "initialBudgetFailureRetained": true,
+      "review": "Narrow optional-entry/aggregate allowance plus 64-byte facade alias allowance; editor/framework/CSS limits unchanged"
+    }
+  },
+  "reproduction": {
+    "unit": "pnpm exec vitest run --maxWorkers=1",
+    "browser": "pnpm exec playwright test -c playwright.input-audit.config.ts --grep \"inspects and downloads retained HTML source|retains authored carriage returns\" --output artifacts/html-source-writer-final-browser-20261103",
+    "conformance": "node scripts/check-markdown-conformance.mjs",
+    "performance": "pnpm test:performance (currently reproduces the documented failure)"
+  },
+  "hashEncoding": "SHA-256 of git index blob bytes; log trailing whitespace/newlines normalized only; manifest excludes itself",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "158d95d4b7fcefdac654417123202a2aeb1863954bc4a9bb9c127a2c52634f53"
+    },
+    {
+      "path": "README.md",
+      "sha256": "e94e1b3c7edff7a5855edae3dd6f3bec1551668c2860c67d1419127648920821"
+    },
+    {
+      "path": "api-surface.json",
+      "sha256": "75d87af758f61ecb8b6aa774c6f2f74b3d5cf6bf9a624d531bbd39b352f7c308"
+    },
+    {
+      "path": "artifacts/html-source-baseline-build-20261103.log",
+      "sha256": "636bd433693e829a4f3868c935c21e3456015e589bad7dfe9ffb9ec4371dee64"
+    },
+    {
+      "path": "artifacts/html-source-baseline-performance-20261103.log",
+      "sha256": "b9d6d974c6a0e7caf06e72aa4fbdf29a8247fd60a6aefe0cc03cd0d8a34a763a"
+    },
+    {
+      "path": "artifacts/html-source-writer-api-20261103.log",
+      "sha256": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9"
+    },
+    {
+      "path": "artifacts/html-source-writer-budget-20261103.log",
+      "sha256": "7bc067d4a214208cbba8a8c84db269bc524fc43e2852399d537c703877b4e099"
+    },
+    {
+      "path": "artifacts/html-source-writer-budget-initial-20261103.log",
+      "sha256": "bd25265641ff59bb89a1f8b78c874a7bf66b2814d1ebbb69339ee1835356f13a"
+    },
+    {
+      "path": "artifacts/html-source-writer-conformance-gate-20261103.log",
+      "sha256": "5e0ea47e2d347b22b8dd8330acbda8c6bc8b54e2a159f4240f0521c41281ce30"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103.log",
+      "sha256": "a288b33c6de78bc2f72c892a3327f2cbdc561089495411fe987f211df6ea0ca8"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-chromium/reconstructed-source.html",
+      "sha256": "559227b5b8346371702c30e8efebc4d562b6a19b88d5eed33fd4d5188084d673"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-chromium/source-inspected.png",
+      "sha256": "087e6eb811a049dc4b4cebdfb9cd72ff2cd41942bb537dc4488dafec77e864cb"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-chromium/source-refused.png",
+      "sha256": "6d48aaf885a02bf8ecb974c41d07fa5523e6f076ded7506bb475b5768b0fda85"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-firefox/reconstructed-source.html",
+      "sha256": "559227b5b8346371702c30e8efebc4d562b6a19b88d5eed33fd4d5188084d673"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-firefox/source-inspected.png",
+      "sha256": "7c4920179d47cbbd87ffbf5acf1b88e700b8898301f08954975ca1f9ddadee57"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-firefox/source-refused.png",
+      "sha256": "b15d7c3e4564a91e20c9ac87150fe0c0904f86f91d924d0ec92fc0f55a9222eb"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-webkit/reconstructed-source.html",
+      "sha256": "559227b5b8346371702c30e8efebc4d562b6a19b88d5eed33fd4d5188084d673"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-webkit/source-inspected.png",
+      "sha256": "5f3a8588689fc6be91766bc1624d8d9272ad7d2024778f3bdadc4bfedf175966"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-inspects-and-downlo-49ebb-ource-without-activating-it-webkit/source-refused.png",
+      "sha256": "bde7eb7c9c468b940713ff96cdd6a1c8d05a8e9168a911bfa6c8c7f980d68d6c"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-editor.png",
+      "sha256": "d009720d204142b9370c64232b1667363bae26ffda6de8c363e5706331c0a51e"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-observations.json",
+      "sha256": "dff04d1c96e53f6def251281bbe66379fe31268a3155d13b32edbc5bedfcd40f"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-chromium/carriage-return-reader.png",
+      "sha256": "2fbeb958cb798b2578729fac9326365559861c7ac01fccf53aaa936544aa6d8c"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-editor.png",
+      "sha256": "3500bc10fc9692e5344de925ebc9dd7f2b77197218e4f3ec66acd652135095d5"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-observations.json",
+      "sha256": "dff04d1c96e53f6def251281bbe66379fe31268a3155d13b32edbc5bedfcd40f"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-firefox/carriage-return-reader.png",
+      "sha256": "e982249131ba0d9c077fd521620eb0122b60693e79b65fae64fb817a9c53f6eb"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-editor.png",
+      "sha256": "acf0e426f790ff90b2de912b4f15c02fb4b3742132814720d1b67c5b6857d6df"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-observations.json",
+      "sha256": "dff04d1c96e53f6def251281bbe66379fe31268a3155d13b32edbc5bedfcd40f"
+    },
+    {
+      "path": "artifacts/html-source-writer-final-browser-20261103/editor-retains-authored-ca-277bd-ource-editing-and-reopening-webkit/carriage-return-reader.png",
+      "sha256": "207be1bc7d6851e885028cb993eae8a3ed5b3bc6443b97b8ca9df087816a5cad"
+    },
+    {
+      "path": "artifacts/html-source-writer-headless-20261103.log",
+      "sha256": "da72902517617d53ff530f88e2e0d61b29fddeb9d4ae5fdf503bf6324e2cecf6"
+    },
+    {
+      "path": "artifacts/html-source-writer-package-20261103.log",
+      "sha256": "5d14f20c7e1df7ffb102d80cbdb45b0a0ea3828fa06770cfaf237fa9e45a7d08"
+    },
+    {
+      "path": "artifacts/html-source-writer-performance-20261103.log",
+      "sha256": "1367a4ede06f4331b39326ebce0d53ee19294c057a65eb6c707a33e4e8e064b6"
+    },
+    {
+      "path": "artifacts/html-source-writer-performance-recheck-20261103.log",
+      "sha256": "21486923243d87dfdf200e6365f0c45a56e4173a19d94179e1e3f13ef078e35d"
+    },
+    {
+      "path": "artifacts/html-source-writer-retention-20261103.log",
+      "sha256": "72d03de92994073e336a7449652284cd2a3224c953206f556e051651a17919e6"
+    },
+    {
+      "path": "artifacts/html-source-writer-site-20261103.log",
+      "sha256": "b9c01df52a51e0c09995b89571a603e4ac670035257e47ba2f22f54e97984136"
+    },
+    {
+      "path": "artifacts/html-source-writer-types-20261103.log",
+      "sha256": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976"
+    },
+    {
+      "path": "artifacts/html-source-writer-unit-20261103.log",
+      "sha256": "d4e5877a1363b0fd2e1f8367c218c2050d6e395ce7bc350c8a0fc41069f85373"
+    },
+    {
+      "path": "docs/API.md",
+      "sha256": "d30500b3c0a9950ef33780ac64008035b29ee4c77e5443719d058fa106094de3"
+    },
+    {
+      "path": "docs/HTML_INERT_SOURCE.md",
+      "sha256": "f4e30a0b5b16f8dab8239df33f43d86be9cc07307bfc01e161dbff069bdd26fd"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "9ddc311321276f2966f6b7201c496ccf2b835a24e6d5e9a32c70d23a39d1edd1"
+    },
+    {
+      "path": "examples/react-app/src/HTMLInertWorkshop.tsx",
+      "sha256": "4aa558b77d63d043b31d5775577db906f82ac0ae141576967abe69a6289c5a46"
+    },
+    {
+      "path": "package.json",
+      "sha256": "4654bb4ce35ff74fa18e2e7922798d7057648ff0fe52a1bc9ac22473a8e6ddea"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "d356f42451d53c2db6a6639f75c18315579d4eb39713ca72487f37f3c7a7d258"
+    },
+    {
+      "path": "playwright.input-audit.config.ts",
+      "sha256": "f768e7b9c1d23228fd274d54a034eb35ce384ae20ba28a0fc38ef48f1b912c7d"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "a04479c8149247d8fa045dfc8cc5476291a76da5391d900d600bc9f980038bbe"
+    },
+    {
+      "path": "scripts/check-headless-boundary.mjs",
+      "sha256": "7e99c728d0ce553065b6f4e89836a41a66ee48b14df76671d291d34a8d10cd1e"
+    },
+    {
+      "path": "scripts/check-markdown-conformance.mjs",
+      "sha256": "c7b77df752a6a5d09d43e349565de7f8817664b7c57eb648c61850bbd00ea39c"
+    },
+    {
+      "path": "scripts/check-performance-budgets.mjs",
+      "sha256": "5cdefd0bf484b80d082911b6a9d161f5d667a2271fab1520c5c70be689c81458"
+    },
+    {
+      "path": "scripts/check-shared-direction-retention.mjs",
+      "sha256": "3c8d3df350d790ac15399ceef4a42b2837512d707d79460ccb7761f41d44ad79"
+    },
+    {
+      "path": "scripts/fixtures/html-source-check.mjs",
+      "sha256": "f3f48e39bdec910d155b43e5feadcef0347f6455ad9eba902bc2f4b785bfab8b"
+    },
+    {
+      "path": "scripts/smoke-package.mjs",
+      "sha256": "1af21233cbe5a73d990d519b91225b0881c0d37e93617198e2f9715bf01a90c6"
+    },
+    {
+      "path": "src/core/exporters/html-exporter.ts",
+      "sha256": "e6a42fff4c7fc6a79b942cc976fa9d664eb3920232b6feb49af2d057f2783ba1"
+    },
+    {
+      "path": "src/html/source.ts",
+      "sha256": "2061a31ae333c1ef3a14424d62e4ea11961e837b7a061bac822a6b5f31128f80"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "79ef9b6cf39c2614b456b7eacab7e614a5efa21392568292669a6a94fea40e42"
+    },
+    {
+      "path": "tests/browser/html-source-journey.ts",
+      "sha256": "0199e69966723bccfb3b2bac45061863923e9399660b5ff0c99794b67f231c32"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-source-output-v1.json",
+      "sha256": "1efbcf62c3248c61af7c4c83615d9c05ea80d658ec18a96409d836b000196f12"
+    },
+    {
+      "path": "tests/html-source.test.ts",
+      "sha256": "ccf779b15bbc66739b7f0982a3493f724cdc699896a6d4dae819962133de84fc"
+    },
+    {
+      "path": "tests/types/headless-consumer.ts",
+      "sha256": "e3e226537c57b1bdba5c7327502e9fa3b6480b9d38789c03b774343e745dbd4d"
+    },
+    {
+      "path": "vite.lib.config.ts",
+      "sha256": "a5a9a3fd1a70ca9b60da8d8adff89d19005f4484d708107f3203f64c370530d5"
+    }
+  ]
+}

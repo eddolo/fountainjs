@@ -8,11 +8,13 @@ const limits = Object.freeze({
   // The headless facade exports the existing engine and portable utilities;
   // shared implementation chunks are counted by the aggregate ceilings.
   // Platform-neutral semantic-math validation adds ~0.4 KiB to the facade.
-  'dist/core.js': 9 * kibibyte,
+  // Shared serializer chunk aliases add 17/23 bytes to the ESM/CJS facades
+  // for the optional source writer; neither facade imports the source parser.
+  'dist/core.js': 9 * kibibyte + 64,
   // Row schema metadata reshuffles shared CJS aliases by less than 128 bytes.
   // Two additive bookmark exports: facade measured 8,329 bytes (+9 over the
   // prior ceiling). This 64-byte capacity adjustment adds no dependency.
-  'dist/core.cjs': 8 * kibibyte + 192,
+  'dist/core.cjs': 8 * kibibyte + 256,
   // Provider-neutral document tools are an isolated, DOM-free entry. Their
   // bounded reads, complete portable function schemas, strict structural
   // validation, and reviewed schema-valid mutations are all opt-in.
@@ -194,6 +196,10 @@ const limits = Object.freeze({
   // 6.0 / 5.1 KiB. No new dependency; default editor/CSS ceilings stay fixed.
   'dist/html-inert.js': 7 * kibibyte,
   'dist/html-inert.cjs': 6 * kibibyte,
+  // Optional source-data reconstruction and independent HTML validation reuse
+  // the existing server parser. Measured entries: 6099 / 4996 bytes.
+  'dist/html-source.js': 6 * kibibyte,
+  'dist/html-source.cjs': 5 * kibibyte,
   // Portable widget definitions and commands, browser lifecycle/focus policy,
   // and the React bridge remain three opt-in surfaces. Hosts pay only for the
   // renderers they actually use.
@@ -551,7 +557,9 @@ const limits = Object.freeze({
   // Optional named-anchor schema plus the verified inline-container replacement
   // fix: 1617.519 KiB (+1.866). Retain html-anchors-budget-before-review evidence.
   // Feature capacity, not a size optimization; CSS/runtime/heap caps unchanged.
-  'all ESM runtime code': 1617.75 * kibibyte,
+  // Source writer + contextual serialization boundary: measured 1624.4 KiB.
+  // No new parser dependency; existing editor/framework/CSS ceilings stay fixed.
+  'all ESM runtime code': 1624.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -616,13 +624,16 @@ const limits = Object.freeze({
   // Same clipboard boundary: measured 1344.226 KiB (+0.986 KiB). Aggregate
   // feature capacity only; preserve both pre-review failures as evidence.
   // Same bookmark/replacement work: 1345.831 KiB (+1.605); no new dependency.
-  'all CommonJS runtime code': 1346 * kibibyte,
+  // The same optional source boundary measures 1351.7 KiB across CJS chunks.
+  'all CommonJS runtime code': 1351.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
 const runtimeFiles = entries.filter((entry) => entry.isFile() && !entry.name.endsWith('.map'));
 const sizeOf = async (path) => (await stat(path)).size;
 const measured = new Map();
+measured.set('dist/html-source.js', await sizeOf('dist/html-source.js'));
+measured.set('dist/html-source.cjs', await sizeOf('dist/html-source.cjs'));
 measured.set('dist/html-inert.js', await sizeOf('dist/html-inert.js'));
 measured.set('dist/html-inert.cjs', await sizeOf('dist/html-inert.cjs'));
 const esmEntityDecoder = runtimeFiles.find((entry) => /^(?:decode|markdown-html)-.*\.js$/u.test(entry.name));

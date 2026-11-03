@@ -1,0 +1,56 @@
+import { expect, type Page, type TestInfo } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+
+export async function htmlSourceJourney(page: Page, info: TestInfo) {
+  const errors: string[] = [], requests: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('request', request => { if (request.url().includes('invalid.test')) requests.push(request.url()); });
+  await page.addInitScript(() => { (globalThis as any).rawPwned = 0; });
+  await page.goto('/demos/node-markdown.html#inert-source');
+  const workshop = page.getByRole('region', { name: 'Inert HTML preservation workshop' });
+  await workshop.getByRole('button', { name: 'Inert script style textarea sample', exact: true }).click();
+  const editor = workshop.getByRole('textbox', { name: 'Inert HTML source editor', exact: true });
+  const body = editor.locator('[data-fountain-inert-raw-text]').first().locator('code');
+  await workshop.getByText('Reconstruct original HTML as source', { exact: true }).click();
+  const inspect = workshop.getByRole('button', { name: 'Inspect reconstructed HTML source', exact: true });
+  await inspect.click();
+  const result = workshop.getByRole('region', { name: 'HTML source export result' });
+  const source = workshop.getByRole('textbox', { name: 'Reconstructed HTML source', exact: true });
+  await expect(source).toHaveValue(/<script type="text\/javascript">/u);
+  const original = await source.inputValue();
+  const download = page.waitForEvent('download');
+  await workshop.getByRole('button', { name: 'Download reconstructed HTML source', exact: true }).click();
+  await (await download).saveAs(info.outputPath('reconstructed-source.html'));
+  expect(await readFile(info.outputPath('reconstructed-source.html'), 'utf8')).toBe(original);
+  await body.scrollIntoViewIfNeeded();
+  const point = await body.evaluate(node => {
+    const text = node.ownerDocument.createTreeWalker(node, NodeFilter.SHOW_TEXT).nextNode()!;
+    const index = text.textContent!.indexOf('globalThis');
+    const range = node.ownerDocument.createRange(); range.setStart(text, index); range.setEnd(text, index + 1);
+    const rect = range.getBoundingClientRect(); return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+  });
+  await page.mouse.click(point.x, point.y);
+  await page.keyboard.press('End');
+  await page.keyboard.type('</script><p>outside</p>');
+  const json = workshop.getByLabel('Inert native document JSON');
+  const edited = JSON.parse(await json.inputValue());
+  await expect(workshop.getByRole('button', { name: 'Download reconstructed HTML source', exact: true })).toBeDisabled();
+  await inspect.click();
+  await expect(result).toContainText('Source export refused');
+  await expect(source).toHaveCount(0);
+  expect(JSON.parse(await json.inputValue())).toEqual(edited);
+  await result.screenshot({ path: info.outputPath('source-refused.png') });
+  await workshop.getByRole('button', { name: 'Undo inert edit', exact: true }).click();
+  await inspect.click();
+  await expect(source).toHaveValue(original);
+  await workshop.getByRole('button', { name: 'Export HTML and reopen', exact: true }).click();
+  await expect(workshop.getByRole('status')).toContainText('Complete native JSON retained.');
+  const reader = workshop.frameLocator('iframe[title="Inert source reader"]');
+  await expect(reader.locator('body script,body style,textarea')).toHaveCount(0);
+  await expect(editor.locator('script,style,textarea')).toHaveCount(0);
+  expect(await page.evaluate(() => (globalThis as any).rawPwned)).toBe(0);
+  expect(requests).toEqual([]);
+  expect(errors).toEqual([]);
+  await inspect.click();
+  await result.screenshot({ path: info.outputPath('source-inspected.png') });
+}

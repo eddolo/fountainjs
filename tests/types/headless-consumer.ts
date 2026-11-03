@@ -19,6 +19,7 @@ import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
 import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 import { createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
+import { exportHTMLSource } from 'fountainjs-editor/html/source';
 
 const documentExtension = defineExtension({
   name: 'headless-document',
@@ -69,6 +70,16 @@ void agentProposal;
 
 JSONExporter.export(editor.state);
 HTMLExporter.export(editor.state, { document: false });
+const sourceHTML = exportHTMLSource(editor.state.doc);
+if (sourceHTML.ok) {
+  const unsanitized: false = sourceHTML.sanitized;
+  const bytes: string = sourceHTML.sourceHTML;
+  void unsanitized;
+  void bytes;
+} else {
+  const reason: string | undefined = sourceHTML.issues[0]?.message;
+  void reason;
+}
 MarkdownExporter.export(editor.state);
 const sourcedMarkdown = MarkdownImporter.parseWithSource('---\ntitle: Portable\n---\n**portable**', schema);
 const exactMarkdown: string = MarkdownExporter.exportWithSource(

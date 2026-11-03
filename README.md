@@ -1134,6 +1134,12 @@ with explicit HTML/Markdown provenance, not file offsets. The separate
 as bounded data and editable children, never their behavior or layout. See the
 [retention/security contract and Node/Markdown workshop](docs/HTML_INERT_SOURCE.md).
 
+Unreleased: `fountainjs-editor/html/source` can reconstruct registered retained
+elements as inspected/downloadable **unsanitized source data**. It validates
+HTML structure, refuses unrepresentable edits and separately reports native
+document differences. It is not a reader renderer or an exact-source guarantee.
+The workshop demonstrates source download, editing, refusal and undo.
+
 The same optional entry offers `createInertHTMLRawTextExtension` for explicitly
 registered script/style/textarea source. It shows editable, literal code with
 a visible inert-source badge—no execution, live CSS or form controls. HTML

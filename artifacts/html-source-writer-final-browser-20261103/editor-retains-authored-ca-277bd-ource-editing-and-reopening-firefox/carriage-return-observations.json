@@ -1,0 +1,66 @@
+{
+  "before": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "html_inert_raw_text",
+            "attrs": {
+              "tag": "textarea",
+              "attributes": {},
+              "tokens": {
+                "startTag": "<textarea>",
+                "endTag": "</textarea>",
+                "origin": "html-input"
+              }
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "first\r\nsecond\rthird\nlast"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "edited": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "html_inert_raw_text",
+            "attrs": {
+              "tag": "textarea",
+              "attributes": {},
+              "tokens": {
+                "startTag": "<textarea>",
+                "endTag": "</textarea>",
+                "origin": "html-input"
+              }
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "first\r\nsecond\rthird\nlast updated"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "text": "first\r\nsecond\rthird\nlast updated",
+  "errors": []
+}

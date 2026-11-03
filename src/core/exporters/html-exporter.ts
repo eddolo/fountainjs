@@ -216,8 +216,20 @@ function mergeAdjacentMarks(value: string): string {
   return value;
 }
 
-function renderNode(node: Node, document: Node = node, path: readonly number[] = []): string {
-  const rendered = renderNodeContent(node, document, path);
+/** Internal serialization boundary for the optional source-data writer.
+ * Not exposed through HTMLExporter or its safe-reader options.
+ */
+export interface HTMLSourceProjection {
+  render(node: Node, path: readonly number[], children: () => string): string | undefined;
+  opaque(node: Node): boolean;
+}
+
+export function renderHTMLSourceFragment(node: Node, projection: HTMLSourceProjection): string {
+  return renderNode(node, node, [], projection);
+}
+
+function renderNode(node: Node, document: Node = node, path: readonly number[] = [], projection?: HTMLSourceProjection): string {
+  const rendered = renderNodeContent(node, document, path, projection);
   const shared = sharedDirectionDOMAttributes(node, document);
   if (!Object.keys(shared).length) return rendered;
   // The normal safe serializer owns tags/attributes/escaping. Its first root
@@ -227,22 +239,34 @@ function renderNode(node: Node, document: Node = node, path: readonly number[] =
     opening.replace(/\sdir="[^"]*"/gi, '').slice(0, -1) + renderDOMAttributes(shared) + '>');
 }
 
-function renderNodeContent(node: Node, document: Node, path: readonly number[]): string {
+function renderNodeContent(node: Node, document: Node, path: readonly number[], projection?: HTMLSourceProjection): string {
   if (node.isText) return renderText(node);
   if (node.type.isInline && node.marks.length) {
-    return renderMarks(renderNode(node.withMarks([]), document, path), node.marks);
+    return renderMarks(renderNode(node.withMarks([]), document, path, projection), node.marks);
   }
   const context = { document, path };
   if (node.type.name === 'html_comment') return htmlCommentSource(node.attrs.data);
-  const children = () => mergeAdjacentMarks(node.content
-    .map((child, index) => renderNode(child, document, [...path, index]))
-    .join(''));
+  const children = () => {
+    if (!projection) return mergeAdjacentMarks(node.content
+      .map((child, index) => renderNode(child, document, [...path, index])).join(''));
+    // String-level mark coalescing must never rewrite a script/style body or
+    // source attribute that happens to contain closing/opening markup strings.
+    let ordinary = '', output = '';
+    node.content.forEach((child, index) => {
+      const rendered = renderNode(child, document, [...path, index], projection);
+      if (projection.opaque(child)) { output += mergeAdjacentMarks(ordinary) + rendered; ordinary = ''; }
+      else ordinary += rendered;
+    });
+    return output + mergeAdjacentMarks(ordinary);
+  };
+  const source = projection?.render(node, path, children);
+  if (source !== undefined) return source;
   switch (node.type.name) {
     case 'doc': return node.content.map((child, index) => {
       // An anonymous inline flow already owns its whitespace. Pretty-printing
       // separators beside it would become new editable data on HTML reopen.
       const separator = index && child.type.name !== 'html_flow' && node.child(index - 1).type.name !== 'html_flow' ? '\n' : '';
-      return separator + renderNode(child, document, [index]);
+      return separator + renderNode(child, document, [index], projection);
     }).join('');
     case 'html_flow': return children();
     case 'paragraph': return `<p${node.childCount === 0 ? ' data-fountain-empty="block"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</p>`;

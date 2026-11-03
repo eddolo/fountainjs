@@ -2511,6 +2511,13 @@ non-React boundary.
 
 ## Optional unknown-inline source retention (Unreleased)
 
+`fountainjs-editor/html/source` separately exports
+`exportHTMLSource(document, { document?: boolean })`. It returns validated,
+**unsanitized source data** or explicit refusal issues, never a reader view.
+Successful results separately report whether native-model reopening differs
+beyond old source tokens. The default is a complete document; `document: false`
+returns a body-context fragment. See [the source-export contract and limits](HTML_INERT_SOURCE.md#validated-source-data-export-2026-11-03-unreleased).
+
 `fountainjs-editor/html/inert` exports `createInertHTMLInlineExtension({ tags })`.
 It also exports `createInertHTMLBlockExtension({ tags })` for explicitly owned
 unknown block wrappers and `appendInertHTMLBlockParagraph(editor, path)` for

@@ -1,6 +1,90 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
-## Source reconstruction investigation (2026-11-02)
+## Validated source-data export (2026-11-03, Unreleased)
+
+`fountainjs-editor/html/source` adds `exportHTMLSource(document, options?)`.
+It reconstructs registered retained elements around their **current** children
+and attributes. It does not reuse stale lexical tokens or change the document.
+The existing `HTMLExporter` continues to emit safe retained-source carriers.
+
+```ts
+import { exportHTMLSource } from 'fountainjs-editor/html/source';
+
+const result = exportHTMLSource(editor.state.doc);
+if (result.ok) {
+  // Source data for inspection or an explicit file download, not innerHTML.
+  saveSourceFile(result.sourceHTML);
+  console.log(result.modelRoundTrip, result.issues);
+} else {
+  showExportIssues(result.issues); // No partial source is returned.
+}
+```
+
+The successful result has `sanitized: false`: original event attributes,
+script/style source and custom element names may be present. The exporter does
+no IO or execution. Opening the downloaded HTML in another application can
+activate its contents. Use the ordinary exporter for the safe reader surface.
+The public HTML workshop exposes inspection and download separately from its
+reader preview, disables stale downloads after edits, and lets authors undo an
+unrepresentable edit without losing their document.
+
+Validation compares independently parsed HTML structure, attributes and text
+against the intended source projection of the canonical safe output. This is
+**not equality between Fountain and CommonMark ASTs**. Separately, the function
+reimports the complete HTML file into the document's schema and reports
+`modelRoundTrip: 'equal-except-source-tokens'` or `'different'`. The latter includes
+a `model-canonicalization` issue; native metadata, grouping and unsupported
+schema behavior must not be advertised as lossless HTML. Keep Fountain JSON
+for exact native retention. Canonical source spelling can change in either case;
+untouched Markdown spelling remains the source-snapshot export's responsibility.
+
+The default result is a complete UTF-8 HTML document with explicit body context
+and supported page settings. `{ document: false }` returns its body fragment;
+the validation still uses the complete document. A fragment needs **body**
+insertion/parsing context: parsing a leading script/style as a standalone
+document can move it into the head.
+
+Refusals include closing script/style tokens in edited source, raw script/style
+carriage returns, NUL, isolated UTF-16 surrogates, invalid retained attributes,
+or a changed structure on HTML reparsing. Textarea source escapes closing tags
+and preserves authored CR and initial LF. Limits are 20,000 nodes, depth 64,
+1,048,576 UTF-16 code units of text plus JSON-encoded node attributes, and
+4,194,304 code units of complete output. Limits return issues, not truncated
+documents. This optional entry reuses the existing DOM-free HTML parser.
+
+The permanent `commonmark-source-output-v1.json` profile matches **629/652**
+official cases with both LF and CRLF, with 1,304 separate untouched-source
+checks. The reference comparator is unchanged. Default and safe-reader profile
+scores remain separate; the strongest existing safe profile remains **613/652**.
+Twenty-three source-output differences remain: seventeen deliberate policies
+and six unresolved format/semantic contracts. This is not full CommonMark
+conformance, arbitrary HTML support, or native-file visual fidelity.
+
+Regression coverage includes 51 unit cases and six headless browser journeys
+across Chromium, Firefox and WebKit. The source journey uses pointer/keyboard
+editing, stale-download detection, refusal, undo, download-byte checks and safe
+reader reopening. Its six success/refusal screenshots have been inspected.
+
+Checkpoint verification: 3,074 unit tests across 226 files; 415 API declaration
+files; packed ESM/CommonJS source-export acceptance/refusal checks; DOM-free
+consumer types and 106-module import boundary; TypeScript/framework checks;
+bundle budgets; production site build; and shared-direction memory retention
+pass. All twelve source-export and CR editor/reader screenshots were inspected.
+
+Performance is **not all green**: with one process restricted to two cores,
+the unchanged incremental-remote 1,000-to-10,000-block median-ratio check failed
+at 16.45x and 23.04x against its 15x ceiling. An isolated build of parent
+`2f7534d` also failed at 19.69x (and its local ratio/small HTML p95 checks).
+Current absolute latency and heap ceilings passed. This comparison establishes
+an existing failing baseline on this machine, not a performance certification
+or proof that the new work has no impact. Preserve the red results; investigate
+sampling/scaling separately without raising the threshold. No npm release is
+declared by this checkpoint. Evidence: `artifacts/html-source-writer-verification-20261103.json`.
+
+## Source reconstruction investigation (2026-11-02, historical prototype)
+
+The investigation below predates the validated API above. Its prototype and
+known failures remain evidence for why an unchecked reconstruction is insufficient.
 
 The remaining CommonMark work needs an explicit source-output boundary, not a
 relaxed safe-reader serializer. A pure Node prototype reconstructs the original

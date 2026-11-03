@@ -7,6 +7,7 @@ import { checkMarkdownBlockAtoms } from './fixtures/markdown-block-atoms-check.m
 import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
 import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
 import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
+import { checkHTMLSource } from './fixtures/html-source-check.mjs';
 import { checkHTMLLinkControls } from './fixtures/html-link-controls-check.mjs';
 import { checkHTMLAnchorLoss, checkHTMLAnchorRetention } from './fixtures/html-anchor-loss-check.mjs';
 import { checkTextDirection } from './fixtures/text-direction-check.mjs';
@@ -265,6 +266,7 @@ const esmServerHTML = await import('fountainjs-editor/html/server');
 const esmInertHTML = await import('fountainjs-editor/html/inert');
 assertExports(esmInertHTML, ['createInertHTMLInlineExtension', 'createInertHTMLRawTextExtension'], 'ESM inert HTML entry');
 checkInertHTMLSource(esmCore, esmServerHTML, esmInertHTML);
+console.log(`Packed ESM source-data writer: ${checkHTMLSource(esmCore, esmInertHTML, await import('fountainjs-editor/html/source'))} acceptance/refusal contracts passed.`);
 console.log(`Packed ESM: ${checkHTMLLinkControls(esmCore, esmServerHTML)} link normalization/security/history/destination contracts passed.`);
 console.log(`Packed ESM root/core: ${checkHTMLAnchorLoss(esmCore, esmServerHTML)}/${checkHTMLAnchorLoss(esmHeadlessCore, esmServerHTML, esmCore.CoreSchemaSpec)} anchor loss/privacy/retention contracts passed.`);
 console.log(`Packed ESM root/core: ${checkHTMLAnchorRetention(esmCore, esmServerHTML)}/${checkHTMLAnchorRetention(esmHeadlessCore, esmServerHTML, esmCore.CoreSchemaSpec)} optional bookmark contracts passed.`);
@@ -410,6 +412,7 @@ assertExports(require('fountainjs-editor/structured-attributes'), structuredAttr
 const cjsServerHTML = require('fountainjs-editor/html/server');
 assertExports(require('fountainjs-editor/html/inert'), ['createInertHTMLInlineExtension', 'createInertHTMLRawTextExtension'], 'CommonJS inert HTML entry');
 checkInertHTMLSource(cjsCore, cjsServerHTML, require('fountainjs-editor/html/inert'));
+console.log(`Packed CommonJS source-data writer: ${checkHTMLSource(cjsCore, require('fountainjs-editor/html/inert'), require('fountainjs-editor/html/source'))} acceptance/refusal contracts passed.`);
 console.log(`Packed CommonJS: ${checkHTMLLinkControls(cjsCore, cjsServerHTML)} link normalization/security/history/destination contracts passed.`);
 console.log(`Packed CommonJS root/core: ${checkHTMLAnchorLoss(cjsCore, cjsServerHTML)}/${checkHTMLAnchorLoss(cjsHeadlessCore, cjsServerHTML, cjsCore.CoreSchemaSpec)} anchor loss/privacy/retention contracts passed.`);
 console.log(`Packed CommonJS root/core: ${checkHTMLAnchorRetention(cjsCore, cjsServerHTML)}/${checkHTMLAnchorRetention(cjsHeadlessCore, cjsServerHTML, cjsCore.CoreSchemaSpec)} optional bookmark contracts passed.`);

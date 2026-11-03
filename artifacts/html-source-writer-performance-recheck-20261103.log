@@ -1,0 +1,28 @@
+$ node --expose-gc scripts/check-performance-budgets.mjs && node --expose-gc scripts/check-shared-direction-retention.mjs
+100 blocks: local p50 0.09 ms, p95 0.16 ms; incremental remote p50 0.06 ms, p95 0.10 ms; JSON boundary p50 0.98 ms, p95 1.36 ms
+1,000 blocks: local p50 0.08 ms, p95 0.11 ms; incremental remote p50 0.05 ms, p95 0.10 ms; JSON boundary p50 11.42 ms, p95 17.94 ms
+5,000 blocks: local p50 0.25 ms, p95 0.43 ms; incremental remote p50 0.24 ms, p95 0.54 ms; JSON boundary p50 59.85 ms, p95 71.73 ms
+10,000 blocks: local p50 1.19 ms, p95 1.50 ms; incremental remote p50 1.26 ms, p95 4.47 ms; JSON boundary p50 66.07 ms, p95 106.82 ms
+100 HTML blocks: server parse p50 20.65 ms, p95 32.39 ms
+1,000 HTML blocks: server parse p50 70.08 ms, p95 111.41 ms
+5,000 HTML blocks: server parse p50 261.33 ms, p95 288.57 ms
+10,000 HTML blocks: server parse p50 504.27 ms, p95 572.32 ms
+server HTML 1,000→10,000 median growth: 7.20x / 15x
+local 1,000→10,000 median growth: 14.34x / 15x
+incremental remote 1,000→10,000 median growth: 23.04x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.08 MiB / 16 MiB
+retained 10,000-block server HTML document: 14.31 MiB / 48 MiB
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:217
+if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);
+                           ^
+
+Error: Performance budget failed:
+- incremental remote curve grew 23.04x from 1,000 to 10,000 blocks
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:217:28
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1
+[ELIFECYCLE] Command failed with exit code 1.

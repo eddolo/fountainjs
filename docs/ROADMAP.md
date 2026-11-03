@@ -1,6 +1,21 @@
 # FountainJS opportunity roadmap
 
-HTML-source investigation (2026-11-02, Unreleased): reconstructing retained
+Performance follow-up (2026-11-03, open): the two-core local verification of
+source export reproduces the incremental-remote scaling-ratio failure both on
+the working tree (16.45x/23.04x) and an isolated parent `2f7534d` build (19.69x),
+against the unchanged 15x limit. Absolute latency/heap checks pass on the current
+tree. Investigate the baseline/scaling measurement; do not promote this to an
+all-green release or widen the gate. See the source-export checkpoint evidence.
+
+HTML-source implementation (2026-11-03, Unreleased): the optional DOM-free
+`html/source` entry now reconstructs registered source with explicit refusal,
+independent HTML-structure validation and separate native-model loss reporting.
+The public workshop supports source inspection/download, stale-result detection,
+editing and undo without activating reconstructed source. Its permanent profile
+matches 629/652 cases; the existing safe profile remains 613/652, and full
+CommonMark conformance remains unfinished. See [the contract](HTML_INERT_SOURCE.md#validated-source-data-export-2026-11-03-unreleased).
+
+HTML-source investigation (2026-11-02, historical prototype): reconstructing retained
 opaque nodes as source data reaches 629/652 in an experimental profile with the
 unchanged comparator, but edited closing tags/control characters expose four
 integrity failures. This is not a shipped score increase. Implement a separate

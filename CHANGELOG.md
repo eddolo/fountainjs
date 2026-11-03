@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add optional DOM-free `fountainjs-editor/html/source` reconstruction with
+  independent structure validation, explicit refusals and native-model loss
+  reporting. The HTML workshop can inspect/download current retained source,
+  invalidate stale results and undo refused edits. Reconstructed source is
+  explicitly unsanitized data; safe reader exports remain unchanged. The new
+  separate reference profile matches 629/652 cases, not full conformance.
+
 - Preserve authored carriage returns in safe HTML text/attributes using numeric
   references, including retained raw-source blocks and canonical Markdown HTML
   carriers. Reopening no longer silently normalizes those CR/CRLF code points.

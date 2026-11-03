@@ -107,6 +107,9 @@
       "html/inert": [
         "dist/html/inert.d.ts"
       ],
+      "html/source": [
+        "dist/html/source.d.ts"
+      ],
       "widgets": [
         "dist/widgets/index.d.ts"
       ],
@@ -146,6 +149,16 @@
       "require": {
         "types": "./dist/html/inert.d.cts",
         "default": "./dist/html-inert.cjs"
+      }
+    },
+    "./html/source": {
+      "import": {
+        "types": "./dist/html/source.d.ts",
+        "default": "./dist/html-source.js"
+      },
+      "require": {
+        "types": "./dist/html/source.d.cts",
+        "default": "./dist/html-source.cjs"
       }
     },
     "./core": {
