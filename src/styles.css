@@ -111,7 +111,7 @@
 .fountain-editor [data-fountain-selected-node="true"][draggable="true"] { cursor: grab; }
 .fountain-editor [data-fountain-block-grabbed="true"], .fountain-editor [data-fountain-dragging="true"] { cursor: grabbing; opacity: .78; background: color-mix(in srgb, var(--fountain-accent) 13%, var(--fountain-surface)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--fountain-accent) 46%, transparent); }
 @media (pointer: coarse) {
-  .fountain-editor[data-fountain-block-handles-enabled] { padding-inline-start: max(58px, clamp(20px, 4vw, 44px)); }
+  .fountain-editor[data-fountain-block-handles-enabled] { padding-inline-start: max(68px, clamp(20px, 4vw, 44px)); }
   .fountain-block-controls { gap: 3px; padding: 4px; }
   .fountain-block-controls__button { width: 44px; height: 44px; }
 }

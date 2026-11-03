@@ -21,7 +21,8 @@ import {
   type CommandManager,
   type CommandRegistry,
 } from '../extensions/command-manager';
-import { getNodeAtPath, getTextLeaves } from '../core/transaction/path';
+import { getNodeAtPath } from '../core/transaction/path';
+import { matchesContentExpression } from '../core/schema/content-expression';
 import {
   reconcileDocument,
   renderDocument,
@@ -601,11 +602,33 @@ export class EditorView {
 
   private moveSelection(position: EditorFocusPosition): void {
     if (position === 'current') return;
-    const leaves = getTextLeaves(this.editor.state.doc);
-    const target = position === 'start' ? leaves[0] : leaves.at(-1);
+    const doc = this.editor.state.doc, path: number[] = [];
+    const forward = position === 'start';
+    let target: AnySelection | undefined;
+    const visit = (node: Node): boolean => {
+      if (node.type.spec.atom) return false;
+      if (node.isText) {
+        target = Selection.cursor(path, forward ? 0 : node.text?.length ?? 0);
+        return true;
+      }
+      // A childless text source is editable without inventing a text leaf.
+      // Use the same schema-owned eligibility as rendering and first typing.
+      if (path.length && !node.childCount && (node.type.isBlock || node.type.spec.code)
+        && node.type.spec.content && matchesContentExpression([node.type.schema.text('')], node.type.spec.content)) {
+        target = new NodeSelection(doc, path);
+        return true;
+      }
+      for (let index = forward ? 0 : node.childCount - 1; forward ? index < node.childCount : index >= 0; index += forward ? 1 : -1) {
+        path.push(index);
+        const found = visit(node.child(index));
+        path.pop();
+        if (found) return true;
+      }
+      return false;
+    };
+    visit(doc);
     if (!target) return;
-    const offset = position === 'start' ? 0 : target.node.text?.length ?? 0;
-    this.editor.dispatch(this.editor.state.createTransaction().setSelection(Selection.cursor(target.path, offset)));
+    this.editor.dispatch(this.editor.state.createTransaction().setSelection(target));
   }
 
   private destroyNodeViews(): void {

@@ -1684,6 +1684,14 @@ are evaluated against temporary selection state without focusing the DOM. A live
 focus chain commits its selection and edits atomically, then keeps the DOM view
 focused.
 
+Explicit start/end focus searches in document order for a text leaf or a valid
+childless text source, including nested table-cell paragraphs and extension
+blocks whose schema accepts text. A childless source uses its existing node
+selection until typing creates its first text; focusing does not add an empty
+text node or alter its attributes. Atoms are skipped. With no eligible text
+target, the existing semantic selection is retained. `focus('current')` always
+preserves the current selection, including an intentional block gap.
+
 ### Node moves
 
 `moveNode(editor, { fromPath, toParentPath, toIndex })` moves any non-text node

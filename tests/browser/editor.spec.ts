@@ -47,6 +47,10 @@ import { markdownFlowNewlineJourney } from './markdown-flow-newline-journey';
 import { markdownEmphasisRunsJourney, markdownPartialSchemaJourney } from './markdown-emphasis-runs-journey';
 import { webComponentFormJourney } from './web-component-form-journey';
 import { webComponentValidationJourney } from './web-component-validation-journey';
+import { explicitFocusJourney } from './explicit-focus-journey';
+for (const edge of ['start', 'end'] as const) test(`focuses the ${edge} empty text source before native typing`, async ({ page }, info) => {
+  await explicitFocusJourney(page, info, edge);
+});
 import { nativeFormPolicyContracts, nativeFormLabelContracts, childlessBlockClickJourney } from './web-component-validation-contracts';
 
 test('fills replaced childless blocks by native click without adding another block', async ({ page }, info) => {

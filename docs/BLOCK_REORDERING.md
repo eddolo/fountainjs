@@ -84,6 +84,14 @@ Home/End traverse enabled toolbar controls, including right-to-left layouts. But
 accessible names and hover titles, and disabled directions are real `disabled`
 states. Coarse-pointer targets are at least 44 by 44 CSS pixels.
 
+The supplied coarse-pointer stylesheet reserves a 68-pixel inline-start gutter:
+the controls' inset, full padded width and seven pixels of clear space. A visual
+mobile audit found the former 58-pixel gutter covered the text area by three
+pixels. Browser geometry checks now require separation from both the active
+and adjacent blocks after native typing and undo/redo. Hosts replacing the
+stylesheet should reserve space for the complete control box, not just the
+44-pixel button. This gutter is view styling and never enters document data.
+
 The active model block—not merely its handle—receives a subtle full-box visual
 target while the block or its handle is hovered or focused. Grabbing the handle
 adds a stronger state to that same whole block. Press Space or Enter to grab it,

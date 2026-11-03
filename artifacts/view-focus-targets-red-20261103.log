@@ -1,0 +1,98 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/view-focus-targets.test.ts (11 tests | 10 failed) 174ms
+   ❯ explicit view focus targets (11)
+     × fills the childless paragraph at the start without changing its identity or surrounding content 93ms
+     × fills the childless heading at the start without changing its identity or surrounding content 9ms
+     × fills the childless code_block at the start without changing its identity or surrounding content 10ms
+     × fills the childless paragraph at the end without changing its identity or surrounding content 7ms
+     × fills the childless heading at the end without changing its identity or surrounding content 6ms
+     × fills the childless code_block at the end without changing its identity or surrounding content 5ms
+     × finds a nested childless table-cell paragraph before later prose 22ms
+     × skips atom-owned text at the start 1ms
+     × skips atom-owned text at the end 0ms
+     × keeps current selection intact and dry-run focus does not focus or mutate the real editor 7ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > fills the childless paragraph at the start without changing its identity or surrounding content
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > fills the childless heading at the start without changing its identity or surrounding content
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > fills the childless code_block at the start without changing its identity or surrounding content
+AssertionError: expected Selection{ path: [ 1, +0 ], …(4) } to be an instance of NodeSelection
+ ❯ tests/view-focus-targets.test.ts:26:38
+     24|       view.focus(edge);
+     25|       expect(editor.getJSON()).toEqual(before);
+     26|       expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+       |                                      ^
+     27|       expect((editor.state.selection as NodeSelection).nodePath).toEqu…
+     28|       expect(insertText(editor, 'Filled')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > fills the childless paragraph at the end without changing its identity or surrounding content
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > fills the childless heading at the end without changing its identity or surrounding content
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > fills the childless code_block at the end without changing its identity or surrounding content
+AssertionError: expected Selection{ path: [ +0, +0 ], …(4) } to be an instance of NodeSelection
+ ❯ tests/view-focus-targets.test.ts:26:38
+     24|       view.focus(edge);
+     25|       expect(editor.getJSON()).toEqual(before);
+     26|       expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+       |                                      ^
+     27|       expect((editor.state.selection as NodeSelection).nodePath).toEqu…
+     28|       expect(insertText(editor, 'Filled')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > finds a nested childless table-cell paragraph before later prose
+AssertionError: expected Selection{ path: [ 1, +0 ], …(4) } to be an instance of NodeSelection
+ ❯ tests/view-focus-targets.test.ts:43:36
+     41|     ] }] }, text('Later')]);
+     42|     view.focus('start');
+     43|     expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+       |                                    ^
+     44|     expect((editor.state.selection as NodeSelection).nodePath).toEqual…
+     45|     expect(insertText(editor, 'Cell')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > skips atom-owned text at the start
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > skips atom-owned text at the end
+Error: Atom display_only has children.
+ ❯ visit src/core/schema/schema.ts:149:69
+    147|           throw new Error('Only inline nodes may carry marks.');
+    148|         }
+    149|         if (current.type.spec.atom && current.content.length) throw ne…
+       |                                                                     ^
+    150|         const expression = current.type.spec.content;
+    151|         if (expression) {
+ ❯ visit src/core/schema/schema.ts:166:14
+ ❯ Schema.validate src/core/schema/schema.ts:174:5
+ ❯ Schema.nodeFromJSON src/core/schema/schema.ts:120:10
+ ❯ createEditor src/core/editor.ts:157:16
+ ❯ setup tests/view-focus-targets.test.ts:9:18
+ ❯ tests/view-focus-targets.test.ts:67:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/view-focus-targets.test.ts > explicit view focus targets > keeps current selection intact and dry-run focus does not focus or mutate the real editor
+AssertionError: expected 'FirstCommitted' to be 'First' // Object.is equality
+
+Expected: "First"
+Received: "FirstCommitted"
+
+ ❯ tests/view-focus-targets.test.ts:83:51
+     81|     expect(document.activeElement).toBe(button);
+     82|     expect(manager.chain().focus('end').insertText('Committed').run())…
+     83|     expect(editor.state.doc.child(0).textContent).toBe('First');
+       |                                                   ^
+     84|     expect(editor.state.doc.child(1).textContent).toBe('Committed');
+     85|     expect(undo(editor)).toBe(true); expect(editor.getJSON()).toEqual(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 1 passed (11)
+   Start at  15:39:35
+   Duration  3.60s (transform 36%, import 30%, environment 29%, tests 5%)

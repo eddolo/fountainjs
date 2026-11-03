@@ -1,0 +1,9 @@
+{
+  "BaselineCommit": "f293269d49b840452af04d227e23421be47163e6",
+  "BaselineExit": 1,
+  "CandidateExit": 1,
+  "Affinity": 192,
+  "ChangedSampling": false,
+  "Priority": "BelowNormal",
+  "ChangedThresholds": false
+}

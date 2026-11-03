@@ -59,7 +59,10 @@ export function WebComponentFormDemo() {
         <p id="native-form-validation-message" role="alert" hidden={!problem} className="native-form__error">{problem}</p>
         <div style={{ marginTop: 12 }}>
           <button type="button" onClick={() => {
-            if (field.current) field.current.value = { type: 'doc', attrs: field.current.value?.attrs, content: [{ type: 'paragraph' }] };
+            if (field.current) {
+              field.current.value = { type: 'doc', attrs: field.current.value?.attrs, content: [{ type: 'paragraph' }] };
+              field.current.focusEditor('start');
+            }
           }}>Clear document</button>
           <button type="button" onClick={() => {
             attempted.current = true;

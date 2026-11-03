@@ -1,5 +1,33 @@
 # FountainJS opportunity roadmap
 
+Explicit focus and touch gutter (2026-11-03, Unreleased): first/last text focus
+now includes valid childless text blocks and inline code sources, using schema
+capabilities instead of type-name lists. Focus itself preserves complete JSON;
+typing fills the selected source while retaining its attributes and neighbors.
+Current/gap selection and dry-run command behavior remain intact. Thirteen new
+unit contracts cover nested table cells, custom sources, atoms and exact undo.
+The form workshop explicitly focuses the cleared paragraph and verifies typing
+after native validation without an extra click or unwanted extra paragraph.
+
+Actual mobile captures reveal a three-pixel overlap between the 44-pixel touch
+reorder controls and content. Increasing only the coarse-pointer gutter from
+58 to 68 pixels restores seven pixels of separation, verified after native
+typing and undo/redo. Twenty-six desktop/mobile-emulation browser checks pass;
+the complete functional suite passes 3,238 tests / 235 files. API 415, package,
+110-module headless, server-runtime and size checks pass. API/schema/dependencies
+and the numerical performance/heap/CSS ceilings are unchanged. Measured runtime
+growth is 398 bytes ESM / 300 CommonJS, with only aggregate code capacity reviewed.
+
+Performance certification remains open. The first local sample fails remote
+growth at 16.74x/15x; confirmation fails 100-block HTML p95 at 52.14/35 ms. A
+controlled rebuild of previous commit `f293269` fails remote growth at 17.83x,
+while the paired current build fails local growth at 19.89x. That does not prove
+a new focus regression or explain the variation. Both independent retention
+checks pass. Preserve the failures, compare fixed-host measurements and require
+current-source cloud gates before a stronger claim or npm release. No threshold
+is changed and the whole parity goal stays open. Exact evidence and source
+binding: `artifacts/explicit-focus-verification-20261103.json`.
+
 Native form validation (2026-11-03, Unreleased): opt-in Web Components now
 support required-content and host custom-error validation, native validity and
 check/report APIs, associated-label focus/naming, and dynamic accessible

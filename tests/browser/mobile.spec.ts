@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { webComponentFormJourney } from './web-component-form-journey';
+import { explicitFocusJourney } from './explicit-focus-journey';
+for (const edge of ['start', 'end'] as const) test(`focuses the ${edge} empty text source on mobile before native typing`, async ({ page }, info) => {
+  await explicitFocusJourney(page, info, edge);
+});
 import { webComponentValidationJourney } from './web-component-validation-journey';
 
 test('validates required documents custom errors and labels on a mobile viewport', async ({ page }, info) => {

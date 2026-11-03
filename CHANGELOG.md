@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Explicit view start/end focus now includes valid childless text sources,
+  nested text blocks and extension-defined source blocks. Focus preserves the
+  document until typing, fills the selected source with its attributes intact,
+  and retains side-effect-free capability checks and atomic undo. Current
+  focus and intentional gap selections keep their existing behavior.
+  Reserve the complete touch-control gutter so 44-pixel block-reorder buttons
+  do not cover the current or adjacent block's text on narrow screens.
+
 - Add opt-in Web Component required-content validation, host custom errors,
   native validity/check/report APIs and associated-label focus/naming. Keep
   browser validation UI outside document rendering, preserve document JSON,

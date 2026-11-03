@@ -35,6 +35,9 @@ and a disabled UI are not authorization.
 
 The [live workshop](https://eddolo.github.io/fountainjs/demos/java-approval-workflow.html#native-form)
 prevents network submission and shows the actual native FormData instead.
+Its Clear action explicitly calls `focusEditor('start')` after replacing the
+document with a childless paragraph, allowing immediate typing into that same
+paragraph. Programmatic value assignments themselves do not request focus.
 
 ## Contract
 

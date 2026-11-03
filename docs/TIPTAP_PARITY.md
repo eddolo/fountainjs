@@ -1,5 +1,19 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased explicit-focus follow-up (2026-11-03): start/end view focus includes
+valid childless text sources without adding model content. The form workshop
+clears and explicitly focuses its paragraph, so typing immediately after native
+validation fills that same block. A mobile visual audit also finds and fixes
+three pixels of touch-handle overlap by reserving the complete gutter. Thirteen
+new unit contracts and 26 recorded desktop/mobile-emulation browser checks pass;
+the full suite passes 3,238 / 235 files. These do not certify physical devices.
+Local performance checks remain unresolved: failures occur on different metrics
+and a rebuilt previous-commit control also fails. Keep the unchanged numerical
+limits and every result; no clean performance, new parity row or npm claim.
+Current acceptance is detailed in [the roadmap](ROADMAP.md) and
+`artifacts/explicit-focus-verification-20261103.json`. Dated checkpoint entries
+below are historical evidence, not certification of later HEAD changes.
+
 Unreleased clipboard inheritance correction (2026-11-02): whole-node child
 copies retain the omitted ancestor's direction without copying hidden text.
 Automatic ownership outside the selection becomes a reported fixed snapshot;
@@ -1269,7 +1283,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 | FORMAT-05 | DOCX, PDF, ODT, and EPUB workflows | Partial | The isolated DOM-free `fountainjs-editor/docx` entry imports/exports a bounded Word subset with archive/XML/media limits, caller-schema validation, immutable fidelity reports, verified embedded PNG/JPEG/GIF/WebP relationships, safe default data URLs, explicit host-owned URL-to-bytes resolution, block/inline images, text alternatives, dimensions, captions, and external/unsupported-media fallback. Pure-Node ESM/CommonJS, independent `python-docx`, recorded browser download/re-import, and side-by-side independent visual-render coverage remain permanent gates. The visual comparison has already corrected heading scale, paragraph spacing, image alignment, quote styling, table borders, and font fallback. The media batch passed 669 behavioral tests, 382 browser checks with 14 deliberate capability skips, and seven recorded human-use/export audits in [CI run `69091cf`](https://github.com/eddolo/fountainjs/actions/runs/34067541278); its [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/34067541261) also passed. Existing page entries provide measured print-quality PDF projection, Chromium byte/text verification, and a recorded real-PDF/Poppler page-image audit. Deeper Word layout/revision fidelity remains, while ODT and EPUB are still explicitly unclaimed. See [DOCX.md](DOCX.md) and [PAGINATION.md](PAGINATION.md). |
 | SURFACE-01 | Plain DOM integration | Delivered | Add lifecycle stress and multi-editor tests. |
 | SURFACE-02 | React integration | Delivered | Add server-rendering guidance and concurrent React coverage. |
-| SURFACE-03 | Standards-based Web Component | Delivered | Add form association, attributes/events completeness, and browser tests. |
+| SURFACE-03 | Standards-based Web Component | Delivered | Public value/event/lifecycle and configurable schema/plugins remain available. Unreleased source adds opt-in native JSON FormData, required-content/custom-error validity, associated-label focus/naming, reset, fieldset disabling and state restoration. Real native ElementInternals and recorded public-workshop checks cover the bounded contract; full native-input, autofill and assistive-technology parity remain unclaimed. See [WEB_COMPONENT_FORMS.md](WEB_COMPONENT_FORMS.md). |
 | SURFACE-04 | Native Vue, Svelte, and Angular bindings | Partial | Optional `/vue` composables/component, `/svelte` lifecycle/store/action and `/angular` signals/partial-Ivy directive; real compiled framework demos with ownership, SSR and browser editing checks. [Vue](VUE.md), [Svelte](SVELTE.md), [Angular](ANGULAR.md) guides. All three are unreleased. Equivalent optional framework UI suites, broader Angular-major/form integrations and further production evidence remain open. |
 | SURFACE-05 | Headless/server document processing | Delivered | `fountainjs-editor/core` exposes the model/schema, logical selections, transactions, editor state, commands, history, portable extension composition, generic collaboration, formats, migrations, stable IDs, and structured attributes behind a 50-module import gate. A real package consumer compiles with only `ES2023`, no ambient types, and `skipLibCheck: false`; packed ESM/CommonJS execute generic and Yjs collaboration with `document` and `window` absent; `html/server` supplies bounded HTML parsing. The complete 455-test package gate and 289-pass Chromium/Firefox/WebKit/mobile matrix are certified in [CI run `2c7ff4c`](https://github.com/eddolo/fountainjs/actions/runs/33979389234), with the corresponding [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33979389243). Native UI renderers remain explicitly outside this delivered server outcome. |
 

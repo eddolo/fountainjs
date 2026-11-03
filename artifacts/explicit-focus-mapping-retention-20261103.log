@@ -1,0 +1,9 @@
+{
+  "blocks": 5000,
+  "snapshots": 500,
+  "measurement": "heapUsed + arrayBuffers after forced GC",
+  "retainedBytes": 23362368,
+  "retainedLimitBytes": 33554432,
+  "releasedBytes": 665848,
+  "releasedLimitBytes": 4194304
+}

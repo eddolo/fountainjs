@@ -51,7 +51,9 @@ export async function webComponentValidationJourney(page: Page, info: TestInfo) 
   expect(layout.rect.height).toBeGreaterThan(0);
   await workshop.scrollIntoViewIfNeeded();
   await page.screenshot({ path: info.outputPath('native-form-required.png') });
-  await editor.locator('p').first().click(); await page.keyboard.type('Approval owner: Ada.');
+  // After Clear and native invalid submission, type immediately. The host's
+  // explicit start focus must fill the original childless paragraph.
+  await page.keyboard.type('Approval owner: Ada.');
   await expect(workshop.getByRole('alert')).toBeHidden();
   expect(await flags()).toMatchObject({ valueMissing: false, valid: true });
   await submit.click();
@@ -80,9 +82,11 @@ export async function webComponentValidationJourney(page: Page, info: TestInfo) 
   await workshop.getByRole('checkbox', { name: 'Require document content', exact: true }).uncheck();
   expect(await flags()).toMatchObject({ required: false, valid: true });
   await workshop.getByRole('checkbox', { name: 'Require document content', exact: true }).check();
-  await editor.click(); await page.keyboard.type('Ready for review.');
+  await workshop.locator('label[for="native-approval-document"]').click();
+  await page.keyboard.type('Ready for review.');
   await submit.click();
   expect(await flags()).toMatchObject({ required: true, valid: true });
+  expect(JSON.parse(JSON.parse((await payload.textContent())!).document).content).toHaveLength(1);
   await page.screenshot({ path: info.outputPath('native-form-valid-submission.png') });
   expect(errors).toEqual([]);
 }

@@ -1,0 +1,45 @@
+[WebServer] (node:18400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 26 tests using 1 worker
+
+(node:12004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:51:47 › focuses the start empty text source before native typing (2.2s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:51:47 › focuses the end empty text source before native typing (2.1s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:60:1 › keeps native form labels names and validation anchors consistent through reconnect (2.7s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:64:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (1.8s)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:68:1 › validates required documents custom errors and labels through the native form workshop (3.8s)
+  ok  6 [chromium] › tests\browser\editor.spec.ts:265:1 › submits resets and disables a native form-associated Web Component (2.8s)
+(node:13964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:51:47 › focuses the start empty text source before native typing (6.6s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:51:47 › focuses the end empty text source before native typing (3.1s)
+  ok  9 [firefox] › tests\browser\editor.spec.ts:60:1 › keeps native form labels names and validation anchors consistent through reconnect (4.4s)
+  ok 10 [firefox] › tests\browser\editor.spec.ts:64:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (3.4s)
+  ok 11 [firefox] › tests\browser\editor.spec.ts:68:1 › validates required documents custom errors and labels through the native form workshop (6.0s)
+  ok 12 [firefox] › tests\browser\editor.spec.ts:265:1 › submits resets and disables a native form-associated Web Component (4.3s)
+(node:2836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 [webkit] › tests\browser\editor.spec.ts:51:47 › focuses the start empty text source before native typing (4.1s)
+  ok 14 [webkit] › tests\browser\editor.spec.ts:51:47 › focuses the end empty text source before native typing (3.3s)
+  ok 15 [webkit] › tests\browser\editor.spec.ts:60:1 › keeps native form labels names and validation anchors consistent through reconnect (3.3s)
+  ok 16 [webkit] › tests\browser\editor.spec.ts:64:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (2.6s)
+  ok 17 [webkit] › tests\browser\editor.spec.ts:68:1 › validates required documents custom errors and labels through the native form workshop (11.9s)
+  ok 18 [webkit] › tests\browser\editor.spec.ts:265:1 › submits resets and disables a native form-associated Web Component (5.8s)
+(node:17724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 [mobile-chrome] › tests\browser\mobile.spec.ts:4:47 › focuses the start empty text source on mobile before native typing (1.9s)
+  ok 20 [mobile-chrome] › tests\browser\mobile.spec.ts:4:47 › focuses the end empty text source on mobile before native typing (1.5s)
+  ok 21 [mobile-chrome] › tests\browser\mobile.spec.ts:9:1 › validates required documents custom errors and labels on a mobile viewport (3.6s)
+  ok 22 [mobile-chrome] › tests\browser\mobile.spec.ts:13:1 › submits resets and disables a native form-associated Web Component on mobile (2.2s)
+(node:26548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 23 [mobile-safari] › tests\browser\mobile.spec.ts:4:47 › focuses the start empty text source on mobile before native typing (3.0s)
+  ok 24 [mobile-safari] › tests\browser\mobile.spec.ts:4:47 › focuses the end empty text source on mobile before native typing (2.5s)
+  ok 25 [mobile-safari] › tests\browser\mobile.spec.ts:9:1 › validates required documents custom errors and labels on a mobile viewport (8.8s)
+  ok 26 [mobile-safari] › tests\browser\mobile.spec.ts:13:1 › submits resets and disables a native form-associated Web Component on mobile (4.3s)
+
+  26 passed (1.9m)
