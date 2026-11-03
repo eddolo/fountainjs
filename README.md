@@ -13,13 +13,15 @@ Underneath those ready-made features is a modular editing engine: a typed docume
 > `0.3.0` is an early public beta and a ground-up replacement for the `0.2.x` proof of concept.
 
 `0.4.0-beta.2` is the public-beta checkpoint, not a claim of completed parity.
-After npm approval, install it explicitly with `npm install fountainjs-editor@0.4.0-beta.2`.
-The intended default tag is `latest`; npm tag changes require separate maintainer
-approval. See the [checkpoint and known limitations](docs/RELEASE_0_4_0_BETA_2.md).
+Install it with `npm install fountainjs-editor@0.4.0-beta.2`; npm's `latest` tag
+currently points to that version. See the [checkpoint and known limitations](docs/RELEASE_0_4_0_BETA_2.md).
 Newer changes listed under Unreleased are not in this package.
-The latest local [Markdown/HTML work](docs/MARKDOWN_DOCUMENT_FLOW.md) adds explicit
-inert-comment retention; its optional 613/652 reference profile is not a claim
-of full CommonMark compliance or native document-layout fidelity.
+The unreleased [Markdown/HTML work](docs/MARKDOWN_DOCUMENT_FLOW.md) keeps the
+default and optional safe-reader reference profiles at 563/652 and 613/652.
+A separate [complete-file source-data profile](docs/HTML_INERT_SOURCE.md#complete-file-commonmark-verification-2026-11-03-unreleased)
+matches 635/652 body projections while independently checking declarations and
+unfinished EOF data. That opt-in unsanitized source output is not reader HTML;
+none of these scores claims full CommonMark or native document-layout fidelity.
 An additional optional anonymous-flow model repairs the recorded cross-paragraph
 link-spacing case without dropping its whitespace. A stricter URL audit and
 source-bound HTML navigation repair leave the current checkpoint at 613:

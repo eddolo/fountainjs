@@ -17,8 +17,9 @@ import {
   Schema,
 } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
-import { exportHTMLSource } from '../dist/html-source.js';
-import { createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from '../dist/html-inert.js';
+import { createHTMLSourceMarkdownAdapter, exportHTMLSource } from '../dist/html-source.js';
+import { createHTMLSourceEOFExtension, createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from '../dist/html-inert.js';
+import { checkCompleteSourceConformance } from './check-complete-source-conformance.mjs';
 import { checkMarkdownFlowBoundaries } from './check-markdown-flow-boundaries.mjs';
 import { checkMarkdownCodeLabels } from './check-markdown-code-labels.mjs';
 import { checkMarkdownDelimiterNeighbors } from './check-markdown-delimiter-neighbors.mjs';
@@ -1107,6 +1108,15 @@ for (const [preserveComments, preserveFlow, preserveAnchors, sourceOutput] of [[
   const gains = [...unresolved].filter(number => counts.has(number));
   if (gains.length && !reportOnly) throw new Error(`Review newly matching document-flow examples: ${compressRanges(gains)}`);
 }
+const completeReportPath = process.argv.find(value => value.startsWith('--complete-source-report='))?.slice('--complete-source-report='.length);
+checkCompleteSourceConformance({
+  engine: { CoreSchemaSpec, Schema, HTMLExporter, HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension,
+    MarkdownImporter, MarkdownExporter, ServerHTMLImporter, createHTMLSourceMarkdownAdapter, exportHTMLSource,
+    createHTMLSourceEOFExtension, createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension },
+  examples: commonmarkSpec.tests, materializeTabs, projectionVersion: baseline.projectionVersion, reportOnly, reportPath: completeReportPath,
+  referenceProjection: source => referenceOutput(referenceRenderer, referenceParser.parse(source)).projection,
+  projectBodyNodes: nodes => blockChildren(nodes, new Set()),
+});
 if (htmlPolicyFailures.length || htmlTokenFailures.length || generatedFailures.length) throw new Error('Inert HTML reference policy regressed; use --html-policy-report for details.');
 if (divergenceFailures.length) throw new Error(`Intentional divergence contract regressions: ${compressRanges(divergenceFailures)}`);
 if (regressed.length) profileRegressions.push(`Default semantic regressions: ${compressRanges(regressed)}`);

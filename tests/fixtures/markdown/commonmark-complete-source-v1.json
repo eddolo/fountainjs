@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "standard": "CommonMark 0.31.2",
+  "projectionVersion": 12,
+  "sourceCaptureFrontmatterDivergences": "96,98",
+  "profile": "Complete source DATA; explicit body parsing context; unchanged neutral body reducer plus separate declaration/EOF/retention oracles",
+  "requiredMatchRanges": "1-206,208-217,219-238,241-279,285-314,316-595,597,600,602-607,609-610,613-652",
+  "unresolvedRanges": "207,218,239-240,280-284,315,596,598-599,601,608,611-612",
+  "note": "635 matches in the explicit complete-file source BODY profile, using MarkdownImporter.parse and the unchanged v12 neutral reducer. Independently checks exact declarations, EOF data, source capture and native JSON. Source capture's YAML policy additionally differs in 96/98, so its body score is 633/652. Existing default/safe/fragment profiles remain 563/613/631. This is neither full CommonMark conformance nor exact HTML-to-native-model retention."
+}

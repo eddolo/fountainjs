@@ -1,5 +1,59 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Complete-file CommonMark verification (2026-11-03, Unreleased)
+
+The existing CI command, `pnpm test:markdown-conformance`, now also exercises
+complete `exportHTMLSource` files using the optional retained HTML schema.
+`MarkdownImporter.parse` matches **635/652** official CommonMark 0.31.2 body
+projections in both LF and CRLF form. The independently versioned fixture is
+`tests/fixtures/markdown/commonmark-complete-source-v1.json`. The unchanged
+version-12 neutral reducer compares shared HTML meaning, never either parser's
+AST. Complete-file parsing supplies body nodes to that same reducer; it does
+not turn head metadata, CSS, layout, scripts or unsupported behavior into
+certified body semantics.
+
+This verifies examples **156–158** at actual EOF and **181** with its declaration
+and a source-empty body. The older fragment-oriented source profile stays
+**631/652**, the optional safe-reader profile stays **613/652**, and the default
+stays **563/652**. The remaining seventeen complete-source differences retain
+their existing URI allowlist (596, 598–599, 601), GFM autolink (608, 611–612),
+and editable-caret (207, 218, 239–240, 280–284, 315) contracts. They have not
+been normalized away or counted as matches. Full CommonMark is still unclaimed.
+
+The additional file oracle separately checks stored declaration spelling and
+compatibility mode, exact retained EOF bytes and final-root placement. Eighteen
+positive/negative controls cover deleted/changed/completed EOF data, generated
+closing tags, moved/duplicate/nested EOF models, unowned unfinished tags,
+declaration loss/changes and visible-body corruption. An unchanged parsed body
+cannot excuse deleted raw source, and intact source metadata cannot excuse
+changed prose. Existing negative semantic controls remain in place.
+
+Source capture is a distinct public route: `parseWithSource` recognizes inert
+YAML frontmatter. It therefore matches **633/652** body projections, differing
+from `parse` only in examples **96/98**. The gate checks that exact two-case
+model difference rather than calling source capture CommonMark-equivalent.
+All **1,304** untouched source snapshots and **1,304** `parse` native-JSON
+reopens are exact. These are retention checks, not extra semantic matches.
+
+HTML is not an exact native backup: **1,248/1,304** safe-HTML model reopens are
+exact in this corpus. The other 28 examples per line ending include text-leaf
+merging, empty-leaf/code representation and nested/repeated mark changes; the
+report records concrete paths and values. Complete source export reports
+**1,242** `equal-except-source-tokens` and **62** `different` model statuses;
+the latter also includes the generated envelope restored on the three EOF
+examples. Those differences are not waived by the body score. Use native JSON
+for exact model retention; improving representable HTML retention remains work.
+
+Reproduce the full report after `pnpm build`:
+
+```sh
+node scripts/check-markdown-conformance.mjs --complete-source-report=artifacts/complete-source-verified-20261103.json
+```
+
+The checker uses only development-time CommonMark/parse5 oracles already in the
+project. This follow-up changes no runtime, browser renderer, API or package
+version, and makes no new visual, performance or physical-device claim.
+
 ## Unfinished HTML at EOF (2026-11-03, Unreleased)
 
 `createHTMLSourceEOFExtension()` from `fountainjs-editor/html/inert` registers
@@ -47,9 +101,9 @@ demonstrate refusal without content loss. Its reader uses a safe export snapshot
 refresh by exporting/reopening HTML. Reader HTML never activates the retained tag.
 
 The three former root EOF patterns are covered by independent body-tree/source
-checks, but the existing fragment-oriented conformance profile remains 631/652.
-A separately certified complete-document profile is still required before
-promoting those cases or the doctype-only case. No full CommonMark claim follows.
+checks. The existing fragment-oriented profile remains 631/652; the subsequent
+[complete-file verification](#complete-file-commonmark-verification-2026-11-03-unreleased)
+checks them and the doctype-only case separately. No full CommonMark claim follows.
 
 The final native EOF journey passes Chromium, Firefox and WebKit: literal Enter
 and typing, bounded undo/redo to the original model, JSON/safe-HTML reopening,

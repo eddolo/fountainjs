@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Complete-source verification (2026-11-03, Unreleased): the existing CommonMark
+gate now verifies **635/652** complete-file source body projections on LF and
+CRLF, independently checking declaration spelling/mode and actual EOF data.
+The unchanged neutral reducer is protected by eighteen added fault controls;
+old default/safe/fragment scores stay 563/613/631. Source capture's YAML policy
+means its separate body result is 633/652; all 1,304 untouched snapshots and
+native-JSON reopens pass. Exact safe-HTML model reopening is 1,248/1,304, with
+concrete differences recorded rather than hidden. Seventeen deliberate policy
+differences, representable HTML-retention improvements, broad visual/export
+certification and the rest of the parity roadmap remain open. No runtime or npm
+change. See [the exact scope and reproduction](HTML_INERT_SOURCE.md#complete-file-commonmark-verification-2026-11-03-unreleased).
+
 EOF source foundation (2026-11-03, Unreleased): an optional literal code block
 retains discarded unfinished tags in final root HTML source. Prefix conversion,
 native/history/safe saving and parser-checked source reconstruction preserve the

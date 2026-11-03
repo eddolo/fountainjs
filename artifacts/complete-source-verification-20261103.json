@@ -1,0 +1,95 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "de32c45967206e3e6b50af63146ae12554fab444",
+  "scope": "Development-time complete-file CommonMark source BODY verification; runtime unchanged",
+  "checks": {
+    "completeBodyMatches": 635,
+    "sourceCaptureBodyMatches": 633,
+    "total": 652,
+    "lineEndings": [
+      "LF",
+      "CRLF"
+    ],
+    "sourceChecks": 1304,
+    "nativeJSONChecks": 1304,
+    "declarationChecks": 2,
+    "eofChecks": 6,
+    "oracleControls": 18,
+    "existingProfiles": {
+      "default": 563,
+      "safeOptional": 613,
+      "fragmentSource": 631
+    },
+    "neutralReducerSHA256": "891b68d610dd8070fc57b89b6a83216461c4da28fcbddc83576a0e9691f1f183",
+    "websiteBuild": "passed",
+    "scriptSyntax": "passed",
+    "diffWhitespace": "passed"
+  },
+  "limitations": {
+    "remainingCompleteBodyDifferences": 17,
+    "safeHTMLExactNativeReopens": 1248,
+    "safeHTMLTotal": 1304,
+    "sourceModelStatuses": {
+      "equal-except-source-tokens": 1242,
+      "different": 62
+    },
+    "sourceCaptureFrontmatterCases": [
+      96,
+      98
+    ],
+    "fullCommonMark": false,
+    "newVisualAudit": false,
+    "newRuntimeTests": false,
+    "npmUnchanged": "0.4.0-beta.2"
+  },
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "14fb29c481c77acc10f441dd95167bbbc6c94aee696fda98e3f82bd2f4582b4b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "37d7d244f39325fc6330562320d59e36120f9ec7c2989210c9419df5581f3725"
+    },
+    {
+      "path": "artifacts/complete-source-site-20261103.log",
+      "sha256": "723c013c8ea75cd84fe14f702de26c3372d64c78fd6e08220a66e3d1fc65ad5e"
+    },
+    {
+      "path": "artifacts/complete-source-verified-20261103.json",
+      "sha256": "2b2cab0d233e25dae371e0d8c6e62fca2598fab83f652ac993aa18eda204e8e1"
+    },
+    {
+      "path": "artifacts/complete-source-verified-20261103.log",
+      "sha256": "33d7cd48b6021f2f4444c7bdf53d07ddd2ed5f740592f55265d3c6744d6eeb3c"
+    },
+    {
+      "path": "docs/HTML_INERT_SOURCE.md",
+      "sha256": "c2af9f76604799b321baf1dc5d66be58621871540f5371256b5416f3ccf4d70f"
+    },
+    {
+      "path": "docs/MARKDOWN_DOCUMENT_FLOW.md",
+      "sha256": "579ab350ca4a5f028b8c1e8ea757e7417adfb1b8a35a4b252ee8598cc17005b0"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "5a7ceb354453e38b1e0811afbe53c03647d1f6d4a6f478f90e7f1ad94e0c83cd"
+    },
+    {
+      "path": "examples/react-app/src/Developers.tsx",
+      "sha256": "2e5d82b59c57674d2c85f2d77dbfa7c26ac32774c72a6ceffe3f114582df8e45"
+    },
+    {
+      "path": "scripts/check-complete-source-conformance.mjs",
+      "sha256": "7013296d5faa512244a183fbd0a2bee0c3f9a9ab32180be18e8d48a692a9df81"
+    },
+    {
+      "path": "scripts/check-markdown-conformance.mjs",
+      "sha256": "50bb564068328d4df1993746b8484640d6c5b3bf53cfa733b7b4cdd94b2a7642"
+    },
+    {
+      "path": "tests/fixtures/markdown/commonmark-complete-source-v1.json",
+      "sha256": "9b9a8d4907189a482de86b74cc4b7a2b861458d890e482e3cb04bc09a037db6f"
+    }
+  ]
+}

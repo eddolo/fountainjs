@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Verify the optional complete-file HTML source route against all 652 CommonMark
+  examples in LF/CRLF: 635 body-semantic matches with the unchanged neutral
+  reducer. Separately check declaration/mode, actual EOF data, exact untouched
+  Markdown and native JSON; add eighteen positive/negative oracle controls.
+  Keep source capture's two YAML-frontmatter differences explicit (633 matches)
+  and record HTML/native model differences. Default/safe/fragment profiles stay
+  563/613/631. No runtime, dependency, API or npm version change; full CommonMark
+  and exact HTML-to-native-model retention remain unclaimed.
+
 - Add opt-in literal unfinished-tag EOF blocks. Preserve them through native
   editing, history and safe saving; reconstruct raw source only at actual EOF.
   Refuse completed/moved/duplicated tokens or following content without returning

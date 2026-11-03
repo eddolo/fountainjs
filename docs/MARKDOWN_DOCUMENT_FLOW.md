@@ -1,5 +1,14 @@
 # Whole-document Markdown HTML conversion
 
+Latest verification (2026-11-03, Unreleased): the explicit complete-file source
+route reaches **635/652** body-semantic matches, separately enforcing declaration
+and EOF-data retention. The older fragment source route stays 631/652, safe
+optional HTML stays 613/652 and default Markdown stays 563/652. Source capture
+has its own frontmatter policy (633/652); exact native retention and HTML
+canonicalization are reported independently. This is not full CommonMark or
+pixel fidelity. [Current evidence, remaining cases and reproduction](HTML_INERT_SOURCE.md#complete-file-commonmark-verification-2026-11-03-unreleased)
+supersede the dated intermediate counts below.
+
 Unreleased anchor-retention follow-up (2026-11-03): an explicit inert anchor
 adapter retains otherwise unrepresented destinations/attributes in editable
 nodes and safe carrier HTML. Source-data export reconstructs them separately.
