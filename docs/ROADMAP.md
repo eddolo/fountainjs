@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+Lexical-source investigation (2026-11-03): all six LF/CRLF unfinished-tag
+variants change their parsed tree if the source writer appends its closing
+envelope; a PUBLIC-doctype probe also demonstrates lost envelope/compatibility
+semantics. The current visible fallback and exact untouched source survive.
+Keep the four remaining source-output cases unresolved while implementing a
+schema-owned lexical/envelope boundary with editing/history/reopen guarantees.
+See [the reproducible evidence and acceptance contract](HTML_INERT_SOURCE.md#remaining-lexical-source-boundary-2026-11-03-investigation).
+
 Anchor-retention follow-up (2026-11-03, Unreleased): the optional inert anchor
 adapter preserves otherwise unrepresented attributes and destinations with
 editable children and inactive reader carriers. Supported hyperlinks and native

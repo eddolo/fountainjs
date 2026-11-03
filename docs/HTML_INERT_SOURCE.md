@@ -1,5 +1,55 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Remaining lexical-source boundary (2026-11-03, investigation)
+
+The remaining four source-output cases require a document/lexical-source
+boundary. They are not fixed by registering another parsed element. Reproduce:
+
+```sh
+pnpm build
+node scripts/diagnose-html-lexical-boundary.mjs artifacts/html-lexical-boundary-20261103.json
+```
+
+The diagnostic uses the installed official CommonMark fixtures, parse5, and the
+built Fountain package. It preserves exact untouched Markdown for all eight
+LF/CRLF variants of examples 156–158 and 181. It does not change the conformance
+comparator, any profile requirement, or production import/export behavior.
+
+All three unfinished-tag examples produce an empty reference body tree at
+actual EOF. Appending the source writer's `</body></html>` completes their token
+and creates a `div` with newly interpreted attributes. All six LF/CRLF variants
+demonstrate this. Copying a raw tail into the current envelope would therefore
+change source meaning. Current visible literal fallbacks correctly retain the
+words, report refusal and preserve the untouched source snapshot.
+
+For example 181, body-fragment parsing omits the doctype, then
+`MarkdownImporter.parse` adds the empty paragraph required for editing. Erasing
+that paragraph alone would not retain the declaration. A separate HTML 4.01
+PUBLIC declaration probe changes from quirks mode with a public ID to the
+writer's HTML5 no-quirks envelope when its declaration is moved into the body.
+The current HTML5 export envelope is an output policy, not preservation of every
+source document's declaration or compatibility mode.
+
+Evidence: [eight-case report](../artifacts/html-lexical-boundary-20261103.json).
+Its body-tree helper ignores whitespace-only formatting text only for this
+diagnostic; it is not the conformance comparator or permission to omit authored
+whitespace during conversion.
+
+| Owning boundary | Current behavior | Required next change |
+| --- | --- | --- |
+| `src/html/server.ts`, `parseInlineContent` / `parseFlow` | Explicit `eof-in-tag` refusals protect raw source and protected node slots. | Preserve bounded lexical tokens alongside the parsed tree; keep refusal until those tokens can survive editing and serialization. |
+| `src/html/server.ts`, `parseContent` / `parseWithReport` | Fragment conversion returns body blocks and page settings; document declarations are outside the model result. | Represent document-envelope source separately from body nodes and diagnostics. Keep the existing block-only API compatible. |
+| `src/core/importers/markdown-importer.ts`, `parse` | The document adapter returns block arrays; an empty result becomes a caret paragraph. | Carry explicit envelope/lexical provenance through document construction; distinguish an editing repair from an authored empty paragraph without guessing from appearance. |
+| `src/html/inert.ts` | Carriers represent complete parsed elements and attributes. | Add schema-owned lexical source with bounded data, visible author inspection, safe reader fallback, and exact JSON/carrier reopening. An unfinished token is not an element with synthesized children. |
+| `src/html/source.ts`, `exportHTMLSource` | Always writes an HTML5 envelope and closing body/html tokens; independently validates its body tree and reports native model differences. | Serialize envelope and actual EOF context deliberately. Refuse or explicitly reclassify an EOF token moved before following content. Validate envelope semantics as well as body structure; do not conceal a source-bearing carrier from validation to obtain a match. |
+
+Implementation acceptance requires literal-source edits, native selection,
+undo/redo, block movement, insertion after an EOF token, exact JSON and safe-HTML
+reopening, LF/CRLF and Unicode boundaries, declaration/compatibility-mode loss
+reporting, independent semantic corruption guards and public reader/editor
+captures. Keep all four cases unresolved until that evidence exists. Prototype
+raw-source output is not a shipped capability or a higher conformance score.
+
 ## Unsupported anchor retention (2026-11-03, Unreleased)
 
 `createInertHTMLAnchorExtension()` from `fountainjs-editor/html/inert` retains

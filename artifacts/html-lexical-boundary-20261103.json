@@ -1,0 +1,679 @@
+{
+  "status": "diagnostic only; production code and conformance scores unchanged",
+  "assertions": "8 LF/CRLF cases preserve exact untouched Markdown; 6 envelope-induced tree changes; doctype envelope/compatibility-mode mismatch",
+  "results": [
+    {
+      "number": 156,
+      "ending": "\n",
+      "source": "<div id=\"foo\"\n*hi*\n",
+      "referenceHTML": "<div id=\"foo\"\n*hi*\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [
+        "eof-in-tag"
+      ],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        [
+          [
+            "div",
+            [
+              [
+                "*hi*",
+                ""
+              ],
+              [
+                "<",
+                ""
+              ],
+              [
+                "body",
+                ""
+              ],
+              [
+                "id",
+                "foo"
+              ]
+            ],
+            []
+          ]
+        ]
+      ],
+      "envelopeChangesTree": true,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\""
+              },
+              {
+                "type": "hard_break"
+              },
+              {
+                "type": "text",
+                "text": "*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p>&lt;div id=&quot;foo&quot;<br>*hi*</p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p>&lt;div id=&quot;foo&quot;<br>*hi*</p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "number": 156,
+      "ending": "\r\n",
+      "source": "<div id=\"foo\"\r\n*hi*\r\n",
+      "referenceHTML": "<div id=\"foo\"\n*hi*\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [
+        "eof-in-tag"
+      ],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        [
+          [
+            "div",
+            [
+              [
+                "*hi*",
+                ""
+              ],
+              [
+                "<",
+                ""
+              ],
+              [
+                "body",
+                ""
+              ],
+              [
+                "id",
+                "foo"
+              ]
+            ],
+            []
+          ]
+        ]
+      ],
+      "envelopeChangesTree": true,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\""
+              },
+              {
+                "type": "hard_break"
+              },
+              {
+                "type": "text",
+                "text": "*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p>&lt;div id=&quot;foo&quot;<br>*hi*</p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p>&lt;div id=&quot;foo&quot;<br>*hi*</p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "number": 157,
+      "ending": "\n",
+      "source": "<div class\nfoo\n",
+      "referenceHTML": "<div class\nfoo\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [
+        "eof-in-tag"
+      ],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        [
+          [
+            "div",
+            [
+              [
+                "<",
+                ""
+              ],
+              [
+                "body",
+                ""
+              ],
+              [
+                "class",
+                ""
+              ],
+              [
+                "foo",
+                ""
+              ]
+            ],
+            []
+          ]
+        ]
+      ],
+      "envelopeChangesTree": true,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class"
+              },
+              {
+                "type": "hard_break"
+              },
+              {
+                "type": "text",
+                "text": "foo"
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p>&lt;div class<br>foo</p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p>&lt;div class<br>foo</p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "number": 157,
+      "ending": "\r\n",
+      "source": "<div class\r\nfoo\r\n",
+      "referenceHTML": "<div class\nfoo\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [
+        "eof-in-tag"
+      ],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        [
+          [
+            "div",
+            [
+              [
+                "<",
+                ""
+              ],
+              [
+                "body",
+                ""
+              ],
+              [
+                "class",
+                ""
+              ],
+              [
+                "foo",
+                ""
+              ]
+            ],
+            []
+          ]
+        ]
+      ],
+      "envelopeChangesTree": true,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class"
+              },
+              {
+                "type": "hard_break"
+              },
+              {
+                "type": "text",
+                "text": "foo"
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p>&lt;div class<br>foo</p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p>&lt;div class<br>foo</p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "number": 158,
+      "ending": "\n",
+      "source": "<div *???-&&&-<---\n*foo*\n",
+      "referenceHTML": "<div *???-&&&-<---\n*foo*\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [
+        "unexpected-character-in-attribute-name",
+        "eof-in-tag"
+      ],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        [
+          [
+            "div",
+            [
+              [
+                "*???-&&&-<---",
+                ""
+              ],
+              [
+                "*foo*",
+                ""
+              ],
+              [
+                "<",
+                ""
+              ],
+              [
+                "body",
+                ""
+              ]
+            ],
+            []
+          ]
+        ]
+      ],
+      "envelopeChangesTree": true,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---"
+              },
+              {
+                "type": "hard_break"
+              },
+              {
+                "type": "text",
+                "text": "*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p>&lt;div *???-&amp;&amp;&amp;-&lt;---<br>*foo*</p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p>&lt;div *???-&amp;&amp;&amp;-&lt;---<br>*foo*</p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "number": 158,
+      "ending": "\r\n",
+      "source": "<div *???-&&&-<---\r\n*foo*\r\n",
+      "referenceHTML": "<div *???-&&&-<---\n*foo*\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [
+        "unexpected-character-in-attribute-name",
+        "eof-in-tag"
+      ],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        [
+          [
+            "div",
+            [
+              [
+                "*???-&&&-<---",
+                ""
+              ],
+              [
+                "*foo*",
+                ""
+              ],
+              [
+                "<",
+                ""
+              ],
+              [
+                "body",
+                ""
+              ]
+            ],
+            []
+          ]
+        ]
+      ],
+      "envelopeChangesTree": true,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---"
+              },
+              {
+                "type": "hard_break"
+              },
+              {
+                "type": "text",
+                "text": "*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p>&lt;div *???-&amp;&amp;&amp;-&lt;---<br>*foo*</p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p>&lt;div *???-&amp;&amp;&amp;-&lt;---<br>*foo*</p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [
+        {
+          "reason": "error",
+          "message": "HTML recovery cannot preserve an unfinished HTML tag; inert Markdown source retained."
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "number": 181,
+      "ending": "\n",
+      "source": "<!DOCTYPE html>\n",
+      "referenceHTML": "<!DOCTYPE html>\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        []
+      ],
+      "envelopeChangesTree": false,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p></p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p></p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [],
+      "diagnostics": [
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        }
+      ]
+    },
+    {
+      "number": 181,
+      "ending": "\r\n",
+      "source": "<!DOCTYPE html>\r\n",
+      "referenceHTML": "<!DOCTYPE html>\n",
+      "reference": [
+        "body",
+        [],
+        []
+      ],
+      "parseErrors": [],
+      "rawAtEOF": [
+        "body",
+        [],
+        []
+      ],
+      "rawWithEnvelopeSuffix": [
+        "body",
+        [],
+        []
+      ],
+      "envelopeChangesTree": false,
+      "currentDocument": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "currentSafeHTML": "<p></p>",
+      "currentSourceExport": {
+        "ok": true,
+        "sourceHTML": "<p></p>",
+        "sanitized": false,
+        "modelRoundTrip": "equal-except-source-tokens",
+        "issues": []
+      },
+      "exactUntouchedSource": true,
+      "fallbacks": [],
+      "diagnostics": [
+        {
+          "code": "inline-html-projection",
+          "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+        },
+        {
+          "code": "text-block-flow-projection",
+          "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+        }
+      ]
+    }
+  ],
+  "declarationBoundary": {
+    "source": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">",
+    "originalEnvelope": {
+      "mode": "quirks",
+      "name": "html",
+      "publicId": "-//W3C//DTD HTML 4.01 Transitional//EN",
+      "systemId": ""
+    },
+    "wrappedEnvelope": {
+      "mode": "no-quirks",
+      "name": "html",
+      "publicId": "",
+      "systemId": ""
+    }
+  },
+  "nextRequirements": [
+    "Schema-owned bounded lexical-source data with safe reader carriers and visible author inspection",
+    "Parsed document envelope separate from body structure and from incidental editing caret hosts",
+    "An EOF token must remain at actual EOF; refuse or explicitly reclassify edits that add following content",
+    "Never hide/delete a source-bearing node to raise semantic conformance",
+    "Validate source reconstruction in its real complete-document context and report native model loss",
+    "Native editing, undo/redo, JSON and safe-HTML reopen, exact source and independent semantic guards before promotion"
+  ]
+}

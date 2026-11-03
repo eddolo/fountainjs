@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "5565057c5fe26f1e654180bff3622862de134550",
+  "scope": "Reproducible lexical EOF/document-envelope investigation; no production or score change",
+  "passed": {
+    "officialCases": 4,
+    "lineEndings": 2,
+    "exactUntouchedSource": 8,
+    "envelopeChangesTree": 6,
+    "publicDoctypeEnvelopeDifference": true
+  },
+  "initialProbe": "Expected four envelope-induced changes; actual evidence showed six. Initial red assertion retained, expectation corrected to cover all three examples.",
+  "remainingCases": [
+    156,
+    157,
+    158,
+    181
+  ],
+  "sourceOutputScore": 631,
+  "defaultScore": 563,
+  "safeOptionalScore": 613,
+  "sourceComparatorUnchanged": true,
+  "fullEditorParity": false,
+  "npmPublished": false,
+  "hashBasis": "SHA256 of staged Git blob bytes",
+  "files": {
+    "docs/HTML_INERT_SOURCE.md": "a3ce575dac424ea469641e8ae9d280d0a5d51cd5d37949e2852af23eb0b821d0",
+    "docs/ROADMAP.md": "daf0c81966186262651565289cff4c6ceb676e0b1dad87f05d4de61f2c018974",
+    "scripts/diagnose-html-lexical-boundary.mjs": "c4a23dc007873c619ec3c971afb069669e3e7444f4b2e2656e097e6bd57e1f53",
+    "artifacts/html-lexical-boundary-20261103.json": "139c4acc825126472524ad564a200065b430c2ec831590015d520d978ea52678",
+    "artifacts/html-lexical-boundary-20261103.log": "890f5abb23ae3379f4c6f24f858250d7b436a87ad2bd18bbd2ee61d592de5007",
+    "artifacts/html-lexical-boundary-initial-20261103.log": "c1670c5feec32e1b195af06eae628fcff77f853bbae206b62c6c8cede384467c",
+    "src/html/server.ts": "68e774ac31ff0db01add1eeb76b9a437168e9a8fbc8ae8177a4ec78e749daced",
+    "src/html/source.ts": "a53650fe1d544a3a4d2829153ba5fab3d7a93b82236f01b96abfea0a5fef5c50",
+    "src/html/inert.ts": "a6719304b2c48ae6fd7eb0dc4e68951dec72c445b04a88c5c962f7e3e7196289",
+    "src/core/importers/markdown-importer.ts": "dfcd58a078891d838c4178b0607b1b2320ca3fe4f3837f48539d88fedbbe0f14",
+    "tests/fixtures/markdown/commonmark-source-output-v1.json": "cd58baa1a66d24ddf70a85f8819ed3d7992d2b28c4a6b2b0f6d97111f4ed765c"
+  }
+}
