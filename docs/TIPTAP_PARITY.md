@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased attribute-inspection follow-up (2026-11-03): eliminate repeated
+parser attribute-object arrays while preserving source inspection semantics.
+Thirteen new contracts, full units 3,348 / 239 files, package/runtime/type/
+API/headless/corpus/size/retention/site checks pass. Five public browser journeys
+pass; seventeen captures are byte-identical to reviewed baseline images. Both
+normal runs pass small imports, but the second fails 10k p95; timing certification
+stays open under unchanged limits. No new parity row or npm release.
+[Evidence and limits](PERFORMANCE.md#read-only-html-attribute-inspection-2026-11-03-unreleased).
+
 Unreleased physical-break/native-code follow-up (2026-11-03): explicit HTML
 breaks survive preformatted projection; unsupported formatting/attributes are
 reported. Real native controls expose and verify separate caret-affinity and

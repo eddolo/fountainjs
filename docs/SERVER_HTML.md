@@ -1,5 +1,24 @@
 # Server-native HTML conversion
 
+## Read-only attribute inspection (2026-11-03, Unreleased)
+
+The server facade now inspects the parser's own attribute record without
+constructing a complete attribute-object array for every lookup. Names retain
+their case-insensitive, first-in-record-order lookup; empty strings remain
+different from missing values, and enumeration stays frozen. Values are not
+memoized. Twelve document/fragment comparisons against the parser oracle and
+one allocation contract cover ordinary, duplicate, prefixed, SVG/MathML,
+entity and prototype-like names. The full suite passes 3,348 / 239 files.
+
+Five real import/edit/download/native-reader/reopen journeys pass. All seventeen
+new screenshots are byte-identical to the previously reviewed `00f0ea5` captures.
+Package/runtime/types/API/headless/corpus/size/retention/site checks pass.
+Small-import p95 passes in both normal runs; the second run fails the 10k limit,
+so this does **not** close overall latency certification. No budget, sampling,
+API/schema or conversion-policy change. Rich preformatted formatting remains
+unsupported by the plain-code projection.
+[Timing, scope and evidence](PERFORMANCE.md#read-only-html-attribute-inspection-2026-11-03-unreleased).
+
 ## Physical preformatted breaks and native caret affinity (2026-11-03, Unreleased)
 
 Ordinary browser/server HTML imports now preserve real `<br>` elements inside
@@ -64,7 +83,8 @@ headless boundary, size and website build pass. Two declaration hashes change
 only because the line-number documentation comments now describe the gutter;
 reversing those comments reproduces the prior hashes exactly.
 
-**Performance certification remains open.** The first current-source run fails
+Historical pre-optimization checkpoint at `00f0ea5`: **local performance
+certification remained open.** The first current-source run fails
 100-block server HTML p95 (39.27 ms / 35 ms). A separately rebuilt `cc1f277`
 control fails that limit too (37.42 ms) plus the 1k limit (157.08 / 120 ms).
 The paired current run still fails 100-block p95 (43.04 ms). Keep every result;

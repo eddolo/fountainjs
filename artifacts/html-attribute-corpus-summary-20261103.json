@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-03",
+  "projectionVersion": 13,
+  "bodyMatches": 635,
+  "bodyTotal": 652,
+  "sourceCaptureBodyMatches": 1266,
+  "exactUntouchedMarkdown": 1304,
+  "exactNativeJSON": 1304,
+  "safeHTMLNativeMatches": 1288,
+  "safeHTMLNativeTotal": 1304,
+  "sourceModelStatuses": {
+    "equal-except-source-tokens": 1282,
+    "different": 22
+  },
+  "remainingSafeHTMLNativeCases": [
+    148,
+    169,
+    183,
+    184,
+    187,
+    191,
+    309,
+    494
+  ],
+  "comparatorAndFixtureRangesChanged": false
+}

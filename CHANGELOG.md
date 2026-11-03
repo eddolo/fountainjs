@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid rebuilding parser attribute-object arrays for read-only server HTML
+  lookups. Preserve case handling, lookup order, empty/missing values, frozen
+  name enumeration and existing import/validation policies; retain no cache.
+
 - Preserve explicit HTML breaks inside preformatted code, separately from
   adjacent real newlines, and report unsupported preformatted markup/attributes.
   Strengthen the neutral oracle with six physical-break controls (v13); retain

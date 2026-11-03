@@ -1,0 +1,429 @@
+{
+  "diagnosticOnly": true,
+  "profileDurationMs": 236.66,
+  "samples": 60,
+  "self": [
+    {
+      "name": "post",
+      "source": "node:inspector",
+      "line": 115,
+      "milliseconds": 64.3
+    },
+    {
+      "name": "D",
+      "source": "../src/core/link-destination.ts",
+      "line": 42,
+      "milliseconds": 24.7
+    },
+    {
+      "name": "getAttrList",
+      "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+      "line": 162,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "Is",
+      "source": "../src/html/server.ts",
+      "line": 770,
+      "milliseconds": 17.6
+    },
+    {
+      "name": "_callState",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 492,
+      "milliseconds": 15.1
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 679,
+      "milliseconds": 13.7
+    },
+    {
+      "name": "dispatch",
+      "source": "",
+      "line": 0,
+      "milliseconds": 11.1
+    },
+    {
+      "name": "matches",
+      "source": "../src/html/server.ts",
+      "line": 399,
+      "milliseconds": 7.4
+    },
+    {
+      "name": "k",
+      "source": "../src/core/schema/schema.ts",
+      "line": 35,
+      "milliseconds": 6.7
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 590,
+      "milliseconds": 6.1
+    },
+    {
+      "name": "_runParsingLoop",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 205,
+      "milliseconds": 5.4
+    },
+    {
+      "name": "",
+      "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+      "line": 8,
+      "milliseconds": 4.5
+    },
+    {
+      "name": "advance",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/preprocessor.js",
+      "line": 132,
+      "milliseconds": 4.3
+    },
+    {
+      "name": "getAttribute",
+      "source": "../src/html/server.ts",
+      "line": 374,
+      "milliseconds": 3.4
+    },
+    {
+      "name": "x",
+      "source": "../src/core/link-destination.ts",
+      "line": 5,
+      "milliseconds": 3.3
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 867,
+      "milliseconds": 3
+    },
+    {
+      "name": "ps",
+      "source": "../src/html/server.ts",
+      "line": 285,
+      "milliseconds": 2.1
+    },
+    {
+      "name": "bs",
+      "source": "../src/html/server.ts",
+      "line": 430,
+      "milliseconds": 1.7
+    },
+    {
+      "name": "_emitCodePoint",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 456,
+      "milliseconds": 1.7
+    },
+    {
+      "name": "get protocol",
+      "source": "node:internal/url",
+      "line": 1048,
+      "milliseconds": 1.7
+    },
+    {
+      "name": "_emitCurrentCharacterToken",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 396,
+      "milliseconds": 1.6
+    },
+    {
+      "name": "ba",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+      "line": 1763,
+      "milliseconds": 1.5
+    },
+    {
+      "name": "appendChild",
+      "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+      "line": 61,
+      "milliseconds": 1.4
+    },
+    {
+      "name": "Ve",
+      "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+      "line": 6,
+      "milliseconds": 1.4
+    },
+    {
+      "name": "_stateTagName",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 976,
+      "milliseconds": 1.3
+    },
+    {
+      "name": "_stateData",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 794,
+      "milliseconds": 1.2
+    },
+    {
+      "name": "t",
+      "source": "../src/core/schema/node-spec.ts",
+      "line": 27,
+      "milliseconds": 1.1
+    },
+    {
+      "name": "O",
+      "source": "../src/core/schema/schema.ts",
+      "line": 14,
+      "milliseconds": 1
+    },
+    {
+      "name": "hs",
+      "source": "../src/html/server.ts",
+      "line": 304,
+      "milliseconds": 1
+    },
+    {
+      "name": "getChildNodes",
+      "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+      "line": 156,
+      "milliseconds": 0.9
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 636,
+      "milliseconds": 0.8
+    },
+    {
+      "name": "_stateTagName",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 976,
+      "milliseconds": 0.7
+    },
+    {
+      "name": "isTag",
+      "source": "../node_modules/.pnpm/domelementtype@3.0.0/node_modules/domelementtype/dist/index.js",
+      "line": 28,
+      "milliseconds": 0.6
+    },
+    {
+      "name": "ms",
+      "source": "../src/html/server.ts",
+      "line": 298,
+      "milliseconds": 0.4
+    },
+    {
+      "name": "k",
+      "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+      "line": 243,
+      "milliseconds": 0.3
+    }
+  ],
+  "inclusive": [
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/profile-html-import-cold-20261103.mjs",
+      "line": 0,
+      "milliseconds": 235.4
+    },
+    {
+      "name": "parseContent",
+      "source": "../src/html/server.ts",
+      "line": 2124,
+      "milliseconds": 160
+    },
+    {
+      "name": "parseWithReport",
+      "source": "../src/html/server.ts",
+      "line": 2106,
+      "milliseconds": 160
+    },
+    {
+      "name": "parse",
+      "source": "../src/html/server.ts",
+      "line": 1560,
+      "milliseconds": 160
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/profile-html-import-cold-20261103.mjs",
+      "line": 141,
+      "milliseconds": 160
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/performance-sampling.mjs",
+      "line": 15,
+      "milliseconds": 160
+    },
+    {
+      "name": "measure",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/performance-sampling.mjs",
+      "line": 15,
+      "milliseconds": 160
+    },
+    {
+      "name": "sampleLatency",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/performance-sampling.mjs",
+      "line": 11,
+      "milliseconds": 160
+    },
+    {
+      "name": "sample",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/profile-html-import-cold-20261103.mjs",
+      "line": 49,
+      "milliseconds": 160
+    },
+    {
+      "name": "$",
+      "source": "../src/html/server.ts",
+      "line": 1177,
+      "milliseconds": 108.4
+    },
+    {
+      "name": "tc",
+      "source": "../src/html/server.ts",
+      "line": 1256,
+      "milliseconds": 107.7
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 1191,
+      "milliseconds": 107.7
+    },
+    {
+      "name": "ic",
+      "source": "../src/html/server.ts",
+      "line": 1273,
+      "milliseconds": 89.8
+    },
+    {
+      "name": "post",
+      "source": "node:inspector",
+      "line": 115,
+      "milliseconds": 75.4
+    },
+    {
+      "name": "",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/profile-html-import-cold-20261103.mjs",
+      "line": 3,
+      "milliseconds": 75.4
+    },
+    {
+      "name": "profilePost",
+      "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/profile-html-import-cold-20261103.mjs",
+      "line": 3,
+      "milliseconds": 75.4
+    },
+    {
+      "name": "Gs",
+      "source": "../src/html/server.ts",
+      "line": 1116,
+      "milliseconds": 65.3
+    },
+    {
+      "name": "Q",
+      "source": "../src/html/server.ts",
+      "line": 860,
+      "milliseconds": 63.1
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 867,
+      "milliseconds": 41.9
+    },
+    {
+      "name": "parse",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+      "line": 114,
+      "milliseconds": 40.3
+    },
+    {
+      "name": "$o",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/index.js",
+      "line": 30,
+      "milliseconds": 40.3
+    },
+    {
+      "name": "Is",
+      "source": "../src/html/server.ts",
+      "line": 770,
+      "milliseconds": 37.8
+    },
+    {
+      "name": "_runParsingLoop",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 205,
+      "milliseconds": 34.4
+    },
+    {
+      "name": "write",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 235,
+      "milliseconds": 34.4
+    },
+    {
+      "name": "D",
+      "source": "../src/core/link-destination.ts",
+      "line": 42,
+      "milliseconds": 27.9
+    },
+    {
+      "name": "_callState",
+      "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+      "line": 492,
+      "milliseconds": 24.8
+    },
+    {
+      "name": "e",
+      "source": "../src/html/server.ts",
+      "line": 355,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "hs",
+      "source": "../src/html/server.ts",
+      "line": 304,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 340,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "_s",
+      "source": "../src/html/server.ts",
+      "line": 339,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "get childNodes",
+      "source": "../src/html/server.ts",
+      "line": 368,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "getAttrList",
+      "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+      "line": 162,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "getAttribute",
+      "source": "../src/html/server.ts",
+      "line": 374,
+      "milliseconds": 21.1
+    },
+    {
+      "name": "",
+      "source": "../src/html/server.ts",
+      "line": 679,
+      "milliseconds": 21
+    },
+    {
+      "name": "Ns",
+      "source": "../src/html/server.ts",
+      "line": 664,
+      "milliseconds": 21
+    }
+  ]
+}

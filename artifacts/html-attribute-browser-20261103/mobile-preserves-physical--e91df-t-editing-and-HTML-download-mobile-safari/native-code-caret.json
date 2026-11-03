@@ -1,0 +1,132 @@
+{
+  "target": {
+    "top": 286.65625,
+    "left": 110.1875,
+    "width": 8,
+    "height": 17
+  },
+  "codeBox": {
+    "x": 110.1875,
+    "y": 260.515625,
+    "width": 225.8125,
+    "height": 46.1875
+  },
+  "position": {
+    "x": 4,
+    "y": 34.640625
+  },
+  "afterClick": {
+    "prefix": "first\n",
+    "anchorOffset": 6,
+    "anchorText": "first\nsecond",
+    "anchorParent": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "afterEnd": {
+    "prefix": "first\nsecond",
+    "anchorOffset": 12,
+    "anchorText": "first\nsecond",
+    "anchorParent": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "afterTyping": {
+    "prefix": "first\nsecond edited",
+    "anchorOffset": 19,
+    "anchorText": "first\nsecond edited",
+    "anchorParent": "<span data-fountain-text-path=\"1.0\">first\nsecond edited</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "events": [
+    {
+      "type": "selectionchange",
+      "offset": 6,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "keydown",
+      "key": "End",
+      "offset": 6,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "selectionchange",
+      "offset": 12,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "keydown",
+      "key": " ",
+      "offset": 12,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    }
+  ],
+  "pointers": [
+    {
+      "type": "pointerdown",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "touchstart",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "pointerup",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "touchend",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "click",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    }
+  ]
+}

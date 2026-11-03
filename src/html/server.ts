@@ -372,13 +372,21 @@ class ServerElement implements SourceElement {
   get textContent(): string { return rawText(this.raw); }
 
   getAttribute(name: string): string | null {
-    const value = htmlparser2Adapter.getAttrList(this.raw)
-      .find((attribute) => attribute.name.toLowerCase() === name.toLowerCase())?.value;
-    return value ?? null;
+    // The adapter's attributes getter allocates a full object array. Read the
+    // same own record in the same order, including foreign adjusted names,
+    // without allocating it again for every readonly inspection. No cache:
+    // the parser tree remains the sole source of attribute values.
+    const wanted = name.toLowerCase();
+    for (const attribute in this.raw.attribs) {
+      if (Object.hasOwn(this.raw.attribs, attribute) && attribute.toLowerCase() === wanted) {
+        return this.raw.attribs[attribute] ?? null;
+      }
+    }
+    return null;
   }
 
   hasAttribute(name: string): boolean { return this.getAttribute(name) !== null; }
-  getAttributeNames(): readonly string[] { return Object.freeze(htmlparser2Adapter.getAttrList(this.raw).map(attribute => attribute.name)); }
+  getAttributeNames(): readonly string[] { return Object.freeze(Object.keys(this.raw.attribs)); }
 
   getSourceTokens(): HTMLSourceTokens | null {
     if (!this.#source) return null;

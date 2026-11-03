@@ -1,5 +1,20 @@
 # FountainJS opportunity roadmap
 
+Server attribute-inspection follow-up (2026-11-03, Unreleased): profile evidence
+finds repeated parser attribute-array construction. Read the same own record
+without those temporary objects, preserving lookup order, case handling,
+empty/missing values and frozen name enumeration. Thirteen new contracts and
+the full 3,348-test / 239-file suite pass. Five recorded public conversion
+journeys pass; all seventeen captures exactly match the reviewed prior images.
+API/headless/types/package/Node/workerd/corpus/size/retention/site checks pass.
+
+Both runs pass the small-import limit (33.77 / 21.96 ms), but the second fails
+10k HTML p95 (1,002.95 / 900 ms); overall local timing remains uncertified.
+No numerical limit or sampling change. The +61 / +54 byte implementation fits
+existing code budgets. No feature-row promotion or npm release; rich preformatted
+fidelity and new-source cloud verification remain open.
+[Contract and evidence](PERFORMANCE.md#read-only-html-attribute-inspection-2026-11-03-unreleased).
+
 Physical preformatted breaks and code touch editing (2026-11-03, Unreleased):
 both HTML importers retain real `<br>` lines, independently of adjacent literal
 newlines. Direct import reports unsupported preformatted attributes/formatting;

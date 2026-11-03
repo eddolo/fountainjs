@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/server-html-attributes.test.ts (13 tests | 1 failed) 78ms
+   ❯ read-only server HTML attributes (13)
+     × does not allocate parser attribute-list objects for repeated read-only inspection 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/server-html-attributes.test.ts > read-only server HTML attributes > does not allocate parser attribute-list objects for repeated read-only inspection
+AssertionError: expected 2000 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2000
+
+ ❯ tests/server-html-attributes.test.ts:75:23
+     73|     try { ServerHTMLImporter.parse('<p data-probe="value" data-empty="…
+     74|     finally { lists.mockRestore(); }
+     75|     expect(allocated).toBe(0);
+       |                       ^
+     76|   });
+     77| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  18:34:31
+   Duration  3.56s (transform 51%, import 47%, tests 2%)

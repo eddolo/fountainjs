@@ -1,0 +1,37 @@
+{
+  "nativeGaps": [
+    24,
+    48
+  ],
+  "editorGaps": [
+    23.10009765625,
+    46.2000732421875
+  ],
+  "readerGaps": [
+    27.199996948242188,
+    54.40000915527344
+  ],
+  "gutter": {
+    "supported": true,
+    "content": "attr(data-fountain-code-lines) / \"\"",
+    "codeHeight": 46.20001220703125,
+    "gutterLineHeight": "23.1px",
+    "codeLineHeight": "23.1px",
+    "sourceOnlyText": "first\nsecond"
+  },
+  "accessibleCode": "- region \"text code\":\n  - text: text\n  - code: first second",
+  "nativeSelectedCode": "first\r\nsecond edited",
+  "externalClipboard": {
+    "trusted": true,
+    "plain": "first\nsecond edited",
+    "types": [
+      "text/html",
+      "text/plain"
+    ]
+  },
+  "explicitBRAndAdjacentLFAreIndependent": true,
+  "nativeTypingUndoRedo": true,
+  "actualDownloadReopen": true,
+  "formattingLossDisclosed": true,
+  "errors": []
+}

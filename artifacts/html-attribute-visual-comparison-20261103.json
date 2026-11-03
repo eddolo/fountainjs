@@ -1,0 +1,125 @@
+{
+  "baselineCommit": "00f0ea53c6e100b40fb14b3069a2f53c12bce7f0",
+  "baselineAllPNGsPreviouslyReviewed": true,
+  "comparisons": [
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png",
+      "SHA256": "ca0dbe091407266f4ffa302c77a615282d3b8e8ff0c096effeb5027a8a299de1",
+      "baselineSHA256": "ca0dbe091407266f4ffa302c77a615282d3b8e8ff0c096effeb5027a8a299de1",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png",
+      "SHA256": "e344037cfc5e436be6e79092c32683853020c569c01c491eb70518b0c7276b37",
+      "baselineSHA256": "e344037cfc5e436be6e79092c32683853020c569c01c491eb70518b0c7276b37",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png",
+      "SHA256": "4255e01bba905ab207c71d774184719d22af5ac5ad58da9ecb99d1676f9e9926",
+      "baselineSHA256": "4255e01bba905ab207c71d774184719d22af5ac5ad58da9ecb99d1676f9e9926",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png",
+      "SHA256": "2e84628096a877d30d8b7947a5b48137e030961c4785f6cb85684392620d2b1a",
+      "baselineSHA256": "2e84628096a877d30d8b7947a5b48137e030961c4785f6cb85684392620d2b1a",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png",
+      "SHA256": "79fa7ae49f6fb3556e5c4b96d35c1a7688709d4d1acd2bf6f8726604f8d9c09a",
+      "baselineSHA256": "79fa7ae49f6fb3556e5c4b96d35c1a7688709d4d1acd2bf6f8726604f8d9c09a",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png",
+      "SHA256": "30a90e5f152c6767b4225de28ea0a2cab79b6f9f44f8263549531e789d7024ec",
+      "baselineSHA256": "30a90e5f152c6767b4225de28ea0a2cab79b6f9f44f8263549531e789d7024ec",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png",
+      "SHA256": "4dcfd1a213d3c4fe137d451b7322c30105c0a6a1b4c157e5f1a70cbcbe304931",
+      "baselineSHA256": "4dcfd1a213d3c4fe137d451b7322c30105c0a6a1b4c157e5f1a70cbcbe304931",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png",
+      "SHA256": "c1c5a51c18fc2bd8b1296867d3b3631b1981113c9b84cb809a288c20665a284f",
+      "baselineSHA256": "c1c5a51c18fc2bd8b1296867d3b3631b1981113c9b84cb809a288c20665a284f",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png",
+      "SHA256": "f44a338f02788b2b70abc404053424af84331d3ae269eb723620933573026c9d",
+      "baselineSHA256": "f44a338f02788b2b70abc404053424af84331d3ae269eb723620933573026c9d",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png",
+      "SHA256": "b92b70ccf83dba271899f0b5557bf22136acf2d4a1ffcc1cca8db766c5348428",
+      "baselineSHA256": "b92b70ccf83dba271899f0b5557bf22136acf2d4a1ffcc1cca8db766c5348428",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png",
+      "SHA256": "a544cf04859b6d8539c4b214ad41177b4fcfc10c1f65175f9745d7c6d0951a26",
+      "baselineSHA256": "a544cf04859b6d8539c4b214ad41177b4fcfc10c1f65175f9745d7c6d0951a26",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png",
+      "SHA256": "771fca8c7ad9a69032e538c14ca4488894170b05409c1b8309d4c215449063f5",
+      "baselineSHA256": "771fca8c7ad9a69032e538c14ca4488894170b05409c1b8309d4c215449063f5",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png",
+      "SHA256": "20c43c97eda89d1cb42a2f367b9df520f230d511dc2f338b54a9cffc816fe10c",
+      "baselineSHA256": "20c43c97eda89d1cb42a2f367b9df520f230d511dc2f338b54a9cffc816fe10c",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png",
+      "SHA256": "08c89478ddb9b41c457d30a42ea43f94adb1a492527c524e36dc386b00bacf6f",
+      "baselineSHA256": "08c89478ddb9b41c457d30a42ea43f94adb1a492527c524e36dc386b00bacf6f",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png",
+      "SHA256": "9662a549c26cedb1671e8408935bd4e257eca655e67b1b2cb65890ede54823f9",
+      "baselineSHA256": "9662a549c26cedb1671e8408935bd4e257eca655e67b1b2cb65890ede54823f9",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png",
+      "SHA256": "b0b9e7a71a5cccecd279863b0ea8e1c81731b747c8983875ff12213f094c272d",
+      "baselineSHA256": "b0b9e7a71a5cccecd279863b0ea8e1c81731b747c8983875ff12213f094c272d",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/html-attribute-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png",
+      "baseline": "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png",
+      "SHA256": "6387ab3735bed0b98194c7afec65a7f59781b690fd743166b637655d0ac05ab7",
+      "baselineSHA256": "6387ab3735bed0b98194c7afec65a7f59781b690fd743166b637655d0ac05ab7",
+      "byteIdentical": true
+    }
+  ]
+}

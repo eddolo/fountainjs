@@ -1,0 +1,9 @@
+{
+  "diagnosticOnly": true,
+  "originalScriptSHA256": "ba3b797c6eab594bc85981a598d34655312f3f1ed83240a5752f325b97c4ad15",
+  "changes": "Inspector recording only around the existing 100-block HTML sample; import relocation; no size, count, limit or sampling changes.",
+  "performanceAcceptance": false,
+  "sourceCommit": "00f0ea53c6e100b40fb14b3069a2f53c12bce7f0",
+  "serverSourceSHA256": "4ea6e1124f579f0fd7f8467f7698dfeea56992b30e3ffc18f90ab75dbd91276e",
+  "captureScope": "Inspector around seven existing 100-block HTML parses; no warm-up removal. Source maps resolved before rebuilding the candidate."
+}

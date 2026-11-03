@@ -1,5 +1,39 @@
 # Performance and memory contract
 
+## Read-only HTML attribute inspection (2026-11-03, Unreleased)
+
+A diagnostic CPU recording around the existing 100-block HTML sample identifies
+the parser adapter's attribute-list getter as allocation work. Each call builds
+an array of attribute objects. `ServerElement.getAttribute` now reads the same
+own record in the same order, with the same case-insensitive comparison and
+empty/missing-value distinction. `getAttributeNames` still returns a frozen
+names array. Values are not cached; source inspection, limits, namespaces,
+selectors, rule priorities and schema validation keep their existing behavior.
+
+Twelve differential contracts compare document/fragment inspection with the
+actual parser attribute-list oracle: duplicate spellings, empty values, entities,
+prototype-like names, SVG/MathML adjusted names and prefixed attributes. A
+separate repeated-inspection contract reduces parser attribute-list allocations
+from 2,000 to zero; constructors/tree validation still allocate where needed.
+The full suite passes 3,348 tests / 239 files. Five recorded public conversion
+journeys pass across desktop/mobile emulation; all seventeen source/editor/
+download/external-paste PNGs are byte-identical to the reviewed `00f0ea5` images.
+
+Keep both normal performance runs. The first passes all unchanged limits, with
+100-block HTML p95 33.77 ms / 35 ms. The second's small-import p95 is 21.96 ms,
+but its 10k p95 is **1,002.95 ms / 900 ms**, so overall local latency certification
+remains open. The earlier current/control failures are not discarded. The CPU
+profile is diagnostic only and never an acceptance run. No threshold, sample,
+initial window, affinity or priority is relaxed. Both independent retention
+checks pass; numerical live/released heap limits remain unchanged.
+
+API 415, headless 111, framework types, packed root/core ESM/CommonJS, pure Node,
+real workerd, strict v13 corpus, size and website checks pass. Body profiles stay
+563/613/631/635, with 1,288/1,304 exact safe-HTML native reopens. The source adds
+61 ESM / 54 CJS bytes and fits existing budgets; no CSS, dependency, public API
+or schema change. New-source cloud certification and npm release remain pending.
+See `artifacts/html-attribute-verification-20261103.json` for bound evidence.
+
 ## Immutable-copy validation (2026-11-03, Unreleased)
 
 CPU profiles of 4,000 last-paragraph edits show repeated schema traversal and
