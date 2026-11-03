@@ -96,6 +96,21 @@ describe('ruby annotations', () => {
     expect(editor.state.doc.child(0).textContent).toBe('東京 city');
   });
 
+  it('retains an imported outer mark scope and inner emphasis depth when removing ruby', () => {
+    const composed = kit(), schema = new Schema(composed.schema);
+    const doc = HTMLImporter.parse('<p><em><strong><ruby><rb>Outer <em><strong>Inner</strong></em></rb><rt>reading</rt></ruby></strong></em></p>', schema);
+    const editor = createEditor({ schema: composed.schema, plugins: composed.plugins, content: doc.toJSON() });
+    try {
+      const original = editor.getJSON();
+      expect(unsetRuby(editor, [0, 0])).toBe(true);
+      expect(editor.state.doc.child(0).content.map(node => [node.text, node.marks.map(mark => mark.type.name)])).toEqual([
+        ['Outer ', ['em', 'strong']], ['Inner', ['em', 'strong', 'em', 'strong']],
+      ]);
+      expect(undo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(original);
+    } finally { editor.destroy(); }
+  });
+
   it('rejects ambiguous, empty, invalid, nested, and read-only command targets', () => {
     const composed = kit();
     const content = { type: 'doc', content: [

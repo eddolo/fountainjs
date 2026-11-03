@@ -200,8 +200,13 @@ export function unsetRuby(editor: Editor, path?: readonly number[]): boolean {
   const first = node.child(0);
   const lastIndex = node.childCount - 1;
   const last = node.child(lastIndex);
+  const base = node.marks.length ? node.content.map(child => child.withMarks([
+    ...node.marks.filter(mark => ['em', 'strong'].includes(mark.type.name)
+      || !child.marks.some(local => local.type === mark.type)),
+    ...child.marks,
+  ])) : node.content;
   const transaction = editor.state.createTransaction()
-    .replaceNode(targetPath, node.content)
+    .replaceNode(targetPath, base)
     .setSelection(Selection.range(
       [...parentPath, index],
       0,

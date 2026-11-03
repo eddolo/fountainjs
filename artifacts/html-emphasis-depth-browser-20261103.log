@@ -1,0 +1,163 @@
+[WebServer] (node:8636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:13024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening (18.4s)
+(node:13164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening (11.1s)
+(node:24336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening (10.1s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Inert HTML preservation workshop' }).getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator('td strong strong')
+    Expected: "700"
+    Received: "900"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Inert HTML preservation workshop' }).getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator('td strong strong')
+        14 × locator resolved to <strong>nested cell</strong>
+           - unexpected value "900"
+
+
+       at html-emphasis-depth-journey.ts:26
+
+      24 |     await expect(editor.locator('blockquote em em')).toHaveText('nested quote');
+      25 |     await expect(editor.locator('td strong strong')).toHaveText('nested cell');
+    > 26 |     await expect(editor.locator('td strong strong')).toHaveCSS('font-weight', '700');
+         |                                                      ^
+      27 |     await expect(editor.getByText('Plain sibling.', { exact: true })).toBeVisible();
+      28 |   };
+      29 |   await verifyEditor(false);
+        at verifyEditor (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-emphasis-depth-journey.ts:26:54)
+        at htmlEmphasisDepthJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-emphasis-depth-journey.ts:29:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:64:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Inert HTML preservation workshop' }).getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator('td strong strong')
+    Expected: "700"
+    Received: "900"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Inert HTML preservation workshop' }).getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator('td strong strong')
+        13 × locator resolved to <strong>nested cell</strong>
+           - unexpected value "900"
+
+
+       at html-emphasis-depth-journey.ts:26
+
+      24 |     await expect(editor.locator('blockquote em em')).toHaveText('nested quote');
+      25 |     await expect(editor.locator('td strong strong')).toHaveText('nested cell');
+    > 26 |     await expect(editor.locator('td strong strong')).toHaveCSS('font-weight', '700');
+         |                                                      ^
+      27 |     await expect(editor.getByText('Plain sibling.', { exact: true })).toBeVisible();
+      28 |   };
+      29 |   await verifyEditor(false);
+        at verifyEditor (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-emphasis-depth-journey.ts:26:54)
+        at htmlEmphasisDepthJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-emphasis-depth-journey.ts:29:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:64:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Inert HTML preservation workshop' }).getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator('td strong strong')
+    Expected: "700"
+    Received: "900"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Inert HTML preservation workshop' }).getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator('td strong strong')
+        13 × locator resolved to <strong>nested cell</strong>
+           - unexpected value "900"
+
+
+       at html-emphasis-depth-journey.ts:26
+
+      24 |     await expect(editor.locator('blockquote em em')).toHaveText('nested quote');
+      25 |     await expect(editor.locator('td strong strong')).toHaveText('nested cell');
+    > 26 |     await expect(editor.locator('td strong strong')).toHaveCSS('font-weight', '700');
+         |                                                      ^
+      27 |     await expect(editor.getByText('Plain sibling.', { exact: true })).toBeVisible();
+      28 |   };
+      29 |   await verifyEditor(false);
+        at verifyEditor (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-emphasis-depth-journey.ts:26:54)
+        at htmlEmphasisDepthJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-emphasis-depth-journey.ts:29:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:64:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\html-emphasis-depth-browser-20261103\editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening
+    [firefox] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening
+    [webkit] › tests\browser\editor.spec.ts:63:1 › retains explicit nested emphasis through native editing history and HTML reopening

@@ -58,6 +58,11 @@ import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-tex
 import { htmlSourceJourney } from './html-source-journey';
 import { htmlEnvelopeJourney } from './html-envelope-journey';
 import { htmlSourceEOFJourney } from './html-source-eof-journey';
+import { htmlEmphasisDepthJourney } from './html-emphasis-depth-journey';
+
+test('retains explicit nested emphasis through native editing history and HTML reopening', async ({ page }, info) => {
+  await htmlEmphasisDepthJourney(page, info);
+});
 test('retains unfinished EOF source through native literal edits and refuses following content', async ({ page }, info) => {
   await htmlSourceEOFJourney(page, info);
 });

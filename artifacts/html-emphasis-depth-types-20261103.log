@@ -1,0 +1,6 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+tests/html-emphasis-depth.test.ts(68,88): error TS2322: Type '{ inline: boolean; group: string; content: string; parseHTML: { tag: string; }[]; toDOM: () => readonly ["span", { readonly 'data-depth-carrier': 'true'; }, 0]; }' is not assignable to type 'NodeSpec'.
+  The types returned by 'toDOM(...)' are incompatible between these types.
+    Type 'readonly ["span", { readonly 'data-depth-carrier': "true"; }, 0]' is not assignable to type 'DOMOutputSpec'.
+      The type 'readonly ["span", { readonly 'data-depth-carrier': "true"; }, 0]' is 'readonly' and cannot be assigned to the mutable type '[string, ...(0 | Attributes | DOMOutputSpec)[]]'.
+[ELIFECYCLE] Command failed with exit code 1.

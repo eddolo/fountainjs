@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve explicit nested emphasis through browser/server HTML import,
+  including formatting wrappers around blocks. Count each wrapper once;
+  retain CSS reassertion, nearest-color and safe-link behavior. Nineteen
+  official Markdown cases now keep their complete native marks on HTML reopen.
+  Give custom inline containers one enclosing scope with local child scopes;
+  retain outer/base formatting and undo when removing Ruby annotations.
+  Exact safe-HTML model retention improves to 1,286/1,304 corpus checks without
+  changing the existing CommonMark semantic profiles, schema or public API.
+
 - Verify the optional complete-file HTML source route against all 652 CommonMark
   examples in LF/CRLF: 635 body-semantic matches with the unchanged neutral
   reducer. Separately check declaration/mode, actual EOF data, exact untouched

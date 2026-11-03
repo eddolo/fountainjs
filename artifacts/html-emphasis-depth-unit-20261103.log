@@ -1,0 +1,82 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-anchors-browser.test.ts (7 tests | 1 failed) 92ms
+   × agrees with the server about bookmark structure and HTML recovery: <p><strong><a id="chapter">Bold bookmark</a></strong></p> 16ms
+ ❯ tests/markdown-schema-html.test.ts (15 tests | 1 failed) 54ms
+   ❯ schema-owned sanitized HTML projection in Markdown (15)
+     × retains complete native JSON through its matching adapter: <p><strong><span data-test-carrier="marked">marked</span></strong></p> 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed | 232 passed (234)
+      Tests  2 failed | 3213 passed (3215)
+   Start at  13:41:20
+   Duration  204.11s (environment 50%, import 26%, tests 18%, transform 5%, worker 1%)
+
+     Import  606 modules were evaluated 1244 times · 44.60s total, 26% of tracked time
+             ~22.87s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+ FAIL  tests/html-anchors-browser.test.ts > agrees with the server about bookmark structure and HTML recovery: <p><strong><a id="chapter">Bold bookmark</a></strong></p>
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -13,10 +13,13 @@
+              {
+                "marks": [
+                  {
+                    "type": "strong",
+                  },
++                 {
++                   "type": "strong",
++                 },
+                ],
+                "text": "Bold bookmark",
+                "type": "text",
+              },
+            ],
+
+ ❯ tests/html-anchors-browser.test.ts:21:57
+     19|   expect(browser.toJSON()).toEqual(server.toJSON());
+     20|   const exported = HTMLExporter.export(browser, { document: false });
+     21|   expect(HTMLImporter.parse(exported, schema).toJSON()).toEqual(browse…
+       |                                                         ^
+     22|   expect(ServerHTMLImporter.parse(exported, schema).toJSON()).toEqual(…
+     23| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/markdown-schema-html.test.ts > schema-owned sanitized HTML projection in Markdown > retains complete native JSON through its matching adapter: <p><strong><span data-test-carrier="marked">marked</span></strong></p>
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -13,10 +13,13 @@
+              {
+                "marks": [
+                  {
+                    "type": "strong",
+                  },
++                 {
++                   "type": "strong",
++                 },
+                ],
+                "text": "marked",
+                "type": "text",
+              },
+            ],
+
+ ❯ tests/markdown-schema-html.test.ts:31:46
+     29|     const result = MarkdownExporter.exportWithReport(doc, { tableForma…
+     30|     expect(result.markdown).toContain('data-test-carrier');
+     31|     expect(native(result.markdown).toJSON()).toEqual(doc.toJSON());
+       |                                              ^
+     32|   });
+     33|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯

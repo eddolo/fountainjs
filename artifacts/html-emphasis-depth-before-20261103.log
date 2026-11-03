@@ -1,0 +1,722 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-emphasis-depth.test.ts (54 tests | 54 failed) 245ms
+   ❯ browser explicit emphasis depth (27)
+     × retains the complete native mark sequence from CommonMark example 369 26ms
+     × retains the complete native mark sequence from CommonMark example 373 6ms
+     × retains the complete native mark sequence from CommonMark example 389 5ms
+     × retains the complete native mark sequence from CommonMark example 407 4ms
+     × retains the complete native mark sequence from CommonMark example 408 4ms
+     × retains the complete native mark sequence from CommonMark example 409 4ms
+     × retains the complete native mark sequence from CommonMark example 417 4ms
+     × retains the complete native mark sequence from CommonMark example 418 5ms
+     × retains the complete native mark sequence from CommonMark example 419 9ms
+     × retains the complete native mark sequence from CommonMark example 425 4ms
+     × retains the complete native mark sequence from CommonMark example 426 3ms
+     × retains the complete native mark sequence from CommonMark example 427 4ms
+     × retains the complete native mark sequence from CommonMark example 432 4ms
+     × retains the complete native mark sequence from CommonMark example 461 4ms
+     × retains the complete native mark sequence from CommonMark example 463 4ms
+     × retains the complete native mark sequence from CommonMark example 464 8ms
+     × retains the complete native mark sequence from CommonMark example 465 5ms
+     × retains the complete native mark sequence from CommonMark example 466 7ms
+     × retains the complete native mark sequence from CommonMark example 468 5ms
+     × retains explicit <em>/<em> depth around block and inline content 11ms
+     × retains explicit <i>/<em> depth around block and inline content 9ms
+     × retains explicit <em>/<i> depth around block and inline content 6ms
+     × retains explicit <strong>/<strong> depth around block and inline content 6ms
+     × retains explicit <b>/<strong> depth around block and inline content 7ms
+     × retains explicit <strong>/<b> depth around block and inline content 6ms
+     × does not manufacture another semantic level from CSS on the same element or a descendant span 16ms
+     × keeps nearest colors and one safe link while preserving nested emphasis 21ms
+   ❯ server explicit emphasis depth (27)
+     × retains the complete native mark sequence from CommonMark example 369 7ms
+     × retains the complete native mark sequence from CommonMark example 373 2ms
+     × retains the complete native mark sequence from CommonMark example 389 2ms
+     × retains the complete native mark sequence from CommonMark example 407 1ms
+     × retains the complete native mark sequence from CommonMark example 408 1ms
+     × retains the complete native mark sequence from CommonMark example 409 1ms
+     × retains the complete native mark sequence from CommonMark example 417 2ms
+     × retains the complete native mark sequence from CommonMark example 418 2ms
+     × retains the complete native mark sequence from CommonMark example 419 3ms
+     × retains the complete native mark sequence from CommonMark example 425 1ms
+     × retains the complete native mark sequence from CommonMark example 426 1ms
+     × retains the complete native mark sequence from CommonMark example 427 1ms
+     × retains the complete native mark sequence from CommonMark example 432 2ms
+     × retains the complete native mark sequence from CommonMark example 461 1ms
+     × retains the complete native mark sequence from CommonMark example 463 1ms
+     × retains the complete native mark sequence from CommonMark example 464 1ms
+     × retains the complete native mark sequence from CommonMark example 465 1ms
+     × retains the complete native mark sequence from CommonMark example 466 1ms
+     × retains the complete native mark sequence from CommonMark example 468 1ms
+     × retains explicit <em>/<em> depth around block and inline content 2ms
+     × retains explicit <i>/<em> depth around block and inline content 2ms
+     × retains explicit <em>/<i> depth around block and inline content 1ms
+     × retains explicit <strong>/<strong> depth around block and inline content 2ms
+     × retains explicit <b>/<strong> depth around block and inline content 1ms
+     × retains explicit <strong>/<b> depth around block and inline content 2ms
+     × does not manufacture another semantic level from CSS on the same element or a descendant span 2ms
+     × keeps nearest colors and one safe link while preserving nested emphasis 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 54 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 369
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 373
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 369
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 373
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -17,13 +17,10 @@
+          {
+            "marks": [
+              {
+                "type": "em",
+              },
+-             {
+-               "type": "em",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+          {
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 389
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 425
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 389
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 425
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -17,13 +17,10 @@
+          {
+            "marks": [
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "bar",
+            "type": "text",
+          },
+          {
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 407
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 407
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -17,13 +17,10 @@
+          {
+            "marks": [
+              {
+                "type": "em",
+              },
+-             {
+-               "type": "em",
+-             },
+            ],
+            "text": "bar",
+            "type": "text",
+          },
+          {
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 408
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 408
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -8,13 +8,10 @@
+          {
+            "marks": [
+              {
+                "type": "em",
+              },
+-             {
+-               "type": "em",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+          {
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 409
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 409
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -17,13 +17,10 @@
+          {
+            "marks": [
+              {
+                "type": "em",
+              },
+-             {
+-               "type": "em",
+-             },
+            ],
+            "text": "bar",
+            "type": "text",
+          },
+        ],
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 417
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 417
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -12,16 +12,10 @@
+          {
+            "marks": [
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "bar",
+            "type": "text",
+          },
+          {
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 418
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 418
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -27,13 +27,10 @@
+            "type": "text",
+          },
+          {
+            "marks": [
+              {
+-               "type": "em",
+-             },
+-             {
+                "type": "strong",
+              },
+              {
+                "type": "em",
+              },
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 419
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 419
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -15,13 +15,10 @@
+            "type": "text",
+          },
+          {
+            "marks": [
+              {
+-               "type": "em",
+-             },
+-             {
+                "attrs": {
+                  "href": "/url",
+                  "target": "_blank",
+                  "title": "",
+                },
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 426
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 426
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -8,13 +8,10 @@
+          {
+            "marks": [
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+          {
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 427
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 427
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -17,13 +17,10 @@
+          {
+            "marks": [
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "bar",
+            "type": "text",
+          },
+        ],
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 432
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 432
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -27,13 +27,10 @@
+            "type": "text",
+          },
+          {
+            "marks": [
+              {
+-               "type": "strong",
+-             },
+-             {
+                "type": "em",
+              },
+              {
+                "type": "strong",
+              },
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 461
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 463
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 461
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 463
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -8,13 +8,10 @@
+          {
+            "marks": [
+              {
+                "type": "em",
+              },
+-             {
+-               "type": "em",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+        ],
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 464
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 465
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 464
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 465
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -8,13 +8,10 @@
+          {
+            "marks": [
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+        ],
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 466
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 466
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -8,16 +8,10 @@
+          {
+            "marks": [
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+        ],
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains the complete native mark sequence from CommonMark example 468
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains the complete native mark sequence from CommonMark example 468
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -11,13 +11,10 @@
+                "type": "em",
+              },
+              {
+                "type": "strong",
+              },
+-             {
+-               "type": "strong",
+-             },
+            ],
+            "text": "foo",
+            "type": "text",
+          },
+        ],
+
+ ❯ tests/html-emphasis-depth.test.ts:18:33
+     16|       const html = HTMLExporter.export(original, { document: false });
+     17|       const reopened = importer.parse(html, schema);
+     18|       expect(reopened.toJSON()).toEqual(original.toJSON());
+       |                                 ^
+     19|       expect(HTMLExporter.export(reopened, { document: false })).toBe(…
+     20|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains explicit <em>/<em> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains explicit <i>/<em> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains explicit <em>/<i> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains explicit <em>/<em> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains explicit <i>/<em> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains explicit <em>/<i> depth around block and inline content
+AssertionError: expected [ [ 'Outer ', [ 'em' ] ], …(4) ] to deeply equal [ [ 'Outer ', [ 'em' ] ], …(4) ]
+
+- Expected
++ Received
+
+@@ -7,11 +7,10 @@
+    ],
+    [
+      "Inner",
+      [
+        "em",
+-       "em",
+      ],
+    ],
+    [
+      " tail",
+      [
+@@ -19,11 +18,10 @@
+      ],
+    ],
+    [
+      "Item",
+      [
+-       "em",
+        "em",
+      ],
+    ],
+    [
+      "Plain",
+
+ ❯ tests/html-emphasis-depth.test.ts:28:91
+     26|       const source = `<${outer}><p>Outer <${inner}>Inner</${inner}> ta…
+     27|       const doc = importer.parse(source, schema);
+     28|       expect(texts(doc).map(node => [node.text, node.marks.map(mark =>…
+       |                                                                                           ^
+     29|         ['Outer ', [mark]], ['Inner', [mark, mark]], [' tail', [mark]]…
+     30|       ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains explicit <strong>/<strong> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains explicit <b>/<strong> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > retains explicit <strong>/<b> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains explicit <strong>/<strong> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains explicit <b>/<strong> depth around block and inline content
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > retains explicit <strong>/<b> depth around block and inline content
+AssertionError: expected [ [ 'Outer ', [ 'strong' ] ], …(4) ] to deeply equal [ [ 'Outer ', [ 'strong' ] ], …(4) ]
+
+- Expected
++ Received
+
+@@ -7,11 +7,10 @@
+    ],
+    [
+      "Inner",
+      [
+        "strong",
+-       "strong",
+      ],
+    ],
+    [
+      " tail",
+      [
+@@ -19,11 +18,10 @@
+      ],
+    ],
+    [
+      "Item",
+      [
+-       "strong",
+        "strong",
+      ],
+    ],
+    [
+      "Plain",
+
+ ❯ tests/html-emphasis-depth.test.ts:28:91
+     26|       const source = `<${outer}><p>Outer <${inner}>Inner</${inner}> ta…
+     27|       const doc = importer.parse(source, schema);
+     28|       expect(texts(doc).map(node => [node.text, node.marks.map(mark =>…
+       |                                                                                           ^
+     29|         ['Outer ', [mark]], ['Inner', [mark, mark]], [' tail', [mark]]…
+     30|       ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > does not manufacture another semantic level from CSS on the same element or a descendant span
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > does not manufacture another semantic level from CSS on the same element or a descendant span
+AssertionError: expected [ [ 'One ', [ 'em' ] ], …(5) ] to deeply equal [ [ 'One ', [ 'em' ] ], …(5) ]
+
+- Expected
++ Received
+
+@@ -7,18 +7,16 @@
+    ],
+    [
+      "Two ",
+      [
+        "em",
+-       "em",
+      ],
+    ],
+    [
+      "Still two",
+      [
+        "em",
+-       "em",
+      ],
+    ],
+    [
+      " ",
+      [],
+@@ -30,10 +28,9 @@
+      ],
+    ],
+    [
+      "Twice",
+      [
+-       "strong",
+        "strong",
+      ],
+    ],
+  ]
+
+ ❯ tests/html-emphasis-depth.test.ts:38:91
+     36|         + '<strong style="font-weight:bold">Bold <strong><span style="…
+     37|       const doc = importer.parse(source, schema);
+     38|       expect(texts(doc).map(node => [node.text, node.marks.map(mark =>…
+       |                                                                                           ^
+     39|         ['One ', ['em']], ['Two ', ['em', 'em']], ['Still two', ['em',…
+     40|         ['Bold ', ['strong']], ['Twice', ['strong', 'strong']],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/54]⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > keeps nearest colors and one safe link while preserving nested emphasis
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > keeps nearest colors and one safe link while preserving nested emphasis
+AssertionError: expected [ Array(1) ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/html-emphasis-depth.test.ts:49:67
+     47|       const [outer, inner] = texts(doc);
+     48|       expect(outer.marks.filter(mark => mark.type.name === 'em')).toHa…
+     49|       expect(inner.marks.filter(mark => mark.type.name === 'em')).toHa…
+       |                                                                   ^
+     50|       expect(inner.marks.filter(mark => mark.type.name === 'link')).to…
+     51|       expect(inner.marks.find(mark => mark.type.name === 'text_color')…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/54]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  54 failed (54)
+   Start at  13:32:47
+   Duration  3.82s (transform 36%, import 29%, environment 28%, tests 7%)

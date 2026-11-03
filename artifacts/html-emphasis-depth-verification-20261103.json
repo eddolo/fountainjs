@@ -1,0 +1,272 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "c29028d0d14c24b10918121bc559eb89baf381fc",
+  "scope": "Explicit emphasis depth and single inline-container scope ownership in HTML; Ruby unwrap retains outer/base marks",
+  "verified": {
+    "unitTests": 3220,
+    "unitFiles": 234,
+    "newDepthTests": 58,
+    "newRubyCommandTests": 1,
+    "nativeBrowser": {
+      "passed": 3,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "headless": true,
+      "workers": 1,
+      "port": 4194,
+      "reuseExistingServer": false,
+      "screenshotsInspected": 9,
+      "videosRecorded": true,
+      "videosReviewed": false,
+      "behaviors": [
+        "native word replacement in ordinary and custom inline content",
+        "exact undo/redo",
+        "complete native JSON and safe HTML reopening",
+        "nested marks in paragraphs/quotes/table cells",
+        "CSS reassertion in a structural wrapper",
+        "reader ending scrolls into view"
+      ]
+    },
+    "completeSourceCorpus": {
+      "bodyMatches": 635,
+      "total": 652,
+      "sourceCaptureBodyMatches": 633,
+      "lineEndingChecks": 1304,
+      "sourceChecks": 1304,
+      "nativeJSONChecks": 1304,
+      "safeHTMLExactReopens": 1286,
+      "sourceModelStatuses": {
+        "equal-except-source-tokens": 1280,
+        "different": 24
+      },
+      "oldSemanticProfiles": [
+        563,
+        613,
+        631
+      ],
+      "neutralReducerSHA256": "891b68d610dd8070fc57b89b6a83216461c4da28fcbddc83576a0e9691f1f183"
+    },
+    "headlessModules": 110,
+    "apiDeclarations": 415,
+    "build": "passed",
+    "frameworkTypes": "passed",
+    "packedESMAndCommonJS": "passed",
+    "nodeAndWorkerd": "passed",
+    "performanceAndRetention": "passed",
+    "websiteBuild": "passed",
+    "bundleBudget": "passed"
+  },
+  "bundleReview": {
+    "ESMBytes": 1679745,
+    "CJSBytes": 1398106,
+    "ESMCapKiB": 1640.5,
+    "CJSCapKiB": 1365.5,
+    "oldESMCapKiB": 1638,
+    "oldCJSCapKiB": 1363.25,
+    "sharedHelperCopiesPerFormat": 1,
+    "dependencyChanges": false,
+    "entryCeilingChanges": false,
+    "CSSCeilingChanges": false,
+    "numericalPerformanceLimitChanges": false
+  },
+  "retainedFailures": [
+    "54 initial depth regression tests",
+    "two full-suite bookmark/carrier regressions",
+    "four CSS ownership regressions",
+    "initial native browser assertion expected 700; actual relative nested strong is 900",
+    "readonly tuple in the test-only carrier fixture",
+    "initial/frozen aggregate size overruns before measured capacity review"
+  ],
+  "limits": {
+    "safeHTMLNativeDifferenceExamples": [
+      79,
+      148,
+      169,
+      183,
+      184,
+      187,
+      191,
+      309,
+      494
+    ],
+    "fullCommonMark": false,
+    "arbitraryHTMLOrPixelFidelity": false,
+    "physicalDeviceAudit": false,
+    "npmUnchanged": "0.4.0-beta.2",
+    "wholeParityGoalComplete": false
+  },
+  "logNormalization": "LF, trailing whitespace and extra final blank lines only",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "e7c85cf46c49b06b4fb65843101118cee4ce2a2513516aaa9b866c964ffe13ea"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-api-frozen-20261103.log",
+      "sha256": "69c8bc9f702ecaa5b93250aca345240117f25448eba92ad7dd8ed003836f6589"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-before-20261103.log",
+      "sha256": "c131bca3207d8167eda2e91cd097578849cb756dd6bbfc438287da6e15f4d39c"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-20261103.log",
+      "sha256": "5c22cbdb501c3f47e5f6c6c7da2a280ff34245f8bf630154bae82286ca3eb02d"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103.log",
+      "sha256": "cae66a2586e99a0087b890af31396bca61f71a0e787421c6da51262d6e51067f"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium/emphasis-editor.png",
+      "sha256": "d124268557c5a586c6ce4fd6449b4cd2dbcc1c7fe30aa4b2f9c01a25b54acbcf"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium/emphasis-reader-end.png",
+      "sha256": "76f93a40d2e2b40035c295d1d7515593d6d1ec0d2080df8d33cb6bd527cbe319"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-chromium/emphasis-reader.png",
+      "sha256": "20b5a54ca24ce281203aa6290169a4da6ceb66037f91eca0a8ccbbe4869098b4"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox/emphasis-editor.png",
+      "sha256": "813fe22273d7f21bb308710f9155d3b47385da898ce1063e6551b19f7d8a0c30"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox/emphasis-reader-end.png",
+      "sha256": "6a5f133aa34fdb218a273c383b6360b7da402e25507eeba4b15b296dc668854d"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-firefox/emphasis-reader.png",
+      "sha256": "c82e96ebd1949365de2d72a95aa4ac22b0abc672b141848edd5a616a8929741b"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit/emphasis-editor.png",
+      "sha256": "840fd5f0442caca70eb9cf8dc00cfb4bf799cc1e8bc1844ed38bdcfe8c3fb657"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit/emphasis-reader-end.png",
+      "sha256": "594000c69a2d3adba60686d4cd7ba23bbba39ff430bfc7785acf4bd22439db7e"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-browser-frozen-20261103/editor-retains-explicit-ne-eeae3--history-and-HTML-reopening-webkit/emphasis-reader.png",
+      "sha256": "118260b307c4da214b15ddc80bab0a05fb08a53c384cbd167a9e6ff1c6193373"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-budget-frozen-20261103.log",
+      "sha256": "06d1e58b1523083dd3c85de245c0b2fb72c85b5294fee7ad0b3f4da1fb3de193"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-budget-verified-20261103.log",
+      "sha256": "c9f8b06627725f5cd5075679b8ff9c22f67093fb316a2f92f786a3fec658ec76"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-build-verified-20261103.log",
+      "sha256": "3bb7a477da87f0eab7bce03795b6109ff6d791288e99cde9a6c20fb065953fb6"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-corpus-frozen-20261103.json",
+      "sha256": "bae6001dda42f29e5cdb2e538a50727c01c647e5fd09eb40c13d5cdcc6a99f74"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-corpus-frozen-20261103.log",
+      "sha256": "f7441a00111325866019cfdf377c9dd96b59da3463fc0849ef730f19e18f5254"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-css-scope-before-20261103.log",
+      "sha256": "e7d2d51414fef4e7ed8c125d37b75f6661928a3d669a2b3beeca8613fbffedfa"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-headless-frozen-20261103.log",
+      "sha256": "666fe716a14c0184b5bae11debf48c8f749843156f91f22eafaa0a8f31aff264"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-package-frozen-20261103.log",
+      "sha256": "df34db12a56ee4a403e1819bf486b18ebc4eaf6cdf6583c7139d1e2c2b4d73e2"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-performance-20261103.log",
+      "sha256": "9b5062908ee16a76d6e8d9b2a62b75435831f5a830175fcd9b943ab3981b60eb"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-server-runtimes-20261103.log",
+      "sha256": "49bcd5534ff552f1177d3bd88fd1b3c29cc2e251629ecd6c36def06cfc974e22"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-site-20261103.log",
+      "sha256": "8e527d87ca1862ff24ac2f452fe0b4d5fbedbe401a317c02bbdb9303fb4f6a4e"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-types-20261103.log",
+      "sha256": "a72898db9a9f13002dbbe625c569d9c9de4b6bdb0c35ae2757e3c0956e49f429"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-types-verified-20261103.log",
+      "sha256": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-unit-20261103.log",
+      "sha256": "ca34035a8d645b72ad8f9092b32a9fed578d821cc0e81fb14ab8414df70b08c8"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth-unit-verified-20261103.log",
+      "sha256": "5095def96d7054f4bd9b2e8c800c8f0a1824a177c6419b72badfc3ee0c51e548"
+    },
+    {
+      "path": "artifacts/html-emphasis-depth.config.ts",
+      "sha256": "9a16a09f8378abd696f57c9aad8a6dfb35be670e757506824e15d984609c06e7"
+    },
+    {
+      "path": "docs/HTML_INERT_SOURCE.md",
+      "sha256": "2cac008a3980a23b5fad394a7462c8b0bc5afa90b747e23895b4a491c3c68fbe"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "72eb5eb7ce2e4e98f7b13568088d71ac61050fa0a31165ceab5ff7e37eb5b6c8"
+    },
+    {
+      "path": "docs/SERVER_HTML.md",
+      "sha256": "c20008e56bb50bc31d3caa1036b43c5bbd9ccec1366ae0aa10701eaa6d23a719"
+    },
+    {
+      "path": "scripts/check-build-budgets.mjs",
+      "sha256": "ff0b2c14cccedea032e6cf65cb538655132fb35e798b7d64c04745479fdd0473"
+    },
+    {
+      "path": "src/core/importers/html-importer.ts",
+      "sha256": "c39666e90cfde809b4ef75c7f69aa8ca244842c35a3932fa01246bd9b073df1a"
+    },
+    {
+      "path": "src/core/importers/html-marks.ts",
+      "sha256": "57edf181ef0257735b9b1b4b490d8e1a04e5d63ab9ae866920ffd116f9282ffa"
+    },
+    {
+      "path": "src/html/server.ts",
+      "sha256": "66df2111051b84e4b249d1653e416802929ba54f066fe50057dbced84b596197"
+    },
+    {
+      "path": "src/ruby/index.ts",
+      "sha256": "dfa391054290250c0fd6b0b7e4f2951923ededbb6c785b7453edcf86adc95f12"
+    },
+    {
+      "path": "tests/browser/editor.spec.ts",
+      "sha256": "7c9d2949a776b81dd809c9b050ffea40f10e97156e6fcb27f2563ac67e11dfdd"
+    },
+    {
+      "path": "tests/browser/html-emphasis-depth-journey.ts",
+      "sha256": "8437145574714890369fe53ddeae1a9f752c095131568c1e4f80e07683ad8d1b"
+    },
+    {
+      "path": "tests/html-emphasis-depth.test.ts",
+      "sha256": "ba9cb5f1f9e4535501abf3c7ce76f8df3ea2e3024e306a746dd4b3d58952abc1"
+    },
+    {
+      "path": "tests/ruby.test.ts",
+      "sha256": "1b3ba223571640d1f81c4f1234c9743f3c139f819c026d182462735f8556f425"
+    }
+  ]
+}

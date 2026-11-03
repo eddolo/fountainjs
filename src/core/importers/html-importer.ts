@@ -11,6 +11,7 @@ import {
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { importedHTMLLinkURL } from './html-link-url';
+import { explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from './html-marks';
 import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource } from '../link-destination';
 import { importHTMLComment } from '../html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
@@ -158,7 +159,7 @@ function configuredNode(
     // Empty inline projection must not win over real children in block*.
     if (/^block[+*?]$/.test(expression ?? '')) candidates.reverse();
     for (const candidate of candidates) {
-      const content = restoreHTMLFlowCaret(type.name, contentRoot, candidate, schema);
+      const content = relativeHTMLContent(restoreHTMLFlowCaret(type.name, contentRoot, candidate, schema), inheritedMarks);
       if (expression && !matchesContentExpression(content, expression)) continue;
       try {
         const node = type.create(attrs, content, undefined, inheritedMarks);
@@ -205,7 +206,7 @@ function configuredRuby(
   const base = inlineChildren(baseRoot, schema, inheritedMarks);
   if (!annotation || !base.length || base.some((node) => !node.isText)) return base;
   try {
-    const ruby = type.create({ rt: annotation }, base);
+    const ruby = type.create({ rt: annotation }, relativeHTMLContent(base, inheritedMarks), undefined, inheritedMarks);
     schema.validate(ruby);
     return [ruby];
   } catch { return base; }
@@ -306,6 +307,10 @@ function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[]
     const background = colorValue(child.style.backgroundColor);
     // Cell fills belong to the cell, not to movable text inside it.
     if (background && !layoutProjection && tag !== 'td' && tag !== 'th') addSchemaMark(nextMarks, schema, 'highlight', { color: background });
+    nextMarks.forEach(mark => {
+      if (mark.type.name === 'em' && !['em', 'i'].includes(tag) && child.style.fontStyle.toLowerCase() === 'italic'
+        || mark.type.name === 'strong' && !['strong', 'b'].includes(tag) && (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500)) rememberCSSEmphasis(mark);
+    });
     if (tag === 'a' && schema.marks.link) {
       const originalHref = child.getAttribute('href') ?? '';
       const HTMLCarrier = child.getAttribute('data-fountain-html-href');
@@ -326,7 +331,7 @@ function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[]
         });
       }
     }
-    return [...marks.filter(mark => !nextMarks.some(local => local.type === mark.type)), ...nextMarks];
+    return mergeHTMLMarks(nextMarks, marks, tag);
 }
 
 function imageSize(value: string, fallback: string): string {
@@ -568,14 +573,25 @@ function block(element: Element, schema: Schema): FountainNode[] {
   return inheritElementMarks(element, projectBlock(element, schema), schema);
 }
 
+// Weak keys and weak node membership keep parsed DOM trees out of retained
+// document/history state. A wrapper can be visited by blockChildren and block;
+// each source element must contribute its emphasis level only once.
+const blockEmphasis = new WeakMap<Element, WeakSet<FountainNode>>();
+
 function inheritElementMarks(element: Element, nodes: FountainNode[], schema: Schema): FountainNode[] {
   const marks = element instanceof HTMLElement ? elementMarks(element, schema) : [];
+  const tag = element.tagName.toLowerCase();
+  let seen = explicitHTMLEmphasis(tag) ? blockEmphasis.get(element) : undefined;
+  if (explicitHTMLEmphasis(tag) && !seen) blockEmphasis.set(element, seen = new WeakSet());
   const inherit = (node: FountainNode): FountainNode => {
-    const children = node.content.map(inherit);
+    // An inline container owns the enclosing scope; its children already own
+    // their local scopes. Applying the same wrapper to both doubles emphasis.
+    const children = node.type.isInline ? relativeHTMLContent(node.content, marks, true) : node.content.map(inherit);
     let result = children.some((child, index) => child !== node.content[index]) ? node.copy(children) : node;
     if (node.type.isInline) {
-      const combined = [...marks.filter(mark => !node.marks.some(local => local.type === mark.type)), ...node.marks];
+      const combined = seen?.has(node) ? node.marks : mergeHTMLBlockMarks(node.marks, marks, tag);
       if (combined.length !== node.marks.length || combined.some((mark, index) => !mark.eq(node.marks[index]))) result = result.withMarks(combined);
+      seen?.add(result);
     }
     return result;
   };

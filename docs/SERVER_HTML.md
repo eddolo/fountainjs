@@ -1,5 +1,63 @@
 # Server-native HTML conversion
 
+## Retained emphasis depth (2026-11-03, Unreleased)
+
+Both `HTMLImporter` and `ServerHTMLImporter` now preserve explicit nested
+`em`/`i` and `strong`/`b` levels. For example, `*(*foo*)*` exports as
+`<em>(<em>foo</em>)</em>` and reopens with both emphasis marks on `foo`.
+Previously, HTML reopening silently collapsed them to one. Nineteen official
+CommonMark examples now retain their complete native mark sequence through
+safe HTML in both importers; the semantic comparator and existing CommonMark
+profile scores are unchanged.
+
+This also covers inline formatting wrappers around paragraphs, lists and
+quotes. Each source wrapper contributes once even when block projection visits
+it twice. The private visit records have weak element keys and weak node
+membership: documents/history do not retain the parsed browser DOM or server
+tree. The shared mark helper itself has no browser dependency.
+
+Repeated CSS font style/weight on one element or a descendant span does not
+invent another semantic level or erase existing nested levels. Inner colors,
+link attributes, URL restrictions and other nearest-value overrides keep
+their previous rules. This is explicit emphasis preservation, not a general
+promise of arbitrary HTML styling or exact text-leaf segmentation.
+
+An enclosing scope is stored on its configured inline container, not repeated
+on every descendant. Children retain their local scopes. The parser resolves
+CSS using the full context before separating those scopes; weak import
+provenance distinguishes CSS reassertions from explicit elements. This also
+keeps bookmarks and schema-owned HTML carriers stable through reopening. Ruby
+uses the same ownership rule; removing a Ruby annotation transfers its outer
+marks to the base text, retaining inner emphasis depth and exact undo.
+
+The complete-file corpus still matches **635/652** body projections. Exact
+safe-HTML native reopens improve from **1,248 to 1,286 of 1,304** LF/CRLF checks;
+source export reports **1,280** `equal-except-source-tokens` and **24** `different`
+native-model reopens. The remaining safe-HTML differences are example 79's
+empty heading leaf; 148, 169, 183, 184, 191 and 309's declared plain-code
+projection; and 187/494's adjacent equal-mark text-leaf merging. Source export
+also reports the generated envelope restored on EOF examples 156–158. Native
+JSON remains the exact backup. These retention counts are separate from
+CommonMark semantics and screen/print fidelity.
+
+Regression coverage: `tests/html-emphasis-depth.test.ts` tests both importers;
+`tests/browser/html-emphasis-depth-journey.ts` uses the public workshop's HTML
+input, native selection/replacement, undo/redo, JSON/HTML reopening and reader
+preview. It is registered in the normal desktop browser matrix.
+
+The final frozen source passes **3,220 unit tests / 234 files**, the 110-module
+headless boundary, framework types, 415 API declarations, packed ESM/CommonJS
+consumers, Node/workerd, performance/retention gates and the production website
+build. Three recorded native desktop journeys pass; nine final editor/reader
+captures were visually inspected, including the reader's scrollable ending.
+Videos were recorded but not reviewed. The initial full-suite carrier/bookmark
+regressions, CSS-scope failures and incorrect 700-weight browser assertion are
+retained in the evidence; native nested `strong` correctly computes to 900.
+The shared helper is emitted once per module format. Aggregate capacity is
+reviewed at 1640.5 KiB ESM / 1365.5 KiB CJS for measured 1640.4 / 1365.3 output;
+entry, CSS and numerical performance limits stay fixed. No npm release follows
+from this checkpoint. [Source-bound evidence](../artifacts/html-emphasis-depth-verification-20261103.json).
+
 ## Registered inert wrappers and saved empty paragraphs
 
 Unreleased, 2026-10-06: the separate `fountainjs-editor/html/inert` entry supplies

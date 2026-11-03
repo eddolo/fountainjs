@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+HTML retention repair (2026-11-03, Unreleased): both importers now retain
+explicit nested emphasis instead of collapsing its semantic levels. Nineteen
+official cases keep their complete native marks after HTML reopening; CSS
+reassertions do not add levels and structural wrappers contribute once. Exact
+safe-HTML native retention rises from 1,248 to 1,286 / 1,304 corpus checks while
+the default/safe/fragment/complete-source semantic scores stay 563/613/631/635.
+No schema, public API or dependency addition. Remaining native-shape/code
+policies are documented separately from actual text/mark loss. See
+[the contract and regression paths](SERVER_HTML.md#retained-emphasis-depth-2026-11-03-unreleased).
+The final source passes 3,220 unit tests / 234 files and three recorded native
+desktop journeys, with nine captures visually inspected. Inline-container/Ruby
+scope ownership and Ruby removal/undo are covered; API, headless, package,
+server-runtime, performance, types and website gates pass. Npm remains unchanged.
+
 Complete-source verification (2026-11-03, Unreleased): the existing CommonMark
 gate now verifies **635/652** complete-file source body projections on LF and
 CRLF, independently checking declaration spelling/mode and actual EOF data.

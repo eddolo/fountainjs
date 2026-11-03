@@ -1,5 +1,12 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+Latest retention follow-up (2026-11-03, Unreleased): ordinary browser/server
+HTML reopening now preserves explicit emphasis depth. The corpus's exact
+safe-HTML native reopens improve to **1,286/1,304**; source model statuses become
+**1,280** `equal-except-source-tokens` / **24** `different`. CommonMark scores
+remain unchanged. [Behavior and the nine remaining native-shape cases](SERVER_HTML.md#retained-emphasis-depth-2026-11-03-unreleased).
+The verification checkpoint below records the earlier pre-fix retention counts.
+
 ## Complete-file CommonMark verification (2026-11-03, Unreleased)
 
 The existing CI command, `pnpm test:markdown-conformance`, now also exercises

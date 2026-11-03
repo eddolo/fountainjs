@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-emphasis-depth.test.ts (58 tests | 4 failed) 267ms
+   ❯ browser explicit emphasis depth (29)
+     × owns each scope once across configured inline containers in an inline wrapper 19ms
+     × owns each scope once across configured inline containers in an block wrapper 17ms
+   ❯ server explicit emphasis depth (29)
+     × owns each scope once across configured inline containers in an inline wrapper 3ms
+     × owns each scope once across configured inline containers in an block wrapper 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > owns each scope once across configured inline containers in an inline wrapper
+ FAIL  tests/html-emphasis-depth.test.ts > browser explicit emphasis depth > owns each scope once across configured inline containers in an block wrapper
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > owns each scope once across configured inline containers in an inline wrapper
+ FAIL  tests/html-emphasis-depth.test.ts > server explicit emphasis depth > owns each scope once across configured inline containers in an block wrapper
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "type": "em",
++   },
++ ]
+
+ ❯ tests/html-emphasis-depth.test.ts:81:54
+     79|         const css = importer.parse(shape === 'inline' ? `<p><em>${same…
+     80|         expect(css.child(0).child(0).marks.map(mark => mark.type.name)…
+     81|         expect(css.child(0).child(0).child(0).marks).toEqual([]);
+       |                                                      ^
+     82|       }
+     83|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 54 passed (58)
+   Start at  14:01:05
+   Duration  3.82s (transform 34%, import 32%, environment 27%, tests 7%)
