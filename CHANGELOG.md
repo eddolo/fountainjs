@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Resolve Word contextual-spacing on/off declarations through the bounded
+  paragraph cascade, including explicit false overrides. Locate the remaining
+  adjacency-rule loss on each affected paragraph; this does not yet implement
+  contextual spacing in the portable model or browser/native projection.
+
 - Add optional portable list geometry and marker-format attributes on ordered
   lists, bullet lists and items. Keep paragraph indentation local to that origin
   through Word import/export, safe HTML, editing/history and collaboration.

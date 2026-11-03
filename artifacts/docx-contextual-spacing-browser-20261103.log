@@ -1,0 +1,18 @@
+[WebServer] (node:21412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:6456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\docx-contextual-spacing-audit.spec.ts:5:1 › the real conversion lab locates the unresolved Word spacing rule while preserving editing and reopen (5.9s)
+(node:26432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\docx-contextual-spacing-audit.spec.ts:5:1 › the real conversion lab locates the unresolved Word spacing rule while preserving editing and reopen (9.4s)
+(node:1572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\docx-contextual-spacing-audit.spec.ts:5:1 › the real conversion lab locates the unresolved Word spacing rule while preserving editing and reopen (9.9s)
+
+  3 passed (33.1s)

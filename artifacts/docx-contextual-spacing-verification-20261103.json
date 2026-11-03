@@ -1,0 +1,314 @@
+{
+  "previousCheckpoint": "f9546582b3177e71207ed748da5095171b06b2fa",
+  "status": "private Word declaration/cascade and precise loss-report checkpoint; contextual layout is not fixed; unmerged/unpublished",
+  "scope": "Strict contextual-spacing on/off parsing, absolute cascade overrides and effective located unsupported-behavior reports.",
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "checks": {
+    "focusedDOCX": {
+      "tests": 489,
+      "files": 32,
+      "newContracts": 21,
+      "exit": 0
+    },
+    "build": 0,
+    "api": {
+      "exit": 0,
+      "declarations": 417,
+      "snapshotChanged": false
+    },
+    "types": {
+      "initialExit": 1,
+      "finalExit": 0
+    },
+    "builtPackageEntries": 0,
+    "headless": {
+      "exit": 0,
+      "modules": 117
+    },
+    "recordedBrowser": {
+      "exit": 0,
+      "journeys": 3,
+      "workers": 1,
+      "headless": true
+    },
+    "size": {
+      "exit": 1,
+      "failedCeilings": 7,
+      "limitsChanged": false
+    }
+  },
+  "comparison": {
+    "baselineCommit": "d8e6f3d93082afa49b3905fdf09fb3c073cf97ac",
+    "baselineTarballSHA256": "cf41cee65c1b4372ae9289457577b589b8570f1974961974d10ff4f57d48870b",
+    "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+    "clockInput": "2026-11-03T23:00:00.000Z",
+    "completeModelEquality": true,
+    "completeNativeArchiveEqual": true,
+    "allNativePartsEqual": true,
+    "profile": "StarterKit + Pages + Math, with the unchanged real lab MathJax adapter",
+    "nativeParts": 18,
+    "representedNodeCounts": {
+      "doc": 1,
+      "paragraph": 42,
+      "text": 51,
+      "heading": 4,
+      "ordered_list": 1,
+      "list_item": 3,
+      "image_super": 2,
+      "page_break": 1,
+      "math_block": 2,
+      "table": 1,
+      "table_row": 9,
+      "table_cell": 25,
+      "footnote_reference": 1,
+      "page_header": 1,
+      "inline_image": 1,
+      "page_footer": 1,
+      "page_field": 1,
+      "footnote_definition": 1
+    },
+    "unchangedHostMathAdapterSHA256": "4382401bd0721a7f0bf22be1b090a2fe73e5563c5f61372bad7f0e944a1cbafe",
+    "findings": [
+      {
+        "code": "paragraph-contextual-spacing-not-imported",
+        "severity": "warning",
+        "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+        "path": [
+          0
+        ]
+      },
+      {
+        "code": "paragraph-contextual-spacing-not-imported",
+        "severity": "warning",
+        "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+        "path": [
+          5
+        ]
+      },
+      {
+        "code": "paragraph-contextual-spacing-not-imported",
+        "severity": "warning",
+        "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+        "path": [
+          6
+        ]
+      },
+      {
+        "code": "paragraph-contextual-spacing-not-imported",
+        "severity": "warning",
+        "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+        "path": [
+          7
+        ]
+      }
+    ],
+    "contextualLayoutFixed": false
+  },
+  "auditCorrections": [
+    "Initial test setup used an incorrect XML helper import and schema export; corrected before the valid 21-case baseline.",
+    "The first retained-source expectation omitted its Title style; independent source XML identifies paths 0, 5, 6 and 7.",
+    "The invalid-programmatic-input test needed an explicit unknown cast for the TypeScript check; production behavior was unchanged.",
+    "Comparing separate real-time exports first failed on creation/modification timestamps. Both implementations now receive the same clock input; no output normalization or byte assertion was removed.",
+    "The minimal-core comparison was extended to the full lab schema and its unchanged host math adapter before claiming full-document/native-part equality."
+  ],
+  "browsers": {
+    "chromium": {
+      "observations": {
+        "locatedIssues": [
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              0
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              5
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              6
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              7
+            ]
+          }
+        ],
+        "typingUndo": true,
+        "actualDiagnosticDownload": true,
+        "actualDOCXDownloadReopen": true,
+        "contextualLayoutFixed": false,
+        "errors": []
+      },
+      "manuallyReviewed": [
+        {
+          "path": "artifacts/docx-contextual-spacing-real-20261103/chromium/located-warning.png",
+          "sha256": "083a5c3821e95054347475ce06c6454fe1796ce3494fd23c4826bc946ffa8661"
+        },
+        {
+          "path": "artifacts/docx-contextual-spacing-real-20261103/chromium/reopened.png",
+          "sha256": "81ca9789ca5092efa80d0e42cc450f636a020001358003d46391770e5778af8d"
+        }
+      ]
+    },
+    "firefox": {
+      "observations": {
+        "locatedIssues": [
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              0
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              5
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              6
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              7
+            ]
+          }
+        ],
+        "typingUndo": true,
+        "actualDiagnosticDownload": true,
+        "actualDOCXDownloadReopen": true,
+        "contextualLayoutFixed": false,
+        "errors": []
+      },
+      "manuallyReviewed": [
+        {
+          "path": "artifacts/docx-contextual-spacing-real-20261103/firefox/located-warning.png",
+          "sha256": "c137758f57d530a6500ae763b7044e11a895010c8ba5656edd3008164f00aab4"
+        },
+        {
+          "path": "artifacts/docx-contextual-spacing-real-20261103/firefox/reopened.png",
+          "sha256": "622f9ff03cb3a2116a6c02a2aa19f210ce3b562ca5d89e62d139a83468566ae5"
+        }
+      ]
+    },
+    "webkit": {
+      "observations": {
+        "locatedIssues": [
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              0
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              5
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              6
+            ]
+          },
+          {
+            "code": "paragraph-contextual-spacing-not-imported",
+            "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+            "path": [
+              7
+            ]
+          }
+        ],
+        "typingUndo": true,
+        "actualDiagnosticDownload": true,
+        "actualDOCXDownloadReopen": true,
+        "contextualLayoutFixed": false,
+        "errors": []
+      },
+      "manuallyReviewed": [
+        {
+          "path": "artifacts/docx-contextual-spacing-real-20261103/webkit/located-warning.png",
+          "sha256": "d470fc27171f4fea5b7f179fb670eb227f20847770441a9aae20740de59db124"
+        },
+        {
+          "path": "artifacts/docx-contextual-spacing-real-20261103/webkit/reopened.png",
+          "sha256": "9a1f5045b4713b9527fff949007dc5413eb88e3983b8eb2a32eaabc522f2c277"
+        }
+      ]
+    }
+  },
+  "remaining": [
+    "Portable opaque paragraph spacing-group identity and retained contextual intent.",
+    "DOM-free adjacent-flow gap resolution, including the official 10/12 -> 2 pt example.",
+    "Live browser/virtualized reuse, HTML and native projection recomputation after structural and remote edits.",
+    "Native visual proof of the actual spacing fix, broader list behavior and current size failures."
+  ],
+  "stagedSHA256": {
+    "CHANGELOG.md": "1175627b4ac53f0684399cac5ac76fb9875ab3145e9183c20b11a3972ca681cc",
+    "artifacts/compare-docx-contextual-spacing-model-20261103.mjs": "d82bcbbb18756491551d788c58dbdd738000b6a2b137af991d97f78f770f5ade",
+    "artifacts/docx-contextual-spacing-after-20261103.log": "e932bd56284d82f9b6255f163ffeb564f5fc233e1deb3c0c71d3dc5b1bd910e5",
+    "artifacts/docx-contextual-spacing-api-20261103.log": "0e6f464db5427c416e94a21d07223206159c73b878c32e2fa90f883881605694",
+    "artifacts/docx-contextual-spacing-before-valid-20261103.log": "9b7d74b94f355fd108b74b542cc0e16ec3af36f3573141a445585db0784a09fa",
+    "artifacts/docx-contextual-spacing-browser-20261103.log": "2121c784e7ccb5aa06b7ab034a84093180c045e4609e3f2662aabacdb27fe30b",
+    "artifacts/docx-contextual-spacing-browser.config.ts": "6b3ca9535af102a96da00dbdb1856975b065c761f98a1347f7f4589a7d999708",
+    "artifacts/docx-contextual-spacing-build-20261103.log": "fbe6ec0916257a99a8a44b542f38224b8f0b8de54011e40c8ae3fc4c105b9188",
+    "artifacts/docx-contextual-spacing-checks-20261103.json": "125b6d614f424bf5bf56eef163b1821ce7619d29cebdeeb3cf2ccbf05370d851",
+    "artifacts/docx-contextual-spacing-full-profile-comparison-20261103.log": "3c5c7a256e6c2713d08163c1bb48b476dcd97c6c618d35b9cefba38bbdb90cab",
+    "artifacts/docx-contextual-spacing-headless-20261103.log": "885800c7acd8a905a7baea6767f43d9d27df4978af846506bc386beb382cb9df",
+    "artifacts/docx-contextual-spacing-model-comparison-20261103.json": "6861e998c3c9ce42d004b3cc84f81362196ec55b2868e1e892dd2a772a82a852",
+    "artifacts/docx-contextual-spacing-model-comparison-initial-20261103.log": "e8f19d9596d74a605493a16ed9c4b3a066c660a797ebde8d50353e9c88c4ed0d",
+    "artifacts/docx-contextual-spacing-package-20261103.log": "d348f8ab49ff4221c8d22b6320c400d1550a5b09516f80832c40b1d465ac8921",
+    "artifacts/docx-contextual-spacing-real-20261103/chromium/diagnostic.json": "af52f9e37c1ce424d2c3d1e4b6f1423bfb7bbe8843d656d0f63dfd1336376c8a",
+    "artifacts/docx-contextual-spacing-real-20261103/chromium/editor.png": "8b3f1cec7ffab88c2d54e6ed9b8587c6937da74e3785f0c7b46d0c46e61d2d9f",
+    "artifacts/docx-contextual-spacing-real-20261103/chromium/exported.docx": "6ea89d4265ffe788bfb639ddd9cfbbe17471b204314ae4be36aa9b27fcdcd6a6",
+    "artifacts/docx-contextual-spacing-real-20261103/chromium/located-warning.png": "083a5c3821e95054347475ce06c6454fe1796ce3494fd23c4826bc946ffa8661",
+    "artifacts/docx-contextual-spacing-real-20261103/chromium/observations.json": "6f39a8dc467990428ed18dbaa23de41faa001e27d66945a87c93cea539a360ab",
+    "artifacts/docx-contextual-spacing-real-20261103/chromium/reopened.png": "81ca9789ca5092efa80d0e42cc450f636a020001358003d46391770e5778af8d",
+    "artifacts/docx-contextual-spacing-real-20261103/firefox/diagnostic.json": "16bc4b8f1f21850d53ffeb80c2e867a478d729a57ce6abb116fd061eebeca222",
+    "artifacts/docx-contextual-spacing-real-20261103/firefox/editor.png": "a218efe96a1ffadfeaa08438ec6741f5f0a8b53bf57d06987080264116bec421",
+    "artifacts/docx-contextual-spacing-real-20261103/firefox/exported.docx": "b6893fc8f340506762dea1fb731ce4f5de56ad184c5428d68634a542d1c573b0",
+    "artifacts/docx-contextual-spacing-real-20261103/firefox/located-warning.png": "c137758f57d530a6500ae763b7044e11a895010c8ba5656edd3008164f00aab4",
+    "artifacts/docx-contextual-spacing-real-20261103/firefox/observations.json": "6f39a8dc467990428ed18dbaa23de41faa001e27d66945a87c93cea539a360ab",
+    "artifacts/docx-contextual-spacing-real-20261103/firefox/reopened.png": "622f9ff03cb3a2116a6c02a2aa19f210ce3b562ca5d89e62d139a83468566ae5",
+    "artifacts/docx-contextual-spacing-real-20261103/webkit/diagnostic.json": "bf89681c3ec676337d1b5b142130f0f2199edcefb74263518dbd4c929838614f",
+    "artifacts/docx-contextual-spacing-real-20261103/webkit/editor.png": "22af7fd6433cf901cb7f725c80807a07ea3fbfcf412d2d49141b2fdc53e4b6b7",
+    "artifacts/docx-contextual-spacing-real-20261103/webkit/exported.docx": "6ea0f862543781a40b637cbc62180dc009b980a3f26e28454582900522d82dfb",
+    "artifacts/docx-contextual-spacing-real-20261103/webkit/located-warning.png": "d470fc27171f4fea5b7f179fb670eb227f20847770441a9aae20740de59db124",
+    "artifacts/docx-contextual-spacing-real-20261103/webkit/observations.json": "6f39a8dc467990428ed18dbaa23de41faa001e27d66945a87c93cea539a360ab",
+    "artifacts/docx-contextual-spacing-real-20261103/webkit/reopened.png": "9a1f5045b4713b9527fff949007dc5413eb88e3983b8eb2a32eaabc522f2c277",
+    "artifacts/docx-contextual-spacing-regression-20261103.log": "49466d7034fc18e1e9b03e0e75ab1b22ca32cfec1945e41418e1069f30725b5a",
+    "artifacts/docx-contextual-spacing-size-20261103.log": "ff09d1f727651b3771734936e1dfc68f63a7ddf6a84b14ad57963ee10f2c30b8",
+    "artifacts/docx-contextual-spacing-types-20261103.log": "edf97033bd6c7f2244579868d9f3f7e89c7ef6ac5b8962aa185bc36503d927c8",
+    "artifacts/docx-contextual-spacing-types-final-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/write-docx-contextual-spacing-verification-20261103.mjs": "86e2923a24ea02b52f33d823365f8f4e56bbd58956c5456c86d84fe046bdcf1a",
+    "docs/DOCX_LIST_LAYOUT.md": "aa5769c5b38eea65a2ed2b411d185b3b7b439a03e2bb453c8e9a8544f989d989",
+    "src/docx/paragraph-style.ts": "45b18befceb3ea13375074b8f00152a5a913d30435910fd69bcf93a012dfec0d",
+    "src/docx/style-cascade.ts": "110903348cd63dab1810dc44751168ca5c834f2696274789a264ca49e7b1b71a",
+    "src/docx/style-reader.ts": "ea368639bb2e91d0f99746f05df53833ad7f409f5a4de49c4b5a096b6ee7f89d",
+    "tests/docx-contextual-spacing.test.ts": "0dd4c71582ef71fc28f8bc7111f6a99d1d0720c04735d1b83ccaffeb44614304",
+    "tests/manual/docx-contextual-spacing-audit.spec.ts": "c641ea12200104dbfc9226b9fa7b519a1f1b03fff7c83cb198c627c8eef8858c"
+  }
+}

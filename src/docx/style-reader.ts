@@ -13,7 +13,8 @@ export interface WordStyleReadIssue {
   readonly property: string;
 }
 
-/** Decode the paragraph declarations Fountain can faithfully preserve. Values
+/** Decode declarations understood by the Word cascade. The projection boundary
+ * reports behavior that the portable model/view cannot yet preserve. Values
  * stay in Word units until the format-projection boundary. Attributes cascade
  * independently, matching Word's spacing and indentation inheritance model.
  */
@@ -58,7 +59,7 @@ export function readWordParagraphFormatting(properties: XMLElement | undefined, 
       if (firstLine !== undefined && hanging !== undefined) issue('invalid-paragraph-property', 'ind/firstLine+hanging');
       else if (firstLine !== undefined) { result.firstLine = integer(firstLine, 'ind/firstLine'); result.hanging = null; }
       else if (hanging !== undefined) { result.hanging = integer(hanging, 'ind/hanging'); result.firstLine = null; }
-    } else if (['keepNext', 'keepLines', 'pageBreakBefore'].includes(local)) {
+    } else if (['keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing'].includes(local)) {
       const raw = take('val'); const value = onOff(raw);
       if (value === undefined) issue('invalid-paragraph-property', local);
       else Object.assign(result, { [local]: value });

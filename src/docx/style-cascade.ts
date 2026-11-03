@@ -40,6 +40,8 @@ export interface WordParagraphFormatting {
   /** Twentieths of a point, except auto line spacing which is 240ths of a line. */
   readonly spacingBefore?: number;
   readonly spacingAfter?: number;
+  /** Absolute on/off declaration; the layout boundary resolves adjacency. */
+  readonly contextualSpacing?: boolean;
   readonly line?: number;
   readonly lineRule?: 'auto' | 'exact' | 'atLeast';
   /** Twentieths of a point. */
@@ -137,7 +139,7 @@ function copyFormatting(input: WordRunFormatting = {}): WordRunFormatting {
 }
 
 const PARAGRAPH_VALUE_KEYS = [
-  'align', 'spacingBefore', 'spacingAfter', 'line', 'lineRule', 'indentLeft', 'indentRight',
+  'align', 'spacingBefore', 'spacingAfter', 'contextualSpacing', 'line', 'lineRule', 'indentLeft', 'indentRight',
   'firstLine', 'hanging', 'keepNext', 'keepLines', 'pageBreakBefore', 'background',
 ] as const;
 
@@ -152,7 +154,7 @@ function copyParagraphFormatting(input: WordParagraphFormatting = {}): WordParag
       if (typeof value !== 'number' || !Number.isSafeInteger(value) || Math.abs(value) > 20_000_000) throw new Error(`Invalid Word paragraph ${key}.`);
     } else if (key === 'firstLine' || key === 'hanging') {
       if (value !== null && (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0 || value > 20_000_000)) throw new Error(`Invalid Word paragraph ${key}.`);
-    } else if (['keepNext', 'keepLines', 'pageBreakBefore'].includes(key)) {
+    } else if (['keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing'].includes(key)) {
       if (typeof value !== 'boolean') throw new Error(`Invalid Word paragraph ${key}.`);
     } else if (key === 'lineRule') {
       if (!['auto', 'exact', 'atLeast'].includes(String(value))) throw new Error('Invalid Word paragraph lineRule.');

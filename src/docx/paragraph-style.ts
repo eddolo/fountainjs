@@ -5,7 +5,7 @@ import type { XMLElement } from './xml-types';
 import { wordStyleChild, wordStyleReference } from './style-projection';
 
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-const SUPPORTED = new Set(['jc', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'shd', 'pBdr']);
+const SUPPORTED = new Set(['jc', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing', 'shd', 'pBdr']);
 const EMPTY_STYLES = createWordRunStyleCascade({ styles: [] });
 
 function isWord(element: XMLElement, local: string) {
@@ -45,6 +45,8 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
     warn(issue.code, `Word ${issue.styleId === undefined ? 'defaults/direct paragraph formatting' : `style ${issue.styleId}`}: ${issue.property} is not fully represented.`);
   }
   const source = resolved.formatting;
+  if (source.contextualSpacing) warn('paragraph-contextual-spacing-not-imported',
+    'Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.');
   const alignment = source.align === 'both' ? 'justify' : source.align;
   const align = ['left', 'center', 'right', 'justify'].includes(alignment ?? '')
     ? alignment as 'left' | 'center' | 'right' | 'justify'

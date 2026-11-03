@@ -92,6 +92,65 @@ does not establish complete native Word or whole-document visual fidelity.
 An actual packed local tarball additionally passes ESM/CommonJS root/core HTML
 and native DOCX list-geometry consumer checks in Node. It was not published.
 
+## Contextual-spacing declaration checkpoint
+
+The Word reader/cascade now preserves the three distinct declaration states:
+omitted, enabled and explicitly disabled. Namespace aliases, invalid values,
+duplicates, inheritance and absolute overrides use the existing strict reader
+and cascade. Defaults, table context, paragraph ancestry, numbering and direct
+formatting retain their established order. This is private format resolution;
+no new public layout attribute or successful visual-spacing claim is introduced.
+
+The projection reports `paragraph-contextual-spacing-not-imported` only where
+the effective rule is enabled. An unused style or a false override does not
+produce that warning. The retained paper enables it on the title and three
+numbered paragraphs (source paths 0, 5, 6 and 7). Declared 7 pt spacing remains
+unchanged until the portable rule and its view/export boundary are implemented.
+
+Twenty-one focused declaration/report contracts pass, together with 489 tests
+in the 32-file DOCX run. Build, unchanged 417-file public API, framework types,
+built package entries and the 117-module headless boundary pass. Three recorded
+headless lab journeys pass with one worker; the warning and reopened-document
+captures were inspected in Chromium, Firefox and WebKit. Seven existing size
+ceilings still fail and no limit was changed.
+
+The complete imported JSON and all 18 native export parts, including the entire
+ZIP archive, also match the retained pre-change tarball under the same clock
+input. That comparison uses the lab's full StarterKit/Pages/Math schema and its
+unchanged real MathJax export adapter, with explicit image, equation, table,
+page-template and footnote coverage checks. It does not strip timestamps or
+normalize output. The earlier minimal-core comparison was insufficient for
+these broader statements and was extended before recording this result.
+
+The remaining implementation must retain an opaque paragraph spacing-group
+identity independently of resolved appearance: identical formatting or a common
+ancestor does not make two Word paragraph styles identical. It must compute the
+gap from the original spacing values and the current adjacent paragraphs,
+without replacing those values by a one-time zero. Microsoft's documented
+example combines 10 pt after and 12 pt before into a 12 pt gap, then subtracts
+the first paragraph's enabled 10 pt contribution, leaving 2 pt. See the
+[contextual-spacing contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.contextualspacing?view=openxml-3.0.1).
+
+Before enabling that portable behavior, verify these boundaries:
+
+1. Opaque group identity and on/off intent survive JSON, editing/history,
+   collaboration, HTML and native Word without colliding with generated style
+   IDs or changing paragraph/heading semantics.
+2. A pure, DOM-independent gap resolver uses the adjacent flow's original
+   before/after values, suppresses only enabled contributions between identical
+   groups, and floors the resulting gap at zero. Cover the documented 2 pt case,
+   both enabled, neither enabled, explicit false, different IDs with equal
+   formatting, and distinct child/parent styles.
+3. The view recomputes after insertion, deletion, splitting, merging, reordering
+   and remote edits, including unchanged neighbouring DOM nodes. Reuse and
+   virtualization must not retain an old gap or scan unmounted DOM for semantics.
+4. Adjacent paragraphs across list items use their native text-flow order;
+   table cells, separate stories and opaque/custom blocks need explicit flow
+   boundaries. Split Word paragraphs must keep their existing loss diagnostics.
+5. HTML reader/export projection and native style/contextual-spacing output
+   retain the rule as well as its present appearance. Inspect independent native
+   source/export renders and actual recorded browser editing before promotion.
+
 ## Earlier numbering-resolution checkpoint (df045ce)
 
 The implementation now reads namespace-qualified numbering identities, abstract
