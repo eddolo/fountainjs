@@ -1,5 +1,14 @@
 # FountainJS opportunity roadmap
 
+Native DOCX verification (2026-11-03, Unreleased): reusing the unchanged
+scientific source exposed and repaired a repeated-shading import crash. Full
+units pass 3,388 / 240 files; a real Chromium edit/history/download/reopen
+retains three image hashes, two equations, the table, footnote and manual break.
+Nine editor captures were inspected, with list-indent drift retained as an
+open discrepancy. The isolated LibreOffice/Poppler CI audit is ready for its
+first native render; no native/pixel fidelity or parity promotion yet.
+[Contracts and evidence](DOCX_NATIVE_AUDIT.md).
+
 Supported preformatted formatting (2026-11-03, Unreleased): browser/server HTML
 imports and safe HTML exports now retain supported text marks, safe links,
 registered mark adapters and typed font/layout context in literal code buffers.

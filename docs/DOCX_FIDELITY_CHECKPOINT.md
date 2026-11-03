@@ -1,5 +1,25 @@
 # DOCX fidelity checkpoint
 
+## Native audit setup and repeated shading repair 2026 11 03
+
+A fresh run of the original independent cooling report exposed a whole-import
+crash on repeated identical shading declarations. The reader now shares the
+existing namespace-aware appearance coalescing/conflict policy across shading
+precedence layers. Conflicts do not pick a value or fall through to a lower
+fill. The source fixture is unchanged and now retained with its hash/provenance.
+The focused table set passes 74 tests; the actual headless Chromium
+import/edit/Undo/Redo/download/reopen journey retains all three image hashes,
+two editable equations, table, footnote and manual break. Nine editor captures
+were inspected, with reopened list indentation still a visible discrepancy.
+Full units pass 3,388 / 240 files, and API/headless/package/independent
+python-docx/framework types/size/site checks pass under the existing limits.
+
+An isolated Ubuntu CI job now provides the missing native-rendering path,
+separately rendering original and actual downloaded DOCX files with LibreOffice
+and all-page Poppler PNGs. Its first native result is pending; setup is not
+native fidelity approval. See [the workflow and contracts](DOCX_NATIVE_AUDIT.md).
+The Windows bundled renderer remains unavailable; desktop Office is not used.
+
 ## Completed scrolling and flow desktop matrix 2026 10 06
 
 The cold-start, one-worker, zero-retry Chromium/Firefox/WebKit matrix completes

@@ -19,7 +19,7 @@ import { projectWordRunStyle, wordStyleChild, wordStyleReference } from './style
 import type { XMLElement, XMLChild } from './xml-types';
 import { parseDOCXXML as parseXML } from './xml-parser';
 import { projectWordParagraphStyle } from './paragraph-style';
-import { readWordTableAppearance, wordTableAppearanceXML } from './table-appearance';
+import { readWordTableAppearance, readWordTableProperty, wordTableAppearanceXML } from './table-appearance';
 import { isTableAppearance, type TableAppearance } from '../core/table-appearance';
 import { readWordTableWidth, wordTableWidthXML } from './table-width';
 import { createWordTableRegions, mergeWordTableProperties, WORD_TABLE_REGIONS } from './table-style';
@@ -1135,13 +1135,13 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
       }));
       const inheritedCell = mergeWordTableProperties('tcPr', [inherited?.cell, regionalCell, ...rowMargins]);
       const properties = inheritedCell ? mergeWordTableProperties('tcPr', [inheritedCell, directCellProperties]) : directCellProperties;
-      const cellAppearance = readWordTableAppearance(properties, true, (code, message) => issues.push({ code, severity: 'warning', message, path: [...path, rowIndex, cellIndex] }));
+      const warn = (code: string, message: string) => issues.push({ code, severity: 'warning' as const, message, path: [...path, rowIndex, cellIndex] });
+      const cellAppearance = readWordTableAppearance(properties, true, warn);
       const colspan = Math.max(1, Number(attr(child(properties, 'gridSpan'), 'val') ?? 1) || 1);
       const merge = child(properties, 'vMerge');
       const mergeValue = attr(merge, 'val');
       const continuation = Boolean(merge) && mergeValue !== 'restart';
-      const shading = wordStyleChild(directCellProperties, 'shd') ?? wordStyleChild(exceptions, 'shd') ?? wordStyleChild(directProperties, 'shd')
-        ?? wordStyleChild(inheritedCell, 'shd') ?? wordStyleChild(inherited?.table, 'shd');
+      const shading = readWordTableProperty([directCellProperties, exceptions, directProperties, inheritedCell, inherited?.table], 'shd', warn);
       const background = tableShading(shading, issues, [...path, rowIndex, cellIndex]);
       if (continuation) {
         const origin = active.get(column);

@@ -14,14 +14,21 @@ function signature(element: XMLElement): string {
   ];
   return JSON.stringify(tree(element));
 }
-function appearanceChild(element: XMLElement | undefined, local: string, warn: Warn): XMLElement | undefined {
-  const matches = element?.children.filter((item): item is XMLElement => typeof item !== 'string' && expanded(item.name, item) === `${W}|${local}`) ?? [];
-  if (matches.length < 2) return matches[0];
-  const identical = matches.every(item => signature(item) === signature(matches[0]!));
-  warn(identical ? 'duplicate-table-appearance-declaration' : 'ambiguous-table-appearance-declaration',
-    identical ? `Identical repeated Word ${local} declarations were coalesced; export writes one declaration.`
-      : `Conflicting Word ${local} declarations have no unambiguous appearance; that property was omitted without discarding cell content.`);
-  return identical ? matches[0] : undefined;
+/** First declared layer owns the property, including an ambiguous declaration:
+ * do not turn a conflict into a different lower-priority fill or border.
+ */
+export function readWordTableProperty(layers: readonly (XMLElement | undefined)[], local: string, warn: Warn): XMLElement | undefined {
+  for (const element of layers) {
+    const matches = element?.children.filter((item): item is XMLElement => typeof item !== 'string' && expanded(item.name, item) === `${W}|${local}`) ?? [];
+    if (!matches.length) continue;
+    if (matches.length < 2) return matches[0];
+    const identical = matches.every(item => signature(item) === signature(matches[0]!));
+    warn(identical ? 'duplicate-table-appearance-declaration' : 'ambiguous-table-appearance-declaration',
+      identical ? `Identical repeated Word ${local} declarations were coalesced; export writes one declaration.`
+        : `Conflicting Word ${local} declarations have no unambiguous appearance; that property was omitted without discarding cell content.`);
+    return identical ? matches[0] : undefined;
+  }
+  return undefined;
 }
 function attribute(element: XMLElement, local: string): string | undefined {
   const entries = Object.entries(element.attrs).filter(([name]) => {
@@ -34,12 +41,12 @@ function attribute(element: XMLElement, local: string): string | undefined {
 const BORDER_STYLES = { single: 'solid', double: 'double', dotted: 'dotted', dashed: 'dashed' } as const;
 
 export function readWordTableAppearance(properties: XMLElement | undefined, cell: boolean, warn: Warn): TableAppearance {
-  const bordersRoot = appearanceChild(properties, cell ? 'tcBorders' : 'tblBorders', warn);
-  const marginsRoot = appearanceChild(properties, cell ? 'tcMar' : 'tblCellMar', warn);
+  const bordersRoot = readWordTableProperty([properties], cell ? 'tcBorders' : 'tblBorders', warn);
+  const marginsRoot = readWordTableProperty([properties], cell ? 'tcMar' : 'tblCellMar', warn);
   const borders: Partial<Record<TableBorderSide, TableBorder>> = {};
   const padding: Partial<Record<TableEdgeSide, number>> = {};
   for (const side of cell ? TABLE_EDGE_SIDES : TABLE_BORDER_SIDES) {
-    const border = appearanceChild(bordersRoot, side, warn);
+    const border = readWordTableProperty([bordersRoot], side, warn);
     if (!border) continue;
     const type = attribute(border, 'val');
     if (type === 'nil' || type === 'none') { borders[side] = { style: type === 'nil' ? 'hidden' : 'none' }; continue; }
@@ -61,7 +68,7 @@ export function readWordTableAppearance(properties: XMLElement | undefined, cell
     borders[side] = { style, width: size / 8, color: '#' + color.toLowerCase() };
   }
   for (const side of TABLE_EDGE_SIDES) {
-    const margin = appearanceChild(marginsRoot, side, warn);
+    const margin = readWordTableProperty([marginsRoot], side, warn);
     if (!margin) continue;
     const type = attribute(margin, 'type');
     const raw = attribute(margin, 'w');

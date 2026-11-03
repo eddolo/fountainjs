@@ -1,0 +1,144 @@
+{
+  "baseCommit": "b2360838d7a849939429f92b6a8fcad83b8f4212",
+  "scope": "Repeated Word shading recovery and independent native source/browser-export CI audit",
+  "verified": {
+    "tests": 3388,
+    "files": 240,
+    "newContracts": 8,
+    "focusedTests": 74,
+    "actualBrowserJourneys": 1,
+    "declarations": 415,
+    "headlessModules": 113,
+    "independentPythonDOCXAndPackageAndTypesAndSiteAndSize": "passed",
+    "sourceUnchanged": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+    "imageHashesPreserved": 3,
+    "math": 2,
+    "footnotes": 1,
+    "tables": 1,
+    "manualBreaks": 1,
+    "actualTypingUndoRedoDownloadReopen": true,
+    "completeReopenedJSONEquality": false,
+    "manuallyReviewed": [
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-edited-ending.png",
+        "SHA256": "c075154f8d8ac03a088bcc09804b23a76e7449008c9cbe2cc95acc8e0fdd44c6",
+        "capturedAt": "artifacts/docx-native-audit/editor-edited-ending.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-equation-1.png",
+        "SHA256": "f112f75a5d483c0451201091a09560ddfbfcec24d010d9fa50ba9d185ffca0d2",
+        "capturedAt": "artifacts/docx-native-audit/editor-equation-1.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-equation-2.png",
+        "SHA256": "f112f75a5d483c0451201091a09560ddfbfcec24d010d9fa50ba9d185ffca0d2",
+        "capturedAt": "artifacts/docx-native-audit/editor-equation-2.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-image-1.png",
+        "SHA256": "7ad6601603b1cd56744ae67777d7d6a5a3e3accc47f8b662300aa42786878b84",
+        "capturedAt": "artifacts/docx-native-audit/editor-image-1.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-image-2.png",
+        "SHA256": "98adbc77908241835d25e1222498a9c3fbf4e46b345cc9d91dbf8ef1d0c3bc77",
+        "capturedAt": "artifacts/docx-native-audit/editor-image-2.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-image-3.png",
+        "SHA256": "96a00912bcd91351c7e281494990f1fb2903fda9a0e269c3cf7e20ea49333104",
+        "capturedAt": "artifacts/docx-native-audit/editor-image-3.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-reopened.png",
+        "SHA256": "4912c71b1a5fdf9c8f3c064626484b3d19352c2cd7909ef7c74ea4b124286bf4",
+        "capturedAt": "artifacts/docx-native-audit/editor-reopened.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-table.png",
+        "SHA256": "0eec6873c7923efd8810dff8a97ddf47fb8f3bb2dcd08d27229f0b5cf8f8b790",
+        "capturedAt": "artifacts/docx-native-audit/editor-table.png"
+      },
+      {
+        "path": "artifacts/docx-native-local-evidence-20261103/editor-top.png",
+        "SHA256": "7ad6601603b1cd56744ae67777d7d6a5a3e3accc47f8b662300aa42786878b84",
+        "capturedAt": "artifacts/docx-native-audit/editor-top.png"
+      }
+    ],
+    "visualFindings": [
+      "Both body figures and the header logo are visible and decoded. Captions remain attached to figures.",
+      "Both mathematical expressions are visible with scripts and a stacked fraction.",
+      "The merged dark header and white text are readable, with all numeric table rows retained.",
+      "The authored final-paragraph edit survives undo, redo and actual DOCX download/reopening.",
+      "Numbered-list text indentation differs after DOCX reopening; this remains a discrepancy for native comparison.",
+      "Header/footer templates are intentionally separate authoring blocks, not original page positions. Viewport captures crop offscreen content."
+    ]
+  },
+  "implementation": {
+    "addedAggregateESMBytes": 54,
+    "addedAggregateCJSBytes": 19,
+    "limitsChanged": false,
+    "dependenciesChanged": false,
+    "APIOrSchemaChanged": false,
+    "styleReferenceAmbiguityRulesChanged": false
+  },
+  "pending": {
+    "nativeCI": "pending first push/run",
+    "nativePageInspection": "not performed yet",
+    "microsoftWordCertification": false,
+    "pixelFidelity": false,
+    "numberedListIndentDiscrepancy": "open",
+    "newSourceCloudChecks": "pending push",
+    "npm": "unchanged at 0.4.0-beta.2"
+  },
+  "sourceBinding": "SHA-256 of staged Git blobs; manifest excluded to avoid circular hashes.",
+  "hashes": {
+    ".github/workflows/native-docx.yml": "6d17a6dcf38d08f5674a5807c2a6b8e36bcd916184465e26f48d501357cb0ed7",
+    "CHANGELOG.md": "d409479c98093463aa307f8a39f727ee08e7acbff7a5b7274df4515cb45350c0",
+    "artifacts/docx-native-browser-20261103.log": "8f8c7b5ecf3921c39c7f034cec72b022d81cc52e72234ae377e1d9fa51293b68",
+    "artifacts/docx-native-interchange-20261103.log": "35b0bb20c541c567de58f3c16aa34dc4dbbf1dc6cb5f6c730b5fc13dc0bc20cb",
+    "artifacts/docx-native-local-evidence-20261103/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-native-local-evidence-20261103/conversion-report.json": "1ed627c9bf21bbf422940020b5cb575461e63541715b2483794be46f1c659390",
+    "artifacts/docx-native-local-evidence-20261103/editor-edited-ending.png": "c075154f8d8ac03a088bcc09804b23a76e7449008c9cbe2cc95acc8e0fdd44c6",
+    "artifacts/docx-native-local-evidence-20261103/editor-equation-1.png": "f112f75a5d483c0451201091a09560ddfbfcec24d010d9fa50ba9d185ffca0d2",
+    "artifacts/docx-native-local-evidence-20261103/editor-equation-2.png": "f112f75a5d483c0451201091a09560ddfbfcec24d010d9fa50ba9d185ffca0d2",
+    "artifacts/docx-native-local-evidence-20261103/editor-image-1.png": "7ad6601603b1cd56744ae67777d7d6a5a3e3accc47f8b662300aa42786878b84",
+    "artifacts/docx-native-local-evidence-20261103/editor-image-2.png": "98adbc77908241835d25e1222498a9c3fbf4e46b345cc9d91dbf8ef1d0c3bc77",
+    "artifacts/docx-native-local-evidence-20261103/editor-image-3.png": "96a00912bcd91351c7e281494990f1fb2903fda9a0e269c3cf7e20ea49333104",
+    "artifacts/docx-native-local-evidence-20261103/editor-reopened.png": "4912c71b1a5fdf9c8f3c064626484b3d19352c2cd7909ef7c74ea4b124286bf4",
+    "artifacts/docx-native-local-evidence-20261103/editor-table.png": "0eec6873c7923efd8810dff8a97ddf47fb8f3bb2dcd08d27229f0b5cf8f8b790",
+    "artifacts/docx-native-local-evidence-20261103/editor-top.png": "7ad6601603b1cd56744ae67777d7d6a5a3e3accc47f8b662300aa42786878b84",
+    "artifacts/docx-native-local-evidence-20261103/exported.docx": "39cc2bcc894ba46b42683d2864e8c0b1d1f380e862e129f1f33f7dfa6219376c",
+    "artifacts/docx-native-local-evidence-20261103/interchange-report.json": "e7109c3c654421b3e7ca9abfb842e434ec47de71a72cc34a1ce13584ac2e62af",
+    "artifacts/docx-native-local-evidence-20261103/source-report.json": "95c3ae43d22328b19467e8f9a6678297fc6a681edd1a4de98fcb2653ce3325bc",
+    "artifacts/docx-native-local-visual-review-20261103.json": "13cc0821ee043fd877143a1803812250b780219ea4077c19eb57e72a6ea074a1",
+    "artifacts/docx-native-prepare-20261103.log": "9e296f5698e050e20743aa55e32af9c1c2081fbea4c9317b14752ba9d5d3fe0b",
+    "artifacts/docx-native-prepare-fixed-20261103.log": "586d8d81b3658ae13f80a05206f791375cd2fbbeb128a226b268b40b45f537e0",
+    "artifacts/docx-native-shading-api-20261103.log": "69c8bc9f702ecaa5b93250aca345240117f25448eba92ad7dd8ed003836f6589",
+    "artifacts/docx-native-shading-before-20261103.log": "8b607411dd42ef4803abae93c0c0039f9362aa3f533b2c426ecd18fc428e58ad",
+    "artifacts/docx-native-shading-build-20261103.log": "75a2a7e240dedaf67d4d140e0f864e213dccfb5f42a265a9fd6fdc41e630f6be",
+    "artifacts/docx-native-shading-checks-20261103.json": "3590f7204269de64b159da0a9ce12d4ae29093e84afbdec57e6a7e2081b6b751",
+    "artifacts/docx-native-shading-focused-20261103.log": "a15ac1cc11ebc7daa33db34df453a0704593f007bd92cf63efe5aaf349d1c2b4",
+    "artifacts/docx-native-shading-full-tests-20261103.log": "051a107c215082d298bd40c7c7ec23c1411b37eb54193b192732b11d27453aee",
+    "artifacts/docx-native-shading-headless-20261103.log": "4bc782998160601df8f3b232cf13ed35459c5b2cce8b63895c6ed198e80b05df",
+    "artifacts/docx-native-shading-interop-20261103.log": "ff3c52d262885299107f166bcfbdb9c9872256b5950baa6ca2c4f187bc79f88f",
+    "artifacts/docx-native-shading-package-20261103.log": "2d830157e3a610825f4a83155061bf1a73bdc2db2fe05dc01284cb1c2f8c022f",
+    "artifacts/docx-native-shading-site-20261103.log": "02027abe33c7f165aa1130f56bd939bafc0e7bbe140e8b8622fa49ef55c917f0",
+    "artifacts/docx-native-shading-size-20261103.log": "ef1e79b665305d728121031bb8daca770cbeb3be8c10f6a5a059ebc0ad3e7cfd",
+    "artifacts/docx-native-shading-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/write-docx-native-verification-20261103.mjs": "5ee560c8ba66da6cebe45e47363a7015ba6746ea3a62ca247ca4a1a4aeca8b57",
+    "docs/DOCX_FIDELITY_CHECKPOINT.md": "33714e4d5c836ffc1275cab25a8435b6b03aec039abdb785a993dd7f2be9e6ff",
+    "docs/DOCX_NATIVE_AUDIT.md": "ac53941541da2b18dece0d1fbcd3ac46eaa2d27107c16f63ebf05eccea0df6c2",
+    "docs/FORMAT_BRIDGE_PLAN.md": "16f6b9074ebb37bb17a88baefd432b915e4906012b8d9e334228fff2219f7a43",
+    "docs/ROADMAP.md": "00b9e906b81ee9eb9ee8a730236c2245aa2ce24a6ffcce3838948e9cb3cc9d72",
+    "playwright.native-docx-audit.config.ts": "4b86e12b37e2edc8c005dd5f7dfaeaa18f0a85e9b63f9989072d607192ae4247",
+    "scripts/native-docx-audit.mjs": "a239ecc07861518b8321f32dfd9a39380041f982d3ace2a77ca47664f236d7f0",
+    "scripts/render-docx-native-audit.py": "15c2958f5b0631bcacc802786f6d3de784645b58f73c30c041f19750bf701565",
+    "src/docx/index.ts": "4d29e4fde9d398842810978c75d8a2111eecb6992606d1aa6724c1018069ba89",
+    "src/docx/table-appearance.ts": "62d14745f8792386492d7230bf0af14ebcf017f8d0d7c60532b81d1713db90c8",
+    "tests/docx-cell-shading.test.ts": "5c8df27a1bc03e23f986e250dfebdb6c13fb7af5c264aebf6a480a9f3396ac90",
+    "tests/fixtures/native-docx/cooling-report.docx": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+    "tests/fixtures/native-docx/provenance.json": "3b4dff2e6c27e164bf68dffc4ea84a3533d5869f4e13cbc55135b4d81f065d5a",
+    "tests/native-docx/editor.spec.ts": "c3f95461d42119f118fc724644900b38a2e5c9e6511a2b664580c2cf1565e2b4"
+  }
+}

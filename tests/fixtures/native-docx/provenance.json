@@ -1,0 +1,16 @@
+{
+  "fixture": "cooling-report.docx",
+  "sha256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "producer": "Independent python-docx and Pillow source created for the FountainJS conversion audit; never produced by Fountain's DOCX exporter.",
+  "originalLocation": "artifacts/conversion-real-use/source/cooling-report.docx",
+  "generator": "scripts/create-conversion-stress-fixture.py plus the original audit's OOXML additions",
+  "data": "Synthetic Newton cooling model, not measured experimental data. Original file bytes are unchanged.",
+  "expected": { "bodyImages": 2, "headerImages": 1, "nativeEquations": 2, "tables": 1, "footnotes": 1, "explicitPageBreaks": 1 },
+  "assetSHA256": [
+    "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+    "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+    "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3"
+  ],
+  "requiredText": ["Cooling experiment report", "Experimental setup", "Model and measurements", "Recorded temperatures", "Interpretation", "END OF REPORT", "Uninsulated", "Insulated", "80.0", "38.1"],
+  "nativeComparison": "Render source and actual browser-downloaded export using the same isolated LibreOffice environment. Completion of the audit is not a pixel-fidelity pass or Microsoft Word certification."
+}

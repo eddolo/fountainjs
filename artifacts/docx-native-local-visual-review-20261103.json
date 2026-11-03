@@ -1,0 +1,63 @@
+{
+  "scope": "Manual review of all nine local Chromium editor captures; no native PDF or source-page rendering is available locally.",
+  "reviewed": [
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-edited-ending.png",
+      "SHA256": "c075154f8d8ac03a088bcc09804b23a76e7449008c9cbe2cc95acc8e0fdd44c6",
+      "capturedAt": "artifacts/docx-native-audit/editor-edited-ending.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-equation-1.png",
+      "SHA256": "f112f75a5d483c0451201091a09560ddfbfcec24d010d9fa50ba9d185ffca0d2",
+      "capturedAt": "artifacts/docx-native-audit/editor-equation-1.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-equation-2.png",
+      "SHA256": "f112f75a5d483c0451201091a09560ddfbfcec24d010d9fa50ba9d185ffca0d2",
+      "capturedAt": "artifacts/docx-native-audit/editor-equation-2.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-image-1.png",
+      "SHA256": "7ad6601603b1cd56744ae67777d7d6a5a3e3accc47f8b662300aa42786878b84",
+      "capturedAt": "artifacts/docx-native-audit/editor-image-1.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-image-2.png",
+      "SHA256": "98adbc77908241835d25e1222498a9c3fbf4e46b345cc9d91dbf8ef1d0c3bc77",
+      "capturedAt": "artifacts/docx-native-audit/editor-image-2.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-image-3.png",
+      "SHA256": "96a00912bcd91351c7e281494990f1fb2903fda9a0e269c3cf7e20ea49333104",
+      "capturedAt": "artifacts/docx-native-audit/editor-image-3.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-reopened.png",
+      "SHA256": "4912c71b1a5fdf9c8f3c064626484b3d19352c2cd7909ef7c74ea4b124286bf4",
+      "capturedAt": "artifacts/docx-native-audit/editor-reopened.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-table.png",
+      "SHA256": "0eec6873c7923efd8810dff8a97ddf47fb8f3bb2dcd08d27229f0b5cf8f8b790",
+      "capturedAt": "artifacts/docx-native-audit/editor-table.png"
+    },
+    {
+      "path": "artifacts/docx-native-local-evidence-20261103/editor-top.png",
+      "SHA256": "7ad6601603b1cd56744ae67777d7d6a5a3e3accc47f8b662300aa42786878b84",
+      "capturedAt": "artifacts/docx-native-audit/editor-top.png"
+    }
+  ],
+  "findings": [
+    "Both body figures and the header logo are visible and decoded. Captions remain attached to figures.",
+    "Both mathematical expressions are visible with scripts and a stacked fraction.",
+    "The merged dark header and white text are readable, with all numeric table rows retained.",
+    "The authored final-paragraph edit survives undo, redo and actual DOCX download/reopening.",
+    "Numbered-list text indentation differs after DOCX reopening; this remains a discrepancy for native comparison.",
+    "Header/footer templates are intentionally separate authoring blocks, not original page positions. Viewport captures crop offscreen content."
+  ],
+  "limitations": [
+    "Native PDFs not rendered locally",
+    "No Microsoft Word or pixel-parity certification",
+    "Video recorded but not manually watched"
+  ]
+}

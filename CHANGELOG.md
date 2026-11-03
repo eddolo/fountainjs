@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Recover repeated identical native Word table-shading declarations through the
+  existing appearance coalescing policy. Report conflicting fills without
+  discarding readable content, choosing one value or falling through to a lower
+  fill. Retain the original scientific audit fixture and add isolated Linux
+  native-rendering CI for original versus actual browser-downloaded DOCX files.
+  Rendering setup is not native Word or pixel-fidelity certification.
+
 - Name affected formatting and show document locations in conversion-lab export
   findings. Preserve Word package locations and apply the existing content
   opt-in consistently to source paths in both import and round-trip diagnostic

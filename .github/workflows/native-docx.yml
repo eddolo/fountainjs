@@ -1,0 +1,83 @@
+name: Native DOCX audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/native-docx.yml'
+      - 'scripts/native-docx-audit.mjs'
+      - 'scripts/render-docx-native-audit.py'
+      - 'playwright.native-docx-audit.config.ts'
+      - 'tests/native-docx/**'
+      - 'tests/fixtures/native-docx/**'
+      - 'src/**'
+      - 'examples/react-app/src/conversion-lab.ts'
+      - 'examples/react-app/src/ConversionLab.tsx'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  pull_request:
+    paths:
+      - '.github/workflows/native-docx.yml'
+      - 'scripts/native-docx-audit.mjs'
+      - 'scripts/render-docx-native-audit.py'
+      - 'playwright.native-docx-audit.config.ts'
+      - 'tests/native-docx/**'
+      - 'tests/fixtures/native-docx/**'
+      - 'src/**'
+      - 'examples/react-app/src/conversion-lab.ts'
+      - 'examples/react-app/src/ConversionLab.tsx'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install the independent native office renderer
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libreoffice-writer libreoffice-math poppler-utils fontconfig fonts-crosextra-carlito fonts-crosextra-caladea fonts-liberation fonts-dejavu-core fonts-opensymbol
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - name: Prepare the original independent source
+        run: node scripts/native-docx-audit.mjs prepare artifacts/docx-native-audit
+      - name: Import edit undo redo download and reopen in the actual lab
+        run: pnpm exec playwright test --config playwright.native-docx-audit.config.ts
+      - name: Check the actual browser-downloaded Word file
+        run: node scripts/native-docx-audit.mjs inspect artifacts/docx-native-audit
+      - name: Render original and actual exported Word files independently
+        run: python scripts/render-docx-native-audit.py artifacts/docx-native-audit --soffice /usr/bin/soffice
+      # Preserve known fidelity differences too. A successful render is not a
+      # visual-equality verdict; source and export stay independently inspectable.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-docx-audit
+          path: |
+            artifacts/docx-native-audit/*.docx
+            artifacts/docx-native-audit/*.json
+            artifacts/docx-native-audit/*.png
+            artifacts/docx-native-audit/native/**/*.pdf
+            artifacts/docx-native-audit/native/**/*.png
+            artifacts/docx-native-audit/native/**/*.txt
+            artifacts/docx-native-audit/native/**/*.log
+            artifacts/docx-native-audit/browser/**
+          if-no-files-found: error
+          retention-days: 14

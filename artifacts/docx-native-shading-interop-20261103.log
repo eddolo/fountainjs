@@ -1,0 +1,6 @@
+$ node scripts/check-docx-interoperability.mjs && node scripts/check-docx-table-text.mjs && node scripts/check-docx-quote-appearance.mjs
+python-docx opened Fountain media and edited a typed glossary; Fountain retained glossary roles and independent body/cell controls with two explicit behavior-loss warnings (49 additional style/interchange diagnostics retained).
+ESM: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+CommonJS: DOM-free shipped DOCX table text, Word toggle resets, regional paragraph layout and native reopening passed.
+ESM: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.
+CommonJS: complete bordered/borderless quote JSON, native Word styles, neutral HTML, core editing/history and Yjs local undo retain source-owned appearance without DOM.

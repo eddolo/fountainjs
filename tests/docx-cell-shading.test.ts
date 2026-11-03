@@ -1,5 +1,6 @@
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { strToU8, strFromU8, unzipSync, zipSync } from 'fflate';
 import { Schema } from '../src/core';
 import { StarterKit } from '../src/extensions';
@@ -7,6 +8,43 @@ import { importDOCX, exportDOCX } from '../src/docx';
 
 const schema = new Schema(StarterKit.schema);
 const ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+function layeredShading(scope: 'cell' | 'row' | 'table', shading: string) {
+  const table = scope === 'table' ? shading : '<w:shd w:fill="AABBCC"/>';
+  return zipSync({ 'word/document.xml': strToU8(`<w:document xmlns:w="${ns}" xmlns:a="${ns}" xmlns:x="urn:foreign"><w:body><w:tbl><w:tblPr>${table}</w:tblPr><w:tr>${scope === 'row' ? `<w:tblPrEx>${shading}</w:tblPrEx>` : ''}<w:tc><w:tcPr>${scope === 'cell' ? shading : ''}</w:tcPr><w:p><w:r><w:t>Kept cell text</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>`) });
+}
+
+describe('repeated native table shading', () => {
+  it.each(['cell', 'row', 'table'] as const)('coalesces identical %s declarations with namespace aliases and reordered attributes', scope => {
+    const imported = importDOCX(layeredShading(scope, '<w:shd w:fill="173B59" w:val="clear"/><a:shd a:val="clear" a:fill="173B59"/>'), schema);
+    expect(imported.document.textContent).toBe('Kept cell text');
+    expect(imported.document.child(0).child(0).child(0).attrs.background).toBe('#173b59');
+    expect(imported.report.issues).toContainEqual(expect.objectContaining({ code: 'duplicate-table-appearance-declaration', path: [0, 0, 0] }));
+    expect(importDOCX(exportDOCX(imported.document).bytes, schema).document.child(0).child(0).child(0).attrs.background).toBe('#173b59');
+  });
+
+  it.each(['cell', 'row', 'table'] as const)('reports conflicting %s declarations without choosing one or falling through to lower fill', scope => {
+    const imported = importDOCX(layeredShading(scope, '<w:shd w:fill="173B59"/><w:shd w:fill="CCDDEE"/>'), schema);
+    expect(imported.document.textContent).toBe('Kept cell text');
+    expect(imported.document.child(0).child(0).child(0).attrs.background).toBe('');
+    expect(imported.report.issues).toContainEqual(expect.objectContaining({ code: 'ambiguous-table-appearance-declaration', path: [0, 0, 0] }));
+    expect(JSON.stringify(imported.report.issues)).not.toMatch(/173B59|CCDDEE/);
+  });
+
+  it('ignores foreign lookalikes when selecting the first native shading layer', () => {
+    const imported = importDOCX(layeredShading('cell', '<x:shd x:fill="FF0000"/><x:shd x:fill="00FF00"/>'), schema);
+    expect(imported.document.child(0).child(0).child(0).attrs.background).toBe('#aabbcc');
+    expect(imported.report.issues).toEqual([]);
+  });
+
+  it('opens the unchanged independent cooling report instead of crashing on repeated shading', () => {
+    const bytes = readFileSync(new URL('./fixtures/native-docx/cooling-report.docx', import.meta.url));
+    const imported = importDOCX(bytes, schema);
+    expect(imported.document.textContent).toContain('Cooling experiment report');
+    expect(imported.document.textContent).toContain('END OF REPORT');
+    expect(imported.report.issues.some(issue => issue.code === 'duplicate-table-appearance-declaration')).toBe(true);
+  });
+});
+
 function source(shading: string) {
   return zipSync({ 'word/document.xml': strToU8(`<w:document xmlns:w="${ns}"><w:body><w:tbl><w:tr><w:tc><w:tcPr><w:gridSpan w:val="3"/>${shading}</w:tcPr><w:p><w:r><w:rPr><w:color w:val="FFFFFF"/></w:rPr><w:t>Visible heading</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>`) });
 }

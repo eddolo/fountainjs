@@ -1,0 +1,139 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-cell-shading.test.ts (17 tests | 7 failed) 170ms
+   ❯ repeated native table shading (8)
+     × coalesces identical cell declarations with namespace aliases and reordered attributes 19ms
+     × coalesces identical row declarations with namespace aliases and reordered attributes 2ms
+     × coalesces identical table declarations with namespace aliases and reordered attributes 2ms
+     × reports conflicting cell declarations without choosing one or falling through to lower fill 1ms
+     × reports conflicting row declarations without choosing one or falling through to lower fill 1ms
+     × reports conflicting table declarations without choosing one or falling through to lower fill 1ms
+     × opens the unchanged independent cooling report instead of crashing on repeated shading 80ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > coalesces identical cell declarations with namespace aliases and reordered attributes
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:23
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:18:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > coalesces identical row declarations with namespace aliases and reordered attributes
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:70
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:18:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > coalesces identical table declarations with namespace aliases and reordered attributes
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:107
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:18:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > reports conflicting cell declarations without choosing one or falling through to lower fill
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:23
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:26:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > reports conflicting row declarations without choosing one or falling through to lower fill
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:70
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:26:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > reports conflicting table declarations without choosing one or falling through to lower fill
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:107
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:26:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > repeated native table shading > opens the unchanged independent cooling report instead of crashing on repeated shading
+Error: Ambiguous Word style reference shd.
+ ❯ wordStyleChild src/docx/style-projection.ts:12:33
+     10| export function wordStyleChild(parent: XMLElement | undefined, local: …
+     11|   const matches = parent?.children.filter((item): item is XMLElement =…
+     12|   if (matches.length > 1) throw new Error(`Ambiguous Word style refere…
+       |                                 ^
+     13|   return matches[0];
+     14| }
+ ❯ parseTable src/docx/index.ts:1143:23
+ ❯ visit src/docx/index.ts:902:21
+ ❯ parseBlocks src/docx/index.ts:917:3
+ ❯ importDOCX src/docx/index.ts:1509:18
+ ❯ tests/docx-cell-shading.test.ts:41:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 10 passed (17)
+   Start at  20:21:01
+   Duration  2.60s (transform 47%, import 46%, tests 7%)

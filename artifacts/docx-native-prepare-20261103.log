@@ -1,0 +1,13 @@
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/docx.js:1846
+	if (n.length > 1) throw Error(`Ambiguous Word style reference ${t}.`);
+	                        ^
+
+Error: Ambiguous Word style reference shd.
+    at G (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/docx.js:1846:26)
+    at Yn (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/docx.js:3299:144)
+    at l (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/docx.js:3082:40)
+    at Bn (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/docx.js:3099:9)
+    at sr (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/docx.js:3679:9)
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/native-docx-audit.mjs:40:18
+
+Node.js v24.22.1
