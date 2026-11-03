@@ -1,3 +1,4 @@
+import { readWordNumberingReference } from './numbering';
 import { expandedXMLName as expanded } from './xml-names';
 import { createWordRunStyleCascade, WORD_PARAGRAPH_BORDER_SIDES, type WordFontDeclaration, type WordFontSlot, type WordParagraphBorder, type WordParagraphBorderSide, type WordParagraphFormatting, type WordRunFormatting, type WordStyleDefinition, type WordToggle } from './style-cascade';
 import type { XMLElement } from './xml-types';
@@ -193,6 +194,7 @@ export function readWordStyleSheet(document: XMLElement, limits: { readonly maxS
   const defaults = readWordRunFormatting(single(single(defaultsRoot, 'rPrDefault'), 'rPr'), issues);
   const paragraphDefaults = readWordParagraphFormatting(single(single(defaultsRoot, 'pPrDefault'), 'pPr'), issues);
   const styles: WordStyleDefinition[] = [];
+  const numbering = new Map<string, string>();
   const ids = new Set<string>();
   for (const element of styleElements) {
     const id = attribute(element, 'styleId');
@@ -211,10 +213,15 @@ export function readWordStyleSheet(document: XMLElement, limits: { readonly maxS
     const basedOn = attribute(basedOnElement, 'val');
     if (basedOnElement && (!basedOn || basedOn.length > 253)) throw new Error('Invalid Word parent-style identity.');
     const run = readWordRunFormatting(single(element, 'rPr'), issues, id);
-    const paragraph = readWordParagraphFormatting(single(element, 'pPr'), issues, id);
+    const properties = single(element, 'pPr');
+    const reference = kind === 'paragraph' ? readWordNumberingReference(properties, false) : undefined;
+    if (reference?.id !== undefined) numbering.set(id, reference.id);
+    const paragraph = readWordParagraphFormatting(reference && properties ? { ...properties,
+      children: properties.children.filter(item => typeof item === 'string' || expanded(item) !== `${W}|numPr`),
+    } : properties, issues, id);
     styles.push(Object.freeze({ id, kind, isDefault, ...(basedOn === undefined ? {} : { basedOn }), run, paragraph }));
   }
   const cascade = createWordRunStyleCascade({ styles, defaults, paragraphDefaults, ...limits });
-  return Object.freeze({ defaults, paragraphDefaults, styles: Object.freeze(styles), issues: Object.freeze(issues), resolve: cascade.resolve, resolveParagraph: cascade.resolveParagraph,
+  return Object.freeze({ numbering: numbering as ReadonlyMap<string, string>, defaults, paragraphDefaults, styles: Object.freeze(styles), issues: Object.freeze(issues), resolve: cascade.resolve, resolveParagraph: cascade.resolveParagraph,
     resolveTable: createWordTableStyleCascade(styleElements, limits.maxDepth) });
 }

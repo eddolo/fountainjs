@@ -1,0 +1,52 @@
+{
+  "reviewed": [
+    {
+      "path": "artifacts/docx-style-numbering-final-real-20261103/chromium/imported.png",
+      "SHA256": "750538135f4e441dd356f1f21cc55997266f668376e3e12900fbade4201a0821",
+      "manuallyReviewed": true,
+      "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/chromium/imported.png",
+      "measuredCaptureIdentical": true
+    },
+    {
+      "path": "artifacts/docx-style-numbering-final-real-20261103/chromium/reopened.png",
+      "SHA256": "15c851917a3793c6bcf494c23495c097feff7c83df0895bc2d93a7a4ffec560c",
+      "manuallyReviewed": true,
+      "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/chromium/reopened.png",
+      "measuredCaptureIdentical": true
+    },
+    {
+      "path": "artifacts/docx-style-numbering-final-real-20261103/firefox/imported.png",
+      "SHA256": "8e29bbb8cdb2de6ec192458c188c9870bb6799053a6da8815bf9b788c7270e35",
+      "manuallyReviewed": true,
+      "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/firefox/imported.png",
+      "measuredCaptureIdentical": true
+    },
+    {
+      "path": "artifacts/docx-style-numbering-final-real-20261103/firefox/reopened.png",
+      "SHA256": "92baf842827bd01e05c2cf6692b34e5e8dd289b8becd48069c1d45e0aaa5823e",
+      "manuallyReviewed": true,
+      "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/firefox/reopened.png",
+      "measuredCaptureIdentical": true
+    },
+    {
+      "path": "artifacts/docx-style-numbering-final-real-20261103/webkit/imported.png",
+      "SHA256": "eb021a8e6a1a6831712d505a051779b70654778f471f225fb370b2c844fefe5c",
+      "manuallyReviewed": true,
+      "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/webkit/imported.png",
+      "measuredCaptureIdentical": true
+    },
+    {
+      "path": "artifacts/docx-style-numbering-final-real-20261103/webkit/reopened.png",
+      "SHA256": "c815e1c0b046f706b4bdcc7d5c7dab560ccf4ca953c24fd83db769e856e6f13e",
+      "manuallyReviewed": true,
+      "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/webkit/reopened.png",
+      "measuredCaptureIdentical": true
+    }
+  ],
+  "findings": [
+    "Starts 3 and 4 and the two bullet items are correct in all three engines.",
+    "Both explicitly unnumbered and deceptively named ordinary paragraphs stay outside lists.",
+    "The authored ending survives native download/reopen.",
+    "Text indents still move right on reopen; this review does not certify list-layout fidelity."
+  ]
+}

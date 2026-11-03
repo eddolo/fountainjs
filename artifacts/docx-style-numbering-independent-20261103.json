@@ -1,0 +1,80 @@
+[
+  {
+    "engine": "chromium",
+    "pythonDocxParagraphs": 9,
+    "nativeNumbering": [
+      [
+        "Verify the inlet pressure.",
+        "decimal",
+        3
+      ],
+      [
+        "Record the outlet temperature.",
+        "decimal",
+        3
+      ],
+      [
+        "Wear eye protection.",
+        "bullet",
+        1
+      ],
+      [
+        "Keep the bypass closed.",
+        "bullet",
+        1
+      ]
+    ]
+  },
+  {
+    "engine": "firefox",
+    "pythonDocxParagraphs": 9,
+    "nativeNumbering": [
+      [
+        "Verify the inlet pressure.",
+        "decimal",
+        3
+      ],
+      [
+        "Record the outlet temperature.",
+        "decimal",
+        3
+      ],
+      [
+        "Wear eye protection.",
+        "bullet",
+        1
+      ],
+      [
+        "Keep the bypass closed.",
+        "bullet",
+        1
+      ]
+    ]
+  },
+  {
+    "engine": "webkit",
+    "pythonDocxParagraphs": 9,
+    "nativeNumbering": [
+      [
+        "Verify the inlet pressure.",
+        "decimal",
+        3
+      ],
+      [
+        "Record the outlet temperature.",
+        "decimal",
+        3
+      ],
+      [
+        "Wear eye protection.",
+        "bullet",
+        1
+      ],
+      [
+        "Keep the bypass closed.",
+        "bullet",
+        1
+      ]
+    ]
+  }
+]

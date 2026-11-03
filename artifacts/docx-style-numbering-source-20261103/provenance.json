@@ -1,0 +1,12 @@
+{
+  "producer": "Hand-authored OOXML/OPC fixture; not a Fountain export",
+  "SHA256": "38244b73b2cff085cd71aeb126be99a34397ddb73ccbe19388c907a1e0a793e3",
+  "expected": {
+    "orderedStart": 3,
+    "orderedItems": 2,
+    "bulletItems": 2,
+    "removedNumbering": "This note is not numbered.",
+    "ordinaryStyle": "This is an ordinary paragraph despite the style name."
+  },
+  "scope": "Style/numbering linkage and removal; no independent layout or Word-render certification"
+}

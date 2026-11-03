@@ -1,3 +1,4 @@
+import { readWordNumbering as readNumbering, readWordNumberingReference, type WordNumberingLevel as NumberingLevel } from './numbering';
 import { expandedXMLName as expandedName } from './xml-names';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
@@ -592,47 +593,6 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
   return output;
 }
 
-interface NumberingLevel { readonly ordered: boolean; readonly start: number }
-
-function readNumbering(root: XMLElement | undefined): ReadonlyMap<string, NumberingLevel> {
-  const levels = new Map<string, NumberingLevel>();
-  if (!root) return levels;
-  const abstracts = new Map<string, ReadonlyMap<string, NumberingLevel>>();
-  for (const abstract of descendants(root, 'abstractNum')) {
-    const id = attr(abstract, 'abstractNumId');
-    if (!id) continue;
-    const map = new Map<string, NumberingLevel>();
-    for (const level of elements(abstract, 'lvl')) {
-      const index = attr(level, 'ilvl') ?? '0';
-      const format = attr(child(level, 'numFmt'), 'val') ?? 'decimal';
-      const start = Number(attr(child(level, 'start'), 'val') ?? 1);
-      map.set(index, { ordered: format !== 'bullet' && format !== 'none', start: Number.isInteger(start) && start >= 0 ? start : 1 });
-    }
-    abstracts.set(id, map);
-  }
-  for (const numbering of descendants(root, 'num')) {
-    const numId = attr(numbering, 'numId');
-    const abstractId = attr(child(numbering, 'abstractNumId'), 'val');
-    if (!numId || !abstractId) continue;
-    for (const [level, value] of abstracts.get(abstractId) ?? []) levels.set(`${numId}:${level}`, value);
-    for (const override of elements(numbering, 'lvlOverride')) {
-      const index = attr(override, 'ilvl') ?? '0';
-      const key = `${numId}:${index}`;
-      const base = levels.get(key);
-      if (!base) continue;
-      const definition = child(override, 'lvl');
-      const format = attr(child(definition, 'numFmt'), 'val');
-      const start = Number(attr(child(override, 'startOverride'), 'val')
-        ?? attr(child(definition, 'start'), 'val') ?? base.start);
-      levels.set(key, {
-        ordered: format ? format !== 'bullet' && format !== 'none' : base.ordered,
-        start: Number.isInteger(start) && start >= 0 ? start : base.start,
-      });
-    }
-  }
-  return levels;
-}
-
 /** Recover explicit emphasis only when Word contains absolute b/i declarations
  * for all text runs and normal emphasis for the paragraph mark. A partial direct
  * override still needs the complete style cascade; do not guess its other runs.
@@ -663,7 +623,7 @@ function hasExplicitWordEmphasis(paragraph: XMLElement): boolean {
 
 function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaContext, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): ParsedParagraph {
   const properties = child(element, 'pPr');
-  const style = attr(child(properties, 'pStyle'), 'val') ?? '';
+  const style = wordStyleReference(properties, 'pStyle') ?? '';
   const isQuote = /^(?:(?:intense)?quote|FountainExplicitQuote)$/i.test(style) && Boolean(schema.nodes.blockquote);
   const { align, alignExplicit, layout: geometry } = projectWordParagraphStyle(properties, media.styles, (code, message) => {
     issues.push({ code, severity: 'warning', message, path });
@@ -749,12 +709,27 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   }
   const paragraph = parts[0]!;
   const continuation = parts.slice(1);
-  const numPr = child(properties, 'numPr');
-  const numId = attr(child(numPr, 'numId'), 'val');
-  const level = Number(attr(child(numPr, 'ilvl'), 'val') ?? 0);
-  const definition = numId ? numbering.get(`${numId}:${level}`) ?? numbering.get(`${numId}:0`) : undefined;
-  if (definition) return { node: paragraph, continuation, list: { level: Math.max(0, Math.min(8, level)), ...definition, id: numId } };
-  const listStyle = /^list(bullet|number)(\d+)?$/i.exec(style);
+  const directNumbering = readWordNumberingReference(properties);
+  const chain = media.styles?.resolveParagraph({ paragraphStyle: style || undefined }).paragraphChain ?? [];
+  let numId = directNumbering?.id;
+  if (numId === undefined) for (const id of [...chain].reverse()) {
+    const inherited = media.styles?.numbering.get(id);
+    if (inherited !== undefined) { numId = inherited; break; }
+  }
+  let level = directNumbering?.level;
+  if (numId !== undefined && numId !== '0' && level === undefined) {
+    for (const id of [...chain].reverse()) {
+      const associated = Array.from({ length: 9 }, (_, index) => index).filter(index => numbering.get(`${numId}:${index}`)?.style === id);
+      if (associated.length > 1) throw new Error('Ambiguous Word numbering style association.');
+      if (associated.length) { level = associated[0]; break; }
+    }
+  }
+  level ??= 0;
+  const definition = numId && numId !== '0' ? numbering.get(`${numId}:${level}`) : undefined;
+  if (definition) return { node: paragraph, continuation, list: { level, ordered: definition.ordered, start: definition.start, id: numId } };
+  if (numId !== '0' && (numId !== undefined || directNumbering)) issues.push({ code: 'numbering-reference-not-resolved', severity: 'warning',
+    message: 'The Word numbering instance/level could not be resolved; paragraph text remains without invented list formatting.', path });
+  const listStyle = !media.styles && numId === undefined && !directNumbering ? /^list(bullet|number)(\d+)?$/i.exec(style) : null;
   if (listStyle) return {
     node: paragraph,
     continuation,
