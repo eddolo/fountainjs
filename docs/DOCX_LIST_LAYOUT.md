@@ -68,6 +68,30 @@ heap, reference or assertion limits were widened for this checkpoint. The earlie
 approved aggregate allowance is already present and is not a fresh allowance for
 this unfinished feature.
 
+## Independent native result for d8e6f3d
+
+[Native audit 41740050920](https://github.com/eddolo/fountainjs/actions/runs/41740050920)
+passes on the unmerged feature commit. The downloaded archive digest was checked
+against GitHub's artifact digest before extraction. Both source and actual
+browser-downloaded export render to two Letter pages with four drawn image
+objects. All four page images were inspected; the unchanged source's two images
+are byte-identical to the earlier master audit.
+
+The source and export now place all three instruction texts at 75.7 pt, removing
+the previously measured 18 pt horizontal shift. The same 18 pt body-relative
+offset also survives browser import/download/reopen and standalone HTML in
+Chromium, Firefox and WebKit. This is bounded evidence for this fixture/profile.
+
+Vertical list spacing still differs: source instruction tops are 244.471,
+258.971 and 273.471 pt; export tops are 251.471, 272.971 and 294.471 pt. Header
+horizontal placement and the original footnote/renderer discrepancy also remain.
+Page two of the export is byte-identical to the prior master audit. Supported
+equations, figures, table, title font and authored ending remain visible; this
+does not establish complete native Word or whole-document visual fidelity.
+
+An actual packed local tarball additionally passes ESM/CommonJS root/core HTML
+and native DOCX list-geometry consumer checks in Node. It was not published.
+
 ## Earlier numbering-resolution checkpoint (df045ce)
 
 The implementation now reads namespace-qualified numbering identities, abstract
@@ -111,9 +135,9 @@ numbering, then direct formatting), which differs from ISO's generic order:
 
 ## Remaining acceptance work
 
-1. Verify the new geometry owner against independent native source/export
-   rendering. The original 18 pt profile passes browser download/reopen checks;
-   this does not establish all Word list geometry or marker behavior.
+1. Extend the verified original 18 pt profile to broader native list geometry
+   and marker behavior. The retained fixture now passes both browser and
+   independent native position checks; broader cases still require evidence.
 2. Keep multi-paragraph list-item ownership on native reopen. Numbering-level
    declarations, styles, direct overrides and per-item offsets now have focused
    contracts; ordinary unnumbered continuation paragraphs still need a reliable
