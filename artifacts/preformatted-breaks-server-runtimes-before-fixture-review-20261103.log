@@ -1,0 +1,27 @@
+$ node scripts/smoke-server-html-runtime.mjs && node scripts/check-server-html-worker.mjs
+Compiled runtime: 24 empty-heading HTML contracts passed.
+Compiled runtime: 11 preformatted-break HTML contracts passed.
+Compiled runtime: 486 link normalization/security/history/destination contracts passed.
+Compiled runtime: 13 anchor loss/privacy/retention contracts passed.
+Compiled runtime: inert inline lexical data, full reopen, real transactions/history and altered-carrier refusal passed.
+Compiled runtime: 576 owned-attribute checks plus immutable snapshots/history passed.
+Compiled runtime: 140 native emphasis and partial-schema retention checks passed.
+Compiled runtime: protected Markdown images/rules/tables, exact source, native/canonical reopen and refusal guards passed.
+Compiled runtime: anonymous HTML flow, native/canonical reopening and exact source passed.
+Node 24.22.1: DOM-free server HTML import/export passed.
+Node 24.22.1: inert HTML comment retention, canonical reopen and breakout rejection passed.
+Node 24.22.1: complete HTML page-settings retention and invalid/fragment boundaries passed.
+Node 24.22.1: block-returning Markdown paragraph recovery passed.
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/fixtures/markdown-flow-source-check.mjs:65
+      throw new Error('Compiled hard-break source recovery lost line-break semantics or original source.');
+            ^
+
+Error: Compiled hard-break source recovery lost line-break semantics or original source.
+    at checkMarkdownFlowSources (file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/fixtures/markdown-flow-source-check.mjs:65:13)
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/smoke-server-html-runtime.mjs:84:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1
+[ELIFECYCLE] Command failed with exit code 1.

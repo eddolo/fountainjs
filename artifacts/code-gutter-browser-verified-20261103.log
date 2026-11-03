@@ -1,0 +1,39 @@
+[WebServer] (node:20284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:25672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (5.4s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (5.4s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (5.8s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (5.3s)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:3691:1 › highlights editable code and updates language metadata through public commands (1.1s)
+  ok  6 [chromium] › tests\browser\editor.spec.ts:5749:1 › edits code language and line numbers through the public React toolbar (2.8s)
+(node:1412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (9.4s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (9.8s)
+  ok  9 [firefox] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (10.4s)
+  ok 10 [firefox] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (10.1s)
+  ok 11 [firefox] › tests\browser\editor.spec.ts:3691:1 › highlights editable code and updates language metadata through public commands (2.8s)
+  ok 12 [firefox] › tests\browser\editor.spec.ts:5749:1 › edits code language and line numbers through the public React toolbar (5.5s)
+(node:24464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (9.5s)
+  ok 14 [webkit] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (15.2s)
+  ok 15 [webkit] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (18.7s)
+  ok 16 [webkit] › tests\browser\editor.spec.ts:143:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (15.0s)
+  ok 17 [webkit] › tests\browser\editor.spec.ts:3691:1 › highlights editable code and updates language metadata through public commands (2.6s)
+  ok 18 [webkit] › tests\browser\editor.spec.ts:5749:1 › edits code language and line numbers through the public React toolbar (5.5s)
+(node:25140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 [mobile-chrome] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (4.2s)
+(node:10500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 20 [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (6.7s)
+
+  20 passed (2.8m)

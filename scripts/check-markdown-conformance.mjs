@@ -67,6 +67,14 @@ function textContent(node) {
   return (node.childNodes ?? []).map(textContent).join('');
 }
 
+// Independent output-tree oracle: <br> contributes a physical line inside pre.
+// The parser's textContent omits it, which formerly hid deleted line breaks.
+function preformattedContent(node) {
+  if (node.nodeName === '#text') return node.value;
+  if (node.tagName === 'br') return '\n';
+  return (node.childNodes ?? []).map(preformattedContent).join('');
+}
+
 function normalizedText(value) {
   return value.replace(/[\t\n\r ]+/g, ' ');
 }
@@ -155,7 +163,7 @@ function block(node, reference) {
     // Authored raw <pre> content owns every LF. Bind this distinction to the
     // actual renderer's output offset, never tag spelling, order or attributes.
     const generated = reference.has(node.sourceCodeLocation?.startOffset);
-    return ['code-block', codeLanguage(node), generated ? textContent(node).replace(/\n$/, '') : textContent(node)];
+    return ['code-block', codeLanguage(node), generated ? preformattedContent(node).replace(/\n$/, '') : preformattedContent(node)];
   }
   if (tag === 'hr') return ['thematic-break'];
   if (tag === 'td' || tag === 'th') {
@@ -248,6 +256,27 @@ for (const [placeholder, hyperlink] of anchorSensitivityCases) {
   }
 }
 console.log('Anchor oracle sensitivity: 3 placeholder-vs-hyperlink distinctions retained.');
+
+const preformattedSensitivityCases = [
+  ['<pre>a<br>b</pre>', '<pre>ab</pre>'],
+  ['<pre>a<br>\nb</pre>', '<pre>a\nb</pre>'],
+  ['<pre><code>a<br>b</code></pre>', '<pre><code>ab</code></pre>'],
+  ['<pre>a&lt;br&gt;b</pre>', '<pre>a<br>b</pre>'],
+];
+for (const [original, corrupted] of preformattedSensitivityCases) {
+  if (JSON.stringify(semanticProjection(original)) === JSON.stringify(semanticProjection(corrupted))) {
+    throw new Error('Preformatted oracle hides a real HTML break or confuses literal source with markup.');
+  }
+}
+for (const [html, literal] of [
+  ['<pre>a<br>b</pre>', '<pre>a\nb</pre>'],
+  ['<pre>a<br>\nb</pre>', '<pre>a\n\nb</pre>'],
+]) {
+  if (JSON.stringify(semanticProjection(html)) !== JSON.stringify(semanticProjection(literal))) {
+    throw new Error('Preformatted oracle fails equivalent explicit-break/literal-LF content.');
+  }
+}
+console.log('Preformatted oracle sensitivity: 4 line-break distinctions and 2 equivalent literal-newline controls retained.');
 
 // Observe the oracle's renderer without changing one byte of its HTML. A raw
 // HTML block can contain identical <pre><code> markup, so neither a regex nor
@@ -419,7 +448,7 @@ function compressRanges(values) {
   return result.join(',');
 }
 
-if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 12) {
+if (baseline.version !== 1 || baseline.standard !== 'CommonMark 0.31.2' || baseline.projectionVersion !== 13) {
   throw new Error('The Markdown semantic baseline does not match this oracle implementation.');
 }
 if (!Array.isArray(baseline.intentionalDivergences)

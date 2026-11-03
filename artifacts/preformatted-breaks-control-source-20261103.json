@@ -1,0 +1,16 @@
+{
+  "commit": "cc1f2772dcc86836ef001958e4a2e0e49749880c",
+  "filesVerified": 262,
+  "method": "Every extracted Git archive file checked against HEAD Git blob SHA-1 before relying on its performance control.",
+  "treeSHA256": "d524a3fa52ea1fd4683eda02e309dd492316a7f179b24a55abb628511655c34b",
+  "benchmarkAndSamplingChanged": false,
+  "controlBuiltWithOriginalViteConfig": true,
+  "controlFailures": [
+    "100-block server HTML p95 37.42 ms exceeds 35 ms",
+    "1000-block server HTML p95 157.08 ms exceeds 120 ms"
+  ],
+  "currentFailures": [
+    "100-block server HTML p95 43.04 ms exceeds 35 ms"
+  ],
+  "conclusion": "Both controls fail small-import latency; certification unresolved. No numerical limit or sampling change."
+}

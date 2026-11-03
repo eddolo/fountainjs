@@ -1,0 +1,81 @@
+[WebServer] (node:21240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+(node:25520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (5.5s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:3691:1 › highlights editable code and updates language metadata through public commands (1.3s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:5749:1 › edits code language and line numbers through the public React toolbar (3.1s)
+(node:4960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   4 [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (8.4s)
+(node:24768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:3691:1 › highlights editable code and updates language metadata through public commands (5.1s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:5749:1 › edits code language and line numbers through the public React toolbar (5.3s)
+(node:25856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  7 [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (8.4s)
+  ok  8 [webkit] › tests\browser\editor.spec.ts:3691:1 › highlights editable code and updates language metadata through public commands (2.0s)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:5749:1 › edits code language and line numbers through the public React toolbar (4.9s)
+(node:11544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 10 [mobile-chrome] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (3.6s)
+(node:9556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (5.3s)
+
+
+  1) [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    - first
+    + first
+
+      second edited
+
+       at preformatted-breaks-journey.ts:140
+
+      138 |     await page.keyboard.press('Home'); await page.keyboard.press('ArrowUp'); await page.keyboard.press('Home');
+      139 |     await page.keyboard.down('Shift'); await page.keyboard.press('ArrowDown'); await page.keyboard.press('End'); await page.keyboard.up('Shift');
+    > 140 |     expect(await page.evaluate(() => getSelection()?.toString())).toBe('first\nsecond edited');
+          |                                                                   ^
+      141 |     await page.keyboard.press('ControlOrMeta+c');
+      142 |     const destination = await page.context().newPage();
+      143 |     try {
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:140:67)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-gutter-browser-final-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-gutter-browser-final-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-gutter-browser-final-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-gutter-browser-final-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-gutter-browser-final-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-gutter-browser-final-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+  10 passed (1.1m)

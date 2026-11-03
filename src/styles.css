@@ -254,17 +254,21 @@
 .fountain-editor pre.fjs-code-block { position: relative; tab-size: 2; }
 .fountain-editor pre.fjs-code-block::before { display: block; margin-bottom: 12px; white-space: normal; overflow-wrap: anywhere; color: #9298aa; font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .1em; content: attr(data-language); user-select: none; }
 .fountain-editor pre.fjs-code-block > code { display: block; min-width: max-content; }
+/* CSS-only gutter: no non-editable widgets among native code text. The empty
+   alternative text keeps decorative numbers out of the accessibility tree. */
+.fountain-editor pre.fjs-code-block[data-fountain-code-lines] { display: grid; grid-template-columns: max-content minmax(0, 1fr); }
+.fountain-editor pre.fjs-code-block[data-fountain-code-lines]::before { grid-column: 1 / -1; grid-row: 1; }
+.fountain-editor pre.fjs-code-block[data-fountain-code-lines] > code { grid-column: 2; grid-row: 2; }
+.fountain-editor pre.fjs-code-block[data-fountain-code-lines]::after { grid-column: 1; grid-row: 2; width: 2.8em; margin-inline-end: 1em; color: #697084; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; text-align: end; white-space: pre; direction: ltr; content: attr(data-fountain-code-lines) / ""; user-select: none; pointer-events: none; }
 /* Preserve native per-line auto bidi in decorated code. */
 .fountain-editor pre[dir="auto"] > code { unicode-bidi: plaintext; }
-.fountain-editor .fjs-code-line-number { display: inline-block; width: 2.8em; margin-right: 1em; color: #697084; text-align: right; user-select: none; }
-.fountain-editor .fjs-code-line-number::before { content: attr(data-line); }
 .fountain-editor .fjs-token--keyword { color: #c9a7ff; }
 .fountain-editor .fjs-token--string { color: #a8e6b1; }
 .fountain-editor .fjs-token--number { color: #ffc98b; }
 .fountain-editor .fjs-token--comment { color: #8990a3; font-style: italic; }
 .fountain-editor .fjs-token--tag, .fountain-editor .fjs-token--symbol { color: #8bd5ff; }
 .fountain-editor pre.fjs-highlight--light { color: #272437; background: #f4f1eb; border: 1px solid var(--fountain-border); }
-.fountain-editor .fjs-highlight--light::before, .fountain-editor .fjs-highlight--light .fjs-code-line-number { color: #777182; }
+.fountain-editor .fjs-highlight--light::before, .fountain-editor .fjs-highlight--light::after { color: #777182; }
 .fountain-editor .fjs-highlight--light .fjs-token--keyword { color: #6d35b5; }
 .fountain-editor .fjs-highlight--light .fjs-token--string { color: #23723e; }
 .fountain-editor .fjs-highlight--light .fjs-token--number { color: #9a4e00; }

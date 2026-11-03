@@ -1,0 +1,179 @@
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 317 modules transformed.
+rendering chunks...
+computing gzip size...
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-server.js                         0.11 kB │ gzip:  0.11 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/step-8RWginfF.js                       0.26 kB │ gzip:  0.22 kB │ map:   0.41 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/plugin-C7sP1o7U.js                     0.44 kB │ gzip:  0.32 kB │ map:   3.23 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-link-url-NYr1T3HX.js              0.64 kB │ gzip:  0.42 kB │ map:   1.81 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/node-spec-3QnkCq40.js                  0.69 kB │ gzip:  0.41 kB │ map:   8.05 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/text-style.js                          0.87 kB │ gzip:  0.39 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/url-ttIc9DgX.js                        1.08 kB │ gzip:  0.56 kB │ map:   2.68 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/svelte.js                              1.13 kB │ gzip:  0.59 kB │ map:   3.58 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/useFountain-GsM1ZSSe.js                1.14 kB │ gzip:  0.61 kB │ map:   3.25 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/child-offset-BoqNR7dK.js               1.26 kB │ gzip:  0.63 kB │ map:   4.03 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/command-manager-DGNrM8vB.js            1.37 kB │ gzip:  0.66 kB │ map:   6.46 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/collaboration-D7BEkqFb.js              1.50 kB │ gzip:  0.75 kB │ map:   3.60 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-widgets.js                       1.62 kB │ gzip:  0.71 kB │ map:   5.52 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/vue.js                                 1.77 kB │ gzip:  0.90 kB │ map:   4.53 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/inline-atom-CTwSh-hJ.js                1.81 kB │ gzip:  0.82 kB │ map:   5.30 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/path-au5gdK3h.js                       1.95 kB │ gzip:  0.93 kB │ map:   5.80 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/search-DcCwI-R6.js                     2.04 kB │ gzip:  0.99 kB │ map:   6.14 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/history-CN62Zcnu.js                    2.76 kB │ gzip:  1.16 kB │ map:   7.84 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/text-direction-Da-ZUvqa.js             2.90 kB │ gzip:  1.14 kB │ map:   8.85 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/content-expression-I7lmp_N3.js         2.92 kB │ gzip:  1.16 kB │ map:   7.89 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/input-rules-D1EL1seD.js                3.04 kB │ gzip:  1.35 kB │ map:   9.02 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/decoration-Dn9nmhsr.js                 3.20 kB │ gzip:  1.27 kB │ map:  10.15 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/extension-BWhWVzOF.js                  3.25 kB │ gzip:  1.31 kB │ map:  10.62 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/replace-text-range-step-CqFKVv-A.js    3.38 kB │ gzip:  1.26 kB │ map:   9.56 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/table-map-waWRi96g.js                  3.52 kB │ gzip:  1.45 kB │ map:  10.05 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/mark-range-step-BBpLKsXp.js            3.58 kB │ gzip:  1.13 kB │ map:  10.32 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-page-settings-C_j63nBS.js         4.22 kB │ gzip:  1.57 kB │ map:  12.66 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/widgets-dom.js                         4.79 kB │ gzip:  1.71 kB │ map:  13.70 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/text-style-C7qMZiwI.js                 4.98 kB │ gzip:  1.64 kB │ map:  15.05 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-document-envelope-DBTXUdJi.js     5.11 kB │ gzip:  1.99 kB │ map:  13.26 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/integrity-dom.js                       5.13 kB │ gzip:  2.02 kB │ map:  14.22 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/table-of-contents.js                   5.74 kB │ gzip:  2.39 kB │ map:  17.63 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/node-RlrTdomV.js                       5.94 kB │ gzip:  2.04 kB │ map:  16.36 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-anchors-CIOY_V2w.js               6.02 kB │ gzip:  2.26 kB │ map:  15.65 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/testing.js                             6.54 kB │ gzip:  2.36 kB │ map:  18.97 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/selection-W0ibDkTY.js                  6.58 kB │ gzip:  2.25 kB │ map:  19.93 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/migrations.js                          7.10 kB │ gzip:  2.27 kB │ map:  19.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/table-layout--_rzZCG4.js               7.23 kB │ gzip:  2.59 kB │ map:  19.86 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-tracked-changes.js               7.70 kB │ gzip:  2.38 kB │ map:  13.99 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/mapping-BHkfLURf.js                    7.72 kB │ gzip:  2.70 kB │ map:  24.62 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/details.js                             7.78 kB │ gzip:  2.69 kB │ map:  21.54 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-integrity.js                     8.14 kB │ gzip:  2.46 kB │ map:  13.31 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/menu-position-827p757e.js              8.34 kB │ gzip:  3.09 kB │ map:  25.35 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-inert.js                          8.60 kB │ gzip:  3.19 kB │ map:  18.73 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/node-ids.js                            8.79 kB │ gzip:  3.19 kB │ map:  28.06 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/widgets.js                             8.83 kB │ gzip:  3.25 kB │ map:  27.94 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/core.js                                9.23 kB │ gzip:  3.22 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-comments.js                      9.83 kB │ gzip:  2.79 kB │ map:  17.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/structured-attributes.js              10.08 kB │ gzip:  3.01 kB │ map:  31.46 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-versions.js                     10.11 kB │ gzip:  2.79 kB │ map:  18.26 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/collaboration-core-q42iems9.js        10.35 kB │ gzip:  3.27 kB │ map:  32.95 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ai-generated-media.js                 10.77 kB │ gzip:  3.32 kB │ map:  27.57 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ruby.js                               11.15 kB │ gzip:  3.60 kB │ map:  29.31 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/shared-direction-CMK14zFN.js          11.18 kB │ gzip:  4.16 kB │ map:  34.19 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/pages.js                              11.38 kB │ gzip:  3.64 kB │ map:  28.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/page-settings-DqoMSrpI.js             11.45 kB │ gzip:  3.78 kB │ map:  32.14 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/integrity.js                          11.52 kB │ gzip:  3.66 kB │ map:  30.86 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/pages-preview.js                      13.52 kB │ gzip:  4.49 kB │ map:  37.18 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-source.js                        14.32 kB │ gzip:  4.83 kB │ map:  34.88 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/editor-C5efCLcG.js                    15.50 kB │ gzip:  4.64 kB │ map:  44.65 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-exporter-D03UPWYc.js             15.98 kB │ gzip:  5.68 kB │ map:  39.18 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ai-conversation.js                    16.01 kB │ gzip:  4.51 kB │ map:  41.86 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ai-document-tools.js                  16.89 kB │ gzip:  4.75 kB │ map:  45.73 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/emoji-Oh56Wkyh.js                     17.52 kB │ gzip:  5.76 kB │ map:  46.29 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/link-behavior-DUEcttaP.js             19.25 kB │ gzip:  7.22 kB │ map:  51.23 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/presentation-CKL5Lmpc.js              21.53 kB │ gzip:  6.22 kB │ map:  64.52 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/document-utilities.js                 23.99 kB │ gzip:  7.53 kB │ map:  67.80 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/yjs.js                                27.99 kB │ gzip:  8.00 kB │ map:  77.61 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/tracked-changes.js                    28.67 kB │ gzip:  8.14 kB │ map:  85.58 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/versions.js                           29.44 kB │ gzip:  7.80 kB │ map:  80.63 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/comments.js                           29.82 kB │ gzip:  8.62 kB │ map:  87.59 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/extensions-DvhN-HWG.js                34.78 kB │ gzip:  9.68 kB │ map:  91.61 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/media-C_-950oy.js                     43.61 kB │ gzip: 12.38 kB │ map: 113.05 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/markdown-html-CVYb_6pw.js             43.62 kB │ gzip: 24.00 kB │ map:  74.69 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/pages-dom.js                          53.77 kB │ gzip: 13.38 kB │ map: 147.72 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/commands-CUcuy5M2.js                  74.26 kB │ gzip: 18.40 kB │ map: 221.20 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/index.js                              87.98 kB │ gzip: 25.76 kB │ map: 190.43 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/direction-scope-BUU_AyXa.js           89.46 kB │ gzip: 26.07 kB │ map: 272.78 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react.js                              95.53 kB │ gzip: 22.21 kB │ map: 187.55 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/view-hH4Ja_f9.js                     123.72 kB │ gzip: 30.74 kB │ map: 318.68 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/docx.js                              189.24 kB │ gzip: 54.15 kB │ map: 518.32 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/server-Bb0ti0f1.js                   264.30 kB │ gzip: 60.08 kB │ map: 778.27 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/emoji-data.js                        331.45 kB │ gzip: 30.93 kB │ map: 467.62 kB
+
+transforming...
+✓ 317 modules transformed.
+rendering chunks...
+computing gzip size...
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-server.cjs                         0.17 kB │ gzip:  0.15 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/step-Dris_BoY.cjs                       0.20 kB │ gzip:  0.18 kB │ map:   0.42 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/plugin-DlQkwKdU.cjs                     0.48 kB │ gzip:  0.27 kB │ map:   3.21 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-link-url-tZSXfHX8.cjs              0.54 kB │ gzip:  0.38 kB │ map:   1.83 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/node-spec-owlJN_nc.cjs                  0.59 kB │ gzip:  0.36 kB │ map:   8.05 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/rolldown-runtime-Chgba0Kb.cjs           0.77 kB │ gzip:  0.41 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/text-style.cjs                          0.87 kB │ gzip:  0.36 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/svelte.cjs                              0.89 kB │ gzip:  0.51 kB │ map:   3.64 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/url-Co8QRAHd.cjs                        0.92 kB │ gzip:  0.51 kB │ map:   2.68 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/useFountain-CcJQbPsZ.cjs                0.96 kB │ gzip:  0.52 kB │ map:   3.30 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/child-offset-BSNa84aJ.cjs               1.03 kB │ gzip:  0.51 kB │ map:   4.01 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/command-manager-DU4ahU5C.cjs            1.06 kB │ gzip:  0.55 kB │ map:   6.45 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/collaboration-BlXeVKX7.cjs              1.26 kB │ gzip:  0.63 kB │ map:   3.61 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-widgets.cjs                       1.33 kB │ gzip:  0.63 kB │ map:   5.62 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/vue.cjs                                 1.45 kB │ gzip:  0.76 kB │ map:   4.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/inline-atom-Cg88XSNe.cjs                1.53 kB │ gzip:  0.70 kB │ map:   5.34 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/search-Cb5HWhnF.cjs                     1.76 kB │ gzip:  0.87 kB │ map:   6.15 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/path-DDY3uxw-.cjs                       1.98 kB │ gzip:  0.82 kB │ map:   5.79 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/content-expression-YXcFdjFU.cjs         2.15 kB │ gzip:  0.98 kB │ map:   7.85 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/table-map-Dbo_d2TT.cjs                  2.65 kB │ gzip:  1.23 kB │ map:  10.02 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/input-rules-HXvPuvbc.cjs                2.66 kB │ gzip:  1.16 kB │ map:   9.04 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/decoration-jVx4B2Pl.cjs                 2.68 kB │ gzip:  1.13 kB │ map:  10.14 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/replace-text-range-step-faXLgwrj.cjs    2.69 kB │ gzip:  1.07 kB │ map:   9.63 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/history-C1iHQbdz.cjs                    2.76 kB │ gzip:  1.03 kB │ map:   7.85 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/extension-Sb4ErwsF.cjs                  2.86 kB │ gzip:  1.17 kB │ map:  10.59 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/text-direction-T5Baosqb.cjs             2.89 kB │ gzip:  1.01 kB │ map:   8.85 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/mark-range-step-BUk9RcVx.cjs            3.02 kB │ gzip:  0.92 kB │ map:  10.34 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-page-settings-C9g_NBtA.cjs         3.69 kB │ gzip:  1.37 kB │ map:  12.62 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/widgets-dom.cjs                         4.02 kB │ gzip:  1.53 kB │ map:  13.67 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/integrity-dom.cjs                       4.36 kB │ gzip:  1.82 kB │ map:  14.27 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/table-of-contents.cjs                   4.75 kB │ gzip:  2.12 kB │ map:  17.66 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/node-CF4zrAjG.cjs                       5.07 kB │ gzip:  1.80 kB │ map:  16.33 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/text-style-DlY5P_V7.cjs                 5.08 kB │ gzip:  1.44 kB │ map:  15.23 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-document-envelope-B2jeIlG_.cjs     5.11 kB │ gzip:  1.67 kB │ map:  13.31 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/testing.cjs                             5.43 kB │ gzip:  2.08 kB │ map:  18.97 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-anchors-C4VZiEhi.cjs               5.49 kB │ gzip:  2.03 kB │ map:  15.73 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/selection-DrO1gWsj.cjs                  5.65 kB │ gzip:  1.97 kB │ map:  19.95 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-tracked-changes.cjs               5.71 kB │ gzip:  2.01 kB │ map:  14.60 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/migrations.cjs                          6.10 kB │ gzip:  2.00 kB │ map:  19.78 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-integrity.cjs                     6.18 kB │ gzip:  2.18 kB │ map:  14.15 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/details.cjs                             6.35 kB │ gzip:  2.39 kB │ map:  21.62 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/mapping-BKAURisw.cjs                    6.48 kB │ gzip:  2.37 kB │ map:  24.71 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/table-layout-DclxIB5V.cjs               6.74 kB │ gzip:  2.29 kB │ map:  19.85 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-comments.cjs                      7.05 kB │ gzip:  2.27 kB │ map:  18.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-inert.cjs                          7.10 kB │ gzip:  2.92 kB │ map:  18.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/node-ids.cjs                            7.18 kB │ gzip:  2.81 kB │ map:  28.03 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/menu-position-CkYZvd13.cjs              7.21 kB │ gzip:  2.71 kB │ map:  25.43 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/widgets.cjs                             7.33 kB │ gzip:  2.88 kB │ map:  28.00 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react-versions.cjs                      7.37 kB │ gzip:  2.35 kB │ map:  19.28 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/core.cjs                                8.40 kB │ gzip:  2.50 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/structured-attributes.cjs               8.41 kB │ gzip:  2.71 kB │ map:  31.45 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ai-generated-media.cjs                  9.11 kB │ gzip:  2.97 kB │ map:  27.49 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ruby.cjs                                9.34 kB │ gzip:  3.21 kB │ map:  29.28 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/integrity.cjs                           9.36 kB │ gzip:  3.32 kB │ map:  30.88 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/pages.cjs                               9.36 kB │ gzip:  3.21 kB │ map:  28.86 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/collaboration-core-C1by4XGf.cjs         9.37 kB │ gzip:  2.92 kB │ map:  32.93 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/shared-direction-DKpgM0gI.cjs           9.37 kB │ gzip:  3.71 kB │ map:  34.07 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/page-settings-BTDzBnRH.cjs             10.15 kB │ gzip:  3.43 kB │ map:  32.11 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/pages-preview.cjs                      11.42 kB │ gzip:  4.10 kB │ map:  37.00 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-source.cjs                        11.80 kB │ gzip:  4.33 kB │ map:  34.94 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/editor-CL20rONw.cjs                    13.35 kB │ gzip:  4.17 kB │ map:  44.76 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ai-conversation.cjs                    13.42 kB │ gzip:  4.04 kB │ map:  41.75 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/html-exporter-C6MQYgry.cjs             13.92 kB │ gzip:  5.28 kB │ map:  39.29 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/ai-document-tools.cjs                  13.93 kB │ gzip:  4.22 kB │ map:  45.71 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/emoji-BuZCHPBT.cjs                     14.66 kB │ gzip:  5.12 kB │ map:  46.33 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/link-behavior-e9OQu8fx.cjs             17.13 kB │ gzip:  6.61 kB │ map:  51.31 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/presentation-DrPDmb6z.cjs              17.92 kB │ gzip:  5.47 kB │ map:  64.36 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/document-utilities.cjs                 19.37 kB │ gzip:  6.71 kB │ map:  67.92 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/yjs.cjs                                23.26 kB │ gzip:  7.24 kB │ map:  77.39 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/tracked-changes.cjs                    23.66 kB │ gzip:  7.29 kB │ map:  85.59 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/comments.cjs                           24.18 kB │ gzip:  7.65 kB │ map:  87.59 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/versions.cjs                           24.36 kB │ gzip:  7.06 kB │ map:  80.44 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/extensions-XqQ95vRQ.cjs                32.05 kB │ gzip:  8.57 kB │ map:  92.13 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/media-4S4LRpB0.cjs                     35.89 kB │ gzip: 11.10 kB │ map: 113.22 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/markdown-html-DD8ATANg.cjs             41.42 kB │ gzip: 23.40 kB │ map:  74.58 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/pages-dom.cjs                          44.81 kB │ gzip: 12.13 kB │ map: 147.15 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/commands-Cdja5qpc.cjs                  65.38 kB │ gzip: 16.61 kB │ map: 222.26 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/direction-scope-C_TFxOTK.cjs           69.75 kB │ gzip: 23.30 kB │ map: 272.13 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/react.cjs                              71.01 kB │ gzip: 19.11 kB │ map: 196.61 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/index.cjs                              74.04 kB │ gzip: 22.33 kB │ map: 190.37 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/view-DbFN9fdj.cjs                     105.13 kB │ gzip: 27.91 kB │ map: 317.98 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/docx.cjs                              152.44 kB │ gzip: 48.67 kB │ map: 517.24 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/server-C7llU01C.cjs                   215.08 kB │ gzip: 54.90 kB │ map: 775.47 kB
+artifacts/preformatted-perf-control-cc1f277-20261103/dist/emoji-data.cjs                        274.54 kB │ gzip: 30.24 kB │ map: 451.99 kB
+
+✓ built in 3.21s

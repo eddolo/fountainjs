@@ -68,8 +68,8 @@ describe('language-aware code blocks', () => {
     expect(block?.getAttribute('title')).toBe('typescript');
     expect([...view.dom.querySelectorAll('.fjs-token--keyword')].map((node) => node.textContent)).toEqual(['const', 'return']);
     expect(view.dom.querySelector('.fjs-token--comment')?.textContent).toBe('// return 42');
-    expect(view.dom.querySelectorAll('.fjs-code-line-number')).toHaveLength(3);
-    expect([...view.dom.querySelectorAll<HTMLElement>('.fjs-code-line-number')].map((node) => node.dataset.line)).toEqual(['1', '2', '3']);
+    expect(block?.getAttribute('data-fountain-code-lines')).toBe('1\n2\n3');
+    expect(block?.querySelectorAll('[data-fountain-widget]')).toHaveLength(0);
     expect(block?.textContent).toBe('const answer = "if";\n// return 42\nreturn answer;');
     expect(editor.getJSON()).toEqual(before);
     view.destroy();
@@ -92,11 +92,48 @@ describe('language-aware code blocks', () => {
     expect(setCodeBlockLanguage(editor, ';')).toBe(true);
     expect(view.dom.querySelector('pre')?.dataset.language).toBe(';');
     expect(toggleCodeBlockLineNumbers(editor, false)).toBe(true);
-    expect(view.dom.querySelectorAll('.fjs-code-line-number')).toHaveLength(0);
+    expect(view.dom.querySelector('pre')?.hasAttribute('data-fountain-code-lines')).toBe(false);
     expect(setCodeBlockLanguage(editor, '<script>')).toBe(true);
     expect(view.dom.querySelector('script')).toBeNull();
     expect(editor.state.doc.child(0).attrs.language).toBe('<script>');
     view.destroy();
+  });
+
+  it.each([
+    ['', 10, '1'],
+    ['first\n', 10, '1\n2'],
+    ['first\n\nthird\nfourth', 2, '1\n2'],
+    ['first\nsecond', 0, null],
+  ])('keeps the external gutter bounded for source %j and limit %s', (text, maxLineNumbers, labels) => {
+    const kit = composeExtensions([CoreExtension, createSyntaxHighlightExtension({ maxLineNumbers })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'code_block', ...(text ? { content: [{ type: 'text', text }] } : {}) }],
+    } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const before = editor.getJSON(), view = new EditorView(mount, editor);
+    try {
+      const pre = view.dom.querySelector('pre')!;
+      expect(pre.getAttribute('data-fountain-code-lines')).toBe(labels);
+      expect(pre.querySelector('[data-fountain-widget]')).toBeNull();
+      expect(pre.textContent).toBe(text);
+      expect(editor.getJSON()).toEqual(before);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it('updates line numbers after an actual text transaction and restores them through undo', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
+      type: 'doc', content: [{ type: 'code_block', content: [{ type: 'text', text: 'first\nsecond' }] }],
+    } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), before = editor.getJSON();
+    try {
+      editor.dispatch(editor.createTransaction().insertText([0, 0], 6, '\n'));
+      expect(view.dom.querySelector('pre')?.textContent).toBe('first\n\nsecond');
+      expect(view.dom.querySelector('pre')?.getAttribute('data-fountain-code-lines')).toBe('1\n2\n3');
+      expect(undo(editor)).toBe(true);
+      expect(editor.getJSON()).toEqual(before);
+      expect(view.dom.querySelector('pre')?.getAttribute('data-fountain-code-lines')).toBe('1\n2');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
   });
 
   it.each(['constructor', '__proto__', 'toString', 'hasOwnProperty'])('handles unregistered prototype-like label %s without crashing or changing document data', language => {
@@ -131,7 +168,7 @@ describe('language-aware code blocks', () => {
     expect(view.dom.querySelectorAll('.fjs-token--function')).toHaveLength(1);
     expect(view.dom.querySelector('.fjs-highlight--light')).toBeTruthy();
     expect(view.dom.querySelectorAll('[data-fountain-syntax-token]')).toHaveLength(1);
-    expect(view.dom.querySelectorAll('.fjs-code-line-number')).toHaveLength(0);
+    expect(view.dom.querySelector('pre')?.hasAttribute('data-fountain-code-lines')).toBe(false);
     view.destroy();
   });
 

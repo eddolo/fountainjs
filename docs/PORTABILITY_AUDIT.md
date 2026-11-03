@@ -5,6 +5,14 @@ Audited revision: `b11eb75` (`feat: add extension authoring conformance tooling`
 Original scope: architecture and dependency inspection only. Subsequent
 implementation results are recorded explicitly below.
 
+Implementation update (2026-11-03, Unreleased): live syntax line numbers now
+use bounded node-decoration labels rendered by a CSS gutter. The old
+`lineNumberFactory`/`document.createElement` dependency in
+`src/extensions/plugins/syntax-highlight.ts` is removed. Tokenization and
+decoration calculation require no DOM; the existing click handler still uses
+browser geometry to enter the visual language label. The historical inventory
+below describes the audited revision, not a new native renderer.
+
 Implementation update (2026-09-05): the audit's server-conversion recommendation
 now has an additive implementation. [`src/html/server.ts`](../src/html/server.ts)
 ships as `fountainjs-editor/html/server`, parses HTML without browser globals or

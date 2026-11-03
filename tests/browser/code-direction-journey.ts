@@ -59,7 +59,7 @@ export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr
   const inherited = editor.locator('blockquote pre'), owned = editor.locator(':scope > pre');
   await expect(owned).toHaveText(raw);
   await expect(owned).toHaveAttribute('data-line-numbers', 'false');
-  await expect(owned.locator('.fjs-code-line-number')).toHaveCount(0);
+  await expect(owned).not.toHaveAttribute('data-fountain-code-lines');
   await expect(inherited).not.toHaveAttribute('dir');
   expect(await editor.locator('pre').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).direction))).toEqual(evidence.nativeDirections);
   expect([await latinLineAlignment(inherited), await latinLineAlignment(owned)]).toEqual(evidence.nativeLatinAlignment);
@@ -146,7 +146,7 @@ export async function codeDirectionJourney(page: Page, info: TestInfo, dir: 'ltr
     await expect(inherited).toHaveText(raw); await expect(inherited).not.toHaveAttribute('dir');
     await expect(owned).toHaveText(`English ${raw}`); await expect(owned).toHaveAttribute('dir', 'auto');
     await expect(owned).toHaveAttribute('data-line-numbers', 'false');
-    await expect(owned.locator('.fjs-code-line-number')).toHaveCount(0);
+    await expect(owned).not.toHaveAttribute('data-fountain-code-lines');
     await editor.screenshot({ path: info.outputPath('code-direction-internal-paste.png') });
   }
   const reopenedName = `reopened-${name}`;

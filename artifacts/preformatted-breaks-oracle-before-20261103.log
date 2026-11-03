@@ -1,0 +1,12 @@
+Anchor oracle sensitivity: 3 placeholder-vs-hyperlink distinctions retained.
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-markdown-conformance.mjs:260
+    throw new Error('Preformatted oracle hides a real HTML break or confuses literal source with markup.');
+          ^
+
+Error: Preformatted oracle hides a real HTML break or confuses literal source with markup.
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-markdown-conformance.mjs:260:11
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1

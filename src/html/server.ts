@@ -1122,6 +1122,21 @@ function paragraph(element: SourceElement, schema: Schema, context: ImportContex
   return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
+function preformattedText(node: SourceNode): string {
+  if (node.kind !== 'element') return node.textContent;
+  return node.tagName === 'br' ? '\n' : node.childNodes.map(preformattedText).join('');
+}
+
+function hasProjectedPreformattedMarkup(element: SourceElement): boolean {
+  const accepted = ['data-language', 'data-line-numbers', 'dir', 'data-fountain-paragraph-layout',
+    'data-fountain-direction-group', 'data-fountain-direction-origin'];
+  if (element.getAttributeNames?.().some(name => !accepted.includes(name))) return true;
+  return element.childNodes.some(child => child.kind !== 'text' && !(child.kind === 'element' && child.tagName === 'code'
+    && child.getAttributeNames?.().every(name => name === 'class')
+    && (child.getAttribute('class') ?? '').split(/\s+/u).every(name => !name || /^language-\S+$/u.test(name))
+    && child.childNodes.every(node => node.kind === 'text')));
+}
+
 function tableCellWidths(cell: SourceElement, colspan: number): number[] | null {
   const declared = (cell.getAttribute('data-colwidth') ?? '')
     .split(',')
@@ -1325,13 +1340,14 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       let emptyInitial = false;
       content = inlineChildren(element, schema, [], context).flatMap(node => {
         const index = slots.provenance.get(node);
-        // A parser-generated <br /> has no textContent inside pre. Its following
-        // renderer LF is a separate text token, not an atom flattened to text.
-        if (slots.projectedBreaks.has(node)) {
+        // Both a real <br> and its following renderer LF occupy a line inside
+        // pre. Keep the LF token separately; do not merge away a visible line.
+        if (slots.projectedBreaks.has(node) || node.type.name === 'hard_break') {
+          if (Object.keys(node.attrs).length) throw new Error('Preformatted HTML cannot discard hard-break attributes; literal source retained.');
           previousIndex = undefined;
           previousCR = false;
           emptyInitial = false;
-          return [];
+          return [schema.text('\n', node.marks)];
         }
         if (!node.isText) {
           throw new Error('Preformatted HTML cannot flatten an inline atom; literal source retained.');
@@ -1359,9 +1375,15 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       });
       reportOnce(context, {
         code: 'preformatted-html-projection',
-        message: 'Preformatted HTML became a code block. Text-node attributes and marks remain in the document; code exports render plain text, not HTML formatting. Physical soft breaks were restored, CR/CRLF normalized as HTML newlines, and HTML initial-LF handling applied. Inline atoms require a specialized adapter.',
+        message: 'Preformatted HTML became a code block. Text-node attributes and marks remain in the document; code exports render plain text, not HTML formatting. Explicit HTML breaks and physical soft breaks were restored, CR/CRLF normalized as HTML newlines, and HTML initial-LF handling applied. Other inline atoms require a specialized adapter.',
       });
-    } else content = [schema.text(element.textContent)];
+    } else {
+      content = [schema.text(preformattedText(element))];
+      if (hasProjectedPreformattedMarkup(element)) reportOnce(context, {
+        code: 'preformatted-html-projection',
+        message: 'Preformatted HTML became plain code text. Explicit HTML breaks became literal newlines; unsupported attributes, child formatting, links, comments, media and block layout are not represented. Keep the original file when those properties matter.',
+      });
+    }
     return [reportStructuralDirection(element, schema.node('code_block', {
       language: element.getAttribute('data-language') || codeClass.match(/(?:^|\s)language-(\S+)(?=\s|$)/u)?.[1] || 'text',
       lineNumbers: element.getAttribute('data-line-numbers') !== 'false',

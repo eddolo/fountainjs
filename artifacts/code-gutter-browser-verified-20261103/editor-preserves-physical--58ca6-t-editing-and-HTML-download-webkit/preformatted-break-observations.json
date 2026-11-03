@@ -1,0 +1,30 @@
+{
+  "nativeGaps": [
+    24,
+    48
+  ],
+  "editorGaps": [
+    23.09375,
+    46.1875
+  ],
+  "readerGaps": [
+    27.1875,
+    54.375
+  ],
+  "gutter": {
+    "supported": true,
+    "content": "\"1\\a 2\" / \"\"",
+    "codeHeight": 46.1875,
+    "gutterLineHeight": "23.1px",
+    "codeLineHeight": "23.1px",
+    "sourceOnlyText": "first\nsecond"
+  },
+  "accessibleCode": "- region \"text code\":\n  - text: text\n  - code: first second",
+  "nativeSelectedCode": "first\nsecond edited",
+  "externalClipboard": null,
+  "explicitBRAndAdjacentLFAreIndependent": true,
+  "nativeTypingUndoRedo": true,
+  "actualDownloadReopen": true,
+  "formattingLossDisclosed": true,
+  "errors": []
+}

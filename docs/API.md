@@ -467,10 +467,13 @@ generated Word defaults may change line geometry even when inline fonts remain.
 
 The `code_block` node stores only portable source plus `language` and
 `lineNumbers` attributes. `StarterKit` adds `SyntaxHighlightExtension`, which
-turns token ranges and line starts into view decorations. Highlight spans and
-line-number widgets update after every edit, remain outside document JSON and
-exports, and are ignored when DOM selections are converted back to model
-offsets. The default tokenizer covers common syntax in JavaScript/TypeScript,
+turns token ranges into inline decorations and supplies bounded line labels to
+a separate CSS gutter. Highlight spans and gutter numbers update after every
+edit and remain outside document JSON and exports. The gutter inserts no DOM
+widgets into the editable text and uses empty CSS alternative text to exclude
+its decorative numbers from accessible content. Native selections and copied
+source therefore contain only code. The default tokenizer covers common syntax
+in JavaScript/TypeScript,
 HTML, CSS, JSON, Python, SQL, shell, Lean, Rust, Go, Java, C, and C++ without a
 runtime dependency. Unknown language names remain valid portable metadata and
 render safely as plain code.

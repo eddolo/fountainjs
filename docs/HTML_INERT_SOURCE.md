@@ -1,5 +1,12 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+Latest preformatted follow-up (2026-11-03, Unreleased): explicit HTML breaks
+survive plain-code projection, including an independent adjacent renderer LF.
+Ordinary preformatted markup/attribute loss is reported; rich formatting is
+still unclaimed. The neutral reducer advances to v13 with six physical-break
+controls, keeping every fixture example range and existing profile count.
+[Scope and native caret repair](SERVER_HTML.md#physical-preformatted-breaks-and-native-caret-affinity-2026-11-03-unreleased).
+
 Latest empty-heading follow-up (2026-11-03, Unreleased): a safe writer marker
 retains an empty heading text leaf through both importers while ordinary
 childless headings keep their representation. Exact safe-HTML native retention

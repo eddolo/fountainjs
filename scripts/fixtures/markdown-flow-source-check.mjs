@@ -60,7 +60,9 @@ export function checkMarkdownFlowSources() {
   for (const body of ['one  \ntwo', 'one\\\ntwo']) {
     const source = `<div><pre>\n\n${body}\n\n</pre></div>`;
     const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow });
-    if (parsed.document.child(0).type.name !== 'code_block' || parsed.document.child(0).textContent !== 'one\ntwo\n'
+    // The rendered hard break and its following literal LF occupy separate
+    // native preformatted lines; do not reinstate the old textContent loss.
+    if (parsed.document.child(0).type.name !== 'code_block' || parsed.document.child(0).textContent !== 'one\n\ntwo\n'
       || MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown !== source) {
       throw new Error('Compiled hard-break source recovery lost line-break semantics or original source.');
     }

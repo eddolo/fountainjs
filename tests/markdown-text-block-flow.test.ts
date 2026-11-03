@@ -16,8 +16,9 @@ describe('source-aware heading and code HTML flow', () => {
     ['literal code', '```\n<b>x</b> &amp; *y*\n```', '<b>x</b> &amp; *y*\n\n'],
     ['mixed text blocks', '# Recovery note\n\nfirst line\n  second line\n\n```\nconst n = 1;\n```', 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n'],
     ['tight list', '- one\n- two', '\none\ntwo\n\n'],
-    ['space hard break', 'line  \nbreak', 'line\nbreak\n'],
-    ['backslash hard break', 'line\\\nbreak', 'line\nbreak\n'],
+    // The generated <br> and renderer LF are both visible inside raw <pre>.
+    ['space hard break', 'line  \nbreak', 'line\n\nbreak\n'],
+    ['backslash hard break', 'line\\\nbreak', 'line\n\nbreak\n'],
     ['literal space', 'line break', 'line break\n'],
   ];
   it.each(cases)('recovers %s without confusing syntax with rendered text', (_name, body, expected) => {
@@ -107,12 +108,13 @@ describe('source-aware heading and code HTML flow', () => {
     expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
   });
 
-  it('does not mistake authored raw br HTML for a generated Markdown hard break', () => {
+  it('projects authored raw br HTML as its own newline and retains exact source', () => {
     const source = wrap('one<br />two');
     const fallback = vi.fn();
     const parsed = MarkdownImporter.parseWithSource(source, schema, { parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlowFallback: fallback });
-    expect(fallback).toHaveBeenCalledOnce();
-    expect(parsed.document.toJSON()).toEqual(MarkdownImporter.parse(source, schema).toJSON());
+    expect(fallback).not.toHaveBeenCalled();
+    expect(parsed.document.child(0).type.name).toBe('code_block');
+    expect(parsed.document.child(0).textContent).toBe('one\ntwo\n');
     expect(MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown).toBe(source);
   });
 

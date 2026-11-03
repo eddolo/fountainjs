@@ -1,0 +1,339 @@
+{
+  "date": "2026-11-03",
+  "projectionVersion": 13,
+  "bodyMatches": 635,
+  "bodyTotal": 652,
+  "exactUntouchedMarkdown": 1304,
+  "exactNativeJSON": 1304,
+  "sourceCaptureBodyMatches": 1266,
+  "safeHTMLNativeMatches": 1288,
+  "safeHTMLNativeTotal": 1304,
+  "sourceModelStatuses": {
+    "equal-except-source-tokens": 1282,
+    "different": 22
+  },
+  "unchangedBodyPolicies": {
+    "editableCaretHosts": [
+      207,
+      218,
+      239,
+      240,
+      280,
+      281,
+      282,
+      283,
+      284,
+      315
+    ],
+    "URIRestrictions": [
+      596,
+      598,
+      599,
+      601
+    ],
+    "defaultGFMLiteralAutolinks": [
+      608,
+      611,
+      612
+    ],
+    "note": "These remain differences from the reference. Existing autolinkLiterals:false is a separate import choice, not a certified full CommonMark mode."
+  },
+  "remainingSafeHTMLNativeDifferences": [
+    {
+      "number": 148,
+      "differences": [
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.0.text",
+          "before": "**Hello**,\n",
+          "after": "**Hello**,\nworld.\n"
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.1",
+          "before": {
+            "type": "text",
+            "text": "world",
+            "marks": [
+              {
+                "type": "em"
+              }
+            ]
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": "."
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "\n"
+          },
+          "after": null
+        }
+      ],
+      "classification": "declared plain-code projection"
+    },
+    {
+      "number": 169,
+      "differences": [
+        {
+          "path": "$.content.0.content.0.marks",
+          "before": [
+            {
+              "type": "code"
+            }
+          ],
+          "after": null
+        }
+      ],
+      "classification": "declared plain-code projection"
+    },
+    {
+      "number": 183,
+      "differences": [
+        {
+          "path": "$.content.1.content.0.marks",
+          "before": [
+            {
+              "type": "code"
+            }
+          ],
+          "after": null
+        },
+        {
+          "path": "$.content.1.content.1",
+          "before": {
+            "type": "text",
+            "text": "",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "classification": "declared plain-code projection"
+    },
+    {
+      "number": 184,
+      "differences": [
+        {
+          "path": "$.content.0.content.0.content.0.marks",
+          "before": [
+            {
+              "type": "code"
+            }
+          ],
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.0.content.1",
+          "before": {
+            "type": "text",
+            "text": "",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "classification": "declared plain-code projection"
+    },
+    {
+      "number": 187,
+      "differences": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "Foo",
+          "after": "Foo "
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": " baz"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "bar",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": " ",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "baz",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "classification": "adjacent equal-mark leaf coalescing"
+    },
+    {
+      "number": 191,
+      "differences": [
+        {
+          "path": "$.content.0.content.0.marks",
+          "before": [
+            {
+              "type": "code"
+            }
+          ],
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.1",
+          "before": {
+            "type": "text",
+            "text": "",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "classification": "declared plain-code projection"
+    },
+    {
+      "number": 309,
+      "differences": [
+        {
+          "path": "$.content.2.content.0.marks",
+          "before": [
+            {
+              "type": "code"
+            }
+          ],
+          "after": null
+        },
+        {
+          "path": "$.content.2.content.1",
+          "before": {
+            "type": "text",
+            "text": "",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "classification": "declared plain-code projection"
+    },
+    {
+      "number": 494,
+      "differences": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "[a](<b)c",
+          "after": "[a](<b)c [a](<b)c> [a]("
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": "c)"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": "[a](<b)c>"
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": " "
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.4",
+          "before": {
+            "type": "text",
+            "text": "[a]("
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.5",
+          "before": {
+            "type": "text",
+            "text": "c)",
+            "marks": [
+              {
+                "type": "strong"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "classification": "adjacent equal-mark leaf coalescing"
+    }
+  ],
+  "note": "Derived from the complete corpus report; v13 adds four negative physical-break controls and two equivalent-newline controls. Fixture example ranges and native/model counts remain unchanged. Rich preformatted formatting is not certified."
+}

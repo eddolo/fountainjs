@@ -1,5 +1,15 @@
 # Whole-document Markdown HTML conversion
 
+Latest physical-break follow-up (2026-11-03, Unreleased): raw and generated
+HTML breaks inside `pre` now become code-buffer LFs without erasing an adjacent
+renderer LF. Direct import reports unsupported preformatted markup/attributes
+instead of silently dropping them. Rich formatting still requires a separate
+bridge. The v13 neutral oracle adds six physical-break controls; the eight
+fixture example ranges and profile counts are unchanged. A real browser audit
+also repairs equivalent DOM-caret synchronization across line-number widgets.
+[Behavior and verification](SERVER_HTML.md#physical-preformatted-breaks-and-native-caret-affinity-2026-11-03-unreleased).
+The v12 checkpoints below are historical evidence.
+
 Latest verification (2026-11-03, Unreleased): the explicit complete-file source
 route reaches **635/652** body-semantic matches, separately enforcing declaration
 and EOF-data retention. The older fragment source route stays 631/652, safe

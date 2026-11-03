@@ -1,0 +1,197 @@
+[WebServer] (node:20856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:27408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (4.7s)
+(node:7136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (11.6s)
+(node:26400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (10.3s)
+(node:22548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [mobile-chrome] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (3.2s)
+(node:13900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (8.2s)
+
+
+  1) [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+    Timeout: 5000ms
+    - Expected  - 2
+    + Received  + 2
+
+    - first
+    - second edited
+    + first edited
+    + second
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+        14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "first edited
+    second"
+
+
+       at preformatted-breaks-journey.ts:64
+
+      62 |   await page.keyboard.press('End');
+      63 |   await page.keyboard.type(' edited');
+    > 64 |   await expect(code.nth(0)).toHaveText('first\nsecond edited');
+         |                             ^
+      65 |   await page.keyboard.press('ControlOrMeta+z');
+      66 |   await expect(code.nth(0)).toHaveText('first\nsecond');
+      67 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:64:29)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+    Timeout: 5000ms
+    - Expected  - 2
+    + Received  + 2
+
+    - first
+    - second edited
+    + first edited
+    + second
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+        13 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "first edited
+    second"
+
+
+       at preformatted-breaks-journey.ts:64
+
+      62 |   await page.keyboard.press('End');
+      63 |   await page.keyboard.type(' edited');
+    > 64 |   await expect(code.nth(0)).toHaveText('first\nsecond edited');
+         |                             ^
+      65 |   await page.keyboard.press('ControlOrMeta+z');
+      66 |   await expect(code.nth(0)).toHaveText('first\nsecond');
+      67 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:64:29)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-breaks-browser-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+    Timeout: 5000ms
+    - Expected  - 2
+    + Received  + 2
+
+    - first
+    - second edited
+    + first edited
+    + second
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+        13 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "first edited
+    second"
+
+
+       at preformatted-breaks-journey.ts:64
+
+      62 |   await page.keyboard.press('End');
+      63 |   await page.keyboard.type(' edited');
+    > 64 |   await expect(code.nth(0)).toHaveText('first\nsecond edited');
+         |                             ^
+      65 |   await page.keyboard.press('ControlOrMeta+z');
+      66 |   await expect(code.nth(0)).toHaveText('first\nsecond');
+      67 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:64:29)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\mobile.spec.ts:7:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-breaks-browser-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-browser-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-breaks-browser-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+    [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+    [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+  2 passed (50.4s)

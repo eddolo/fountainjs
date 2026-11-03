@@ -1,9 +1,9 @@
 {
   "version": 1,
   "standard": "CommonMark 0.31.2",
-  "projectionVersion": 12,
+  "projectionVersion": 13,
   "profile": "Optional retained HTML adapters plus exportHTMLSource({ document: false }); unsanitized source DATA, never safe-reader output",
   "requiredMatchRanges": "1-155,159-180,182-206,208-217,219-238,241-279,285-314,316-595,597,600,602-607,609-610,613-652",
   "unresolvedRanges": "156-158,181,207,218,239-240,280-284,315,596,598-599,601,608,611-612",
-  "note": "631/652 configured source-output matches with the unchanged neutral comparator, including explicit inert anchor retention for examples 616 and 631. Four remaining conversion gaps and seventeen existing intentional policies remain. Original-source retention is checked separately. Source output is validated against its intended canonical HTML tree; native model differences are reported, not silently equated. This does not promote the default 563 or safe optional 613 profiles."
+  "note": "631/652 configured source-output matches with the physical-break-aware v13 neutral comparator, including explicit inert anchor retention for examples 616 and 631. Four remaining conversion gaps and seventeen existing intentional policies remain. Original-source retention is checked separately. Source output is validated against its intended canonical HTML tree; native model differences are reported, not silently equated. This does not promote the default 563 or safe optional 613 profiles. Projection v13 independently retains explicit HTML breaks inside pre, with four negative distinctions and two equivalent-newline controls; expected example ranges are unchanged."
 }

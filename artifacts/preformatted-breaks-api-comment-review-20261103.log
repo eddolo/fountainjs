@@ -1,0 +1,2 @@
+dist/extensions/plugins/syntax-highlight.d.ts: reversing only the two documentation comments restores the previous declaration hash.
+dist/extensions/plugins/syntax-highlight.d.cts: reversing only the two documentation comments restores the previous declaration hash.

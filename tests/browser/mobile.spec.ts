@@ -2,6 +2,10 @@ import { expect, test } from '@playwright/test';
 import { webComponentFormJourney } from './web-component-form-journey';
 import { explicitFocusJourney } from './explicit-focus-journey';
 import { emptyHeadingHTMLJourney } from './empty-heading-html-journey';
+import { preformattedBreaksJourney } from './preformatted-breaks-journey';
+test('preserves physical preformatted breaks through real mobile import editing and HTML download', async ({ page }, info) => {
+  await preformattedBreaksJourney(page, info);
+});
 test('retains an empty heading through actual HTML download reopen and native mobile editing', async ({ page }, info) => {
   await emptyHeadingHTMLJourney(page, info);
 });

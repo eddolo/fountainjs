@@ -49,6 +49,10 @@ import { webComponentFormJourney } from './web-component-form-journey';
 import { webComponentValidationJourney } from './web-component-validation-journey';
 import { explicitFocusJourney } from './explicit-focus-journey';
 import { emptyHeadingHTMLJourney } from './empty-heading-html-journey';
+import { preformattedBreaksJourney } from './preformatted-breaks-journey';
+test('preserves physical preformatted breaks through real import editing and HTML download', async ({ page }, info) => {
+  await preformattedBreaksJourney(page, info);
+});
 test('retains an empty heading through actual HTML download reopen and native editing', async ({ page }, info) => {
   await emptyHeadingHTMLJourney(page, info);
 });
@@ -3701,17 +3705,18 @@ test('highlights editable code and updates language metadata through public comm
   await expect(block.locator('.fjs-token--keyword')).toHaveText('const');
   await expect(block.locator('.fjs-token--number')).toHaveText('42');
   await expect(block.locator('.fjs-token--comment')).toHaveText('// editable');
-  await expect(block.locator('.fjs-code-line-number')).toHaveCount(2);
+  await expect(block).toHaveAttribute('data-fountain-code-lines', '1\n2');
+  await expect(block.locator('[data-fountain-widget]')).toHaveCount(0);
 
   await page.keyboard.press('Enter');
   await page.keyboard.type('return answer;');
   await expect(block.locator('.fjs-token--keyword')).toHaveText(['const', 'return']);
-  await expect(block.locator('.fjs-code-line-number')).toHaveCount(3);
+  await expect(block).toHaveAttribute('data-fountain-code-lines', '1\n2\n3');
 
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.setCodeBlockLanguage('PY'))).toBe(true);
   await expect(block).toHaveAttribute('data-language', 'python');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.commands.commands.toggleCodeBlockLineNumbers(false))).toBe(true);
-  await expect(block.locator('.fjs-code-line-number')).toHaveCount(0);
+  await expect(block).not.toHaveAttribute('data-fountain-code-lines');
 });
 
 test('runs a view-focused chain and checks it without preview side effects', async ({ page }) => {
@@ -5757,7 +5762,7 @@ test('edits code language and line numbers through the public React toolbar', as
   await page.getByRole('button', { name: 'Apply' }).click();
 
   await expect(block).toHaveAttribute('data-language', 'javascript');
-  await expect(block.locator('.fjs-code-line-number')).toHaveCount(0);
+  await expect(block).not.toHaveAttribute('data-fountain-code-lines');
 });
 
 test('opens the searchable clipboard-history picker in the public React toolbar', async ({ page }) => {

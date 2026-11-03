@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve explicit HTML breaks inside preformatted code, separately from
+  adjacent real newlines, and report unsupported preformatted markup/attributes.
+  Strengthen the neutral oracle with six physical-break controls (v13); retain
+  all fixture example ranges and existing CommonMark profile scores.
+  Preserve equivalent native caret endpoints across decoration widgets so
+  clicking a code line and pressing End does not jump to the previous row.
+  Render line numbers in a separate CSS gutter rather than non-editable inline
+  widgets, repairing incorrect WebKit touch caret placement across code blocks.
+
 - Preserve one empty heading text leaf through safe HTML with an explicit
   writer marker. Keep ordinary childless headings unchanged and never let the
   marker override source children. Browser/server importers agree; no public

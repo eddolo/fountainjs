@@ -678,11 +678,13 @@ replaceable renderer over the external-store controller. See
 Syntax highlighting demonstrates the decoration boundary. A code block persists
 source and presentation-neutral language metadata. `SyntaxHighlightExtension`
 tokenizes that source into validated ranges, then supplies inline tokens,
-line-number widgets, and a block theme through the ordinary plugin decoration
+bounded CSS gutter labels, and a block theme through the ordinary plugin decoration
 contract. No highlighted DOM enters JSON, history, Markdown, HTML export, or
 selection offsets. The dependency-free tokenizer is a useful default; hosts
 can replace only that extension with a full grammar tokenizer while keeping the
-node, commands, formats, toolbar, and document shape unchanged.
+node, commands, formats, toolbar, and document shape unchanged. Gutter labels
+are generated outside the code text flow, with empty CSS alternative text.
+They create no native caret positions, clipboard characters or DOM widgets.
 
 The first-party mathematics module demonstrates this boundary. Its inline and
 display nodes persist only validated TeX source and an optional accessible

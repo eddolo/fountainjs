@@ -20,7 +20,7 @@ export type SyntaxTokenizer = (code: string, language: string) => readonly Synta
 
 export interface SyntaxHighlightConfig {
   theme?: 'light' | 'dark';
-  /** Enables line-number decorations when the code block also has `lineNumbers: true`. */
+  /** Enables the decorative gutter when the code block also has `lineNumbers: true`. */
   lineNumbers?: boolean;
   /** Trusted HTML renderer used only by `SyntaxHighlighter.highlight()`. */
   highlighter?: (code: string, language: string) => string;
@@ -28,7 +28,7 @@ export interface SyntaxHighlightConfig {
   tokenizer?: SyntaxTokenizer;
   /** Maximum source length sent to a tokenizer. Defaults to 200,000 characters. */
   maxCodeLength?: number;
-  /** Maximum line-number decorations per block. Defaults to 10,000. */
+  /** Maximum displayed gutter lines per block. Defaults to 10,000. */
   maxLineNumbers?: number;
   onTokenizeError?: (error: unknown, context: { code: string; language: string }) => void;
 }
@@ -187,23 +187,6 @@ export class SyntaxHighlighter {
   }
 }
 
-const lineNumberFactories = new Map<number, () => HTMLElement>();
-
-function lineNumberFactory(line: number): () => HTMLElement {
-  let factory = lineNumberFactories.get(line);
-  if (!factory) {
-    factory = () => {
-      const element = document.createElement('span');
-      element.className = 'fjs-code-line-number';
-      element.dataset.line = String(line);
-      element.setAttribute('aria-hidden', 'true');
-      return element;
-    };
-    lineNumberFactories.set(line, factory);
-  }
-  return factory;
-}
-
 function colorLuminance(value: unknown): number | undefined {
   if (typeof value !== 'string' || !/^#[\da-f]{6}$/i.test(value)) return undefined;
   const channels = [1, 3, 5].map(offset => {
@@ -250,28 +233,30 @@ function collectCodeDecorations(state: EditorState, config: SyntaxHighlightConfi
       const language = normalizeCodeLanguage(String(node.attrs.language ?? 'text'));
       const code = node.textContent;
       const textStart = before + 1;
+      // Keep decorative, non-editable objects out of the code's native text
+      // flow. WebKit touch caret placement can jump into a different block
+      // when every physical line starts with a contenteditable=false widget.
+      // A bounded CSS gutter has no model positions or clipboard characters.
+      let lineLabels: string | undefined;
+      if (showLineNumbers && node.attrs.lineNumbers !== false && maxLineNumbers > 0) {
+        const labels = ['1'];
+        for (let index = 0; index < code.length && labels.length < maxLineNumbers; index += 1) {
+          if (code[index] === '\n') labels.push(String(labels.length + 1));
+        }
+        lineLabels = labels.join('\n');
+      }
       decorations.push(Decoration.node(before, before + node.nodeSize, {
         class: `fjs-code-block fjs-highlight--${codeTheme(node, config.theme)}`,
         'data-language': language,
         title: String(node.attrs.language ?? 'text'),
         'data-fountain-syntax-truncated': code.length > maxCodeLength ? 'true' : undefined,
+        'data-fountain-code-lines': lineLabels,
       }, { key: `syntax-block-${path.join('.')}` }));
       for (const token of tokenizeSafely(code, language, config)) {
         decorations.push(Decoration.inline(textStart + token.from, textStart + token.to, {
           class: `fjs-token fjs-token--${token.type}`,
           'data-fountain-syntax-token': token.type,
         }, { key: `syntax-${path.join('.')}-${token.from}-${token.to}-${token.type}` }));
-      }
-      if (showLineNumbers && node.attrs.lineNumbers !== false && maxLineNumbers > 0) {
-        const starts = [0];
-        for (let index = 0; index < code.length && starts.length < maxLineNumbers; index += 1) {
-          if (code[index] === '\n') starts.push(index + 1);
-        }
-        starts.forEach((offset, index) => decorations.push(Decoration.widget(
-          textStart + offset,
-          lineNumberFactory(index + 1),
-          { key: `syntax-line-${path.join('.')}-${index + 1}`, side: -1 },
-        )));
       }
       return;
     }

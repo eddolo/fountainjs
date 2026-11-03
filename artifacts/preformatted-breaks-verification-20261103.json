@@ -1,0 +1,597 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "cc1f2772dcc86836ef001958e4a2e0e49749880c",
+  "scope": "Physical preformatted HTML breaks, explicit projection reports, equivalent native caret affinity and non-widget code gutters",
+  "verified": {
+    "fullSuite": {
+      "tests": 3335,
+      "files": 238
+    },
+    "newUnitContracts": 40,
+    "browser": {
+      "finalRunPassed": 20,
+      "additionalPassed": 12,
+      "additionalRun": "artifacts/code-gutter-browser-20261103.log",
+      "additionalCases": "three engines each: list-first native code focus, RTL native editing, 1k input paint, 100k virtual editing",
+      "finalPNGsReviewed": [
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png"
+      ],
+      "downloadedHTML": [
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-edited.html",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-edited.html",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-edited.html",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-edited.html",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-edited.html"
+      ],
+      "observations": [
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-break-observations.json",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-break-observations.json",
+        "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-break-observations.json",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-break-observations.json",
+        "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-break-observations.json"
+      ],
+      "externalClipboard": "trusted native copy/paste into independent textarea in Chromium and Firefox; native newline control retained",
+      "headless": true,
+      "workers": 1,
+      "port": 4194,
+      "reuseExistingServer": false,
+      "videosManuallyReviewed": false
+    },
+    "packedRootAndCoreESMAndCommonJS": "11 contracts each",
+    "node": "11 contracts",
+    "workerd": "11 contracts",
+    "publicAPIDeclarations": 415,
+    "headlessModules": 111,
+    "frameworkTypes": "passed",
+    "libraryBuild": "passed",
+    "websiteBuild": "passed",
+    "profiles": [
+      563,
+      613,
+      631,
+      635
+    ],
+    "corpus": {
+      "date": "2026-11-03",
+      "projectionVersion": 13,
+      "bodyMatches": 635,
+      "bodyTotal": 652,
+      "exactUntouchedMarkdown": 1304,
+      "exactNativeJSON": 1304,
+      "sourceCaptureBodyMatches": 1266,
+      "safeHTMLNativeMatches": 1288,
+      "safeHTMLNativeTotal": 1304,
+      "sourceModelStatuses": {
+        "equal-except-source-tokens": 1282,
+        "different": 22
+      },
+      "unchangedBodyPolicies": {
+        "editableCaretHosts": [
+          207,
+          218,
+          239,
+          240,
+          280,
+          281,
+          282,
+          283,
+          284,
+          315
+        ],
+        "URIRestrictions": [
+          596,
+          598,
+          599,
+          601
+        ],
+        "defaultGFMLiteralAutolinks": [
+          608,
+          611,
+          612
+        ],
+        "note": "These remain differences from the reference. Existing autolinkLiterals:false is a separate import choice, not a certified full CommonMark mode."
+      },
+      "remainingSafeHTMLNativeDifferences": [
+        {
+          "number": 148,
+          "differences": [
+            {
+              "path": "$.content.0.content.0.content.0.content.0.content.0.text",
+              "before": "**Hello**,\n",
+              "after": "**Hello**,\nworld.\n"
+            },
+            {
+              "path": "$.content.0.content.0.content.0.content.0.content.1",
+              "before": {
+                "type": "text",
+                "text": "world",
+                "marks": [
+                  {
+                    "type": "em"
+                  }
+                ]
+              },
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.0.content.0.content.0.content.2",
+              "before": {
+                "type": "text",
+                "text": "."
+              },
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.0.content.0.content.0.content.3",
+              "before": {
+                "type": "text",
+                "text": "\n"
+              },
+              "after": null
+            }
+          ],
+          "classification": "declared plain-code projection"
+        },
+        {
+          "number": 169,
+          "differences": [
+            {
+              "path": "$.content.0.content.0.marks",
+              "before": [
+                {
+                  "type": "code"
+                }
+              ],
+              "after": null
+            }
+          ],
+          "classification": "declared plain-code projection"
+        },
+        {
+          "number": 183,
+          "differences": [
+            {
+              "path": "$.content.1.content.0.marks",
+              "before": [
+                {
+                  "type": "code"
+                }
+              ],
+              "after": null
+            },
+            {
+              "path": "$.content.1.content.1",
+              "before": {
+                "type": "text",
+                "text": "",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ]
+              },
+              "after": null
+            }
+          ],
+          "classification": "declared plain-code projection"
+        },
+        {
+          "number": 184,
+          "differences": [
+            {
+              "path": "$.content.0.content.0.content.0.marks",
+              "before": [
+                {
+                  "type": "code"
+                }
+              ],
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.0.content.1",
+              "before": {
+                "type": "text",
+                "text": "",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ]
+              },
+              "after": null
+            }
+          ],
+          "classification": "declared plain-code projection"
+        },
+        {
+          "number": 187,
+          "differences": [
+            {
+              "path": "$.content.0.content.0.text",
+              "before": "Foo",
+              "after": "Foo "
+            },
+            {
+              "path": "$.content.0.content.1.text",
+              "before": " ",
+              "after": " baz"
+            },
+            {
+              "path": "$.content.0.content.1.marks",
+              "before": null,
+              "after": [
+                {
+                  "type": "link",
+                  "attrs": {
+                    "href": "bar",
+                    "title": "",
+                    "target": "_blank"
+                  }
+                }
+              ]
+            },
+            {
+              "path": "$.content.0.content.2",
+              "before": {
+                "type": "text",
+                "text": " ",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              },
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.3",
+              "before": {
+                "type": "text",
+                "text": "baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              },
+              "after": null
+            }
+          ],
+          "classification": "adjacent equal-mark leaf coalescing"
+        },
+        {
+          "number": 191,
+          "differences": [
+            {
+              "path": "$.content.0.content.0.marks",
+              "before": [
+                {
+                  "type": "code"
+                }
+              ],
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.1",
+              "before": {
+                "type": "text",
+                "text": "",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ]
+              },
+              "after": null
+            }
+          ],
+          "classification": "declared plain-code projection"
+        },
+        {
+          "number": 309,
+          "differences": [
+            {
+              "path": "$.content.2.content.0.marks",
+              "before": [
+                {
+                  "type": "code"
+                }
+              ],
+              "after": null
+            },
+            {
+              "path": "$.content.2.content.1",
+              "before": {
+                "type": "text",
+                "text": "",
+                "marks": [
+                  {
+                    "type": "code"
+                  }
+                ]
+              },
+              "after": null
+            }
+          ],
+          "classification": "declared plain-code projection"
+        },
+        {
+          "number": 494,
+          "differences": [
+            {
+              "path": "$.content.0.content.0.text",
+              "before": "[a](<b)c",
+              "after": "[a](<b)c [a](<b)c> [a]("
+            },
+            {
+              "path": "$.content.0.content.1.text",
+              "before": " ",
+              "after": "c)"
+            },
+            {
+              "path": "$.content.0.content.1.marks",
+              "before": null,
+              "after": [
+                {
+                  "type": "strong"
+                }
+              ]
+            },
+            {
+              "path": "$.content.0.content.2",
+              "before": {
+                "type": "text",
+                "text": "[a](<b)c>"
+              },
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.3",
+              "before": {
+                "type": "text",
+                "text": " "
+              },
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.4",
+              "before": {
+                "type": "text",
+                "text": "[a]("
+              },
+              "after": null
+            },
+            {
+              "path": "$.content.0.content.5",
+              "before": {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              },
+              "after": null
+            }
+          ],
+          "classification": "adjacent equal-mark leaf coalescing"
+        }
+      ],
+      "note": "Derived from the complete corpus report; v13 adds four negative physical-break controls and two equivalent-newline controls. Fixture example ranges and native/model counts remain unchanged. Rich preformatted formatting is not certified."
+    }
+  },
+  "oracleReview": {
+    "previousProjection": 12,
+    "currentProjection": 13,
+    "additionalNegativeControls": 4,
+    "additionalPositiveControls": 2,
+    "fixtureRangesAndPoliciesChanged": false,
+    "referenceASTEqualityRequired": false,
+    "priorOracleFailure": "artifacts/preformatted-breaks-oracle-before-20261103.log"
+  },
+  "performance": {
+    "status": "unresolved; no clean latency certification",
+    "initialFailures": [
+      "100-block server HTML p95 39.27 ms exceeds 35 ms"
+    ],
+    "previousCommitControlFailures": [
+      "100-block server HTML p95 37.42 ms exceeds 35 ms",
+      "1000-block server HTML p95 157.08 ms exceeds 120 ms"
+    ],
+    "pairedCurrentFailures": [
+      "100-block server HTML p95 43.04 ms exceeds 35 ms"
+    ],
+    "limitsAndSamplingChanged": false,
+    "previousCommitControlSource": {
+      "commit": "cc1f2772dcc86836ef001958e4a2e0e49749880c",
+      "filesVerified": 262,
+      "method": "Every extracted Git archive file checked against HEAD Git blob SHA-1 before relying on its performance control.",
+      "treeSHA256": "d524a3fa52ea1fd4683eda02e309dd492316a7f179b24a55abb628511655c34b",
+      "benchmarkAndSamplingChanged": false,
+      "controlBuiltWithOriginalViteConfig": true,
+      "controlFailures": [
+        "100-block server HTML p95 37.42 ms exceeds 35 ms",
+        "1000-block server HTML p95 157.08 ms exceeds 120 ms"
+      ],
+      "currentFailures": [
+        "100-block server HTML p95 43.04 ms exceeds 35 ms"
+      ],
+      "conclusion": "Both controls fail small-import latency; certification unresolved. No numerical limit or sampling change."
+    },
+    "affinityMask": 192,
+    "priority": "BelowNormal",
+    "independentDirectionAndMappingRetention": "passed"
+  },
+  "bundleReview": {
+    "ESMBytes": 1688787,
+    "CJSBytes": 1405815,
+    "CSSBytes": 89426,
+    "addedESMBytes": 1776,
+    "addedCJSBytes": 1585,
+    "addedCSSBytes": 612,
+    "ESMCapKiB": 1649.5,
+    "CJSCapKiB": 1373,
+    "CSSCapKiB": 87.5,
+    "individualEntryCapsChanged": false,
+    "dependenciesChanged": false,
+    "priorFailures": [
+      "artifacts/preformatted-breaks-size-before-review-20261103.log",
+      "artifacts/code-gutter-size-before-review-20261103.log"
+    ]
+  },
+  "limitations": {
+    "richPreformattedFormatting": "still projected to plain code; warning is not retention",
+    "completeCommonMarkConformance": false,
+    "physicalDeviceCertification": false,
+    "universalPixelParity": false,
+    "APIOrSchemaChanged": false,
+    "APIHashRefresh": "two documentation comments only; reverse-comment hashes match prior declarations",
+    "parityRowsPromoted": 0,
+    "newSourceCloudGates": "pending push",
+    "npmRelease": "none; still 0.4.0-beta.2"
+  },
+  "sourceBinding": "SHA-256 of staged Git blobs; manifest excluded to avoid a circular hash.",
+  "hashes": {
+    "CHANGELOG.md": "3d43685aedbf76ec36e6e3448ccea17226044eb8779359e08c9164d3f9ea2b9d",
+    "api-surface.json": "b6ae66204fcc584ba1080925944d93fa0adda42f8737df9276a6ee445572ac7a",
+    "artifacts/code-gutter-browser-20261103.log": "f64be6e6bd50b9f9f3f45fc847cd6692f326b99095dec435e38420d5e699a58c",
+    "artifacts/code-gutter-browser-final-20261103.log": "b36288466853e39155cc3aa02a5fe4393b3f9d925ca8b768115e241e40d727dd",
+    "artifacts/code-gutter-browser-verified-20261103.log": "c41a7e4b206965b6ee2d843b4f21e872441e20cc1605117deb6e6abf86f4871c",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png": "ca0dbe091407266f4ffa302c77a615282d3b8e8ff0c096effeb5027a8a299de1",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png": "e344037cfc5e436be6e79092c32683853020c569c01c491eb70518b0c7276b37",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png": "4255e01bba905ab207c71d774184719d22af5ac5ad58da9ecb99d1676f9e9926",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-code-caret.json": "80276c10b7a0a4567bcee076dada431022514e1ce76c38eb214a8abd134c3e53",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png": "2e84628096a877d30d8b7947a5b48137e030961c4785f6cb85684392620d2b1a",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-break-observations.json": "37daa07731d6a3f123fe9f442d7d49617d92b2ef7303b4e0bfa07d2b0da5da1a",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-edited.html": "a2e9c1075a4cca49cfa39c64039da1c2837aae0474e686f38543edb6480105fa",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png": "79fa7ae49f6fb3556e5c4b96d35c1a7688709d4d1acd2bf6f8726604f8d9c09a",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png": "30a90e5f152c6767b4225de28ea0a2cab79b6f9f44f8263549531e789d7024ec",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png": "4dcfd1a213d3c4fe137d451b7322c30105c0a6a1b4c157e5f1a70cbcbe304931",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-code-caret.json": "029bbe4d2c01f0c3c1bab93d711156b78dba0bc0aa55f9a379e765233dafc505",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png": "c1c5a51c18fc2bd8b1296867d3b3631b1981113c9b84cb809a288c20665a284f",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-break-observations.json": "c58f5ccd0bad81ed7d0beaf8df0e6ac6b00bf12ea55fb7ee0c43d16e2a43ef58",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-edited.html": "a2e9c1075a4cca49cfa39c64039da1c2837aae0474e686f38543edb6480105fa",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png": "f44a338f02788b2b70abc404053424af84331d3ae269eb723620933573026c9d",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png": "b92b70ccf83dba271899f0b5557bf22136acf2d4a1ffcc1cca8db766c5348428",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-code-caret.json": "e8608fe5bf3ac599f8b2e77f54615598c69b873a1f719295692cf5d4f7622439",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png": "a544cf04859b6d8539c4b214ad41177b4fcfc10c1f65175f9745d7c6d0951a26",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-break-observations.json": "46cf8c846775cab006b2216ff8cbb405e7c361a8b3349ca2d6d40bc59a970b3c",
+    "artifacts/code-gutter-browser-verified-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-edited.html": "a2e9c1075a4cca49cfa39c64039da1c2837aae0474e686f38543edb6480105fa",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png": "771fca8c7ad9a69032e538c14ca4488894170b05409c1b8309d4c215449063f5",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png": "20c43c97eda89d1cb42a2f367b9df520f230d511dc2f338b54a9cffc816fe10c",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-code-caret.json": "9c39dd9f579402267775d49d87fecfbf2ecfb9b1741dcd326d4a2fc6dd75e482",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png": "08c89478ddb9b41c457d30a42ea43f94adb1a492527c524e36dc386b00bacf6f",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-break-observations.json": "46cf8c846775cab006b2216ff8cbb405e7c361a8b3349ca2d6d40bc59a970b3c",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-edited.html": "a2e9c1075a4cca49cfa39c64039da1c2837aae0474e686f38543edb6480105fa",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png": "9662a549c26cedb1671e8408935bd4e257eca655e67b1b2cb65890ede54823f9",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png": "b0b9e7a71a5cccecd279863b0ea8e1c81731b747c8983875ff12213f094c272d",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-code-caret.json": "a81441ca2da00163481fb0b7ec8eb76cbca77ab825a64762e4d503a6d97535c4",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png": "6387ab3735bed0b98194c7afec65a7f59781b690fd743166b637655d0ac05ab7",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-break-observations.json": "d9f930ee902aefe75b75c581af66cd4e897627266354e0adc5d2b0994f0be82a",
+    "artifacts/code-gutter-browser-verified-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-edited.html": "a2e9c1075a4cca49cfa39c64039da1c2837aae0474e686f38543edb6480105fa",
+    "artifacts/code-gutter-build-20261103.log": "cda5fb6e5cf5209d66575bcf29fdf5c401b1609bd27b18d84cc0e60cc4315e4b",
+    "artifacts/code-gutter-focused-20261103.log": "cb8740da1c2e0aa0dbc05cb384397a3ae2d67a4b4eb2e10699153f933b47c159",
+    "artifacts/code-gutter-size-before-review-20261103.log": "de48263d2a1db23e8438cf6cb2e4668e625fdc9936f5fd52eb520348a76d2001",
+    "artifacts/code-gutter-touch-20261103.log": "0729493371a439273fd3cd86261747a67bab73c9c0c12132c25d6f5f7104b339",
+    "artifacts/code-gutter-unit-before-20261103.log": "2bd2089650831c48767caa6851fa2aaf9f74e51f7de9357b1b9196d659cee227",
+    "artifacts/preformatted-breaks-api-20261103.log": "69c8bc9f702ecaa5b93250aca345240117f25448eba92ad7dd8ed003836f6589",
+    "artifacts/preformatted-breaks-api-before-review-20261103.log": "649342e8bc0bb67323afbca3c0b1a89f229aed103e5a46ac09e6c8ca70cdeb1f",
+    "artifacts/preformatted-breaks-api-comment-review-20261103.log": "17680bf164adfdcedca2835a977a3f18bb7d56d4ad9747a0f1a8e0cd006d53e4",
+    "artifacts/preformatted-breaks-api-refresh-20261103.log": "ea3149d08594ff90397e6229609317fe7c9a94e4fda8e1d5894adce80bb1ebd4",
+    "artifacts/preformatted-breaks-before-20261103.log": "109c437470ba6d7e0ac8ccdf600d423dec591c07d29683e56df4c180b9216749",
+    "artifacts/preformatted-breaks-browser-20261103.log": "2059fd7d5ca270cdd9cd8e000d52c2d1956579110a8fced2dde77427b3c02d05",
+    "artifacts/preformatted-breaks-browser-final-20261103.log": "462d421772f19d31c8e4daf43048504623fbb5d14dfca835f59b306ce45718b0",
+    "artifacts/preformatted-breaks-caret-events-20261103.log": "2add02e2c0ba7c8b6412da1638484d8d195fa9658226f3b2dd6a1cdd308b3604",
+    "artifacts/preformatted-breaks-caret-unit-before-20261103.log": "ec9a72f21462245f69161ae167c16202047ef24bf57ac395cb78cc9330056736",
+    "artifacts/preformatted-breaks-conformance-final-20261103.log": "27e4e5f58b5af9e9e5957a864d7e9766139750c252ebfbb48747eea4a56c0b91",
+    "artifacts/preformatted-breaks-control-build-20261103.log": "86df5aace75d8358ff5eab0fcdb0c016e5eb8b06c2c6b8604fd230b06c98763e",
+    "artifacts/preformatted-breaks-control-performance-20261103.log": "cb3ceb15ad0bd4ac9c6e65a1199fa6b6d673062b1842549726acc3fa5101f52d",
+    "artifacts/preformatted-breaks-control-performance-report-20261103.json": "1bdfc84394cffc54c57f4f195286cd5bddb9a09e4dd3455a6f146cfcb8f90356",
+    "artifacts/preformatted-breaks-control-source-20261103.json": "f204c14cc15b8ef42c10a5b71c91f75a4324bb85c9f304afafcb2ca0002f981a",
+    "artifacts/preformatted-breaks-corpus-summary-20261103.json": "79081eabd6aaf065f4495df480a6778f2ef407efce9e5fee3263b8aa48e0220e",
+    "artifacts/preformatted-breaks-direction-retention-20261103.log": "89915683fed5af75595141d90d48f377f2179877864458009a03a39216dc1a0e",
+    "artifacts/preformatted-breaks-focused-frozen-20261103.log": "3e1022176ae409c2e8eb13db4b5cc6661045fe230335965b29e6a00c774a655e",
+    "artifacts/preformatted-breaks-full-tests-20261103.log": "187f760c6752c3d8f1fbb904309338716ee47e755fbc3cdbc3f2f76d221acf01",
+    "artifacts/preformatted-breaks-headless-20261103.log": "30da0881a31edcb5573c85121504f8ed07db2f57eabc6f6a7bfc0270c546f663",
+    "artifacts/preformatted-breaks-mapping-retention-20261103.log": "b5e1bb18c1973bf536bd0255a2154bad9b3ec76e0d31ce1352b20ad8db7cd1c0",
+    "artifacts/preformatted-breaks-oracle-before-20261103.log": "a6bb71989a57abb253a1c178a235431e4b99add1d6cebdd8526c4eeb4cc85a0b",
+    "artifacts/preformatted-breaks-package-20261103.log": "31f040730b1315aafed851e3c54782a483d939bde9b094508e26d3baa359f8d6",
+    "artifacts/preformatted-breaks-paired-performance-20261103.log": "9f47e17e616416f7cd78ccb53ab34bf8ea426a353c840d485ff802555bcd8a8e",
+    "artifacts/preformatted-breaks-paired-performance-report-20261103.json": "5aaa93b7616789b6a886bd183ff32f815b320b978637a91c5ed99419b00a72ca",
+    "artifacts/preformatted-breaks-performance-20261103.log": "7681972158561ec7688efa6b3365f88a11e487be6d249c6fa1ed278b2f347142",
+    "artifacts/preformatted-breaks-performance-report-20261103.json": "c1f49a0c00969eeb457947409546d08d0ee3d714f93c0bb1fc8b806c04a37953",
+    "artifacts/preformatted-breaks-server-runtimes-20261103.log": "f7290d0c4fe6487a8dbed7252077b15c8fa6de7dd82d6619afd9cfd509ef133d",
+    "artifacts/preformatted-breaks-server-runtimes-before-fixture-review-20261103.log": "76b06f3fdeed7fd9163eac902237b9796884ce21436efa6ac26b86402f27e727",
+    "artifacts/preformatted-breaks-size-20261103.log": "68332d8038531ac459ac68245cec0559a6d086a17a8c87ee0956ef5c01b21d8d",
+    "artifacts/preformatted-breaks-size-before-review-20261103.log": "d332af02e05d1a2eb4b5b5c6124cafef2448dd5447d30132b9f365347ea4fb0a",
+    "artifacts/preformatted-breaks-touch-widgets-20261103.log": "9e6e580bec442f1824c717e45d1e01b8e9a556ee343aa4139c105d44d0d82b93",
+    "artifacts/preformatted-breaks-touch-widgets-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-code-caret.json": "e7e9a0292dd719b2c827d6fa1f2842084c5fc52a9675802b58c93109628c2023",
+    "artifacts/preformatted-breaks-typecheck-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/preformatted-breaks-website-20261103.log": "38a622069076b350e3191a4bdec6bcf462e2820a9d6ee2dbf065d86e41ca6c2f",
+    "artifacts/write-preformatted-breaks-verification-20261103.mjs": "d71c772e399b44493ebe3044ef3546ed5810ac3d1a1dd1384ea80340d0669042",
+    "docs/API.md": "ada7e1a2ac5e5e5142873f4bec87e076a1a4ca550a414174ad10c1e32db36972",
+    "docs/ARCHITECTURE.md": "86af5288dbf21300efa99d190c294806ab72fe0020b0cea9d82f591bb33d86bf",
+    "docs/HTML_INERT_SOURCE.md": "a5b91b4ea1ffa4a889dec26dabd5dced12b30eb889e010fa9e5dbfc0ac431dd4",
+    "docs/MARKDOWN_DOCUMENT_FLOW.md": "d0abed4e76a40eeec55c863f030fded2a72975a5e6490fecbbf102ed402de2d5",
+    "docs/PORTABILITY_AUDIT.md": "828c0c6d7a14ff50efa1678aae7e542589c2081449b222eaed27e051b91e560e",
+    "docs/ROADMAP.md": "22384602c14f56b71adc7d09b22042d3d77706ed7b7d74133e05b84321fc7417",
+    "docs/SERVER_HTML.md": "81cbc7248764638f7c7c254f92290a1852f892499e38a58857f0a118ec47ed83",
+    "docs/TIPTAP_PARITY.md": "41b4269feed4cde0aee74c6206284b25f1cf177c5e4679852f70e633b54c71f0",
+    "scripts/check-build-budgets.mjs": "5ceaa4a491735b5ecda9213471de97b3300b407a435162bb473acec59d85a61e",
+    "scripts/check-markdown-conformance.mjs": "ed912b83b8e18e8788f3c2294423c44926732779067122f55177b4277039dad5",
+    "scripts/check-server-html-worker.mjs": "ffa358d250ce069567e5eafe8de786ce3a8c5c2895263721969d23037df12f57",
+    "scripts/fixtures/html-preformatted-breaks-check.mjs": "b1f6d126a1e1e4a16dc33429c6334a32ffedb299e70911700fe2168d66946a95",
+    "scripts/fixtures/markdown-flow-source-check.mjs": "4e33494ea7cf617428e51b6b56af16f796e2beadc5ddc4aac9833363994bd16c",
+    "scripts/fixtures/server-html-worker.mjs": "ed8f4b7f7c868126a9928c470de3b908f96554fff9119702ab176538afd11627",
+    "scripts/smoke-package.mjs": "880d81e69462f098d5eda548e69f76d0bf9923fadfc5d24ab27be3d9b3e2dca6",
+    "scripts/smoke-server-html-runtime.mjs": "4f7bf349080f9409d3c0c3aaa1afcf8621328c3498db00d0fe0ab8e349eac21e",
+    "src/core/importers/html-importer.ts": "1d31ae9f001b242589380172ed7f915ebe91d19892f1844a801cb1262781234a",
+    "src/extensions/plugins/syntax-highlight.ts": "af8459a15416c4ba370777ac9f17be8ffc8e31440385ead11f59638671d90c6c",
+    "src/html/server.ts": "4ea6e1124f579f0fd7f8467f7698dfeea56992b30e3ffc18f90ab75dbd91276e",
+    "src/styles.css": "8e50f2b85fd3c89ac167108c1d437c56efdb2031a22f2cbe16d0ab804b2ee467",
+    "src/view/selection-handler.ts": "cea1286883b397336b23b8b0c277cfc23e16731dc742feabc489b9c0172ff963",
+    "tests/browser/code-direction-journey.ts": "13886deee445c595b3bae21223efdfc1be83e4d1e70146ef16ee6834df95e451",
+    "tests/browser/editor.spec.ts": "5ddbf3e23578bf74966155e292f3979e72b88bad047dad4d831731402a6f0a85",
+    "tests/browser/mobile.spec.ts": "88bd1dd4c8239ba35df68b633076febcf5edd69ec2b751b8ae0f35aa7e983db4",
+    "tests/browser/preformatted-breaks-journey.ts": "2b1d84af1ca48e0e20057e7c13ace6a15fc290edd3bb45c21710c388ff8d3202",
+    "tests/fixtures/markdown/commonmark-anonymous-flow-v1.json": "0e8ac31ecd251cac4e80a37c9074f2ae32e61541e62077e798578c314cdc382c",
+    "tests/fixtures/markdown/commonmark-comment-flow-v1.json": "c9b9d0a341aea950f78112fe7ba6203146985653da0544b861d981ded48950c9",
+    "tests/fixtures/markdown/commonmark-complete-source-v1.json": "2b17daac4c2d9a6d98858861ae062b14ee34bcd4bc5c5778689327208c5c102f",
+    "tests/fixtures/markdown/commonmark-document-flow-v1.json": "fad9a9373cbba5df94b5d078216835c0a88305c970a5562a7c8d009180572471",
+    "tests/fixtures/markdown/commonmark-html-projection-baseline-v1.json": "c5ae069d3ad2ca93d45e744b8117f35b7202739088e603c08d433789d1ea042c",
+    "tests/fixtures/markdown/commonmark-semantic-baseline-v1.json": "714f98d17aece65220bc251e0c84728a50e2b1f8eb73309dff183748c28b283b",
+    "tests/fixtures/markdown/commonmark-source-output-v1.json": "5806eb85001c835e69799ef9fb5973f50b1451bf28d0ed3907a8cef77746856e",
+    "tests/fixtures/markdown/commonmark-source-recovery-baseline-v1.json": "86ac042651c83d1825103e34e9191494d7247abc4edaf89482e3056079d3a7ba",
+    "tests/html-preformatted-breaks.test.ts": "a8c581d7bf7ccf3f62953c3821a0443254b63592df8eef91e156f9503eef436b",
+    "tests/markdown-text-block-flow.test.ts": "bea8b0ab92056f9b804272bee3a790e32450159db65b56cda70d8a2b8803feda",
+    "tests/syntax-highlight.test.ts": "5bdb65fe58f4b8838ef5e3cb9975230b83b648c4f37ab9a0cc595f772a23598b",
+    "tests/view-native-selection.test.ts": "ec65bd3230c401d3938e5bdd031703f4637627e45c682c6f049d424f239b9d54"
+  }
+}

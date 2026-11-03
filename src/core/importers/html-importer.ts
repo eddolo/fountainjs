@@ -478,6 +478,17 @@ function paragraph(element: Element, schema: Schema, childContext = false): Foun
   return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
+/** A real HTML break occupies a preformatted line even though textContent omits it. */
+function preformattedText(element: Element): string {
+  const walker = element.ownerDocument.createTreeWalker(element, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+  let text = '';
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (node.nodeType === globalThis.Node.TEXT_NODE) text += node.textContent ?? '';
+    else if (node instanceof HTMLElement && node.tagName.toLowerCase() === 'br') text += '\n';
+  }
+  return text;
+}
+
 function tableCellWidths(cell: Element, colspan: number): number[] | null {
   const declared = (cell.getAttribute('data-colwidth') ?? '')
     .split(',')
@@ -632,7 +643,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     lineNumbers: element.getAttribute('data-line-numbers') !== 'false',
     ...readParagraphLayout(element),
     ...(schema.nodes.code_block.spec.attrs?.dir ? readTextDirection(element, schema) : {}),
-  }, [schema.text(element.textContent ?? '')])];
+  }, [schema.text(preformattedText(element))])];
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {
     const isTask = element.getAttribute('data-type') === 'task-list';

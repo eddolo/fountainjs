@@ -1,0 +1,268 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-preformatted-breaks.test.ts (27 tests | 24 failed) 95ms
+   ❯ browser plain preformatted HTML projection (9)
+     × keeps explicit line breaks: <pre>first<br>second</pre> 20ms
+     × keeps explicit line breaks: <pre>first<br>
+second</pre> 5ms
+     × keeps explicit line breaks: <pre><br>second<br></pre> 4ms
+     × keeps explicit line breaks: <pre>
+first<br><br>second
+</pre> 3ms
+     × keeps explicit line breaks: <pre><code>first<br>second</code></pre> 4ms
+     × keeps explicit line breaks: <pre><span>first<br></span><em>second</em></pre> 3ms
+     × keeps explicit line breaks: <pre>&lt;br&gt; &amp; 	😀<br>&#13;
+end</pre> 4ms
+     × keeps explicit line breaks: <pre>first<!-- private-token --><br>second</pre> 4ms
+   ❯ server plain preformatted HTML projection (9)
+     × keeps explicit line breaks: <pre>first<br>second</pre> 4ms
+     × keeps explicit line breaks: <pre>first<br>
+second</pre> 1ms
+     × keeps explicit line breaks: <pre><br>second<br></pre> 1ms
+     × keeps explicit line breaks: <pre>
+first<br><br>second
+</pre> 1ms
+     × keeps explicit line breaks: <pre><code>first<br>second</code></pre> 1ms
+     × keeps explicit line breaks: <pre><span>first<br></span><em>second</em></pre> 1ms
+     × keeps explicit line breaks: <pre>&lt;br&gt; &amp; 	😀<br>&#13;
+end</pre> 1ms
+     × keeps explicit line breaks: <pre>first<!-- private-token --><br>second</pre> 1ms
+   ❯ preformatted projection reports and protected Markdown (9)
+     × reports unsupported child markup without leaking source: <em>important</em> 2ms
+     × reports unsupported child markup without leaking source: <a href="/private-destination">link</a> 1ms
+     × reports unsupported child markup without leaking source: <span style="color:red">colored</span> 1ms
+     × reports unsupported child markup without leaking source: <div>block</div> 1ms
+     × reports unsupported child markup without leaking source: <!-- private-token --> 1ms
+     × reports unsupported child markup without leaking source: <img src="private-resource"> 1ms
+     × bounds repeated projection reports 13ms
+     × keeps raw HTML breaks distinct from an adjacent real LF in Markdown flow 11ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 24 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre>first<br>second</pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre><code>first<br>second</code></pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre><span>first<br></span><em>second</em></pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre>first<!-- private-token --><br>second</pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre>first<br>second</pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre><code>first<br>second</code></pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre><span>first<br></span><em>second</em></pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre>first<!-- private-token --><br>second</pre>
+AssertionError: expected 'firstsecond' to be 'first\nsecond' // Object.is equality
+
+- Expected
++ Received
+
+- first
+- second
++ firstsecond
+
+ ❯ tests/html-preformatted-breaks.test.ts:23:40
+     21|       const doc = importer.parse(html, schema);
+     22|       expect(doc.child(0).type.name).toBe('code_block');
+     23|       expect(doc.child(0).textContent).toBe(expected);
+       |                                        ^
+     24|       expect(importer.parse(HTMLExporter.export(doc), schema).toJSON()…
+     25|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre>first<br>
+second</pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre>first<br>
+second</pre>
+AssertionError: expected 'first\nsecond' to be 'first\n\nsecond' // Object.is equality
+
+- Expected
++ Received
+
+  first
+-
+  second
+
+ ❯ tests/html-preformatted-breaks.test.ts:23:40
+     21|       const doc = importer.parse(html, schema);
+     22|       expect(doc.child(0).type.name).toBe('code_block');
+     23|       expect(doc.child(0).textContent).toBe(expected);
+       |                                        ^
+     24|       expect(importer.parse(HTMLExporter.export(doc), schema).toJSON()…
+     25|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre><br>second<br></pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre><br>second<br></pre>
+AssertionError: expected 'second' to be '\nsecond\n' // Object.is equality
+
+- Expected
++ Received
+
+-
+  second
+-
+
+ ❯ tests/html-preformatted-breaks.test.ts:23:40
+     21|       const doc = importer.parse(html, schema);
+     22|       expect(doc.child(0).type.name).toBe('code_block');
+     23|       expect(doc.child(0).textContent).toBe(expected);
+       |                                        ^
+     24|       expect(importer.parse(HTMLExporter.export(doc), schema).toJSON()…
+     25|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre>
+first<br><br>second
+</pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre>
+first<br><br>second
+</pre>
+AssertionError: expected 'firstsecond\n' to be 'first\n\nsecond\n' // Object.is equality
+
+- Expected
++ Received
+
+- first
+-
+- second
++ firstsecond
+
+
+ ❯ tests/html-preformatted-breaks.test.ts:23:40
+     21|       const doc = importer.parse(html, schema);
+     22|       expect(doc.child(0).type.name).toBe('code_block');
+     23|       expect(doc.child(0).textContent).toBe(expected);
+       |                                        ^
+     24|       expect(importer.parse(HTMLExporter.export(doc), schema).toJSON()…
+     25|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > browser plain preformatted HTML projection > keeps explicit line breaks: <pre>&lt;br&gt; &amp; 	😀<br>&#13;
+end</pre>
+ FAIL  tests/html-preformatted-breaks.test.ts > server plain preformatted HTML projection > keeps explicit line breaks: <pre>&lt;br&gt; &amp; 	😀<br>&#13;
+end</pre>
+AssertionError: expected '<br> & \t😀\r\nend' to be '<br> & \t😀\n\r\nend' // Object.is equality
+
+- Expected
++ Received
+
+- <br> & 	😀
+-
++ <br> & 	😀
+  end
+
+ ❯ tests/html-preformatted-breaks.test.ts:23:40
+     21|       const doc = importer.parse(html, schema);
+     22|       expect(doc.child(0).type.name).toBe('code_block');
+     23|       expect(doc.child(0).textContent).toBe(expected);
+       |                                        ^
+     24|       expect(importer.parse(HTMLExporter.export(doc), schema).toJSON()…
+     25|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > reports unsupported child markup without leaking source: <em>important</em>
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > reports unsupported child markup without leaking source: <a href="/private-destination">link</a>
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > reports unsupported child markup without leaking source: <span style="color:red">colored</span>
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > reports unsupported child markup without leaking source: <div>block</div>
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > reports unsupported child markup without leaking source: <img src="private-resource">
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "preformatted-html-projection",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-preformatted-breaks.test.ts:38:29
+     36|     ('reports unsupported child markup without leaking source: %s', ch…
+     37|       const result = ServerHTMLImporter.parseWithReport(`<pre>before $…
+     38|       expect(result.issues).toContainEqual(expect.objectContaining({ c…
+       |                             ^
+     39|       expect(JSON.stringify(result.issues)).not.toMatch(/private-token…
+     40|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > reports unsupported child markup without leaking source: <!-- private-token -->
+AssertionError: expected [ { …(4) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "preformatted-html-projection",
+}
+
++ Received:
+[
+  {
+    "code": "discarded-html-comment",
+    "column": 13,
+    "line": 1,
+    "message": "An HTML comment was omitted: the schema, comment data, or containing projection cannot retain it. Original source must be retained separately.",
+  },
+]
+
+ ❯ tests/html-preformatted-breaks.test.ts:38:29
+     36|     ('reports unsupported child markup without leaking source: %s', ch…
+     37|       const result = ServerHTMLImporter.parseWithReport(`<pre>before $…
+     38|       expect(result.issues).toContainEqual(expect.objectContaining({ c…
+       |                             ^
+     39|       expect(JSON.stringify(result.issues)).not.toMatch(/private-token…
+     40|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > bounds repeated projection reports
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/html-preformatted-breaks.test.ts:51:90
+     49|     const result = ServerHTMLImporter.parseWithReport('<pre>first<br><…
+     50|     expect(result.document.childCount).toBe(100);
+     51|     expect(result.issues.filter(issue => issue.code === 'preformatted-…
+       |                                                                                          ^
+     52|     expect(Object.isFrozen(result.issues[0])).toBe(true);
+     53|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/24]⎯
+
+ FAIL  tests/html-preformatted-breaks.test.ts > preformatted projection reports and protected Markdown > keeps raw HTML breaks distinct from an adjacent real LF in Markdown flow
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "message": "Preformatted HTML cannot flatten an inline atom; literal source retained.",
+        "reason": "error",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/html-preformatted-breaks.test.ts:61:26
+     59|       parseHTMLFlow: ServerHTMLImporter.parseTextBlockFlow, onHTMLFlow…
+     60|     });
+     61|     expect(fallback).not.toHaveBeenCalled();
+       |                          ^
+     62|     expect(result.document.child(0).type.name).toBe('code_block');
+     63|     expect(result.document.child(0).textContent).toBe('one\n\ntwo\n');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/24]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  24 failed | 3 passed (27)
+   Start at  17:15:20
+   Duration  3.69s (transform 37%, import 31%, environment 29%, tests 3%)

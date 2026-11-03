@@ -1,5 +1,21 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased physical-break/native-code follow-up (2026-11-03): explicit HTML
+breaks survive preformatted projection; unsupported formatting/attributes are
+reported. Real native controls expose and verify separate caret-affinity and
+WebKit touch-widget repairs. Line numbers now use a CSS gutter with no editable
+text objects or accessible number content. Twenty final browser cases and twelve
+additional focus/RTL/large-document checks pass, with seventeen final PNGs
+reviewed and real external clipboard delivery in Chromium/Firefox. The stronger
+v13 oracle keeps fixture ranges and existing CommonMark profile counts. Rich
+preformatted formatting, complete CommonMark conformance and physical devices
+remain unclaimed. No parity row or npm version is promoted.
+The full unit suite passes 3,335 tests / 238 files, with forty new contracts.
+Package/runtime/types/headless/API/corpus/size/retention/site checks pass, but
+small-import p95 fails on both current source and a rebuilt previous commit.
+Latency certification stays open under unchanged limits; keep npm unchanged.
+[Scope and evidence](SERVER_HTML.md#physical-preformatted-breaks-and-native-caret-affinity-2026-11-03-unreleased).
+
 Unreleased empty-heading retention (2026-11-03): safe HTML preserves a heading's
 empty text position through both importers. Full units pass 3,295 / 237 files;
 five recorded download/native-reader/reopen/typing/history journeys pass across

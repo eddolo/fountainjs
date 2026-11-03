@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/syntax-highlight.test.ts (18 tests | 1 failed) 264ms
+   ❯ language-aware code blocks (18)
+     × decorates editable StarterKit code without changing portable JSON 123ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/syntax-highlight.test.ts > language-aware code blocks > decorates editable StarterKit code without changing portable JSON
+AssertionError: expected null to be '1\n2\n3' // Object.is equality
+
+- Expected:
+"1
+2
+3"
+
++ Received:
+null
+
+ ❯ tests/syntax-highlight.test.ts:71:61
+     69|     expect([...view.dom.querySelectorAll('.fjs-token--keyword')].map((…
+     70|     expect(view.dom.querySelector('.fjs-token--comment')?.textContent)…
+     71|     expect(block?.getAttribute('data-fountain-code-lines')).toBe('1\n2…
+       |                                                             ^
+     72|     expect(block?.querySelectorAll('[data-fountain-widget]')).toHaveLe…
+     73|     expect(block?.textContent).toBe('const answer = "if";\n// return 4…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  18:02:43
+   Duration  4.88s (import 33%, transform 32%, environment 29%, tests 6%)

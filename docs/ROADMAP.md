@@ -1,5 +1,34 @@
 # FountainJS opportunity roadmap
 
+Physical preformatted breaks and code touch editing (2026-11-03, Unreleased):
+both HTML importers retain real `<br>` lines, independently of adjacent literal
+newlines. Direct import reports unsupported preformatted attributes/formatting;
+this does not restore rich formatting. Protected Markdown keeps exact source.
+The neutral oracle advances explicitly to v13, adding four negative and two
+positive physical-break controls without changing any fixture example ranges.
+
+Real browser use finds two separate caret bugs: synchronization discarded an
+equivalent native text boundary, and inline line-number widgets confused WebKit
+touch placement into another block. Preserve equivalent native endpoints and
+move numbers into a separate CSS gutter. The model, schema, commands and export
+shape stay unchanged. Twenty final browser cases pass across desktop engines
+and mobile emulation; twelve additional passing cases cover native list-first
+code focus, RTL editing, 1k input paint and 100k virtual editing. All seventeen
+final source/editor/export/external-paste captures are reviewed. Actual trusted
+copy/paste into independent textareas passes in Chromium and Firefox, with a
+separate native control explaining Windows Firefox's CRLF selection string.
+This is not physical-device or rich-preformatted fidelity certification.
+The complete unit suite passes 3,335 tests / 238 files, including forty new
+contracts. Failed initial import/caret/touch cases and test-only CSSOM/native
+newline assumptions remain recorded alongside their corrected final checks.
+Package, Node/workerd, framework types, headless/API, corpus, size, independent
+retention and website checks pass. Local latency remains uncertified: both a
+rebuilt previous-commit control and current source fail the small HTML-import
+p95 gate. Preserve the limits and all samples; do not claim clean performance
+or release npm from this checkpoint. Prior `cc1f277` CI and Pages are successful;
+new-source cloud results remain pending. Only reviewed code/CSS capacity grows.
+[Contract and evidence](SERVER_HTML.md#physical-preformatted-breaks-and-native-caret-affinity-2026-11-03-unreleased).
+
 Empty-heading HTML retention (2026-11-03, Unreleased): a safe writer marker now
 retains a heading's empty text position through browser/server reopening, without
 changing ordinary childless HTML or overriding source children. Five recorded

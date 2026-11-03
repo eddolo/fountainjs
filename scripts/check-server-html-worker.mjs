@@ -53,6 +53,8 @@ try {
   if (body.commentsChecked !== true) throw new Error('Worker inert HTML comment interchange failed.');
   if (body.emptyHeadingsChecked !== 24) throw new Error('Worker empty-heading HTML retention failed.');
   console.log('Cloudflare workerd (Miniflare): 24 empty-heading HTML contracts passed.');
+  if (body.preformattedBreaksChecked !== 11) throw new Error('Worker preformatted break/source retention failed.');
+  console.log('Cloudflare workerd (Miniflare): 11 preformatted-break HTML contracts passed.');
   if (body.flowChecked !== true) throw new Error('Worker anonymous HTML flow interchange failed.');
   if (body.blockAtomsChecked !== true) throw new Error('Worker protected Markdown block-atom interchange/refusal failed.');
   if (body.emphasisChecked !== 140) throw new Error('Worker native emphasis/partial-schema interchange failed.');

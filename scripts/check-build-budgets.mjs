@@ -254,7 +254,9 @@ const limits = Object.freeze({
   // One 93-byte rule; bound the addition at 128 bytes, not a whole new KiB.
   // Link hit padding, code focus rings and background-preserving structural
   // highlights add ~0.2 KiB. Bound the stylesheet at 86.4 KiB.
-  'dist/styles.css': 86.75 * kibibyte,
+  // A separate accessible CSS code gutter replaces inline line-number widgets:
+  // +612 bytes, measured 87.330 KiB. Keep only 174 bytes of raw CSS headroom.
+  'dist/styles.css': 87.5 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -584,7 +586,10 @@ const limits = Object.freeze({
   // 1647.139 KiB. Initial size failure retained; entry/CSS/latency/heap caps unchanged.
   // Empty heading leaf retention adds 341 bytes, measured 1647.472 KiB.
   // Only aggregate code capacity changes; the failed prior cap is retained.
-  'all ESM runtime code': 1647.5 * kibibyte,
+  // Physical preformatted breaks/reports and equivalent native caret affinity:
+  // Including the smaller CSS-gutter plugin: +1,776 bytes, measured 1649.207 KiB.
+  // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
+  'all ESM runtime code': 1649.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -662,7 +667,9 @@ const limits = Object.freeze({
   // Same edge-focus repair: +300 bytes, measured 1369.290 KiB.
   // Same validation optimization: +1,782 bytes, measured 1371.030 KiB.
   // Same heading marker/restoration: +295 bytes, measured 1371.318 KiB.
-  'all CommonJS runtime code': 1371.5 * kibibyte,
+  // Same repair and smaller gutter: +1,585 bytes, measured 1372.867 KiB.
+  // Initial code/CSS cap failures are retained; no latency/heap relaxation.
+  'all CommonJS runtime code': 1373 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

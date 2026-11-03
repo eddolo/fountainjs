@@ -1,0 +1,73 @@
+[WebServer] (node:21524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:23392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (16.2s)
+
+
+  1) [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+    Timeout: 5000ms
+    - Expected  - 1
+    + Received  + 1
+
+      first
+    - second edited
+    + second
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').first()
+        13 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "first
+    second"
+
+
+       at preformatted-breaks-journey.ts:162
+
+      160 |   }
+      161 |   await writeFile(info.outputPath('native-code-caret.json'), JSON.stringify({ target, codeBox, position, afterClick, afterEnd, afterTyping, events, pointers, nativeClone, touchRetry }, null, 2));
+    > 162 |   await expect(code.nth(0)).toHaveText('first\nsecond edited');
+          |                             ^
+      163 |   await page.keyboard.press('ControlOrMeta+z');
+      164 |   await expect(code.nth(0)).toHaveText('first\nsecond');
+      165 |   await page.keyboard.press('ControlOrMeta+Shift+z');
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:162:29)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\mobile.spec.ts:7:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-breaks-touch-widgets-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download

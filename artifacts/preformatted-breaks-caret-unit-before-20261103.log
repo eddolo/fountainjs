@@ -1,0 +1,56 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/view-native-selection.test.ts (7 tests | 3 failed) 212ms
+   × keeps equivalent native endpoints 0→0 after a code line-number widget 139ms
+   × keeps equivalent native endpoints 0→3 after a code line-number widget 22ms
+   × keeps equivalent native endpoints 3→0 after a code line-number widget 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/view-native-selection.test.ts > keeps equivalent native endpoints 0→0 after a code line-number widget
+ FAIL  tests/view-native-selection.test.ts > keeps equivalent native endpoints 0→3 after a code line-number widget
+AssertionError: expected Text{ …(1) } to be Text{ …(1) } // Object.is equality
+
+- Expected
++ Received
+
+- second
++ first
++
+
+ ❯ tests/view-native-selection.test.ts:26:31
+     24|     expect(editor.state.selection.from).toBe(6 + Math.min(anchor, focu…
+     25|     expect(editor.state.selection.to).toBe(6 + Math.max(anchor, focus)…
+     26|     expect(native.anchorNode).toBe(second);
+       |                               ^
+     27|     expect(native.focusNode).toBe(second);
+     28|     expect(native.anchorOffset).toBe(anchor); expect(native.focusOffse…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/view-native-selection.test.ts > keeps equivalent native endpoints 3→0 after a code line-number widget
+AssertionError: expected Text{ …(1) } to be Text{ …(1) } // Object.is equality
+
+- Expected
++ Received
+
+- second
++ first
++
+
+ ❯ tests/view-native-selection.test.ts:27:30
+     25|     expect(editor.state.selection.to).toBe(6 + Math.max(anchor, focus)…
+     26|     expect(native.anchorNode).toBe(second);
+     27|     expect(native.focusNode).toBe(second);
+       |                              ^
+     28|     expect(native.anchorOffset).toBe(anchor); expect(native.focusOffse…
+     29|     expect(native.getRangeAt(0)).toBe(range);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  17:36:15
+   Duration  4.47s (import 34%, transform 33%, environment 28%, tests 5%)

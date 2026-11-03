@@ -1,0 +1,155 @@
+{
+  "target": {
+    "top": 286.65625,
+    "left": 110,
+    "width": 8,
+    "height": 17
+  },
+  "codeBox": {
+    "x": 57,
+    "y": 260.515625,
+    "width": 279,
+    "height": 46.1875
+  },
+  "position": {
+    "x": 57,
+    "y": 34.640625
+  },
+  "afterClick": {
+    "prefix": null,
+    "anchorOffset": 5,
+    "anchorText": "first important second",
+    "anchorParent": "<span data-fountain-text-path=\"3.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-1\" contenteditable=\"false\" style=\"\"></span>first important second</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "afterEnd": {
+    "prefix": null,
+    "anchorOffset": 22,
+    "anchorText": "first important second",
+    "anchorParent": "<span data-fountain-text-path=\"3.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-1\" contenteditable=\"false\" style=\"\"></span>first important second</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "afterTyping": {
+    "prefix": null,
+    "anchorOffset": 29,
+    "anchorText": "first important second edited",
+    "anchorParent": "<span data-fountain-text-path=\"3.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-1\" contenteditable=\"false\"></span>first important second edited</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "events": [],
+  "pointers": [
+    {
+      "type": "pointerdown",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-1-1\" contenteditable=\"",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "touchstart",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-1-1\" contenteditable=\"",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "pointerup",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-1-1\" contenteditable=\"",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "touchend",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-1-1\" contenteditable=\"",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    },
+    {
+      "type": "click",
+      "x": 114,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-1-1\" contenteditable=\"",
+      "pre": "1",
+      "scrollY": 2378,
+      "viewport": {
+        "top": 0,
+        "pageTop": 2378
+      }
+    }
+  ],
+  "nativeClone": {
+    "afterTap": {
+      "path": "3",
+      "offset": 5,
+      "text": "first important second edited"
+    },
+    "text": [
+      "first\nsecond",
+      "first\n\nsecond",
+      "first important second edited baseline"
+    ],
+    "variants": [
+      {
+        "widgetsRemoved": true,
+        "textNormalized": false,
+        "caret": {
+          "path": "1",
+          "offset": 6,
+          "text": "second"
+        }
+      },
+      {
+        "widgetsRemoved": true,
+        "textNormalized": true,
+        "caret": {
+          "path": "1",
+          "offset": 12,
+          "text": "first\nsecond"
+        }
+      }
+    ]
+  },
+  "touchRetry": {
+    "afterTap": {
+      "prefix": null,
+      "anchorOffset": 5,
+      "anchorText": "first important second",
+      "anchorParent": "<span data-fountain-text-path=\"3.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-1\" contenteditable=\"false\"></span>first important second</span>",
+      "activeElement": "DIV",
+      "activeRole": "textbox"
+    },
+    "afterTyping": {
+      "prefix": null,
+      "anchorOffset": 29,
+      "anchorText": "first important second edited",
+      "anchorParent": "<span data-fountain-text-path=\"3.0\"><span class=\"fjs-code-line-number\" data-line=\"1\" aria-hidden=\"true\" data-fountain-widget=\"syntax-line-3-1\" contenteditable=\"false\"></span>first important second edited</span>",
+      "activeElement": "DIV",
+      "activeRole": "textbox"
+    }
+  }
+}

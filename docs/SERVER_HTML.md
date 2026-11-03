@@ -1,5 +1,84 @@
 # Server-native HTML conversion
 
+## Physical preformatted breaks and native caret affinity (2026-11-03, Unreleased)
+
+Ordinary browser/server HTML imports now preserve real `<br>` elements inside
+`pre` as literal code-buffer newlines. Previously `textContent` joined
+`first<br>second` into `firstsecond`. A break followed by an actual LF occupies
+two lines in a native preformatted surface; both are retained. Encoded `<br>`
+stays literal text. HTML initial-LF handling, authored CR references, tabs and
+Unicode remain separate from the break projection. The browser uses an
+iterative DOM walk; the server retains its existing parser depth/node limits.
+
+Protected Markdown flow keeps generated and raw HTML breaks as explicit LFs,
+independently of the following renderer LF. It retains exact untouched source
+and refuses protected hard-break attributes that cannot survive conversion.
+This remains a plain-code projection. Ordinary `parseWithReport` now reports
+unrepresented pre attributes, child formatting, links, comments, media and
+block layout without including source snippets. Canonical plain code receives
+no new warning. Rich preformatted formatting is **not** fixed by a warning;
+a dedicated supported bridge remains future work.
+
+The physical browser audit also exposed an independent source-caret bug. A
+click at the second line's first glyph initially selected its native text node,
+but model synchronization moved to the equivalent end offset before a line
+number widget. Firefox/WebKit then applied End to the previous row. Sync now
+keeps native endpoints when their wrapper, logical offsets and direction
+already match the requested model selection. Real endpoint changes, stale
+nodes, semantic selections and native form controls keep their existing rules.
+An unequal offset in the same text node skips the extra range mapping, so
+ordinary typing does not add native range cloning.
+
+A separate mobile WebKit touch failure was reproduced in an independent native
+copy of the exact editor DOM and CSS, without Fountain event handlers. Tapping
+the second line selected a different code block. Removing only the inline
+line-number widgets restored the intended caret, before merging text nodes.
+The live syntax extension now supplies bounded labels to a separate CSS gutter.
+There are no line-number DOM widgets or extra code text; empty CSS alternative
+text excludes decorative numbers from the accessibility tree. Source metadata,
+token highlighting, line-number controls, history and export shapes stay intact.
+
+The neutral output oracle is explicitly revised from **v12 to v13**: it now
+counts physical preformatted `<br>` lines instead of only `textContent`.
+Four negative break/literal-source controls and two equivalent-newline controls
+first fail against the old reducer, then pass. All eight fixture example ranges
+remain unchanged, as do the 563/613/631/635 profile counts and 1,288/1,304 exact
+safe-HTML native reopens. This strengthens a shared rendered-content check;
+it does not impose a reference AST or certify arbitrary HTML formatting.
+
+The full suite passes **3,335 tests / 238 files**, including forty new contracts
+for break retention, loss-report privacy, equivalent native endpoints and bounded
+gutter updates/history. Twenty final recorded browser cases pass; twelve more
+passing focus/RTL/1k-paint/100k-virtual cases use the same frozen runtime. All
+seventeen final source/editor/download/external-paste PNGs are reviewed. The
+five public conversion-lab journeys download actual HTML, open it in the native
+browser reader, reopen the bytes, and verify typing/undo/redo. Chromium and
+Firefox additionally deliver trusted native copy/paste into independent plain
+textareas. A separate native browser control explains Windows Firefox's CRLF
+selection string; Fountain's clipboard payload retains the LF-only source.
+Mobile checks are emulation, not physical-device certification.
+
+Packed root/core ESM/CommonJS, pure Node and real workerd each pass eleven
+new preformatted contracts. Framework types, the 415-file API check, 111-module
+headless boundary, size and website build pass. Two declaration hashes change
+only because the line-number documentation comments now describe the gutter;
+reversing those comments reproduces the prior hashes exactly.
+
+**Performance certification remains open.** The first current-source run fails
+100-block server HTML p95 (39.27 ms / 35 ms). A separately rebuilt `cc1f277`
+control fails that limit too (37.42 ms) plus the 1k limit (157.08 / 120 ms).
+The paired current run still fails 100-block p95 (43.04 ms). Keep every result;
+this does not prove clean latency or isolate a new regression. Scaling, live
+heap, destroyed-editor heap and the independent direction/mapping retention
+checks pass. No numerical latency/heap/sampling limits change. CI on the new
+source must be observed before further certification; npm stays unchanged.
+
+Measured code grows 1,776 bytes ESM / 1,585 CJS; the CSS gutter adds 612 bytes.
+Only aggregate code/CSS capacity changes to the reviewed footprint plus narrow
+headroom. Individual entry limits, dependencies, public signatures and schema
+stay unchanged. The manifest is
+`artifacts/preformatted-breaks-verification-20261103.json`.
+
 ## Empty heading text retention (2026-11-03, Unreleased)
 
 Safe HTML now distinguishes a heading containing one empty text leaf from a

@@ -295,6 +295,25 @@ export class SelectionHandler {
       && domSelection.focusNode === focus.node && domSelection.focusOffset === focus.offset) {
       return this.finishSync();
     }
+    // Decorations split one model text leaf into several DOM text nodes. Two
+    // native endpoints can map to the requested model range while differing
+    // from locateOffset's preferred boundary. Preserve the native choice and
+    // its line/bidi affinity instead of moving across a non-editable widget.
+    // Different offsets in the same text node cannot be equivalent: avoid
+    // cloning native ranges on the ordinary typing/cursor-update path.
+    const differentTextOffset = (domSelection.anchorNode === anchor.node && anchor.node.nodeType === Node.TEXT_NODE
+      && domSelection.anchorOffset !== anchor.offset)
+      || (domSelection.focusNode === focus.node && focus.node.nodeType === Node.TEXT_NODE
+        && domSelection.focusOffset !== focus.offset);
+    if (!differentTextOffset && domSelection.anchorNode && domSelection.focusNode) {
+      const nativeAnchor = this.readPoint(domSelection.anchorNode, domSelection.anchorOffset);
+      const nativeFocus = domSelection.anchorNode === domSelection.focusNode && domSelection.anchorOffset === domSelection.focusOffset
+        ? nativeAnchor : this.readPoint(domSelection.focusNode, domSelection.focusOffset);
+      if (nativeAnchor?.element === (backward ? endWrapper : wrapper) && nativeAnchor.offset === (backward ? selection.to : selection.from)
+        && nativeFocus?.element === (backward ? wrapper : endWrapper) && nativeFocus.offset === (backward ? selection.from : selection.to)) {
+        return this.finishSync();
+      }
+    }
     if (backward) {
       domSelection.setBaseAndExtent(end.node, end.offset, start.node, start.offset);
       return this.finishSync();
