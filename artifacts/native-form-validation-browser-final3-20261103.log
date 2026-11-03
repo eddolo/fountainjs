@@ -1,0 +1,35 @@
+[WebServer] (node:15848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:7160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:52:1 › keeps native form labels names and validation anchors consistent through reconnect (2.8s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:56:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (1.8s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:60:1 › validates required documents custom errors and labels through the native form workshop (4.1s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:257:1 › submits resets and disables a native form-associated Web Component (2.7s)
+(node:7592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:52:1 › keeps native form labels names and validation anchors consistent through reconnect (5.9s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:56:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (3.4s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:60:1 › validates required documents custom errors and labels through the native form workshop (6.2s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:257:1 › submits resets and disables a native form-associated Web Component (4.2s)
+(node:26356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:52:1 › keeps native form labels names and validation anchors consistent through reconnect (3.6s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:56:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (2.5s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:60:1 › validates required documents custom errors and labels through the native form workshop (11.2s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:257:1 › submits resets and disables a native form-associated Web Component (6.1s)
+(node:13884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 13 [mobile-chrome] › tests\browser\mobile.spec.ts:5:1 › validates required documents custom errors and labels on a mobile viewport (3.8s)
+  ok 14 [mobile-chrome] › tests\browser\mobile.spec.ts:9:1 › submits resets and disables a native form-associated Web Component on mobile (2.1s)
+(node:6664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 15 [mobile-safari] › tests\browser\mobile.spec.ts:5:1 › validates required documents custom errors and labels on a mobile viewport (9.2s)
+  ok 16 [mobile-safari] › tests\browser\mobile.spec.ts:9:1 › submits resets and disables a native form-associated Web Component on mobile (4.4s)
+
+  16 passed (1.4m)

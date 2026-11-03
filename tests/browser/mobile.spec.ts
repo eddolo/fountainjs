@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { webComponentFormJourney } from './web-component-form-journey';
+import { webComponentValidationJourney } from './web-component-validation-journey';
+
+test('validates required documents custom errors and labels on a mobile viewport', async ({ page }, info) => {
+  await webComponentValidationJourney(page, info);
+});
 
 test('submits resets and disables a native form-associated Web Component on mobile', async ({ page }, info) => {
   await webComponentFormJourney(page, info);

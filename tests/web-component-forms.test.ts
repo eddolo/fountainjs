@@ -28,6 +28,38 @@ describe('Web Component value and disabled-state contracts (native form behavior
     insertText(element.editor!, 'Changed');
     expect(serialize).not.toHaveBeenCalled();
   });
+  it('reflects required while keeping legacy elements outside native validation', () => {
+    const isEmpty = vi.fn(() => { throw new Error('Not a native form field'); });
+    const element = mount({ isFormValueEmpty: isEmpty });
+    element.required = true;
+    expect(element.hasAttribute('required')).toBe(true);
+    expect(element.willValidate).toBe(false);
+    expect(element.validity).toBeNull();
+    expect(element.labels).toBeNull();
+    expect(element.validationMessage).toBe('');
+    expect(element.checkValidity()).toBe(true);
+    expect(element.reportValidity()).toBe(true);
+    expect(() => element.setCustomValidity('Needs form association')).toThrow('formAssociated');
+    insertText(element.editor!, 'Changed');
+    expect(isEmpty).not.toHaveBeenCalled();
+    element.required = false;
+    expect(element.hasAttribute('required')).toBe(false);
+  });
+  it('forwards dynamic accessible names and descriptions without replacing the editor', () => {
+    const element = mount(), editor = element.editor;
+    element.setAttribute('aria-label', 'Updated document name');
+    element.setAttribute('aria-labelledby', 'document-label');
+    element.setAttribute('aria-describedby', 'document-help');
+    const view = element.querySelector<HTMLElement>('[role=textbox]')!;
+    expect(view.getAttribute('aria-label')).toBe('Updated document name');
+    expect(view.getAttribute('aria-labelledby')).toBe('document-label');
+    expect(view.getAttribute('aria-describedby')).toBe('document-help');
+    element.removeAttribute('aria-labelledby');
+    element.removeAttribute('aria-describedby');
+    expect(view.hasAttribute('aria-labelledby')).toBe(false);
+    expect(view.hasAttribute('aria-describedby')).toBe(false);
+    expect(element.editor).toBe(editor);
+  });
   it('replaces root metadata and content in one undoable update', () => {
     const element = mount({ plugins: [createHistoryPlugin()] });
     element.value = doc('Replacement', 'Grace');

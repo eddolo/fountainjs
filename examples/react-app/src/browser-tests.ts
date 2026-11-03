@@ -29,6 +29,7 @@ import {
   textPasteRule,
   type ExternalPasteReport,
   type Node,
+  type NodeJSON,
 } from '../../../src';
 import * as Y from 'yjs';
 import { createYjsCollaborationExtension } from '../../../src/yjs';
@@ -1375,6 +1376,8 @@ Object.assign(globalThis, {
     pasteReports: () => [...pasteReports],
     clearPasteReports: () => { pasteReports.length = 0; },
     clipboardHistory: () => getClipboardHistoryState(editor),
+    nativeFormValidation: async (mode: import('./native-form-validation-probe').FormPolicyProbe, value: NodeJSON, disabled = false) =>
+      (await import('./native-form-validation-probe')).probeNativeFormValidation(mode, value, disabled),
     inspectMarkdown,
     inspectMarkdownSource,
     partialMarkdownSource: () => partialMarkdown

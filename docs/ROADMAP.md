@@ -1,5 +1,36 @@
 # FountainJS opportunity roadmap
 
+Native form validation (2026-11-03, Unreleased): opt-in Web Components now
+support required-content and host custom-error validation, native validity and
+check/report APIs, associated-label focus/naming, and dynamic accessible
+descriptions. The public workshop exposes clear, required, custom-rule and
+disabled/reset controls. Independent native reproductions identify WebKit-port
+validation UI hiding an anchor's children and Firefox synchronous focus
+redirection breaking repeated reports; a separate empty anchor and deferred
+focus handoff keep the editor usable. Native popup timing stays browser-owned;
+the workshop also displays persistent inline feedback.
+
+Visual review also exposed an empty-block click regression: an inline-code
+guard incorrectly excluded childless block contentDOMs. The targeted selection
+repair fills the clicked paragraph/heading/code block without adding a trailing
+paragraph and preserves attributes and undo/redo. Nineteen recorded browser
+checks pass across Chromium/Firefox/WebKit and two mobile viewports, including
+three host display modes, callback failures, canceled invalid events, native
+FormData, labels and reconnect. These are browser-emulation results, not a
+physical-device or full native-input/accessibility certification. Minlength,
+autofill UX, host authorization, broader fidelity and the overall parity goal
+remain open. The additive API is documented in
+[the native form contract](WEB_COMPONENT_FORMS.md); npm remains unchanged.
+Final local verification passes 3,225 tests / 234 files, framework types, packed
+ESM/CommonJS, 110-module headless boundary, Node/workerd, performance/retention,
+reviewed API/size gates and the website build. Eighteen final PNGs were visually
+inspected; videos were recorded but not manually watched. CommonMark profiles
+and 1,286/1,304 safe-HTML retention are unchanged. Only measured aggregate code
+capacity grows (+4,475 bytes ESM / +3,747 CJS); entry/CSS/runtime/heap caps stay
+fixed. Source/evidence hashes and retained failures are in
+`artifacts/native-form-validation-verification-20261103.json`. Cloud gates for
+the new commit remain a separate requirement before stronger release claims.
+
 HTML retention repair (2026-11-03, Unreleased): both importers now retain
 explicit nested emphasis instead of collapsing its semantic levels. Nineteen
 official cases keep their complete native marks after HTML reopening; CSS

@@ -365,16 +365,16 @@ export class SelectionHandler {
     const contentRegion = target.closest('[data-fountain-content-dom]');
     // An inline atom inside somebody else's content region still owns node
     // selection. Only bypass the shell that owns this editable region.
-    const emptyCode = atom.dataset.fountainEmptyTextBlock === 'true'
+    const emptyTextBlock = atom.dataset.fountainEmptyTextBlock === 'true'
       && contentRegion && atom.contains(contentRegion);
-    if (contentRegion && atom.contains(contentRegion) && !emptyCode) return;
+    if (contentRegion && atom.contains(contentRegion) && !emptyTextBlock) return;
     try {
       const path = parseNodePath(atom);
       const node = getNodeAtPath(this.editor.state.doc, path);
       // Chromium can place an empty inline code caret on the surrounding
       // paragraph instead of inside its contentDOM. Keep the actual pointer
       // target as a semantic selection until typing creates its first text.
-      if (emptyCode && (!node.type.isInline || !node.type.spec.code || node.childCount)) return;
+      if (emptyTextBlock && node.type.isInline && (!node.type.spec.code || node.childCount)) return;
       if (!node.type.spec.atom && !node.type.spec.selectable
         && !(atom.dataset.fountainEmptyTextBlock === 'true' && !node.childCount)) return;
       const selection = new NodeSelection(this.editor.state.doc, path);

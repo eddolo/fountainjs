@@ -1,0 +1,62 @@
+[WebServer] (node:7120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:12968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [firefox] › tests\browser\editor.spec.ts:60:1 › validates required documents custom errors and labels through the native form workshop (12.7s)
+
+
+  1) [firefox] › tests\browser\editor.spec.ts:60:1 › validates required documents custom errors and labels through the native form workshop
+
+    Error: Native validation focus with display:block
+
+    expect(locator).toBeFocused() failed
+
+    Locator:  getByRole('region', { name: 'Native HTML form workshop' }).getByRole('textbox', { name: 'Approval request document', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Native validation focus with display:block with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Native HTML form workshop' }).getByRole('textbox', { name: 'Approval request document', exact: true })
+        14 × locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-invalid="true" aria-required="true" aria-multiline="true" aria-disabled="false" contenteditable="true" class="fountain-editor" aria-label="Approval request document" aria-describedby="native-form-document-hint native-form-validation-message">…</div>
+           - unexpected value "inactive"
+
+
+       at web-component-validation-journey.ts:34
+
+      32 |       events: node.focusProbe, active: node.ownerDocument.activeElement?.outerHTML, html: node.outerHTML,
+      33 |     })), null, 2));
+    > 34 |     await expect(editor, `Native validation focus with display:${display}`).toBeFocused();
+         |                                                                             ^
+      35 |     // Validate real layout, not just model text or simulated input events.
+      36 |     await expect.poll(() => editor.locator('p').first().evaluate(node => node.getBoundingClientRect().height)).toBeGreaterThan(0);
+      37 |     await page.keyboard.press('Escape');
+        at webComponentValidationJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\web-component-validation-journey.ts:34:77)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:61:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-form-validation-browser-focus-probe-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-form-validation-browser-focus-probe-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-form-validation-browser-focus-probe-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-form-validation-browser-focus-probe-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-form-validation-browser-focus-probe-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › tests\browser\editor.spec.ts:60:1 › validates required documents custom errors and labels through the native form workshop

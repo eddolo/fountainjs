@@ -1,0 +1,99 @@
+[
+  {
+    "kind": "input",
+    "display": "inline",
+    "active": "INPUT",
+    "events": [
+      "BUTTON",
+      "INPUT"
+    ]
+  },
+  {
+    "kind": "input",
+    "display": "block",
+    "active": "INPUT",
+    "events": [
+      "BUTTON",
+      "INPUT"
+    ]
+  },
+  {
+    "kind": "input",
+    "display": "inline-block",
+    "active": "INPUT",
+    "events": [
+      "BUTTON",
+      "INPUT",
+      "BUTTON",
+      "INPUT"
+    ]
+  },
+  {
+    "kind": "custom",
+    "display": "inline",
+    "active": "DIV",
+    "events": [
+      "BUTTON",
+      "DIV"
+    ]
+  },
+  {
+    "kind": "custom",
+    "display": "block",
+    "active": "BUTTON",
+    "events": [
+      "BUTTON",
+      "DIV",
+      "BUTTON"
+    ]
+  },
+  {
+    "kind": "custom",
+    "display": "inline-block",
+    "active": "BUTTON",
+    "events": [
+      "BUTTON",
+      "DIV",
+      "BUTTON"
+    ]
+  },
+  {
+    "kind": "custom-microtask",
+    "display": "inline",
+    "active": "DIV",
+    "events": [
+      "BUTTON",
+      "SPAN",
+      "DIV"
+    ]
+  },
+  {
+    "kind": "custom-microtask",
+    "display": "block",
+    "active": "DIV",
+    "events": [
+      "BUTTON",
+      "SPAN",
+      "DIV",
+      "BUTTON",
+      "SPAN",
+      "DIV"
+    ]
+  },
+  {
+    "kind": "custom-microtask",
+    "display": "inline-block",
+    "active": "DIV",
+    "events": [
+      "BUTTON",
+      "SPAN",
+      "DIV",
+      "BUTTON",
+      "SPAN",
+      "DIV",
+      "BUTTON",
+      "SPAN",
+      "DIV"
+    ]
+  }
+]

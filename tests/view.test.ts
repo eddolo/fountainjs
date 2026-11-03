@@ -9,6 +9,7 @@ import {
   EditorView,
   HTMLExporter,
   Selection as EditorSelection,
+  NodeSelection,
   Plugin,
   PluginKey,
   Decoration,
@@ -261,6 +262,25 @@ describe('EditorView', () => {
     expect(editor.state.doc.child(1).textContent).toBe('Heading');
     view.destroy();
     mount.remove();
+  });
+
+  it.each(['paragraph', 'heading', 'code_block'])('clicks into a replaced childless %s instead of leaving typing at a gap', type => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+      { type: 'paragraph', content: [{ type: 'text', text: 'Previous document' }] },
+    ] } });
+    const mount = document.createElement('div'); document.body.appendChild(mount);
+    const view = new EditorView(mount, editor);
+    const replacement = editor.state.schema.nodeFromJSON({ type: 'doc', content: [{ type }] });
+    editor.dispatch(editor.createTransaction().replaceDocument(replacement));
+    const block = view.dom.querySelector<HTMLElement>('[data-fountain-empty-text-block]')!;
+    block.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true }));
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection);
+    expect((editor.state.selection as NodeSelection).nodePath).toEqual([0]);
+    view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'Filled' }));
+    expect(editor.state.doc.childCount).toBe(1);
+    expect(editor.state.doc.child(0).type.name).toBe(type);
+    expect(editor.state.doc.child(0).textContent).toBe('Filled');
+    view.destroy(); mount.remove();
   });
 
   it('preserves and rebases unchanged block DOM across leading insertion and deletion', () => {

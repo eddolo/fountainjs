@@ -7,6 +7,8 @@
 .native-form input:not([type=checkbox]) { padding: 9px 12px; border: 1px solid #b7aecb; border-radius: 6px; max-width: 100%; box-sizing: border-box; font: inherit; }
 .demo-surface.native-form .fountain-editor { min-height: 150px; max-height: 320px; padding: 20px; background: white; border: 1px solid #d6d0e1; border-radius: 8px; }
 .native-form .fountain-editor[inert] { opacity: .65; }
+.native-form .fountain-editor[aria-invalid=true] { border-color: #a12b31; }
+.native-form .native-form__error { color: #8a2026; background: #fff0f0; padding: 10px 12px; border-radius: 6px; }
 .native-form button { padding: 10px 14px; margin: 0 4px 6px 0; border: 1px solid #b7aecb; border-radius: 7px; background: white; color: #201b31; font: inherit; cursor: pointer; }
 .native-form button:hover { background: #e6dff3; color: #201b31; }
 .native-form pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 16px; background: #fff; border: 1px solid #d6d0e1; border-radius: 8px; font-size: 12px; line-height: 1.5; }

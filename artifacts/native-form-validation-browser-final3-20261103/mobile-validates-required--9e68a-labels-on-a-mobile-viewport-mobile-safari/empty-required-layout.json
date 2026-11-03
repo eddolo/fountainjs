@@ -1,0 +1,149 @@
+{
+  "html": "<p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-empty-text-block=\"true\" data-fountain-gap=\"after\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></p>",
+  "rect": {
+    "width": 281,
+    "height": 24.796875,
+    "x": 56,
+    "y": 220.9375
+  },
+  "style": {
+    "display": "block",
+    "visibility": "visible",
+    "minHeight": "0px",
+    "lineHeight": "24.799999px"
+  },
+  "editor": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Approval request document\" spellcheck=\"true\" aria-required=\"true\" aria-invalid=\"true\" aria-disabled=\"false\" aria-describedby=\"native-form-document-hint native-form-validation-message\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-empty-text-block=\"true\" data-fountain-gap=\"after\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></p></div>",
+  "active": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Approval request document\" spellcheck=\"true\" aria-required=\"true\" aria-invalid=\"true\" aria-disabled=\"false\" aria-describedby=\"native-form-document-hint native-form-validation-message\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-empty-text-block=\"true\" data-fountain-gap=\"after\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></p></div>",
+  "ancestors": [
+    {
+      "tag": "P",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 281,
+      "height": 24.796875,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 323,
+      "height": 150,
+      "clientRects": 1
+    },
+    {
+      "tag": "FOUNTAIN-NATIVE-FORM-EDITOR",
+      "connected": true,
+      "display": "inline-block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 323,
+      "height": 150,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 323,
+      "height": 155,
+      "clientRects": 1
+    },
+    {
+      "tag": "FIELDSET",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 357,
+      "height": 675.984375,
+      "clientRects": 1
+    },
+    {
+      "tag": "FORM",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 357,
+      "height": 741.984375,
+      "clientRects": 1
+    },
+    {
+      "tag": "SECTION",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 375,
+      "height": 1308.65625,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "grid",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 377,
+      "height": 4741.65625,
+      "clientRects": 1
+    },
+    {
+      "tag": "SECTION",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 393,
+      "height": 5111.65625,
+      "clientRects": 1
+    },
+    {
+      "tag": "MAIN",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 393,
+      "height": 7155.625,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 393,
+      "height": 7155.625,
+      "clientRects": 1
+    },
+    {
+      "tag": "BODY",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 393,
+      "height": 7155.625,
+      "clientRects": 1
+    },
+    {
+      "tag": "HTML",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 393,
+      "height": 7155.625,
+      "clientRects": 1
+    }
+  ]
+}

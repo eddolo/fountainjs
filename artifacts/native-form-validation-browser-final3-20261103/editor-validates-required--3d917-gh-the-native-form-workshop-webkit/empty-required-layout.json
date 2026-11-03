@@ -1,0 +1,149 @@
+{
+  "html": "<p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-empty-text-block=\"true\" data-fountain-gap=\"after\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></p>",
+  "rect": {
+    "width": 1063.625,
+    "height": 24.796875,
+    "x": 108.1875,
+    "y": 381.90625
+  },
+  "style": {
+    "display": "block",
+    "visibility": "visible",
+    "minHeight": "0px",
+    "lineHeight": "24.799999px"
+  },
+  "editor": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Approval request document\" spellcheck=\"true\" aria-required=\"true\" aria-invalid=\"true\" aria-disabled=\"false\" aria-describedby=\"native-form-document-hint native-form-validation-message\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-empty-text-block=\"true\" data-fountain-gap=\"after\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></p></div>",
+  "active": "<div class=\"fountain-editor\" contenteditable=\"true\" tabindex=\"0\" role=\"textbox\" aria-multiline=\"true\" aria-label=\"Approval request document\" spellcheck=\"true\" aria-required=\"true\" aria-invalid=\"true\" aria-disabled=\"false\" aria-describedby=\"native-form-document-hint native-form-validation-message\"><p data-fountain-node=\"paragraph\" data-fountain-path=\"0\" data-fountain-content-dom=\"\" data-fountain-empty-text-block=\"true\" data-fountain-gap=\"after\"><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></p></div>",
+  "ancestors": [
+    {
+      "tag": "P",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1063.625,
+      "height": 24.796875,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1105.625,
+      "height": 150,
+      "clientRects": 1
+    },
+    {
+      "tag": "FOUNTAIN-NATIVE-FORM-EDITOR",
+      "connected": true,
+      "display": "inline-block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1105.625,
+      "height": 150,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1105.625,
+      "height": 155,
+      "clientRects": 1
+    },
+    {
+      "tag": "FIELDSET",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1139.625,
+      "height": 469.59375,
+      "clientRects": 1
+    },
+    {
+      "tag": "FORM",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1139.625,
+      "height": 535.59375,
+      "clientRects": 1
+    },
+    {
+      "tag": "SECTION",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1175.625,
+      "height": 895.6875,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "grid",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1177.625,
+      "height": 3473.6875,
+      "clientRects": 1
+    },
+    {
+      "tag": "SECTION",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1280,
+      "height": 3710.6875,
+      "clientRects": 1
+    },
+    {
+      "tag": "MAIN",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1280,
+      "height": 5247.21875,
+      "clientRects": 1
+    },
+    {
+      "tag": "DIV",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1280,
+      "height": 5247.21875,
+      "clientRects": 1
+    },
+    {
+      "tag": "BODY",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1280,
+      "height": 5247.21875,
+      "clientRects": 1
+    },
+    {
+      "tag": "HTML",
+      "connected": true,
+      "display": "block",
+      "visibility": "visible",
+      "contentVisibility": "visible",
+      "width": 1280,
+      "height": 5247.21875,
+      "clientRects": 1
+    }
+  ]
+}

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add opt-in Web Component required-content validation, host custom errors,
+  native validity/check/report APIs and associated-label focus/naming. Keep
+  browser validation UI outside document rendering, preserve document JSON,
+  and retain native disabled/reset semantics. Application authorization and
+  server validation remain host responsibilities.
+  Correct clicking into a childless text block after document replacement:
+  typing fills that block instead of creating an unintended following paragraph.
+
 - Preserve explicit nested emphasis through browser/server HTML import,
   including formatting wrappers around blocks. Count each wrapper once;
   retain CSS reassertion, nearest-color and safe-link behavior. Nineteen

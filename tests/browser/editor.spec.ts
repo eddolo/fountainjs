@@ -46,6 +46,24 @@ import { htmlFlowJourney, htmlFlowRetentionJourney, htmlFlowClipboardJourney, ht
 import { markdownFlowNewlineJourney } from './markdown-flow-newline-journey';
 import { markdownEmphasisRunsJourney, markdownPartialSchemaJourney } from './markdown-emphasis-runs-journey';
 import { webComponentFormJourney } from './web-component-form-journey';
+import { webComponentValidationJourney } from './web-component-validation-journey';
+import { nativeFormPolicyContracts, nativeFormLabelContracts, childlessBlockClickJourney } from './web-component-validation-contracts';
+
+test('fills replaced childless blocks by native click without adding another block', async ({ page }, info) => {
+  await childlessBlockClickJourney(page, info);
+});
+
+test('keeps native form labels names and validation anchors consistent through reconnect', async ({ page }) => {
+  await nativeFormLabelContracts(page);
+});
+
+test('keeps native form emptiness custom policy failures and canceled invalid events consistent', async ({ page }) => {
+  await nativeFormPolicyContracts(page);
+});
+
+test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
+  await webComponentValidationJourney(page, info);
+});
 import { conversionLabJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';

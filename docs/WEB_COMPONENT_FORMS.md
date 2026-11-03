@@ -1,6 +1,6 @@
 # Web Components in native HTML forms
 
-Unreleased, 2026-09-08. This is a browser integration feature, not a form builder,
+Unreleased, updated 2026-11-03. This is a browser integration feature, not a form builder,
 submission service, permission system, or a claim of full native-input parity.
 
 Register a distinct tag with native form association enabled:
@@ -19,7 +19,8 @@ registerFountainElement({
 ```html
 <form id="request">
   <label>Title <input name="title"></label>
-  <request-document name="document" aria-label="Request document"></request-document>
+  <label for="request-document">Request document</label>
+  <request-document id="request-document" name="document" required></request-document>
   <button type="submit">Submit</button>
   <button type="reset">Reset</button>
 </form>
@@ -38,7 +39,7 @@ prevents network submission and shows the actual native FormData instead.
 ## Contract
 
 - Form association is opt-in at registration, and requires native
-  `ElementInternals.setFormValue`. Existing registrations remain non-associated.
+  `ElementInternals.setFormValue` and `setValidity`. Existing registrations remain non-associated.
   Registration reuses an existing tag; choose a new tag to change its definition.
 - `name` reflects the HTML attribute. Nameless editors are omitted by the browser.
   The read-only `form` property exposes the native owner, including an external
@@ -70,10 +71,80 @@ prevents network submission and shows the actual native FormData instead.
 - Disconnect/reconnect retains the current document. As before, it destroys and
   recreates the editor/view; plugin history is not a persisted form-session store.
 
-Native `required`, `minlength`, custom-validity UI, alternative submission
-formats, automatic label-to-inner-editor focus, and autofill-specific UX are
-not implemented by this slice. Supply an accessible editor label and validate
-document requirements in the host. They remain follow-up integration work.
+## Required content and custom errors
+
+`required` reflects the attribute. By default a document satisfies it when it
+contains non-whitespace text or a non-break atom (for example an image or
+divider). Empty paragraphs, whitespace, hard breaks and empty code blocks do
+not count. This checks content, not whether its meaning meets your application
+rules. It never trims, normalizes or modifies the stored document; zero-width
+characters are not silently sanitized.
+
+Register `requiredMessage` for a localized missing-content message. The optional
+synchronous `isFormValueEmpty(value)` callback can replace the emptiness rule,
+for example to require prose rather than media. Throwing or returning a
+non-boolean blocks validation with a custom error and reports the failure to
+`onError`; an observer exception cannot bypass the error.
+
+```ts
+import type { FountainEditorElement } from 'fountainjs-editor';
+
+const field = document.querySelector<FountainEditorElement>('request-document')!;
+field.setCustomValidity('Please supply an approval owner.');
+field.reportValidity(); // false; native invalid event and reporting
+field.setCustomValidity(''); // clear the host-owned error
+```
+
+The element exposes native `validity`, `validationMessage`, `willValidate`,
+`checkValidity()` and `reportValidity()`. Normal interactive form submission
+and `requestSubmit()` run constraint validation; directly constructing
+`FormData` does not. Canceling an `invalid` event suppresses native reporting,
+not the invalid state. Custom errors persist across edits and reset until the
+host clears them, like native inputs. Disabled controls are barred from native
+validation and omitted from FormData.
+
+Native popup appearance and lifetime remain browser-owned and can change when
+focus moves to the editing surface. For persistent visible feedback, listen for
+`invalid` and show `validationMessage`, as the workshop does. The SDK does not
+inject an error panel or cancel the host's invalid events.
+
+Non-associated legacy elements expose `validity: null`, `labels: null`,
+`willValidate: false`, an empty validation message and successful check/report
+results. `setCustomValidity()` throws `NotSupportedError` there: it requires an
+explicit form-associated registration.
+
+## Labels, focus and rendering
+
+Native associated labels are exposed by `labels`. Clicking one focuses the
+actual editable view. Its accessible name uses explicit `aria-label`, then the
+registration's `ariaLabel`, then associated label text, then the default name.
+Label text changes are observed; document content inside a wrapping label is
+excluded from the name. Association is refreshed on focus and host ID/form
+association changes. `aria-labelledby`, `aria-describedby` and
+`aria-errormessage` are forwarded to the view. Required/invalid/disabled state
+is reflected there for assistive technology; this is not certification of
+every screen-reader/browser combination.
+
+The host has a default programmatic `tabindex="-1"`; an explicit host tabindex
+is respected. The editable view remains the normal keyboard stop. Native
+validation uses an empty sibling anchor outside the document renderer,
+forwarding focus to the editable view. This keeps browser-owned validation UI
+out of document content and avoids a WebKit-port behavior in which that UI
+hides an anchor's light-DOM children. The anchor is never serialized or submitted
+as document content and is removed on disconnect. The anchor spans the field's
+available width without adding vertical space, keeping the native popup away
+from the viewport's left edge. Focus forwarding waits for
+the browser's focus operation to finish, so repeated invalid submissions keep
+working in Firefox. It respects focus moved elsewhere by another listener.
+
+The isolated WebKit reproduction agrees with its fallback
+[validation-message implementation](https://github.com/WebKit/WebKit/blob/main/Source/WebCore/html/ValidationMessage.cpp),
+which uses a user-agent shadow tree when no native validation-message client is
+available. This is evidence for the tested port, not a claim that every Safari
+build has the same rendering defect.
+
+`minlength`, alternative submission formats and autofill-specific UX remain
+follow-up work. Server validation and authorization always belong to the host.
 
 ## Metadata retention correction
 
@@ -94,6 +165,16 @@ These tests do not simulate native browser FormData support in jsdom.
 real typing, a submit button, FormData, fieldset disabling, reset, external-form
 association, name changes and direct disabling in Chromium, Firefox and WebKit.
 Its manual counterpart records the same journey for visual review.
+
+`tests/browser/web-component-validation-journey.ts` uses the public workshop's
+label, clear, submit, type, custom-error, reset and fieldset controls. It checks
+that an invalid empty paragraph still has a physical click target, then fixes
+it with native typing and checks the actual submission JSON.
+The separate childless-block journey clicks replaced paragraphs, headings and
+code blocks, requires typing to fill the same block, and checks exact undo/redo.
+`tests/browser/web-component-validation-contracts.ts` uses real browser
+ElementInternals to check emptiness, atom versus prose policies, failed callbacks
+and canceled invalid events; jsdom does not stand in for native validation.
 
 The implementation follows the [HTML Standard's form-associated custom-element
 contract](https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements-face-example).

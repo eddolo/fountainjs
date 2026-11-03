@@ -1,0 +1,51 @@
+[WebServer] (node:16276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [webkit] › tests\browser\editor.spec.ts:56:1 › validates required documents custom errors and labels through the native form workshop (4.6s)
+
+
+  1) [webkit] › tests\browser\editor.spec.ts:56:1 › validates required documents custom errors and labels through the native form workshop
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at web-component-validation-journey.ts:44
+
+      42 |   });
+      43 |   await writeFile(info.outputPath('empty-required-layout.json'), JSON.stringify(layout, null, 2));
+    > 44 |   expect(layout.rect.height).toBeGreaterThan(0);
+         |                              ^
+      45 |   await workshop.scrollIntoViewIfNeeded();
+      46 |   await workshop.screenshot({ path: info.outputPath('native-form-required.png') });
+      47 |   await editor.locator('p').first().click(); await page.keyboard.type('Approval owner: Ada.');
+        at webComponentValidationJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\web-component-validation-journey.ts:44:30)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:57:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-form-validation-browser-host-anchor-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-form-validation-browser-host-anchor-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-form-validation-browser-host-anchor-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-form-validation-browser-host-anchor-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-form-validation-browser-host-anchor-20261103\editor-validates-required--3d917-gh-the-native-form-workshop-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\browser\editor.spec.ts:56:1 › validates required documents custom errors and labels through the native form workshop

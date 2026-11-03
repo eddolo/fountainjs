@@ -1,0 +1,497 @@
+[
+  {
+    "display": "inline",
+    "anchor": "host",
+    "before": [
+      {
+        "tag": "LAYOUT-INLINE-HOST",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-INLINE-HOST",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-INLINE-HOST",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ]
+  },
+  {
+    "display": "inline",
+    "anchor": "editor",
+    "before": [
+      {
+        "tag": "LAYOUT-INLINE-EDITOR",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-INLINE-EDITOR",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-INLINE-EDITOR",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  },
+  {
+    "display": "inline",
+    "anchor": "separate",
+    "before": [
+      {
+        "tag": "LAYOUT-INLINE-SEPARATE",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-INLINE-SEPARATE",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-INLINE-SEPARATE",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ]
+  },
+  {
+    "display": "block",
+    "anchor": "host",
+    "before": [
+      {
+        "tag": "LAYOUT-BLOCK-HOST",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-BLOCK-HOST",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-BLOCK-HOST",
+        "width": 1264,
+        "height": 0
+      },
+      {
+        "tag": "DIV",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  },
+  {
+    "display": "block",
+    "anchor": "editor",
+    "before": [
+      {
+        "tag": "LAYOUT-BLOCK-EDITOR",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-BLOCK-EDITOR",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-BLOCK-EDITOR",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  },
+  {
+    "display": "block",
+    "anchor": "separate",
+    "before": [
+      {
+        "tag": "LAYOUT-BLOCK-SEPARATE",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-BLOCK-SEPARATE",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-BLOCK-SEPARATE",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 1264,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 1222,
+        "height": 18
+      }
+    ]
+  },
+  {
+    "display": "inline-block",
+    "anchor": "host",
+    "before": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-HOST",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-HOST",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-HOST",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "DIV",
+        "width": 0,
+        "height": 0
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  },
+  {
+    "display": "inline-block",
+    "anchor": "editor",
+    "before": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-EDITOR",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-EDITOR",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-EDITOR",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 0
+      }
+    ]
+  },
+  {
+    "display": "inline-block",
+    "anchor": "separate",
+    "before": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-SEPARATE",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ],
+    "invalid": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-SEPARATE",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ],
+    "reported": [
+      {
+        "tag": "LAYOUT-INLINE-BLOCK-SEPARATE",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "DIV",
+        "width": 42,
+        "height": 192
+      },
+      {
+        "tag": "P",
+        "width": 0,
+        "height": 18
+      }
+    ]
+  }
+]
