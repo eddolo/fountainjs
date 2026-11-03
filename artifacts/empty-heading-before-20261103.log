@@ -1,0 +1,281 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-empty-heading.test.ts (32 tests | 14 failed) 137ms
+   ❯ browser empty heading HTML retention (16)
+     × keeps an empty text leaf in level 1 through safe HTML 11ms
+     × keeps an empty text leaf in level 2 through safe HTML 3ms
+     × keeps an empty text leaf in level 3 through safe HTML 2ms
+     × keeps an empty text leaf in level 4 through safe HTML 1ms
+     × keeps an empty text leaf in level 5 through safe HTML 2ms
+     × keeps an empty text leaf in level 6 through safe HTML 3ms
+     × keeps empty Markdown headings exact after HTML reopening 10ms
+   ❯ server empty heading HTML retention (16)
+     × keeps an empty text leaf in level 1 through safe HTML 1ms
+     × keeps an empty text leaf in level 2 through safe HTML 2ms
+     × keeps an empty text leaf in level 3 through safe HTML 1ms
+     × keeps an empty text leaf in level 4 through safe HTML 1ms
+     × keeps an empty text leaf in level 5 through safe HTML 1ms
+     × keeps an empty text leaf in level 6 through safe HTML 1ms
+     × keeps empty Markdown headings exact after HTML reopening 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps an empty text leaf in level 1 through safe HTML
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps an empty text leaf in level 1 through safe HTML
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'h1 data-fountain-empty="text"'
+
+- Expected
++ Received
+
+- h1 data-fountain-empty="text"
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <h1 dir="rtl" style="text-align:right"></h1>
++ <p>Keep this sibling.</p>
++ </body>
++ </html>
+
+ ❯ tests/html-empty-heading.test.ts:13:20
+     11|         schema.node('paragraph', {}, [schema.text('Keep this sibling.'…
+     12|       const html = HTMLExporter.export(doc);
+     13|       expect(html).toContain(`h${level} data-fountain-empty="text"`);
+       |                    ^
+     14|       const reopened = importer.parse(html, schema);
+     15|       expect(reopened.toJSON()).toEqual(doc.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps an empty text leaf in level 2 through safe HTML
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps an empty text leaf in level 2 through safe HTML
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'h2 data-fountain-empty="text"'
+
+- Expected
++ Received
+
+- h2 data-fountain-empty="text"
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <h2 dir="rtl" style="text-align:right"></h2>
++ <p>Keep this sibling.</p>
++ </body>
++ </html>
+
+ ❯ tests/html-empty-heading.test.ts:13:20
+     11|         schema.node('paragraph', {}, [schema.text('Keep this sibling.'…
+     12|       const html = HTMLExporter.export(doc);
+     13|       expect(html).toContain(`h${level} data-fountain-empty="text"`);
+       |                    ^
+     14|       const reopened = importer.parse(html, schema);
+     15|       expect(reopened.toJSON()).toEqual(doc.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps an empty text leaf in level 3 through safe HTML
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps an empty text leaf in level 3 through safe HTML
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'h3 data-fountain-empty="text"'
+
+- Expected
++ Received
+
+- h3 data-fountain-empty="text"
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <h3 dir="rtl" style="text-align:right"></h3>
++ <p>Keep this sibling.</p>
++ </body>
++ </html>
+
+ ❯ tests/html-empty-heading.test.ts:13:20
+     11|         schema.node('paragraph', {}, [schema.text('Keep this sibling.'…
+     12|       const html = HTMLExporter.export(doc);
+     13|       expect(html).toContain(`h${level} data-fountain-empty="text"`);
+       |                    ^
+     14|       const reopened = importer.parse(html, schema);
+     15|       expect(reopened.toJSON()).toEqual(doc.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps an empty text leaf in level 4 through safe HTML
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps an empty text leaf in level 4 through safe HTML
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'h4 data-fountain-empty="text"'
+
+- Expected
++ Received
+
+- h4 data-fountain-empty="text"
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <h4 dir="rtl" style="text-align:right"></h4>
++ <p>Keep this sibling.</p>
++ </body>
++ </html>
+
+ ❯ tests/html-empty-heading.test.ts:13:20
+     11|         schema.node('paragraph', {}, [schema.text('Keep this sibling.'…
+     12|       const html = HTMLExporter.export(doc);
+     13|       expect(html).toContain(`h${level} data-fountain-empty="text"`);
+       |                    ^
+     14|       const reopened = importer.parse(html, schema);
+     15|       expect(reopened.toJSON()).toEqual(doc.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps an empty text leaf in level 5 through safe HTML
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps an empty text leaf in level 5 through safe HTML
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'h5 data-fountain-empty="text"'
+
+- Expected
++ Received
+
+- h5 data-fountain-empty="text"
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <h5 dir="rtl" style="text-align:right"></h5>
++ <p>Keep this sibling.</p>
++ </body>
++ </html>
+
+ ❯ tests/html-empty-heading.test.ts:13:20
+     11|         schema.node('paragraph', {}, [schema.text('Keep this sibling.'…
+     12|       const html = HTMLExporter.export(doc);
+     13|       expect(html).toContain(`h${level} data-fountain-empty="text"`);
+       |                    ^
+     14|       const reopened = importer.parse(html, schema);
+     15|       expect(reopened.toJSON()).toEqual(doc.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps an empty text leaf in level 6 through safe HTML
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps an empty text leaf in level 6 through safe HTML
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'h6 data-fountain-empty="text"'
+
+- Expected
++ Received
+
+- h6 data-fountain-empty="text"
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <h6 dir="rtl" style="text-align:right"></h6>
++ <p>Keep this sibling.</p>
++ </body>
++ </html>
+
+ ❯ tests/html-empty-heading.test.ts:13:20
+     11|         schema.node('paragraph', {}, [schema.text('Keep this sibling.'…
+     12|       const html = HTMLExporter.export(doc);
+     13|       expect(html).toContain(`h${level} data-fountain-empty="text"`);
+       |                    ^
+     14|       const reopened = importer.parse(html, schema);
+     15|       expect(reopened.toJSON()).toEqual(doc.toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  tests/html-empty-heading.test.ts > browser empty heading HTML retention > keeps empty Markdown headings exact after HTML reopening
+ FAIL  tests/html-empty-heading.test.ts > server empty heading HTML retention > keeps empty Markdown headings exact after HTML reopening
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -3,42 +3,24 @@
+      {
+        "attrs": {
+          "align": "left",
+          "level": 1,
+        },
+-       "content": [
+-         {
+-           "text": "",
+-           "type": "text",
+-         },
+-       ],
+        "type": "heading",
+      },
+      {
+        "attrs": {
+          "align": "left",
+          "level": 2,
+-       },
+-       "content": [
+-         {
+-           "text": "",
+-           "type": "text",
+        },
+-       ],
+        "type": "heading",
+      },
+      {
+        "attrs": {
+          "align": "left",
+          "level": 3,
+-       },
+-       "content": [
+-         {
+-           "text": "",
+-           "type": "text",
+        },
+-       ],
+        "type": "heading",
+      },
+    ],
+    "type": "doc",
+  }
+
+ ❯ tests/html-empty-heading.test.ts:47:78
+     45|     it('keeps empty Markdown headings exact after HTML reopening', () …
+     46|       const original = MarkdownImporter.parse('#\n\n##\n\n###', schema…
+     47|       expect(importer.parse(HTMLExporter.export(original), schema).toJ…
+       |                                                                              ^
+     48|     });
+     49|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 18 passed (32)
+   Start at  16:50:30
+   Duration  3.60s (transform 36%, import 31%, environment 29%, tests 4%)

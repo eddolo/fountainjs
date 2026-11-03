@@ -270,7 +270,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     }).join('');
     case 'html_flow': return children();
     case 'paragraph': return `<p${node.childCount === 0 ? ' data-fountain-empty="block"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</p>`;
-    case 'heading': return `<h${Number(node.attrs.level) || 1}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</h${Number(node.attrs.level) || 1}>`;
+    case 'heading': return `<h${Number(node.attrs.level) || 1}${node.childCount === 1 && node.child(0).isText && node.child(0).text === '' ? ' data-fountain-empty="text"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</h${Number(node.attrs.level) || 1}>`;
     case 'blockquote': return `<blockquote${renderDOMAttributes(quoteDOMAttributes(node.attrs))}>${children()}</blockquote>`;
     case 'bullet_list': return `<ul${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
     case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ol>`;

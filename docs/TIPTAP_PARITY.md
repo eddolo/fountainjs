@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased empty-heading retention (2026-11-03): safe HTML preserves a heading's
+empty text position through both importers. Full units pass 3,295 / 237 files;
+five recorded download/native-reader/reopen/typing/history journeys pass across
+desktop/mobile emulation, with all fifteen final PNGs reviewed. Packed root/core
+and server-runtime contracts pass. Exact native safe-HTML reopens improve to
+1,288/1,304; CommonMark body scores and the semantic comparator are unchanged.
+The current Markdown boundary table distinguishes seventeen declared body
+policies from eight native-model cases. No parity row or npm version is promoted;
+new-source cloud certification remains pending. [Contract and evidence](SERVER_HTML.md#empty-heading-text-retention-2026-11-03-unreleased).
+
 Unreleased validation performance follow-up (2026-11-03): immutable wide copies
 reuse validated unchanged ranges while checking changed descendants and current
 grammar. A 10k-block one-child validation falls from 10,004 cache probes to five;

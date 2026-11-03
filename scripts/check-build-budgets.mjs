@@ -582,7 +582,9 @@ const limits = Object.freeze({
   // measured 1645.135 KiB. No individual entry, CSS or dependency increase.
   // Safe immutable-copy validation certificates: +2,052 bytes, measured
   // 1647.139 KiB. Initial size failure retained; entry/CSS/latency/heap caps unchanged.
-  'all ESM runtime code': 1647.25 * kibibyte,
+  // Empty heading leaf retention adds 341 bytes, measured 1647.472 KiB.
+  // Only aggregate code capacity changes; the failed prior cap is retained.
+  'all ESM runtime code': 1647.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -659,7 +661,8 @@ const limits = Object.freeze({
   // and retention caps stay unchanged; preserve the pre-review size failure.
   // Same edge-focus repair: +300 bytes, measured 1369.290 KiB.
   // Same validation optimization: +1,782 bytes, measured 1371.030 KiB.
-  'all CommonJS runtime code': 1371.25 * kibibyte,
+  // Same heading marker/restoration: +295 bytes, measured 1371.318 KiB.
+  'all CommonJS runtime code': 1371.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

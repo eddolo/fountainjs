@@ -35,7 +35,37 @@ ambiguous navigation stays rejected; its original spelling can survive only in
 the separate source snapshot. No URL-policy relaxation or CommonMark score
 promotion follows from source retention or better diagnostics.
 
-## Current remaining CommonMark work (2026-10-08, Unreleased)
+## Current remaining boundaries (2026-11-03, Unreleased)
+
+The strongest complete-file source profile matches 635/652 body projections.
+Its seventeen differences are still counted as differences, with the existing
+contracts below. They are not the twenty-two unresolved conversion cases in
+the dated October checkpoint.
+
+| Cases | Current contract |
+| --- | --- |
+| 596, 598–599, 601 | The conservative URL policy retains unapproved URI schemes literally instead of creating active links. Do not weaken this policy to increase a score. |
+| 608, 611–612 | Default GFM-style literal-address linking exceeds CommonMark. The existing public `autolinkLiterals: false` import choice leaves bare addresses literal; it is not a certified complete CommonMark mode. |
+| 207, 218, 239–240, 280–284, 315 | Empty documents/list items/quotes receive editable caret paragraphs. The gate separately verifies that this is the only difference and that source/canonical reopening retains content. |
+
+Native-model HTML retention is a different question. Empty heading text leaves
+now survive safe HTML via the explicit writer marker. Exact safe-HTML native
+reopens reach 1,288/1,304, with six plain-code projection cases and two adjacent
+equal-mark text-leaf merging cases remaining. The latter are representation
+canonicalization, not proof of lost visible text. Preformatted rich HTML needs
+a reviewed bridge if its formatting must survive plain-code projection; do not
+silently change the literal-code contract or force Fountain toward another AST.
+Source export also reports its three EOF-envelope model differences. Exact
+Markdown snapshots and native JSON remain independently checked backups.
+
+Run `node scripts/check-markdown-conformance.mjs
+--complete-source-report=artifacts/empty-heading-complete-corpus-20261103.json`
+and then `node artifacts/summarize-empty-heading-corpus-20261103.mjs` to reproduce
+the current case classification. The summary preserves concrete model paths and
+source examples; semantic agreement, model equality and visual fidelity remain
+separate. [Empty heading contract and verification](SERVER_HTML.md#empty-heading-text-retention-2026-11-03-unreleased).
+
+## Historical remaining CommonMark work (2026-10-08, Unreleased)
 
 The version-12 neutral comparator distinguishes `<a>` (a non-hyperlink
 placeholder) from `<a href="">` (a hyperlink). Three negative guards reject

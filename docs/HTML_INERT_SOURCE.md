@@ -1,6 +1,13 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
-Latest retention follow-up (2026-11-03, Unreleased): ordinary browser/server
+Latest empty-heading follow-up (2026-11-03, Unreleased): a safe writer marker
+retains an empty heading text leaf through both importers while ordinary
+childless headings keep their representation. Exact safe-HTML native retention
+is **1,288/1,304**; source model statuses are **1,282**
+`equal-except-source-tokens` / **22** `different`. Body-semantic profiles remain
+unchanged. [Contract, independent native-reader checks and remaining eight cases](SERVER_HTML.md#empty-heading-text-retention-2026-11-03-unreleased).
+
+Prior emphasis retention follow-up (2026-11-03, Unreleased): ordinary browser/server
 HTML reopening now preserves explicit emphasis depth. The corpus's exact
 safe-HTML native reopens improve to **1,286/1,304**; source model statuses become
 **1,280** `equal-except-source-tokens` / **24** `different`. CommonMark scores

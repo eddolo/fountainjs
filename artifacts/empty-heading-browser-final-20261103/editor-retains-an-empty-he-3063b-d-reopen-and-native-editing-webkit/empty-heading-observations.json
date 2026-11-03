@@ -1,0 +1,8 @@
+{
+  "workflow": "Markdown file -> HTML round-trip check -> actual HTML download -> file-picker reopen -> native typing/undo/redo",
+  "emptyHeadingHeight": 28.796875,
+  "preservedSibling": true,
+  "exactRoundTrips": 3,
+  "nativeHTMLReaderChecked": true,
+  "errors": []
+}

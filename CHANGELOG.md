@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve one empty heading text leaf through safe HTML with an explicit
+  writer marker. Keep ordinary childless headings unchanged and never let the
+  marker override source children. Browser/server importers agree; no public
+  API, schema or reference semantic-comparator change.
+
 - Avoid repeatedly validating unchanged siblings in wide immutable document
   copies. Reuse only fully validated immutable source ranges; check changed
   children, schema ownership, attributes, marks and node invariants. Reuse

@@ -1,5 +1,48 @@
 # Server-native HTML conversion
 
+## Empty heading text retention (2026-11-03, Unreleased)
+
+Safe HTML now distinguishes a heading containing one empty text leaf from a
+heading with no children. The former writes `data-fountain-empty="text"`; both
+browser and server importers restore that leaf only when the element is
+literally childless. This retains the empty native text position through saving
+and reopening instead of silently changing its document path. An ordinary
+unmarked empty heading keeps its previous childless representation.
+
+The marker cannot suppress source children, including whitespace, comments,
+empty formatting wrappers or breaks. Unknown marker values are ignored, and
+marked empty leaves keep their formatting. It adds no visible text, scripting,
+schema field, public API or new default import policy. It does not promise
+arbitrary text-leaf segmentation, attributes or HTML styling preservation.
+
+The public conversion-lab journey imports an empty Markdown heading, checks
+exact native equality, downloads HTML, reopens the actual bytes, types into the
+same heading and checks undo/redo and its unchanged sibling. The downloaded
+HTML is also opened with the browser's native renderer, independently of the
+Fountain preview. Headless runtime and packed root/core contracts cover all six
+heading levels, both empty shapes and document/fragment HTML.
+
+The exact safe-HTML corpus result improves to **1,288/1,304**; source model
+statuses become **1,282** `equal-except-source-tokens` / **22** `different`.
+Example 79 is repaired on both line endings with no new native-model mismatch.
+The body-semantic scores remain 563/613/631/635. Eight safe-HTML native cases
+remain: 148, 169, 183, 184, 191 and 309's plain-code projection, and 187/494's
+adjacent equal-mark text-leaf merging. Source export also retains the three
+previously reported EOF-envelope differences. These are separate measurements;
+no parser reference AST, general exact-HTML or pixel-parity claim follows.
+
+Verification passes 3,295 units / 237 files, including 32 new contracts; the
+focused set passes 103 tests. Five recorded public conversion-lab journeys pass
+across Chromium/Firefox/WebKit and two mobile viewports. All fifteen final PNGs
+are visually inspected; ten videos are recorded, not manually watched. Twenty-four
+empty-shape checks run in each packed ESM/CommonJS root/core route, pure Node
+and workerd. API 415, headless 111, types, corpus, performance/retention and website
+checks pass. Only measured aggregate code capacity increases: +341 bytes ESM /
+295 CJS, with 1647.5 / 1371.5 KiB caps. Entry/CSS/latency/heap limits stay fixed;
+the pre-review size failure and fourteen initial regression failures remain.
+Current-source cloud certification is pending and npm stays unchanged.
+Source/evidence binding: `artifacts/empty-heading-verification-20261103.json`.
+
 ## Retained emphasis depth (2026-11-03, Unreleased)
 
 Both `HTMLImporter` and `ServerHTMLImporter` now preserve explicit nested

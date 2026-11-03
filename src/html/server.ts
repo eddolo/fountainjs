@@ -1298,7 +1298,9 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
   }
   if (/^h[1-6]$/.test(tag)) {
     const dir = readTextDirection(element, schema);
-    return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema, [], context))];
+    const content = inlineChildren(element, schema, [], context);
+    const emptyText = !content.length && !element.childNodes.length && element.getAttribute('data-fountain-empty') === 'text';
+    return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, emptyText ? [schema.text('')] : content)];
   }
   if (tag === 'p') return [paragraph(element, schema, context)];
   if (tag === 'blockquote') {

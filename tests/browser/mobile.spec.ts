@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { webComponentFormJourney } from './web-component-form-journey';
 import { explicitFocusJourney } from './explicit-focus-journey';
+import { emptyHeadingHTMLJourney } from './empty-heading-html-journey';
+test('retains an empty heading through actual HTML download reopen and native mobile editing', async ({ page }, info) => {
+  await emptyHeadingHTMLJourney(page, info);
+});
 for (const edge of ['start', 'end'] as const) test(`focuses the ${edge} empty text source on mobile before native typing`, async ({ page }, info) => {
   await explicitFocusJourney(page, info, edge);
 });

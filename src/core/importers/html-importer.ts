@@ -616,7 +616,11 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
   }
   if (/^h[1-6]$/.test(tag)) {
     const dir = readTextDirection(element, schema);
-    return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, inlineChildren(element, schema))];
+    const content = inlineChildren(element, schema);
+    // Only a writer-marked, literally empty heading restores a text leaf.
+    // Ordinary childless HTML and source children keep their existing meaning.
+    const emptyText = !content.length && !element.childNodes.length && element.getAttribute('data-fountain-empty') === 'text';
+    return [schema.node('heading', { level: Number(tag[1]), ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, emptyText ? [schema.text('')] : content)];
   }
   if (tag === 'p') return [paragraph(element, schema)];
   if (tag === 'blockquote') {

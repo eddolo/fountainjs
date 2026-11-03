@@ -1,5 +1,24 @@
 # FountainJS opportunity roadmap
 
+Empty-heading HTML retention (2026-11-03, Unreleased): a safe writer marker now
+retains a heading's empty text position through browser/server reopening, without
+changing ordinary childless HTML or overriding source children. Five recorded
+public conversion-lab journeys download the real HTML, open it in a native
+browser reader, reopen the bytes in Fountain, then type/undo/redo in that heading.
+All fifteen final PNGs are reviewed. Full units pass 3,295 / 237 files; the focused
+set passes 103, including 32 new contracts and fourteen retained initial failures.
+Packed root/core ESM/CommonJS, pure Node and workerd each pass 24 shape contracts.
+API 415, headless 111, types, corpus, performance/retention and website checks pass.
+
+Exact safe-HTML native retention improves to 1,288/1,304, with eight model-shape
+cases remaining. The strongest body-semantic profile remains 635/652 with its
+seventeen declared policies; default/safe/fragment profiles stay unchanged. The
+older “22 remaining” conversion table is now explicitly historical and a current
+boundary table separates policies from model canonicalization. Only aggregate
+code capacity grows (+341 bytes ESM / +295 CJS); other limits, API/schema,
+dependencies, npm and parity rows stay unchanged. New-source cloud certification
+remains pending. [Scope, costs and evidence](SERVER_HTML.md#empty-heading-text-retention-2026-11-03-unreleased).
+
 Immutable-copy validation follow-up (2026-11-03, Unreleased): profiles identify
 repeated validation of unchanged siblings as the main wide-document dispatch
 cost. Fully validated immutable copies now reuse unchanged ranges; new children,
