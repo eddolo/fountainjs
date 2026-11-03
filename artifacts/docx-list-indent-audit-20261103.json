@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "7101338addc0b2c3e0675a7dd55c20bc505079f8",
+  "nativeRun": 41713938393,
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "observed": {
+    "sourceNativeFirstItemTextXPt": 75.7,
+    "exportedNativeFirstItemTextXPt": 93.7,
+    "sourceStyle": "ListNumber -> numId 5 -> abstractNumId 7, level 0",
+    "sourceNumberingTwips": { "left": 360, "hanging": 360, "numberTab": 360 },
+    "exportedNumberingTwips": { "left": 720, "hanging": 360, "numberTab": 720 }
+  },
+  "codeEvidence": [
+    { "file": "src/docx/index.ts", "symbol": "NumberingLevel/readNumbering", "finding": "Only ordered/start are retained; level geometry, marker text and numbering tabs are omitted." },
+    { "file": "src/docx/index.ts", "symbol": "parseParagraph", "finding": "Reads direct numPr, then falls back to a ListNumber-style name; does not resolve the numbering reference in the paragraph style." },
+    { "file": "src/docx/index.ts", "symbol": "blockXML list cases", "finding": "Writes generated level geometry using a 720-twip level step and 360-twip hanging indent." },
+    { "file": "src/docx/index.ts", "symbol": "paragraphXML", "finding": "Reopened Word paragraph indentation can add to the browser list gutter; list and paragraph coordinate ownership need an explicit boundary." },
+    { "file": "src/docx/style-reader.ts", "symbol": "readWordParagraphFormatting", "finding": "contextualSpacing and style-owned numPr currently remain unsupported paragraph properties." }
+  ],
+  "nextRepairRequirements": [
+    "Resolve style-owned numbering and level overrides without reviving ambiguous declarations.",
+    "Preserve supported list marker/text geometry and contextual spacing through import/view/export/reopen.",
+    "Keep paragraph-local indentation separate from list gutter ownership to avoid doubling it.",
+    "Verify nested lists, multi-paragraph items, custom starts and source/native rendered positions; do not alter the original fixture."
+  ],
+  "implementationStarted": false,
+  "limitations": "The 18-point first-item shift is native LibreOffice evidence for this fixture; a general list-layout repair remains unimplemented."
+}

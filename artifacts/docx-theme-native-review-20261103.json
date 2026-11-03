@@ -1,0 +1,78 @@
+{
+  "nativeSourceCommit": "73ad110708c5d2dcb2c7ec4f9a3d06f128a8c7c4",
+  "run": 41720509194,
+  "job": 126211719668,
+  "conclusion": "success",
+  "artifact": 13272755698,
+  "artifactArchiveSHA256": "sha256:43f001cc8eb179790956f1f55a07e3b55d91f8065bb98b1c240b7e95d3ffe4c5",
+  "archiveIndependentlyRehashed": true,
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "exportedSHA256": "11945508cf8f6be160948bba80b074a38feeb230abccdbba8b10f620af08ef81",
+  "reviewed": [
+    {
+      "path": "artifacts/docx-theme-native-evidence-20261103/native/source/page-1.png",
+      "SHA256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d"
+    },
+    {
+      "path": "artifacts/docx-theme-native-evidence-20261103/native/source/page-2.png",
+      "SHA256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223"
+    },
+    {
+      "path": "artifacts/docx-theme-native-evidence-20261103/native/exported/page-1.png",
+      "SHA256": "b5cd62a31349d3ea6c2bfb8c020b8ef0122223dc9dc52f9a76759299d62c8555"
+    },
+    {
+      "path": "artifacts/docx-theme-native-evidence-20261103/native/exported/page-2.png",
+      "SHA256": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862"
+    }
+  ],
+  "allNativePagesReviewed": true,
+  "sourcePagePNGsIdenticalToPreviousRun": true,
+  "result": "Both native PDFs use Carlito Regular 25 pt for the title and Carlito Bold 16 pt for the setup heading.",
+  "remaining": [
+    "Title final-word x position differs by 0.6 pt",
+    "List indentation/spacing",
+    "Header placement",
+    "Source footnote validity/rendering discrepancy",
+    "Capacity approval before changing four code limits",
+    "Fresh broad cloud gate before npm release"
+  ],
+  "worker": "Real workerd production DOCX import/export/reopen retains title paragraph/text Calibri without DOM or Node built-ins.",
+  "pixelFidelityCertified": false,
+  "microsoftWordCertified": false,
+  "capacityPatchApplied": false,
+  "npm": "unchanged at 0.4.0-beta.2",
+  "sourceBinding": "SHA-256 of staged Git blobs; this manifest excluded to avoid circular hashes. Runtime source equals native audit commit.",
+  "hashes": {
+    "artifacts/check-docx-theme-language-worker-20261103.mjs": "f479a4404c41ccfcccde060ec546e7e53d188f7ef43256a5212d081ee4a84830",
+    "artifacts/docx-list-indent-audit-20261103.json": "d1f1d4db1b3b29903c745df5ec832dd32ea254b1f022781424b47c1be207bd31",
+    "artifacts/docx-theme-language-worker-20261103.mjs": "1cc2419178b095359c420aa286b942a5f5eaf3277f66ac1d9a4a18632039c696",
+    "artifacts/docx-theme-language-worker-final-20261103.log": "86037ea16dae821002916959eafde4eb4a2803d159731199561dd53ef57b3df6",
+    "artifacts/docx-theme-native-cloud-metadata-20261103.json": "e56f5f84c87a630456c0e2a02c9a83fdee8003c42a10beb43dca5fa55e2fb0ee",
+    "artifacts/docx-theme-native-evidence-20261103/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-native-evidence-20261103/exported.docx": "11945508cf8f6be160948bba80b074a38feeb230abccdbba8b10f620af08ef81",
+    "artifacts/docx-theme-native-evidence-20261103/interchange-report.json": "2d0e24ce96a28ddc969bd145e949e51f8ebe88825a798641a293bb2f9f50b5a7",
+    "artifacts/docx-theme-native-evidence-20261103/native-report.json": "f8584b374ef5fcdfafb840471166da4f27064b52df43f993a939f40a2e11b039",
+    "artifacts/docx-theme-native-evidence-20261103/native/exported/exported.pdf": "c543afd65f8cdb4cab1ba7300ed3238a029e1ea4d882aa38edec9445e0609e17",
+    "artifacts/docx-theme-native-evidence-20261103/native/exported/images.txt": "974efe612a3c1b57b236bf105afe083e8a5161836a71a7c98a3e2b60d0508e93",
+    "artifacts/docx-theme-native-evidence-20261103/native/exported/page-1.png": "b5cd62a31349d3ea6c2bfb8c020b8ef0122223dc9dc52f9a76759299d62c8555",
+    "artifacts/docx-theme-native-evidence-20261103/native/exported/page-2.png": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862",
+    "artifacts/docx-theme-native-evidence-20261103/native/exported/pdfinfo.txt": "fc9df21812a44e52334bd341f1670532017927114f28244120407bb6c32d211c",
+    "artifacts/docx-theme-native-evidence-20261103/native/exported/text.txt": "8d0476297b9869677693a874244b6eb339807fd260738904aa9ad02a5a0407dc",
+    "artifacts/docx-theme-native-evidence-20261103/native/office-version.txt": "56fd5c80e538053b29bda06f2437996e247aa134ffa01a12eb4641e2c3eb4b45",
+    "artifacts/docx-theme-native-evidence-20261103/native/source/images.txt": "ee74b48531b46beff90cffc8f93887be7abfe55803a5ef671c99d42ffb57c9f4",
+    "artifacts/docx-theme-native-evidence-20261103/native/source/page-1.png": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+    "artifacts/docx-theme-native-evidence-20261103/native/source/page-2.png": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+    "artifacts/docx-theme-native-evidence-20261103/native/source/pdfinfo.txt": "0a66cefe57c89b8ce6f0d5c9fae4b90acb896acf456f6079f8e7fb218c7a041b",
+    "artifacts/docx-theme-native-evidence-20261103/native/source/source.pdf": "01859b1e0d57a69869dc9555bb1ea907317544dc62f756e80e9ec6856db34d86",
+    "artifacts/docx-theme-native-evidence-20261103/native/source/text.txt": "bac4753c940ed96cfa0e4321c2cce544431a0a2fbe205aed6b36b6a4fb6c68df",
+    "artifacts/docx-theme-native-font-observations-20261103.json": "24a53900f757950e951ae37fc5fe0b95211456bf000c5e48b55be84cfc4dd559",
+    "artifacts/docx-theme-native-font-observations-20261103.log": "9bc1566afc49b9ace6cf861cf8298d7ae634917207e0cd7995c1099f766f118c",
+    "artifacts/inspect-docx-theme-native-20261103.py": "8b59f6a535bda12ea924c45994bc41f6a12e6c44afe02c884a9b036a32a76fcd",
+    "artifacts/write-docx-theme-native-review-20261103.mjs": "62b016ec74a1a87cc1d2911c2c6abf35877a0268e90ad6e03f5c8a9ecc3f86c9",
+    "docs/DOCX_FIDELITY_CHECKPOINT.md": "4dfc459c35e63d2dfaf6b065b26b837b8ee7da0d093062f22da7a51eca734556",
+    "docs/DOCX_NATIVE_AUDIT.md": "22a7aac2a1532886db25f7b2c0e33f3e2a94be9d952412f37958b5f4c218c28f",
+    "docs/ROADMAP.md": "be02f0c76effdbf9816bc0e6f95c8f6abc9d0887e1e04a7c53f932a2575d97fe",
+    "docs/TIPTAP_PARITY.md": "90d36165ebf9caccf8a29f92bb83ca78fa5dd3ba92c8374daab2c3f74de93452"
+  }
+}

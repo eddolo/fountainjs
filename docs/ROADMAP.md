@@ -4,8 +4,10 @@ DOCX theme-language repair (2026-11-03, Unreleased): resolve embedded script
 fonts/regional defaults instead of rejecting all explicit languages. The
 unchanged scientific source now retains its Calibri title and headings through
 real browser import/edit/history/download/reopen in all three desktop engines.
-Full units pass 3,413 / 241 files. Native font verification and measured code
-capacity remain pending; FORMAT-05 stays partial. [Details](DOCX_NATIVE_AUDIT.md).
+Full units pass 3,413 / 241 files. Native font verification now passes with four
+pages reviewed; matching faces/sizes do not certify full layout parity. The
+measured code-capacity decision remains pending. FORMAT-05 stays partial.
+[Details](DOCX_NATIVE_AUDIT.md).
 
 Native DOCX verification (2026-11-03, Unreleased): reusing the unchanged
 scientific source exposed and repaired a repeated-shading import crash. Full

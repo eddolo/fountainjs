@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+DOCX theme-language repair (2026-11-03, Unreleased): the scientific document
+now retains the correct embedded title/heading font through real import,
+editing/history, download and reopen in all three desktop engines. Full units
+pass 3,413 / 241 files; package/types/API/headless/interop/site and real workerd
+checks pass. Independent native source/export PDFs now agree on title/heading
+faces and sizes, and all four pages were inspected. Source PNGs remain identical.
+Code capacity is prepared for approval; layout gaps and FORMAT-05 remain
+partial, with no npm or parity-percentage promotion. [Evidence](DOCX_NATIVE_AUDIT.md).
+
 Browser assertion follow-up (2026-11-03, Unreleased): the broad formatting run
 had 839 passes, 16 skips and three identical stale serialized-HTML assertions.
 The strengthened journey checks exact parsed text/newlines and code-mark scope;
