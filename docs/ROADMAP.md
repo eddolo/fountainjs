@@ -1,5 +1,14 @@
 # FountainJS opportunity roadmap
 
+EOF source foundation (2026-11-03, Unreleased): an optional literal code block
+retains discarded unfinished tags in final root HTML source. Prefix conversion,
+native/history/safe saving and parser-checked source reconstruction preserve the
+data; raw-source export refuses following content, completed/moved/duplicate
+tokens and unsupported shapes. Initial text-location and direct-reimport
+failures are covered by regression cases. The existing fragment-oriented scores
+remain 563/613/631 while a complete-document profile is certified separately.
+See [the bounded EOF contract](HTML_INERT_SOURCE.md#unfinished-html-at-eof-2026-11-03-unreleased).
+
 Source-empty body foundation (2026-11-03, Unreleased): optional explicit editing
 blocks distinguish source-empty bodies from authored empty paragraphs. JSON
 and safe HTML preserve provenance; validated source output omits only a sole

@@ -4,7 +4,7 @@ import { EditorView, StarterKit, composeExtensions, createEditor, EditorState, S
   type Editor, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 import { createHTMLSourceMarkdownAdapter, importHTMLSourceDocument, exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
-import { appendInertHTMLBlockParagraph, createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
+import { appendInertHTMLBlockParagraph, createHTMLSourceEOFExtension, createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import './html-container-workshop.css';
 
 const samples = {
@@ -53,6 +53,7 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
   useEffect(() => {
     const kit = composeExtensions([...StarterKit.extensions,
       createHTMLSourceEmptyBodyExtension(),
+      createHTMLSourceEOFExtension(),
       createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'lab.measurement', 'fountain-unsafe'] }),
       createInertHTMLBlockExtension({ tags: ['lab-section', 'warning'] }),
       ...(preserveAnchors ? [createInertHTMLAnchorExtension()] : []),
@@ -151,6 +152,7 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
       <button onClick={() => load(samples.declaration, 'HTML')}>Document declaration sample</button>
       <button onClick={() => load('<!DOCTYPE html>\n\nResearch evidence.\n', 'Markdown')}>Markdown declaration sample</button>
       <button onClick={() => load('<!DOCTYPE html>\n', 'Markdown')}>Empty source document sample</button>
+      <button onClick={() => load('<div data-note="unfinished\nliteral & <not active', 'Markdown')}>Retained EOF source sample</button>
     </div>
     <label>Inert input format<select value={inputFormat} onChange={event => setInputFormat(event.target.value as 'Markdown' | 'HTML')}><option>Markdown</option><option>HTML</option></select></label>
     <label><input type="checkbox" checked={preserveEnvelope} onChange={event => setPreserveEnvelope(event.target.checked)} /> Retain HTML source doctype on next import</label>
@@ -159,6 +161,14 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
     <label htmlFor="inert-source-input">Inert source input</label><textarea id="inert-source-input" value={input} onChange={event => setInput(event.target.value)} rows={3} />
     <button onClick={() => load(input)}>Import inert source</button>
     <h3>Edit retained content</h3><div className="section-editor" ref={mount} />
+    {editor?.state.doc.content.some(node => node.type.name === 'html_source_eof') && <>
+      <p>The unfinished tag is literal source. Enter adds a literal newline. Complete source export requires it to stay unfinished and at the end; completed syntax must be reimported. Following content stays editable but makes source export refuse.</p>
+      <button onClick={() => {
+        const index = editor.state.doc.content.findIndex(node => node.type.name === 'html_source_eof');
+        if (index < 0) return;
+        editor.dispatch(editor.createTransaction().replaceNode([index], [editor.state.doc.child(index), editor.state.schema.node('paragraph', {}, [editor.state.schema.text('')])]));
+      }}>Add paragraph after EOF source</button>
+    </>}
     <p>Block wrappers retain structured children, not the original layout. Empty wrappers stay empty until you explicitly add content. Each button below adds one paragraph inside that wrapper and places the caret there.</p>
     <div className="section-actions">{blockChoices.map(choice => <button key={choice.path.join('.')} onClick={() => {
       if (editor && appendInertHTMLBlockParagraph(editor, choice.path)) viewRef.current?.focus();

@@ -41,5 +41,15 @@ export function checkHTMLSource(root, inert, source) {
   const emptyOutput = source.exportHTMLSource(empty);
   assert.equal(emptyOutput.ok, true); assert.ok(!emptyOutput.sourceHTML.includes('<p'));
   assert.deepEqual(source.importHTMLSourceDocument(root.HTMLExporter.export(empty), emptySchema).document.toJSON(), empty.toJSON());
-  return 20;
+  const eofSchema = new root.Schema({ ...root.CoreSchemaSpec, nodes: { ...root.CoreSchemaSpec.nodes,
+    ...inert.createHTMLSourceEOFExtension().nodes } });
+  const eof = root.MarkdownImporter.parse('Evidence.\n\n<div title="<unfinished', eofSchema,
+    { parseHTMLDocument: source.createHTMLSourceMarkdownAdapter() });
+  assert.equal(eof.content.at(-1).type.name, 'html_source_eof');
+  const eofOutput = source.exportHTMLSource(eof);
+  assert.equal(eofOutput.ok, true); assert.ok(eofOutput.sourceHTML.endsWith('<div title="<unfinished'));
+  assert.equal(source.exportHTMLSource(eof.copy([...eof.content].reverse())).ok, false);
+  assert.deepEqual(root.MarkdownImporter.parse(root.MarkdownExporter.export(eof), eofSchema,
+    { parseHTMLDocument: source.createHTMLSourceMarkdownAdapter() }).toJSON(), eof.toJSON());
+  return 25;
 }

@@ -1,0 +1,69 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-source-eof.test.ts (15 tests | 2 failed) 65ms
+   ❯ explicit unfinished tag source at EOF (15)
+     × uses lexical source locations rather than the last angle bracket: "Before &amp; after <div title=\"unfinished" 4ms
+     × preserves direct complete-document EOF source and envelope 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-source-eof.test.ts > explicit unfinished tag source at EOF > uses lexical source locations rather than the last angle bracket: "Before &amp; after <div title=\"unfinished"
+AssertionError: expected undefined to be '<div title="unfinished' // Object.is equality
+
+- Expected:
+"<div title=\"unfinished"
+
++ Received:
+undefined
+
+ ❯ tests/html-source-eof.test.ts:39:46
+     37|     ['<template><p>Inside</p></template><div data-x=', '<div data-x='],
+     38|   ])('uses lexical source locations rather than the last angle bracket…
+     39|     expect(unfinishedHTMLTail(source)?.tail).toBe(tail);
+       |                                              ^
+     40|   });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/html-source-eof.test.ts > explicit unfinished tag source at EOF > preserves direct complete-document EOF source and envelope
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', attrs: { …(1) }, …(1) }
+
+- Expected
++ Received
+
+@@ -17,17 +17,8 @@
+            "type": "text",
+          },
+        ],
+        "type": "paragraph",
+      },
+-     {
+-       "content": [
+-         {
+-           "text": "<div data-x=\"unfinished",
+-           "type": "text",
+-         },
+-       ],
+-       "type": "html_source_eof",
+-     },
+    ],
+    "type": "doc",
+  }
+
+ ❯ tests/html-source-eof.test.ts:82:98
+     80|     expect(eofNodes(doc)).toHaveLength(1); expect(doc.child(0).textCon…
+     81|     const result = exportHTMLSource(doc); expect(result.ok, JSON.strin…
+     82|     if (result.ok) expect(importHTMLSourceDocument(result.sourceHTML, …
+       |                                                                                                  ^
+     83|   });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 23 passed (25)
+   Start at  12:47:47
+   Duration  2.73s (import 49%, transform 47%, tests 4%)

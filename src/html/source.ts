@@ -5,6 +5,15 @@ import { readDocumentPageSettings } from '../core/page-settings';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { ServerHTMLImporter, type ServerHTMLImporterOptions, type ServerHTMLImportResult, type ServerHTMLFragmentImportResult } from './server';
 import type { MarkdownImportOptions } from '../core/importers/markdown-importer';
+import { unfinishedHTMLTail } from './eof';
+
+function sourceEOF(schema: Schema, tail: string): Node | undefined {
+  const type = schema.nodes.html_source_eof;
+  if (!type) return undefined;
+  const node = type.create({}, [schema.text(tail)]);
+  schema.validate(node);
+  return node;
+}
 
 function sourceEmptyBody(schema: Schema): readonly Node[] | undefined {
   const type = schema.nodes.html_source_empty_body;
@@ -29,7 +38,19 @@ export function createHTMLSourceMarkdownAdapter(options?: ServerHTMLImporterOpti
   onReport?: (report: ServerHTMLFragmentImportResult) => void): NonNullable<MarkdownImportOptions['parseHTMLDocument']> {
   const importer = new ServerHTMLImporter(options);
   return (segments, schema, context) => {
-    const report = importer.parseTextBlockFlowWithReport(segments, schema, context);
+    const last = segments.at(-1);
+    if (schema.nodes.html_source_eof && last?.kind === 'html'
+      && encodeURIComponent(last.html).replace(/%[0-9a-f]{2}/giu, 'x').length > importer.options.maxInputBytes) {
+      throw new RangeError('Unfinished HTML source exceeds the configured input byte limit.');
+    }
+    const eof = schema.nodes.html_source_eof && last?.kind === 'html' ? unfinishedHTMLTail(last.html) : undefined;
+    const projected = eof ? [...segments.slice(0, -1), ...(eof.prefix ? [{ kind: 'html' as const, html: eof.prefix }] : [])] : segments;
+    const tailBytes = eof ? encodeURIComponent(eof.tail).replace(/%[0-9a-f]{2}/giu, 'x').length + 1 : 0;
+    if (tailBytes >= importer.options.maxInputBytes) throw new RangeError('Unfinished HTML source exceeds the configured input byte limit.');
+    const prefixImporter = eof ? new ServerHTMLImporter({ ...importer.options, maxInputBytes: importer.options.maxInputBytes - tailBytes }) : importer;
+    const prefix = projected.length ? prefixImporter.parseTextBlockFlowWithReport(projected, schema, context) : { nodes: [], issues: [] };
+    const retained = eof ? sourceEOF(schema, eof.tail) : undefined;
+    const report = retained ? { ...prefix, nodes: [...prefix.nodes, retained] } : prefix;
     onReport?.(report);
     const first = segments[0];
     if (first?.kind !== 'html') return report.nodes;
@@ -51,17 +72,28 @@ export function createHTMLSourceMarkdownAdapter(options?: ServerHTMLImporterOpti
 export function importHTMLSourceDocument(html: string, schema: Schema, options?: ServerHTMLImporterOptions): ServerHTMLImportResult {
   const imported = new ServerHTMLImporter(options).parseWithReport(html, schema);
   // Safe reader files already carry the original source-envelope data.
-  if (isHTMLDocumentEnvelope(imported.document.attrs.htmlSourceEnvelope)) return imported;
-  const parsed = parse(html, { scriptingEnabled: false, sourceCodeLocationInfo: true });
+  const existing = imported.document.attrs.htmlSourceEnvelope;
+  const retainedEnvelope = isHTMLDocumentEnvelope(existing) ? existing : undefined;
+  if (retainedEnvelope && !schema.nodes.html_source_eof) return imported;
+  let unfinished = false;
+  const parsed = parse(html, { scriptingEnabled: false, sourceCodeLocationInfo: true,
+    onParseError: error => { if (error.code === 'eof-in-tag') unfinished = true; } });
+  const eof = schema.nodes.html_source_eof ? unfinishedHTMLTail(html) : undefined;
+  if (schema.nodes.html_source_eof && unfinished && !eof) {
+    throw new Error('Unfinished HTML source could not be retained within its lexical capture limits; no source document was returned.');
+  }
+  if (retainedEnvelope && !eof) return imported;
   const declaration = parsed.childNodes.find(node => node.nodeName === '#documentType') as DefaultTreeAdapterMap['documentType'] | undefined;
   const location = declaration?.sourceCodeLocation;
-  const envelope: HTMLDocumentEnvelope = { version: 1,
+  const envelope: HTMLDocumentEnvelope = retainedEnvelope ?? { version: 1,
     doctype: location ? html.slice(location.startOffset, location.endOffset) : null, mode: parsed.mode };
   if (!isHTMLDocumentEnvelope(envelope)) throw new RangeError('HTML source doctype exceeds the bounded envelope contract.');
   const htmlElement = parsed.childNodes.find(node => 'tagName' in node && node.tagName === 'html') as DefaultTreeAdapterMap['element'];
   const body = htmlElement.childNodes.find(node => 'tagName' in node && node.tagName === 'body') as DefaultTreeAdapterMap['element'];
   const empty = !body.childNodes.length ? sourceEmptyBody(schema) : undefined;
-  const document = (empty ? imported.document.copy(empty) : imported.document).withAttrs({ ...imported.document.attrs, htmlSourceEnvelope: envelope });
+  const retained = eof ? sourceEOF(schema, eof.tail) : undefined;
+  const content = retained ? [...(body.childNodes.length ? imported.document.content : []), retained] : empty;
+  const document = (content ? imported.document.copy(content) : imported.document).withAttrs({ ...imported.document.attrs, htmlSourceEnvelope: envelope });
   schema.validate(document);
   return Object.freeze({ ...imported, document });
 }
@@ -132,6 +164,7 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
   if (document.type !== document.type.schema.topNodeType) return { ok: false, issues: [{ code: 'invalid-source', message: 'Choose a complete Fountain document for source export.' }] };
   const issues: HTMLSourceIssue[] = [];
   const opaque = new WeakSet<Node>();
+  let eofNode: Node | undefined;
   let nodes = 0, characters = 0;
   const scan = (node: Node, path: readonly number[]): boolean => {
     if (++nodes > 20_000 || path.length > 64) throw new Error('Source export limit: 20,000 nodes and depth 64.');
@@ -145,7 +178,15 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     if (invalidText) {
       issues.push({ code: 'unrepresentable-source', path, message: 'Portable HTML cannot preserve NUL or isolated UTF-16 surrogates; retain the Fountain document instead.' });
     }
-    let retained = types.has(node.type.name);
+    if (node.type.name === 'html_source_eof') {
+      const tail = unfinishedHTMLTail(node.textContent);
+      if (eofNode || path.length !== 1 || path[0] !== document.childCount - 1 || !tail || tail.prefix
+        || node.marks.length || Object.keys(node.attrs).length || node.content.some(child => !child.isText || child.marks.length || Object.keys(child.attrs).length)) {
+        issues.push({ code: 'unrepresentable-source', path, message: 'An EOF source block must contain one unfinished tag and remain the final root block. Reimport completed/changed syntax or move following content before it.' });
+      }
+      eofNode = node;
+    }
+    let retained = types.has(node.type.name) || node.type.name === 'html_source_eof';
     for (let index = 0; index < node.childCount; index++) retained = scan(node.child(index), [...path, index]) || retained;
     if (retained) opaque.add(node);
     return retained;
@@ -159,6 +200,7 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     const fragment = renderHTMLSourceFragment(document, {
       opaque: node => opaque.has(node) || types.has(node.type.name),
       render: (node, path, children) => {
+        if (node.type.name === 'html_source_eof') return node.textContent;
         if (emptyBody && path.length === 1 && node.type.name === 'html_source_empty_body') return '';
         if (node.type.name === 'html_source_empty_body') {
           if (node.marks.length || Object.keys(node.attrs).length) throw new Error('Source-empty editing block has unsupported metadata; convert it to an explicit paragraph first.');
@@ -193,7 +235,7 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     if (options.document === false && document.attrs.htmlSourceEnvelope !== undefined) {
       return { ok: false, issues: [{ code: 'unrepresentable-source', message: 'Source document-envelope data requires complete-document export; a body fragment cannot retain its declaration or compatibility mode.' }] };
     }
-    const complete = `${declaration}<html><head><meta charset="utf-8"></head><body${pageAttribute}>${fragment}</body></html>`;
+    const complete = `${declaration}<html><head><meta charset="utf-8"></head><body${pageAttribute}>${fragment}${eofNode ? '' : '</body></html>'}`;
     if (complete.length > 4_194_304) return { ok: false, issues: [{ code: 'limit', message: 'Source export exceeds 4 MiB.' }] };
     if (issues.length) return { ok: false, issues };
     // The ordinary exporter surrounds block documents with formatting LF. Our
@@ -201,6 +243,17 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     // explicit body context, without removing authored text or empty nodes.
     const intended = bodyTree(`${declaration}<html><head></head><body${pageAttribute}>${HTMLExporter.export(document, { document: false })}</body></html>`);
     projectCarriers(intended);
+    if (eofNode) {
+      const carrier = intended.childNodes.at(-1);
+      const text = (node: HTMLNode): string => node.nodeName === '#text' ? (node as DefaultTreeAdapterMap['textNode']).value
+        : 'childNodes' in node ? node.childNodes.map(text).join('') : '';
+      if (!carrier || !('tagName' in carrier) || carrier.tagName !== 'pre' || carrier.attrs.length !== 1
+        || carrier.attrs[0].name !== 'data-fountain-source-eof' || carrier.attrs[0].value !== 'v1'
+        || carrier.childNodes.length !== 1 || !('tagName' in carrier.childNodes[0]) || carrier.childNodes[0].tagName !== 'code'
+        || carrier.childNodes[0].attrs.length || text(carrier.childNodes[0]) !== eofNode.textContent
+        || !complete.endsWith(eofNode.textContent)) throw new Error('EOF source carrier or final output boundary does not match retained source.');
+      intended.childNodes.pop();
+    }
     if (emptyBody) {
       const carrier = intended.childNodes[0];
       if (intended.childNodes.length !== 1 || !carrier || !('tagName' in carrier) || carrier.tagName !== 'p'
@@ -223,7 +276,7 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     if (JSON.stringify(htmlMeaning(bodyTree(complete))) !== JSON.stringify(htmlMeaning(intended))) {
       return { ok: false, issues: [{ code: 'source-reopen-mismatch', message: 'Reconstructed HTML changes source content or structure when parsed. No source was returned.' }] };
     }
-    const reopened = document.attrs.htmlSourceEnvelope === undefined ? new ServerHTMLImporter().parse(complete, document.type.schema)
+    const reopened = document.attrs.htmlSourceEnvelope === undefined && !eofNode ? new ServerHTMLImporter().parse(complete, document.type.schema)
       : importHTMLSourceDocument(complete, document.type.schema).document;
     // Lexical tokens describe the earlier input, not edited canonical source.
     // Report other model differences separately from HTML structure/content.

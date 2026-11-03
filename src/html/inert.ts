@@ -87,6 +87,23 @@ export function createHTMLSourceEmptyBodyExtension(): FountainExtension {
   } } });
 }
 
+/** Literal unfinished tag data. It never becomes active HTML in a reader. */
+export function createHTMLSourceEOFExtension(): FountainExtension {
+  return defineExtension({ name: 'html-source-eof', nodes: { html_source_eof: {
+    group: 'block', content: 'text*', code: true, selectable: true, markdown: 'html',
+    validate: node => node.textContent.length <= 65_536 && node.content.every(child => !child.marks.length && !Object.keys(child.attrs).length),
+    parseHTML: [{ tag: 'pre[data-fountain-source-eof="v1"]', priority: 100, contentElement: ':scope > code', getAttrs: element => {
+      const keys = element.getAttributeNames?.();
+      const children = element.querySelectorAll?.(':scope > *');
+      const code = children?.[0];
+      return keys?.length === 1 && children?.length === 1 && code?.tagName.toLowerCase() === 'code'
+        && code.getAttributeNames?.().length === 0 && code.querySelectorAll?.(':scope > *').length === 0
+        && element.textContent === code.textContent ? {} : false;
+    } }],
+    toDOM: () => ['pre', { 'data-fountain-source-eof': 'v1' }, ['code', {}, 0]],
+  } } });
+}
+
 /** Add an editable paragraph without silently changing an imported empty wrapper. */
 export function appendInertHTMLBlockParagraph(editor: Editor, path: readonly number[]): boolean {
   if (!editor.editable || !path.length || !path.every(index => Number.isInteger(index) && index >= 0)) return false;

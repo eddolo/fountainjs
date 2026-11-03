@@ -1,5 +1,75 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Unfinished HTML at EOF (2026-11-03, Unreleased)
+
+`createHTMLSourceEOFExtension()` from `fountainjs-editor/html/inert` registers
+`html_source_eof`, a literal `text*` code block with safe `pre/code` reader
+carriers. With this schema opt-in, `createHTMLSourceMarkdownAdapter` can retain
+an unfinished tag in the final root HTML segment and preserve an independently
+converted prefix. `importHTMLSourceDocument` also retains a discarded EOF tail,
+including input that already carries safe-reader envelope metadata.
+
+The tail is visible and editable as literal source. Enter inserts a source
+newline; it does not complete or activate a tag. Native JSON, canonical Markdown
+with the matching adapter, and safe HTML retain its data. Exact untouched
+Markdown remains the source snapshot's responsibility; normalized parser input
+is not an original-file slice. Direct HTML tail CR/CRLF and Unicode survive safe
+carrier reopening.
+NUL and isolated UTF-16 surrogates remain outside portable HTML text: source
+export refuses them, and native JSON is required to retain such data exactly.
+
+`exportHTMLSource` requires one EOF block at the final root position, with no
+attributes/marks or completed syntax mixed into it. It validates the current
+text as an unfinished tag, reconstructs it literally, and emits no generated
+closing body/html tags after it. Independent validation checks its canonical
+carrier text, actual file ending and complete-document body tree. Changing the
+syntax into a complete tag, moving it before other content, duplicating it or
+adding following content refuses raw-source output without returning partial
+source or modifying the editor. Reimport completed syntax through the host's
+explicit conversion path. Native JSON/safe HTML can still save the document.
+
+The initial location experiment found that parse5 text spans can extend through
+discarded EOF markup. Structural token locations now provide only a lower bound;
+up to sixteen tag-like candidates are checked by parsing both prefix and tail.
+Quoted `<` characters cannot bypass the prefix check. Both document and fragment
+locations cover doctype/shell tokens and otherwise omitted whitespace. No parser
+private fields are used. The input inspection bound is 1,048,576 UTF-16 units,
+the literal tail is at most 65,536 units, and configured importer byte budgets
+are retained when the prefix/tail are split. Unsupported/oversized/nested
+Markdown cases keep the reported literal fallback. Direct HTML source import
+with EOF capture enabled refuses an unfinished token it cannot retain, even
+when the parser diagnostic budget is exhausted; it returns no partially preserved source
+document. This is not arbitrary HTML recovery.
+
+The public workshop's retention option includes a Retained EOF source sample,
+native source editing and an explicit Add paragraph after EOF source action to
+demonstrate refusal without content loss. Its reader uses a safe export snapshot;
+refresh by exporting/reopening HTML. Reader HTML never activates the retained tag.
+
+The three former root EOF patterns are covered by independent body-tree/source
+checks, but the existing fragment-oriented conformance profile remains 631/652.
+A separately certified complete-document profile is still required before
+promoting those cases or the doctype-only case. No full CommonMark claim follows.
+
+The final native EOF journey passes Chromium, Firefox and WebKit: literal Enter
+and typing, bounded undo/redo to the original model, JSON/safe-HTML reopening,
+refusal after adding a following paragraph, then safe HTML saving/reopening of
+that entire refused-source document. Nine final editor, refreshed reader and
+refusal-panel screenshots were inspected visually. Videos were recorded but not
+reviewed. The earlier six-case browser run also covers source-empty editing;
+the final EOF workflow additionally verifies the following paragraph in the reader.
+
+Final frozen-source gates pass 3,161 unit tests / 233 files, the 109-module
+headless boundary, consumer/framework types, packed ESM/CommonJS imports with
+25 source contracts each, unchanged conformance profiles, 415 reviewed API
+declarations, performance/retention gates, bundle budgets and the production
+website build. Only optional inert/source entries and aggregate capacity caps
+increase for measured code growth; no dependency, CSS-cap or numerical
+performance-limit change is included. The initial parser-location and invalid
+diagnostic-option test failures, and both budget-cap reviews, remain recorded.
+See [the source-bound record](../artifacts/eof-source-verification-20261103.json).
+The npm version remains `0.4.0-beta.2`; this checkpoint is unreleased there.
+
 ## Explicit source-empty body (2026-11-03, Unreleased)
 
 `createHTMLSourceEmptyBodyExtension()` from `fountainjs-editor/html/inert` adds

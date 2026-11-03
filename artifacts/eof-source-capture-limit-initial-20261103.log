@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-source-eof.test.ts (19 tests | 1 failed) 73ms
+   ❯ explicit unfinished tag source at EOF (19)
+     × refuses direct HTML source import when an unfinished token exceeds capture limits even with diagnostics disabled 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-source-eof.test.ts > explicit unfinished tag source at EOF > refuses direct HTML source import when an unfinished token exceeds capture limits even with diagnostics disabled
+AssertionError: expected [Function] to throw error matching /could not be retained/ but got 'maxParseErrors must be an integer bet…'
+
+- Expected:
+/could not be retained/
+
++ Received:
+"maxParseErrors must be an integer between 1 and 100."
+
+ ❯ tests/html-source-eof.test.ts:123:80
+    121|   it('refuses direct HTML source import when an unfinished token excee…
+    122|     const raw = '<div title="' + 'x'.repeat(65_537);
+    123|     expect(() => importHTMLSourceDocument(raw, schema, { maxParseError…
+       |                                                                                ^
+    124|   });
+    125| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  13:03:37
+   Duration  2.30s (transform 54%, import 43%, tests 3%)

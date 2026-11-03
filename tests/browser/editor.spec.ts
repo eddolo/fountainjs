@@ -57,6 +57,10 @@ import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-jour
 import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-text-journey';
 import { htmlSourceJourney } from './html-source-journey';
 import { htmlEnvelopeJourney } from './html-envelope-journey';
+import { htmlSourceEOFJourney } from './html-source-eof-journey';
+test('retains unfinished EOF source through native literal edits and refuses following content', async ({ page }, info) => {
+  await htmlSourceEOFJourney(page, info);
+});
 import { htmlSourceEmptyJourney } from './html-source-empty-journey';
 test('edits source-empty documents with visible native Enter Backspace history and reopening', async ({ page }, info) => {
   await htmlSourceEmptyJourney(page, info);

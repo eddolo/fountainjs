@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add opt-in literal unfinished-tag EOF blocks. Preserve them through native
+  editing, history and safe saving; reconstruct raw source only at actual EOF.
+  Refuse completed/moved/duplicated tokens or following content without returning
+  partial source. Use parser-checked bounded candidate locations, including
+  quoted angle brackets and text spans that extend across discarded tokens.
+
 - Add opt-in source-empty body blocks, distinct from authored empty paragraphs.
   Keep their safe HTML/JSON identity; omit only a sole unformatted empty block
   from validated source output. Include the new type in text-block join and

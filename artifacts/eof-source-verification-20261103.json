@@ -1,0 +1,143 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "7a0a400745730b5df34103996b5e95643c7f2fa7",
+  "scope": "Explicit opt-in literal unfinished EOF source; parser-checked reconstruction at actual EOF; preserve-or-refuse boundaries",
+  "unit": {
+    "passed": 3161,
+    "files": 233,
+    "newEOFCases": 19
+  },
+  "browser": {
+    "finalPassed": 3,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "headless": true,
+    "workers": 1,
+    "finalScreenshotsInspected": 9,
+    "videosReviewed": false,
+    "earlierRegressionRun": {
+      "passed": 6,
+      "scope": "EOF and source-empty native editing journeys"
+    },
+    "assertions": [
+      "native literal typing/Enter",
+      "undo/redo to complete original model",
+      "JSON/safe HTML reopening",
+      "following-content refusal without editor mutation",
+      "safe save/reopen and refreshed reader retain following paragraph after raw-source refusal",
+      "inactive literal source in editor/reader"
+    ]
+  },
+  "checks": {
+    "headlessModules": 109,
+    "apiDeclarations": 415,
+    "reviewedAPI": "optional EOF factory in two inert declarations",
+    "types": "passed",
+    "packedConsumers": "25 source contracts in each ESM/CommonJS passed",
+    "conformance": "passed unchanged",
+    "performance": "passed unchanged numerical caps",
+    "budgets": "passed after reviewed optional entry/aggregate capacity increases",
+    "website": "passed"
+  },
+  "performance": {
+    "localMedianGrowth": 6.31,
+    "remoteMedianGrowth": 5.85,
+    "serverMedianGrowth": 7.19,
+    "unchangedGrowthCeiling": 15
+  },
+  "limits": {
+    "inspectionUTF16": 1048576,
+    "tailUTF16": 65536,
+    "candidateAttempts": 16,
+    "importerByteBudgets": "retained across prefix/tail splitting"
+  },
+  "initialFailures": {
+    "location": "parse5 text locations can extend across discarded EOF markup; replaced text-end assumption with bounded parser-checked prefix/tail candidates",
+    "captureLimitFixture": "maxParseErrors=0 was not a supported option; test now exhausts maxParseErrors=1 before the EOF error and proves independent refusal",
+    "captureLimitGuard": "direct source import with an uncapturable unfinished token now refuses without a partial document",
+    "readerWorkflow": "final browser workflow refreshes safe HTML after adding following content, rather than showing the earlier valid-source reader snapshot",
+    "budget": "initial and post-limit-guard entry/aggregate cap failures retained; no dependency/CSS/performance limit change"
+  },
+  "commonmark": {
+    "default": 563,
+    "safeOptional": 613,
+    "sourceOutput": 631,
+    "total": 652,
+    "unchanged": true,
+    "completeDocumentProfile": "still required; do not promote the former four fragment-profile gaps from these targeted tests"
+  },
+  "limitations": [
+    "Final root HTML segment only for Markdown capture",
+    "Nested/unsupported Markdown contexts use reported literal fallback",
+    "Direct opted-in HTML source import refuses uncapturable unfinished tags",
+    "Raw-source export requires one unfinished EOF block at final root position",
+    "Canonical root-envelope additions can be reported as native model differences; native JSON/safe HTML own exact retention"
+  ],
+  "npm": {
+    "version": "0.4.0-beta.2",
+    "published": false
+  },
+  "hashBasis": "SHA256 staged Git blob bytes; log newlines/trailing whitespace normalized",
+  "files": {
+    "CHANGELOG.md": "4c6bb1611b733e4407d0582157a795c565b9d6c6e87ddd303102ee5d9b2bf69d",
+    "api-surface.json": "a924db28803acb0496f355f45a4419dd758e55c5f8fec5328cd1f01905c8198a",
+    "artifacts/eof-source-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/eof-source-api-final-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/eof-source-api-initial-20261103.log": "bd28da696576127b2f04a846fe962b93979a6018355214d55500ad785fba7806",
+    "artifacts/eof-source-browser-20261103.log": "289194d70738e9654d689c7eef7b7a65f64188efdede2422d0ab10d2a0b21a5d",
+    "artifacts/eof-source-browser-final-20261103.log": "9eeaabcf042f1c37a272fde78a17ea61dbd623be1e4bd6d4c220102b36152df9",
+    "artifacts/eof-source-browser-verified-20261103.log": "14563c6846eb602ccf90d847cf393e3a8d5fa2d8f4e281d05ed8c1f65ce218a0",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-chromium/eof-source-editor.png": "3023e9c54145b408f5db911e4f07648b40da1a7e9eafa57a373de7d8891c780b",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-chromium/eof-source-reader.png": "c09d310f18289ba500c80bf6df2d5683ebf59403fb24b6026479db5437bfe968",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-chromium/eof-source-refused.png": "140230f5554db83baa05b077ce12cf8ccc0129d401882837cf726073b26ebc62",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-firefox/eof-source-editor.png": "fcfdcb7272adca379dacd6151c7f7c8f4d07526bf5195c04f3887c793254e517",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-firefox/eof-source-reader.png": "29e58e99dfef37b6238f5c0f42f346dac9fa5ae8f0f024e05d285e0e923f8d30",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-firefox/eof-source-refused.png": "6805464fb8377288bdd91ed65c66b841a3e8d934b191503a19e39cad4e84e616",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-webkit/eof-source-editor.png": "a13852c03e5771dfdf0a7df4a4ba177d24c2ab73574b0f317996d8064483500c",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-webkit/eof-source-reader.png": "12c682c87075233c73187ee1d4917f29035bc33342d269ced0c9cf9a880880dd",
+    "artifacts/eof-source-browser-verified-20261103/editor-retains-unfinished--fb0a9-d-refuses-following-content-webkit/eof-source-refused.png": "0f45f7a5b21716c7ad26c90f62ef71d8378512a1d172e9186501d4ff01255cc4",
+    "artifacts/eof-source-budget-20261103.log": "e91f283f5754b299576c7ac1691f5db3f1ef99122ab321bcd28d4663abb1430a",
+    "artifacts/eof-source-budget-final-20261103.log": "6748ed4c298b87e8513925df9b95b1256223b224f8f136552eb4747626acb497",
+    "artifacts/eof-source-budget-initial-20261103.log": "9f36ded348d2a8697d684170599b36814f2968594cc9e81b1ed037b9377dddf9",
+    "artifacts/eof-source-budget-reviewed-20261103.log": "bc22ae9840e2a8755a549cbde32473f8ce3c2263bf1966a2a84d6dc6b283dced",
+    "artifacts/eof-source-capture-limit-20261103.log": "593b8054c47eaaee5b61a4c4698f23962403725f04a85fd0d7fc7fc003345813",
+    "artifacts/eof-source-capture-limit-final-20261103.log": "67ee06ffd10b99df453a37693927e72e28db4f117ae536a51855626203f3d003",
+    "artifacts/eof-source-capture-limit-initial-20261103.log": "593b8054c47eaaee5b61a4c4698f23962403725f04a85fd0d7fc7fc003345813",
+    "artifacts/eof-source-conformance-20261103.log": "a298758a2e9e06b5d9ffb11cde2edf35a4a7572a05dc36c84774661ea29bc747",
+    "artifacts/eof-source-conformance-final-20261103.log": "a298758a2e9e06b5d9ffb11cde2edf35a4a7572a05dc36c84774661ea29bc747",
+    "artifacts/eof-source-focused-20261103.log": "09faf7c4ac70ee2e9058aae6c9cf1df82cce374d65bb3ee0faac7edb31e6f437",
+    "artifacts/eof-source-focused-final-20261103.log": "5fe9c9a69008e4e9a1e82f90bdf29f3a62801236c7d4f568e82ee88f43bfab99",
+    "artifacts/eof-source-focused-initial-20261103.log": "09faf7c4ac70ee2e9058aae6c9cf1df82cce374d65bb3ee0faac7edb31e6f437",
+    "artifacts/eof-source-focused-verified-20261103.log": "3ab8e89afa63d357405ce5f3daa806eea5da6351d99a66b505272ce72ede4391",
+    "artifacts/eof-source-headless-20261103.log": "e655e7d8f328f130f2d210982afd0518a759b7a4c024aaedc788892ec87bbcee",
+    "artifacts/eof-source-headless-final-20261103.log": "e655e7d8f328f130f2d210982afd0518a759b7a4c024aaedc788892ec87bbcee",
+    "artifacts/eof-source-package-20261103.log": "0773792b1161d4463a398598d42cc059b6f5ed7963ade3a3da2871adfd4513e4",
+    "artifacts/eof-source-package-final-20261103.log": "0773792b1161d4463a398598d42cc059b6f5ed7963ade3a3da2871adfd4513e4",
+    "artifacts/eof-source-performance-20261103.log": "af0beb9f61637796e92d7fbb777f7685a50670e09804c52aab7a64e156961c67",
+    "artifacts/eof-source-performance-final-20261103.log": "b488f231d9619fe6a7add370e98466d13b0b43d0fd7acd1e0b4af5ed023f0770",
+    "artifacts/eof-source-site-20261103.log": "849b1028190d23c940c76ed36e366df521058ce7efebc6a2e619ed1e08eb847d",
+    "artifacts/eof-source-site-final-20261103.log": "1ef7dba2c6fcfd0bc30c9382a68990f2108fc9f7477d6eaee78c468845628d3b",
+    "artifacts/eof-source-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/eof-source-types-final-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/eof-source-types-initial-20261103.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "artifacts/eof-source-unit-20261103.log": "d0c9d82c3d7c3f4d4c4d158eae339e8d6c8e21f267a11021b4bd110b953eb74d",
+    "artifacts/eof-source-unit-final-20261103.log": "67b4744af7366b437ffac9b073a0cd7f3cd98e1d8f217fa92967bc0137f2e5fb",
+    "docs/HTML_INERT_SOURCE.md": "a4cbfe56b66c44e1b08f95dbe72e096e78416089e4c1e9aba286f6f85efc5106",
+    "docs/ROADMAP.md": "6b2a85520d4681f9bef18b70e01c37e8d2374c1882a65571555e5723e2f07c3b",
+    "examples/react-app/src/HTMLInertWorkshop.tsx": "922d149744d77d131d96c9a5b3ccc6ea86ef7476b840b8ab07f9cb14625a57ce",
+    "scripts/check-build-budgets.mjs": "67c8951c635fafcb49e386e706288b19cfc26898bcbb5b06eecb54c824b45581",
+    "scripts/check-markdown-conformance.mjs": "6a3d599644189875b641d3ec891fd56c543cf88458c59755d9a7dd2757885655",
+    "scripts/fixtures/html-source-check.mjs": "eaa724b53b9ef003e08fc8e754690e3962c23f97609feabdb0894ec5497d2e86",
+    "src/html/eof.ts": "08249e4aa468fa33c0330eea85a79674ca51bac95672bb67a8563aa5943c3165",
+    "src/html/inert.ts": "669935e9173187e5de6e5d7b9fc1f2d7777d525f4fe3da5b85a4e8fa3d27069d",
+    "src/html/source.ts": "852cec57c994ff4b743fa6760882629107d5e03ac1606c4951904e40c006ca93",
+    "tests/browser/editor.spec.ts": "3eb4dc19ffa9cacb5e85f46a13ac6c3504b775c4da0131e3b42d94a32fed956f",
+    "tests/browser/html-source-eof-journey.ts": "8196cc9634d5d5b08a579486c3e74f2ced8392bdf9621e2392c9475b97ba0c35",
+    "tests/fixtures/markdown/commonmark-source-output-v1.json": "cd58baa1a66d24ddf70a85f8819ed3d7992d2b28c4a6b2b0f6d97111f4ed765c",
+    "tests/html-source-eof.test.ts": "f70616017395f8e4f12a2129bc276fd9e3ea73d4655f57695f1d5a0d722edddc",
+    "tests/types/headless-consumer.ts": "9d764622c7f3379f4cbbef96b999839de0171db388651c4fa127639690898109"
+  }
+}

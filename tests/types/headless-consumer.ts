@@ -17,7 +17,7 @@ import {
 } from 'fountainjs-editor/core';
 import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
 import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
-import { createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
+import { createHTMLSourceEOFExtension, createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 import { createHTMLSourceMarkdownAdapter, importHTMLSourceDocument, exportHTMLSource } from 'fountainjs-editor/html/source';
 
@@ -45,7 +45,7 @@ const documentExtension = defineExtension({
 const collaborationExtension = createCoreCollaborationExtension({
   adapter: () => ({ connect() {} }),
 });
-const kit = composeExtensions([documentExtension, collaborationExtension, createHTMLSourceEmptyBodyExtension(), createInertHTMLAnchorExtension(), createInertHTMLInlineExtension({ tags: ['my-inline'] }), createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] })]);
+const kit = composeExtensions([documentExtension, collaborationExtension, createHTMLSourceEOFExtension(), createHTMLSourceEmptyBodyExtension(), createInertHTMLAnchorExtension(), createInertHTMLInlineExtension({ tags: ['my-inline'] }), createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] })]);
 const schemaSpec: SchemaSpec = kit.schema;
 const schema = new Schema(schemaSpec);
 ServerHTMLImporter.parse('<p><my-inline>portable</my-inline></p>', schema, { sourceTokens: true });
