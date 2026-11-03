@@ -1,4 +1,6 @@
-import { performance } from 'node:perf_hooks';
+import { writeFileSync } from 'node:fs';
+import { availableParallelism, platform, arch } from 'node:os';
+import { sampleLatency, editLatencyFailures } from './performance-sampling.mjs';
 import {
   CoreExtension,
   Schema,
@@ -40,23 +42,8 @@ function htmlContent(size) {
   )).join('');
 }
 
-function percentile(values, fraction) {
-  const sorted = [...values].sort((left, right) => left - right);
-  return sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * fraction) - 1)] ?? 0;
-}
-
-function sample(run, count = iterations) {
-  run();
-  const values = [];
-  for (let index = 0; index < count; index += 1) {
-    const started = performance.now();
-    run();
-    values.push(performance.now() - started);
-  }
-  return {
-    median: percentile(values, 0.5),
-    p95: percentile(values, 0.95),
-  };
+function sample(run, count = iterations, initialCount = 1) {
+  return sampleLatency(run, { sampleCount: count, initialCount });
 }
 
 function localCurve(size) {
@@ -67,7 +54,7 @@ function localCurve(size) {
     const accepted = editor.dispatch(editor.state.createTransaction().insertText([size - 1, 0], offset, '!'));
     if (!accepted) throw new Error('Local benchmark transaction was rejected.');
     offset += 1;
-  });
+  }, 100, 100);
   editor.destroy();
   return result;
 }
@@ -86,7 +73,7 @@ function remoteCurve(size) {
       throw new Error('Incremental remote benchmark transaction was rejected.');
     }
     offset += 1;
-  });
+  }, 100, 100);
   editor.destroy();
   return result;
 }
@@ -134,8 +121,13 @@ for (const size of sizes) {
   remote.set(size, remoteResult);
   fullRemote.set(size, fullRemoteResult);
   console.log(`${size.toLocaleString('en-US')} blocks: local p50 ${format(localResult.median)}, p95 ${format(localResult.p95)}; incremental remote p50 ${format(remoteResult.median)}, p95 ${format(remoteResult.p95)}; JSON boundary p50 ${format(fullRemoteResult.median)}, p95 ${format(fullRemoteResult.p95)}`);
-  if (localResult.p95 > limits.localP95[size]) failures.push(`${size}-block local p95 ${format(localResult.p95)} exceeds ${limits.localP95[size]} ms`);
-  if (remoteResult.p95 > limits.remoteP95[size]) failures.push(`${size}-block incremental remote p95 ${format(remoteResult.p95)} exceeds ${limits.remoteP95[size]} ms`);
+  // Compare steady typing with steady typing, not twelve operations spanning
+  // different JIT/GC phases. Keep the first edit and the initial-window p95
+  // under the same latency ceiling. Report maxima too, without confusing a
+  // p95 contract with a maximum-latency contract on a shared OS scheduler.
+  console.log(`  first edit / initial p95 / initial peak: local ${format(localResult.first)} / ${format(localResult.initialP95)} / ${format(localResult.initialMax)}; incremental remote ${format(remoteResult.first)} / ${format(remoteResult.initialP95)} / ${format(remoteResult.initialMax)}`);
+  failures.push(...editLatencyFailures(localResult, limits.localP95[size], `${size}-block local`));
+  failures.push(...editLatencyFailures(remoteResult, limits.remoteP95[size], `${size}-block incremental remote`));
   if (fullRemoteResult.p95 > limits.fullRemoteP95[size]) failures.push(`${size}-block JSON-boundary p95 ${format(fullRemoteResult.p95)} exceeds ${limits.fullRemoteP95[size]} ms`);
 }
 
@@ -214,4 +206,14 @@ if (typeof globalThis.gc !== 'function') {
   parsedHTMLDocument = undefined;
 }
 
+const reportIndex = process.argv.indexOf('--report');
+if (reportIndex >= 0) {
+  const destination = process.argv[reportIndex + 1];
+  if (!destination || destination.startsWith('--')) throw new Error('--report requires an output file path.');
+  writeFileSync(destination, JSON.stringify({
+    version: 1, date: new Date().toISOString(), runtime: { node: process.version, v8: process.versions.v8, platform: platform(), arch: arch(), availableParallelism: availableParallelism() },
+    sampling: { incrementalInitialCount: 100, incrementalSampleCount: 100, fullReplacementAndHTML: 'unchanged' },
+    limits, local: Object.fromEntries(local), remote: Object.fromEntries(remote), fullRemote: Object.fromEntries(fullRemote), serverHTML: Object.fromEntries(serverHTML), failures,
+  }, null, 2) + '\n');
+}
 if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);

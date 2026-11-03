@@ -1,0 +1,170 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "df093becda3208fbbe560aafefcbf56295b6a166",
+  "scope": "Performance measurement and fault-injection tests; production editor engine unchanged",
+  "numericalLimitsUnchanged": true,
+  "limitsBlockSHA256": "60b5f32d10d3d71e7822c97d8ca133edbca7a96a327a9e1aaa37a61ad7d3f329",
+  "method": {
+    "firstEdits": 100,
+    "steadyEdits": 100,
+    "gates": [
+      "first edit under existing latency ceiling",
+      "initial p95 under same ceiling",
+      "steady p95 under same ceiling",
+      "steady median growth at most 15x"
+    ],
+    "maxima": "Reported with all raw samples; a p95 ceiling is not a maximum guarantee",
+    "otherWorkloads": "Full replacement, server HTML and heap checks unchanged"
+  },
+  "evidence": {
+    "profiling": "Instrumented 1k/10k/100k transaction stream plus CPU profile; validation and sibling-size position mapping dominate. These are diagnostic timings, not a shipping speedup.",
+    "originalFailures": "See df093be artifacts/html-source-writer-verification-20261103.json: current remote 16.45x/23.04x, isolated parent 19.69x under original short sampler",
+    "exploratoryMaximumGate": {
+      "file": "artifacts/edit-sampling-performance-20261103.json",
+      "status": "failed",
+      "peakMs": 25.981,
+      "zeroBasedEdit": 45,
+      "firstMs": 0.3303,
+      "reason": "Maximum of the initial window was compared with a p95 ceiling; retained as an exploratory result, not the final metric contract"
+    },
+    "final": {
+      "status": "passed",
+      "engine": "df093be",
+      "localRatio": 7.3,
+      "remoteRatio": 12.99,
+      "serverRatio": 7.5
+    },
+    "parent": {
+      "status": "passed",
+      "engine": "2f7534d",
+      "harness": "same final sampler copied into isolated archived engine without replacing its original benchmark",
+      "localRatio": 7.59,
+      "remoteRatio": 13.61,
+      "serverRatio": 7.06
+    },
+    "faultInjection": {
+      "tests": 8,
+      "passed": true,
+      "covers": [
+        "slow first edit",
+        "slow initial burst",
+        "slow steady p95",
+        "outlier visibility",
+        "quadratic scaling signal",
+        "raw sample retention",
+        "rejected edits",
+        "invalid clocks and counts"
+      ]
+    },
+    "typecheck": "passed",
+    "packedSamplerInventory": "passed",
+    "fullFunctionalSuite": "Not rerun for CLI-only changes; prior engine snapshot df093be passed 3074 tests and six browser journeys",
+    "cloud": "df093be original verify/performance/Lean jobs passed; browser still running when inspected. New sampler CI requires its own run.",
+    "sourceDemo": {
+      "deployment": "41552812922 success",
+      "asset": "https://eddolo.github.io/fountainjs/assets/demo-main-CZ1fr_W-.js",
+      "httpStatus": 200,
+      "inspectionControlPresent": true
+    }
+  },
+  "remaining": [
+    "CI for new measurement method",
+    "Investigate sibling-prefix position mapping without per-snapshot full-size retained indexes",
+    "CommonMark and broader parity roadmap remain active"
+  ],
+  "hashEncoding": "SHA-256 of git index blob bytes; logs only normalize trailing whitespace/newlines; manifest excludes itself",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "cdb2d932809cc25650f23ef5711f8ec3d2d0c986e958a481105c5f342223b0b5"
+    },
+    {
+      "path": "artifacts/edit-path-20261103.cpuprofile",
+      "sha256": "018bcb016823ea7ecaef281c993d63135d8b45b44dabc90b62544d270277ca06"
+    },
+    {
+      "path": "artifacts/edit-path-profile-before-20261103.log",
+      "sha256": "2951f5121c82a683ab38537030313617c4d17f990a6101dbd09a63249dada7d5"
+    },
+    {
+      "path": "artifacts/edit-path-profile-summary-20261103.json",
+      "sha256": "9cf36089d131eb09c3cee4566910262e1a391ad0768ec7c83c4c639d18052e10"
+    },
+    {
+      "path": "artifacts/edit-sampling-baseline-performance-20261103.json",
+      "sha256": "faebbb2ad7bdec64020240c2708d764e6bc76951f2fdb5680682f989316a0174"
+    },
+    {
+      "path": "artifacts/edit-sampling-baseline-performance-20261103.log",
+      "sha256": "f7f6de961b2a0651a91a24de4c3e3c974b008533d5535d733cc7e5bd71dde486"
+    },
+    {
+      "path": "artifacts/edit-sampling-final-performance-20261103.json",
+      "sha256": "689e611fc65e5d908c48bd70de8cd0305d90c6cdfd7237a8f8404b759b069f99"
+    },
+    {
+      "path": "artifacts/edit-sampling-final-performance-20261103.log",
+      "sha256": "f51768d0d644f645a1889e3da9dbc9b1e86d3c0ce9d992580418ad88f75aa582"
+    },
+    {
+      "path": "artifacts/edit-sampling-final-unit-20261103.log",
+      "sha256": "e13baaa2aad19405cedce8685cde94452ab98b171011d76b838516d906df57cd"
+    },
+    {
+      "path": "artifacts/edit-sampling-pack-20261103.log",
+      "sha256": "128853c7e588bb28ce8ba7cffde2c3334a4a2042005234a12637a868b38822ad"
+    },
+    {
+      "path": "artifacts/edit-sampling-performance-20261103.json",
+      "sha256": "867a808c220a49378c2534c81eb0692b246399dbb118660b83a5df5aa70a4c34"
+    },
+    {
+      "path": "artifacts/edit-sampling-performance-20261103.log",
+      "sha256": "6d8b88828d70d03cc162d4e57d5fe38c8c1058ac7e966d0f6b03daebac77fe3e"
+    },
+    {
+      "path": "artifacts/edit-sampling-probe-20261103.log",
+      "sha256": "b79075d5f1c6b7e0265423c62c53a63e54e6f8c2f98d31ca321ac278a28bf0db"
+    },
+    {
+      "path": "artifacts/edit-sampling-types-20261103.log",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "path": "artifacts/prepare-edit-sampling-probe-20261103.mjs",
+      "sha256": "ac593fecf4874ab0766b34f9e430e6fe3178636e7038439df45f6e8d2c68a7bd"
+    },
+    {
+      "path": "artifacts/profile-edit-path-20261103.mjs",
+      "sha256": "0358fb395be70edd2cc83925e4c2d3cb72cd42e2fdca3d00597ff688a5346eeb"
+    },
+    {
+      "path": "docs/HTML_INERT_SOURCE.md",
+      "sha256": "0d2db3fd2c35d863ce1401601f1f04483bc893169fb990d3074af02d653ff3a6"
+    },
+    {
+      "path": "docs/PERFORMANCE.md",
+      "sha256": "88d24381c79902796d3e1c7c833a90f17f346647841ea923c445c9763bce0799"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "74a7037fbfe825f1c1dd118d66af03c84ba30b3b26715f2587666124a5ef13dd"
+    },
+    {
+      "path": "package.json",
+      "sha256": "fd1838136c4318e5972e2838ecfbc95ebd5a7d808ac35b5b05fd883f68ef4c4b"
+    },
+    {
+      "path": "scripts/check-performance-budgets.mjs",
+      "sha256": "ba3b797c6eab594bc85981a598d34655312f3f1ed83240a5752f325b97c4ad15"
+    },
+    {
+      "path": "scripts/performance-sampling.mjs",
+      "sha256": "cb3647836779b1da3e9449a410abdd72a92b4c4a4cb090fbc73ab512d2724347"
+    },
+    {
+      "path": "tests/performance-sampling.test.ts",
+      "sha256": "bdc28e68e0e70dc18268e5ae589f42644aaa5a6354b52478206a1721b7b0c5ab"
+    }
+  ]
+}

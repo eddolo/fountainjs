@@ -1,11 +1,13 @@
 # FountainJS opportunity roadmap
 
-Performance follow-up (2026-11-03, open): the two-core local verification of
-source export reproduces the incremental-remote scaling-ratio failure both on
-the working tree (16.45x/23.04x) and an isolated parent `2f7534d` build (19.69x),
-against the unchanged 15x limit. Absolute latency/heap checks pass on the current
-tree. Investigate the baseline/scaling measurement; do not promote this to an
-all-green release or widen the gate. See the source-export checkpoint evidence.
+Performance sampling follow-up (2026-11-03, Unreleased): profiling and an
+isolated-parent comparison identify short-sample phase sensitivity. The revised
+check retains all initial samples, gates first-edit/initial-p95/steady-p95
+latency, and compares sustained typing medians under the existing 15x ceiling.
+Current and parent engines pass locally; the earlier red results and an
+exploratory maximum-latency failure remain recorded. No engine speedup is
+claimed, numerical limits are unchanged, and new-method CI evidence remains
+required. See [the measurement contract](PERFORMANCE.md#initial-edits-and-sustained-typing-2026-11-03-unreleased).
 
 HTML-source implementation (2026-11-03, Unreleased): the optional DOM-free
 `html/source` entry now reconstructs registered source with explicit refusal,

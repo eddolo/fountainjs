@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Separate first-edit, initial-window and sustained-typing measurements in the
+  performance gate. Retain raw readings and outliers, detect slow startup and
+  p95 regressions, and keep every numerical latency/scaling/heap limit fixed.
+  This corrects phase-sensitive measurement; it is not an editor speedup.
+
 - Add optional DOM-free `fountainjs-editor/html/source` reconstruction with
   independent structure validation, explicit refusals and native-model loss
   reporting. The HTML workshop can inspect/download current retained source,

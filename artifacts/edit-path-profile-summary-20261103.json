@@ -1,0 +1,58 @@
+[
+  {
+    "frame": "t @ editor-CMX7ABLq.js:93",
+    "ms": 957.988
+  },
+  {
+    "frame": "get nodeSize @ node-CMohf4dR.js:46",
+    "ms": 703.747
+  },
+  {
+    "frame": "(garbage collector) @ :0",
+    "ms": 234.297
+  },
+  {
+    "frame": "w @ editor-CMX7ABLq.js:11",
+    "ms": 167.825
+  },
+  {
+    "frame": "a @ content-expression-CuobUc-r.js:88",
+    "ms": 126.264
+  },
+  {
+    "frame": "d @ mapping-BbhEodcc.js:132",
+    "ms": 67.406
+  },
+  {
+    "frame": "t @ node-spec-Dl5lMC1C.js:10",
+    "ms": 61.874
+  },
+  {
+    "frame": "r @ node-CMohf4dR.js:28",
+    "ms": 59.263
+  },
+  {
+    "frame": "T @ editor-CMX7ABLq.js:22",
+    "ms": 49.763
+  },
+  {
+    "frame": "n @ path-B7Cr90vg.js:12",
+    "ms": 30.096
+  },
+  {
+    "frame": " @ node-CMohf4dR.js:95",
+    "ms": 27.792
+  },
+  {
+    "frame": "getMap @ replace-text-range-step-DDj1wpRU.js:19",
+    "ms": 25.69
+  },
+  {
+    "frame": "compileSourceTextModule @ utils:317",
+    "ms": 22.243
+  },
+  {
+    "frame": "child @ node-CMohf4dR.js:50",
+    "ms": 21.854
+  }
+]

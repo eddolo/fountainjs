@@ -65,7 +65,7 @@ across Chromium, Firefox and WebKit. The source journey uses pointer/keyboard
 editing, stale-download detection, refusal, undo, download-byte checks and safe
 reader reopening. Its six success/refusal screenshots have been inspected.
 
-Checkpoint verification: 3,074 unit tests across 226 files; 415 API declaration
+Source-export checkpoint (`df093be`): 3,074 unit tests across 226 files; 415 API declaration
 files; packed ESM/CommonJS source-export acceptance/refusal checks; DOM-free
 consumer types and 106-module import boundary; TypeScript/framework checks;
 bundle budgets; production site build; and shared-direction memory retention
@@ -80,6 +80,11 @@ an existing failing baseline on this machine, not a performance certification
 or proof that the new work has no impact. Preserve the red results; investigate
 sampling/scaling separately without raising the threshold. No npm release is
 declared by this checkpoint. Evidence: `artifacts/html-source-writer-verification-20261103.json`.
+
+Subsequent sampling investigation separates first edits from sustained typing,
+retains outliers, and passes on both current and parent engines under the same
+numerical limits. It changes the benchmark method, not the editor engine; the
+old failures above remain historical evidence. See [the follow-up](PERFORMANCE.md#initial-edits-and-sustained-typing-2026-11-03-unreleased).
 
 ## Source reconstruction investigation (2026-11-02, historical prototype)
 

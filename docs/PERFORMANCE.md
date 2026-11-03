@@ -1,5 +1,55 @@
 # Performance and memory contract
 
+## Initial edits and sustained typing (2026-11-03, Unreleased)
+
+The short incremental-edit benchmark mixed twelve timed edits with JIT/GC
+settling effects. On Windows with Node 24.22.1, BelowNormal priority and two-core
+affinity, it reported remote median growth of 16.45x/23.04x for `df093be`'s engine
+against the 15x ceiling. An isolated `2f7534d` build also failed at 19.69x. The
+original red results remain in the HTML-source checkpoint evidence. Linux CI
+for `df093be` passes the original performance job; the failure is not universal.
+
+Profiling a longer real transaction stream found text-position mapping (summing
+sibling node sizes) and schema validation dominating time, with no HTML-source
+exporter on this path. Path copying also contributes to transaction creation. A
+separate sampling probe then recorded the first 100 edits and timed the next
+100. Its local/remote median growth was 7.63x/12.26x with the same engine and
+limits. This supports a measurement-phase explanation; it is not an engine
+optimization or a claim that all latency variation has been diagnosed.
+
+The incremental benchmark now records **every** initial and steady sample:
+
+- The first edit must meet the existing per-size latency ceiling.
+- The first 100 edits' p95 must meet that ceiling too.
+- The next 100 edits' p95 must meet the same ceiling; their median supplies the
+  existing 1,000-to-10,000 growth check, still limited to 15x.
+- Initial maxima are reported separately, without treating a p95 ceiling as a
+  maximum-latency guarantee. An exploratory maximum gate caught a 25.98 ms pause
+  at edit 46 in a 100-block document; its first edit was 0.33 ms and initial p95
+  0.06 ms. The raw sample remains in the evidence. It has not been erased or
+  described as a startup regression.
+
+Full-document replacement, server HTML parsing, heap checks and every numerical
+limit remain unchanged. Eight deterministic sampler tests cover slow first
+edits, initial bursts, steady p95 failures, isolated outlier visibility,
+quadratic growth signals, rejected edits, invalid clocks and bounded counts.
+`--report path.json` writes runtime details and raw latency readings even when
+a numerical gate fails; the default command still fails on a gate violation.
+
+The final method passes on both the current engine (local/remote/server growth
+7.30x/12.99x/7.50x) and the isolated parent engine (7.59x/13.61x/7.06x). These are
+observations on one machine, not portable speed guarantees. The new measurement
+method requires its own CI evidence; earlier green runs do not certify it.
+Reproduce with `node --expose-gc scripts/check-performance-budgets.mjs --report
+artifacts/performance.json`. The sampler ships with the existing Node CLI.
+Evidence: `artifacts/edit-sampling-verification-20261103.json`.
+
+Next optimization investigation: mapping currently sums preceding siblings'
+`nodeSize` values when resolving a text position. Any indexing improvement must
+preserve mapping/selection/history correctness and avoid retaining a full-size
+index per historical snapshot. The profile motivates investigating that path;
+it does not justify bypassing schema validation or weakening immutable ownership.
+
 Physical table-column controls (2026-10-08, Unreleased): the private mounted
 view/focus/direction boundary adds about 2.3 KiB ESM / 2.0 KiB CJS overall and
 0.4 / 0.3 KiB to React relative to `14b3642`. Resolve computed layout once only while the table panel

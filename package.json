@@ -526,6 +526,7 @@
     "scripts/smoke-package.mjs",
     "scripts/check-build-budgets.mjs",
     "scripts/check-performance-budgets.mjs",
+    "scripts/performance-sampling.mjs",
     "scripts/check-shared-direction-retention.mjs",
     "scripts/check-api-surface.mjs",
     "scripts/create-extension.mjs",
