@@ -1,0 +1,135 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "ee10663e66301390d8d1b90052a9076acb00ec39",
+  "scope": "Bounded scalar shared-prefix checkpoints for immutable node copies; forward structural position mapping only",
+  "unit": {
+    "passed": 3092,
+    "files": 228,
+    "newIndependentOracleTests": 10
+  },
+  "browser": {
+    "passed": 9,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "headless": true,
+    "workers": 1,
+    "visualScreenshotsInspected": 6,
+    "videosReviewed": false,
+    "scope": [
+      "distant native typing/backward selection/split/merge/undo",
+      "immutable snapshots and JSON reopening",
+      "100,000-block virtualization regression"
+    ]
+  },
+  "checks": {
+    "performance": "passed",
+    "headlessModules": 107,
+    "apiDeclarations": 415,
+    "types": "passed",
+    "packedESMandCommonJS": "passed",
+    "websiteBuild": "passed",
+    "bundle": "passed after explicit aggregate capacity review"
+  },
+  "performance": {
+    "unchangedGrowthCeiling": 15,
+    "localGrowth": 6.31,
+    "remoteGrowth": 11.23,
+    "serverHTMLGrowth": 7.59,
+    "firstLocalEditAt10000Ms": 27.64,
+    "scope": "single Windows machine, BelowNormal priority, two-core affinity; not universal timing or frame-latency guarantee"
+  },
+  "isolatedComparison": {
+    "parent": "ee10663",
+    "blocks": 100000,
+    "parentCreationMs": 5.95271,
+    "currentCreationMs": 1.442857,
+    "parentDispatchMs": 5.852138,
+    "currentDispatchMs": 6.293431,
+    "smallDocumentSpeedupClaim": false
+  },
+  "retention": {
+    "blocks": 5000,
+    "snapshots": 500,
+    "metric": "heapUsed + arrayBuffers after forced GC",
+    "parentRetainedBytes": 23299056,
+    "currentRetainedBytes": 23362464,
+    "parentReleasedBytes": 643200,
+    "currentReleasedBytes": 665944,
+    "retainedLimitBytes": 33554432,
+    "releasedLimitBytes": 4194304
+  },
+  "limitations": [
+    "Cold and changed-suffix lookups remain linear",
+    "Reverse position lookup unchanged",
+    "Node.copy still compares leading child identities",
+    "Full editor and CommonMark parity not achieved"
+  ],
+  "commonmark": {
+    "default": 563,
+    "safeOptional": 613,
+    "sourceOutput": 629,
+    "total": 652,
+    "unchanged": true
+  },
+  "initialFailures": {
+    "focused": "test constructed a Node with a foreign Schema; fixture corrected",
+    "bundle": "original aggregate caps exceeded by approximately 1.1 KiB ESM / 1.0 KiB CJS; only aggregate capacity raised"
+  },
+  "npm": {
+    "version": "0.4.0-beta.2",
+    "published": false
+  },
+  "logNormalization": "CRLF normalized to LF and trailing whitespace removed; results unchanged",
+  "hashBasis": "SHA-256 of staged Git blob bytes, including unchanged supporting sources",
+  "files": {
+    "CHANGELOG.md": "62eb5bdb18898fcc4790082b42e1cbe87a3fa3b41ace45210f49137ced2c31ff",
+    "artifacts/child-offset-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/child-offset-baseline-build-20261103.log": "28f1197b028a6eb1950738838514d0c06b1d116c4782b271a36a0065812fc8ab",
+    "artifacts/child-offset-browser-final-20261103.log": "e30150ddaac6f1fedb9a81fa09e25272469e9256b14ec0af091d579f5d9f96c6",
+    "artifacts/child-offset-browser-final-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-chromium/distant-edit-history.png": "5a780ad64b7026c2a318044b4b1a6fff043a724df690eb0d8fa5fab9f35dd2c7",
+    "artifacts/child-offset-browser-final-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-chromium/distant-edit-observations.json": "e0eb7bbc8d04935d2f0b149a0360238dd5dd7bec307e364b313e6790040a1468",
+    "artifacts/child-offset-browser-final-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-firefox/distant-edit-history.png": "3d81aaa38259f7f24e3ba53d382246054f0599200ce9b6fa46bee0d592112327",
+    "artifacts/child-offset-browser-final-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-firefox/distant-edit-observations.json": "e0eb7bbc8d04935d2f0b149a0360238dd5dd7bec307e364b313e6790040a1468",
+    "artifacts/child-offset-browser-final-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-webkit/distant-edit-history.png": "87bad2cfde8b594b4eb604cd64b6417485d4442cb6be62c6f097c8623971d9e1",
+    "artifacts/child-offset-browser-final-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-webkit/distant-edit-observations.json": "e0eb7bbc8d04935d2f0b149a0360238dd5dd7bec307e364b313e6790040a1468",
+    "artifacts/child-offset-browser-final-20261103/editor-preserves-immutable-06bd5--history-and-JSON-reopening-chromium/immutable-model-real-editing.png": "524015f5b9554f9cb603aeaa4407ad92cb16869a6b06e5607620aa22d0f381c8",
+    "artifacts/child-offset-browser-final-20261103/editor-preserves-immutable-06bd5--history-and-JSON-reopening-firefox/immutable-model-real-editing.png": "82eb8c826dc7158f33a5462c30be3d3ac87e4dbfebe2523c393f2be0afff294f",
+    "artifacts/child-offset-browser-final-20261103/editor-preserves-immutable-06bd5--history-and-JSON-reopening-webkit/immutable-model-real-editing.png": "2bb21fc94dac3d0a4b6f07a81d5c281b00afa907be135e481bbe1477cb11425d",
+    "artifacts/child-offset-browser-first-20261103.log": "41b908d586e133c221221ee8418c0ad19d4fe52ba1c6f71d985de92e69295591",
+    "artifacts/child-offset-budget-20261103.log": "3e5cb6a2f53d272f75b165305e5a3eeabac49c1953190620af8abac959ed74a5",
+    "artifacts/child-offset-budget-initial-20261103.log": "823faa81ea7779c1a8b7c0d8cd6065f89e7c37d925723d03e1a1412fade568d2",
+    "artifacts/child-offset-build-20261103.log": "3166f801bc43c7b2ad43b64b7489bd80b59ea9d60591b2c96c5cde667b90bf60",
+    "artifacts/child-offset-conformance-20261103.log": "d6cab3552641ebbc115e2e323de27d7fec6c16302c4eae988e537e951b3bdb75",
+    "artifacts/child-offset-focused-20261103.log": "aaf5501257ba113e4d5473edfd710c61502ef5264dd090baacdf4553e746a0d5",
+    "artifacts/child-offset-focused-final-20261103.log": "c96e1d429c79692df3e51a8b973097c097a75b0b541757bde9dcb9a1535ec3b6",
+    "artifacts/child-offset-headless-20261103.log": "cd4d029322626fc5d5ef5dc57459e5f0fa0e0e6b1e368685168936c8d89aca1d",
+    "artifacts/child-offset-memory-baseline-20261103.log": "c98e2a4f7483a36c081ab8d3d23a3626fca468a8462d7db89334c7a395263731",
+    "artifacts/child-offset-memory-current-20261103.log": "b76f2a2ab92c04a6b89bab22a52f6fc4169d1cccedc330225cfeed07b29e249f",
+    "artifacts/child-offset-package-20261103.log": "5d14f20c7e1df7ffb102d80cbdb45b0a0ea3828fa06770cfaf237fa9e45a7d08",
+    "artifacts/child-offset-performance-20261103.log": "2af58549133e16f8659a437d4ee02d17c6abb91bd6116424377ef71dc4e6cebe",
+    "artifacts/child-offset-profile-after-20261103.log": "6fe7a197bd84ba48b3e334c8f335e2d19457cbf4008bad464959f0a14daf658b",
+    "artifacts/child-offset-profile-baseline-20261103.log": "43ee4f2714b83e9a10400b8dc1ba45204da24910f51968dae55963f9a0827df0",
+    "artifacts/child-offset-site-20261103.log": "76ac8d74872f43e34a845effcad39b7d228ee850b10eda53bc42a2797a74252b",
+    "artifacts/child-offset-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/child-offset-unit-20261103.log": "01a183d816bbc913cf36b408ce2aebef9c297fc1012327842f76aa2ad53ab5bc",
+    "artifacts/profile-edit-path-20261103.mjs": "0358fb395be70edd2cc83925e4c2d3cb72cd42e2fdca3d00597ff688a5346eeb",
+    "docs/PERFORMANCE.md": "96fc4cf645d36af40c66a4b727180b5b14bf4f3c80450b4a8665205bb46f75c1",
+    "docs/ROADMAP.md": "9eecede383f3e237583851c97075296820f12227377f467355645d97ffd08ee3",
+    "package.json": "65eb17c36c38c2fa73dbfc320dda2f22543f8c2a27b0063efef2187b3348b98c",
+    "playwright.config.ts": "d356f42451d53c2db6a6639f75c18315579d4eb39713ca72487f37f3c7a7d258",
+    "playwright.input-audit.config.ts": "f768e7b9c1d23228fd274d54a034eb35ce384ae20ba28a0fc38ef48f1b912c7d",
+    "scripts/check-build-budgets.mjs": "ed7cbb98c88c99d0dbb3ad344a74cb868fa571fb92d8c6379d5636c37faac8a0",
+    "scripts/check-performance-budgets.mjs": "ba3b797c6eab594bc85981a598d34655312f3f1ed83240a5752f325b97c4ad15",
+    "scripts/check-position-mapping-retention.mjs": "63672809d6ba37de128471859653f821fef2e3f542e461a67387c6b9c9e9acc9",
+    "scripts/performance-sampling.mjs": "cb3647836779b1da3e9449a410abdd72a92b4c4a4cb090fbc73ab512d2724347",
+    "src/core/schema/child-offset.ts": "a21d72bf5fce450cfe09d2c3293d63170428cd2cdb4b21fb8a5d584edb3b4adb",
+    "src/core/schema/node.ts": "083e5a150995df66a5f3978384c04c4ed1fc408863a22a89ca97d2d2f0b84050",
+    "src/core/transaction/mapping.ts": "00dc0d2bf7c2945ff845aeea29a52dc1d20811f423b70ff23abee28d939eb3f7",
+    "tests/browser/child-offset-journey.ts": "d6dab405a64f0d2d72cc84ca98c8dd8e5d37acf2b581520644e17f22742f2ee4",
+    "tests/browser/editor.spec.ts": "7deeffd62f8849e35c78b9dab7e85ff1e0ea89deab3ba18c6f5fd93a4d1be8ce",
+    "tests/child-offset-mapping.test.ts": "ce56d05ab29f4c1eafd0ba4361f18d3c9bdfdc516358d4aaffdbe0161e945074"
+  }
+}

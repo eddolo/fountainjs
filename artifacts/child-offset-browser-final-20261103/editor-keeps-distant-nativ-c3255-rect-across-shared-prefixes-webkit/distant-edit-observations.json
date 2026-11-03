@@ -1,0 +1,22 @@
+{
+  "paragraphs": 257,
+  "preservedOriginal": true,
+  "nativeBackwardSelection": "Draft.",
+  "prefix": "Section 101: review note. Prefix edit.",
+  "finalSelection": {
+    "path": [
+      257,
+      0
+    ],
+    "endPath": [
+      257,
+      0
+    ],
+    "from": 0,
+    "to": 0,
+    "kind": "text"
+  },
+  "nativeSplitMergeUndo": true,
+  "nativeJSONReopen": true,
+  "errors": []
+}

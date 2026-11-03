@@ -1,5 +1,15 @@
 # FountainJS opportunity roadmap
 
+Position-mapping follow-up (2026-11-03, Unreleased): immutable copies now share
+a bounded checkpoint only across identical leading children. This reduces
+repeated size scans without a full index per history snapshot. Independent
+structural-oracle/history tests and the full 3,092-test suite pass; the 500-version
+retention fixture adds about 63 KB over the isolated parent. Cold/suffix and
+reverse lookups can still scan. Nine targeted browser checks pass across three
+engines, with six final captures visually inspected; package, headless, API,
+performance and website checks pass. CommonMark parity remains unfinished.
+See [the measured scope and limits](PERFORMANCE.md#bounded-shared-prefix-position-mapping-2026-11-03-unreleased).
+
 Performance sampling follow-up (2026-11-03, Unreleased): profiling and an
 isolated-parent comparison identify short-sample phase sensitivity. The revised
 check retains all initial samples, gates first-edit/initial-p95/steady-p95

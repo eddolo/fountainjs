@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/child-offset-mapping.test.ts (9 tests | 1 failed) 462ms
+   ❯ bounded shared-prefix position mapping (9)
+     × preserves selection/history when a prefix changes before a tail cursor 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/child-offset-mapping.test.ts > bounded shared-prefix position mapping > preserves selection/history when a prefix changes before a tail cursor
+Error: Foreign node at root.
+ ❯ visit src/core/schema/schema.ts:134:47
+    132|       // invalid, so transactions only need to revisit their newly-cre…
+    133|       if (this.validatedNodes.has(current)) return true;
+    134|       if (current.type.schema !== this) throw new Error(`Foreign node …
+       |                                               ^
+    135|       computeAttrs(current.type.spec.attrs, current.attrs);
+    136|       if (current.type.spec.validate && !current.type.spec.validate(cu…
+ ❯ Schema.validate src/core/schema/schema.ts:174:5
+ ❯ new EditorState src/core/state.ts:75:17
+ ❯ EditorState.create src/core/state.ts:95:12
+ ❯ createEditor src/core/editor.ts:159:29
+ ❯ tests/child-offset-mapping.test.ts:119:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 59 passed (60)
+   Start at  00:44:02
+   Duration  8.09s (import 38%, transform 36%, environment 16%, tests 9%)
+
+     Import  178 modules were evaluated 428 times · 2.84s total, 38% of tracked time
+             ~1.66s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

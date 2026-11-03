@@ -1,0 +1,43 @@
+[WebServer] (node:3240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:15688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:26028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:3548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:24248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:53:1 › keeps distant native edits backward selections and history correct across shared prefixes (3.8s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:201:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (1.5s)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:7289:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (1.6s)
+(node:8124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:53:1 › keeps distant native edits backward selections and history correct across shared prefixes (7.1s)
+  ok 5 [firefox] › tests\browser\editor.spec.ts:201:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (2.9s)
+  ok 6 [firefox] › tests\browser\editor.spec.ts:7289:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (3.2s)
+(node:26024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\browser\editor.spec.ts:53:1 › keeps distant native edits backward selections and history correct across shared prefixes (8.2s)
+  ok 8 [webkit] › tests\browser\editor.spec.ts:201:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (3.2s)
+  ok 9 [webkit] › tests\browser\editor.spec.ts:7289:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (3.0s)
+
+  9 passed (58.1s)

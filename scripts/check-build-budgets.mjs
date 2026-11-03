@@ -559,7 +559,9 @@ const limits = Object.freeze({
   // Feature capacity, not a size optimization; CSS/runtime/heap caps unchanged.
   // Source writer + contextual serialization boundary: measured 1624.4 KiB.
   // No new parser dependency; existing editor/framework/CSS ceilings stay fixed.
-  'all ESM runtime code': 1624.5 * kibibyte,
+  // Bounded shared-prefix mapping avoids repeated sibling-size scans without
+  // per-snapshot full indexes. Measured 1625.5 KiB (+~1.1); no dependency/API.
+  'all ESM runtime code': 1625.75 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -625,7 +627,8 @@ const limits = Object.freeze({
   // feature capacity only; preserve both pre-review failures as evidence.
   // Same bookmark/replacement work: 1345.831 KiB (+1.605); no new dependency.
   // The same optional source boundary measures 1351.7 KiB across CJS chunks.
-  'all CommonJS runtime code': 1351.75 * kibibyte,
+  // Same mapping checkpoint boundary: measured 1352.7 KiB (+~1.0).
+  'all CommonJS runtime code': 1352.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

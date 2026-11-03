@@ -1,6 +1,7 @@
 import { Mark, type MarkJSON } from './mark';
 import { freezeAttributes, type Attributes } from './node-spec';
 import type { NodeType, Schema } from './schema';
+import { inheritChildOffset } from './child-offset';
 
 export interface NodeJSON {
   type: string;
@@ -62,7 +63,9 @@ export class Node {
   }
 
   copy(content: readonly Node[] = this.content): Node {
-    return new Node(this.type, this.attrs, content, undefined, this.marks);
+    const node = new Node(this.type, this.attrs, content, undefined, this.marks);
+    inheritChildOffset(this, node);
+    return node;
   }
 
   withText(text: string): Node {

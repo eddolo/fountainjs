@@ -48,6 +48,11 @@ import { markdownEmphasisRunsJourney, markdownPartialSchemaJourney } from './mar
 import { webComponentFormJourney } from './web-component-form-journey';
 import { conversionLabJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
+import { childOffsetJourney } from './child-offset-journey';
+
+test('keeps distant native edits backward selections and history correct across shared prefixes', async ({ page }, info) => {
+  await childOffsetJourney(page, info);
+});
 import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-journey';
 import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-text-journey';
 import { htmlSourceJourney } from './html-source-journey';

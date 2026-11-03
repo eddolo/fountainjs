@@ -1,5 +1,67 @@
 # Performance and memory contract
 
+## Bounded shared-prefix position mapping (2026-11-03, Unreleased)
+
+`textPointToPosition`, `nodeRangeAtPath` and `topLevelPosition` now reuse a
+position checkpoint for wide immutable containers. `Node.copy` identifies the
+unchanged leading child references and shares a scalar checkpoint only within
+that prefix. This also handles `apply` preceding `getMap`: the old-document
+query may populate the new copy's shared prefix after the copy already exists.
+
+Each cell contains only a prefix limit, child index and numeric position. It
+contains no nodes, arrays or references to previous snapshots. Weak ownership
+lets discarded versions release their entries. A shorter/longer common prefix
+gets a separate cell; positions beyond the common region are never written to
+a shared cell. Small prefixes below 64 children use direct scans. Copying still
+compares child identities; cold lookups and queries beyond the shared prefix
+can still be linear. Reverse `positionToTextPoint` traversal is unchanged.
+This is not a general constant-time mapping or whole-editor speed claim.
+
+An isolated `ee10663` build and the candidate use the same instrumented Node
+transaction stream, two-core affinity and BelowNormal priority. These are
+diagnostic means on one machine, not portable benchmarks:
+
+| Blocks | Parent creation / dispatch (ms) | Candidate creation / dispatch (ms) |
+| --- | --- | --- |
+| 1,000 | 0.038 / 0.044 | 0.056 / 0.044 |
+| 10,000 | 0.228 / 0.376 | 0.134 / 0.429 |
+| 100,000 | 5.953 / 5.852 | 1.443 / 6.293 |
+
+The largest fixture improves transaction construction substantially; schema
+validation remains the dominant dispatch cost. The small-document result is
+slightly slower in this run, so do not advertise a universal speedup.
+
+The new retention gate holds 500 historical 5,000-block snapshots and measures
+`heapUsed + arrayBuffers` after forced GC. Parent/current retention is
+23,299,056 / 23,362,464 bytes; after release it is 643,200 / 665,944 bytes.
+The fixed ceilings are 32 MiB retained and 4 MiB after release. Including
+ArrayBuffers catches a full typed-array index per historical snapshot too.
+`pnpm test:performance` now runs this check after the existing gates.
+
+Ten independent-oracle tests cover nested/mixed content, empty and marked text,
+UTF-16 positions, branching copies, changed suffixes, insertion/deletion/reorder,
+small/empty copies, mutable caller arrays, history, invalid positions and bounded
+node-size reads after a shared-prefix lookup. The full suite passes 3,092 tests
+in 228 files. Public API declarations are unchanged. The runtime addition is
+about 1.1 KiB ESM / 1.0 KiB CommonJS, with no dependency; only the aggregate
+bundle capacity changes, and the initial failed-cap result is retained.
+
+Nine targeted headless browser checks pass across Chromium, Firefox and WebKit:
+distant native typing/backward selection/split/merge/undo, immutable snapshots
+and JSON reopening, and the existing 100,000-block virtualized journey. Six
+final editor screenshots were visually inspected; recorded videos were not
+reviewed. These are focused regression checks, not a complete browser audit.
+
+The final performance run passes with local/remote/server median growth of
+6.31x / 11.23x / 7.59x against the unchanged 15x ceiling. First-edit and both
+p95 phases also pass; the 10,000-block first local edit is 27.64 ms, so this is
+not a guarantee that every edit is below one frame. Headless checking covers
+107 modules; 415 API declarations, packed ESM/CommonJS imports, type checks,
+CommonMark diagnostics and the website build pass. CommonMark scores remain
+563/613/629 for the default/safe-optional/source-output profiles respectively.
+Evidence and source hashes: [verification record](../artifacts/child-offset-verification-20261103.json).
+The npm version remains `0.4.0-beta.2`; this checkpoint is unreleased there.
+
 ## Initial edits and sustained typing (2026-11-03, Unreleased)
 
 The short incremental-edit benchmark mixed twelve timed edits with JIT/GC
@@ -44,7 +106,7 @@ Reproduce with `node --expose-gc scripts/check-performance-budgets.mjs --report
 artifacts/performance.json`. The sampler ships with the existing Node CLI.
 Evidence: `artifacts/edit-sampling-verification-20261103.json`.
 
-Next optimization investigation: mapping currently sums preceding siblings'
+Follow-up identified by this profile: mapping summed preceding siblings'
 `nodeSize` values when resolving a text position. Any indexing improvement must
 preserve mapping/selection/history correctness and avoid retaining a full-size
 index per historical snapshot. The profile motivates investigating that path;

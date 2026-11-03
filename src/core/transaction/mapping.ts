@@ -8,6 +8,7 @@ import {
 } from '../selection';
 import { Node } from '../schema';
 import { getNodeAtPath } from './path';
+import { childOffset } from '../schema/child-offset';
 
 export type MapAssociation = -1 | 1;
 
@@ -237,7 +238,7 @@ export function textPointToPosition(doc: Node, path: readonly number[], offset: 
   let position = 0;
   for (let depth = 0; depth < path.length; depth += 1) {
     const index = path[depth] as number;
-    for (let sibling = 0; sibling < index; sibling += 1) position += node.child(sibling).nodeSize;
+    position += childOffset(node, index);
     node = node.child(index);
     if (depth < path.length - 1) {
       if (node.isText) throw new Error('A text node cannot contain a selection descendant.');
@@ -254,7 +255,7 @@ export function nodeRangeAtPath(doc: Node, path: readonly number[]): NodeRange {
   let position = 0;
   for (let depth = 0; depth < path.length; depth += 1) {
     const index = path[depth] as number;
-    for (let sibling = 0; sibling < index; sibling += 1) position += node.child(sibling).nodeSize;
+    position += childOffset(node, index);
     node = node.child(index);
     if (depth < path.length - 1) {
       if (node.isText) throw new Error('A text node cannot contain a descendant node.');
@@ -269,7 +270,7 @@ export function topLevelPosition(doc: Node, childIndex: number): number {
   if (!Number.isInteger(childIndex) || childIndex < 0 || childIndex > doc.childCount) {
     throw new RangeError(`Invalid top-level child index: ${childIndex}.`);
   }
-  return doc.content.slice(0, childIndex).reduce((position, child) => position + child.nodeSize, 0);
+  return childOffset(doc, childIndex);
 }
 
 /** Resolves a structural position to the nearest editable text point. */

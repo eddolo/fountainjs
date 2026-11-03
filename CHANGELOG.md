@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse bounded shared-prefix position checkpoints across immutable document
+  copies. Avoid repeated sibling-size scans without retaining full indexes for
+  every historical snapshot; preserve branching edits, selection and undo.
+  Add a historical-snapshot memory gate including ArrayBuffer memory. Cold,
+  divergent-suffix and reverse-position lookups can still require traversal.
+
 - Separate first-edit, initial-window and sustained-typing measurements in the
   performance gate. Retain raw readings and outliers, detect slow startup and
   p95 regressions, and keep every numerical latency/scaling/heap limit fixed.
