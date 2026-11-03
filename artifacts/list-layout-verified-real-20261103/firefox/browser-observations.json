@@ -1,0 +1,213 @@
+{
+  "actualDownload": true,
+  "typingUndoRedo": true,
+  "actualReopen": true,
+  "images": 3,
+  "math": 2,
+  "listGeometryMaintained": true,
+  "importedListGeometry": {
+    "bodyX": 96.19999694824219,
+    "listX": 120.19999694824219,
+    "relativeTextIndent": 24
+  },
+  "reopenedListGeometry": {
+    "bodyX": 96.19999694824219,
+    "listX": 120.19999694824219,
+    "relativeTextIndent": 24
+  },
+  "listEnterUndoRedoBackspace": true,
+  "backwardKeyboardSelection": true,
+  "actualHTMLReader": true,
+  "readerListGeometry": {
+    "bodyX": 260,
+    "listX": 284,
+    "relativeTextIndent": 24
+  },
+  "nativeFragmentFallback": true,
+  "roundTripEqual": false,
+  "conversionIssues": [
+    {
+      "code": "footnote-definition-position-normalized",
+      "message": "DOCX stores notes separately from body blocks; reimport places definitions after the body rather than retaining their editor block positions."
+    },
+    {
+      "code": "native-math-experimental",
+      "message": "Host math was exported as OMML with its original source in customXml/fountainMath.xml. Word rendering and source restoration after external edits are not yet certified.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "native-math-experimental",
+      "message": "Host math was exported as OMML with its original source in customXml/fountainMath.xml. Word rendering and source restoration after external edits are not yet certified.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "page-template-projection",
+      "message": "Headers/footers are stored as separate native parts and reimported after body blocks. Original styles, section geometry and exact template block positions are not certified."
+    },
+    {
+      "code": "page-field-recalculation-required",
+      "message": "Dynamic PAGE/NUMPAGES fields need recalculation by the receiving layout engine. Cached values are placeholders, not verified page numbers."
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "office-math-imported-experimental",
+      "message": "Supported Word equation semantics were converted to editable TeX. The original OMML source/style is not retained, and native application fidelity is not yet certified.",
+      "path": [
+        15
+      ]
+    },
+    {
+      "code": "office-math-imported-experimental",
+      "message": "Supported Word equation semantics were converted to editable TeX. The original OMML source/style is not retained, and native application fidelity is not yet certified.",
+      "path": [
+        17
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "unrepresented-run-vertical-align",
+      "message": "Word vertical alignment superscript is not yet projected.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "unrepresented-run-vertical-align",
+      "message": "Word vertical alignment superscript is not yet projected.",
+      "path": [
+        25,
+        0
+      ]
+    }
+  ],
+  "errors": [],
+  "nativeRenderingVerified": false
+}

@@ -1,3 +1,5 @@
+import { readWordListLayout, WORD_LIST_MARKER_FORMATS } from './list-layout';
+import { isListLayout, listMarkerAffixes, type ListLayout } from '../core/list-layout';
 import { readWordNumbering as readNumbering, readWordNumberingReference, type WordNumberingLevel as NumberingLevel } from './numbering';
 import { expandedXMLName as expandedName } from './xml-names';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
@@ -183,7 +185,7 @@ function extensionFor(contentType: DOCXImageContentType): string {
 interface ParsedParagraph {
   readonly node: FountainNode;
   readonly continuation?: readonly FountainNode[];
-  readonly list?: { readonly level: number; readonly ordered: boolean; readonly start: number; readonly id?: string };
+  readonly list?: { readonly level: number; readonly ordered: boolean; readonly start: number; readonly id?: string; readonly layout?: ListLayout };
   readonly caption?: boolean;
 }
 
@@ -357,6 +359,7 @@ interface ImportMediaContext {
   readonly themeFonts?: ReturnType<typeof readWordThemeFonts>;
   readonly styles?: ReturnType<typeof readWordStyleSheet>;
   readonly tableText?: WordTableTextFormatting;
+  readonly definitionIndent?: number;
 }
 
 function packagePartPath(sourcePart: string, target: string): string | undefined {
@@ -624,10 +627,27 @@ function hasExplicitWordEmphasis(paragraph: XMLElement): boolean {
 function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaContext, numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): ParsedParagraph {
   const properties = child(element, 'pPr');
   const style = wordStyleReference(properties, 'pStyle') ?? '';
+  const directNumbering = readWordNumberingReference(properties);
+  const chain = media.styles?.resolveParagraph({ paragraphStyle: style || undefined }).paragraphChain ?? [];
+  let numId = directNumbering?.id;
+  if (numId === undefined) for (const id of [...chain].reverse()) {
+    const inherited = media.styles?.numbering.get(id);
+    if (inherited !== undefined) { numId = inherited; break; }
+  }
+  let level = directNumbering?.level;
+  if (numId !== undefined && numId !== '0' && level === undefined) {
+    for (const id of [...chain].reverse()) {
+      const associated = Array.from({ length: 9 }, (_, index) => index).filter(index => numbering.get(`${numId}:${index}`)?.style === id);
+      if (associated.length > 1) throw new Error('Ambiguous Word numbering style association.');
+      if (associated.length) { level = associated[0]; break; }
+    }
+  }
+  level ??= 0;
+  const definition = numId && numId !== '0' ? numbering.get(`${numId}:${level}`) : undefined;
   const isQuote = /^(?:(?:intense)?quote|FountainExplicitQuote)$/i.test(style) && Boolean(schema.nodes.blockquote);
   const { align, alignExplicit, layout: geometry } = projectWordParagraphStyle(properties, media.styles, (code, message) => {
     issues.push({ code, severity: 'warning', message, path });
-  }, media.tableText);
+  }, media.tableText, definition?.properties);
   const content = inlineContent(element, schema, media, issues, path);
   const fontContext: { fontFamily?: string; fontSize?: number } = {};
   const markProperties = wordStyleChild(properties, 'rPr');
@@ -658,7 +678,25 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
       else fontContext.fontSize = Number(value.slice(0, -2));
     }
   }
-  const layout = geometry && Object.freeze({ ...geometry, ...fontContext });
+  let layout = geometry && Object.freeze({ ...geometry, ...fontContext });
+  let listLayout: ListLayout | undefined;
+  if (definition && layout && !isQuote) {
+    const listType = definition.ordered ? 'ordered_list' : 'bullet_list';
+    if (schema.nodes[listType]?.spec.attrs?.layout && schema.nodes.list_item?.spec.attrs?.layout) {
+      const markerFont: { fontFamily?: string; fontSize?: number } = {};
+      if (definition.markerProperties) {
+        const font = runTypography({ name: 'w:r', attrs: {}, namespaces: { w: WORD_NS }, children: [definition.markerProperties] }, issues, path, media.themeFonts);
+        if (font.family) markerFont.fontFamily = font.family;
+        if (font.size) markerFont.fontSize = Number(font.size.slice(0, -2));
+        if (elements(definition.markerProperties).some(item => !['rFonts', 'sz', 'szCs'].includes(localName(item.name)))) issues.push({ code: 'list-marker-formatting-not-imported', severity: 'warning', message: 'Word marker run effects beyond supported font family/size are not retained.', path });
+      }
+      listLayout = readWordListLayout(definition, layout, properties, level, (code, message) => issues.push({ code, severity: 'warning', message, path }), markerFont);
+      if (listLayout) {
+        const { indentStart, indentEnd, firstLineIndent, hangingIndent, ...textLayout } = layout;
+        layout = Object.freeze(textLayout);
+      }
+    } else issues.push({ code: 'list-layout-not-imported', severity: 'warning', message: 'The supplied list/item schema cannot own list geometry; the paragraph projection may add to host list indentation.', path });
+  }
   let type = 'paragraph';
   let attrs: Record<string, unknown> = { align, ...(layout ? { layout } : {}) };
   const heading = /^heading([1-6])$/i.exec(style);
@@ -709,24 +747,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   }
   const paragraph = parts[0]!;
   const continuation = parts.slice(1);
-  const directNumbering = readWordNumberingReference(properties);
-  const chain = media.styles?.resolveParagraph({ paragraphStyle: style || undefined }).paragraphChain ?? [];
-  let numId = directNumbering?.id;
-  if (numId === undefined) for (const id of [...chain].reverse()) {
-    const inherited = media.styles?.numbering.get(id);
-    if (inherited !== undefined) { numId = inherited; break; }
-  }
-  let level = directNumbering?.level;
-  if (numId !== undefined && numId !== '0' && level === undefined) {
-    for (const id of [...chain].reverse()) {
-      const associated = Array.from({ length: 9 }, (_, index) => index).filter(index => numbering.get(`${numId}:${index}`)?.style === id);
-      if (associated.length > 1) throw new Error('Ambiguous Word numbering style association.');
-      if (associated.length) { level = associated[0]; break; }
-    }
-  }
-  level ??= 0;
-  const definition = numId && numId !== '0' ? numbering.get(`${numId}:${level}`) : undefined;
-  if (definition) return { node: paragraph, continuation, list: { level, ordered: definition.ordered, start: definition.start, id: numId } };
+  if (definition) return { node: paragraph, continuation, list: { level, ordered: definition.ordered, start: definition.start, id: numId, ...(listLayout ? { layout: listLayout } : {}) } };
   if (numId !== '0' && (numId !== undefined || directNumbering)) issues.push({ code: 'numbering-reference-not-resolved', severity: 'warning',
     message: 'The Word numbering instance/level could not be resolved; paragraph text remains without invented list formatting.', path });
   const listStyle = !media.styles && numId === undefined && !directNumbering ? /^list(bullet|number)(\d+)?$/i.exec(style) : null;
@@ -742,13 +763,15 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   return { node: paragraph, continuation, caption: !continuation.length && /^caption$/i.test(style) };
 }
 
-function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: DOCXIssue[]): FountainNode[] {
+function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: DOCXIssue[], origin = 0): FountainNode[] {
   const output: FountainNode[] = [];
   let cursor = 0;
-  const parseList = (level: number, ordered: boolean): FountainNode => {
+  const parseList = (level: number, ordered: boolean, parentStart = 0, parentEnd = 0): FountainNode => {
     const listItems: FountainNode[] = [];
     const start = items[cursor]?.list?.start ?? 1;
     const id = items[cursor]?.list?.id;
+    const baseLayout = items[cursor]?.list?.layout;
+    let lastOrigin = { start: parentStart, end: parentEnd };
     while (cursor < items.length) {
       const current = items[cursor]!;
       if (!current.list || current.list.level < level || (current.list.level === level
@@ -756,27 +779,31 @@ function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: D
       if (current.list.level > level) {
         if (!listItems.length) {
           issues.push({ code: 'list-level-normalized', severity: 'warning', message: 'A list began below level zero; its nesting was normalized.' });
-          return parseList(current.list.level, current.list.ordered);
+          return parseList(current.list.level, current.list.ordered, parentStart, parentEnd);
         }
-        const nested = parseList(current.list.level, current.list.ordered);
+        const nested = parseList(current.list.level, current.list.ordered, lastOrigin.start, lastOrigin.end);
         const previous = listItems.at(-1)!;
         listItems[listItems.length - 1] = previous.copy([...previous.content, nested]);
         continue;
       }
       cursor += 1;
       const children: FountainNode[] = [current.node, ...current.continuation ?? []];
+      const ownLayout = current.list.layout;
+      lastOrigin = { start: ownLayout?.indentStart ?? parentStart, end: ownLayout?.indentEnd ?? parentEnd };
+      const itemLayout = ownLayout && JSON.stringify(ownLayout) !== JSON.stringify(baseLayout)
+        ? { ...ownLayout, indentStart: ownLayout.indentStart - (baseLayout?.indentStart ?? parentStart), indentEnd: (ownLayout.indentEnd ?? 0) - (baseLayout?.indentEnd ?? parentEnd) } : undefined;
       while (cursor < items.length && items[cursor]!.list && items[cursor]!.list!.level > level) {
         const nested = items[cursor]!.list!;
-        children.push(parseList(nested.level, nested.ordered));
+        children.push(parseList(nested.level, nested.ordered, lastOrigin.start, lastOrigin.end));
       }
-      listItems.push(schema.node('list_item', {}, children));
+      listItems.push(schema.node('list_item', itemLayout ? { layout: itemLayout } : {}, children));
     }
-    return schema.node(ordered ? 'ordered_list' : 'bullet_list', ordered ? { start } : {}, listItems);
+    return schema.node(ordered ? 'ordered_list' : 'bullet_list', { ...(ordered ? { start } : {}), ...(baseLayout ? { layout: { ...baseLayout, indentStart: baseLayout.indentStart - parentStart, indentEnd: (baseLayout.indentEnd ?? 0) - parentEnd } } : {}) }, listItems);
   };
   while (cursor < items.length) {
     const current = items[cursor]!;
     if (!current.list) { output.push(current.node, ...current.continuation ?? []); cursor += 1; continue; }
-    output.push(parseList(current.list.level, current.list.ordered));
+    output.push(parseList(current.list.level, current.list.ordered, origin));
   }
   return output;
 }
@@ -816,7 +843,7 @@ function parseDefinitionList(element: XMLElement, schema: Schema, media: ImportM
   if (entries.some(entry => !entry || entry.role === 'list')) return;
   // Parse each visible entry exactly once, even with an incompatible host schema.
   // Retrying nested controls through the fallback would multiply work by depth.
-  const contents = entries.map((entry, index) => parseBlocks(entry!.content, schema, media, numbering, issues,
+  const contents = entries.map((entry, index) => parseBlocks(entry!.content, schema, { ...media, definitionIndent: (media.definitionIndent ?? 0) + (entry!.role === 'description' ? 18 : 0) }, numbering, issues,
     [...path, control.index, index, entry!.index]));
   try {
     const children = entries.map((entry, index) => schema.node(`definition_${entry!.role}`, {},
@@ -851,7 +878,7 @@ function parseBlocks(container: XMLElement, schema: Schema, media: ImportMediaCo
   numbering: ReadonlyMap<string, NumberingLevel>, issues: DOCXIssue[], path: readonly number[]): FountainNode[] {
   const blocks: FountainNode[] = [];
   const paragraphs: ParsedParagraph[] = [];
-  const flush = () => { if (paragraphs.length) blocks.push(...groupLists(paragraphs.splice(0), schema, issues)); };
+  const flush = () => { if (paragraphs.length) blocks.push(...groupLists(paragraphs.splice(0), schema, issues, media.definitionIndent ?? 0)); };
   const visit = (parent: XMLElement, parentPath: readonly number[]) => {
     for (const [index, item] of elements(parent).entries()) {
       const currentPath = [...parentPath, index];
@@ -1144,7 +1171,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
       const tableText = { runs: [...baseText.runs, ...regionText.flatMap(text => text.runs)], paragraphs: [...baseText.paragraphs, ...regionText.flatMap(text => text.paragraphs)] };
       // Replace, never inherit, the containing table context: nested tables own
       // their own table styles, and body/footnote stories keep their own context.
-      const paragraphs = parseBlocks(scope ? control!.content : cell, schema, { ...media, tableText }, numbering, issues, cellPath);
+      const paragraphs = parseBlocks(scope ? control!.content : cell, schema, { ...media, tableText, definitionIndent: 0 }, numbering, issues, cellPath);
       const content = paragraphs.length ? paragraphs : [schema.node('paragraph')];
       const colwidth = readCellWidths(properties, grid, column, colspan, issues, [...path, rowIndex, cellIndex]);
       const cellType = scope && schema.nodes.table_header ? schema.nodes.table_header : schema.nodes.table_cell;
@@ -1920,7 +1947,7 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
   }).join('');
 }
 
-type ExportList = { numId: number; level: number; continuation?: boolean };
+type ExportList = { numId: number; level: number; continuation?: boolean; textIndent?: number; endIndent?: number; layout?: ListLayout };
 type DefinitionLayout = { indent: number; term: boolean };
 type QuoteProjection = boolean | 'explicit';
 
@@ -1951,11 +1978,21 @@ function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: 
     ].join('');
     properties.push(`<w:spacing${values}/>`);
   }
-  const generatedLeft = (definition?.indent ?? 0) + (list ? 720 * (list.level + 1) : quote === true ? 360 : 0);
-  const left = layout?.indentStart === undefined ? (generatedLeft || undefined) : Math.round(layout.indentStart * 20);
-  const right = layout?.indentEnd === undefined ? undefined : Math.round(layout.indentEnd * 20);
-  const firstLine = layout?.firstLineIndent === undefined ? undefined : Math.round(layout.firstLineIndent * 20);
-  const hanging = layout?.hangingIndent === undefined ? (list && !list.continuation ? 360 : undefined) : Math.round(layout.hangingIndent * 20);
+  const generatedLeft = list?.textIndent ?? (definition?.indent ?? 0) + (list ? 720 * (list.level + 1) : quote === true ? 360 : 0);
+  const left = list ? generatedLeft + Math.round((layout?.indentStart ?? 0) * 20)
+    : layout?.indentStart === undefined ? (generatedLeft || undefined) : Math.round(layout.indentStart * 20);
+  const right = list ? (list.endIndent ?? 0) + Math.round((layout?.indentEnd ?? 0) * 20)
+    : layout?.indentEnd === undefined ? undefined : Math.round(layout.indentEnd * 20);
+  const markerOffset = list?.layout ? Math.round(list.layout.markerOffset * 20) : -360;
+  const numbered = list && !list.continuation;
+  const firstLine = numbered ? markerOffset >= 0 ? markerOffset : undefined
+    : layout?.firstLineIndent === undefined ? undefined : Math.round(layout.firstLineIndent * 20);
+  const hanging = numbered ? markerOffset < 0 ? -markerOffset : undefined
+    : layout?.hangingIndent === undefined ? undefined : Math.round(layout.hangingIndent * 20);
+  if (numbered) {
+    const tab = (left ?? 0) + Math.round(((list.layout?.firstLineIndent ?? 0) + (layout?.firstLineIndent ?? 0) - (layout?.hangingIndent ?? 0)) * 20);
+    properties.push(`<w:tabs><w:tab w:val="num" w:pos="${tab}"/></w:tabs>`);
+  }
   if ([left, right, firstLine, hanging].some(value => value !== undefined)) {
     properties.push(`<w:ind${left === undefined ? '' : ` w:left="${left}"`}${right === undefined ? '' : ` w:right="${right}"`}${firstLine === undefined ? '' : ` w:firstLine="${firstLine}"`}${hanging === undefined ? '' : ` w:hanging="${hanging}"`}/>`);
   }
@@ -2148,13 +2185,30 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       // Each document list has its own instance, including adjacent/restarted
       // lists and lists in table cells. Nested lists must not reset a parent.
       const numId = context.numbering.length + 1;
-      const left = 720 * (level + 1) + (definition?.indent ?? 0);
-      context.numberingDefinitions.push(`<w:abstractNum w:abstractNumId="${numId}"><w:lvl w:ilvl="${level}"><w:start w:val="${start}"/><w:numFmt w:val="${ordered ? 'decimal' : 'bullet'}"/><w:lvlText w:val="${ordered ? `%${level + 1}.` : '•'}"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="${left}"/></w:tabs><w:ind w:left="${left}" w:hanging="360"/></w:pPr></w:lvl></w:abstractNum>`);
+      const geometry = isListLayout(node.attrs.layout) ? node.attrs.layout : undefined;
+      const left = (list?.textIndent ?? definition?.indent ?? 0) + (geometry ? Math.round(geometry.indentStart * 20) : 720);
+      const right = (list?.endIndent ?? 0) + Math.round((geometry?.indentEnd ?? 0) * 20);
+      const markerOffset = geometry ? Math.round(geometry.markerOffset * 20) : -360;
+      const indent = `${markerOffset < 0 ? ` w:hanging="${-markerOffset}"` : ` w:firstLine="${markerOffset}"`}`;
+      const format = geometry ? WORD_LIST_MARKER_FORMATS[geometry.markerStyle] : ordered ? 'decimal' : 'bullet';
+      const [prefix, suffix] = geometry ? listMarkerAffixes(geometry) : ['', ordered ? '.' : ''];
+      const marker = geometry?.markerStyle === 'none' ? '' : geometry?.markerStyle === 'literal' ? prefix + suffix
+        : geometry ? `${prefix}%${level + 1}${suffix}` : ordered ? `%${level + 1}.` : '•';
+      const font = geometry && paragraphFontProperties({ unit: 'pt', fontFamily: geometry.fontFamily, fontSize: geometry.fontSize }, context.issues, path);
+      context.numberingDefinitions.push(`<w:abstractNum w:abstractNumId="${numId}"><w:lvl w:ilvl="${level}"><w:start w:val="${start}"/><w:numFmt w:val="${format}"/><w:lvlText w:val="${xmlEscape(marker)}"/><w:suff w:val="tab"/><w:lvlJc w:val="${geometry?.markerAlign ?? 'left'}"/><w:pPr><w:tabs><w:tab w:val="num" w:pos="${left + Math.round((geometry?.firstLineIndent ?? 0) * 20)}"/></w:tabs><w:ind w:left="${left}" w:right="${right}"${indent}/></w:pPr>${font && (font.family || font.size) ? `<w:rPr>${font.family}${font.size}</w:rPr>` : ''}</w:lvl></w:abstractNum>`);
       context.numbering.push(`<w:num w:numId="${numId}"><w:abstractNumId w:val="${numId}"/><w:lvlOverride w:ilvl="${level}"><w:startOverride w:val="${start}"/></w:lvlOverride></w:num>`);
-      return node.content.map((item, index) => item.content.map((block, childIndex) => {
-        if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1), quote, undefined, definition);
-        return blockXML(block, context, [...path, index, childIndex], level, quote, { numId, level, continuation: childIndex > 0 }, definition);
-      }).join('')).join('');
+      return node.content.map((item, index) => {
+        const own = isListLayout(item.attrs.layout) ? item.attrs.layout : undefined;
+        if (own && ['markerStyle', 'markerPrefix', 'markerSuffix', 'markerAlign', 'fontFamily', 'fontSize'].some(key => own[key as keyof ListLayout] !== geometry?.[key as keyof ListLayout])) {
+          context.issues.push({ code: 'list-item-marker-not-exported', severity: 'warning', message: 'Per-item marker formatting differs from the shared numbering definition; native export retains the list marker and per-item geometry.', path: [...path, index] });
+        }
+        const itemList: ExportList = { numId, level, textIndent: left + Math.round((own?.indentStart ?? 0) * 20),
+          endIndent: right + Math.round((own?.indentEnd ?? 0) * 20), layout: own ?? geometry };
+        return item.content.map((block, childIndex) => {
+          if (block.type.name === 'bullet_list' || block.type.name === 'ordered_list') return blockXML(block, context, [...path, index, childIndex], Math.min(8, level + 1), quote, itemList, definition);
+          return blockXML(block, context, [...path, index, childIndex], level, quote, { ...itemList, continuation: childIndex > 0 }, definition);
+        }).join('');
+      }).join('');
     }
     case 'table': return tableXML(node, context, path);
     case 'image_super': {

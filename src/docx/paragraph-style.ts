@@ -1,11 +1,12 @@
 import type { ParagraphBorder, ParagraphLayout } from '../core/paragraph-layout';
 import { readWordParagraphFormatting, type readWordStyleSheet, type WordStyleReadIssue } from './style-reader';
-import { WORD_PARAGRAPH_BORDER_SIDES, type WordTableTextFormatting } from './style-cascade';
+import { createWordRunStyleCascade, WORD_PARAGRAPH_BORDER_SIDES, type WordTableTextFormatting } from './style-cascade';
 import type { XMLElement } from './xml-types';
 import { wordStyleChild, wordStyleReference } from './style-projection';
 
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 const SUPPORTED = new Set(['jc', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'shd', 'pBdr']);
+const EMPTY_STYLES = createWordRunStyleCascade({ styles: [] });
 
 function isWord(element: XMLElement, local: string) {
   const colon = element.name.indexOf(':');
@@ -21,7 +22,7 @@ function paragraphIssue(issue: WordStyleReadIssue) {
  */
 export function projectWordParagraphStyle(properties: XMLElement | undefined,
   sheet: ReturnType<typeof readWordStyleSheet> | undefined,
-  warn: (code: string, message: string) => void, table?: WordTableTextFormatting): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly layout?: ParagraphLayout } {
+  warn: (code: string, message: string) => void, table?: WordTableTextFormatting, numberingProperties?: XMLElement): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly layout?: ParagraphLayout } {
   const paragraphStyle = sheet ? wordStyleReference(properties, 'pStyle') : undefined;
   const filtered = properties && {
     ...properties,
@@ -30,7 +31,13 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
   };
   const directIssues: WordStyleReadIssue[] = [];
   const direct = readWordParagraphFormatting(filtered, directIssues);
-  const resolved = sheet?.resolveParagraph({ paragraphStyle, direct, table }) ?? { formatting: direct, paragraphChain: [], issues: [] };
+  const numberingIssues: WordStyleReadIssue[] = [];
+  // The list boundary resolves numbering tabs separately from paragraph styles.
+  const numbering = readWordParagraphFormatting(numberingProperties && { ...numberingProperties,
+    children: numberingProperties.children.filter(item => typeof item === 'string' || !isWord(item, 'tabs')),
+  }, numberingIssues);
+  for (const issue of numberingIssues) warn(issue.code, `Word numbering paragraph formatting: ${issue.property} is not fully represented.`);
+  const resolved = (sheet ?? EMPTY_STYLES).resolveParagraph({ paragraphStyle, direct, table, numbering });
   if (table?.paragraphs.length && resolved.paragraphChain.includes('Normal')) warn('table-normal-style-precedence-unverified',
     'Word Normal/document-default equivalence can alter table paragraph precedence. The explicit cascade is retained, but this combination still requires native Word verification.');
   const used = new Set(resolved.paragraphChain);

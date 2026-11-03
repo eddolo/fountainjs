@@ -22,6 +22,7 @@ export function withDOCXPageDefaults(document: NodeJSON, page: 'a4' | 'letter' =
 interface DOCXExportStyleContext {
   readonly definitionIndent: number;
   readonly listLevel?: number;
+  readonly listOrigin?: number;
   readonly listContinuation?: boolean;
 }
 
@@ -68,13 +69,11 @@ export function withDOCXExportStyles(document: NodeJSON, role = '', context: DOC
       borders: { left: { style: 'solid', color: '#7047ff', width: 2.25, space: 12 } },
     };
     else if (currentRole === 'term') inherited = { ...normal, keepWithNext: true };
-    const generatedIndent = context.definitionIndent + (context.listLevel === undefined ? 0 : 36 * (context.listLevel + 1));
+    const generatedIndent = context.listLevel === undefined ? context.definitionIndent : 0;
     if (generatedIndent && document.attrs?.layout === undefined) inherited = { ...inherited, indentStart: generatedIndent };
     else if (generatedIndent && (document.attrs?.layout as Record<string, unknown>).indentStart === undefined) inherited = { ...inherited, indentStart: generatedIndent };
-    if (context.listLevel !== undefined && !context.listContinuation
-      && (document.attrs?.layout as Record<string, unknown> | undefined)?.hangingIndent === undefined) {
-      inherited = { ...inherited, hangingIndent: 18 };
-    }
+    // Numbered paragraph offsets belong to the list/item geometry. Keeping
+    // the old absolute left/hanging values here would apply the indent twice.
     // The generated Word stylesheet supplies presentation defaults and direct
     // Fountain layout overrides them property by property. Reimport correctly
     // materializes that complete effective appearance, so fixtures must compare
@@ -109,7 +108,7 @@ export function withDOCXExportStyles(document: NodeJSON, role = '', context: DOC
       });
     }
     if (document.type === 'bullet_list' || document.type === 'ordered_list') {
-      return withDOCXExportStyles(child, currentRole, { ...context, listLevel: context.listLevel ?? 0 });
+      return withDOCXExportStyles(child, currentRole, { ...context, listLevel: context.listLevel ?? 0, listOrigin: (context.listOrigin ?? context.definitionIndent) + 36 });
     }
     if (document.type === 'list_item') {
       const nested = child.type === 'bullet_list' || child.type === 'ordered_list';
@@ -120,6 +119,14 @@ export function withDOCXExportStyles(document: NodeJSON, role = '', context: DOC
     return withDOCXExportStyles(child, currentRole, context);
   });
   return { ...document,
+    ...(['bullet_list', 'ordered_list'].includes(document.type) ? { attrs: { ...document.attrs,
+      // Independent canonical Word defaults: 36pt per nesting step, 18pt
+      // marker outset. Relative layout replaces the old paragraph ownership.
+      layout: document.attrs?.layout ?? { unit: 'pt', indentStart: 36, indentEnd: 0,
+        markerOffset: -18, markerStyle: document.type === 'ordered_list' ? 'decimal' : 'literal',
+        markerAlign: 'left', markerPrefix: document.type === 'ordered_list' ? '' : '•',
+        markerSuffix: document.type === 'ordered_list' ? '.' : '', firstLineIndent: 0 },
+    } } : {}),
     ...(document.type === 'blockquote' ? { attrs: { ...document.attrs, appearance: 'explicit' } } : {}),
     ...(block ? { attrs: { ...document.attrs, ...(layout ? { layout } : {}),
       // The generated native Quote style explicitly declares physical left.

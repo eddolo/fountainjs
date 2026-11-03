@@ -1,0 +1,32 @@
+{
+  "commit": "b1dce0e4c3a20f3e341de6edd3e45ab091467b06",
+  "run": 41726623960,
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": {
+    "verify": 126232972647,
+    "lean-integration": 126232973170,
+    "performance": 126232973289,
+    "browser": 126232973290
+  },
+  "browserBatches": [
+    {
+      "passed": 60
+    },
+    {
+      "passed": 24
+    },
+    {
+      "passed": 5
+    },
+    {
+      "passed": 2
+    },
+    {
+      "passed": 847,
+      "skipped": 16
+    }
+  ],
+  "source": "GitHub Actions decoded job logs, browser job 126232973290; job status fetched independently",
+  "doesNotValidateUnmergedListLayout": true
+}

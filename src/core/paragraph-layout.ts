@@ -111,8 +111,8 @@ export function paragraphLayoutDOMAttributes(value: unknown): Attributes {
   if (value.lineHeight !== undefined) styles.push(`line-height:${value.lineHeightUnit === 'multiple' ? Number(value.lineHeight.toFixed(6)) : points(value.lineHeight)}`);
   if (value.indentStart !== undefined) styles.push(`margin-inline-start:${points(value.indentStart)}`);
   if (value.indentEnd !== undefined) styles.push(`margin-inline-end:${points(value.indentEnd)}`);
-  if (value.firstLineIndent !== undefined) styles.push(`text-indent:${points(value.firstLineIndent)}`);
-  if (value.hangingIndent !== undefined) styles.push(`text-indent:-${points(value.hangingIndent)}`);
+  if (value.firstLineIndent !== undefined) styles.push(`text-indent:${points(value.firstLineIndent)}`, `--fountain-paragraph-first-line:${points(value.firstLineIndent)}`);
+  if (value.hangingIndent !== undefined) styles.push(`text-indent:-${points(value.hangingIndent)}`, `--fountain-paragraph-first-line:-${points(value.hangingIndent)}`);
   if (value.background) styles.push(`background-color:${value.background}`);
   // Firefox drops `avoid-page` even though Chromium/WebKit accept it. The
   // generic `avoid` value expresses the same keep-with-next intent for this

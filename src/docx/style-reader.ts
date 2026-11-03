@@ -215,6 +215,9 @@ export function readWordStyleSheet(document: XMLElement, limits: { readonly maxS
     const run = readWordRunFormatting(single(element, 'rPr'), issues, id);
     const properties = single(element, 'pPr');
     const reference = kind === 'paragraph' ? readWordNumberingReference(properties, false) : undefined;
+    if (reference && single(single(properties, 'numPr'), 'ilvl')) issues.push(Object.freeze({
+      code: 'unresolved-paragraph-properties', property: 'numPr/ilvl (ISO association used; native Word behavior is unpredictable)', styleId: id,
+    }));
     if (reference?.id !== undefined) numbering.set(id, reference.id);
     const paragraph = readWordParagraphFormatting(reference && properties ? { ...properties,
       children: properties.children.filter(item => typeof item === 'string' || expanded(item) !== `${W}|numPr`),

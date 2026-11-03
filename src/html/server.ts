@@ -1,3 +1,4 @@
+import { readListLayout } from '../core/list-layout';
 import { compile as compileSelector, selectAll } from 'css-select';
 import { readImageCaptionAttributes } from '../core/image-caption';
 import { readTableLayout, readTableRow } from '../core/table-layout';
@@ -1412,7 +1413,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const itemType = isTask ? 'task_item' : 'list_item';
     const items = element.children.filter((child) => child.tagName === 'li').map((item) => schema.node(
       itemType,
-      { ...readContainerDirection(item, schema), ...(isTask ? {
+      { ...readContainerDirection(item, schema), ...(!isTask && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(isTask ? {
         checked: item.getAttribute('data-checked') === 'true'
           || item.querySelector('input')?.hasAttribute('checked') === true,
       } : {}) },
@@ -1428,7 +1429,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         message: 'Ordered-list numbering was normalized. Negative starts, reversed numbering, non-decimal marker types and per-item value overrides are not retained by the supplied list schema.',
       });
     }
-    return [reportStructuralDirection(element, schema.node(listType, { ...readContainerDirection(element, schema), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items), context, schema)];
+    return [reportStructuralDirection(element, schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items), context, schema)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

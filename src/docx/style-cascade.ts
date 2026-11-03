@@ -300,9 +300,11 @@ export function createWordRunStyleCascade(input: {
         issues: Object.freeze(issues.map(issue => Object.freeze(issue))),
       });
     },
-    resolveParagraph(input: { readonly paragraphStyle?: string; readonly direct?: WordParagraphFormatting; readonly table?: WordTableTextFormatting } = {}): ResolvedWordParagraph {
+    resolveParagraph(input: { readonly paragraphStyle?: string; readonly direct?: WordParagraphFormatting; readonly table?: WordTableTextFormatting; readonly numbering?: WordParagraphFormatting } = {}): ResolvedWordParagraph {
       const paragraph = chain(input.paragraphStyle ?? defaultParagraph, 'paragraph');
-      const layers = [paragraphDefaults, ...input.table?.paragraphs.map(copyParagraphFormatting) ?? [], ...paragraph.styles.map(style => style.paragraph!), copyParagraphFormatting(input.direct)];
+      // Word's implementation applies numbering after paragraph styles, unlike
+      // the generic ISO ordering. Direct paragraph declarations remain nearest.
+      const layers = [paragraphDefaults, ...input.table?.paragraphs.map(copyParagraphFormatting) ?? [], ...paragraph.styles.map(style => style.paragraph!), copyParagraphFormatting(input.numbering), copyParagraphFormatting(input.direct)];
       const output: { -readonly [K in keyof WordParagraphFormatting]: WordParagraphFormatting[K] } = {};
       const borders: Partial<Record<WordParagraphBorderSide, WordParagraphBorder | null>> = {};
       for (const layer of layers) {

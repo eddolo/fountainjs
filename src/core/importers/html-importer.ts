@@ -1,3 +1,4 @@
+import { readListLayout } from '../list-layout';
 import {
   Mark,
   Node as FountainNode,
@@ -651,13 +652,13 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const items = Array.from(element.children).filter((child) => child.tagName.toLowerCase() === 'li').map((item) => {
       return schema.node(
         itemType,
-        { ...readContainerDirection(item, schema), ...(isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
+        { ...readContainerDirection(item, schema), ...(!isTask && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
         listItemContent(item, schema),
       );
     });
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
     const start = htmlOrderedListStart(element.getAttribute('start'));
-    return [schema.node(listType, { ...readContainerDirection(element, schema), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
+    return [schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

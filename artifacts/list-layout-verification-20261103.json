@@ -1,0 +1,309 @@
+{
+  "baseMaster": "b1dce0e4c3a20f3e341de6edd3e45ab091467b06",
+  "previousCheckpoint": "df045ce",
+  "status": "unfinished feature branch; not merged or published; native independent render pending",
+  "scope": "Explicit list/item geometry, native Word coordinates, safe HTML projection and editing retention.",
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "checks": {
+    "build": 0,
+    "fullUnit": {
+      "exit": 0,
+      "tests": 3460,
+      "files": 245
+    },
+    "performance": 0,
+    "types": 0,
+    "packageEntries": 0,
+    "headless": {
+      "exit": 0,
+      "modules": 117
+    },
+    "workerd": 0,
+    "api": {
+      "initialExit": 1,
+      "reviewedSnapshotUpdated": true,
+      "finalExit": 0,
+      "declarations": 417
+    },
+    "browser": {
+      "exit": 0,
+      "journeys": 3,
+      "workers": 1,
+      "headless": true
+    },
+    "size": {
+      "exit": 1,
+      "failingCeilings": 7,
+      "limitsChanged": false
+    }
+  },
+  "browsers": {
+    "chromium": {
+      "imported": {
+        "bodyX": 96.1875,
+        "listX": 120.1875,
+        "relativeTextIndent": 24
+      },
+      "reopened": {
+        "bodyX": 96.1875,
+        "listX": 120.1875,
+        "relativeTextIndent": 24
+      },
+      "reader": {
+        "bodyX": 260,
+        "listX": 284,
+        "relativeTextIndent": 24
+      },
+      "errors": [],
+      "editingHistoryAndBackwardSelectionPassed": true,
+      "nativeHTMLFragmentFallback": true,
+      "captures": [
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/chromium/editor-top.png",
+          "sha256": "6ff14e6f554b008948c9cf7d9c5a5159361e2dd017f5d4a4746bf3803f43b278",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/chromium/editor-reopened.png",
+          "sha256": "81ca9789ca5092efa80d0e42cc450f636a020001358003d46391770e5778af8d",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/chromium/editor-list-enter.png",
+          "sha256": "6b043bab0fa4d4479fdc237f11d8429313b158b8983960bf07f9995e5dc20d17",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/chromium/reader.png",
+          "sha256": "58e2342ae69a2e3cf3560d00bdf56df0b3d094dfb6f6d9cf6a73e7da700550f1",
+          "matchesPreviousCapture": true,
+          "freshManualReview": true
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/chromium/native-fragment.png",
+          "sha256": "d8ba98b51ff9290fa60543b0184b0bdae74b21f6cd9a41eeff5f3311baf7fb55",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        }
+      ]
+    },
+    "firefox": {
+      "imported": {
+        "bodyX": 96.19999694824219,
+        "listX": 120.19999694824219,
+        "relativeTextIndent": 24
+      },
+      "reopened": {
+        "bodyX": 96.19999694824219,
+        "listX": 120.19999694824219,
+        "relativeTextIndent": 24
+      },
+      "reader": {
+        "bodyX": 260,
+        "listX": 284,
+        "relativeTextIndent": 24
+      },
+      "errors": [],
+      "editingHistoryAndBackwardSelectionPassed": true,
+      "nativeHTMLFragmentFallback": true,
+      "captures": [
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/firefox/editor-top.png",
+          "sha256": "a218efe96a1ffadfeaa08438ec6741f5f0a8b53bf57d06987080264116bec421",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/firefox/editor-reopened.png",
+          "sha256": "622f9ff03cb3a2116a6c02a2aa19f210ce3b562ca5d89e62d139a83468566ae5",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/firefox/editor-list-enter.png",
+          "sha256": "702a1d4ecd1dd401c8a5a911196522acfbfe2e92925ede1625d36f0d8ab2db12",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/firefox/reader.png",
+          "sha256": "0adeccfc082603531343ca5c2d628dfda8564a708fa695367c7e68e839798821",
+          "matchesPreviousCapture": false,
+          "freshManualReview": true
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/firefox/native-fragment.png",
+          "sha256": "26dd1e695abd24dee00a7348e9332933ff9961c3ce4cb5e75bbb2f7defcdc062",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        }
+      ]
+    },
+    "webkit": {
+      "imported": {
+        "bodyX": 96.1875,
+        "listX": 120.1875,
+        "relativeTextIndent": 24
+      },
+      "reopened": {
+        "bodyX": 96.1875,
+        "listX": 120.1875,
+        "relativeTextIndent": 24
+      },
+      "reader": {
+        "bodyX": 260,
+        "listX": 284,
+        "relativeTextIndent": 24
+      },
+      "errors": [],
+      "editingHistoryAndBackwardSelectionPassed": true,
+      "nativeHTMLFragmentFallback": true,
+      "captures": [
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/webkit/editor-top.png",
+          "sha256": "22af7fd6433cf901cb7f725c80807a07ea3fbfcf412d2d49141b2fdc53e4b6b7",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/webkit/editor-reopened.png",
+          "sha256": "9a1f5045b4713b9527fff949007dc5413eb88e3983b8eb2a32eaabc522f2c277",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/webkit/editor-list-enter.png",
+          "sha256": "19fd19b0b6725cb6a7966c31e95c3de39d35c4381c4d4d7afbde428b1d39078d",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/webkit/reader.png",
+          "sha256": "e52d11c5626f8602a1f061907f7997189cd44aedd4e77d4899b5adebc1e4783c",
+          "matchesPreviousCapture": false,
+          "freshManualReview": true
+        },
+        {
+          "path": "artifacts/list-layout-verified-real-20261103/webkit/native-fragment.png",
+          "sha256": "2eed0df2e39b0665d0a03cf9f39d09812fd118513e40f2b73eb25b2ac32f045f",
+          "matchesPreviousCapture": true,
+          "freshManualReview": false
+        }
+      ]
+    }
+  },
+  "builtArtifacts": {
+    "dist/core.js": {
+      "bytes": 9511,
+      "sha256": "25c38161b9a32960ed441a4ed95292b2c6b61b8e8ef5509f0f6584ee7e2f72fd"
+    },
+    "dist/core.cjs": {
+      "bytes": 8653,
+      "sha256": "e24fa384d4367ccd47551ae725e19a13260d9284760c99cac9950872f7954649"
+    },
+    "dist/docx.js": {
+      "bytes": 199009,
+      "sha256": "b1ce5021111335b649972e2ebd600687b6ccac683f7022a3d2ab688d811e36aa"
+    },
+    "dist/docx.cjs": {
+      "bytes": 160774,
+      "sha256": "8bb45c41a62e836b8a4b6bbcbb0da23ce57a2b9643ea9cd88fb28eec082fcdd7"
+    },
+    "dist/styles.css": {
+      "bytes": 90515,
+      "sha256": "28c6d50cdd72e481e33a2a2d141459a090b737c6b17c8179b09652294c84f9c1"
+    }
+  },
+  "limitations": [
+    "Seven existing size ceilings fail; no acceptance limit was widened.",
+    "Independent native rendering for this commit is pending; browser geometry is not a native Word verdict.",
+    "Contextual spacing, native multi-paragraph item ownership and broad marker/tab behavior remain incomplete.",
+    "Raw TeX and literal page-template fields remain in standalone HTML; whole-document visual fidelity is not established.",
+    "Native HTML fragment fallback is not an actual external application clipboard test.",
+    "Real-device IME and assistive-technology certification are outside these desktop journeys."
+  ],
+  "stagedSHA256": {
+    "CHANGELOG.md": "a3d3a6ee7c30855de7d001ee435b494d709778b42c3c126cdf109ad95de11a80",
+    "api-surface.json": "e8c7be14293068c3fb4f1c6a23156e625e40c5bf12e696c531317f92d1820bb0",
+    "artifacts/b1dce0e-cloud-browser-result-20261103.json": "49e3564aa2087495f292723a2ba9224a49cc1dd504ed2b1b9db6dd9ee42ebf3d",
+    "artifacts/check-list-layout-worker-20261103.mjs": "98df2e0d9d75f2b3eaba9bd31a8daa3ec424a6502f371ecd52a26f3e152d52c9",
+    "artifacts/list-layout-browser.config.ts": "64d5c503a4a2ccfa7e0531afb2c7354386ea5018b49810dc9670a3e91fd96995",
+    "artifacts/list-layout-commonmark-20261103.log": "ffad58c2314a9dc85082003f6a53d2882279f1bacac6a519b9b04c60df946941",
+    "artifacts/list-layout-interop-20261103.log": "23fe034426b06916a288a8ef86763b3975b4d08a78875166624eb3b6a3f63137",
+    "artifacts/list-layout-performance-20261103.log": "261ecc1cf2cf64b19663773ff20861b922b5d4ef595376d5d72b332eb3749185",
+    "artifacts/list-layout-runtimes-20261103.log": "b1785093dfb6458c361a9f3f049325ed3b26c28fdc087a514cfdf6a79f9c9ace",
+    "artifacts/list-layout-verified-api-20261103.log": "a3e760d25a7d354d90aa5436e75784b8529099d0b61fceff372f32a7d668a2c4",
+    "artifacts/list-layout-verified-api-final-20261103.log": "0e6f464db5427c416e94a21d07223206159c73b878c32e2fa90f883881605694",
+    "artifacts/list-layout-verified-browser-20261103.log": "63793b2d935af1155fe1ed7e9ed02157f7ec793e66e1075d4ed599a144456425",
+    "artifacts/list-layout-verified-build-20261103.log": "6b0d56c1adc84fc13904de44076ff75e7ee92fd49af75fe01ee98cba65916a3b",
+    "artifacts/list-layout-verified-checks-20261103.json": "48f60adb5c1c2b6ef800c088421ab9de5554c4b790f2636c9401a8dca9162263",
+    "artifacts/list-layout-verified-full-unit-20261103.log": "444b1db7f0eb460ce4f2b8315c016cb58c416d5f778d167f9606de8992d61d4e",
+    "artifacts/list-layout-verified-headless-20261103.log": "885800c7acd8a905a7baea6767f43d9d27df4978af846506bc386beb382cb9df",
+    "artifacts/list-layout-verified-package-20261103.log": "d348f8ab49ff4221c8d22b6320c400d1550a5b09516f80832c40b1d465ac8921",
+    "artifacts/list-layout-verified-real-20261103/chromium/browser-observations.json": "e6de6e9d8bb1c57098e3e2b16bbdc965a23bc68dff6b7783e68f10abb9369ceb",
+    "artifacts/list-layout-verified-real-20261103/chromium/conversion-report.json": "3d2af19ab462f4e30ba8b0a88aa0fbb4444d86a919adcc916c121f57e238084d",
+    "artifacts/list-layout-verified-real-20261103/chromium/editor-list-enter.png": "6b043bab0fa4d4479fdc237f11d8429313b158b8983960bf07f9995e5dc20d17",
+    "artifacts/list-layout-verified-real-20261103/chromium/editor-reopened.png": "81ca9789ca5092efa80d0e42cc450f636a020001358003d46391770e5778af8d",
+    "artifacts/list-layout-verified-real-20261103/chromium/editor-top.png": "6ff14e6f554b008948c9cf7d9c5a5159361e2dd017f5d4a4746bf3803f43b278",
+    "artifacts/list-layout-verified-real-20261103/chromium/exported.docx": "4e26a38568b765b6575481361043d2861bc7bdaa9db00b5bd8249ad8b0c733f5",
+    "artifacts/list-layout-verified-real-20261103/chromium/interchange-report.json": "607c5fd0d4a1e80bd61f70ec0edbaa85b5e3aa4183a2c31809def695dd907610",
+    "artifacts/list-layout-verified-real-20261103/chromium/native-fragment.png": "d8ba98b51ff9290fa60543b0184b0bdae74b21f6cd9a41eeff5f3311baf7fb55",
+    "artifacts/list-layout-verified-real-20261103/chromium/reader.html": "be618163a58bee4cec0b578dc38bcf1ff20b4c5b415cb6ff363770e75e860b3f",
+    "artifacts/list-layout-verified-real-20261103/chromium/reader.png": "58e2342ae69a2e3cf3560d00bdf56df0b3d094dfb6f6d9cf6a73e7da700550f1",
+    "artifacts/list-layout-verified-real-20261103/firefox/browser-observations.json": "c89ddf7eb98645a07b3e2806b7566fef12727e7ce0222cbc977ded4fc2fdb91e",
+    "artifacts/list-layout-verified-real-20261103/firefox/conversion-report.json": "c33a63adb970dc1572bd1b599a710cbfc01f83c79696e457e766b09f2fbfca37",
+    "artifacts/list-layout-verified-real-20261103/firefox/editor-list-enter.png": "702a1d4ecd1dd401c8a5a911196522acfbfe2e92925ede1625d36f0d8ab2db12",
+    "artifacts/list-layout-verified-real-20261103/firefox/editor-reopened.png": "622f9ff03cb3a2116a6c02a2aa19f210ce3b562ca5d89e62d139a83468566ae5",
+    "artifacts/list-layout-verified-real-20261103/firefox/editor-top.png": "a218efe96a1ffadfeaa08438ec6741f5f0a8b53bf57d06987080264116bec421",
+    "artifacts/list-layout-verified-real-20261103/firefox/exported.docx": "726c9d8371e96b111639ec347da4ba0439e8f781a5cbae0cf7d3893624158759",
+    "artifacts/list-layout-verified-real-20261103/firefox/interchange-report.json": "a67f73fbd067fdf849f785abf90cedd7814086732b89741abfd2744bbc22cf34",
+    "artifacts/list-layout-verified-real-20261103/firefox/native-fragment.png": "26dd1e695abd24dee00a7348e9332933ff9961c3ce4cb5e75bbb2f7defcdc062",
+    "artifacts/list-layout-verified-real-20261103/firefox/reader.html": "be618163a58bee4cec0b578dc38bcf1ff20b4c5b415cb6ff363770e75e860b3f",
+    "artifacts/list-layout-verified-real-20261103/firefox/reader.png": "0adeccfc082603531343ca5c2d628dfda8564a708fa695367c7e68e839798821",
+    "artifacts/list-layout-verified-real-20261103/webkit/browser-observations.json": "e6de6e9d8bb1c57098e3e2b16bbdc965a23bc68dff6b7783e68f10abb9369ceb",
+    "artifacts/list-layout-verified-real-20261103/webkit/conversion-report.json": "b634342f6e8ad6adeb4df8e7d862fb3513dc8aa5022c6c3291c396caef2dbe15",
+    "artifacts/list-layout-verified-real-20261103/webkit/editor-list-enter.png": "19fd19b0b6725cb6a7966c31e95c3de39d35c4381c4d4d7afbde428b1d39078d",
+    "artifacts/list-layout-verified-real-20261103/webkit/editor-reopened.png": "9a1f5045b4713b9527fff949007dc5413eb88e3983b8eb2a32eaabc522f2c277",
+    "artifacts/list-layout-verified-real-20261103/webkit/editor-top.png": "22af7fd6433cf901cb7f725c80807a07ea3fbfcf412d2d49141b2fdc53e4b6b7",
+    "artifacts/list-layout-verified-real-20261103/webkit/exported.docx": "f924c2ce45e5d6145b3a67169b88e20ed972f14f5411edb5614623a8abf34a00",
+    "artifacts/list-layout-verified-real-20261103/webkit/interchange-report.json": "5206e198c4039bf752336b232ebbd5be5fda0b4082968699c6fc9067573d9d63",
+    "artifacts/list-layout-verified-real-20261103/webkit/native-fragment.png": "2eed0df2e39b0665d0a03cf9f39d09812fd118513e40f2b73eb25b2ac32f045f",
+    "artifacts/list-layout-verified-real-20261103/webkit/reader.html": "be618163a58bee4cec0b578dc38bcf1ff20b4c5b415cb6ff363770e75e860b3f",
+    "artifacts/list-layout-verified-real-20261103/webkit/reader.png": "e52d11c5626f8602a1f061907f7997189cd44aedd4e77d4899b5adebc1e4783c",
+    "artifacts/list-layout-verified-size-20261103.log": "f54359c8b5c8965493bb656860453acee33c6fc4940caa03a4a28fc17d3482a0",
+    "artifacts/list-layout-verified-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/list-layout-worker-20261103.log": "b24d2b59b27975dc6d88574aa2a10cc7ff7ecdfee62f19a83e77e5c8988b9e74",
+    "artifacts/list-layout-worker-20261103.mjs": "29c16df706e228f4fd4214384a0a2503231ede3df9a7f26812fcde87055c6b90",
+    "artifacts/write-list-layout-verification-20261103.mjs": "baa809db9721f7de86eedfd05615026c96df2a1cc5070838efb95370d64d936c",
+    "docs/DOCX_LIST_LAYOUT.md": "59e02c2ff8a451fa3c7a8105e41884c93c5e553ec8d96212fefab1939bb8ca07",
+    "scripts/fixtures/list-layout-check.mjs": "1e48e0b35d879721b4a8ba7c3eb81e5142b7451d7e726006ad19543813dacd18",
+    "scripts/native-docx-audit.mjs": "3c92624bf2a0bb0512e4651f2ec9f980654cebd42b9b487b27d0cd3f45beb218",
+    "scripts/smoke-package.mjs": "50d568a0d084bf8ec9aedd79f970645f45a5ebedd0be320cdf5f7796ce797007",
+    "src/core/exporters/html-exporter.ts": "e8bc3ebc784ca8599c3addca248365a3c24c49ac1cb6c1dce55b458edc256770",
+    "src/core/exporters/markdown-exporter.ts": "5699c6f363e8482a6a4de7924c32eadfed315f2a1c8bd84d0da53af62cf95f08",
+    "src/core/importers/html-importer.ts": "794e1f5060b5ab7a9474acc8892f2d6cfeee3ddaa0b2c5b1942d2203a9fa5b23",
+    "src/core/index.ts": "e4d5e7a1a2f116910534b78bd3fdf762769f088d06c17387fd7de63680ec9541",
+    "src/core/list-layout.ts": "b63dbfe1f48bb501fc57b1bd59a659dd4d736a5c1d021e0a940206b6c3b8274d",
+    "src/core/paragraph-layout.ts": "a28039ba3b7ea3ae2d5e4d6c99b05e2eaaeab8b501aa28451e8096ce22c75170",
+    "src/core/structure-commands.ts": "9a36cd5630df10d1b478c507d269b8b414511d3bc368781651ed125bbee90779",
+    "src/docx/index.ts": "dd176aa6b59bb9d0de108002f505cea0b2a8929f1c053cc32763c291ba1d6c18",
+    "src/docx/list-layout.ts": "0c82cced63c0f8c5f20cf1b2f31e4f7409a1bdfad8708859f6ce9b76e5a03859",
+    "src/docx/numbering.ts": "629fe028faccf1a1e1cf13ba9c2394ada286ce4e5f863c21f7aeb1399e14440e",
+    "src/docx/paragraph-style.ts": "977c957ffb30f6f6cbfb554b003b12e983e80a6ab0ecc98f5ed8be0c4857a674",
+    "src/docx/style-cascade.ts": "fddc03966884bf696b4db7a78868c1ef9afb6708296e5da160d3529d86e87fd3",
+    "src/docx/style-reader.ts": "7cdc1383b57601780defdd2352907c6e0c5c76ef01381a7ba3af22c17decf9f5",
+    "src/extensions/nodes/bullet-list.ts": "bad0636fe79ef327c7d0b978a45bf5b8a8be34199f44f0818911ec9d9cb8ff39",
+    "src/extensions/nodes/list-item.ts": "caf170a67bd3332c3b751be467ed1b2ab4800caa69d6512059be6db210dd2d2a",
+    "src/extensions/nodes/ordered-list.ts": "bc80211fe2a9936cda78859489d53b8880d637bcfb42edb49a6d3868085bd40a",
+    "src/html/server.ts": "7f9f1c12d485b74adca7ffd8bc342662d05ca584e91a13020074467d4891cc8e",
+    "src/styles.css": "28c6d50cdd72e481e33a2a2d141459a090b737c6b17c8179b09652294c84f9c1",
+    "tests/docx-list-layout.test.ts": "ae9baeaf1b8364da495979c86521ce307a5995218962b35135abeadcc12d1776",
+    "tests/fixtures/docx-page-defaults.ts": "63c99195559696b8e14de5ad43801ba1579f906290c25e1d77bbf7a32a349c30",
+    "tests/list-layout-editing.test.ts": "d9528a438a8300635f5cfbc0496d1edc7dfaf278eb3036b12a08f88927ef7da1",
+    "tests/list-layout.test.ts": "38e898cd08f73d8fac525e5c40f343bc58b4675ca0a02cdea2203215b6a27206",
+    "tests/native-docx/editor.spec.ts": "1ca2ff0cf284444f85054faee7682d64911c24fd4bdf674b3c57174aab884b0a"
+  }
+}

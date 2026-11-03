@@ -30,6 +30,12 @@ export interface WordNumberingLevel {
   readonly start: number;
   /** Abstract-level style association, independent of instance overrides. */
   readonly style?: string;
+  readonly format: string;
+  readonly text?: string;
+  readonly align?: string;
+  readonly suffix?: string;
+  readonly properties?: XMLElement;
+  readonly markerProperties?: XMLElement;
 }
 
 /** Namespace-aware references. Zero is an explicit removal, not absence. */
@@ -56,7 +62,9 @@ export function readWordNumbering(document: XMLElement | undefined): ReadonlyMap
     const raw = Number(value(element, 'start') ?? 1);
     return Object.freeze({ ordered: format !== 'bullet' && format !== 'none',
       start: Number.isSafeInteger(raw) && raw >= 0 && raw <= 2147483647 ? raw : 1,
-      style: value(element, 'pStyle') });
+      style: value(element, 'pStyle'), format, text: value(element, 'lvlText'),
+      align: value(element, 'lvlJc'), suffix: value(element, 'suff'),
+      properties: one(element, 'pPr'), markerProperties: one(element, 'rPr') });
   };
   for (const element of children(root, 'abstractNum')) {
     const id = identity(element, 'abstractNumId')!;

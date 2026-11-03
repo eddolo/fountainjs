@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add optional portable list geometry and marker-format attributes on ordered
+  lists, bullet lists and items. Keep paragraph indentation local to that origin
+  through Word import/export, safe HTML, editing/history and collaboration.
+  Preserve native marker fallbacks in HTML fragments without the stylesheet.
+  This branch work remains partial: contextual spacing, multi-paragraph list
+  ownership, broader marker behavior and final release gates are unfinished.
+
 - Add task deletion with one-step recovery of edited descriptions, metadata and
   undo histories to the task workflow demo. Handle an empty workspace and
   restore focus after deletion. Add clickable breadcrumbs and parent arrows

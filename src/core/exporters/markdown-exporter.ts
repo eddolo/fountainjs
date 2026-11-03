@@ -171,6 +171,9 @@ function reportNodeAttributes(
   if (['paragraph', 'heading'].includes(name) && node.attrs.emphasis === 'explicit') {
     report(context, 'attribute', name, path, 'Explicit normal-weight/non-italic block emphasis is not represented by ordinary Markdown; renderer defaults may differ.');
   }
+  if (['ordered_list', 'bullet_list', 'list_item'].includes(name) && node.attrs.layout != null) {
+    report(context, 'attribute', name, path, 'List marker formatting and geometry are not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
+  }
   if (['paragraph', 'heading'].includes(name) && node.attrs.layout != null) {
     report(context, 'attribute', name, path, 'Paragraph spacing, font context, indentation, borders and pagination controls are not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
   }
