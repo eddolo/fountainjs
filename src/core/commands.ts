@@ -26,7 +26,7 @@ export interface TableOptions {
 }
 
 const SAFE_CONTENT_URL = /^(https?:|data:image\/(?:png|gif|jpe?g|webp);base64,|\/|#|\.)/i;
-const TEXT_BLOCKS = ['paragraph', 'heading', 'html_flow'];
+const TEXT_BLOCKS = ['paragraph', 'heading', 'html_flow', 'html_source_empty_body'];
 const LIST_ITEMS = ['list_item', 'task_item'];
 
 function dispatchTextSelection(editor: Editor, transaction: ReturnType<Editor['createTransaction']>, path: readonly number[], from: number, to: number): boolean {
@@ -1262,7 +1262,7 @@ export function splitBlock(editor: Editor): boolean {
   const leftText = (text.text ?? '').slice(0, from);
   const rightText = (text.text ?? '').slice(to);
   const left = block.copy([...block.content.slice(0, textIndex), text.withText(leftText)]);
-  const nextType = ['heading', 'html_flow'].includes(block.type.name) ? state.schema.nodes.paragraph : block.type;
+  const nextType = ['heading', 'html_flow', 'html_source_empty_body'].includes(block.type.name) ? state.schema.nodes.paragraph : block.type;
   const nextAttrs = block.type === nextType ? block.attrs
     : {
         ...(block.attrs.emphasis === 'explicit' && nextType.spec.attrs?.emphasis ? { emphasis: 'explicit' } : {}),

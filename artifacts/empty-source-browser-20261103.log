@@ -1,0 +1,189 @@
+[WebServer] (node:4304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:18024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:15384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:13852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:17144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening (18.7s)
+(node:13884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:64:1 › retains leading Markdown declarations through native edits and complete source reopening (3.8s)
+(node:17444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [firefox] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening (11.7s)
+(node:16856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:64:1 › retains leading Markdown declarations through native edits and complete source reopening (7.4s)
+(node:17956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [webkit] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening (11.9s)
+(node:6556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:64:1 › retains leading Markdown declarations through native edits and complete source reopening (8.1s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('#inert-source').getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator(':scope > p')
+    Expected: 1
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('#inert-source').getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator(':scope > p')
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+       at html-source-empty-journey.ts:30
+
+      28 |   const beforeMerge = JSON.parse(await json.inputValue());
+      29 |   await page.keyboard.press('Home'); await page.keyboard.press('Backspace');
+    > 30 |   await expect(blocks).toHaveCount(1); await expect(blocks.first()).toHaveText('EvidenceSecond line');
+         |                        ^
+      31 |   await workshop.getByRole('button', { name: 'Undo inert edit', exact: true }).click();
+      32 |   expect(JSON.parse(await json.inputValue())).toEqual(beforeMerge);
+      33 |   for (const format of ['JSON', 'HTML']) {
+        at htmlSourceEmptyJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-source-empty-journey.ts:30:24)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:62:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('#inert-source').getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator(':scope > p')
+    Expected: 1
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('#inert-source').getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator(':scope > p')
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+       at html-source-empty-journey.ts:30
+
+      28 |   const beforeMerge = JSON.parse(await json.inputValue());
+      29 |   await page.keyboard.press('Home'); await page.keyboard.press('Backspace');
+    > 30 |   await expect(blocks).toHaveCount(1); await expect(blocks.first()).toHaveText('EvidenceSecond line');
+         |                        ^
+      31 |   await workshop.getByRole('button', { name: 'Undo inert edit', exact: true }).click();
+      32 |   expect(JSON.parse(await json.inputValue())).toEqual(beforeMerge);
+      33 |   for (const format of ['JSON', 'HTML']) {
+        at htmlSourceEmptyJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-source-empty-journey.ts:30:24)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:62:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('#inert-source').getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator(':scope > p')
+    Expected: 1
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('#inert-source').getByRole('textbox', { name: 'Inert HTML source editor', exact: true }).locator(':scope > p')
+        13 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+       at html-source-empty-journey.ts:30
+
+      28 |   const beforeMerge = JSON.parse(await json.inputValue());
+      29 |   await page.keyboard.press('Home'); await page.keyboard.press('Backspace');
+    > 30 |   await expect(blocks).toHaveCount(1); await expect(blocks.first()).toHaveText('EvidenceSecond line');
+         |                        ^
+      31 |   await workshop.getByRole('button', { name: 'Undo inert edit', exact: true }).click();
+      32 |   expect(JSON.parse(await json.inputValue())).toEqual(beforeMerge);
+      33 |   for (const format of ['JSON', 'HTML']) {
+        at htmlSourceEmptyJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-source-empty-journey.ts:30:24)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:62:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\empty-source-browser-20261103\editor-edits-source-empty--12b74-space-history-and-reopening-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+    [firefox] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+    [webkit] › tests\browser\editor.spec.ts:61:1 › edits source-empty documents with visible native Enter Backspace history and reopening
+  3 passed (1.5m)

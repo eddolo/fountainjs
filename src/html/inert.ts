@@ -73,6 +73,20 @@ export function createInertHTMLAnchorExtension(): FountainExtension {
   return createInertExtension(['a'], 'anchor');
 }
 
+/** Explicit editing surface for an imported source-empty body, not an authored
+ * empty paragraph. Only a sole, untouched empty instance is omitted from source.
+ */
+export function createHTMLSourceEmptyBodyExtension(): FountainExtension {
+  return defineExtension({ name: 'html-source-empty-body', nodes: { html_source_empty_body: {
+    group: 'block', content: 'inline*',
+    parseHTML: [{ tag: 'p[data-fountain-source-empty-body="v1"]', priority: 100, getAttrs: element =>
+      element.getAttributeNames?.().every(name => name === 'data-fountain-source-empty-body'
+        || name === 'data-fountain-empty-text' && element.getAttribute(name) === 'true' && element.textContent === '') ? {} : false }],
+    toDOM: node => ['p', { 'data-fountain-source-empty-body': 'v1',
+      ...(node.childCount === 1 && node.child(0).isText && node.child(0).text === '' ? { 'data-fountain-empty-text': 'true' } : {}) }, 0],
+  } } });
+}
+
 /** Add an editable paragraph without silently changing an imported empty wrapper. */
 export function appendInertHTMLBlockParagraph(editor: Editor, path: readonly number[]): boolean {
   if (!editor.editable || !path.length || !path.every(index => Number.isInteger(index) && index >= 0)) return false;

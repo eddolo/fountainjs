@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add opt-in source-empty body blocks, distinct from authored empty paragraphs.
+  Keep their safe HTML/JSON identity; omit only a sole unformatted empty block
+  from validated source output. Include the new type in text-block join and
+  conversion commands; Enter creates an ordinary authored paragraph.
+
 - Add atomic document attributes to the whole-document Markdown HTML adapter
   result, while accepting existing block arrays. The optional
   `createHTMLSourceMarkdownAdapter` retains leading declaration data through

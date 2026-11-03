@@ -1,5 +1,14 @@
 # FountainJS opportunity roadmap
 
+Source-empty body foundation (2026-11-03, Unreleased): optional explicit editing
+blocks distinguish source-empty bodies from authored empty paragraphs. JSON
+and safe HTML preserve provenance; validated source output omits only a sole
+untouched empty instance. Native Enter creates an authored paragraph and join
+commands include the new type. The first browser run exposed and fixed missing
+join registration. EOF lexical tokens and a separately certified complete-
+document conformance profile remain outstanding; existing scores stay unchanged.
+See [the source-empty contract](HTML_INERT_SOURCE.md#explicit-source-empty-body-2026-11-03-unreleased).
+
 Markdown envelope follow-up (2026-11-03, Unreleased): document adapters can
 return validated root attributes together with blocks. The explicit source
 adapter retains a leading declaration, preserves untouched LF/CRLF snapshots,

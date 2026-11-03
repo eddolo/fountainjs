@@ -1,0 +1,143 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "2015cbc9ead9e9172e470c6391254b8de6928d1d",
+  "scope": "Explicit opt-in source-empty body identity, editing commands and validated source output; no conformance-score promotion",
+  "unit": {
+    "passed": 3142,
+    "files": 232,
+    "newCases": 10
+  },
+  "browser": {
+    "passed": 6,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "headless": true,
+    "workers": 1,
+    "finalNewScreenshotsInspected": 6,
+    "videosReviewed": false,
+    "assertions": [
+      "native typing and source-empty undo",
+      "Enter creates authored paragraph",
+      "Backspace joins and exact undo restores",
+      "JSON and HTML reopen retain complete native model",
+      "paragraphs have separate physical vertical positions",
+      "source output retains both authored lines",
+      "existing Markdown declaration journey"
+    ]
+  },
+  "checks": {
+    "headlessModules": 108,
+    "apiDeclarations": 415,
+    "reviewedChanges": "optional empty-body factory only",
+    "types": "passed",
+    "packedConsumers": "20 source contracts in each ESM/CommonJS passed",
+    "conformance": "passed unchanged",
+    "budgets": "passed after reviewed optional entry/aggregate capacity changes",
+    "website": "passed",
+    "retention": "both gates passed"
+  },
+  "performance": {
+    "initial": {
+      "status": "failed",
+      "scope": "100-block server HTML p95",
+      "measuredMs": 36.01,
+      "unchangedLimitMs": 35
+    },
+    "parent": {
+      "commit": "2015cbc",
+      "isolatedBuild": true,
+      "status": "passed",
+      "server100P95Ms": 23.81
+    },
+    "current": {
+      "status": "passed",
+      "server100P95Ms": 28.24,
+      "localMedianGrowth": 5.91,
+      "remoteMedianGrowth": 5.58,
+      "serverMedianGrowth": 7.48,
+      "unchangedGrowthCeiling": 15
+    },
+    "interpretation": "Matched runs pass; the initial tail event remains unexplained, not a universal latency guarantee"
+  },
+  "initialFailures": {
+    "browser": "new type missing from text-block join registration; corrected without reducing assertions",
+    "unit": "narrow root test exposed missing finished-document validation; guard added, fresh focused and frozen full runs passed. Initial in-flight run used pre-guard compiled source and is retained separately.",
+    "budget": "optional entry and aggregate capacity exceeded; reviewed measured capacity changes only",
+    "api": "two inert-entry declarations reviewed"
+  },
+  "commonmark": {
+    "default": 563,
+    "safeOptional": 613,
+    "sourceOutput": 631,
+    "total": 652,
+    "unchanged": true
+  },
+  "remaining": [
+    "unfinished EOF tokens",
+    "certified complete-document conformance profile",
+    "full parity goal"
+  ],
+  "npm": {
+    "version": "0.4.0-beta.2",
+    "published": false
+  },
+  "hashBasis": "SHA256 of staged Git blob bytes; log newlines/trailing whitespace normalized",
+  "files": {
+    "CHANGELOG.md": "870e44206eb3c17d251f4842f437ee332735e3050408929943e73b12d4a34ecc",
+    "api-surface.json": "d73ca07dc040d7db3b240163f201c048cc214e0ecdcb09788b064aec8390071a",
+    "artifacts/empty-source-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/empty-source-api-initial-20261103.log": "bd28da696576127b2f04a846fe962b93979a6018355214d55500ad785fba7806",
+    "artifacts/empty-source-browser-20261103.log": "1a677a99e4e7a710034a3d1c3ed0d198c13d8dc9096ba3a72b89c659bb17a1f6",
+    "artifacts/empty-source-browser-final-20261103.log": "a3c55465ffb1ac209feffacf3a8fe27c503075fbeaaa6f20e8372b116fb29ba6",
+    "artifacts/empty-source-browser-verified-20261103.log": "728c09911f52b0a0aec1b9971699d6ef0889dd68633d241b7382beb38f62aacd",
+    "artifacts/empty-source-browser-verified-20261103/editor-edits-source-empty--12b74-space-history-and-reopening-chromium/source-empty-edited.png": "3a5ff08764cd394538674a9ad7074c980a0193560f6761facd5cd424125d511f",
+    "artifacts/empty-source-browser-verified-20261103/editor-edits-source-empty--12b74-space-history-and-reopening-chromium/source-empty-reader.png": "e1fcfbe5b2e51a18988758c13856daebe84431f050cc48ee7a4da98bc9edd131",
+    "artifacts/empty-source-browser-verified-20261103/editor-edits-source-empty--12b74-space-history-and-reopening-firefox/source-empty-edited.png": "9344d47cf421cd695b4650d6879078a60cf436dbe0dd32eb38e99bf9d89f7d21",
+    "artifacts/empty-source-browser-verified-20261103/editor-edits-source-empty--12b74-space-history-and-reopening-firefox/source-empty-reader.png": "e2b68ec71616d6a788b7f44a4cec1f4696aec9617adc015b7f1f5d645ba00301",
+    "artifacts/empty-source-browser-verified-20261103/editor-edits-source-empty--12b74-space-history-and-reopening-webkit/source-empty-edited.png": "be0ff7f2e8a5a58e43b9785253697dbb8fa01ac7f4853d4b6e6471459b32878e",
+    "artifacts/empty-source-browser-verified-20261103/editor-edits-source-empty--12b74-space-history-and-reopening-webkit/source-empty-reader.png": "55578655160f6f5b7c833d6328ab4c8e56423e5a669d59c5646c1e17d3d93446",
+    "artifacts/empty-source-budget-20261103.log": "69714d6db106abd58326f074dff9b12056c10826db5e8f28d7e77e18d2596484",
+    "artifacts/empty-source-budget-initial-20261103.log": "35284f43371f54cfefb38882f42a5e1804f75f1dfc8a3d0820cffd60921ba12e",
+    "artifacts/empty-source-conformance-20261103.log": "a298758a2e9e06b5d9ffb11cde2edf35a4a7572a05dc36c84774661ea29bc747",
+    "artifacts/empty-source-current-performance-20261103.json": "6c060ae949e9d89c1b3b029a1491c15bfb46b9424cb50566d25965964dc7f617",
+    "artifacts/empty-source-current-performance-20261103.log": "2ffbcff691c7e32aeca499ab701e0f06c86e2a149a6299238aab2491360905c8",
+    "artifacts/empty-source-focused-20261103.log": "d0baaf89b58caee4a2c6cfed2713021dad0bf32837373a2615f549ac00a31943",
+    "artifacts/empty-source-focused-final-20261103.log": "154dc161b5ee0883c3f5babf03cb4e9fc8b4a3ec3c5d007b4cf6bbf3fca53b37",
+    "artifacts/empty-source-headless-20261103.log": "e8a4e8942d199d47967904e92b45909adcc30e22659322c0914c98f2aaa976ee",
+    "artifacts/empty-source-mapping-retention-20261103.log": "b76f2a2ab92c04a6b89bab22a52f6fc4169d1cccedc330225cfeed07b29e249f",
+    "artifacts/empty-source-package-20261103.log": "20a720b00102e675115a292dd02e7444d03899e21f6d189cca4765b46dd82edf",
+    "artifacts/empty-source-parent-build-20261103.log": "28e7b115b77758ab20638e31aa1f5f7a6f478998d90e6b82a69b8b66613405cb",
+    "artifacts/empty-source-parent-performance-20261103.json": "da4a461e24330fbca334d04cbcd7fe626f872e8566533f1a0cf9f6fa55e94a75",
+    "artifacts/empty-source-parent-performance-20261103.log": "3627e7fcb2201eaf330e36a9d67be491cc073009e2dc3251eb2a87662b81632c",
+    "artifacts/empty-source-performance-20261103.log": "30f893a0658004fd535d745950f2294a4561cf5265d3fe27cf147d3e38068d14",
+    "artifacts/empty-source-performance-initial-20261103.log": "30f893a0658004fd535d745950f2294a4561cf5265d3fe27cf147d3e38068d14",
+    "artifacts/empty-source-schema-check-20261103.log": "040e768d90e4c094636005a1f514461a4b859a54b7a5997a2d2479624594795e",
+    "artifacts/empty-source-shared-retention-20261103.log": "7f54a7aa7a1ce1a4d95887fded49018d79da27899c29db3cc83bb14f48c1d1ef",
+    "artifacts/empty-source-site-20261103.log": "55865ca2d127ec94837d66a2742101959582bae8ae6d1a56a36c716dc5930211",
+    "artifacts/empty-source-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/empty-source-types-initial-20261103.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "artifacts/empty-source-unit-20261103.log": "999cd88273ec9a5228539d649dfab69978071396a797527cbe023b0aa331a558",
+    "artifacts/empty-source-unit-final-20261103.log": "6bf3183b63ad95edd261944480d7329220e6a3e373acd801b111530e6eae0603",
+    "artifacts/empty-source-unit-initial-20261103.log": "999cd88273ec9a5228539d649dfab69978071396a797527cbe023b0aa331a558",
+    "docs/HTML_INERT_SOURCE.md": "a39dc1fcae993d4ca5263918ad9facd2f7af95f0e7a06492fe8b87fcda79b431",
+    "docs/ROADMAP.md": "f4ab3fe4ceff2b73a96551ef1d42209a088da20350dc3d41d570ae64e4ff17e3",
+    "examples/react-app/src/HTMLInertWorkshop.tsx": "f568e64a006a75c3fd3e0ffb67c21a3f546afe244e1a9c0500afc42bff7cbaf3",
+    "scripts/check-build-budgets.mjs": "8357974640cee1c8b05dd03a177cb286ed1799e746ffa4a5711da8ad02efc539",
+    "scripts/check-performance-budgets.mjs": "ba3b797c6eab594bc85981a598d34655312f3f1ed83240a5752f325b97c4ad15",
+    "scripts/check-position-mapping-retention.mjs": "63672809d6ba37de128471859653f821fef2e3f542e461a67387c6b9c9e9acc9",
+    "scripts/check-shared-direction-retention.mjs": "3c8d3df350d790ac15399ceef4a42b2837512d707d79460ccb7761f41d44ad79",
+    "scripts/fixtures/html-source-check.mjs": "8a5dbb3b239f6222a01966def544110c0d47a06747daab139dca04aa8cb4c96d",
+    "scripts/performance-sampling.mjs": "cb3647836779b1da3e9449a410abdd72a92b4c4a4cb090fbc73ab512d2724347",
+    "src/core/commands.ts": "19ce01cf16ee0766962d73fa0fdf6c20e9c1e6c762c922fe1649b17abbc18cb2",
+    "src/core/html-flow.ts": "d30ceb069aaa7aace609201d482261d095eb41925dd3f8802edcdc2b96afd38c",
+    "src/html/inert.ts": "fdc4dceec690075eeca7619f574c20ed9efa55c8301ac964df742efd468c404e",
+    "src/html/source.ts": "15f35173fab1f680bae437a8ba949d82aca5dbd6d7170a002a1f6d7d787e34bb",
+    "tests/browser/editor.spec.ts": "0c313cc84117c373ddf4f50949b3fcb3cdab0dc046ae8a3de2ed7c7b3ba785b4",
+    "tests/browser/html-source-empty-journey.ts": "d622de8ebfc8647d3b9c1078dcb8b960854b377cd1a40dd28d1f744a9ce5a7bc",
+    "tests/html-source-empty-body.test.ts": "5d3839e7ce62c5ae3ceca68a3fd826d4ed4d20c0dad68d2f6872e52d0a279db2",
+    "tests/types/headless-consumer.ts": "ad0d565d19ed3242aadc850bcde43b2ee48a5e9cc90430d0935b39dcf061203f"
+  }
+}

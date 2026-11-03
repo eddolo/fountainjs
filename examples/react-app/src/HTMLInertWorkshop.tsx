@@ -4,7 +4,7 @@ import { EditorView, StarterKit, composeExtensions, createEditor, EditorState, S
   type Editor, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 import { createHTMLSourceMarkdownAdapter, importHTMLSourceDocument, exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
-import { appendInertHTMLBlockParagraph, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
+import { appendInertHTMLBlockParagraph, createHTMLSourceEmptyBodyExtension, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import './html-container-workshop.css';
 
 const samples = {
@@ -52,6 +52,7 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
   const [importIssues, setImportIssues] = useState<string[]>([]);
   useEffect(() => {
     const kit = composeExtensions([...StarterKit.extensions,
+      createHTMLSourceEmptyBodyExtension(),
       createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'lab.measurement', 'fountain-unsafe'] }),
       createInertHTMLBlockExtension({ tags: ['lab-section', 'warning'] }),
       ...(preserveAnchors ? [createInertHTMLAnchorExtension()] : []),
@@ -149,6 +150,7 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
       <button onClick={() => load(samples.literalLinks, 'Markdown')}>Literal Markdown link sample</button>
       <button onClick={() => load(samples.declaration, 'HTML')}>Document declaration sample</button>
       <button onClick={() => load('<!DOCTYPE html>\n\nResearch evidence.\n', 'Markdown')}>Markdown declaration sample</button>
+      <button onClick={() => load('<!DOCTYPE html>\n', 'Markdown')}>Empty source document sample</button>
     </div>
     <label>Inert input format<select value={inputFormat} onChange={event => setInputFormat(event.target.value as 'Markdown' | 'HTML')}><option>Markdown</option><option>HTML</option></select></label>
     <label><input type="checkbox" checked={preserveEnvelope} onChange={event => setPreserveEnvelope(event.target.checked)} /> Retain HTML source doctype on next import</label>

@@ -33,5 +33,13 @@ export function checkHTMLSource(root, inert, source) {
   const converted = source.exportHTMLSource(captured.document);
   assert.equal(converted.ok, true);
   assert.deepEqual(source.importHTMLSourceDocument(converted.sourceHTML, schema).document.toJSON(), captured.document.toJSON());
-  return 16;
+  const emptySchema = new root.Schema({ ...root.CoreSchemaSpec, nodes: { ...root.CoreSchemaSpec.nodes,
+    ...inert.createHTMLSourceEmptyBodyExtension().nodes } });
+  const empty = root.MarkdownImporter.parse('<!DOCTYPE html>\n', emptySchema,
+    { parseHTMLDocument: source.createHTMLSourceMarkdownAdapter() });
+  assert.equal(empty.child(0).type.name, 'html_source_empty_body');
+  const emptyOutput = source.exportHTMLSource(empty);
+  assert.equal(emptyOutput.ok, true); assert.ok(!emptyOutput.sourceHTML.includes('<p'));
+  assert.deepEqual(source.importHTMLSourceDocument(root.HTMLExporter.export(empty), emptySchema).document.toJSON(), empty.toJSON());
+  return 20;
 }

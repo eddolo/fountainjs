@@ -194,14 +194,16 @@ const limits = Object.freeze({
   // as unknown-inline preservation. Existing editor-entry/CSS caps stay fixed.
   // Shared block-wrapper mode + explicit paragraph authoring: measured
   // 6.0 / 5.1 KiB. No new dependency; default editor/CSS ceilings stay fixed.
-  'dist/html-inert.js': 7 * kibibyte,
-  'dist/html-inert.cjs': 6 * kibibyte,
+  // Explicit source-empty editing block/carrier: measured 7.4 / 6.2 KiB.
+  'dist/html-inert.js': 7.5 * kibibyte,
+  'dist/html-inert.cjs': 6.5 * kibibyte,
   // Optional source-data reconstruction and independent HTML validation reuse
   // the existing server parser. Measured entries: 6099 / 4996 bytes.
   // Explicit complete-document source import and validated doctype/mode export.
   // Leading Markdown declaration adapter and atomic document attributes.
-  'dist/html-source.js': 8.5 * kibibyte,
-  'dist/html-source.cjs': 7 * kibibyte,
+  // Source-empty omission and independent carrier validation: 10.0 / 8.4 KiB.
+  'dist/html-source.js': 10.25 * kibibyte,
+  'dist/html-source.cjs': 8.5 * kibibyte,
   // Portable widget definitions and commands, browser lifecycle/focus policy,
   // and the React bridge remain three opt-in surfaces. Hosts pay only for the
   // renderers they actually use.
@@ -567,7 +569,8 @@ const limits = Object.freeze({
   // Entry/CSS ceilings stay fixed; no dependency or core-editor feature change.
   // Source envelope capture and inactive reader metadata: measured 1629.3 KiB.
   // Same Markdown/root metadata boundary: measured 1630.4 KiB.
-  'all ESM runtime code': 1630.5 * kibibyte,
+  // Same source-empty model/command boundary: measured 1633.0 KiB.
+  'all ESM runtime code': 1633.25 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -637,7 +640,8 @@ const limits = Object.freeze({
   // Same optional anchor retention: 1353.6 KiB (+~0.9).
   // Same envelope boundary: measured 1356.0 KiB. No new dependency.
   // Same boundary: measured 1357.0 KiB; no dependency or CSS change.
-  'all CommonJS runtime code': 1357.25 * kibibyte,
+  // Same boundary: measured 1359.1 KiB. CSS/performance caps unchanged.
+  'all CommonJS runtime code': 1359.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

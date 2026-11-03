@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-source-empty-body.test.ts (10 tests | 1 failed) 57ms
+   ❯ explicit source-empty body editing block (10)
+     × refuses source-empty replacement when the host root permits only paragraphs 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed | 231 passed (232)
+      Tests  1 failed | 3141 passed (3142)
+   Start at  12:25:44
+ FAIL  tests/html-source-empty-body.test.ts > explicit source-empty body editing block > refuses source-empty replacement when the host root permits only paragraphs
+   Duration  195.39s (environment 50%, import 26%, tests 18%, transform 5%, worker 1%)
+AssertionError: expected [Function] to throw an error
+ ❯ tests/html-source-empty-body.test.ts:113:70
+    111|     const local = new Schema({ ...CoreSchemaSpec, nodes: { ...schema.s…
+    112|       doc: { ...CoreSchemaSpec.nodes.doc, content: 'paragraph+' } } });
+    113|     expect(() => importHTMLSourceDocument('<!DOCTYPE html>', local)).t…
+       |                                                                      ^
+    114|     const issues: unknown[] = [];
+    115|     const doc = MarkdownImporter.parse(source, local, { ...options, on…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+     Import  602 modules were evaluated 1238 times · 42.49s total, 26% of tracked time
+             ~21.83s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

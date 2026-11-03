@@ -6,6 +6,21 @@ import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { ServerHTMLImporter, type ServerHTMLImporterOptions, type ServerHTMLImportResult, type ServerHTMLFragmentImportResult } from './server';
 import type { MarkdownImportOptions } from '../core/importers/markdown-importer';
 
+function sourceEmptyBody(schema: Schema): readonly Node[] | undefined {
+  const type = schema.nodes.html_source_empty_body;
+  if (!type) return undefined;
+  const node = type.create({}, [schema.text('')]);
+  schema.validate(node);
+  return [node];
+}
+
+function isSoleEmptySourceBody(document: Node): boolean {
+  if (document.childCount !== 1) return false;
+  const node = document.child(0);
+  return node.type.name === 'html_source_empty_body' && !node.marks.length && !Object.keys(node.attrs).length
+    && node.content.every(child => child.isText && child.text === '' && !child.marks.length && !Object.keys(child.attrs).length);
+}
+
 /** Whole-document Markdown HTML projection retaining a leading declaration.
  * Existing fallback/protected-node rules still apply. Exact source spelling is
  * owned by parseWithSource; this callback carries bounded root-envelope data.
@@ -25,7 +40,7 @@ export function createHTMLSourceMarkdownAdapter(options?: ServerHTMLImporterOpti
     const envelope: HTMLDocumentEnvelope = { version: 1,
       doctype: first.html.slice(location.startOffset, location.endOffset), mode: parsed.mode };
     if (!isHTMLDocumentEnvelope(envelope)) throw new RangeError('Markdown source doctype exceeds the bounded envelope contract.');
-    return { nodes: report.nodes, attributes: { htmlSourceEnvelope: envelope } };
+    return { nodes: report.nodes.length ? report.nodes : sourceEmptyBody(schema) ?? report.nodes, attributes: { htmlSourceEnvelope: envelope } };
   };
 }
 
@@ -43,7 +58,12 @@ export function importHTMLSourceDocument(html: string, schema: Schema, options?:
   const envelope: HTMLDocumentEnvelope = { version: 1,
     doctype: location ? html.slice(location.startOffset, location.endOffset) : null, mode: parsed.mode };
   if (!isHTMLDocumentEnvelope(envelope)) throw new RangeError('HTML source doctype exceeds the bounded envelope contract.');
-  return Object.freeze({ ...imported, document: imported.document.withAttrs({ ...imported.document.attrs, htmlSourceEnvelope: envelope }) });
+  const htmlElement = parsed.childNodes.find(node => 'tagName' in node && node.tagName === 'html') as DefaultTreeAdapterMap['element'];
+  const body = htmlElement.childNodes.find(node => 'tagName' in node && node.tagName === 'body') as DefaultTreeAdapterMap['element'];
+  const empty = !body.childNodes.length ? sourceEmptyBody(schema) : undefined;
+  const document = (empty ? imported.document.copy(empty) : imported.document).withAttrs({ ...imported.document.attrs, htmlSourceEnvelope: envelope });
+  schema.validate(document);
+  return Object.freeze({ ...imported, document });
 }
 
 function sourceDoctype(value: unknown): string {
@@ -135,9 +155,15 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
   }
   if (issues.length) return { ok: false, issues };
   try {
+    const emptyBody = isSoleEmptySourceBody(document);
     const fragment = renderHTMLSourceFragment(document, {
       opaque: node => opaque.has(node) || types.has(node.type.name),
       render: (node, path, children) => {
+        if (emptyBody && path.length === 1 && node.type.name === 'html_source_empty_body') return '';
+        if (node.type.name === 'html_source_empty_body') {
+          if (node.marks.length || Object.keys(node.attrs).length) throw new Error('Source-empty editing block has unsupported metadata; convert it to an explicit paragraph first.');
+          return `<p>${children()}</p>`;
+        }
         if (!types.has(node.type.name)) return undefined;
         const tag = String(node.attrs.tag);
         const raw = node.type.name === 'html_inert_raw_text';
@@ -175,6 +201,25 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     // explicit body context, without removing authored text or empty nodes.
     const intended = bodyTree(`${declaration}<html><head></head><body${pageAttribute}>${HTMLExporter.export(document, { document: false })}</body></html>`);
     projectCarriers(intended);
+    if (emptyBody) {
+      const carrier = intended.childNodes[0];
+      if (intended.childNodes.length !== 1 || !carrier || !('tagName' in carrier) || carrier.tagName !== 'p'
+        || carrier.childNodes.length || !carrier.attrs.some(attr => attr.name === 'data-fountain-source-empty-body' && attr.value === 'v1')
+        || carrier.attrs.some(attr => !['data-fountain-source-empty-body', 'data-fountain-empty-text'].includes(attr.name))) {
+        throw new Error('Source-empty editing block does not match its empty canonical carrier.');
+      }
+      intended.childNodes = [];
+    }
+    const stripEmptyBodyCarrier = (node: HTMLNode): void => {
+      if (!('childNodes' in node)) return;
+      node.childNodes.forEach(child => {
+        if ('tagName' in child && child.tagName === 'p' && child.attrs.some(attr => attr.name === 'data-fountain-source-empty-body' && attr.value === 'v1')) {
+          child.attrs = child.attrs.filter(attr => !['data-fountain-source-empty-body', 'data-fountain-empty-text'].includes(attr.name));
+        }
+        stripEmptyBodyCarrier(child);
+      });
+    };
+    stripEmptyBodyCarrier(intended);
     if (JSON.stringify(htmlMeaning(bodyTree(complete))) !== JSON.stringify(htmlMeaning(intended))) {
       return { ok: false, issues: [{ code: 'source-reopen-mismatch', message: 'Reconstructed HTML changes source content or structure when parsed. No source was returned.' }] };
     }

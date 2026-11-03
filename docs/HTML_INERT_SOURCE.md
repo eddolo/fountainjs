@@ -1,5 +1,57 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Explicit source-empty body (2026-11-03, Unreleased)
+
+`createHTMLSourceEmptyBodyExtension()` from `fountainjs-editor/html/inert` adds
+`html_source_empty_body`, a normal inline-content editing block representing an
+imported empty HTML body. Complete source import and the leading-Markdown-
+declaration adapter create it only when their parsed body/block result is empty
+and the host registered the extension. Existing schemas keep their paragraph
+policy. Authored `<p></p>` and whitespace-bearing body content are not inferred
+to be source-empty from their visual appearance.
+
+Native JSON and safe HTML preserve this block's identity. A strict carrier
+check restores its empty text leaf; altered attributes fall back to readable
+content. Source output omits it only when it is the sole root block, has no
+attributes/marks, and contains no data beyond unmarked empty text. Independent
+validation requires its canonical carrier to contain no hidden source/content.
+Typing emits a real paragraph; two empty blocks and following content also emit
+paragraphs. Unsupported block metadata refuses source export with an explicit
+conversion instruction rather than disappearing. Use the ordinary paragraph
+type for authored formatting/metadata.
+
+The existing text-block command contract now includes this type. Enter creates
+an ordinary authored paragraph; Backspace and forward Delete can join it again,
+and undo restores exact native data. The initial browser run exposed a missing
+join registration, which was corrected without weakening the join assertions.
+The public workshop provides an Empty source document sample under the explicit
+retention option. This does not implement unfinished EOF tokens or promote the
+existing fragment-based CommonMark source profile; its score remains 631/652.
+
+The narrowed-root schema check also requires complete source import to validate
+the finished document after replacement. A host whose root only accepts
+paragraphs receives a refusal; the Markdown adapter keeps its literal fallback.
+Six final headless browser journeys pass across Chromium, Firefox and WebKit.
+They exercise actual typing, native Enter/Backspace joining, exact undo, JSON
+and HTML reopening, exported paragraph structure and distinct vertical line
+positions. Six final editor/reader captures were visually inspected. Recorded
+videos were not reviewed.
+
+The frozen-source verification passes 3,142 unit tests / 232 files, 108-module
+headless boundary, consumer/framework types, packed ESM/CommonJS consumers
+(20 source contracts each), unchanged conformance gates, 415 reviewed API
+declarations, bundle budgets and production website build. Entry/aggregate
+capacity increases cover measured code growth; CSS and performance caps stay
+fixed. Initial join/schema/budget/API failures remain in the evidence.
+
+Performance initially failed the 100-block server HTML p95 check at 36.01 ms
+against 35 ms. An isolated `2015cbc` build and current build then pass the same
+unchanged benchmark at 23.81 / 28.24 ms respectively. Current local/remote/server
+median growth is 5.91x / 5.58x / 7.48x under 15x; both retention checks pass.
+These measurements do not explain the earlier tail event or establish a
+universal latency guarantee. See [the source-bound record](../artifacts/empty-source-verification-20261103.json).
+No npm release is included; its version remains `0.4.0-beta.2`.
+
 ## Leading declarations in Markdown (2026-11-03, Unreleased)
 
 Use `createHTMLSourceMarkdownAdapter` for explicit whole-document HTML projection

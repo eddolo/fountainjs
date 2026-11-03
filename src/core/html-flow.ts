@@ -5,7 +5,7 @@ import type { HTMLParseElement, Node, Schema } from './schema';
  * ordinary empty paragraphs and anonymous native HTML are not normalized.
  */
 export function restoreHTMLFlowCaret(type: string, element: Pick<HTMLParseElement, 'getAttribute'>, content: Node[], schema: Schema): Node[] {
-  return type === 'html_flow' && element.getAttribute('data-fountain-empty-text') === 'true' && !content.length
+  return (type === 'html_flow' || type === 'html_source_empty_body') && element.getAttribute('data-fountain-empty-text') === 'true' && !content.length
     ? [schema.text('')] : content;
 }
 

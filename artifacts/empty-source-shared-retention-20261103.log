@@ -1,0 +1,11 @@
+{
+  "scope": "Bounded public HTML projection with shared direction; no DOM or history plugin",
+  "edits": 2000,
+  "blocks": 1000,
+  "elapsedMs": 6428.3854,
+  "liveGrowthBytes": 380856,
+  "liveLimitBytes": 8388608,
+  "destroyedEditors": 40,
+  "destroyedGrowthBytes": 259840,
+  "destroyedLimitBytes": 16777216
+}
