@@ -1,3 +1,4 @@
+import { expandedXMLName as expandedName } from './xml-names';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 import { Node as FountainNode, type Mark, type Schema } from '../core/schema';
@@ -1250,13 +1251,7 @@ interface MathSourceRecord {
   readonly omml: string;
 }
 
-function expandedName(element: XMLElement, name = element.name, attribute = false): string {
-  const separator = name.indexOf(':');
-  const prefix = separator < 0 ? '' : name.slice(0, separator);
-  const namespace = attribute && separator < 0 ? '' : element.namespaces[prefix];
-  if (separator >= 0 && !namespace) throw new Error('Unbound XML namespace.');
-  return `${namespace ?? ''}|${localName(name)}`;
-}
+
 
 function namespacedAttr(element: XMLElement, name: string): string | undefined {
   const matches = Object.entries(element.attrs).filter(([key]) => !key.startsWith('xmlns') && expandedName(element, key, true) === `${WORD_NS}|${name}`);

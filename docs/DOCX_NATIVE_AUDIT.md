@@ -1,5 +1,26 @@
 # Independent native DOCX audit
 
+## Font repair within existing capacity (2026-11-03)
+
+The optimized implementation passes all 438 focused DOCX tests and the full
+3,413-test / 241-file suite. API (415 declarations), headless (114 modules),
+packed ESM/CommonJS, real workerd, independent python-docx interoperability,
+framework types, website and every unchanged size limit pass.
+
+Three fresh recorded Chromium/Firefox/WebKit journeys import the unchanged
+scientific source, type, undo/redo, download a real DOCX file and reopen it.
+All six top/reopened captures were inspected. The existing list-indent drift
+remains visible on reopen and remains an open fidelity defect.
+
+The three downloaded packages have the same 18 parts as the independently
+rendered export from native run `41720509194`. Every uncompressed XML/asset part
+is byte-identical except `docProps/core.xml`, whose only differences are the
+two export timestamps. Source/reopened model JSON also matches the preceding
+font audit. Original files are untouched. This carries forward that fixture's
+native-render observations; it is not a new native-render run or a broader
+layout certification. See
+[`docx-theme-size-output-comparison-20261103.json`](../artifacts/docx-theme-size-output-comparison-20261103.json).
+
 ## Declared theme-language repair (2026-11-03, Unreleased)
 
 The first native comparison exposed a concrete font-selection error: a valid
@@ -45,13 +66,17 @@ renderer discrepancy remain open. Both source page PNGs are byte-identical to
 the first native audit. The downloaded artifact ZIP was independently hashed
 and matches GitHub's published SHA-256.
 
-The build adds 739 ESM / 599 CJS bytes in the optional DOCX entry. Existing
-DOCX and aggregate code limits reject that growth. A prepared, unapplied patch
-proposes DOCX limits of 185 / 149.5 KiB and aggregate limits of 1,652.5 /
-1,375.5 KiB. Additional capacity approval is pending. CSS, runtime/heap,
-reference fixtures and oracle thresholds remain untouched; no npm release or
-parity promotion follows from this branch audit. The historical result below
-still records the earlier mismatch.
+The first audit build added 739 ESM / 599 CJS bytes and exceeded the existing
+limits. Its proposed capacity patch remains historical and unapplied. A later
+internal consolidation shares the strict expanded-name reader across document,
+style and theme decoding, and the qualified Word attribute reader across table
+appearance and preferred widths. It retains namespace alias handling, foreign
+lookalike exclusion and ambiguity rejection. The font repair now fits every
+existing limit: DOCX measures 188,544 bytes ESM / 152,355 bytes CJS, respectively
+68 / 108 bytes smaller than the preceding master build. No additional capacity
+approval is needed. CSS, runtime/heap, reference fixtures and oracle thresholds
+remain untouched; no npm or parity promotion follows from this checkpoint.
+The historical result below still records the earlier mismatch.
 
 This development workflow renders the same scientific source before import and
 after a real edit/download in Fountain's public conversion lab. It establishes

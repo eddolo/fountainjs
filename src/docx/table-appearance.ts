@@ -1,3 +1,4 @@
+import { qualifiedWordAttribute as attribute } from './xml-names';
 import { isTableAppearance, TABLE_BORDER_SIDES, TABLE_EDGE_SIDES, type TableAppearance, type TableBorder, type TableBorderSide, type TableEdgeSide } from '../core/table-appearance';
 import type { XMLElement } from './xml-types';
 
@@ -30,14 +31,7 @@ export function readWordTableProperty(layers: readonly (XMLElement | undefined)[
   }
   return undefined;
 }
-function attribute(element: XMLElement, local: string): string | undefined {
-  const entries = Object.entries(element.attrs).filter(([name]) => {
-    const colon = name.indexOf(':');
-    return colon > 0 && name.slice(colon + 1) === local && element.namespaces[name.slice(0, colon)] === W;
-  });
-  if (entries.length > 1) throw new Error(`Ambiguous Word table appearance attribute ${local}.`);
-  return entries[0]?.[1];
-}
+
 const BORDER_STYLES = { single: 'solid', double: 'double', dotted: 'dotted', dashed: 'dashed' } as const;
 
 export function readWordTableAppearance(properties: XMLElement | undefined, cell: boolean, warn: Warn): TableAppearance {

@@ -1,0 +1,436 @@
+{
+  "reference": {
+    "path": "artifacts/docx-theme-native-evidence-20261103/exported.docx",
+    "nativeSourceCommit": "73ad110708c5d2dcb2c7ec4f9a3d06f128a8c7c4",
+    "run": 41720509194
+  },
+  "results": [
+    {
+      "engine": "chromium",
+      "exportedPath": "artifacts/docx-theme-size-real-20261103/chromium/exported.docx",
+      "exportedSHA256": "e7ad5fccbccf500358a0f15dcf434b5d7eb6626952b1185a69288c66fd9c637e",
+      "parts": [
+        {
+          "path": "[Content_Types].xml",
+          "nativeSHA256": "1c9f0bbe62d5c3f6b56d733c3c565dac1ba8a5c8ca511804d87fbf47d5f9ee6d",
+          "currentSHA256": "1c9f0bbe62d5c3f6b56d733c3c565dac1ba8a5c8ca511804d87fbf47d5f9ee6d",
+          "identical": true
+        },
+        {
+          "path": "_rels/.rels",
+          "nativeSHA256": "f2ee5d069d316d080de4513502475fc76cbd64a7c536cf2420faad30a053aaae",
+          "currentSHA256": "f2ee5d069d316d080de4513502475fc76cbd64a7c536cf2420faad30a053aaae",
+          "identical": true
+        },
+        {
+          "path": "customXml/fountainMath.xml",
+          "nativeSHA256": "df5aa94d26f8368d48183b3180f80c6bb60048c53a26e21c5fd0c2bc1840a735",
+          "currentSHA256": "df5aa94d26f8368d48183b3180f80c6bb60048c53a26e21c5fd0c2bc1840a735",
+          "identical": true
+        },
+        {
+          "path": "docProps/app.xml",
+          "nativeSHA256": "860c46c002958936488810605ffe153873d5953b9887401ca01f9ceeba227cb5",
+          "currentSHA256": "860c46c002958936488810605ffe153873d5953b9887401ca01f9ceeba227cb5",
+          "identical": true
+        },
+        {
+          "path": "docProps/core.xml",
+          "nativeSHA256": "80a9c830d1cf75db0876658e20454a4746153dadf12e8ad1db04b510e98e5a59",
+          "currentSHA256": "fe12ac86c7f3b759d8df0b54cf69b6cac018db1c0518381e46e858fd499028d1",
+          "identical": false
+        },
+        {
+          "path": "word/_rels/document.xml.rels",
+          "nativeSHA256": "ddd7e1ef11f568b04ffa1dbf405d9fcb97850b5dd2c881c886b7a9a5a4d5e99b",
+          "currentSHA256": "ddd7e1ef11f568b04ffa1dbf405d9fcb97850b5dd2c881c886b7a9a5a4d5e99b",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/footer2.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/footnotes.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/header1.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/document.xml",
+          "nativeSHA256": "9d0d59e40abfc0f3684475359c9463f21fbc0a9d2ff8a7b5c037bd0ddfbc95e2",
+          "currentSHA256": "9d0d59e40abfc0f3684475359c9463f21fbc0a9d2ff8a7b5c037bd0ddfbc95e2",
+          "identical": true
+        },
+        {
+          "path": "word/footer2.xml",
+          "nativeSHA256": "a61ef7bfb14fd1c1f9a41f74d56db849e1a2e2535a0968d90ecf52f6c904e4bb",
+          "currentSHA256": "a61ef7bfb14fd1c1f9a41f74d56db849e1a2e2535a0968d90ecf52f6c904e4bb",
+          "identical": true
+        },
+        {
+          "path": "word/footnotes.xml",
+          "nativeSHA256": "98921192d5d39f20a6a0f151fc1c17e055998864000244cdf2f88e2230936f3c",
+          "currentSHA256": "98921192d5d39f20a6a0f151fc1c17e055998864000244cdf2f88e2230936f3c",
+          "identical": true
+        },
+        {
+          "path": "word/header1.xml",
+          "nativeSHA256": "146fe06c88d73c07e497976450f5e3cefcfa277d93cbc4098bbc0838e86685fe",
+          "currentSHA256": "146fe06c88d73c07e497976450f5e3cefcfa277d93cbc4098bbc0838e86685fe",
+          "identical": true
+        },
+        {
+          "path": "word/media/image1.jpeg",
+          "nativeSHA256": "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "currentSHA256": "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "identical": true
+        },
+        {
+          "path": "word/media/image2.png",
+          "nativeSHA256": "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "currentSHA256": "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "identical": true
+        },
+        {
+          "path": "word/media/image3.png",
+          "nativeSHA256": "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3",
+          "currentSHA256": "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3",
+          "identical": true
+        },
+        {
+          "path": "word/numbering.xml",
+          "nativeSHA256": "b9a48577589dc46c61f4dd59788b1be2457e7c57e999a847bd21e39d250eec07",
+          "currentSHA256": "b9a48577589dc46c61f4dd59788b1be2457e7c57e999a847bd21e39d250eec07",
+          "identical": true
+        },
+        {
+          "path": "word/styles.xml",
+          "nativeSHA256": "bcdb365c5c5340406f8d866438c45304ae45e0837ce7ec50aff970b68fdee19f",
+          "currentSHA256": "bcdb365c5c5340406f8d866438c45304ae45e0837ce7ec50aff970b68fdee19f",
+          "identical": true
+        }
+      ],
+      "models": [
+        {
+          "currentPath": "artifacts/docx-theme-size-real-20261103/chromium/source-model.json",
+          "referencePath": "artifacts/docx-theme-language-real-20261103/chromium/source-model.json",
+          "currentSHA256": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690",
+          "referenceSHA256": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690"
+        },
+        {
+          "currentPath": "artifacts/docx-theme-size-real-20261103/chromium/reopened-model.json",
+          "referencePath": "artifacts/docx-theme-language-real-20261103/chromium/reopened-model.json",
+          "currentSHA256": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01",
+          "referenceSHA256": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01"
+        }
+      ],
+      "captures": [
+        {
+          "path": "artifacts/docx-theme-size-real-20261103/chromium/editor-top.png",
+          "SHA256": "000e519cdf05f0f26ec7802fc388bb0b34e38c6a40960d1e3c4401021903a6ce",
+          "identicalToPreviousReviewedCapture": true
+        },
+        {
+          "path": "artifacts/docx-theme-size-real-20261103/chromium/editor-reopened.png",
+          "SHA256": "2b82c7fbca8c2cf8a13fb178207c84e882a4b15b75ff23cb37c7dec889b2376a",
+          "identicalToPreviousReviewedCapture": true
+        }
+      ],
+      "sourceAndReopenedModelsUnchanged": true
+    },
+    {
+      "engine": "firefox",
+      "exportedPath": "artifacts/docx-theme-size-real-20261103/firefox/exported.docx",
+      "exportedSHA256": "d25884100f4dab6d5c2d9d9f17214809a9c1ae643615dc53d6d637d75c9030be",
+      "parts": [
+        {
+          "path": "[Content_Types].xml",
+          "nativeSHA256": "1c9f0bbe62d5c3f6b56d733c3c565dac1ba8a5c8ca511804d87fbf47d5f9ee6d",
+          "currentSHA256": "1c9f0bbe62d5c3f6b56d733c3c565dac1ba8a5c8ca511804d87fbf47d5f9ee6d",
+          "identical": true
+        },
+        {
+          "path": "_rels/.rels",
+          "nativeSHA256": "f2ee5d069d316d080de4513502475fc76cbd64a7c536cf2420faad30a053aaae",
+          "currentSHA256": "f2ee5d069d316d080de4513502475fc76cbd64a7c536cf2420faad30a053aaae",
+          "identical": true
+        },
+        {
+          "path": "customXml/fountainMath.xml",
+          "nativeSHA256": "df5aa94d26f8368d48183b3180f80c6bb60048c53a26e21c5fd0c2bc1840a735",
+          "currentSHA256": "df5aa94d26f8368d48183b3180f80c6bb60048c53a26e21c5fd0c2bc1840a735",
+          "identical": true
+        },
+        {
+          "path": "docProps/app.xml",
+          "nativeSHA256": "860c46c002958936488810605ffe153873d5953b9887401ca01f9ceeba227cb5",
+          "currentSHA256": "860c46c002958936488810605ffe153873d5953b9887401ca01f9ceeba227cb5",
+          "identical": true
+        },
+        {
+          "path": "docProps/core.xml",
+          "nativeSHA256": "80a9c830d1cf75db0876658e20454a4746153dadf12e8ad1db04b510e98e5a59",
+          "currentSHA256": "42c918b442f4933d5e6a0421fe88b4a0e71173a26ed044489bf8548c37fa747e",
+          "identical": false
+        },
+        {
+          "path": "word/_rels/document.xml.rels",
+          "nativeSHA256": "ddd7e1ef11f568b04ffa1dbf405d9fcb97850b5dd2c881c886b7a9a5a4d5e99b",
+          "currentSHA256": "ddd7e1ef11f568b04ffa1dbf405d9fcb97850b5dd2c881c886b7a9a5a4d5e99b",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/footer2.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/footnotes.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/header1.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/document.xml",
+          "nativeSHA256": "9d0d59e40abfc0f3684475359c9463f21fbc0a9d2ff8a7b5c037bd0ddfbc95e2",
+          "currentSHA256": "9d0d59e40abfc0f3684475359c9463f21fbc0a9d2ff8a7b5c037bd0ddfbc95e2",
+          "identical": true
+        },
+        {
+          "path": "word/footer2.xml",
+          "nativeSHA256": "a61ef7bfb14fd1c1f9a41f74d56db849e1a2e2535a0968d90ecf52f6c904e4bb",
+          "currentSHA256": "a61ef7bfb14fd1c1f9a41f74d56db849e1a2e2535a0968d90ecf52f6c904e4bb",
+          "identical": true
+        },
+        {
+          "path": "word/footnotes.xml",
+          "nativeSHA256": "98921192d5d39f20a6a0f151fc1c17e055998864000244cdf2f88e2230936f3c",
+          "currentSHA256": "98921192d5d39f20a6a0f151fc1c17e055998864000244cdf2f88e2230936f3c",
+          "identical": true
+        },
+        {
+          "path": "word/header1.xml",
+          "nativeSHA256": "146fe06c88d73c07e497976450f5e3cefcfa277d93cbc4098bbc0838e86685fe",
+          "currentSHA256": "146fe06c88d73c07e497976450f5e3cefcfa277d93cbc4098bbc0838e86685fe",
+          "identical": true
+        },
+        {
+          "path": "word/media/image1.jpeg",
+          "nativeSHA256": "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "currentSHA256": "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "identical": true
+        },
+        {
+          "path": "word/media/image2.png",
+          "nativeSHA256": "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "currentSHA256": "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "identical": true
+        },
+        {
+          "path": "word/media/image3.png",
+          "nativeSHA256": "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3",
+          "currentSHA256": "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3",
+          "identical": true
+        },
+        {
+          "path": "word/numbering.xml",
+          "nativeSHA256": "b9a48577589dc46c61f4dd59788b1be2457e7c57e999a847bd21e39d250eec07",
+          "currentSHA256": "b9a48577589dc46c61f4dd59788b1be2457e7c57e999a847bd21e39d250eec07",
+          "identical": true
+        },
+        {
+          "path": "word/styles.xml",
+          "nativeSHA256": "bcdb365c5c5340406f8d866438c45304ae45e0837ce7ec50aff970b68fdee19f",
+          "currentSHA256": "bcdb365c5c5340406f8d866438c45304ae45e0837ce7ec50aff970b68fdee19f",
+          "identical": true
+        }
+      ],
+      "models": [
+        {
+          "currentPath": "artifacts/docx-theme-size-real-20261103/firefox/source-model.json",
+          "referencePath": "artifacts/docx-theme-language-real-20261103/firefox/source-model.json",
+          "currentSHA256": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690",
+          "referenceSHA256": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690"
+        },
+        {
+          "currentPath": "artifacts/docx-theme-size-real-20261103/firefox/reopened-model.json",
+          "referencePath": "artifacts/docx-theme-language-real-20261103/firefox/reopened-model.json",
+          "currentSHA256": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01",
+          "referenceSHA256": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01"
+        }
+      ],
+      "captures": [
+        {
+          "path": "artifacts/docx-theme-size-real-20261103/firefox/editor-top.png",
+          "SHA256": "8dec8c83e478cba479cadb35f164b8d5373900f449880455be48558d47f9d7b9",
+          "identicalToPreviousReviewedCapture": false
+        },
+        {
+          "path": "artifacts/docx-theme-size-real-20261103/firefox/editor-reopened.png",
+          "SHA256": "b2897d50070fa75e7f992b84cb3319520c527081276f076e92030b49e2b8b793",
+          "identicalToPreviousReviewedCapture": true
+        }
+      ],
+      "sourceAndReopenedModelsUnchanged": true
+    },
+    {
+      "engine": "webkit",
+      "exportedPath": "artifacts/docx-theme-size-real-20261103/webkit/exported.docx",
+      "exportedSHA256": "142565922a2a48949893cd3f7d5d647ae01721af4a927203d5f27e76362d8f1b",
+      "parts": [
+        {
+          "path": "[Content_Types].xml",
+          "nativeSHA256": "1c9f0bbe62d5c3f6b56d733c3c565dac1ba8a5c8ca511804d87fbf47d5f9ee6d",
+          "currentSHA256": "1c9f0bbe62d5c3f6b56d733c3c565dac1ba8a5c8ca511804d87fbf47d5f9ee6d",
+          "identical": true
+        },
+        {
+          "path": "_rels/.rels",
+          "nativeSHA256": "f2ee5d069d316d080de4513502475fc76cbd64a7c536cf2420faad30a053aaae",
+          "currentSHA256": "f2ee5d069d316d080de4513502475fc76cbd64a7c536cf2420faad30a053aaae",
+          "identical": true
+        },
+        {
+          "path": "customXml/fountainMath.xml",
+          "nativeSHA256": "df5aa94d26f8368d48183b3180f80c6bb60048c53a26e21c5fd0c2bc1840a735",
+          "currentSHA256": "df5aa94d26f8368d48183b3180f80c6bb60048c53a26e21c5fd0c2bc1840a735",
+          "identical": true
+        },
+        {
+          "path": "docProps/app.xml",
+          "nativeSHA256": "860c46c002958936488810605ffe153873d5953b9887401ca01f9ceeba227cb5",
+          "currentSHA256": "860c46c002958936488810605ffe153873d5953b9887401ca01f9ceeba227cb5",
+          "identical": true
+        },
+        {
+          "path": "docProps/core.xml",
+          "nativeSHA256": "80a9c830d1cf75db0876658e20454a4746153dadf12e8ad1db04b510e98e5a59",
+          "currentSHA256": "0487e2ccf47c6403a139b6ae5091d8f5b9782b3f6ba658711e6425276bcb1684",
+          "identical": false
+        },
+        {
+          "path": "word/_rels/document.xml.rels",
+          "nativeSHA256": "ddd7e1ef11f568b04ffa1dbf405d9fcb97850b5dd2c881c886b7a9a5a4d5e99b",
+          "currentSHA256": "ddd7e1ef11f568b04ffa1dbf405d9fcb97850b5dd2c881c886b7a9a5a4d5e99b",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/footer2.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/footnotes.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/_rels/header1.xml.rels",
+          "nativeSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "currentSHA256": "8630933abd5d4074a41c5fe40f5e1ca7f1990d22958e80db7de9e1a761ba10cc",
+          "identical": true
+        },
+        {
+          "path": "word/document.xml",
+          "nativeSHA256": "9d0d59e40abfc0f3684475359c9463f21fbc0a9d2ff8a7b5c037bd0ddfbc95e2",
+          "currentSHA256": "9d0d59e40abfc0f3684475359c9463f21fbc0a9d2ff8a7b5c037bd0ddfbc95e2",
+          "identical": true
+        },
+        {
+          "path": "word/footer2.xml",
+          "nativeSHA256": "a61ef7bfb14fd1c1f9a41f74d56db849e1a2e2535a0968d90ecf52f6c904e4bb",
+          "currentSHA256": "a61ef7bfb14fd1c1f9a41f74d56db849e1a2e2535a0968d90ecf52f6c904e4bb",
+          "identical": true
+        },
+        {
+          "path": "word/footnotes.xml",
+          "nativeSHA256": "98921192d5d39f20a6a0f151fc1c17e055998864000244cdf2f88e2230936f3c",
+          "currentSHA256": "98921192d5d39f20a6a0f151fc1c17e055998864000244cdf2f88e2230936f3c",
+          "identical": true
+        },
+        {
+          "path": "word/header1.xml",
+          "nativeSHA256": "146fe06c88d73c07e497976450f5e3cefcfa277d93cbc4098bbc0838e86685fe",
+          "currentSHA256": "146fe06c88d73c07e497976450f5e3cefcfa277d93cbc4098bbc0838e86685fe",
+          "identical": true
+        },
+        {
+          "path": "word/media/image1.jpeg",
+          "nativeSHA256": "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "currentSHA256": "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "identical": true
+        },
+        {
+          "path": "word/media/image2.png",
+          "nativeSHA256": "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "currentSHA256": "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "identical": true
+        },
+        {
+          "path": "word/media/image3.png",
+          "nativeSHA256": "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3",
+          "currentSHA256": "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3",
+          "identical": true
+        },
+        {
+          "path": "word/numbering.xml",
+          "nativeSHA256": "b9a48577589dc46c61f4dd59788b1be2457e7c57e999a847bd21e39d250eec07",
+          "currentSHA256": "b9a48577589dc46c61f4dd59788b1be2457e7c57e999a847bd21e39d250eec07",
+          "identical": true
+        },
+        {
+          "path": "word/styles.xml",
+          "nativeSHA256": "bcdb365c5c5340406f8d866438c45304ae45e0837ce7ec50aff970b68fdee19f",
+          "currentSHA256": "bcdb365c5c5340406f8d866438c45304ae45e0837ce7ec50aff970b68fdee19f",
+          "identical": true
+        }
+      ],
+      "models": [
+        {
+          "currentPath": "artifacts/docx-theme-size-real-20261103/webkit/source-model.json",
+          "referencePath": "artifacts/docx-theme-language-real-20261103/webkit/source-model.json",
+          "currentSHA256": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690",
+          "referenceSHA256": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690"
+        },
+        {
+          "currentPath": "artifacts/docx-theme-size-real-20261103/webkit/reopened-model.json",
+          "referencePath": "artifacts/docx-theme-language-real-20261103/webkit/reopened-model.json",
+          "currentSHA256": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01",
+          "referenceSHA256": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01"
+        }
+      ],
+      "captures": [
+        {
+          "path": "artifacts/docx-theme-size-real-20261103/webkit/editor-top.png",
+          "SHA256": "e8a004445cd2c84b696616387e0515bc417ee042f52a81f8db2c532d732ecb87",
+          "identicalToPreviousReviewedCapture": false
+        },
+        {
+          "path": "artifacts/docx-theme-size-real-20261103/webkit/editor-reopened.png",
+          "SHA256": "713f1cca0b45d5fe491e2edbd191b4e4ac9759dd671c5b614a71d8faaaa3845f",
+          "identicalToPreviousReviewedCapture": false
+        }
+      ],
+      "sourceAndReopenedModelsUnchanged": true
+    }
+  ],
+  "scope": "Uncompressed native-render inputs match the prior independent render, except export timestamps in core metadata. No source, export, PDF or PNG is modified. This is not a new native-render run or broader layout certification."
+}

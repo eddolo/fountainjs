@@ -14,15 +14,17 @@ editing/history, download and reopen in all three desktop engines. Full units
 pass 3,413 / 241 files; package/types/API/headless/interop/site and real workerd
 checks pass. Independent native source/export PDFs now agree on title/heading
 faces and sizes, and all four pages were inspected. Source PNGs remain identical.
-Code capacity is prepared for approval; layout gaps and FORMAT-05 remain
-partial, with no npm or parity-percentage promotion. [Evidence](DOCX_NATIVE_AUDIT.md).
+Shared XML readers keep all existing code limits intact; layout gaps and
+FORMAT-05 remain partial, with no npm or parity-percentage promotion. [Evidence](DOCX_NATIVE_AUDIT.md).
 
 Browser assertion follow-up (2026-11-03, Unreleased): the broad formatting run
 had 839 passes, 16 skips and three identical stale serialized-HTML assertions.
 The strengthened journey checks exact parsed text/newlines and code-mark scope;
 all three desktop engines now pass locally. Ten captures were inspected and
 framework types pass. No runtime, reference oracle or numerical limits changed;
-the fresh broad cloud gate remains pending. [Details](SERVER_HTML.md#browser-assertion-follow-up-2026-11-03-unreleased).
+the fresh broad cloud gate passed on `e8953e9` (842 passed / 16 skipped in
+the remaining matrix; all clipboard/focus preflights also passed). Later source
+commits require their own gate. [Details](SERVER_HTML.md#browser-assertion-follow-up-2026-11-03-unreleased).
 
 Independent native DOCX follow-up (2026-11-03, Unreleased): isolated CI now
 renders the unchanged scientific source and actual browser-downloaded export

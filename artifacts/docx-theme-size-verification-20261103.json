@@ -1,0 +1,170 @@
+{
+  "baseMaster": "5de64720a4ce8f76b5a8786341130f11a355b304",
+  "precedingAudit": "5b3ed59",
+  "scope": "Merge the verified declared-theme-language repair with current workflow fixes and fit it inside existing capacity by sharing internal namespace/attribute readers.",
+  "verified": {
+    "checks": {
+      "types": 0,
+      "package": 0,
+      "headless": 0,
+      "api": 0,
+      "worker": 0,
+      "interop": 0,
+      "fullUnit": 0
+    },
+    "focusedDOCXTests": 438,
+    "fullUnitTests": 3413,
+    "files": 241,
+    "browserJourneys": 3,
+    "browserWorkflow": "Real source upload, typing, undo/redo, actual DOCX download, reopen and preserved assets/equations",
+    "manuallyReviewedCaptures": [
+      {
+        "path": "artifacts/docx-theme-size-real-20261103/chromium/editor-top.png",
+        "SHA256": "000e519cdf05f0f26ec7802fc388bb0b34e38c6a40960d1e3c4401021903a6ce",
+        "identicalToPreviousReviewedCapture": true
+      },
+      {
+        "path": "artifacts/docx-theme-size-real-20261103/chromium/editor-reopened.png",
+        "SHA256": "2b82c7fbca8c2cf8a13fb178207c84e882a4b15b75ff23cb37c7dec889b2376a",
+        "identicalToPreviousReviewedCapture": true
+      },
+      {
+        "path": "artifacts/docx-theme-size-real-20261103/firefox/editor-top.png",
+        "SHA256": "8dec8c83e478cba479cadb35f164b8d5373900f449880455be48558d47f9d7b9",
+        "identicalToPreviousReviewedCapture": false
+      },
+      {
+        "path": "artifacts/docx-theme-size-real-20261103/firefox/editor-reopened.png",
+        "SHA256": "b2897d50070fa75e7f992b84cb3319520c527081276f076e92030b49e2b8b793",
+        "identicalToPreviousReviewedCapture": true
+      },
+      {
+        "path": "artifacts/docx-theme-size-real-20261103/webkit/editor-top.png",
+        "SHA256": "e8a004445cd2c84b696616387e0515bc417ee042f52a81f8db2c532d732ecb87",
+        "identicalToPreviousReviewedCapture": false
+      },
+      {
+        "path": "artifacts/docx-theme-size-real-20261103/webkit/editor-reopened.png",
+        "SHA256": "713f1cca0b45d5fe491e2edbd191b4e4ac9759dd671c5b614a71d8faaaa3845f",
+        "identicalToPreviousReviewedCapture": false
+      }
+    ],
+    "nativeRenderInputComparison": "18 parts per downloaded package; rendering XML/assets byte-identical to independently rendered audit export; core metadata differs only by timestamps",
+    "nativeReferenceRun": 41720509194,
+    "freshNativeRun": false,
+    "runtimeScope": {
+      "baseline": "artifacts/preformatted-formatting-runtime-before-css-20261103.json",
+      "compared": 168,
+      "changed": [
+        "dist/docx.cjs",
+        "dist/docx.js"
+      ],
+      "scope": "Historical preformatted-formatting JS baseline; later runtime changes remain confined to DOCX."
+    },
+    "priorBroadCloudGate": {
+      "sourceCommit": "e8953e9ba42757a8821c983c2582b0f5db020c45",
+      "run": 41718204795,
+      "browserJob": 126203695961,
+      "conclusion": "success",
+      "otherJobs": {
+        "verify": "success",
+        "performance": "success",
+        "lean-integration": "success"
+      },
+      "summary": [
+        "2026-11-03T21:06:05.1946668Z Running 60 tests using 2 workers",
+        "2026-11-03T21:09:43.0968455Z   60 passed (3.9m)",
+        "2026-11-03T21:09:55.1950597Z Running 24 tests using 1 worker",
+        "2026-11-03T21:12:23.1205583Z   24 passed (2.6m)",
+        "2026-11-03T21:12:35.1375674Z Running 5 tests using 2 workers",
+        "2026-11-03T21:13:12.8265473Z   5 passed (48.4s)",
+        "2026-11-03T21:13:24.8098853Z Running 2 tests using 2 workers",
+        "2026-11-03T21:13:33.9367296Z   2 passed (19.8s)",
+        "2026-11-03T21:13:46.0057575Z Running 858 tests using 2 workers",
+        "2026-11-03T21:48:24.4327980Z   16 skipped",
+        "2026-11-03T21:48:24.4328321Z   842 passed (34.8m)"
+      ],
+      "scope": "Historical source gate. Does not certify later theme-font or website source commits."
+    },
+    "commandCorrection": "Initial headless check referenced a nonexistent script; the actual package headless command then passed. No product failure was hidden."
+  },
+  "sizesBytes": {
+    "docxESM": 188544,
+    "docxCJS": 152355,
+    "allESM": 1691186,
+    "allCJS": 1407669,
+    "css": 89593
+  },
+  "deltaFromPrecedingMasterBytes": {
+    "ESM": -68,
+    "CJS": -108
+  },
+  "limitsChanged": false,
+  "capacityProposal": "Historical unapplied patch superseded; no further allowance needed.",
+  "remaining": [
+    "List indentation and spacing",
+    "Header placement",
+    "Source-footnote renderer discrepancy",
+    "Full current-source cloud gate before release",
+    "Broader FORMAT-05 and parity programme"
+  ],
+  "limitations": [
+    "No complete JSON round-trip equality or pixel/native Word certification",
+    "Desktop emulation, not physical-device certification",
+    "Native comparison is input equality with a previous independent rendering, not a new rendering"
+  ],
+  "stagedSourceAndEvidenceSHA256": {
+    "artifacts/check-workflow-public-20261103.mjs": "1514e721f7f93ea7adf8af1d2d1eb6b397e09ba505230c1146fa03dcab388ece",
+    "artifacts/compare-docx-theme-size-20261103.mjs": "402a5949c0a4799c67ae2ab279a47d294d6e0a10bed35acf6730aad33bd2abf0",
+    "artifacts/docx-theme-size-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/docx-theme-size-browser-20261103.log": "c960ff5ba756e8761c755783ce4b5ba91070c4d747c480f84fce4f69b8de6b74",
+    "artifacts/docx-theme-size-browser.config.ts": "7c32f43674a17f213753c09962e1da90d564ab7436674941b1df012d007568e8",
+    "artifacts/docx-theme-size-budget-20261103.log": "64ef5b3199564691aaff10fb1cb4202225613d6c68373aec300ec8f672c90202",
+    "artifacts/docx-theme-size-build-20261103.log": "2a3830c40b836a59007a5bc1ee412454d6e00b27fc9d669091c56f2b65266050",
+    "artifacts/docx-theme-size-checks-20261103.json": "af9c7d4ff2e625f4c94b19d852a5ccb27976494ffeb4606ad2b51773632df36b",
+    "artifacts/docx-theme-size-focused-20261103.log": "4d2b1047e35bfe067f3c79fb2e7c99b9507d3a0570d8edb60f994cc6e230780d",
+    "artifacts/docx-theme-size-full-unit-20261103.log": "9b2a13e8b8f8651f1b32835013a08ec4b4821559b386d1653208f4b6bf6bae70",
+    "artifacts/docx-theme-size-headless-20261103.log": "17dd36add2103c335e03890f552b60313b4db745eaab13da89aa5c31606c65fe",
+    "artifacts/docx-theme-size-headless-initial-command-error-20261103.log": "44bb36c7798911380315168953c13cfa001bff8c6dcb7af772a5749a6d6b25cd",
+    "artifacts/docx-theme-size-interop-20261103.log": "23fe034426b06916a288a8ef86763b3975b4d08a78875166624eb3b6a3f63137",
+    "artifacts/docx-theme-size-measurements-20261103.json": "6235be32fbdd69f81ad5524c090f28b10c7a314586d42b7f63004dd91dbfb040",
+    "artifacts/docx-theme-size-output-comparison-20261103.json": "0454c551779e2cf481ffcd4b41f5c5c5f066f638afd6a80a39264eb3b8243d7b",
+    "artifacts/docx-theme-size-output-comparison-20261103.log": "1237bbec69a4b5e2447513f0cbaac85a4ec131ba960cf1704035bd8eec5137a4",
+    "artifacts/docx-theme-size-package-20261103.log": "2d830157e3a610825f4a83155061bf1a73bdc2db2fe05dc01284cb1c2f8c022f",
+    "artifacts/docx-theme-size-real-20261103/chromium/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-size-real-20261103/chromium/editor-reopened.png": "2b82c7fbca8c2cf8a13fb178207c84e882a4b15b75ff23cb37c7dec889b2376a",
+    "artifacts/docx-theme-size-real-20261103/chromium/editor-top.png": "000e519cdf05f0f26ec7802fc388bb0b34e38c6a40960d1e3c4401021903a6ce",
+    "artifacts/docx-theme-size-real-20261103/chromium/exported.docx": "e7ad5fccbccf500358a0f15dcf434b5d7eb6626952b1185a69288c66fd9c637e",
+    "artifacts/docx-theme-size-real-20261103/chromium/interchange-report.json": "a8e4cbfe881fce155f6cb6da5dfa5efa42955e4a89e437fca0f671f8f07c8932",
+    "artifacts/docx-theme-size-real-20261103/firefox/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-size-real-20261103/firefox/editor-reopened.png": "b2897d50070fa75e7f992b84cb3319520c527081276f076e92030b49e2b8b793",
+    "artifacts/docx-theme-size-real-20261103/firefox/editor-top.png": "8dec8c83e478cba479cadb35f164b8d5373900f449880455be48558d47f9d7b9",
+    "artifacts/docx-theme-size-real-20261103/firefox/exported.docx": "d25884100f4dab6d5c2d9d9f17214809a9c1ae643615dc53d6d637d75c9030be",
+    "artifacts/docx-theme-size-real-20261103/firefox/interchange-report.json": "6a8c8ed8aeb40a71f5194d269edd3c793ba2e7ef93492b720a3c8d1cabb9b60e",
+    "artifacts/docx-theme-size-real-20261103/webkit/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-size-real-20261103/webkit/editor-reopened.png": "713f1cca0b45d5fe491e2edbd191b4e4ac9759dd671c5b614a71d8faaaa3845f",
+    "artifacts/docx-theme-size-real-20261103/webkit/editor-top.png": "e8a004445cd2c84b696616387e0515bc417ee042f52a81f8db2c532d732ecb87",
+    "artifacts/docx-theme-size-real-20261103/webkit/exported.docx": "142565922a2a48949893cd3f7d5d647ae01721af4a927203d5f27e76362d8f1b",
+    "artifacts/docx-theme-size-real-20261103/webkit/interchange-report.json": "6e98db3e0cbc6b86cf5d797f4af8c704cc5c46ea935178f2902fb854b861ef9e",
+    "artifacts/docx-theme-size-runtime-scope-20261103.json": "7b8f8b9332b04d4d20442d557e258b51981a96684c01aedc0af43df319ec1375",
+    "artifacts/docx-theme-size-site-20261103.log": "a32ff5394f0f291ba8477a0a314a32dd78b7c37c25441e66422305718cf456ac",
+    "artifacts/docx-theme-size-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/docx-theme-size-worker-20261103.log": "86037ea16dae821002916959eafde4eb4a2803d159731199561dd53ef57b3df6",
+    "artifacts/e8953e9-cloud-browser-result-20261103.json": "102b771967e346b9d86d80030fd5f3033c1f42c1bce5d664280516fdf4006713",
+    "artifacts/workflow-removal-public-20261103.log": "84c19587fdacd20c18d46f528f0cd0d34c44ce395e7c50c9ca08ae450a441113",
+    "artifacts/workflow-removal-public-20261103/restored-desktop.png": "944644d2059d7241da990dbefaa66f1788c12a3a0635c09230875667e53a2cc1",
+    "artifacts/workflow-removal-public-20261103/restored-narrow.png": "cc3da3094bb0f2754ba5c3626659856796237fcde32c3b846974f36337849365",
+    "artifacts/workflow-removal-public-20261103/result.json": "11001342986fab9229ff99d85390e5467b61ec9e089925aa3450760e6319735b",
+    "artifacts/write-docx-theme-size-verification-20261103.mjs": "fac051e8c8c14830c9f2464cac318f310655a6884fd8d8ca09bf7b6f2a4d3108",
+    "docs/DOCX_FIDELITY_CHECKPOINT.md": "0e3f4cb86b8a94ab914b09755eec63ea2ee69356760957e989e5dd333ee52078",
+    "docs/DOCX_NATIVE_AUDIT.md": "1574be9ae74d6724b34b369b3a318241fa74107f8df14c0d93ddd39d3d6a731a",
+    "docs/ROADMAP.md": "2b86c04a1818bdd3fc13109bad82292a13904ecb988fea97e6cb7ccc6dee4884",
+    "docs/TIPTAP_PARITY.md": "d7309cf8d626aadd79146833b11749e5156e80f95bd447ceb04500d9c5cf8ef1",
+    "src/docx/index.ts": "937f51e1dfcfa0406e707fe5b8aec68c2d9dd77b8fe07035a431c92e0c66a19f",
+    "src/docx/style-reader.ts": "271e1fc25363a64a3c15d515c6efac8ae16b77084474dee5b5930ae9f56a3a94",
+    "src/docx/table-appearance.ts": "b22981a238d79363b2531ed9d3aeafd8a5adce36643335766629e438ca50f2e0",
+    "src/docx/table-width.ts": "39acdb990eb8bfcc158e16546eba8afbaf890db70bd96d21c251837294ea1e5a",
+    "src/docx/theme-fonts.ts": "0e364363740efb4aaa06e8d34872c4f25c5e0d316c5426a43e665422ade26261",
+    "src/docx/xml-names.ts": "cde07e5504d372cbb10b12a0fad57e8ac1af72707e1d7f7759dea36ce7ce2420"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "e8953e9ba42757a8821c983c2582b0f5db020c45",
+  "run": 41718204795,
+  "browserJob": 126203695961,
+  "conclusion": "success",
+  "otherJobs": {
+    "verify": "success",
+    "performance": "success",
+    "lean-integration": "success"
+  },
+  "summary": [
+    "2026-11-03T21:06:05.1946668Z Running 60 tests using 2 workers",
+    "2026-11-03T21:09:43.0968455Z   60 passed (3.9m)",
+    "2026-11-03T21:09:55.1950597Z Running 24 tests using 1 worker",
+    "2026-11-03T21:12:23.1205583Z   24 passed (2.6m)",
+    "2026-11-03T21:12:35.1375674Z Running 5 tests using 2 workers",
+    "2026-11-03T21:13:12.8265473Z   5 passed (48.4s)",
+    "2026-11-03T21:13:24.8098853Z Running 2 tests using 2 workers",
+    "2026-11-03T21:13:33.9367296Z   2 passed (19.8s)",
+    "2026-11-03T21:13:46.0057575Z Running 858 tests using 2 workers",
+    "2026-11-03T21:48:24.4327980Z   16 skipped",
+    "2026-11-03T21:48:24.4328321Z   842 passed (34.8m)"
+  ],
+  "scope": "Historical source gate. Does not certify later theme-font or website source commits."
+}

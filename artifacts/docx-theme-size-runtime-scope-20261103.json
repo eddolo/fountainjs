@@ -1,0 +1,9 @@
+{
+  "baseline": "artifacts/preformatted-formatting-runtime-before-css-20261103.json",
+  "compared": 168,
+  "changed": [
+    "dist/docx.cjs",
+    "dist/docx.js"
+  ],
+  "scope": "Historical preformatted-formatting JS baseline; later runtime changes remain confined to DOCX."
+}

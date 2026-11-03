@@ -1,15 +1,10 @@
+import { expandedXMLName as expanded } from './xml-names';
 import type { XMLElement } from './xml-types';
 
 const DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main';
 const WORD_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 
-function expanded(element: XMLElement, name = element.name, attribute = false) {
-  const split = name.indexOf(':');
-  const prefix = split < 0 ? '' : name.slice(0, split);
-  const namespace = attribute && split < 0 ? '' : element.namespaces[prefix];
-  if (split >= 0 && !namespace) throw new Error('Unbound XML namespace in Word theme.');
-  return `${namespace ?? ''}|${split < 0 ? name : name.slice(split + 1)}`;
-}
+
 function one(parent: XMLElement | undefined, namespace: string, name: string): XMLElement | undefined {
   const matches = parent?.children.filter((item): item is XMLElement => typeof item !== 'string' && expanded(item) === `${namespace}|${name}`) ?? [];
   if (matches.length > 1) throw new Error(`Ambiguous Word theme element ${name}.`);

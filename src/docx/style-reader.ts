@@ -1,3 +1,4 @@
+import { expandedXMLName as expanded } from './xml-names';
 import { createWordRunStyleCascade, WORD_PARAGRAPH_BORDER_SIDES, type WordFontDeclaration, type WordFontSlot, type WordParagraphBorder, type WordParagraphBorderSide, type WordParagraphFormatting, type WordRunFormatting, type WordStyleDefinition, type WordToggle } from './style-cascade';
 import type { XMLElement } from './xml-types';
 import { createWordTableStyleCascade } from './table-style';
@@ -97,12 +98,7 @@ export function readWordParagraphFormatting(properties: XMLElement | undefined, 
   return Object.freeze(result);
 }
 
-function expanded(element: XMLElement, name = element.name, attribute = false) {
-  const split = name.indexOf(':'); const prefix = split < 0 ? '' : name.slice(0, split);
-  const namespace = attribute && split < 0 ? '' : element.namespaces[prefix];
-  if (split >= 0 && !namespace) throw new Error('Unbound XML namespace in Word styles.');
-  return `${namespace ?? ''}|${split < 0 ? name : name.slice(split + 1)}`;
-}
+
 const children = (parent?: XMLElement): XMLElement[] => parent?.children.filter((item): item is XMLElement => typeof item !== 'string') ?? [];
 function single(parent: XMLElement | undefined, name: string): XMLElement | undefined {
   const matches = children(parent).filter(element => expanded(element) === `${W}|${name}`);

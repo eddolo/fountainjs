@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "5de64720a4ce8f76b5a8786341130f11a355b304",
+  "pagesRun": 41723824119,
+  "publishedTaskDeletionAndDraftHistoryRecovery": true,
+  "sitePrefixParentNavigation": true,
+  "desktopAndNarrowCaptures": true,
+  "errors": [],
+  "physicalDeviceCertified": false,
+  "reviewed": [
+    {
+      "path": "artifacts/workflow-removal-public-20261103/restored-desktop.png",
+      "SHA256": "944644d2059d7241da990dbefaa66f1788c12a3a0635c09230875667e53a2cc1"
+    },
+    {
+      "path": "artifacts/workflow-removal-public-20261103/restored-narrow.png",
+      "SHA256": "cc3da3094bb0f2754ba5c3626659856796237fcde32c3b846974f36337849365"
+    }
+  ],
+  "review": "Both live-page captures inspected; actions readable, no new overlaps. Narrow capture is a desktop viewport, not a physical device."
+}

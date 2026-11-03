@@ -1,17 +1,11 @@
+import { qualifiedWordAttribute as attribute } from './xml-names';
 import { isTablePreferredWidth, type TablePreferredWidth } from '../core/table-width';
 import { wordStyleChild } from './style-projection';
 import type { XMLElement } from './xml-types';
 
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 type Warn = (code: string, message: string) => void;
-function attribute(element: XMLElement, local: string): string | undefined {
-  const matches = Object.entries(element.attrs).filter(([name]) => {
-    const colon = name.indexOf(':');
-    return colon > 0 && name.slice(colon + 1) === local && element.namespaces[name.slice(0, colon)] === W;
-  });
-  if (matches.length > 1) throw new Error(`Ambiguous Word table width attribute ${local}.`);
-  return matches[0]?.[1];
-}
+
 
 export function readWordTableWidth(properties: XMLElement | undefined, warn: Warn): TablePreferredWidth | undefined {
   const element = wordStyleChild(properties, 'tblW');
