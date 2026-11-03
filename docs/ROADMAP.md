@@ -1,5 +1,28 @@
 # FountainJS opportunity roadmap
 
+Immutable-copy validation follow-up (2026-11-03, Unreleased): profiles identify
+repeated validation of unchanged siblings as the main wide-document dispatch
+cost. Fully validated immutable copies now reuse unchanged ranges; new children,
+node invariants and current content grammar remain checked. One-child validation
+falls from 10,004 cache probes to five at 10k blocks. The same-host 4,000-edit
+profile improves from 1,479 to 461 ms locally and 1,696 to 410 ms remotely; this
+is diagnostic evidence, not a universal speed or competitor claim.
+
+Both unchanged performance runs and independent retention checks pass. The
+history-retention gate now validates every snapshot so it actually exercises
+the new certificates, within the same 32/4 MiB retained/released ceilings.
+Twenty-five new contracts include 240 differential structural edits and nested
+containers. Full units pass 3,262 / 236 files; the final 40-test focused run adds
+one nested contract after that full run. Twenty-one recorded browser checks pass,
+including native distant editing/history, 100k virtualization and native form
+validation across desktop/mobile emulation. Ten representative PNGs are reviewed.
+API 415, headless 111, package, framework types, server runtimes, website and
+CommonMark profiles pass. Only measured aggregate code capacity increases
+(2,052 bytes ESM / 1,782 CJS); no latency/heap/entry/CSS limit changes. Cloud
+verification for the new source remains pending; npm and parity-row counts stay
+unchanged. [Contract and evidence](PERFORMANCE.md#immutable-copy-validation-2026-11-03-unreleased).
+The earlier failing samples below remain historical evidence.
+
 Explicit focus and touch gutter (2026-11-03, Unreleased): first/last text focus
 now includes valid childless text blocks and inline code sources, using schema
 capabilities instead of type-name lists. Focus itself preserves complete JSON;

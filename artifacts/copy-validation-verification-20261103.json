@@ -1,0 +1,270 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "56595406f114b7de7e849042e90e1ec3b37e215a",
+  "scope": "Avoid repeated full sibling validation and grammar matching for validated immutable Node.copy snapshots",
+  "verified": {
+    "fullSuite": {
+      "tests": 3262,
+      "files": 236,
+      "runtimeCodeChangedAfterRun": false,
+      "note": "One nested-container contract was added afterward; final focused run includes that additional test."
+    },
+    "finalFocused": {
+      "tests": 40,
+      "files": 3,
+      "newContracts": 25,
+      "deterministicDifferentialEdits": 240
+    },
+    "browser": {
+      "passed": 21,
+      "desktopEngines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "mobileEmulation": [
+        "mobile-chrome",
+        "mobile-safari"
+      ],
+      "workers": 1,
+      "headless": true,
+      "port": 4194,
+      "reuseExistingServer": false,
+      "scenarios": [
+        "100k virtualized native editing and offscreen updates",
+        "distant backward selection, split/merge, exact history and reopening",
+        "empty-source start/end focus",
+        "native form validation"
+      ],
+      "representativePNGsReviewed": [
+        "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-chromium/distant-edit-history.png",
+        "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-firefox/distant-edit-history.png",
+        "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-webkit/distant-edit-history.png",
+        "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-chromium/virtual-offscreen-anchor-ltr.png",
+        "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-webkit/virtual-restored-rtl.png",
+        "artifacts/copy-validation-browser-20261103/editor-validates-required--3d917-gh-the-native-form-workshop-firefox/native-form-valid-submission.png",
+        "artifacts/copy-validation-browser-20261103/mobile-focuses-the-end-emp-183e0-mobile-before-native-typing-mobile-chrome/explicit-focus-end.png",
+        "artifacts/copy-validation-browser-20261103/mobile-focuses-the-end-emp-183e0-mobile-before-native-typing-mobile-safari/explicit-focus-end.png",
+        "artifacts/copy-validation-browser-20261103/mobile-validates-required--9e68a-labels-on-a-mobile-viewport-mobile-chrome/native-form-valid-submission.png",
+        "artifacts/copy-validation-browser-20261103/mobile-validates-required--9e68a-labels-on-a-mobile-viewport-mobile-safari/native-form-valid-submission.png"
+      ],
+      "videosRecorded": true,
+      "videosManuallyReviewed": false
+    },
+    "publicAPIDeclarations": 415,
+    "headlessModules": 111,
+    "packedESMAndCJS": "passed",
+    "frameworkTypes": "passed",
+    "serverNodeAndWorkerd": "passed",
+    "libraryBuild": "passed",
+    "websiteBuild": "passed",
+    "reviewedSizeGate": "passed",
+    "markdownProfiles": [
+      563,
+      613,
+      631,
+      635
+    ],
+    "safeHTMLExactNativeReopens": "1286/1304"
+  },
+  "performance": {
+    "unchangedGateRunsPassed": 2,
+    "failures": [
+      [],
+      []
+    ],
+    "benchmarkBlobSHA256": "ba3b797c6eab594bc85981a598d34655312f3f1ed83240a5752f325b97c4ad15",
+    "samplingBlobSHA256": "cb3647836779b1da3e9449a410abdd72a92b4c4a4cb090fbc73ab512d2724347",
+    "numericalLatencyAndHeapLimitsChanged": false,
+    "samplingChanged": false,
+    "affinityMask": 192,
+    "priority": "BelowNormal",
+    "profiles": [
+      {
+        "blocks": 1000,
+        "mode": "local",
+        "edits": 4000,
+        "beforeWallMs": 209.15439999999998,
+        "afterWallMs": 124.55179999999999,
+        "beforeThreadCpuMs": 187,
+        "afterThreadCpuMs": 125
+      },
+      {
+        "blocks": 1000,
+        "mode": "remote",
+        "edits": 4000,
+        "beforeWallMs": 173.3012,
+        "afterWallMs": 103.32709999999997,
+        "beforeThreadCpuMs": 172,
+        "afterThreadCpuMs": 94
+      },
+      {
+        "blocks": 10000,
+        "mode": "local",
+        "edits": 4000,
+        "beforeWallMs": 1479.0299999999997,
+        "afterWallMs": 461.49320000000006,
+        "beforeThreadCpuMs": 1422,
+        "afterThreadCpuMs": 437
+      },
+      {
+        "blocks": 10000,
+        "mode": "remote",
+        "edits": 4000,
+        "beforeWallMs": 1696.4168,
+        "afterWallMs": 409.77919999999995,
+        "beforeThreadCpuMs": 1625,
+        "afterThreadCpuMs": 406
+      }
+    ],
+    "workCountControl": {
+      "runtime": "v24.22.1",
+      "baselineCommit": "f293269d49b840452af04d227e23421be47163e6",
+      "schemaCodeIdenticalThroughBaseCommit": "56595406f114b7de7e849042e90e1ec3b37e215a",
+      "assertion": "Same one-child edit; count WeakSet.has calls only during schema.validate, after source validation.",
+      "cases": [
+        {
+          "implementation": "baseline",
+          "blocks": 1000,
+          "probes": 1004
+        },
+        {
+          "implementation": "candidate",
+          "blocks": 1000,
+          "probes": 5
+        },
+        {
+          "implementation": "baseline",
+          "blocks": 10000,
+          "probes": 10004
+        },
+        {
+          "implementation": "candidate",
+          "blocks": 10000,
+          "probes": 5
+        }
+      ]
+    },
+    "sharedDirectionRetention": {
+      "scope": "Bounded public HTML projection with shared direction; no DOM or history plugin",
+      "edits": 2000,
+      "blocks": 1000,
+      "elapsedMs": 6448.5568,
+      "liveGrowthBytes": 403232,
+      "liveLimitBytes": 8388608,
+      "destroyedEditors": 40,
+      "destroyedGrowthBytes": 491776,
+      "destroyedLimitBytes": 16777216
+    },
+    "historicalRetentionBeforeStrengthening": {
+      "blocks": 5000,
+      "snapshots": 500,
+      "measurement": "heapUsed + arrayBuffers after forced GC",
+      "retainedBytes": 23364936,
+      "retainedLimitBytes": 33554432,
+      "releasedBytes": 670552,
+      "releasedLimitBytes": 4194304
+    },
+    "historicalRetentionWithEverySnapshotValidated": {
+      "blocks": 5000,
+      "snapshots": 500,
+      "validatedEverySnapshot": true,
+      "measurement": "heapUsed + arrayBuffers after forced GC",
+      "retainedBytes": 24047648,
+      "retainedLimitBytes": 33554432,
+      "releasedBytes": 759696,
+      "releasedLimitBytes": 4194304
+    },
+    "limits": "Diagnostic timings are same-host observations, not universal speed guarantees or competitor benchmarks. Earlier failing samples remain tracked."
+  },
+  "bundleReview": {
+    "ESMBytes": 1686670,
+    "CJSBytes": 1403935,
+    "addedESMBytes": 2052,
+    "addedCJSBytes": 1782,
+    "oldESMCapKiB": 1645.25,
+    "ESMCapKiB": 1647.25,
+    "oldCJSCapKiB": 1369.5,
+    "CJSCapKiB": 1371.25,
+    "individualEntryCapsChanged": false,
+    "CSSCapChanged": false,
+    "dependenciesChanged": false,
+    "preReviewFailure": "artifacts/copy-validation-size-before-review-20261103.log"
+  },
+  "limitations": {
+    "wholeParityGoalComplete": false,
+    "constantTimeEdits": false,
+    "generalSchemaHotReconfiguration": false,
+    "physicalDeviceOrAssistiveTechnologyCertification": false,
+    "newSourceCloudGates": "pending push",
+    "npmRelease": "none; still 0.4.0-beta.2",
+    "parityRowsPromoted": 0
+  },
+  "sourceBinding": "SHA-256 of staged Git blobs; manifest excluded to avoid a circular hash.",
+  "hashes": {
+    "CHANGELOG.md": "e9106cf8a4e42f4628ea001bf745500e61b316666cf97a66ce15a8606ee4ddcc",
+    "artifacts/copy-validation-api-20261103.log": "69c8bc9f702ecaa5b93250aca345240117f25448eba92ad7dd8ed003836f6589",
+    "artifacts/copy-validation-browser-20261103.log": "866850670488ebc6b36dcfb66b2dfc65f59f112eb9a61726f8dff42d8efe046f",
+    "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-chromium/distant-edit-history.png": "5a780ad64b7026c2a318044b4b1a6fff043a724df690eb0d8fa5fab9f35dd2c7",
+    "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-chromium/distant-edit-observations.json": "e0eb7bbc8d04935d2f0b149a0360238dd5dd7bec307e364b313e6790040a1468",
+    "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-firefox/distant-edit-history.png": "3d81aaa38259f7f24e3ba53d382246054f0599200ce9b6fa46bee0d592112327",
+    "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-firefox/distant-edit-observations.json": "e0eb7bbc8d04935d2f0b149a0360238dd5dd7bec307e364b313e6790040a1468",
+    "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-webkit/distant-edit-history.png": "87bad2cfde8b594b4eb604cd64b6417485d4442cb6be62c6f097c8623971d9e1",
+    "artifacts/copy-validation-browser-20261103/editor-keeps-distant-nativ-c3255-rect-across-shared-prefixes-webkit/distant-edit-observations.json": "e0eb7bbc8d04935d2f0b149a0360238dd5dd7bec307e364b313e6790040a1468",
+    "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-chromium/virtual-direction-observations.json": "034270246c30e8babce9744fd3b4ac4ae3cb03b56932b601c4e693c4d29320d9",
+    "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-chromium/virtual-offscreen-anchor-ltr.png": "e0a0206bfdec1cb6acb5106c715a2a0640099581a6711eed4ee574c27aca5bb1",
+    "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-firefox/virtual-direction-observations.json": "7c52fc2d68f8855a05b0fab8e45aaa397b57045cd9cf1154173d1ba8c5c85467",
+    "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-webkit/virtual-direction-observations.json": "a050243c67f555ed306cf952606540bb2cb576ebb4c899c95caeebd5bc5d375b",
+    "artifacts/copy-validation-browser-20261103/editor-refreshes-live-dire-dafcd--native-editing-and-history-webkit/virtual-restored-rtl.png": "ded5405f52e705b3fba59a19a1120871537b113df2975a01977d325fadf42379",
+    "artifacts/copy-validation-browser-20261103/editor-validates-required--3d917-gh-the-native-form-workshop-chromium/empty-required-layout.json": "c4005adec5262c1dcfa6af5a796b3c76480264dc70b4da16988377f3a9d2e7bf",
+    "artifacts/copy-validation-browser-20261103/editor-validates-required--3d917-gh-the-native-form-workshop-firefox/empty-required-layout.json": "3ff734bab7ec22054c1487e556bf396ef4e925a985081bd3c5f0aa814f79a26d",
+    "artifacts/copy-validation-browser-20261103/editor-validates-required--3d917-gh-the-native-form-workshop-firefox/native-form-valid-submission.png": "d36b89acb60c8ed1bc1e92ee168c1042302d9d726fa4c270ba00a20e488bb341",
+    "artifacts/copy-validation-browser-20261103/editor-validates-required--3d917-gh-the-native-form-workshop-webkit/empty-required-layout.json": "7c7966ee8f3cf45886f18dafc713b9b19d74afa709c5212d64b6f679500a4703",
+    "artifacts/copy-validation-browser-20261103/mobile-focuses-the-end-emp-183e0-mobile-before-native-typing-mobile-chrome/explicit-focus-end.png": "55affa7d3d64035b904ef9040c61e1691937831b2ec42125e93ca96de195c272",
+    "artifacts/copy-validation-browser-20261103/mobile-focuses-the-end-emp-183e0-mobile-before-native-typing-mobile-safari/explicit-focus-end.png": "4f566531d7f158d8a8933586a6c5a494967145bc24db599bd8e5e179cce30827",
+    "artifacts/copy-validation-browser-20261103/mobile-validates-required--9e68a-labels-on-a-mobile-viewport-mobile-chrome/empty-required-layout.json": "152309c94ab4ccb8463635a4885a6245df3ac6a1f602cc78853683727bada7c6",
+    "artifacts/copy-validation-browser-20261103/mobile-validates-required--9e68a-labels-on-a-mobile-viewport-mobile-chrome/native-form-valid-submission.png": "a983a12ae49f8dfc78e988e91022bc3a7a7f018efc7d5c4a11ba96ac1f6643e3",
+    "artifacts/copy-validation-browser-20261103/mobile-validates-required--9e68a-labels-on-a-mobile-viewport-mobile-safari/empty-required-layout.json": "949ecd2d77c656cd916de47d4206cb5e58dc15f64944632c2c2abef4bc1fb655",
+    "artifacts/copy-validation-browser-20261103/mobile-validates-required--9e68a-labels-on-a-mobile-viewport-mobile-safari/native-form-valid-submission.png": "42a8f57283e6acadb73cb94428866d0acf5ebfbaf68c3358dd2207475357bb13",
+    "artifacts/copy-validation-build-20261103.log": "8e8a6cd068e7ddd7b11398104fac89256dc0651bc0a5966c17f8f33017b9ea70",
+    "artifacts/copy-validation-core-profile-20261103.log": "6d1d24a6e66de74dd7784fce9faac6471e1e2660f800a7d3570fd66db26f099f",
+    "artifacts/copy-validation-core-profile-20261103.mjs": "f3e734506ada692c27440b252ebabdecaab825d9223a7ec7984d949e3f992f2b",
+    "artifacts/copy-validation-core-profile-report-20261103.json": "b8fe311534e4cf742247696180fa0583c59ae00ff615c2b8a363530992ebb069",
+    "artifacts/copy-validation-direction-retention-20261103.log": "b53737c7dd3e5e88296b8a81b4d59e4d01a653b2959affed5705808b2e021b35",
+    "artifacts/copy-validation-focused-20261103.log": "c54a35e3c4728610cbc1b5d28e682370468c516770052c7a79fe1d750155e487",
+    "artifacts/copy-validation-focused-final-20261103.log": "40eff333e41065debd1e3db1c13fcfd05b8e816d21116e83e5f6fc17c1a470ec",
+    "artifacts/copy-validation-full-tests-20261103.log": "e7c86de099cc894a9cdcb0a2d948a04198819abf38243954f8876e9215bee3f1",
+    "artifacts/copy-validation-headless-20261103.log": "30da0881a31edcb5573c85121504f8ed07db2f57eabc6f6a7bfc0270c546f663",
+    "artifacts/copy-validation-mapping-retention-20261103.log": "e3419a85d8f1209d83064781ea0ab1ecc6aba0e09d45946f5714ec4e41270e89",
+    "artifacts/copy-validation-mapping-retention-final-20261103.log": "3fc0b3f822e6c2af9a346dc6f07a41dcc9153a1e0f2af6f211c314ae2f458650",
+    "artifacts/copy-validation-markdown-20261103.log": "cad922a3c02e6de509820ad2eef0e25d1c56cc3859182b62116b3bdc15fdaf87",
+    "artifacts/copy-validation-package-20261103.log": "df34db12a56ee4a403e1819bf486b18ebc4eaf6cdf6583c7139d1e2c2b4d73e2",
+    "artifacts/copy-validation-performance-20261103.log": "a34c30e7dbf5973a4120e359f072179fc2555d01eb7fdf48239b8db7ae115fcc",
+    "artifacts/copy-validation-performance-confirmation-20261103.log": "6fd27ec7c6b30431084409275e0f0edecc9cb6e4f92dbd5411727bdec2722fae",
+    "artifacts/copy-validation-performance-confirmation-report-20261103.json": "bccb9a2da61d13b13652a29651986ac12a0b526140596fb07a1e0e3db510bb70",
+    "artifacts/copy-validation-performance-report-20261103.json": "d6dda4414993a5df1fb830c4c1afa07debb99b1c81e28891c647c61b4027aa7b",
+    "artifacts/copy-validation-probes-20261103.log": "c7952f7ab829daa2f2ea9b20ae013d593f45d5a0cb73565bc9b71db955e4b187",
+    "artifacts/copy-validation-probes-20261103.mjs": "f0ad82435aee8c5dbdad137c24cc20b369ae0462aae69961ca14e00ddc57ed1f",
+    "artifacts/copy-validation-probes-report-20261103.json": "fa201c562e77c9e5331a22866c623200e2173953376e0dfcb1a723521585c743",
+    "artifacts/copy-validation-server-runtimes-20261103.log": "49bcd5534ff552f1177d3bd88fd1b3c29cc2e251629ecd6c36def06cfc974e22",
+    "artifacts/copy-validation-site-build-20261103.log": "da49f0eaf5cad91e156479fd7eeadf3b648bdcba6f48879d661ffcb10428b8b8",
+    "artifacts/copy-validation-size-20261103.log": "903264c91f92ef4ee70e0d1814820ef5ff45d8ebe07eb9454ff1f7ad223fa55e",
+    "artifacts/copy-validation-size-before-review-20261103.log": "e736aefe4b991865ea3186d5b21f0e6980767ae9575b98f2590ed86e9399552c",
+    "artifacts/copy-validation-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/performance-core-profile-20261103.log": "e15f425b7fafbd4da9188ed31117dba215b9c6a88c0ad049f809ad0f01115355",
+    "artifacts/performance-core-profile-20261103.mjs": "f2c0f53a2dc6397d1520614040a9219d71a1b7bae0fdeef79f3c3548e8c1bc87",
+    "artifacts/performance-core-profile-report-20261103.json": "df3d8e4e1712884e20f3f0bdd3ea280277dfb959f9864168496f774b6b1397e6",
+    "artifacts/write-copy-validation-verification-20261103.mjs": "e023a4e8c8a185e706f4f9ebe08c18db8b02c4f6f790c9c4df47b071d303d036",
+    "docs/API.md": "6fb146808e5cc3937d343727098a82468188f71747b4b81214650c0e74b81102",
+    "docs/PERFORMANCE.md": "dc0435e9ca952e13d8b713ae11cde28bd5eed4b5bacd4a1815e449585f0c8ad1",
+    "docs/ROADMAP.md": "f3feb34fcba772c48eda2dcdd2673a7d919a157018729c17757f4d99451b2374",
+    "docs/TIPTAP_PARITY.md": "697b4aa0d57ac3958801585cf8a288f3e7ea46467727e2ccf038fc99157f9a69",
+    "scripts/check-build-budgets.mjs": "4bb3a242a72539743f0979151298fdd28f11b4809f7541889ae8a83c11636497",
+    "scripts/check-position-mapping-retention.mjs": "f99b906f1b1ebaeba76d1e9ca75bf2986312883fc4353199dc6d827a7e57853d",
+    "src/core/schema/child-offset.ts": "6e89224fb8616125f06ecc74fa67597d56c8120ac643497f936295cb06fdc768",
+    "src/core/schema/copy-validation.ts": "0eae5dedc8bb9755e37c53f7b1fd4dcb9511cc08feb232057b460b5d4c05cb55",
+    "src/core/schema/node.ts": "1531975240687d0bdad6bfbaedcc367467082b5c1ac5464d16be8f0ff6d70f25",
+    "src/core/schema/schema.ts": "c826dab4aa75b71ed3804e6896446496be0c47e4e99fa084ca1349d67c2bf555",
+    "tests/copy-validation.test.ts": "a7d2be8690205a157f31f4dc828a21a05e7656841282d4f3c92aa011379cde58"
+  }
+}

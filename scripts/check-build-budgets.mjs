@@ -580,7 +580,9 @@ const limits = Object.freeze({
   // +4,475 bytes, measured 1644.746 KiB. No dependency or entry/CSS cap increase.
   // Explicit edge focus includes childless schema-owned sources: +398 bytes,
   // measured 1645.135 KiB. No individual entry, CSS or dependency increase.
-  'all ESM runtime code': 1645.25 * kibibyte,
+  // Safe immutable-copy validation certificates: +2,052 bytes, measured
+  // 1647.139 KiB. Initial size failure retained; entry/CSS/latency/heap caps unchanged.
+  'all ESM runtime code': 1647.25 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -656,7 +658,8 @@ const limits = Object.freeze({
   // Same form/click boundary: +3,747 bytes, measured 1368.997 KiB. Runtime latency
   // and retention caps stay unchanged; preserve the pre-review size failure.
   // Same edge-focus repair: +300 bytes, measured 1369.290 KiB.
-  'all CommonJS runtime code': 1369.5 * kibibyte,
+  // Same validation optimization: +1,782 bytes, measured 1371.030 KiB.
+  'all CommonJS runtime code': 1371.25 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

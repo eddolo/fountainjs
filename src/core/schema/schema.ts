@@ -3,6 +3,7 @@ import { Node, type NodeJSON } from './node';
 import type { Attributes, NodeSpec } from './node-spec';
 import type { MarkSpec } from './mark-spec';
 import { matchesContentExpression } from './content-expression';
+import { captureWideGrammar, copiedValidation, markWideValidated, reusableCopyGrammar, type CopyGrammar } from './copy-validation';
 
 export interface SchemaSpec {
   nodes: Record<string, NodeSpec>;
@@ -140,6 +141,8 @@ export class Schema {
         if (mark.type.schema !== this) throw new Error(`Foreign mark at ${path.join('.') || 'root'}.`);
         computeAttrs(mark.type.spec.attrs, mark.attrs);
       });
+      const copy = copiedValidation(current, this);
+      let grammar: CopyGrammar | undefined;
       if (current.isText) {
         if (current.content.length) throw new Error(`Text has children at ${path.join('.')}.`);
       } else {
@@ -149,9 +152,11 @@ export class Schema {
         if (current.type.spec.atom && current.content.length) throw new Error(`Atom ${current.type.name} has children.`);
         const expression = current.type.spec.content;
         if (expression) {
-          if (!matchesContentExpression(current.content, expression)) {
+          const reusable = reusableCopyGrammar(copy?.grammar, expression);
+          if (!reusable && !matchesContentExpression(current.content, expression)) {
             throw new Error(`Content of ${current.type.name} does not match "${expression}".`);
           }
+          grammar = reusable ? copy!.grammar : captureWideGrammar(current, expression);
         } else if (current.content.length) {
           throw new Error(`${current.type.name} cannot have children.`);
         }
@@ -160,7 +165,9 @@ export class Schema {
       // Do not short-circuit on an uncacheable child: later siblings must still
       // be validated, even when a host owns mutable, non-portable attributes.
       let childrenCacheable = true;
-      for (let index = 0; index < current.content.length; index += 1) {
+      // A validated immutable source certifies unchanged identity ranges only.
+      // Newly introduced children and all node-owned invariants still run.
+      for (let index = copy?.from ?? 0; index < (copy?.to ?? current.content.length); index += 1) {
         const child = current.content[index] as Node;
         if (this.validatedNodes.has(child)) continue;
         if (!visit(child, [...path, index])) childrenCacheable = false;
@@ -168,7 +175,10 @@ export class Schema {
       const cacheable = childrenCacheable
         && isDeeplyImmutable(current.attrs)
         && current.marks.every((mark) => isDeeplyImmutable(mark.attrs));
-      if (cacheable) this.validatedNodes.add(current);
+      if (cacheable) {
+        this.validatedNodes.add(current);
+        markWideValidated(current, this, grammar);
+      }
       return cacheable;
     };
     visit(node, []);

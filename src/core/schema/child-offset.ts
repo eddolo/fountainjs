@@ -14,12 +14,12 @@ interface PrefixCheckpoint {
 const checkpoints = new WeakMap<Node, PrefixCheckpoint>();
 const minimumPrefix = 64;
 
-export function inheritChildOffset(before: Node, after: Node): void {
+export function inheritChildOffset(before: Node, after: Node): number | undefined {
   if (Math.min(before.childCount, after.childCount) < minimumPrefix) return;
   let common = 0;
   const length = Math.min(before.childCount, after.childCount);
   while (common < length && before.content[common] === after.content[common]) common++;
-  if (common < minimumPrefix) return;
+  if (common < minimumPrefix) return common;
   const previous = checkpoints.get(before);
   const cell = previous?.limit === common ? previous : {
     limit: common,
@@ -28,6 +28,7 @@ export function inheritChildOffset(before: Node, after: Node): void {
   };
   checkpoints.set(before, cell);
   checkpoints.set(after, cell);
+  return common;
 }
 
 /** Structural position before a child, or after all children at childCount. */

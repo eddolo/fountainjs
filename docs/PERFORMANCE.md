@@ -1,5 +1,62 @@
 # Performance and memory contract
 
+## Immutable-copy validation (2026-11-03, Unreleased)
+
+CPU profiles of 4,000 last-paragraph edits show repeated schema traversal and
+content matching dominating wide-document dispatch. Fully validated immutable
+wide containers now certify unchanged child identity ranges across `Node.copy`.
+All newly changed descendants and the new node's own attributes, marks,
+ownership, atom rules and custom invariant still run. Mutable non-portable
+attributes anywhere below the source prevent certification. An unvalidated
+intermediate copy cannot certify its successor.
+
+Grammar reuse additionally requires unchanged length and ordered node types,
+plus the current expression, type names and group declarations. Accessor-based
+groups fall back to full matching. Grammar snapshots are captured before child
+validators can change declarations. This is not general support for changing
+validators on already cached nodes. Private weak-map values contain schema/type
+identities and numeric bounds, never earlier nodes or content arrays. Container
+copying, prefix/suffix discovery and cold validation remain linear.
+
+An archived `f293269` control has identical schema/node/checkpoint code through
+base `5659540`. The same one-child edit requires 1,004 / 10,004 `WeakSet.has`
+probes at 1,000 / 10,000 blocks in that control, versus five in both candidate
+cases. The diagnostic profiles below are same-host observations, not a portable
+benchmark or a comparison with another editor:
+
+| 10,000 blocks, 4,000 edits | Before wall / thread CPU (ms) | After wall / thread CPU (ms) |
+| --- | --- | --- |
+| Local transactions | 1479 / 1422 | 461 / 437 |
+| Incremental remote transactions | 1696 / 1625 | 410 / 406 |
+
+Two consecutive runs of the unchanged latency/scaling/heap script pass, retaining
+all initial/cold samples and numerical limits. Local median growth from 1k to
+10k is 4.61x / 7.73x; remote is 8.33x / 6.08x, below 15x. The 100-block server
+HTML p95 is 31.01 / 27.59 ms, below 35 ms. Earlier failing samples remain in
+`artifacts/explicit-focus-*`; these passes do not erase host timing variation.
+Both independent retention checks pass. The historical gate now actually
+validates all 501 retained snapshots, exercising validation certificates as
+well as mapping: 24,047,648 bytes retained / 33,554,432 limit, and 759,696 after
+release / 4,194,304 limit. No timing, sampling or heap allowance is relaxed.
+
+Twenty-five new contracts cover invalid/foreign children and marks, mutable
+host attributes, ordered grammar, declaration changes, validator side effects,
+unvalidated copies, historical branches and nested wide containers. They include
+240 deterministic structural edits compared with uncached full-tree validation.
+The full run passes 3,262 tests / 236 files; the final focused run passes 40 tests
+and includes one additional nested-container contract added after that full run.
+Twenty-one recorded browser checks pass across three desktop engines and two
+mobile viewports. Ten representative PNGs are visually reviewed; videos are
+recorded, not manually watched. Mobile emulation is not physical-device proof.
+
+API 415, 111-module DOM-free boundary, packed ESM/CommonJS, Node/workerd,
+framework types, website and existing CommonMark profiles pass. No API/schema,
+format, dependency, parity-row or npm version changes. Runtime cost is 2,052
+bytes ESM / 1,782 CJS; reviewed aggregate caps become 1647.25 / 1371.25 KiB.
+Individual entry/CSS caps stay fixed and the pre-review size failure is retained.
+Current-source cloud gates remain required before release. Exact source/evidence
+binding: `artifacts/copy-validation-verification-20261103.json`.
+
 ## Bounded shared-prefix position mapping (2026-11-03, Unreleased)
 
 `textPointToPosition`, `nodeRangeAtPath` and `topLevelPosition` now reuse a

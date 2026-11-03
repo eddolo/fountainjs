@@ -1,0 +1,28 @@
+{
+  "runtime": "v24.22.1",
+  "baselineCommit": "f293269d49b840452af04d227e23421be47163e6",
+  "schemaCodeIdenticalThroughBaseCommit": "56595406f114b7de7e849042e90e1ec3b37e215a",
+  "assertion": "Same one-child edit; count WeakSet.has calls only during schema.validate, after source validation.",
+  "cases": [
+    {
+      "implementation": "baseline",
+      "blocks": 1000,
+      "probes": 1004
+    },
+    {
+      "implementation": "candidate",
+      "blocks": 1000,
+      "probes": 5
+    },
+    {
+      "implementation": "baseline",
+      "blocks": 10000,
+      "probes": 10004
+    },
+    {
+      "implementation": "candidate",
+      "blocks": 10000,
+      "probes": 5
+    }
+  ]
+}

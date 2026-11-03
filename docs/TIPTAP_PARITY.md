@@ -1,5 +1,18 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased validation performance follow-up (2026-11-03): immutable wide copies
+reuse validated unchanged ranges while checking changed descendants and current
+grammar. A 10k-block one-child validation falls from 10,004 cache probes to five;
+two unchanged latency/scaling/heap runs pass. Twenty-five new contracts include
+240 differential structural edits. Full units pass 3,262 / 236 files; the final
+40-test focused run includes one additional nested contract. Twenty-one recorded
+desktop/mobile-emulation browser checks pass, with ten representative PNGs
+reviewed. Historical retention now validates every snapshot under unchanged
+limits. API/schema and CommonMark profiles stay unchanged; no new parity row,
+universal speed, physical-device or npm claim. Current-source cloud certification
+is pending. [Scope and costs](PERFORMANCE.md#immutable-copy-validation-2026-11-03-unreleased)
+and `artifacts/copy-validation-verification-20261103.json`.
+
 Unreleased explicit-focus follow-up (2026-11-03): start/end view focus includes
 valid childless text sources without adding model content. The form workshop
 clears and explicitly focuses its paragraph, so typing immediately after native

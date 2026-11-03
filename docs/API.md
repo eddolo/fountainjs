@@ -115,6 +115,18 @@ This does not freeze the entire schema/type configuration or arbitrary
 non-portable attribute instances. Mutable non-portable values remain outside
 the immutable validation cache.
 
+Wide immutable `Node.copy()` snapshots can reuse validation of unchanged child
+identity ranges. Newly changed children, node-owned attributes/marks and custom
+node invariants still run; unvalidated copies and mutable host attributes cannot
+certify a later copy. Content-expression reuse additionally requires the same
+ordered child types and current expression, type names and group declarations.
+Accessor-based group declarations use the ordinary matcher. These private weak
+certificates retain no prior document/content array, add no JSON fields, and do
+not make all edits constant-time: copying and locating changed siblings still
+cost work proportional to container width. Configure schema validators before
+constructing document states; this is not general hot-reconfiguration support
+for already cached nodes.
+
 Attribute construction now reads only own supplied fields. Inherited fields
 cannot override defaults or satisfy required attributes, and own JSON keys
 such as `constructor`, `toString` and `__proto__` remain literal data rather than

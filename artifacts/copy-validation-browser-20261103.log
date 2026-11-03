@@ -1,0 +1,40 @@
+[WebServer] (node:25616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 1 worker
+
+(node:23488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (3.2s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:51:47 › focuses the start empty text source before native typing (2.3s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:51:47 › focuses the end empty text source before native typing (2.0s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:68:1 › validates required documents custom errors and labels through the native form workshop (14.6s)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:75:1 › keeps distant native edits backward selections and history correct across shared prefixes (3.1s)
+(node:23924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [firefox] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (6.7s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:51:47 › focuses the start empty text source before native typing (3.8s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:51:47 › focuses the end empty text source before native typing (4.1s)
+  ok  9 [firefox] › tests\browser\editor.spec.ts:68:1 › validates required documents custom errors and labels through the native form workshop (6.0s)
+  ok 10 [firefox] › tests\browser\editor.spec.ts:75:1 › keeps distant native edits backward selections and history correct across shared prefixes (4.3s)
+(node:12888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 [webkit] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (6.4s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:51:47 › focuses the start empty text source before native typing (3.4s)
+  ok 13 [webkit] › tests\browser\editor.spec.ts:51:47 › focuses the end empty text source before native typing (3.9s)
+  ok 14 [webkit] › tests\browser\editor.spec.ts:68:1 › validates required documents custom errors and labels through the native form workshop (10.8s)
+  ok 15 [webkit] › tests\browser\editor.spec.ts:75:1 › keeps distant native edits backward selections and history correct across shared prefixes (6.6s)
+(node:14484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 16 [mobile-chrome] › tests\browser\mobile.spec.ts:4:47 › focuses the start empty text source on mobile before native typing (1.8s)
+  ok 17 [mobile-chrome] › tests\browser\mobile.spec.ts:4:47 › focuses the end empty text source on mobile before native typing (1.5s)
+  ok 18 [mobile-chrome] › tests\browser\mobile.spec.ts:9:1 › validates required documents custom errors and labels on a mobile viewport (3.9s)
+(node:19084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 [mobile-safari] › tests\browser\mobile.spec.ts:4:47 › focuses the start empty text source on mobile before native typing (3.2s)
+  ok 20 [mobile-safari] › tests\browser\mobile.spec.ts:4:47 › focuses the end empty text source on mobile before native typing (2.4s)
+  ok 21 [mobile-safari] › tests\browser\mobile.spec.ts:9:1 › validates required documents custom errors and labels on a mobile viewport (8.6s)
+
+  21 passed (2.0m)

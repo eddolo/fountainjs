@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid repeatedly validating unchanged siblings in wide immutable document
+  copies. Reuse only fully validated immutable source ranges; check changed
+  children, schema ownership, attributes, marks and node invariants. Reuse
+  content grammar only with unchanged ordered types and current declarations.
+  Private weak certificates retain no old document or content array and add
+  no public API, document fields, dependencies or format changes.
+
 - Explicit view start/end focus now includes valid childless text sources,
   nested text blocks and extension-defined source blocks. Focus preserves the
   document until typing, fills the selected source with its attributes intact,

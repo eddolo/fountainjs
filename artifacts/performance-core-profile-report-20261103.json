@@ -1,0 +1,526 @@
+[
+  {
+    "size": 1000,
+    "mode": "local",
+    "edits": 4000,
+    "wallMs": 209.15439999999998,
+    "threadCpuMs": 187,
+    "frames": [
+      {
+        "name": "t",
+        "selfMs": 75.647,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "post",
+        "selfMs": 19,
+        "generatedURL": "node:inspector"
+      },
+      {
+        "name": "copy",
+        "selfMs": 17.09,
+        "source": "../src/core/schema/node.ts",
+        "line": 65,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "a",
+        "selfMs": 16.556,
+        "source": "../src/core/schema/content-expression.ts",
+        "line": 110,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/content-expression-CuobUc-r.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 16.112,
+        "source": "../src/core/schema/child-offset.ts",
+        "line": 17,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/child-offset-CUNaJGzl.js"
+      },
+      {
+        "name": "validate",
+        "selfMs": 12.259,
+        "source": "../src/core/schema/schema.ts",
+        "line": 128,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "(garbage collector)",
+        "selfMs": 11.204,
+        "generatedURL": ""
+      },
+      {
+        "name": "R",
+        "selfMs": 6.77,
+        "source": "../src/core/state.ts",
+        "line": 44,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 6.294,
+        "source": "../src/core/transaction/path.ts",
+        "line": 29,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/path-B7Cr90vg.js"
+      },
+      {
+        "name": "T",
+        "selfMs": 5.797,
+        "source": "../src/core/schema/schema.ts",
+        "line": 34,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 4.115,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "dispatch",
+        "selfMs": 4.001,
+        "source": "../src/core/editor.ts",
+        "line": 59,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "w",
+        "selfMs": 3.879,
+        "source": "../src/core/schema/schema.ts",
+        "line": 13,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 2.557,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "eq",
+        "selfMs": 2.305,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "e",
+        "selfMs": 1.687,
+        "source": "../src/core/transaction/path.ts",
+        "line": 15,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/path-B7Cr90vg.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 1.647,
+        "source": "../src/core/schema/node-spec.ts",
+        "line": 27,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-spec-Dl5lMC1C.js"
+      },
+      {
+        "name": "f",
+        "selfMs": 1.642,
+        "source": "../src/core/transaction/mapping.ts",
+        "line": 231,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/mapping-BoeE98An.js"
+      }
+    ],
+    "filename": "artifacts/performance-core-local-1000-20261103.cpuprofile"
+  },
+  {
+    "size": 1000,
+    "mode": "remote",
+    "edits": 4000,
+    "wallMs": 173.3012,
+    "threadCpuMs": 172,
+    "frames": [
+      {
+        "name": "t",
+        "selfMs": 57.307,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 20.884,
+        "source": "../src/core/schema/child-offset.ts",
+        "line": 17,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/child-offset-CUNaJGzl.js"
+      },
+      {
+        "name": "post",
+        "selfMs": 19.233,
+        "generatedURL": "node:inspector"
+      },
+      {
+        "name": "a",
+        "selfMs": 13.675,
+        "source": "../src/core/schema/content-expression.ts",
+        "line": 110,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/content-expression-CuobUc-r.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 8.005,
+        "source": "../src/core/transaction/path.ts",
+        "line": 29,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/path-B7Cr90vg.js"
+      },
+      {
+        "name": "copy",
+        "selfMs": 7.2,
+        "source": "../src/core/schema/node.ts",
+        "line": 65,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "validate",
+        "selfMs": 6.444,
+        "source": "../src/core/schema/schema.ts",
+        "line": 128,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "apply",
+        "selfMs": 5.861,
+        "source": "../src/core/transaction/replace-text-step.ts",
+        "line": 14,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/replace-text-range-step-WgJ9TAXg.js"
+      },
+      {
+        "name": "f",
+        "selfMs": 5.783,
+        "source": "../src/core/transaction/mapping.ts",
+        "line": 231,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/mapping-BoeE98An.js"
+      },
+      {
+        "name": "eq",
+        "selfMs": 4.634,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "get docChanged",
+        "selfMs": 3.776,
+        "source": "../src/core/transaction/transform.ts",
+        "line": 26,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 3.391,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "(garbage collector)",
+        "selfMs": 3.077,
+        "generatedURL": ""
+      },
+      {
+        "name": "eq",
+        "selfMs": 2.217,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "eq",
+        "selfMs": 2.209,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "i",
+        "selfMs": 2.162,
+        "source": "../src/core/schema/node.ts",
+        "line": 25,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 1.648,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "R",
+        "selfMs": 1.582,
+        "source": "../src/core/state.ts",
+        "line": 44,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      }
+    ],
+    "filename": "artifacts/performance-core-remote-1000-20261103.cpuprofile"
+  },
+  {
+    "size": 10000,
+    "mode": "local",
+    "edits": 4000,
+    "wallMs": 1479.0299999999997,
+    "threadCpuMs": 1422,
+    "frames": [
+      {
+        "name": "t",
+        "selfMs": 700.864,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "a",
+        "selfMs": 244.786,
+        "source": "../src/core/schema/content-expression.ts",
+        "line": 110,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/content-expression-CuobUc-r.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 121.407,
+        "source": "../src/core/transaction/path.ts",
+        "line": 29,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/path-B7Cr90vg.js"
+      },
+      {
+        "name": "apply",
+        "selfMs": 118.022,
+        "source": "../src/core/transaction/replace-text-step.ts",
+        "line": 14,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/replace-text-range-step-WgJ9TAXg.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 92.609,
+        "source": "../src/core/schema/child-offset.ts",
+        "line": 17,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/child-offset-CUNaJGzl.js"
+      },
+      {
+        "name": "validate",
+        "selfMs": 90.912,
+        "source": "../src/core/schema/schema.ts",
+        "line": 128,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "post",
+        "selfMs": 20.944,
+        "generatedURL": "node:inspector"
+      },
+      {
+        "name": "i",
+        "selfMs": 17.311,
+        "source": "../src/core/schema/node.ts",
+        "line": 25,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "get isSingleText",
+        "selfMs": 16.719,
+        "source": "../src/core/selection.ts",
+        "line": 170,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/selection-Du4v48EK.js"
+      },
+      {
+        "name": "(garbage collector)",
+        "selfMs": 13.23,
+        "generatedURL": ""
+      },
+      {
+        "name": "w",
+        "selfMs": 6.209,
+        "source": "../src/core/schema/schema.ts",
+        "line": 13,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 3.748,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 3.747,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "(program)",
+        "selfMs": 3.198,
+        "generatedURL": ""
+      },
+      {
+        "name": "eq",
+        "selfMs": 3.188,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "e",
+        "selfMs": 3.151,
+        "source": "../src/core/state.ts",
+        "line": 72,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "eq",
+        "selfMs": 2.657,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "apply",
+        "selfMs": 2.646,
+        "source": "../src/core/state.ts",
+        "line": 98,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      }
+    ],
+    "filename": "artifacts/performance-core-local-10000-20261103.cpuprofile"
+  },
+  {
+    "size": 10000,
+    "mode": "remote",
+    "edits": 4000,
+    "wallMs": 1696.4168,
+    "threadCpuMs": 1625,
+    "frames": [
+      {
+        "name": "t",
+        "selfMs": 760.292,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "a",
+        "selfMs": 350.154,
+        "source": "../src/core/schema/content-expression.ts",
+        "line": 110,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/content-expression-CuobUc-r.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 183.079,
+        "source": "../src/core/schema/child-offset.ts",
+        "line": 17,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/child-offset-CUNaJGzl.js"
+      },
+      {
+        "name": "n",
+        "selfMs": 135.24,
+        "source": "../src/core/transaction/path.ts",
+        "line": 29,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/path-B7Cr90vg.js"
+      },
+      {
+        "name": "copy",
+        "selfMs": 114.622,
+        "source": "../src/core/schema/node.ts",
+        "line": 65,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "validate",
+        "selfMs": 62.383,
+        "source": "../src/core/schema/schema.ts",
+        "line": 128,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "post",
+        "selfMs": 30.414,
+        "generatedURL": "node:inspector"
+      },
+      {
+        "name": "i",
+        "selfMs": 12.37,
+        "source": "../src/core/schema/node.ts",
+        "line": 25,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "(garbage collector)",
+        "selfMs": 8.021,
+        "generatedURL": ""
+      },
+      {
+        "name": "t",
+        "selfMs": 5.768,
+        "source": "../src/core/schema/node-spec.ts",
+        "line": 27,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-spec-Dl5lMC1C.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 5.369,
+        "source": "../src/core/schema/node-spec.ts",
+        "line": 27,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-spec-Dl5lMC1C.js"
+      },
+      {
+        "name": "",
+        "selfMs": 5.106,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/performance-core-profile-20261103.mjs"
+      },
+      {
+        "name": "step",
+        "selfMs": 3.904,
+        "source": "../src/core/transaction/transform.ts",
+        "line": 28,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "i",
+        "selfMs": 3.23,
+        "source": "../src/core/selection.ts",
+        "line": 18,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/selection-Du4v48EK.js"
+      },
+      {
+        "name": "t",
+        "selfMs": 3.191,
+        "source": "../src/core/schema/schema.ts",
+        "line": 129,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "eq",
+        "selfMs": 2.99,
+        "source": "../src/core/schema/node.ts",
+        "line": 90,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/node-p6gM02os.js"
+      },
+      {
+        "name": "w",
+        "selfMs": 2.684,
+        "source": "../src/core/schema/schema.ts",
+        "line": 13,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      },
+      {
+        "name": "T",
+        "selfMs": 2.67,
+        "source": "../src/core/schema/schema.ts",
+        "line": 34,
+        "generatedURL": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/editor-D4gENJ9n.js"
+      }
+    ],
+    "filename": "artifacts/performance-core-remote-10000-20261103.cpuprofile"
+  }
+]
