@@ -1,0 +1,23 @@
+diff --git a/scripts/check-build-budgets.mjs b/scripts/check-build-budgets.mjs
+--- a/scripts/check-build-budgets.mjs
++++ b/scripts/check-build-budgets.mjs
+@@ -86,4 +86,7 @@
+   // capacity only, not permission to relax conversion/runtime/heap contracts.
+-  'dist/docx.js': 184.25 * kibibyte,
+-  'dist/docx.cjs': 149 * kibibyte,
++  // Declared theme-language scripts/supplemental fonts: +739 / 599 bytes.
++  // Measured 189,351 ESM / 153,062 CJS bytes; dependency-free and opt-in.
++  // Capacity only: retain every semantic, CSS, runtime and heap gate.
++  'dist/docx.js': 185 * kibibyte,
++  'dist/docx.cjs': 149.5 * kibibyte,
+   // Complete strict HTML5 character-reference decoding is shared by Markdown
+@@ -591,3 +594,3 @@
+   // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
+-  'all ESM runtime code': 1651.75 * kibibyte,
++  'all ESM runtime code': 1652.5 * kibibyte,
+   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
+@@ -671,3 +674,3 @@
+   // Initial code/CSS cap failures are retained; no latency/heap relaxation.
+-  'all CommonJS runtime code': 1375 * kibibyte,
++  'all CommonJS runtime code': 1375.5 * kibibyte,
+ });

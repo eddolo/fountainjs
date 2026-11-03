@@ -1,5 +1,17 @@
 # DOCX fidelity checkpoint
 
+Declared theme-language repair (2026-11-03, Unreleased): remove the blanket
+rejection of explicit theme languages that caused the scientific document's
+Calibri title/headings to fall back to Arial. Resolve supplemental script fonts
+and regional defaults with distinct language roles, preserve fallback reports
+for unresolved input and reject ambiguous script declarations. Full units pass
+3,413 / 241 files; three desktop real-file journeys and real workerd pass.
+Native run 41720509194 confirms matching title/heading faces and sizes, with
+all four pages inspected and unchanged source page images. Existing list,
+header and footnote-reference discrepancies remain. The measured capacity
+decision is pending; no npm or parity promotion.
+[Contract and limits](DOCX_NATIVE_AUDIT.md).
+
 ## Native audit setup and repeated shading repair 2026 11 03
 
 A fresh run of the original independent cooling report exposed a whole-import

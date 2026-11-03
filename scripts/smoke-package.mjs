@@ -138,6 +138,16 @@ const packedDOCXRoundTrip = esmDOCX.importDOCX(packedDOCX.bytes, markdownSchema)
 if (packedDOCXRoundTrip.document.textContent !== 'Packed WordPure Node DOCX' || packedDOCX.report.fidelity !== 'bounded') {
   throw new Error('ESM DOCX entry did not round-trip in pure Node.');
 }
+function checkDOCXThemeLanguage(core, docx, label) {
+  const bytes = readFileSync(new URL('../tests/fixtures/native-docx/cooling-report.docx', import.meta.url));
+  const schema = new core.Schema(core.StarterKit.schema);
+  const first = docx.importDOCX(bytes, schema).document.child(0);
+  if (first.attrs.layout?.fontFamily !== 'Calibri'
+    || first.child(0).marks.find(mark => mark.type.name === 'font_family')?.attrs.family !== 'Calibri') {
+    throw new Error(`${label}: declared en-US theme language did not retain the scientific title font.`);
+  }
+}
+checkDOCXThemeLanguage(esmCore, esmDOCX, 'ESM DOCX');
 const sourcedMarkdown = esmHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, markdownSchema);
 const exactMarkdown = esmHeadlessCore.MarkdownExporter.exportWithSource(sourcedMarkdown.document, sourcedMarkdown.source);
 if (exactMarkdown.markdown !== markdownSource || exactMarkdown.preservation !== 'exact') {
@@ -380,6 +390,7 @@ assertExports(require('fountainjs-editor/ai/conversation'), aiConversationNames,
 assertExports(require('fountainjs-editor/ai/generated-media'), aiGeneratedMediaNames, 'CommonJS AI generated media entry');
 const cjsDOCX = require('fountainjs-editor/docx');
 assertExports(cjsDOCX, docxNames, 'CommonJS DOCX entry');
+checkDOCXThemeLanguage(cjsCore, cjsDOCX, 'CommonJS DOCX');
 const cjsMarkdownSchema = new cjsHeadlessCore.Schema(cjsCore.CoreSchemaSpec);
 checkAutomaticCaretSource(cjsCore, cjsCore.StarterKit, 'CJS root');
 checkAutomaticCaretSource(cjsHeadlessCore, cjsCore.StarterKit, 'CJS mixed core/root');

@@ -1,0 +1,3 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+tests/docx-theme-language.test.ts(101,12): error TS2571: Object is of type 'unknown'.
+[ELIFECYCLE] Command failed with exit code 1.

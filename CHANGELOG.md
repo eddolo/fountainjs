@@ -12,6 +12,13 @@ policy on reopen. Native layout certification remains outstanding.
   restore focus after deletion. Add clickable breadcrumbs and parent arrows
   to the workflow hub, issue editor and task workspace.
 
+- Resolve declared Word theme languages to embedded supplemental script fonts
+  or the appropriate regional default. Retain named fallback diagnostics for
+  unresolved languages; reject ambiguous supplemental declarations. Keep
+  major/minor fonts and Latin/East Asian/complex-script language roles separate.
+  This repairs the scientific fixture's Calibri title and headings without
+  changing source bytes, embedding fonts or fetching them.
+
 - Recover repeated identical native Word table-shading declarations through the
   existing appearance coalescing policy. Report conflicting fills without
   discarding readable content, choosing one value or falling through to a lower

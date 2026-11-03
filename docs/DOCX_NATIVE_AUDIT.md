@@ -1,5 +1,58 @@
 # Independent native DOCX audit
 
+## Declared theme-language repair (2026-11-03, Unreleased)
+
+The first native comparison exposed a concrete font-selection error: a valid
+`en-US` theme language prevented the embedded Calibri font from being resolved,
+so the editable document and export used the named Arial fallback. The source
+declarations, theme bytes and font environment remain the reference.
+
+`src/docx/theme-fonts.ts` now resolves BCP-47 scripts with the runtime's explicit
+`Intl.Locale` likely-subtag operation. A matching embedded DrawingML supplemental
+font wins; otherwise the regional theme default is used. The DrawingML `Hang`
+tag is used for Korean's composite `Kore` script. The three theme-language roles
+and major/minor groups remain independent. Invalid, indeterminate or unavailable
+language resolution produces the existing located fallback warning. Empty
+matching faces are reported as missing; duplicate script declarations are
+rejected. Foreign namespace/attribute lookalikes do not select a font.
+
+This follows the [Word theme-language mapping contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.themefontlanguages?view=openxml-3.0.1)
+and uses [ECMA-402 likely subtags](https://tc39.es/ecma402/2024/#sec-Intl.Locale.prototype.maximize).
+No implicit host locale, external font lookup, font download, DOM or new runtime
+dependency participates. Runtime ICU data can affect likely-script resolution;
+this does not implement Word's per-character script/font selection, layout
+engine or embedded-font activation.
+
+Twenty of 25 new contracts fail on the preceding implementation. The repaired
+focused set passes 48 tests, and the full suite passes 3,413 / 241 files. Both
+native paragraph font context and text marks retain Calibri in the unchanged
+scientific fixture and its DOCX reopen. Only the optional DOCX ESM/CommonJS
+bundles differ; 166 other runtime files are byte-identical. Three recorded real
+Chromium/Firefox/WebKit import/edit/history/download/reopen journeys pass; six
+top/reopened captures were inspected. Packed ESM/CommonJS, 415 declarations,
+113 headless modules, independent DOCX interoperability, framework types and
+the website pass. Real workerd also imports, exports and reopens the title's
+Calibri context/mark without DOM or Node built-ins.
+
+[Native run 41720509194](https://github.com/eddolo/fountainjs/actions/runs/41720509194)
+passes on audit commit `73ad110`. All four page PNGs were inspected. Source and
+actual downloaded export now both use Carlito Regular at 25 pt for the title
+and Carlito Bold at 16 pt for the setup heading. Both retain two Letter pages,
+the body figures, equations and table. The title's final word begins 0.6 pt
+later in the export; matching the face/size does not certify glyph-position
+equality. List geometry/spacing, header placement and the source-footnote
+renderer discrepancy remain open. Both source page PNGs are byte-identical to
+the first native audit. The downloaded artifact ZIP was independently hashed
+and matches GitHub's published SHA-256.
+
+The build adds 739 ESM / 599 CJS bytes in the optional DOCX entry. Existing
+DOCX and aggregate code limits reject that growth. A prepared, unapplied patch
+proposes DOCX limits of 185 / 149.5 KiB and aggregate limits of 1,652.5 /
+1,375.5 KiB. Additional capacity approval is pending. CSS, runtime/heap,
+reference fixtures and oracle thresholds remain untouched; no npm release or
+parity promotion follows from this branch audit. The historical result below
+still records the earlier mismatch.
+
 This development workflow renders the same scientific source before import and
 after a real edit/download in Fountain's public conversion lab. It establishes
 independent LibreOffice evidence; it does not certify identical Microsoft Word

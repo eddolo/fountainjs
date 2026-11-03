@@ -1,0 +1,23 @@
+{
+  "artifacts": [
+    {
+      "id": 13272755698,
+      "name": "native-docx-audit",
+      "size_in_bytes": 7896592,
+      "url": "https://api.github.com/repos/eddolo/fountainjs/actions/artifacts/13272755698",
+      "archive_download_url": "https://api.github.com/repos/eddolo/fountainjs/actions/artifacts/13272755698/zip",
+      "expired": false,
+      "created_at": "2026-11-03T21:19:36Z",
+      "expires_at": "2026-11-17T21:19:35Z",
+      "updated_at": "2026-11-03T21:19:36Z",
+      "digest": "sha256:43f001cc8eb179790956f1f55a07e3b55d91f8065bb98b1c240b7e95d3ffe4c5",
+      "workflow_run": {
+        "id": 41720509194,
+        "repository_id": 1144840264,
+        "head_repository_id": 1144840264,
+        "head_branch": "audit/docx-theme-languages-20261103",
+        "head_sha": "73ad110708c5d2dcb2c7ec4f9a3d06f128a8c7c4"
+      }
+    }
+  ]
+}

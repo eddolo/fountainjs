@@ -1,0 +1,34 @@
+{
+  "reviewed": [
+    {
+      "path": "artifacts/docx-theme-language-real-20261103/chromium/editor-top.png",
+      "SHA256": "000e519cdf05f0f26ec7802fc388bb0b34e38c6a40960d1e3c4401021903a6ce"
+    },
+    {
+      "path": "artifacts/docx-theme-language-real-20261103/chromium/editor-reopened.png",
+      "SHA256": "2b82c7fbca8c2cf8a13fb178207c84e882a4b15b75ff23cb37c7dec889b2376a"
+    },
+    {
+      "path": "artifacts/docx-theme-language-real-20261103/firefox/editor-top.png",
+      "SHA256": "ed4ebcd64d60453ab2946f8dcc1e2bf093620bcc19a123765cfad47039aa26b4"
+    },
+    {
+      "path": "artifacts/docx-theme-language-real-20261103/firefox/editor-reopened.png",
+      "SHA256": "b2897d50070fa75e7f992b84cb3319520c527081276f076e92030b49e2b8b793"
+    },
+    {
+      "path": "artifacts/docx-theme-language-real-20261103/webkit/editor-top.png",
+      "SHA256": "c3862b56a5a476dc574b7587a51f3462268088bb7b2b67346ca8f43be4e0eab3"
+    },
+    {
+      "path": "artifacts/docx-theme-language-real-20261103/webkit/editor-reopened.png",
+      "SHA256": "990fecb74c348c41d9c41355a0f24af124abed06603a1e400565ff8c11871460"
+    }
+  ],
+  "findings": [
+    "The title remains readable and keeps its font after actual DOCX reopen in every desktop engine.",
+    "The known list-text indentation drift remains visible after reopen in each engine.",
+    "These are editor captures; native font/substitution equivalence requires the independent CI PDFs."
+  ],
+  "scope": "Six selected editor captures reviewed. Other captures, videos and traces were recorded but not manually reviewed."
+}

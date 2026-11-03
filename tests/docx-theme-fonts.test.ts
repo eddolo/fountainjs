@@ -43,9 +43,9 @@ describe('DOCX embedded theme fonts', () => {
     expect(value.report.issues.map(issue => issue.code)).toEqual(['external-theme-not-imported', 'font-theme-not-resolved']);
     expect(value.packageParts.find(part => part.path === 'word/themes/research.xml')?.handling).toBe('not-interpreted');
   });
-  it('does not substitute a default regional font for a language-dependent theme font', () => {
+  it('does not substitute a default regional font for an unresolved theme language', () => {
     const value = importDOCX(fixture({ extraRels: `<Relationship Id="settings" Type="${r}/settings" Target="settings-custom.xml"/>`,
-      parts: { 'word/settings-custom.xml': `<w:settings xmlns:w="${w}"><w:themeFontLang w:val="ja-JP"/></w:settings>` } }), schema);
+      parts: { 'word/settings-custom.xml': `<w:settings xmlns:w="${w}"><w:themeFontLang w:val="zz-ZZ"/></w:settings>` } }), schema);
     expect(family(value)).toBeUndefined();
     expect(value.report.issues.every(issue => issue.message.includes('language-dependent-theme-font'))).toBe(true);
     expect(value.report.issues).toHaveLength(2);

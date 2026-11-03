@@ -16,6 +16,8 @@ const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const saveJSON = (name, value) => writeFile(resolve(output, name), JSON.stringify(value, null, 2) + '\n');
 
 function inspectDocument(document) {
+  assert.equal(document.child(0).attrs.layout?.fontFamily, 'Calibri', 'Declared en-US theme font changed.');
+  assert.equal(document.child(0).child(0).marks.find(mark => mark.type.name === 'font_family')?.attrs.family, 'Calibri');
   const counts = {}, images = [];
   document.descendants(node => {
     counts[node.type.name] = (counts[node.type.name] ?? 0) + 1;

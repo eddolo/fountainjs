@@ -2,8 +2,9 @@ import { test, expect } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-test('edits the independent scientific Word source and downloads the native audit export', async ({ page }) => {
-  const root = resolve('artifacts/docx-native-audit');
+test('edits the independent scientific Word source and downloads the native audit export', async ({ page }, info) => {
+  const root = resolve(process.env.FOUNTAIN_NATIVE_DOCX_AUDIT_DIR
+    ? `${process.env.FOUNTAIN_NATIVE_DOCX_AUDIT_DIR}/${info.project.name}` : 'artifacts/docx-native-audit');
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/conversion-lab.html');
@@ -11,6 +12,8 @@ test('edits the independent scientific Word source and downloads the native audi
   const workspace = page.getByRole('region', { name: 'Conversion workspace: source.docx', exact: true });
   const editor = workspace.getByRole('textbox', { name: 'Imported document editor', exact: true });
   await expect(editor).toContainText('Cooling experiment report');
+  const title = editor.locator('p').filter({ hasText: /^Cooling experiment report$/ });
+  await expect.poll(() => title.evaluate(element => getComputedStyle(element).fontFamily)).toBe('Calibri');
   await expect(editor.locator('img')).toHaveCount(3);
   await expect(editor.locator('[data-fountain-math]')).toHaveCount(2);
   await expect.poll(() => editor.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
@@ -44,6 +47,8 @@ test('edits the independent scientific Word source and downloads the native audi
   const reopened = page.getByRole('region', { name: 'Conversion workspace: exported.docx', exact: true })
     .getByRole('textbox', { name: 'Imported document editor', exact: true });
   await expect(reopened).toContainText('END OF REPORT Checked in Fountain.');
+  await expect.poll(() => reopened.locator('p').filter({ hasText: /^Cooling experiment report$/ })
+    .evaluate(element => getComputedStyle(element).fontFamily)).toBe('Calibri');
   await expect(reopened.locator('img')).toHaveCount(3);
   await expect(reopened.locator('[data-fountain-math]')).toHaveCount(2);
   await reopened.screenshot({ path: resolve(root, 'editor-reopened.png') });
