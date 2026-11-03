@@ -1,0 +1,114 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "9404f4cfbcfc2f599979c1a1dffc1d436fbbd8b5",
+  "scope": "Atomic whole-document Markdown projection attributes; optional leading declaration adapter; public workflow",
+  "unit": {
+    "passed": 3132,
+    "files": 231,
+    "newCases": 12
+  },
+  "browser": {
+    "passed": 6,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "headless": true,
+    "workers": 1,
+    "inspectedNewScreenshots": 6,
+    "videosReviewed": false,
+    "assertions": [
+      "native typing and exact history",
+      "JSON and complete HTML model reopening",
+      "source doctype/mode retained",
+      "safe reader standards mode",
+      "legacy source BackCompat",
+      "lossy Markdown reopening disabled"
+    ]
+  },
+  "checks": {
+    "headlessModules": 108,
+    "apiDeclarations": 415,
+    "reviewedDeclarationChanges": 4,
+    "types": "passed",
+    "packedESMandCommonJS": "16 source contracts each passed",
+    "conformance": "passed",
+    "budgets": "passed after reviewed source-entry/aggregate capacity changes",
+    "performance": "passed",
+    "website": "passed"
+  },
+  "performance": {
+    "localMedianGrowth": 6.51,
+    "remoteMedianGrowth": 9.16,
+    "serverMedianGrowth": 7.55,
+    "unchangedGrowthCeiling": 15
+  },
+  "commonmark": {
+    "default": 563,
+    "safeOptional": 613,
+    "sourceOutput": 631,
+    "total": 652,
+    "unchanged": true,
+    "remaining": [
+      156,
+      157,
+      158,
+      181
+    ]
+  },
+  "limitations": [
+    "Leading first-root HTML declaration only",
+    "Markdown declaration spelling uses normalized LF input; untouched snapshot retains original LF/CRLF bytes",
+    "Canonical Markdown is not a root-metadata container",
+    "Doctype-only caret paragraph remains explicit",
+    "Unfinished EOF token handling remains unimplemented"
+  ],
+  "initialFailures": {
+    "typecheck": "projection union needed an explicit interface annotation; corrected before focused/browser/full checks",
+    "api": "four declaration changes reviewed; legacy array-returning adapters remain accepted, direct callback consumers must handle the expanded result union",
+    "budget": "optional source entries and aggregate runtime caps exceeded; reviewed capacity changes only, no CSS/numerical performance cap change"
+  },
+  "npm": {
+    "version": "0.4.0-beta.2",
+    "published": false
+  },
+  "hashBasis": "SHA256 staged Git blob bytes; log newlines/trailing whitespace normalized",
+  "files": {
+    "CHANGELOG.md": "79adcd5155aac7310a710124d70c6106b63ea55a105a02b5d86f3d86e6768d18",
+    "api-surface.json": "2ac14b9f55ed7e831307ab420ffc4f51ca1ce3f478d2195f8f551deff7a9792f",
+    "artifacts/markdown-envelope-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/markdown-envelope-api-initial-20261103.log": "eacf6cb0e90d5c93843ae8af56b2f72bbfde0095ed4f9aca595d36a347cc2d5a",
+    "artifacts/markdown-envelope-browser-20261103.log": "d131a9d44af4bd3adccb9c85e552150c5f4aa1cb3fb2f004d8fc1f02ac054a2a",
+    "artifacts/markdown-envelope-browser-20261103/editor-retains-leading-Mar-e7742-d-complete-source-reopening-chromium/envelope-editor.png": "67615e8b8985a91a1102faefd91314dd6e072ffa5a02b92f41c645a5d5e342fd",
+    "artifacts/markdown-envelope-browser-20261103/editor-retains-leading-Mar-e7742-d-complete-source-reopening-chromium/envelope-reader.png": "f16658e662da8dd16810412e734450197364b937669b69b0b96bfdbc4fa1d370",
+    "artifacts/markdown-envelope-browser-20261103/editor-retains-leading-Mar-e7742-d-complete-source-reopening-firefox/envelope-editor.png": "bbb8a1ba24d712cf1d51b5b90d001688fc3bcafc4afce9b018e77a85b99f49af",
+    "artifacts/markdown-envelope-browser-20261103/editor-retains-leading-Mar-e7742-d-complete-source-reopening-firefox/envelope-reader.png": "15cb7f08e938d4c713c25d4622407dc02c2fc3197c3ddf668651f46044fba7d1",
+    "artifacts/markdown-envelope-browser-20261103/editor-retains-leading-Mar-e7742-d-complete-source-reopening-webkit/envelope-editor.png": "706485d50d4de880cfd3aa4f1f40ec55871e4e2b7a8934b32a63dbb5f4be2e12",
+    "artifacts/markdown-envelope-browser-20261103/editor-retains-leading-Mar-e7742-d-complete-source-reopening-webkit/envelope-reader.png": "77cd085ea03c1b8da186c92ce54ff043f3be6c017ad3f7054c594a5f766cc0bc",
+    "artifacts/markdown-envelope-budget-20261103.log": "ca24a73522f5336094b32908b38ae7de30759684f05a532b89530d014417d416",
+    "artifacts/markdown-envelope-budget-initial-20261103.log": "de90364cde95d1dad19ff957810965781468e5a93d53978cd5ceaa628d7f73f9",
+    "artifacts/markdown-envelope-build-20261103.log": "d8b185b5b7ce66ab4701280bf96b326b59cfd273fa9b3183c9c21fc4d0a889e4",
+    "artifacts/markdown-envelope-conformance-20261103.log": "a298758a2e9e06b5d9ffb11cde2edf35a4a7572a05dc36c84774661ea29bc747",
+    "artifacts/markdown-envelope-focused-20261103.log": "371a7624585477903e24e3c0e068cf45b1daed641eabe81128d616693682dfdc",
+    "artifacts/markdown-envelope-headless-20261103.log": "e8a4e8942d199d47967904e92b45909adcc30e22659322c0914c98f2aaa976ee",
+    "artifacts/markdown-envelope-package-20261103.log": "50c26b3d985e08fab2c5ad7181e04bced23ed1f06f9a9ebdc553dcb8a9ee93c1",
+    "artifacts/markdown-envelope-performance-20261103.log": "5711bb8342c38f8428852d25805dc893cb25a55ea612b535735d9ac9b4a75ad9",
+    "artifacts/markdown-envelope-site-20261103.log": "17ca86b80b0ad90b23fc9837fcb1466af7401d82ae27ff49f6cec81e32c03abc",
+    "artifacts/markdown-envelope-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/markdown-envelope-types-final-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/markdown-envelope-types-initial-20261103.log": "29af9ef6f373895f24ef0b05040cec665432657fe77ea713b86b5f26ac42e001",
+    "artifacts/markdown-envelope-unit-20261103.log": "a329bcab2abc24037ed7dccf49715ba16703fa94a16f36e0b8517e7d9b1a394b",
+    "docs/HTML_INERT_SOURCE.md": "dc49c655311e33122a3ad08f258f8c091435a887a514b5c344b6bbf44d307de5",
+    "docs/ROADMAP.md": "af4a7ee6bd507ed12486687b10b5cfe40989d995df32223c0354338fdb95b509",
+    "examples/react-app/src/HTMLInertWorkshop.tsx": "011cdda3afd9ff3b2906764839429eabe565a92e6202b3b29de75140f4ef33b2",
+    "scripts/check-build-budgets.mjs": "23dec4860ec28686fb6b2024b0998adb0c085ff20fc8397a3d2d69ac319a6874",
+    "scripts/fixtures/html-source-check.mjs": "d17af4b9923d21d9749a0e083e303c5c715ab50fe4cc7d3c430a90ca0b613186",
+    "src/core/importers/markdown-importer.ts": "aa88630302bcf28e63251a448f5f7d7b7cbb0d7d568c7eb566093bff3bb1b215",
+    "src/html/source.ts": "270ad99507889603ea6c11aff81d0f563a8d69907a3bed4aed5c6fa93a039859",
+    "tests/browser/editor.spec.ts": "5927d411134b1cc4aea43fb59d7d049e8301888cf089a50be85716fcc910bb30",
+    "tests/browser/html-envelope-journey.ts": "701447472e263f01a343751690f64f0c5c1c81adb39d4d468330309b57124b87",
+    "tests/markdown-document-envelope.test.ts": "1e24df95855899b75fa1061ac62d375b44d94dc86273e9cf3c8c9fc788fb4e9d",
+    "tests/types/headless-consumer.ts": "494e48b09c47cea4705df12d370f1b8f827791c34dbb3e8f45fd4da85851c4f0"
+  }
+}

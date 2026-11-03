@@ -1,5 +1,61 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Leading declarations in Markdown (2026-11-03, Unreleased)
+
+Use `createHTMLSourceMarkdownAdapter` for explicit whole-document HTML projection
+with a leading declaration retained as root-envelope data:
+
+```ts
+import { MarkdownImporter } from 'fountainjs-editor/core';
+import { createHTMLSourceMarkdownAdapter } from 'fountainjs-editor/html/source';
+const imported = MarkdownImporter.parseWithSource(markdown, schema, {
+  parseHTMLDocument: createHTMLSourceMarkdownAdapter({ sourceTokens: true }, report => {
+    // Display report.issues in your host's import diagnostics.
+  }),
+});
+```
+
+The adapter retains a declaration only in the first root HTML segment, with no
+preceding non-whitespace content in that segment. Ordinary Markdown, inline HTML
+and later declarations do not acquire an invented envelope. The existing HTML
+projection/refusal rules and protected-node checks still apply. Declaration-only
+input keeps its explicit caret paragraph, so example 181 remains unresolved.
+
+The core document callback now accepts legacy block arrays or
+`{ nodes, attributes }`. Both are validated before either is committed. A failed
+root attribute or block validation retains the original inert document and
+reports fallback. Existing array-returning adapters remain valid; callers that
+invoke the callback themselves must handle the expanded result union. This
+contract does not add a parser dependency to the core.
+
+Exact untouched LF/CRLF source is owned by `parseWithSource`. After edits, native
+JSON and complete HTML/source carry the envelope; canonical Markdown is not a
+root-metadata container. The workshop's retention option also applies to leading
+Markdown declarations and prevents lossy Markdown reopening. The existing
+complete-document source validation and fragment refusal remain in force.
+Declaration spelling follows normalized Markdown parser input: a multiline
+CRLF declaration is stored with LF. Its original bytes remain in the untouched
+source snapshot; edited complete source output does not promise those bytes.
+
+This does not implement EOF lexical tokens or remove author-created empty
+paragraphs. Current conformance profiles remain 563/613/631.
+
+Six targeted headless journeys pass across Chromium, Firefox and WebKit, covering
+the Markdown declaration workflow and the existing complete-HTML envelope flow.
+Six new Markdown editor/reader captures were inspected visually; exact model
+comparisons and browser compatibility-mode assertions cover data that a
+screenshot cannot establish. Videos were recorded but not reviewed.
+
+Verification passes 3,132 unit tests / 231 files, 108-module headless boundary,
+consumer/framework types, packed ESM/CommonJS consumers (16 source contracts
+each), all conformance gates, 415 reviewed public declarations, performance and
+retention gates, bundle budgets and the production site build. The callback
+type and optional factory account for the reviewed four declaration changes.
+Only optional source-entry and aggregate capacity caps increased for measured
+code growth; numerical performance and CSS limits remain fixed. See the
+[source-bound record](../artifacts/markdown-envelope-verification-20261103.json).
+The published npm version remains `0.4.0-beta.2`.
+
 ## Doctype and compatibility-mode data (2026-11-03, Unreleased)
 
 `importHTMLSourceDocument(html, schema, options?)` from
@@ -27,7 +83,7 @@ safe-HTML metadata accepts at most 16,384 JSON code units including escaping.
 The public workshop provides a next-import option and a legacy PUBLIC-doctype
 sample. It compares exact native data after HTML/JSON reopening. Markdown
 reopening is disabled for envelope-bearing documents because it would lose root
-source metadata. This does not add Markdown declaration import yet.
+source metadata. The follow-up adapter above adds leading Markdown declarations.
 
 Head content, shell attributes, source comments outside the body, external
 resources, original CSS/layout and arbitrary file fidelity remain outside this

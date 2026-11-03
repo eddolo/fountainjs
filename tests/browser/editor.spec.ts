@@ -57,6 +57,9 @@ import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-jour
 import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-text-journey';
 import { htmlSourceJourney } from './html-source-journey';
 import { htmlEnvelopeJourney } from './html-envelope-journey';
+test('retains leading Markdown declarations through native edits and complete source reopening', async ({ page }, info) => {
+  await htmlEnvelopeJourney(page, info, true);
+});
 test('retains source document envelopes through native edits history and HTML reopening', async ({ page }, info) => {
   await htmlEnvelopeJourney(page, info);
 });

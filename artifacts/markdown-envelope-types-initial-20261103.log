@@ -1,0 +1,2 @@
+src/core/importers/markdown-importer.ts(2617,39): error TS2339: Property 'attributes' does not exist on type 'MarkdownHTMLDocumentProjection | { nodes: any[]; }'.
+  Property 'attributes' does not exist on type '{ nodes: any[]; }'.

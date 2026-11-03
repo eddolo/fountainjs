@@ -199,8 +199,9 @@ const limits = Object.freeze({
   // Optional source-data reconstruction and independent HTML validation reuse
   // the existing server parser. Measured entries: 6099 / 4996 bytes.
   // Explicit complete-document source import and validated doctype/mode export.
-  'dist/html-source.js': 7.75 * kibibyte,
-  'dist/html-source.cjs': 6.5 * kibibyte,
+  // Leading Markdown declaration adapter and atomic document attributes.
+  'dist/html-source.js': 8.5 * kibibyte,
+  'dist/html-source.cjs': 7 * kibibyte,
   // Portable widget definitions and commands, browser lifecycle/focus policy,
   // and the React bridge remain three opt-in surfaces. Hosts pay only for the
   // renderers they actually use.
@@ -565,7 +566,8 @@ const limits = Object.freeze({
   // Optional inert anchor fallback/source reconstruction: 1626.6 KiB (+~1.1).
   // Entry/CSS ceilings stay fixed; no dependency or core-editor feature change.
   // Source envelope capture and inactive reader metadata: measured 1629.3 KiB.
-  'all ESM runtime code': 1629.5 * kibibyte,
+  // Same Markdown/root metadata boundary: measured 1630.4 KiB.
+  'all ESM runtime code': 1630.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -634,7 +636,8 @@ const limits = Object.freeze({
   // Same mapping checkpoint boundary: measured 1352.7 KiB (+~1.0).
   // Same optional anchor retention: 1353.6 KiB (+~0.9).
   // Same envelope boundary: measured 1356.0 KiB. No new dependency.
-  'all CommonJS runtime code': 1356.25 * kibibyte,
+  // Same boundary: measured 1357.0 KiB; no dependency or CSS change.
+  'all CommonJS runtime code': 1357.25 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

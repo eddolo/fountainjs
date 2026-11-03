@@ -1,4 +1,4 @@
-import { Mark, Node, type Schema } from '../schema';
+import { Mark, Node, type Schema, type Attributes } from '../schema';
 import { matchesWithoutAutomaticTrailingParagraph } from '../editing-provenance';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
@@ -31,6 +31,12 @@ export type MarkdownHTMLFlowSegment =
 export interface MarkdownHTMLFlowFallback {
   readonly reason: 'declined' | 'error';
   readonly message: string;
+}
+
+/** Whole-document adapter data, validated and committed atomically with blocks. */
+export interface MarkdownHTMLDocumentProjection {
+  readonly nodes: readonly Node[];
+  readonly attributes?: Attributes;
 }
 
 /** Parser input for one direct paragraph, before HTML adapter conversion. */
@@ -147,8 +153,10 @@ export interface MarkdownImportOptions {
    * Uses onHTMLFlowFallback on refusal; no partial conversion is committed.
    * Exact untouched source survives. Per-block reuse is disabled only when the
    * document adapter is invoked; ordinary Markdown keeps independent capture.
+   * Return legacy block arrays or { nodes, attributes } for validated root data.
+   * Blocks and root attributes are committed together only after validation.
    */
-  readonly parseHTMLDocument?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context: MarkdownHTMLFlowContext) => readonly Node[] | null;
+  readonly parseHTMLDocument?: (segments: readonly MarkdownHTMLFlowSegment[], schema: Schema, context: MarkdownHTMLFlowContext) => readonly Node[] | MarkdownHTMLDocumentProjection | null;
   readonly onHTMLFlowFallback?: (issue: MarkdownHTMLFlowFallback) => void;
   /**
    * Optional synchronous inline HTML scope adapter. Original Markdown nodes
@@ -2589,6 +2597,7 @@ export class MarkdownImporter {
         : [paragraph(schema, '', source.definitions)]);
     });
     let content = [...blocks, ...definitions];
+    let documentAttributes: Attributes = {};
     if (options.parseHTMLDocument) {
       captured.push(...definitions.map(node => ({ kind: 'unsupported' as const, blocks: [node] })));
       const context = htmlFlowContext(captured, schema, source.definitions, options);
@@ -2605,13 +2614,20 @@ export class MarkdownImporter {
           const projected = options.parseHTMLDocument(segments, schema, context);
           if (projected === null) issue = { reason: 'declined', message: 'HTML document adapter declined conversion; the complete inert document was retained.' };
           else {
-            if (!Array.isArray(projected)) throw new TypeError('HTML document adapter must return a block array.');
-            for (const node of projected) {
+            const result: MarkdownHTMLDocumentProjection = Array.isArray(projected) ? { nodes: projected } : projected as MarkdownHTMLDocumentProjection;
+            if (!Array.isArray(result.nodes)) throw new TypeError('HTML document adapter must return blocks or a document projection.');
+            const attributes = result.attributes ?? {};
+            if (!attributes || typeof attributes !== 'object' || Array.isArray(attributes)
+              || ![Object.prototype, null].includes(Object.getPrototypeOf(attributes))) throw new TypeError('HTML document attributes must be a plain record.');
+            for (const node of result.nodes) {
               if (!(node instanceof Node) || node.type.isInline || node.type === schema.topNodeType) throw new TypeError('HTML document adapter must return schema block nodes.');
               schema.validate(node);
             }
-            if (projected.length && !matchesContentExpression(projected, schema.topNodeType.spec.content ?? '')) throw new TypeError('HTML document result does not match document content.');
-            content = [...projected];
+            if (result.nodes.length && !matchesContentExpression(result.nodes, schema.topNodeType.spec.content ?? '')) throw new TypeError('HTML document result does not match document content.');
+            const candidate = schema.topNodeType.create(attributes, result.nodes.length ? result.nodes : [paragraph(schema, '', source.definitions)]);
+            schema.validate(candidate);
+            content = [...result.nodes];
+            documentAttributes = { ...candidate.attrs };
           }
         } catch (error) {
           issue = { reason: 'error', message: error instanceof Error ? error.message : 'HTML document adapter failed; the complete inert document was retained.' };
@@ -2619,7 +2635,7 @@ export class MarkdownImporter {
         if (issue) options.onHTMLFlowFallback?.(Object.freeze(issue));
       }
     }
-    const document = schema.topNodeType.create({}, content.length ? content : [paragraph(schema, '', source.definitions)]);
+    const document = schema.topNodeType.create(documentAttributes, content.length ? content : [paragraph(schema, '', source.definitions)]);
     schema.validate(document);
     return document;
   }

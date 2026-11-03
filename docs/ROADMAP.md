@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+Markdown envelope follow-up (2026-11-03, Unreleased): document adapters can
+return validated root attributes together with blocks. The explicit source
+adapter retains a leading declaration, preserves untouched LF/CRLF snapshots,
+and keeps its envelope through editing, history and complete HTML/source
+reopening. Legacy array adapters remain accepted. Doctype-only caret content
+and EOF-token handling remain explicit unresolved work; scores stay 563/613/631.
+See [the callback and source contract](HTML_INERT_SOURCE.md#leading-declarations-in-markdown-2026-11-03-unreleased).
+
 Envelope foundation (2026-11-03, Unreleased): complete HTML source import now
 retains bounded doctype spelling/mode as inactive root data. Native/history and
 complete safe-HTML reopening preserve it; validated complete source export

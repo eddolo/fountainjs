@@ -1,12 +1,16 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
 
-export async function htmlEnvelopeJourney(page: Page, info: TestInfo) {
+export async function htmlEnvelopeJourney(page: Page, info: TestInfo, markdown = false) {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/demos/node-markdown.html#inert-source');
   const workshop = page.locator('#inert-source');
   await workshop.getByLabel('Retain HTML source doctype on next import').check();
-  await workshop.getByRole('button', { name: 'Document declaration sample', exact: true }).click();
+  if (markdown) {
+    await workshop.getByRole('button', { name: 'Markdown declaration sample', exact: true }).click();
+    await workshop.getByLabel('Inert source input', { exact: true }).fill('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\n\nOriginal envelope evidence.\n');
+    await workshop.getByRole('button', { name: 'Import inert source', exact: true }).click();
+  } else await workshop.getByRole('button', { name: 'Document declaration sample', exact: true }).click();
   const editor = workshop.getByRole('textbox', { name: 'Inert HTML source editor', exact: true });
   const json = workshop.getByLabel('Inert native document JSON', { exact: true });
   const original = JSON.parse(await json.inputValue());

@@ -3,7 +3,7 @@ import { EditorView, StarterKit, composeExtensions, createEditor, EditorState, S
   HTMLImporter, MarkdownImporter, MarkdownExporter, HTMLExporter, undo, redo,
   type Editor, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
-import { importHTMLSourceDocument, exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
+import { createHTMLSourceMarkdownAdapter, importHTMLSourceDocument, exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
 import { appendInertHTMLBlockParagraph, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import './html-container-workshop.css';
 
@@ -86,7 +86,9 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
     try {
       const issues: string[] = [];
       const reportedOptions = {
-        parseHTMLDocument: (...args: Parameters<typeof importer.parseTextBlockFlowWithReport>) => {
+        parseHTMLDocument: preserveEnvelope ? createHTMLSourceMarkdownAdapter({ sourceTokens: true }, result => {
+          issues.push(...result.issues.map(issue => `${issue.code}: ${issue.message}`));
+        }) : (...args: Parameters<typeof importer.parseTextBlockFlowWithReport>) => {
           const result = importer.parseTextBlockFlowWithReport(...args);
           issues.push(...result.issues.map(issue => `${issue.code}: ${issue.message}`));
           return result.nodes;
@@ -146,10 +148,11 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
       <button onClick={() => load(samples.htmlLinks, 'HTML')}>HTML navigation intent sample</button>
       <button onClick={() => load(samples.literalLinks, 'Markdown')}>Literal Markdown link sample</button>
       <button onClick={() => load(samples.declaration, 'HTML')}>Document declaration sample</button>
+      <button onClick={() => load('<!DOCTYPE html>\n\nResearch evidence.\n', 'Markdown')}>Markdown declaration sample</button>
     </div>
     <label>Inert input format<select value={inputFormat} onChange={event => setInputFormat(event.target.value as 'Markdown' | 'HTML')}><option>Markdown</option><option>HTML</option></select></label>
     <label><input type="checkbox" checked={preserveEnvelope} onChange={event => setPreserveEnvelope(event.target.checked)} /> Retain HTML source doctype on next import</label>
-    <p>This option applies to HTML input. The original doctype/mode is stored as data; the reader remains HTML5. Complete source export restores it. Head content and original page layout are outside this retention contract.</p>
+    <p>This option applies to HTML input and leading Markdown HTML declarations. The original doctype/mode is stored as data; the reader remains HTML5. Complete source export restores it. Head content and original page layout are outside this retention contract.</p>
     <p>Dotted names are accepted in HTML input; they are not inline HTML syntax in CommonMark. HTML input uses canonical Markdown export, not an exact Markdown-source snapshot.</p>
     <label htmlFor="inert-source-input">Inert source input</label><textarea id="inert-source-input" value={input} onChange={event => setInput(event.target.value)} rows={3} />
     <button onClick={() => load(input)}>Import inert source</button>

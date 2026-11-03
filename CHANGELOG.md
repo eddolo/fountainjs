@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add atomic document attributes to the whole-document Markdown HTML adapter
+  result, while accepting existing block arrays. The optional
+  `createHTMLSourceMarkdownAdapter` retains leading declaration data through
+  editing and complete HTML/source reopening. Failed block/root validation
+  keeps the original inert document with an explicit fallback report.
+
 - Add opt-in `importHTMLSourceDocument` for bounded original doctype spelling
   and compatibility-mode data. Retain it through native/history and complete
   reader HTML, restore it in validated complete source export, and refuse

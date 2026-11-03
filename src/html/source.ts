@@ -3,7 +3,31 @@ import { isHTMLDocumentEnvelope, type HTMLDocumentEnvelope } from '../core/html-
 import { HTMLExporter, renderHTMLSourceFragment } from '../core/exporters/html-exporter';
 import { readDocumentPageSettings } from '../core/page-settings';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
-import { ServerHTMLImporter, type ServerHTMLImporterOptions, type ServerHTMLImportResult } from './server';
+import { ServerHTMLImporter, type ServerHTMLImporterOptions, type ServerHTMLImportResult, type ServerHTMLFragmentImportResult } from './server';
+import type { MarkdownImportOptions } from '../core/importers/markdown-importer';
+
+/** Whole-document Markdown HTML projection retaining a leading declaration.
+ * Existing fallback/protected-node rules still apply. Exact source spelling is
+ * owned by parseWithSource; this callback carries bounded root-envelope data.
+ */
+export function createHTMLSourceMarkdownAdapter(options?: ServerHTMLImporterOptions,
+  onReport?: (report: ServerHTMLFragmentImportResult) => void): NonNullable<MarkdownImportOptions['parseHTMLDocument']> {
+  const importer = new ServerHTMLImporter(options);
+  return (segments, schema, context) => {
+    const report = importer.parseTextBlockFlowWithReport(segments, schema, context);
+    onReport?.(report);
+    const first = segments[0];
+    if (first?.kind !== 'html') return report.nodes;
+    const parsed = parse(first.html, { scriptingEnabled: false, sourceCodeLocationInfo: true });
+    const declaration = parsed.childNodes.find(node => node.nodeName === '#documentType') as DefaultTreeAdapterMap['documentType'] | undefined;
+    const location = declaration?.sourceCodeLocation;
+    if (!location || first.html.slice(0, location.startOffset).trim()) return report.nodes;
+    const envelope: HTMLDocumentEnvelope = { version: 1,
+      doctype: first.html.slice(location.startOffset, location.endOffset), mode: parsed.mode };
+    if (!isHTMLDocumentEnvelope(envelope)) throw new RangeError('Markdown source doctype exceeds the bounded envelope contract.');
+    return { nodes: report.nodes, attributes: { htmlSourceEnvelope: envelope } };
+  };
+}
 
 /** Import a complete HTML source document with bounded doctype/mode DATA.
  * Head contents, shell attributes and original layout still follow the ordinary

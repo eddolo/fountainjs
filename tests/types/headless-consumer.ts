@@ -19,7 +19,7 @@ import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
 import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 import { createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
-import { importHTMLSourceDocument, exportHTMLSource } from 'fountainjs-editor/html/source';
+import { createHTMLSourceMarkdownAdapter, importHTMLSourceDocument, exportHTMLSource } from 'fountainjs-editor/html/source';
 
 const documentExtension = defineExtension({
   name: 'headless-document',
@@ -73,6 +73,7 @@ HTMLExporter.export(editor.state, { document: false });
 const sourceHTML = exportHTMLSource(editor.state.doc);
 const sourceDocumentWithEnvelope = importHTMLSourceDocument('<!doctype html><p>Source</p>', schema);
 exportHTMLSource(sourceDocumentWithEnvelope.document);
+MarkdownImporter.parse('<!doctype html>\n\nSource.', schema, { parseHTMLDocument: createHTMLSourceMarkdownAdapter() });
 if (sourceHTML.ok) {
   const unsanitized: false = sourceHTML.sanitized;
   const bytes: string = sourceHTML.sourceHTML;

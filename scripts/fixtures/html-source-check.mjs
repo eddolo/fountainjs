@@ -26,5 +26,12 @@ export function checkHTMLSource(root, inert, source) {
   assert.deepEqual(source.importHTMLSourceDocument(output.sourceHTML, schema).document.toJSON(), imported.toJSON());
   assert.deepEqual(source.importHTMLSourceDocument(root.HTMLExporter.export(imported), schema).document.toJSON(), imported.toJSON());
   assert.equal(source.exportHTMLSource(imported, { document: false }).ok, false);
-  return 12;
+  const markdown = `${declaration}\n\nMarkdown evidence.\n`;
+  const captured = root.MarkdownImporter.parseWithSource(markdown, schema, { parseHTMLDocument: source.createHTMLSourceMarkdownAdapter() });
+  assert.equal(captured.document.attrs.htmlSourceEnvelope.doctype, declaration);
+  assert.equal(root.MarkdownExporter.exportWithSource(captured.document, captured.source).markdown, markdown);
+  const converted = source.exportHTMLSource(captured.document);
+  assert.equal(converted.ok, true);
+  assert.deepEqual(source.importHTMLSourceDocument(converted.sourceHTML, schema).document.toJSON(), captured.document.toJSON());
+  return 16;
 }
