@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Workflow usability follow-up (2026-11-03): task deletion now has recovery that
+retains edits, metadata and independent editor history. Empty state, focus and
+20-task limits are exercised. Workflow pages expose clickable breadcrumbs and
+parent arrows. Five new journeys plus three existing workflow regressions pass;
+seventeen captures were inspected, and types/site/size pass. This is demo UX
+completion with no runtime-library or parity-percentage promotion.
+[Details](WORKFLOW_DEMOS.md).
+
 Browser assertion follow-up (2026-11-03, Unreleased): the broad formatting run
 had 839 passes, 16 skips and three identical stale serialized-HTML assertions.
 The strengthened journey checks exact parsed text/newlines and code-mark scope;

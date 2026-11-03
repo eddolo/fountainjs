@@ -24,6 +24,13 @@ download/reopen and a separate reader. See [its API guide](ISSUE_EDITOR_DEMO.md)
 [Todoist-style task workspace](https://eddolo.github.io/fountainjs/task-workflow.html):
 three sample tasks, a rich description per task, task switching, due date and
 completion controls, adding tasks, reader preview, and Markdown download/reopen.
+Tasks can also be deleted, including the last task. The visible Undo delete
+action restores the last removal with its original draft, metadata and editor
+history. Adding or deleting another task replaces that one-step recovery.
+
+The hub, issue editor and task workspace expose a clickable Home → Workflow lab
+breadcrumb and a labelled arrow to the parent page. These are explicit links,
+so direct visits work without relying on a previous browser-history entry.
 
 ### Ownership and lifecycle
 
@@ -33,6 +40,15 @@ completion controls, adding tasks, reader preview, and Markdown download/reopen.
   `StarterKit.schema`, its plugins and a parsed Markdown document. The pane stays
   mounted while hidden, so each task retains its own document and undo/redo history.
   `useFountainState` observes accepted document transactions.
+- Deletion is host collection state, separate from a document transaction.
+  The active task is removed from the sidebar/count and a neighbour is selected.
+  The last removed pane stays hidden under its original React key, preserving
+  accepted edits and its history for Undo delete. Restoration reinserts the
+  task at its original position; it does not reparse the initial Markdown.
+  Another add/delete releases that recovery pane. There are at most 20 live
+  tasks plus one retained recovery pane; no unbounded deleted-editor cache.
+  Focus moves to the selected task button, or Add task when the collection is
+  empty. The empty state offers both a new task and the existing deletion undo.
 - This deliberately small demo allows at most 20 tasks. A production list with
   thousands of tasks should retain inactive model/state separately and mount
   only active views; this demo is not a virtualization benchmark.
@@ -63,7 +79,10 @@ completion controls, adding tasks, reader preview, and Markdown download/reopen.
 4. Open Reader preview; the text remains visible but cannot be typed into.
 5. Download a description, change it, and reopen the downloaded file in that
    task. Undo the file replacement to recover the newer draft.
-6. Follow Workflows back to the hub, or 10 demos/Developers to the integration
+6. Delete a task, then use Undo delete. Its title, date, completion and edited
+   description return; the description's Undo/Redo still operates independently.
+7. Delete every task. Add a new one from the empty state, or undo the last removal.
+8. Follow the breadcrumb/back arrow to the hub, or 10 demos/Developers to the integration
    documentation. Download before navigating away.
 
 Implementation: `examples/react-app/src/TaskWorkflow.tsx`, `task-main.tsx`,
@@ -71,6 +90,17 @@ Implementation: `examples/react-app/src/TaskWorkflow.tsx`, `task-main.tsx`,
 Automated browser journey: `tests/browser/product-workflow-journey.ts`;
 recorded entry: `tests/manual/product-workflow-audit.spec.ts`.
 Browser emulation is not physical-device certification.
+
+Verified 2026-11-03: five new recorded journeys pass in Chromium, Firefox,
+WebKit, mobile Chrome and mobile Safari emulations. They check direct-entry
+parent navigation, keyboard activation, deletion, neighbour focus, original
+ordering, restored metadata/draft/history, independent task histories, empty
+state, new-task recovery and the 20-task limit. The preceding complete workflow
+journey also passes in all three desktop engines, including actual Markdown
+download/reopen and reader preview. Seventeen selected screenshots were inspected.
+Framework types, website build and existing size limits pass. Runtime library
+source, dependencies and all acceptance limits are unchanged; no engine feature
+or npm-version promotion is implied by these website fixes.
 
 Verified 2026-09-08: this full discovery/task journey passed in Chromium, Firefox
 and WebKit. A separate Chromium run recorded video and desktop/390px screenshots;

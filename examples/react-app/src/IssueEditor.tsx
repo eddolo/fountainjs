@@ -3,6 +3,7 @@ import { EditorState, MarkdownExporter, MarkdownImporter, Schema, StarterKit, ty
 import { FountainComposer, FountainEditor, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { issueMarkdown } from './issue-example';
 import { SitePageLink } from './SitePageLink';
+import { WorkflowBreadcrumbs } from './WorkflowBreadcrumbs';
 import { issueMarkdownOptions } from './issue-markdown-policy';
 
 // The demo host stores bounded raster images in the document, not on a server.
@@ -97,7 +98,7 @@ export function IssueEditor() {
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav><a href="#integration">How this is built ↓</a></header>
     <div className="issue-layout">
       <section className="issue-workspace">
-        <p className="issue-eyebrow">WORKFLOW LAB · UNOFFICIAL GITLAB-STYLE ISSUE EDITOR</p>
+        <WorkflowBreadcrumbs current="GitLab-style issue editor (unofficial)" />
         <h1>A bug report, from draft to review.</h1>
         <p>Write visually, inspect the Markdown, and preview what a reader sees. This is a FountainJS implementation of an issue-writing workflow, not a GitLab integration or a full GitLab Flavored Markdown implementation.</p>
         <label className="issue-title">Issue title<input value={title} onChange={event => setTitle(event.target.value)} /></label>

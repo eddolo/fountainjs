@@ -1,4 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { workflowTaskRemovalJourney } from './workflow-task-removal-journey';
+
+test('navigates workflow parents and restores deleted task drafts and histories on mobile', async ({ page }, info) => {
+  await workflowTaskRemovalJourney(page, info);
+});
 import { webComponentFormJourney } from './web-component-form-journey';
 import { explicitFocusJourney } from './explicit-focus-journey';
 import { emptyHeadingHTMLJourney } from './empty-heading-html-journey';

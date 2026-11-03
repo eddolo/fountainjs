@@ -1,7 +1,7 @@
 .workflows-site, .task-site { min-height: 100vh; background: #f7f5f0; }
 .workflows-site .site-header, .task-site .site-header { grid-template-columns: 1fr auto; }
 .workflow-heading, .task-heading { max-width: 1450px; margin: auto; padding: 56px clamp(20px,5vw,72px) 32px; }
-.workflow-heading > p:first-child, .task-heading > p:first-child, .workflow-kind { color: #6542d5; font: 600 13px/1.5 'DM Mono', monospace; letter-spacing: .06em; }
+.workflow-heading > p:first-of-type, .workflow-kind { color: #6542d5; font: 600 13px/1.5 'DM Mono', monospace; letter-spacing: .06em; }
 .workflow-heading h1 { font-size: clamp(38px,5vw,72px); line-height: 1.05; letter-spacing: -.045em; margin: 20px 0; }
 .workflow-heading > p:last-child, .task-heading > p:last-child { max-width: 830px; font-size: 17px; line-height: 1.7; color: #5c5668; }
 .workflow-grid { max-width: 1450px; margin: auto; padding: 12px clamp(20px,5vw,72px) 60px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
@@ -40,6 +40,11 @@
 .task-meta label { display: grid; gap: 8px; font-size: 14px; font-weight: 700; }
 .task-meta input:not([type=checkbox]) { width: 100%; min-width: 0; padding: 12px; border: 1px solid #b9b4c5; border-radius: 7px; background: white; color: #17152a; }
 .task-meta .task-complete { display: flex; align-items: center; grid-column: 1 / -1; }
+.task-metadata-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.task-delete { border: 1px solid #ad4b48; border-radius: 7px; padding: 10px 14px; background: white; color: #8b2724; }
+.task-notice { width: calc(100% - 32px); max-width: 1306px; margin: 0 auto 16px; padding: 12px 16px; border: 1px solid #779b89; border-radius: 8px; background: #e8f5ed; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; overflow-wrap: anywhere; }
+.task-notice button, .task-empty button { background: #11694f; color: white; border: 1px solid #11694f; border-radius: 7px; padding: 10px 14px; }
+.task-empty { padding: 32px; }
 .task-mode { display: flex; gap: 20px; align-items: center; justify-content: space-between; margin-top: 16px; }
 .task-mode h2 { font-size: 20px; }
 .task-mode button, .task-file-actions button { padding: 10px 14px; border: 1px solid #b9b4c5; border-radius: 7px; background: white; color: #342953; }

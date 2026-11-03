@@ -330,6 +330,7 @@ import { markdownLiteralJourney } from './markdown-literal-journey';
 import { markdownNewlineJourney } from './markdown-newline-journey';
 import { markdownEscapeJourney } from './markdown-escape-journey';
 import { productWorkflowJourney } from './product-workflow-journey';
+import { workflowTaskRemovalJourney } from './workflow-task-removal-journey';
 import { htmlBlockFormatJourney } from './html-block-format-journey';
 import { issueTableHandoffJourney } from './issue-table-handoff-journey';
 import { markdownScopeJourney } from './markdown-scope-journey';
@@ -390,6 +391,10 @@ test('preserves headerless and mixed tables through source and file handoff', as
 
 test('retains HTML block formatting through server import, paste and draft handoff', async ({ page }, info) => {
   await htmlBlockFormatJourney(page, info);
+});
+
+test('navigates workflow parents and restores deleted task drafts and histories', async ({ page }, info) => {
+  await workflowTaskRemovalJourney(page, info);
 });
 
 test('discovers product workflows and preserves separate task drafts and histories', async ({ page }, info) => {

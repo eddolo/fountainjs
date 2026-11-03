@@ -1,0 +1,83 @@
+{
+  "reviewed": [
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-chromium/issue-breadcrumb.png",
+      "SHA256": "cc0f75972fe3399d1fe12d2cfa2823f2cf36f998d7689e5ddca0a5ce64e967f2"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-chromium/task-restored-history.png",
+      "SHA256": "34f96beae20149ba9a3080d9c9bed4be3af1ccc319a2f05fe023c35c12a822d1"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-chromium/task-empty.png",
+      "SHA256": "9cccd0d71abab54cbf13fae4365a100fdaccca1513ae00745601b2f2863e04bf"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-chromium/workflow-parent.png",
+      "SHA256": "71f79716e0b795efedf0cbfbc776e05fd2953a424f5d349960fd87210e65ea81"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-firefox/issue-breadcrumb.png",
+      "SHA256": "d4ca82660d78a8f8ef194a0e626fe213a41acb55eab53c0b43389fbca9d9d84a"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-firefox/task-restored-history.png",
+      "SHA256": "f5fe3fc10af8ff3022d2e8534562c244bc48ac9bfe65a7131e4f89b2c0a07df2"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-firefox/task-empty.png",
+      "SHA256": "e54f61762659ba1e1ff9965c72ca2bd90fd96cef90b9fed0b8a871519647d3fd"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-webkit/issue-breadcrumb.png",
+      "SHA256": "7fbbdc597732e4e67b932f69ff2e7c83cbc7a216d6716b7cd3d24bb0ba0aba91"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-webkit/task-restored-history.png",
+      "SHA256": "ab5081342cae7729061046c0d314206b45c2b704bfe1a297fc09c4a74bbdd185"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/editor-navigates-workflow--d8c1d-d-task-drafts-and-histories-webkit/task-empty.png",
+      "SHA256": "a1b6a69da2c6eae26df3bd0226305d2a7240eb6eb3ad19f8a6474bcee1e47dec"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-chrome/issue-breadcrumb.png",
+      "SHA256": "6f7110aed8145301e5876f2cc04e6e9cf5e8b0ff821c5b35b1111556abe6a5cc"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-chrome/task-restored-history.png",
+      "SHA256": "e9603ff979f0f1a2bc4b7d76d17d17cec8d93766a19654142934ff34d6961739"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-chrome/task-empty.png",
+      "SHA256": "a527ec73bfebeb0b0c8c67d1d1627dd9eee4c61c0054cd6e914e6719329695ec"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-safari/issue-breadcrumb.png",
+      "SHA256": "2a42c897003e3ea401dc0c91e821c4f2d71f1bc8105a33eaf73e8ee1c0799c0b"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-safari/task-restored-history.png",
+      "SHA256": "00ca5ccdd622d34dc89ce011c668b3165615889d1e720a3e95d8564066c8aec2"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-safari/task-empty.png",
+      "SHA256": "3248c0074fab67c0fe64604a38ba8055c370ed171947b87d883a7bb0183eba0f"
+    },
+    {
+      "path": "artifacts/workflow-removal-browser-20261103/mobile-navigates-workflow--f5144-fts-and-histories-on-mobile-mobile-safari/workflow-parent.png",
+      "SHA256": "d54255670763b425759b01cbc8160f2eb9dbe639c8e0f552ae68b8e2fd4d3fda"
+    }
+  ],
+  "findings": [
+    "Breadcrumb links and parent arrows remain visible and wrap on narrow screens.",
+    "Restored tasks show the edited draft, original metadata and working undo/redo.",
+    "The empty workspace exposes both creation and last-deletion recovery without hidden editor controls.",
+    "No horizontal page overflow in captured states; mobile editor toolbar retains its existing horizontal scroll."
+  ],
+  "limitations": [
+    "Desktop/touch emulation, not physical-device certification",
+    "Seventeen selected captures inspected; other images, recordings and traces retained but not manually reviewed",
+    "This adds host-demo task management and navigation, not a complete Todoist or GitLab replacement"
+  ]
+}

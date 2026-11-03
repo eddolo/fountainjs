@@ -1,0 +1,8 @@
+.workflow-breadcrumbs { display: grid; gap: 6px; margin-bottom: 14px; font-size: 14px; line-height: 1.6; color: #514562; }
+.workflow-breadcrumbs ol { display: flex; flex-wrap: wrap; gap: 4px 10px; list-style: none; margin: 0; padding: 0; }
+.workflow-breadcrumbs li { display: inline-flex; gap: 10px; min-width: 0; overflow-wrap: anywhere; }
+.workflow-breadcrumbs li > span[aria-hidden] { color: #8a8295; }
+.workflow-breadcrumbs a { text-decoration: underline; text-underline-offset: 3px; }
+.workflow-breadcrumbs [aria-current] { color: #211b2c; }
+.workflow-breadcrumbs .workflow-back { display: inline-flex; align-items: center; gap: 8px; justify-self: start; min-height: 44px; font-weight: 600; }
+.workflow-breadcrumbs a:focus-visible { outline: 3px solid #7b58ec; outline-offset: 3px; border-radius: 2px; }

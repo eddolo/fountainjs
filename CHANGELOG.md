@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add task deletion with one-step recovery of edited descriptions, metadata and
+  undo histories to the task workflow demo. Handle an empty workspace and
+  restore focus after deletion. Add clickable breadcrumbs and parent arrows
+  to the workflow hub, issue editor and task workspace.
+
 - Recover repeated identical native Word table-shading declarations through the
   existing appearance coalescing policy. Report conflicting fills without
   discarding readable content, choosing one value or falling through to a lower

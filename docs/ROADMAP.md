@@ -1,5 +1,12 @@
 # FountainJS opportunity roadmap
 
+Workflow usability follow-up (2026-11-03): task deletion/recovery, empty state,
+neighbour focus and clickable breadcrumb/parent navigation now work in the
+product demos. Five new desktop/touch journeys and three existing workflow
+regressions pass; seventeen screenshots were inspected. Types/site/size pass
+with no runtime-library, dependency or limit changes. Richer product workflows
+remain future work. [Implementation and evidence](WORKFLOW_DEMOS.md).
+
 Native DOCX verification (2026-11-03, Unreleased): reusing the unchanged
 scientific source exposed and repaired a repeated-shading import crash. Full
 units pass 3,388 / 240 files; a real Chromium edit/history/download/reopen
