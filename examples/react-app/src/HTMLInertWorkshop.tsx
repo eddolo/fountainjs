@@ -3,11 +3,12 @@ import { EditorView, StarterKit, composeExtensions, createEditor, EditorState, S
   HTMLImporter, MarkdownImporter, MarkdownExporter, HTMLExporter, undo, redo,
   type Editor, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
-import { exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
+import { importHTMLSourceDocument, exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
 import { appendInertHTMLBlockParagraph, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import './html-container-workshop.css';
 
 const samples = {
+  declaration: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head></head><body><p>Original envelope evidence.</p></body></html>',
   anchors: '<p>Review <a href="\\*" data-owner="Ada" onclick="globalThis.anchorPwned=1">the original evidence</a> before release.</p>\n<p><a foo="bar" _boolean zoop:33="zoop:33"></a> Empty anchor data is retained.</p>\n<p><a href="/safe" title="Ordinary link">Supported links stay links</a>.</p>',
   nested: "Before <FoO data-id='outer'>outside <bar data-id=inner>inside</bar> end</FOO> after.\n",
   empty: '<p><foo></foo> and <lab.measurement units="m">measurement</lab.measurement>.</p>',
@@ -44,6 +45,7 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
   const [sourceResult, setSourceResult] = useState<{ document: Node; result: HTMLSourceResult }>();
   const [input, setInput] = useState(initialSource);
   const [inputFormat, setInputFormat] = useState<'Markdown' | 'HTML'>('Markdown');
+  const [preserveEnvelope, setPreserveEnvelope] = useState(false);
   const [status, setStatus] = useState('Explicitly registered tags: foo, bar, lab.measurement and fountain-unsafe.');
   const [saved, setSaved] = useState('');
   const [preview, setPreview] = useState('');
@@ -92,7 +94,9 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
         onHTMLFlowFallback: (issue: { reason: string; message: string }) => issues.push(`source-fallback (${issue.reason}): ${issue.message}`),
       };
       const captured = format === 'Markdown' ? MarkdownImporter.parseWithSource(source, editor.state.schema, reportedOptions) : undefined;
-      const htmlResult = captured ? undefined : importer.parseWithReport(source, editor.state.schema);
+      const htmlResult = captured ? undefined : preserveEnvelope
+        ? importHTMLSourceDocument(source, editor.state.schema, { sourceTokens: true })
+        : importer.parseWithReport(source, editor.state.schema);
       if (htmlResult) issues.push(...htmlResult.issues.map(issue => `${issue.code}: ${issue.message}`));
       snapshot.current = captured?.source;
       const doc = captured?.document ?? htmlResult!.document;
@@ -110,7 +114,7 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
       const current = editor.getJSON();
       const exported = snapshot.current ? MarkdownExporter.exportWithSource(editor.state.doc, snapshot.current)
         : { markdown: MarkdownExporter.export(editor.state.doc), preservation: 'canonical' };
-      const html = HTMLExporter.export(editor.state.doc, { document: false });
+      const html = HTMLExporter.export(editor.state.doc, { document: editor.state.doc.attrs.htmlSourceEnvelope !== undefined });
       const reopened = format === 'Markdown' ? MarkdownImporter.parse(exported.markdown, editor.state.schema, options)
         : format === 'HTML' ? HTMLImporter.parse(html, editor.state.schema)
           : editor.state.schema.nodeFromJSON(JSON.parse(JSON.stringify(current)));
@@ -141,8 +145,11 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
       <button onClick={() => load(samples.rejectedLinkScope, 'Markdown')}>Rejected cross-block link sample</button>
       <button onClick={() => load(samples.htmlLinks, 'HTML')}>HTML navigation intent sample</button>
       <button onClick={() => load(samples.literalLinks, 'Markdown')}>Literal Markdown link sample</button>
+      <button onClick={() => load(samples.declaration, 'HTML')}>Document declaration sample</button>
     </div>
     <label>Inert input format<select value={inputFormat} onChange={event => setInputFormat(event.target.value as 'Markdown' | 'HTML')}><option>Markdown</option><option>HTML</option></select></label>
+    <label><input type="checkbox" checked={preserveEnvelope} onChange={event => setPreserveEnvelope(event.target.checked)} /> Retain HTML source doctype on next import</label>
+    <p>This option applies to HTML input. The original doctype/mode is stored as data; the reader remains HTML5. Complete source export restores it. Head content and original page layout are outside this retention contract.</p>
     <p>Dotted names are accepted in HTML input; they are not inline HTML syntax in CommonMark. HTML input uses canonical Markdown export, not an exact Markdown-source snapshot.</p>
     <label htmlFor="inert-source-input">Inert source input</label><textarea id="inert-source-input" value={input} onChange={event => setInput(event.target.value)} rows={3} />
     <button onClick={() => load(input)}>Import inert source</button>
@@ -161,8 +168,9 @@ function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolea
         link.href = url; link.download = 'fountain-inert-document.html'; link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }}>Download standalone HTML</button>
-      {(['Markdown', 'HTML', 'JSON'] as const).map(format => <button key={format} onClick={() => reopen(format)}>Export {format} and reopen</button>)}
+      {(['Markdown', 'HTML', 'JSON'] as const).map(format => <button key={format} disabled={format === 'Markdown' && editor?.state.doc.attrs.htmlSourceEnvelope !== undefined} onClick={() => reopen(format)}>Export {format} and reopen</button>)}
     </div>
+    {editor?.state.doc.attrs.htmlSourceEnvelope !== undefined && <p>Markdown reopening is unavailable for this document because it cannot retain the source envelope. Use JSON, complete HTML, or reconstructed source.</p>}
     <p role="status">{status}</p>
     <details><summary>Reconstruct original HTML as source</summary>
       <p>This separate source export can contain original scripts, styles, custom elements and event attributes. It is shown only as text here. Opening a downloaded HTML file elsewhere can activate them. The reader preview uses the safe fallback export.</p>

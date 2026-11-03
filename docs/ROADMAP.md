@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+Envelope foundation (2026-11-03, Unreleased): complete HTML source import now
+retains bounded doctype spelling/mode as inactive root data. Native/history and
+complete safe-HTML reopening preserve it; validated complete source export
+restores the declaration and refuses fragment output. The public workshop has
+an explicit option and protects against lossy Markdown reopening. Markdown
+declaration ingestion and EOF-token editing remain unfinished, so CommonMark
+scores stay 563/613/631. See [the boundary](HTML_INERT_SOURCE.md#doctype-and-compatibility-mode-data-2026-11-03-unreleased).
+
 Lexical-source investigation (2026-11-03): all six LF/CRLF unfinished-tag
 variants change their parsed tree if the source writer appends its closing
 envelope; a PUBLIC-doctype probe also demonstrates lost envelope/compatibility

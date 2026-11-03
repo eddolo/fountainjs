@@ -1,0 +1,29 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-document-envelope.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-document-envelope.test.ts [ tests/html-document-envelope.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'nodes')
+ ❯ new Schema src/core/schema/schema.ts:84:27
+     82|   constructor(public readonly spec: SchemaSpec) {
+     83|     this.nodes = Object.fromEntries(
+     84|       Object.entries(spec.nodes).map(([name, nodeSpec]) => [name, new …
+       |                           ^
+     85|     );
+     86|     this.marks = Object.fromEntries(
+ ❯ tests/html-document-envelope.test.ts:8:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  51 passed (51)
+   Start at  11:55:58
+   Duration  5.56s (transform 48%, import 48%, tests 3%, worker 1%)
+
+  Transform  transforming modules took 2.31s · 48% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

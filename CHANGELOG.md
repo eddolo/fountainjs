@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add opt-in `importHTMLSourceDocument` for bounded original doctype spelling
+  and compatibility-mode data. Retain it through native/history and complete
+  reader HTML, restore it in validated complete source export, and refuse
+  fragment source export that would omit the envelope. The workshop exposes
+  the option and prevents Markdown reopening from discarding that data.
+
 - Optional `createInertHTMLAnchorExtension()` retains unsupported anchor
   attributes/destinations as inactive editable source data. The public workshop
   exposes an explicit opt-in; supported hyperlinks keep their behavior.

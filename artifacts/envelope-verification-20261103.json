@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "94a1ef6d06921eb221b1120e570e542577bc87d4",
+  "scope": "Opt-in complete HTML source doctype/mode DATA; safe reader metadata; validated complete source restoration",
+  "unit": {
+    "passed": 3120,
+    "files": 230,
+    "newEnvelopeCases": 14
+  },
+  "browser": {
+    "passed": 6,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "headless": true,
+    "workers": 1,
+    "inspectedNewScreenshots": 6,
+    "videosReviewed": false,
+    "proof": [
+      "native edits and exact undo/redo",
+      "JSON and complete safe HTML reopening",
+      "safe reader CSS1Compat",
+      "reconstructed source BackCompat",
+      "Markdown reopening disabled for retained-envelope documents",
+      "existing inert-anchor journey regression"
+    ]
+  },
+  "checks": {
+    "headlessModules": 108,
+    "apiDeclarations": 415,
+    "types": "passed",
+    "packedESMandCommonJS": "12 source acceptance/refusal contracts each passed",
+    "performance": "passed",
+    "website": "passed",
+    "budgets": "passed after reviewed optional source-entry and aggregate capacity changes"
+  },
+  "performance": {
+    "localMedianGrowth": 5.95,
+    "remoteMedianGrowth": 5.89,
+    "serverMedianGrowth": 7.69,
+    "unchangedGrowthCeiling": 15,
+    "firstLocal10000BlocksMs": 21.2,
+    "latencyGuarantee": "diagnostic single-machine measurements, not every-edit frame guarantee"
+  },
+  "commonmark": {
+    "default": 563,
+    "safeOptional": 613,
+    "sourceOutput": 631,
+    "total": 652,
+    "sourceRetentionChecks": 1304,
+    "unchanged": true,
+    "remaining": [
+      156,
+      157,
+      158,
+      181
+    ]
+  },
+  "limitations": [
+    "Head/source shell attributes/comments outside body/layout not retained by this contract",
+    "No Markdown declaration ingestion yet",
+    "Explicit caret paragraph remains for doctype-only documents",
+    "Fragment source export refuses retained envelope",
+    "EOF tokens not implemented"
+  ],
+  "initialFailures": {
+    "focused": "test imported CoreSchemaSpec from the wrong module; corrected fixture, 65 focused cases passed",
+    "api": "reviewed optional importHTMLSourceDocument signature in two source declarations",
+    "budget": "reviewed source entries and aggregate growth; CSS and numerical performance caps unchanged"
+  },
+  "npm": {
+    "version": "0.4.0-beta.2",
+    "published": false
+  },
+  "hashBasis": "SHA256 of staged Git blob bytes; log line endings/trailing whitespace normalized",
+  "files": {
+    "CHANGELOG.md": "180d98dd936519dfb81f8245b042231a5ccc8a8710baba8378d5633f3a99e806",
+    "api-surface.json": "d2ee30dbd023cd3776e3ab2e6f5fa9e54d731ff35551f1025bed583fda9696d8",
+    "artifacts/envelope-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/envelope-api-initial-20261103.log": "6d881c1e81f4f7eee5edf25ae49a40cf8ff4bc6cacd6eeb44897cf046708ee93",
+    "artifacts/envelope-browser-20261103.log": "f9c63f1f69088d00582f2d4cef8c9c4005c3e696a528395cf197f0811b16cf33",
+    "artifacts/envelope-browser-20261103/editor-retains-source-docu-e01f0--history-and-HTML-reopening-chromium/envelope-editor.png": "a5e48a495f8ee239caf93bfe28c09e57b5579a0613e204577fdc655455f60cc6",
+    "artifacts/envelope-browser-20261103/editor-retains-source-docu-e01f0--history-and-HTML-reopening-chromium/envelope-reader.png": "6a9b78b49ba89b756525d5df2b9c92c9347f85a4c5304b4ee13121db7c83cb60",
+    "artifacts/envelope-browser-20261103/editor-retains-source-docu-e01f0--history-and-HTML-reopening-firefox/envelope-editor.png": "30d401423fe739667a1bfbd7912a94b3929887c8a31ef628c2b5988d858f3139",
+    "artifacts/envelope-browser-20261103/editor-retains-source-docu-e01f0--history-and-HTML-reopening-firefox/envelope-reader.png": "7f2109dfd0e737383ca4b19c4bc66672bc50ae3a0f90390b7311469b5c21e027",
+    "artifacts/envelope-browser-20261103/editor-retains-source-docu-e01f0--history-and-HTML-reopening-webkit/envelope-editor.png": "886514e218ff905cbff065a8dc9dce392cdb6e441a85c439a87742f28ffa1890",
+    "artifacts/envelope-browser-20261103/editor-retains-source-docu-e01f0--history-and-HTML-reopening-webkit/envelope-reader.png": "7dbd41798d3eec4fe8ec78083aaf4cc638e770feaf78a442a1ce86e63e45a715",
+    "artifacts/envelope-budget-20261103.log": "2573af9b5b920c8a6f789d5527d20a0ae4faae3576f7cecf8e24aa5445433ea3",
+    "artifacts/envelope-budget-initial-20261103.log": "28f775e500bc8ffb062cda75a1433fd68b52295e9d918b84a404c3c7a9b70082",
+    "artifacts/envelope-build-20261103.log": "c08db125f45cc18494fde00caad93f0f1487958169bdb415ee526583e374f285",
+    "artifacts/envelope-conformance-20261103.log": "a298758a2e9e06b5d9ffb11cde2edf35a4a7572a05dc36c84774661ea29bc747",
+    "artifacts/envelope-focused-20261103.log": "a9c3ee4b13fc608c432efc1d55f65ae30875644bf499397e34e2275cc23ff801",
+    "artifacts/envelope-focused-final-20261103.log": "e9ee020c66f2671117278ef7453060396d0e18bc42b01610d0e8bd27437e1368",
+    "artifacts/envelope-headless-20261103.log": "e8a4e8942d199d47967904e92b45909adcc30e22659322c0914c98f2aaa976ee",
+    "artifacts/envelope-headless-final-20261103.log": "e8a4e8942d199d47967904e92b45909adcc30e22659322c0914c98f2aaa976ee",
+    "artifacts/envelope-package-20261103.log": "13348f70b6b788491e8d5a81c6b1a0a1ad27ee90aaccd18d37cca243baedc583",
+    "artifacts/envelope-performance-20261103.log": "d84f585b5a6b5124b410f9661493c1031586eb08e21b8d6e5260e1155446324a",
+    "artifacts/envelope-site-20261103.log": "6a4127cf6d0b520ac2e5e49d7e4a8fa97c749cb824af42d54f0239e7a912050c",
+    "artifacts/envelope-typecheck-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/envelope-typecheck-final-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/envelope-types-initial-20261103.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "artifacts/envelope-unit-20261103.log": "eabb39759ed2e469befcb9991c77f4ead564c91ee52a5738d0631a16b7af0394",
+    "docs/HTML_INERT_SOURCE.md": "295a6e465c3d55f48f4e3dfa53c425ff0cae8686545074c47272cc71ff03978f",
+    "docs/ROADMAP.md": "6c7cdbbf673c4dfc3934490d1fe459de66ddda61f2a34ffaaced424cd44c900f",
+    "examples/react-app/src/HTMLInertWorkshop.tsx": "48cf8610bb97f02af4f360f60a69da06409963baec4ead99bf1f23fe390b400b",
+    "scripts/check-build-budgets.mjs": "a8c709ecf70eddccf5bb5736914f0112a1d2efd9025229fd123789c6b7b3b571",
+    "scripts/fixtures/html-source-check.mjs": "89f76a28c3cadaee3ac1950d8bb236daa5892a77566f4847757f936cc7521a90",
+    "src/core/exporters/html-exporter.ts": "cd8cd5e732834e3110c89d39afc67742d529c5dc250c674dae8aff570fbae5e9",
+    "src/core/html-document-envelope.ts": "2ef942b0341cf6dbb4758358ef1123da539ed6b6e43b72caa4318345ecdcabb0",
+    "src/core/importers/html-importer.ts": "06c99ff80ad8d609dac28b2bb48cdb8f6b9d0c7fc36ac3fc4064bb20c555af64",
+    "src/html/server.ts": "54650059c771143ebcc88272cb4b9adc499af19fb9ba53222aabf0e338e06eb4",
+    "src/html/source.ts": "6ee84fa2f00b2cb3ec8cd48116eb3b7271eb49616a51f80ac8f1810063309384",
+    "tests/browser/editor.spec.ts": "78a0e918ce568406a94907c5e93f4374c227b9dd93b74a6e268afcf4ca568d3b",
+    "tests/browser/html-envelope-journey.ts": "269158bf72248869407b0736b898a64ae5367f9b7931deb916afe6a378de43d2",
+    "tests/html-document-envelope.test.ts": "027c068ba5b5c0281fd81b30b52d4d8a3b2cf1462e7f9364e94271b888d30237",
+    "tests/types/headless-consumer.ts": "dd36f457aae6129f6098dadae2994c4245fcc24e9c1fd199f10c4e74c9c97cf7"
+  }
+}

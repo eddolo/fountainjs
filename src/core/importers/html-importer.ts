@@ -726,12 +726,14 @@ export class HTMLImporter {
     if (typeof DOMParser === 'undefined') throw new Error('HTMLImporter requires a browser DOMParser (or a DOM shim in Node.js).');
     const body = new DOMParser().parseFromString(html, 'text/html').body;
     const { pageSettings } = readHTMLDocumentPageSettings(body);
+    const htmlSourceEnvelope = readHTMLDocumentEnvelope(body);
     const blocks = blockChildren(body, schema);
     if (!blocks.length && body.textContent) blocks.push(schema.node('paragraph', {}, [schema.text(body.textContent)]));
-    const document = schema.topNodeType.create(pageSettings ? { pageSettings } : {}, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
+    const document = schema.topNodeType.create({ ...(pageSettings ? { pageSettings } : {}), ...(htmlSourceEnvelope ? { htmlSourceEnvelope } : {}) }, blocks.length ? blocks : [schema.node('paragraph', {}, [schema.text('')])]);
     schema.validate(document);
     return document;
   }
 
   static parse(html: string, schema: Schema): FountainNode { return new HTMLImporter().parse(html, schema); }
 }
+import { readHTMLDocumentEnvelope } from '../html-document-envelope';

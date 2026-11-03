@@ -1,0 +1,40 @@
+[WebServer] (node:12772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:23232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:23852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:9376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:22168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:60:1 › retains source document envelopes through native edits history and HTML reopening (8.4s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:64:1 › preserves unsupported anchors through native editing history and safe reopening (3.7s)
+(node:24228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:60:1 › retains source document envelopes through native edits history and HTML reopening (7.9s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:64:1 › preserves unsupported anchors through native editing history and safe reopening (5.1s)
+(node:13120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\editor.spec.ts:60:1 › retains source document envelopes through native edits history and HTML reopening (7.4s)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:64:1 › preserves unsupported anchors through native editing history and safe reopening (7.2s)
+
+  6 passed (1.3m)

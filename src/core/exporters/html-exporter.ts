@@ -356,6 +356,8 @@ export class HTMLExporter {
     if (options.document === false) return fragment;
     const settings = node.type === node.type.schema.topNodeType ? readDocumentPageSettings(node) : undefined;
     const pageAttribute = settings ? ` data-fountain-page-settings="${escapeHTML(JSON.stringify(settings))}"` : '';
+    const envelope = node.attrs.htmlSourceEnvelope;
+    const envelopeAttribute = isHTMLDocumentEnvelope(envelope) ? ` ${HTML_ENVELOPE_ATTRIBUTE}="${escapeHTML(JSON.stringify(envelope))}"` : '';
     const title = escapeHTML(options.title ?? 'FountainJS document');
     const first = node.type.name === 'doc' ? node.content[0] : node;
     const last = node.type.name === 'doc' ? node.content.at(-1) : node;
@@ -364,10 +366,11 @@ export class HTMLExporter {
     // Every paragraph occupies at least its own line, including empty marked
     // runs. CSS keeps the model/text untouched; fragment hosts own their styles.
     const styles = options.includeStyles === false ? '' : `<style>${DEFAULT_STYLES}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>`;
-    return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>${title}</title>\n${styles}\n</head>\n<body${pageAttribute}>${leading}${fragment}${trailing}</body>${trailing}</html>`;
+    return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>${title}</title>\n${styles}\n</head>\n<body${pageAttribute}${envelopeAttribute}>${leading}${fragment}${trailing}</body>${trailing}</html>`;
   }
 
   static export(stateOrNode: EditorState | Node, options?: HTMLExportOptions): string {
     return new HTMLExporter().export(stateOrNode, options);
   }
 }
+import { HTML_ENVELOPE_ATTRIBUTE, isHTMLDocumentEnvelope } from '../html-document-envelope';

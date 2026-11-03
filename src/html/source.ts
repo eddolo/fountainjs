@@ -1,8 +1,39 @@
-import type { Node } from '../core/schema';
+import type { Node, Schema } from '../core/schema';
+import { isHTMLDocumentEnvelope, type HTMLDocumentEnvelope } from '../core/html-document-envelope';
 import { HTMLExporter, renderHTMLSourceFragment } from '../core/exporters/html-exporter';
 import { readDocumentPageSettings } from '../core/page-settings';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
-import { ServerHTMLImporter } from './server';
+import { ServerHTMLImporter, type ServerHTMLImporterOptions, type ServerHTMLImportResult } from './server';
+
+/** Import a complete HTML source document with bounded doctype/mode DATA.
+ * Head contents, shell attributes and original layout still follow the ordinary
+ * import report. No DOM, fetching, execution or compatibility-mode activation.
+ */
+export function importHTMLSourceDocument(html: string, schema: Schema, options?: ServerHTMLImporterOptions): ServerHTMLImportResult {
+  const imported = new ServerHTMLImporter(options).parseWithReport(html, schema);
+  // Safe reader files already carry the original source-envelope data.
+  if (isHTMLDocumentEnvelope(imported.document.attrs.htmlSourceEnvelope)) return imported;
+  const parsed = parse(html, { scriptingEnabled: false, sourceCodeLocationInfo: true });
+  const declaration = parsed.childNodes.find(node => node.nodeName === '#documentType') as DefaultTreeAdapterMap['documentType'] | undefined;
+  const location = declaration?.sourceCodeLocation;
+  const envelope: HTMLDocumentEnvelope = { version: 1,
+    doctype: location ? html.slice(location.startOffset, location.endOffset) : null, mode: parsed.mode };
+  if (!isHTMLDocumentEnvelope(envelope)) throw new RangeError('HTML source doctype exceeds the bounded envelope contract.');
+  return Object.freeze({ ...imported, document: imported.document.withAttrs({ ...imported.document.attrs, htmlSourceEnvelope: envelope }) });
+}
+
+function sourceDoctype(value: unknown): string {
+  if (!isHTMLDocumentEnvelope(value)) throw new Error('Invalid HTML source envelope data.');
+  const source = value.doctype ?? '';
+  const parsed = parse(source, { scriptingEnabled: false, sourceCodeLocationInfo: true });
+  const declaration = parsed.childNodes.find(node => node.nodeName === '#documentType') as DefaultTreeAdapterMap['documentType'] | undefined;
+  const location = declaration?.sourceCodeLocation;
+  if (parsed.mode !== value.mode || (value.doctype !== null
+    && (!location || location.startOffset !== 0 || location.endOffset !== source.length))) {
+    throw new Error('Source declaration or compatibility mode differs from the stored envelope.');
+  }
+  return source;
+}
 
 export interface HTMLSourceIssue {
   readonly code: 'limit' | 'unrepresentable-source' | 'source-reopen-mismatch' | 'invalid-source' | 'model-canonicalization';
@@ -108,18 +139,23 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     // body context is explicit. Validate the actual downloadable document.
     const settings = readDocumentPageSettings(document);
     const pageAttribute = settings ? ` data-fountain-page-settings="${escape(JSON.stringify(settings))}"` : '';
-    const complete = `<!doctype html><html><head><meta charset="utf-8"></head><body${pageAttribute}>${fragment}</body></html>`;
+    const declaration = document.attrs.htmlSourceEnvelope === undefined ? '<!doctype html>' : sourceDoctype(document.attrs.htmlSourceEnvelope);
+    if (options.document === false && document.attrs.htmlSourceEnvelope !== undefined) {
+      return { ok: false, issues: [{ code: 'unrepresentable-source', message: 'Source document-envelope data requires complete-document export; a body fragment cannot retain its declaration or compatibility mode.' }] };
+    }
+    const complete = `${declaration}<html><head><meta charset="utf-8"></head><body${pageAttribute}>${fragment}</body></html>`;
     if (complete.length > 4_194_304) return { ok: false, issues: [{ code: 'limit', message: 'Source export exceeds 4 MiB.' }] };
     if (issues.length) return { ok: false, issues };
     // The ordinary exporter surrounds block documents with formatting LF. Our
     // source envelope owns no added whitespace: compare its fragment in the same
     // explicit body context, without removing authored text or empty nodes.
-    const intended = bodyTree(`<!doctype html><html><head></head><body${pageAttribute}>${HTMLExporter.export(document, { document: false })}</body></html>`);
+    const intended = bodyTree(`${declaration}<html><head></head><body${pageAttribute}>${HTMLExporter.export(document, { document: false })}</body></html>`);
     projectCarriers(intended);
     if (JSON.stringify(htmlMeaning(bodyTree(complete))) !== JSON.stringify(htmlMeaning(intended))) {
       return { ok: false, issues: [{ code: 'source-reopen-mismatch', message: 'Reconstructed HTML changes source content or structure when parsed. No source was returned.' }] };
     }
-    const reopened = new ServerHTMLImporter().parse(complete, document.type.schema);
+    const reopened = document.attrs.htmlSourceEnvelope === undefined ? new ServerHTMLImporter().parse(complete, document.type.schema)
+      : importHTMLSourceDocument(complete, document.type.schema).document;
     // Lexical tokens describe the earlier input, not edited canonical source.
     // Report other model differences separately from HTML structure/content.
     const comparable = (node: Node): unknown => ({

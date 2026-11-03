@@ -56,6 +56,10 @@ test('keeps distant native edits backward selections and history correct across 
 import { htmlInertJourney, htmlIncompleteSourceJourney } from './html-inert-journey';
 import { htmlRawTextJourney, htmlRawCarriageReturnJourney } from './html-raw-text-journey';
 import { htmlSourceJourney } from './html-source-journey';
+import { htmlEnvelopeJourney } from './html-envelope-journey';
+test('retains source document envelopes through native edits history and HTML reopening', async ({ page }, info) => {
+  await htmlEnvelopeJourney(page, info);
+});
 import { htmlInertAnchorJourney } from './html-inert-anchor-journey';
 test('preserves unsupported anchors through native editing history and safe reopening', async ({ page }, info) => {
   await htmlInertAnchorJourney(page, info);

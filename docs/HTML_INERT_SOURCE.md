@@ -1,5 +1,57 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Doctype and compatibility-mode data (2026-11-03, Unreleased)
+
+`importHTMLSourceDocument(html, schema, options?)` from
+`fountainjs-editor/html/source` performs the normal server HTML import with its
+existing limits/reports, then captures bounded doctype spelling and the parser's
+`no-quirks`, `quirks` or `limited-quirks` mode. A missing doctype is explicit
+`null`. Root `htmlSourceEnvelope` data survives native JSON, replacement, history
+and complete safe HTML reopening in both browser/server importers.
+
+```ts
+import { importHTMLSourceDocument, exportHTMLSource } from 'fountainjs-editor/html/source';
+const imported = importHTMLSourceDocument(html, schema);
+const source = exportHTMLSource(imported.document); // Complete source document
+```
+
+Ordinary reader HTML still uses its own HTML5 envelope. The original declaration
+is carried in an escaped body data attribute and never activates compatibility
+mode there. Complete source export reparses the declaration, verifies it is one
+complete token with the stored mode, and restores it as the actual declaration.
+Invalid/mismatched/oversized data is refused without partial source output.
+`{ document: false }` refuses documents carrying envelope data: a body fragment
+cannot represent that declaration. The doctype limit is 2,048 UTF-16 code units;
+safe-HTML metadata accepts at most 16,384 JSON code units including escaping.
+
+The public workshop provides a next-import option and a legacy PUBLIC-doctype
+sample. It compares exact native data after HTML/JSON reopening. Markdown
+reopening is disabled for envelope-bearing documents because it would lose root
+source metadata. This does not add Markdown declaration import yet.
+
+Head content, shell attributes, source comments outside the body, external
+resources, original CSS/layout and arbitrary file fidelity remain outside this
+contract and subject to the ordinary conversion report. Doctype-only documents
+retain their editable caret paragraph; no paragraph is removed to increase the
+CommonMark score. The four remaining lexical-source cases stay unresolved.
+
+Six targeted headless journeys pass across Chromium, Firefox and WebKit:
+doctype-data editing/history/JSON/complete-HTML reopening plus the existing
+inert-anchor workflow. Six new editor/reader captures were visually inspected;
+the reader uses Fountain's normal styling, not original-document layout.
+Independent browser `compatMode` checks distinguish the safe reader's standards
+mode from reconstructed source's legacy mode. Recorded videos were not reviewed.
+
+Checkpoint verification: 3,120 unit tests / 230 files; 108-module DOM-free
+boundary and consumer types; framework type checks; packed ESM/CommonJS source
+import/export contracts; unchanged CommonMark profile gates; 415 reviewed API
+declarations; performance/retention gates; bundle budgets; production website
+build. The optional source entries and aggregate bundle caps increased for the
+measured feature cost, with initial red budget/API results retained. No new
+dependency, CSS-cap increase or numerical performance-limit change was needed.
+See [source-bound verification](../artifacts/envelope-verification-20261103.json).
+The npm version remains `0.4.0-beta.2`; this is unreleased there.
+
 ## Remaining lexical-source boundary (2026-11-03, investigation)
 
 The remaining four source-output cases require a document/lexical-source

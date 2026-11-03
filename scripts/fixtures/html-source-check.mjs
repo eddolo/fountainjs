@@ -17,5 +17,14 @@ export function checkHTMLSource(root, inert, source) {
     assert.equal('sourceHTML' in refused, false);
   }
   assert.ok(!root.HTMLExporter.export(doc('script', 'data')).includes('<script>'));
-  return 6;
+  const declaration = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+  const imported = source.importHTMLSourceDocument(`${declaration}<p>Evidence</p>`, schema).document;
+  assert.equal(imported.attrs.htmlSourceEnvelope.mode, 'quirks');
+  const output = source.exportHTMLSource(imported);
+  assert.equal(output.ok, true);
+  assert.ok(output.sourceHTML.startsWith(declaration));
+  assert.deepEqual(source.importHTMLSourceDocument(output.sourceHTML, schema).document.toJSON(), imported.toJSON());
+  assert.deepEqual(source.importHTMLSourceDocument(root.HTMLExporter.export(imported), schema).document.toJSON(), imported.toJSON());
+  assert.equal(source.exportHTMLSource(imported, { document: false }).ok, false);
+  return 12;
 }

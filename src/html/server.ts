@@ -2057,7 +2057,7 @@ export class ServerHTMLImporter {
   parseWithReport(html: string, schema: Schema): ServerHTMLImportResult {
     const result = this.parseContent(html, schema, true);
     const document = schema.topNodeType.create(
-      result.pageSettings ? { pageSettings: result.pageSettings } : {},
+      { ...(result.pageSettings ? { pageSettings: result.pageSettings } : {}), ...(result.htmlSourceEnvelope ? { htmlSourceEnvelope: result.htmlSourceEnvelope } : {}) },
       result.nodes.length ? result.nodes : [schema.node('paragraph', {}, [schema.text('')])],
     );
     schema.validate(document);
@@ -2072,7 +2072,7 @@ export class ServerHTMLImporter {
     return this.parseContent(html, schema, false);
   }
 
-  private parseContent(html: string, schema: Schema, documentMode: boolean): ServerHTMLFragmentImportResult & { readonly pageSettings?: DocumentPageSettings } {
+  private parseContent(html: string, schema: Schema, documentMode: boolean): ServerHTMLFragmentImportResult & { readonly pageSettings?: DocumentPageSettings; readonly htmlSourceEnvelope?: HTMLDocumentEnvelope } {
     if (typeof html !== 'string') throw new TypeError('HTML input must be a string.');
     const inputBytes = utf8Length(html);
     if (inputBytes > this.options.maxInputBytes) {
@@ -2102,12 +2102,14 @@ export class ServerHTMLImporter {
     validateTree(fragment, this.options, context);
     let root = rootSource(fragment, this.options.sourceTokens ? { text: html, origin: 'html-input' } : undefined);
     let pageSettings: DocumentPageSettings | undefined;
+    let htmlSourceEnvelope: HTMLDocumentEnvelope | undefined;
     if (documentMode) {
       const shell = root.childNodes.find((node): node is SourceElement => node.kind === 'element' && node.tagName === 'html');
       const head = shell?.children.find(node => node.tagName === 'head');
       const body = shell?.children.find(node => node.tagName === 'body');
       const settings = readHTMLDocumentPageSettings(body);
       pageSettings = settings.pageSettings;
+      htmlSourceEnvelope = readHTMLDocumentEnvelope(body);
       if (settings.invalid) reportOnce(context, {
         code: 'invalid-page-settings', message: 'Invalid or oversized Fountain body page-settings metadata was omitted; visible document content remains.',
       });
@@ -2125,7 +2127,7 @@ export class ServerHTMLImporter {
     }
     blocks.forEach(node => schema.validate(node));
     reportCommentLoss(blocks, context);
-    return Object.freeze({ nodes: Object.freeze(blocks), issues: Object.freeze([...issues]), ...(pageSettings ? { pageSettings } : {}) });
+    return Object.freeze({ nodes: Object.freeze(blocks), issues: Object.freeze([...issues]), ...(pageSettings ? { pageSettings } : {}), ...(htmlSourceEnvelope ? { htmlSourceEnvelope } : {}) });
   }
 
   static parseFragment(html: string, schema: Schema, options: ServerHTMLImporterOptions = {}): readonly FountainNode[] {
@@ -2152,3 +2154,4 @@ export class ServerHTMLImporter {
     return new ServerHTMLImporter(options).parseWithReport(html, schema);
   }
 }
+import { readHTMLDocumentEnvelope, type HTMLDocumentEnvelope } from '../core/html-document-envelope';

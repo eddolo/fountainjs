@@ -19,7 +19,7 @@ import { createAIDocumentToolbox } from 'fountainjs-editor/ai/document-tools';
 import { exportDOCX, importDOCX } from 'fountainjs-editor/docx';
 import { createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
-import { exportHTMLSource } from 'fountainjs-editor/html/source';
+import { importHTMLSourceDocument, exportHTMLSource } from 'fountainjs-editor/html/source';
 
 const documentExtension = defineExtension({
   name: 'headless-document',
@@ -71,6 +71,8 @@ void agentProposal;
 JSONExporter.export(editor.state);
 HTMLExporter.export(editor.state, { document: false });
 const sourceHTML = exportHTMLSource(editor.state.doc);
+const sourceDocumentWithEnvelope = importHTMLSourceDocument('<!doctype html><p>Source</p>', schema);
+exportHTMLSource(sourceDocumentWithEnvelope.document);
 if (sourceHTML.ok) {
   const unsanitized: false = sourceHTML.sanitized;
   const bytes: string = sourceHTML.sourceHTML;
