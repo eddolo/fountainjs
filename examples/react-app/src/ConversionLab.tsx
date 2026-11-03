@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { EditorState, NodeSelection, readDocumentPageSettings, type DocumentPageSettings, type Node } from 'fountainjs-editor';
 import { FountainComposer, FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from 'fountainjs-editor/react';
 import { computeFootnoteNumbering, inspectFootnotes, insertFootnote, selectFootnoteDefinition, removeFootnote, inspectPageTemplates, selectPageTemplate, insertPageBreak, setDocumentPageSettings } from 'fountainjs-editor/pages';
-import { createLabContext, detectLabFormat, exportLab, importLab, labImages, sameLabDocument, type LabContext, type LabFormat } from './conversion-lab';
+import { createLabContext, detectLabFormat, exportLab, importLab, labImages, labReportIssues, sameLabDocument, type LabContext, type LabFormat, type LabIssue } from './conversion-lab';
 import { SitePageLink } from './SitePageLink';
 import packageInfo from '../../../package.json';
 
@@ -21,6 +21,9 @@ function download(data: BlobPart, name: string, type = 'application/octet-stream
 function Preview({ document, context }: { document: Node; context: LabContext }) {
   const editor = useFountain({ schema: context.kit.schema, content: document.toJSON(), editable: false });
   return <FountainEditor editor={editor} ariaLabel="Reopened export preview" />;
+}
+function IssueList({ issues }: { issues: readonly LabIssue[] }) {
+  return <ul>{issues.map((issue, index) => <li key={index}><code>{issue.code}{issue.type && ` · ${issue.type}`}</code> — {issue.message}{issue.path !== undefined && <> Document path: <code>{issue.path.length ? issue.path.join('.') : 'root'}</code>.</>}{issue.sourcePart && <> Source part: <code>{issue.sourcePart}</code>.</>}</li>)}</ul>;
 }
 function RecoveredImage({ image, index }: { image: ReturnType<typeof labImages>[number]; index: number }) {
   const [failed, setFailed] = useState(false);
@@ -41,7 +44,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const surface = useRef<FountainEditorHandle>(null);
   const state = useFountainState(editor)!;
   const [format, setFormat] = useState<LabFormat>(entry.format!);
-  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: { code: string; message: string }[]; format: LabFormat; revision: Node }>();
+  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node }>();
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [includeContent, setIncludeContent] = useState(false);
@@ -80,8 +83,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
       input: { format: entry.format, bytes: entry.file.size }, output: format,
       importedImages: { represented: images.length, embeddedRaster: images.filter(image => image.embedded).length },
       sourcePackage: packageParts ? { entries: packageParts.length, unrepresentedMedia, parts: includeContent ? packageParts : packageParts.map(({ path: _path, ...part }) => part) } : null,
-      importIssues: includeContent ? entry.result!.issues : entry.result!.issues.map(({ sourcePart: _sourcePart, ...issue }) => issue), draftChanged: !sameLabDocument(entry.result!.document, state.doc),
-      roundTrip: check ? { format: check.format, stale: Boolean(stale), exactFountainJSONEquality: check.equal, issues: check.issues } : null,
+      importIssues: labReportIssues(entry.result!.issues, includeContent), draftChanged: !sameLabDocument(entry.result!.document, state.doc),
+      roundTrip: check ? { format: check.format, stale: Boolean(stale), exactFountainJSONEquality: check.equal, issues: labReportIssues(check.issues, includeContent) } : null,
       fidelity: 'Original-format visual fidelity and exhaustive loss detection are unverified.',
       ...(includeContent ? { fileName: entry.file.name, note, importedDocument: entry.result!.document.toJSON(), editedDocument: state.doc.toJSON(), originalText: entry.sourceText } : {}),
     };
@@ -91,7 +94,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   return <section className="lab-file" hidden={!active} aria-label={`Conversion workspace: ${entry.file.name}`}>
     <div className="lab-file-heading"><div><h2>{entry.file.name}</h2><p>{entry.format?.toUpperCase()} · {entry.file.size.toLocaleString()} bytes · {state.doc.childCount} top-level blocks</p></div><button onClick={() => download(entry.file, entry.file.name)}>Download untouched original</button></div>
     <p className="lab-import-mode">This file: {entry.context.options.preserveHTMLStructure ? 'supported HTML structure preserved; HTML inside Markdown converted' : 'standard import; HTML inside Markdown kept literal'}. Export checks use these same settings.</p>
-    <div className="lab-notice"><strong>Import report</strong><p>These are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.</p><ul>{entry.result!.issues.length ? entry.result!.issues.map((issue, index) => <li key={index}><code>{issue.code}</code> — {issue.message}{issue.sourcePart && <> Source part: <code>{issue.sourcePart}</code>.</>}{issue.path && <> Document path: <code>{issue.path.join('.')}</code>.</>}</li>) : <li>No issues reported by this adapter. Undetected losses remain possible.</li>}</ul></div>
+    <div className="lab-notice"><strong>Import report</strong><p>These are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.</p>{entry.result!.issues.length ? <IssueList issues={entry.result!.issues} /> : <ul><li>No issues reported by this adapter. Undetected losses remain possible.</li></ul>}</div>
     {packageParts && <details className="lab-package" aria-label="Source package inventory"><summary>Source package: {packageParts.length} entries · Unrepresented media: {unrepresentedMedia}</summary><p>Archive entries are counted before conversion. Adapter input means bytes were read, not that every feature survived. Unrepresented media may be unused or belong to omitted content. Skipped parts remain in the untouched original; they are not embedded in the converted document.</p><ul>{packageParts.map((part, index) => <li key={index}><code>{part.path}</code> — {part.handling} · {part.declaredBytes.toLocaleString()} declared bytes</li>)}</ul></details>}
     <details className="lab-assets" open={images.length > 0}><summary>Images in the imported document: {images.length} ({images.filter(image => image.embedded).length} embedded raster)</summary><p>Embedded raster images can be displayed without internet access. This inventory reflects what the adapter recovered, not every image in the original archive. Missing/unsupported Word images appear in the import warnings when detected; headers, drawings and other unsupported structures may need further import work.</p><div>{images.map((image, index) => <RecoveredImage key={index} image={image} index={index} />)}</div></details>
     <div className="lab-columns"><section><h3>1. Original source</h3><p>Text inspection, not an original-application rendering. Source is never executed.</p><pre aria-label="Original source">{entry.sourceText !== undefined ? entry.sourceText.slice(0, 60000) : 'DOCX is a binary archive. Download the untouched original to compare it in Word or LibreOffice. Native page preview is not available here.'}</pre>{(entry.sourceText?.length ?? 0) > 60000 && <p>Preview limited to 60,000 characters. The full original remains downloadable.</p>}</section><section><h3>2. Imported document — editable</h3><p>Edit here, then check an export. Undo/redo stays separate for each file.</p><FountainComposer ref={surface} editor={editor} ariaLabel="Imported document editor" />
@@ -108,7 +111,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
         {footnoteReport.issues.length > 0 && <ul>{footnoteReport.issues.map((issue, index) => <li key={index}>{issue.detail}</li>)}</ul>}
       </section></section></div>
     <section className="lab-export"><h3>3. Export and reopen</h3><div className="lab-actions"><label>Export format<select value={format} onChange={event => setFormat(event.target.value as LabFormat)}>{formats.map(value => <option key={value} value={value}>{value.toUpperCase()}</option>)}</select></label><button onClick={() => convert(false)}>Check round trip</button><button className="lab-primary" onClick={() => convert(true)}>Download export</button></div><p>Compares the current draft with its generated export reimported through Fountain—not with Word or another independent renderer. JSON equality is stricter than visual similarity.</p>
-      {check && <div className="lab-check" aria-label="Round-trip result"><strong>{stale ? 'Outdated check — run again after your changes.' : check.equal ? 'Exact Fountain document equality after reopening.' : 'The reopened Fountain document differs. Inspect the preview and report.'}</strong><p>This compares only the current Fountain draft, not the original file. Original import findings: {entry.result!.issues.length}. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.</p><ul>{check.issues.map((issue, index) => <li key={index}>{issue.code}: {issue.message}</li>)}</ul><Preview key={check.id} document={check.document} context={entry.context} /></div>}
+      {check && <div className="lab-check" aria-label="Round-trip result"><strong>{stale ? 'Outdated check — run again after your changes.' : check.equal ? 'Exact Fountain document equality after reopening.' : 'The reopened Fountain document differs. Inspect the preview and report.'}</strong><p>This compares only the current Fountain draft, not the original file. Original import findings: {entry.result!.issues.length}. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.</p><IssueList issues={check.issues} /><Preview key={check.id} document={check.document} context={entry.context} /></div>}
     </section>
     <section className="lab-report"><h3>Found a problem?</h3><p>Download a diagnostic report for your own testing. Files are never attached or submitted automatically. Even report warnings may contain private snippets: review before sharing.</p><label className="lab-checkbox"><input type="checkbox" checked={includeContent} onChange={event => setIncludeContent(event.target.checked)} /> Include filename, document content and my note in the downloaded report</label><label>What went wrong?<textarea value={note} onChange={event => setNote(event.target.value)} placeholder="What you expected, and what happened instead" /></label><div className="lab-actions"><button onClick={report}>Download diagnostic report</button><a href="https://github.com/eddolo/fountainjs/issues/new" target="_blank" rel="noreferrer">Open a blank GitHub bug report ↗</a></div></section>
     {error && <p role="alert">{error}</p>}<p role="status">{status}</p>

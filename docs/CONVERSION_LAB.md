@@ -11,6 +11,22 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+Located findings follow-up (2026-11-03, Unreleased): Markdown export findings
+keep the affected schema type and document path, so `mark · em` and
+`mark · highlight` are distinguishable instead of repeated anonymous warnings.
+Word export findings retain their document/package locations too. Import and
+round-trip panels display the same fields; an empty path is labelled `root`.
+Downloaded diagnostic reports retain types and numeric document paths. Package
+source paths in both sections require the existing explicit content opt-in.
+Warning messages may still contain private fragments; the report is not
+automatically anonymized. This improves diagnosis, not adapter fidelity.
+Verification: 20 focused adapter tests, eight recorded browser journeys across
+three desktop engines and two mobile emulations, framework type checks and the
+website build pass. Five actual diagnostic JSON downloads retain the expected
+formatting identity/path without opt-in document content. Five changed report
+captures were visually inspected; videos were recorded, not manually watched.
+No library implementation, public API, conversion policy or size limit changes.
+
 Preformatted formatting follow-up (2026-11-03, Unreleased): ordinary HTML
 imports now retain supported text marks in code buffers. Safe HTML export keeps
 those marks and typed font/layout context. **Check round trip** shows export

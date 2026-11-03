@@ -1,0 +1,95 @@
+{
+  "reportVersion": 2,
+  "fountainVersion": "0.4.0-beta.2",
+  "policy": "starter-kit-pages-v2; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000",
+  "importOptions": {
+    "preserveHTMLStructure": false
+  },
+  "createdAt": "2026-11-03T20:05:44.719Z",
+  "input": {
+    "format": "html",
+    "bytes": 757
+  },
+  "output": "markdown",
+  "importedImages": {
+    "represented": 0,
+    "embeddedRaster": 0
+  },
+  "sourcePackage": null,
+  "importIssues": [
+    {
+      "code": "unmapped-inline-element",
+      "message": "Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved."
+    },
+    {
+      "code": "preformatted-html-projection",
+      "message": "Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+    }
+  ],
+  "draftChanged": true,
+  "roundTrip": {
+    "format": "markdown",
+    "stale": false,
+    "exactFountainJSONEquality": false,
+    "issues": [
+      {
+        "code": "mark",
+        "type": "em",
+        "message": "Text formatting inside code is not represented by Markdown fences; retain Fountain JSON or safe HTML.",
+        "path": [
+          3,
+          1
+        ]
+      },
+      {
+        "code": "mark",
+        "type": "text_color",
+        "message": "Text formatting inside code is not represented by Markdown fences; retain Fountain JSON or safe HTML.",
+        "path": [
+          3,
+          3
+        ]
+      },
+      {
+        "code": "mark",
+        "type": "code",
+        "message": "Text formatting inside code is not represented by Markdown fences; retain Fountain JSON or safe HTML.",
+        "path": [
+          3,
+          3
+        ]
+      },
+      {
+        "code": "mark",
+        "type": "highlight",
+        "message": "Text formatting inside code is not represented by Markdown fences; retain Fountain JSON or safe HTML.",
+        "path": [
+          3,
+          5
+        ]
+      },
+      {
+        "code": "attribute",
+        "type": "code_block",
+        "message": "Code-block layout and font context are not represented by Markdown fences; retain Fountain JSON or safe HTML.",
+        "path": [
+          4
+        ]
+      },
+      {
+        "code": "mark",
+        "type": "text_color",
+        "message": "Text formatting inside code is not represented by Markdown fences; retain Fountain JSON or safe HTML.",
+        "path": [
+          4,
+          0
+        ]
+      },
+      {
+        "code": "markdown-coverage",
+        "message": "Default Markdown parser: raw HTML stays inert; full CommonMark/dialect conformance and exhaustive import-loss reporting are not available."
+      }
+    ]
+  },
+  "fidelity": "Original-format visual fidelity and exhaustive loss detection are unverified."
+}

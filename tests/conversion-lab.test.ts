@@ -1,10 +1,36 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { createLabContext, detectLabFormat, exportLab, importLab, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
+import { createLabContext, detectLabFormat, exportLab, importLab, labReportIssues, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
 import { createEditor, EditorState, Schema, StarterKit } from 'fountainjs-editor';
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it('identifies actual Markdown formatting losses and their document locations', () => {
+    const original = importLab(bytes('<pre>before <em>styled</em> <span style="color:#cc0000">red</span></pre>'), 'html');
+    const output = exportLab(original.document, 'markdown');
+    expect(output.issues).toContainEqual(expect.objectContaining({ code: 'mark', type: 'em', path: [0, 1] }));
+    expect(output.issues).toContainEqual(expect.objectContaining({ code: 'mark', type: 'text_color', path: [0, 3] }));
+    expect(importLab(output.bytes, 'markdown').document.textContent).toBe(original.document.textContent);
+    expect(original.document.child(0).child(1).marks.some(mark => mark.type.name === 'em')).toBe(true);
+  });
+
+  it('requires explicit opt-in for source package paths in both report sections', () => {
+    const issues = Object.freeze([Object.freeze({ code: 'part-loss', message: 'Review this warning.',
+      path: Object.freeze([2, 1]), sourcePart: 'word/private-project.xml' })]);
+    const redacted = labReportIssues(issues, false);
+    expect(redacted[0].path).toEqual([2, 1]);
+    expect(JSON.stringify({ importIssues: redacted, roundTrip: { issues: redacted } })).not.toContain('private-project');
+    expect(labReportIssues(issues, true)[0].sourcePart).toBe('word/private-project.xml');
+    expect(issues[0].sourcePart).toBe('word/private-project.xml');
+  });
+
+  it('keeps the location of an actual unavailable Word image export', () => {
+    const original = importLab(bytes('<p><img src="https://example.com/unfetched.png" alt="Remote figure"></p>'), 'html');
+    const output = exportLab(original.document, 'docx');
+    expect(output.issues).toContainEqual(expect.objectContaining({ code: 'image-source-unavailable', path: [0, 0] }));
+    expect(importLab(output.bytes, 'docx').document.textContent).toContain('Remote figure');
+  });
+
   it('keeps each file’s HTML policy and schema through independent editing and reopening', () => {
     const settings = { preserveHTMLStructure: true };
     const context = createLabContext(settings);

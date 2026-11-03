@@ -6,7 +6,13 @@ import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/
 import { compileTeXForDOCX } from './mathjax-docx';
 
 export type LabFormat = 'markdown' | 'html' | 'docx' | 'json';
-export type LabIssue = { code: string; message: string; path?: readonly number[]; sourcePart?: string };
+export type LabIssue = { code: string; message: string; type?: string; path?: readonly number[]; sourcePart?: string };
+/** Source package paths follow the same explicit opt-in for every report section.
+ * Warning messages may still contain source fragments; this is not anonymization.
+ */
+export function labReportIssues(issues: readonly LabIssue[], includeSourcePaths: boolean): LabIssue[] {
+  return issues.map(({ sourcePart, ...issue }) => includeSourcePaths && sourcePart !== undefined ? { ...issue, sourcePart } : issue);
+}
 export const labPolicy = 'starter-kit-pages-v2; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000';
 export type LabImportOptions = { readonly preserveHTMLStructure?: boolean };
 /** Each imported file owns its schema/policy for editing, export and reopening.
@@ -88,7 +94,9 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
     ? 'HTML conversion is enabled for this file. Supported structure is retained; unsupported HTML can remain literal or lose structure with a report. Full CommonMark/dialect conformance and original layout are not certified.'
     : 'Default Markdown parser: raw HTML stays inert; full CommonMark/dialect conformance and exhaustive import-loss reporting are not available.' }, ...issues] };
 }
-export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext) {
+export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext): {
+  bytes: Uint8Array; extension: string; mime: string; issues: LabIssue[];
+} {
   // Keep live import/editing provenance when this file owns the schema. A JSON
   // copy would turn an automatic caret paragraph into an authored empty block.
   // Explicit foreign-schema callers still need normal portable reconstruction.
@@ -97,11 +105,11 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
     const result = exportDOCX(document, {
       resolveMath: node => compileTeXForDOCX(String(node.attrs.latex), node.type.name === 'math_block'),
     });
-    return { bytes: result.bytes, extension: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message })) };
+    return { bytes: result.bytes, extension: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message, path: issue.path, sourcePart: issue.sourcePart })) };
   }
   if (format === 'markdown') {
     const result = source ? MarkdownExporter.exportWithSource(document, source) : MarkdownExporter.exportWithReport(document);
-    return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues: result.losses.map(loss => ({ code: loss.kind, message: loss.detail })) };
+    return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues: result.losses.map(loss => ({ code: loss.kind, type: loss.type, message: loss.detail, path: loss.path })) };
   }
   const text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document);
   return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.' }] : [] };

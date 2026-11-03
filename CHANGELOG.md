@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Name affected formatting and show document locations in conversion-lab export
+  findings. Preserve Word package locations and apply the existing content
+  opt-in consistently to source paths in both import and round-trip diagnostic
+  downloads. This website improvement does not change import/export semantics.
+
 - Preserve supported text formatting inside HTML preformatted code through
   browser/server import and safe HTML export, including typed font/layout
   context, safe links and extension-defined marks. Keep literal source intact.

@@ -1,0 +1,100 @@
+{
+  "baseCommit": "c49be472c3b6786953a309467c389ec68c7f8c1d",
+  "scope": "Conversion lab findings retain formatting identity and document/package location; source package paths follow the content opt-in in both report sections.",
+  "verified": {
+    "focusedAdapterTests": 20,
+    "newContracts": 3,
+    "recordedBrowserJourneys": 8,
+    "frameworkTypes": "passed",
+    "websiteBuild": "passed",
+    "libraryRuntimeFilesByteIdentical": 168,
+    "CSSBytesUnchanged": 89593
+  },
+  "manuallyReviewed": [
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png",
+      "SHA256": "38dc7d030c51d5b67f9aea938ad44d783906281a8b3d8897f32a88ae0a5c6332"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png",
+      "SHA256": "5c8cecd54871d796f9f46dd4e084db52f53b8fdb4410103a0b9c9cfad38cf6fb"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png",
+      "SHA256": "2cd05ebe7a0d754756d5eefe52ad3b2a53dd2f8a5d8a8eafa1f27a3948bc9599"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png",
+      "SHA256": "5136851c52bd355c8e66004dd67a4ed74a1b97ae0a17510de6dca23cbc79d43c"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png",
+      "SHA256": "1c76d76a6889a26dc106c59f7a3f79c78cf9959574f4e1f20b076de3fcf5414b"
+    }
+  ],
+  "visualFindings": [
+    "Schema mark/type and document paths distinguish formerly anonymous repeated warnings.",
+    "The bounded report list remains scrollable on mobile; a screenshot does not show every row.",
+    "Firefox sticky navigation overlays part of the captured explanatory paragraph; findings remain visible.",
+    "Downgraded Markdown preview and original draft stay separate."
+  ],
+  "unchanged": [
+    "library implementation",
+    "public package API",
+    "conversion semantics",
+    "dependencies",
+    "code/CSS/performance limits",
+    "CommonMark comparator and fixture ranges"
+  ],
+  "limitations": [
+    "No physical-device or general accessibility certification",
+    "Videos not manually watched",
+    "Warnings may contain source fragments; path opt-in is not general anonymization",
+    "Full-unit result of 3377 belongs to the preceding library checkpoint; this website-only follow-up uses focused adapter and browser/type/build verification."
+  ],
+  "actualDiagnosticDownloads": [
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/conversion-issue-details-report.json",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/conversion-issue-details-report.json",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/conversion-issue-details-report.json",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/conversion-issue-details-report.json",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/conversion-issue-details-report.json"
+  ],
+  "localChecks": {
+    "focusedAdapters": "passed",
+    "recordedBrowsers": "passed",
+    "frameworkTypes": "passed",
+    "websiteBuild": "passed"
+  },
+  "newSourceCloudChecks": "pending push",
+  "npm": "unchanged at 0.4.0-beta.2",
+  "sourceBinding": "SHA-256 of staged Git blobs; manifest excluded to avoid circular hashing.",
+  "hashes": {
+    "CHANGELOG.md": "58f6d8d3d24280acd5f78ea93340f67c64459e33d90c42c6e93b49b6eab4df3d",
+    "artifacts/conversion-issue-details-browser-20261103.log": "50826c69949e4930302e5042b5c66dbe09095031e777a02750a78f1aab8c9b61",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/conversion-issue-details-report.json": "2f9a8804cb91ccd66180f0808847de6261eecbaf5d7847d27899b0e4f33bf25a",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png": "38dc7d030c51d5b67f9aea938ad44d783906281a8b3d8897f32a88ae0a5c6332",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-break-observations.json": "9754c8e782d4cfb5f1082ca6396703d5baa43a410147a62d349deef3f3b5facd",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/conversion-issue-details-report.json": "f75de8c33248c474d497efc9583fdd0f33d721289a0a926c8a87d758d56495f1",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png": "5c8cecd54871d796f9f46dd4e084db52f53b8fdb4410103a0b9c9cfad38cf6fb",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-break-observations.json": "7b17e4e056c2a62fbb337b9f547fe86308821d48f9812902939565a80fbba153",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/conversion-issue-details-report.json": "e9b4ae10a956b7194452f2779d0f326a733b37d017c17ebd28bff92f9edfa06f",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png": "2cd05ebe7a0d754756d5eefe52ad3b2a53dd2f8a5d8a8eafa1f27a3948bc9599",
+    "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-break-observations.json": "045ae712d1516ef0c9ef021c9c2f44c6897f357b9a0d6861a4257e6f5abfb087",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/conversion-issue-details-report.json": "6a6ec72a8580cbd5926f2864eebde7ec78ecf0e485cf2b1e6725e0a707e4ace0",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png": "5136851c52bd355c8e66004dd67a4ed74a1b97ae0a17510de6dca23cbc79d43c",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-break-observations.json": "68d44d00d02a70066380230f9093f0dae295901fa819bc319cb466833a2aeacf",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/conversion-issue-details-report.json": "1c66432cacf2e84f3abeaa012741a2de13685b32224f678e6aaf96d71967115b",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png": "1c76d76a6889a26dc106c59f7a3f79c78cf9959574f4e1f20b076de3fcf5414b",
+    "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-break-observations.json": "8dafb9592ae388028b99cb3a24828b1695ef459533603c1a90d6b5d837e8e4ed",
+    "artifacts/conversion-issue-details-focused-final-20261103.log": "22d9c7d9c8830e1890550ce9a20130f6b63d41da1feefd04022a48741f10c9bb",
+    "artifacts/conversion-issue-details-review-20261103.json": "f59bc2e517feca580de0cfb086156f361e19fdbba9e17bf86ffeadac94799083",
+    "artifacts/conversion-issue-details-site-20261103.log": "aca7f87a3e98bbd93a401d1c889e845d68f490982642e5a8f01da21870e2d2a9",
+    "artifacts/conversion-issue-details-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/write-conversion-issue-details-verification-20261103.mjs": "9fd4fc07e29d319365899d45f8a76076495141a53e17a51873c16b0e6f86e456",
+    "docs/CONVERSION_LAB.md": "1ca65bbaa7b27e8a4f77f2d6a57cbfa01a46b6b452327f25c13c4abcd6cca9b8",
+    "examples/react-app/src/ConversionLab.tsx": "e8e0b098707a15a4016bce50216999661100a498b71783f74c41239b9954e9d4",
+    "examples/react-app/src/conversion-lab.ts": "828dec8c6e30aef4dc01065bdefa21ee06d41435010c43cc69f9b0d062fdb170",
+    "tests/browser/preformatted-breaks-journey.ts": "e60bcc40440f0cf1cc5cc6d8af1715df56c6057d0b82fc86c59cd88b9f71355f",
+    "tests/conversion-lab.test.ts": "f1e6f7b547b4e6905e12a035271b2439316f3519a6ee38e73547fe350fa90e03"
+  }
+}

@@ -275,7 +275,21 @@ export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
   const markdownReport = workspace.getByLabel('Round-trip result', { exact: true });
   await expect(markdownReport).toContainText('Text formatting inside code');
   await expect(markdownReport).toContainText('Code-block layout and font context');
+  const emphasisLoss = markdownReport.getByRole('listitem').filter({ hasText: 'mark · em' });
+  await expect(emphasisLoss).toHaveCount(1);
+  await expect(emphasisLoss).toContainText('Document path: 3.1.');
+  await expect(markdownReport.getByRole('listitem').filter({ hasText: 'mark · highlight' })).toHaveCount(1);
   await markdownReport.screenshot({ path: info.outputPath('markdown-export-loss-report.png') });
+  const diagnosticPending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download diagnostic report', exact: true }).click();
+  const diagnostic = await diagnosticPending, diagnosticPath = info.outputPath('conversion-issue-details-report.json');
+  await diagnostic.saveAs(diagnosticPath);
+  const diagnosticData = JSON.parse(await readFile(diagnosticPath, 'utf8'));
+  expect(diagnosticData.roundTrip.issues).toEqual(expect.arrayContaining([
+    expect.objectContaining({ code: 'mark', type: 'em', path: [3, 1] }),
+    expect.objectContaining({ code: 'mark', type: 'highlight' }),
+  ]));
+  expect(diagnosticData.fileName).toBeUndefined(); expect(diagnosticData.editedDocument).toBeUndefined();
   const markdownPending = page.waitForEvent('download');
   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
   const markdownDownload = await markdownPending, markdownPath = info.outputPath('preformatted-edited.md');

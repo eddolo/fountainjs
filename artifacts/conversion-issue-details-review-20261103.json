@@ -1,0 +1,55 @@
+{
+  "baseCommit": "c49be472c3b6786953a309467c389ec68c7f8c1d",
+  "scope": "Conversion lab findings retain formatting identity and document/package location; source package paths follow the content opt-in in both report sections.",
+  "verified": {
+    "focusedAdapterTests": 20,
+    "newContracts": 3,
+    "recordedBrowserJourneys": 8,
+    "frameworkTypes": "passed",
+    "websiteBuild": "passed",
+    "libraryRuntimeFilesByteIdentical": 168,
+    "CSSBytesUnchanged": 89593
+  },
+  "manuallyReviewed": [
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png",
+      "SHA256": "38dc7d030c51d5b67f9aea938ad44d783906281a8b3d8897f32a88ae0a5c6332"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png",
+      "SHA256": "5c8cecd54871d796f9f46dd4e084db52f53b8fdb4410103a0b9c9cfad38cf6fb"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png",
+      "SHA256": "2cd05ebe7a0d754756d5eefe52ad3b2a53dd2f8a5d8a8eafa1f27a3948bc9599"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png",
+      "SHA256": "5136851c52bd355c8e66004dd67a4ed74a1b97ae0a17510de6dca23cbc79d43c"
+    },
+    {
+      "path": "artifacts/conversion-issue-details-browser-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png",
+      "SHA256": "1c76d76a6889a26dc106c59f7a3f79c78cf9959574f4e1f20b076de3fcf5414b"
+    }
+  ],
+  "visualFindings": [
+    "Schema mark/type and document paths distinguish formerly anonymous repeated warnings.",
+    "The bounded report list remains scrollable on mobile; a screenshot does not show every row.",
+    "Firefox sticky navigation overlays part of the captured explanatory paragraph; findings remain visible.",
+    "Downgraded Markdown preview and original draft stay separate."
+  ],
+  "unchanged": [
+    "library implementation",
+    "public package API",
+    "conversion semantics",
+    "dependencies",
+    "code/CSS/performance limits",
+    "CommonMark comparator and fixture ranges"
+  ],
+  "limitations": [
+    "No physical-device or general accessibility certification",
+    "Videos not manually watched",
+    "Warnings may contain source fragments; path opt-in is not general anonymization",
+    "Full-unit result of 3377 belongs to the preceding library checkpoint; this website-only follow-up uses focused adapter and browser/type/build verification."
+  ]
+}
