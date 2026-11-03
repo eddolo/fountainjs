@@ -5,8 +5,10 @@ Native verification follow-up (2026-11-03, Unreleased): the unchanged cooling
 report is now a retained source fixture. Reusing it found and repaired a crash
 on repeated identical shading declarations; ambiguous fills remain reported and
 omitted. An isolated Linux CI job renders source and actual browser-downloaded
-export with LibreOffice/Poppler. The first native render/review is pending,
-so FB-04 remains in progress. [Contracts and current evidence](DOCX_NATIVE_AUDIT.md).
+export with LibreOffice/Poppler. Its first native run passes; all four source/
+export page images were inspected. Font faces, list geometry/spacing and header
+placement still differ, and source footnote rendering needs adjudication.
+FB-04 remains in progress. [Contracts and current evidence](DOCX_NATIVE_AUDIT.md).
 
 Latest source-quote/desktop increment (2026-10-05, Unreleased): actual visual
 inspection found and fixed doubled imported quote borders and indentation.

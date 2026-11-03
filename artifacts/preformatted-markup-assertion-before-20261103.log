@@ -1,0 +1,214 @@
+[WebServer] (node:1584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:20908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader (27.1s)
+(node:10712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader (21.8s)
+(node:25776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader (29.0s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.demo-output').locator('pre')
+    Timeout: 5000ms
+    - Expected substring  - 4
+    + Received string     + 5
+
+    - Recovery note
+    + <pre data-language="text"><code class="language-text">Recovery note
+      first line
+        second line
+    - const n = 1;
+    -
+    -
+    + <code>const n = 1;</code><code>
+    + </code>
+    + </code></pre>
+    + <p></p>
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('.demo-output').locator('pre')
+        14 × locator resolved to <pre tabindex="0" role="region" aria-label="Document output">…</pre>
+           - unexpected value "<pre data-language="text"><code class="language-text">Recovery note
+    first line
+      second line
+    <code>const n = 1;</code><code>
+    </code>
+    </code></pre>
+    <p></p>"
+
+
+       at markdown-paragraph-recovery-journey.ts:150
+
+      148 |   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
+      149 |   const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
+    > 150 |   await expect(output.locator('pre')).toContainText(recoveredText);
+          |                                       ^
+      151 |   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
+      152 |   const flowHTML = await output.locator('pre').innerText();
+      153 |   await capture('paragraph-flow-conversion.png');
+        at markdownParagraphRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:150:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:380:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.demo-output').locator('pre')
+    Timeout: 5000ms
+    - Expected substring  - 4
+    + Received string     + 5
+
+    - Recovery note
+    + <pre data-language="text"><code class="language-text">Recovery note
+      first line
+        second line
+    - const n = 1;
+    -
+    -
+    + <code>const n = 1;</code><code>
+    + </code>
+    + </code></pre>
+    + <p></p>
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('.demo-output').locator('pre')
+        14 × locator resolved to <pre tabindex="0" role="region" aria-label="Document output">…</pre>
+           - unexpected value "<pre data-language="text"><code class="language-text">Recovery note
+    first line
+      second line
+    <code>const n = 1;</code><code>
+    </code>
+    </code></pre>
+    <p></p>"
+
+
+       at markdown-paragraph-recovery-journey.ts:150
+
+      148 |   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
+      149 |   const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
+    > 150 |   await expect(output.locator('pre')).toContainText(recoveredText);
+          |                                       ^
+      151 |   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
+      152 |   const flowHTML = await output.locator('pre').innerText();
+      153 |   await capture('paragraph-flow-conversion.png');
+        at markdownParagraphRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:150:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:380:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.demo-output').locator('pre')
+    Timeout: 5000ms
+    - Expected substring  - 4
+    + Received string     + 5
+
+    - Recovery note
+    + <pre data-language="text"><code class="language-text">Recovery note
+      first line
+        second line
+    - const n = 1;
+    -
+    -
+    + <code>const n = 1;</code><code>
+    + </code>
+    + </code></pre>
+    + <p></p>
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('.demo-output').locator('pre')
+        13 × locator resolved to <pre tabindex="0" role="region" aria-label="Document output">…</pre>
+           - unexpected value "<pre data-language="text"><code class="language-text">Recovery note
+    first line
+      second line
+    <code>const n = 1;</code><code>
+    </code>
+    </code></pre>
+    <p></p>"
+
+
+       at markdown-paragraph-recovery-journey.ts:150
+
+      148 |   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
+      149 |   const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
+    > 150 |   await expect(output.locator('pre')).toContainText(recoveredText);
+          |                                       ^
+      151 |   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
+      152 |   const flowHTML = await output.locator('pre').innerText();
+      153 |   await capture('paragraph-flow-conversion.png');
+        at markdownParagraphRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:150:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:380:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-markup-assertion-before-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+    [firefox] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+    [webkit] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader

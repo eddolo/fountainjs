@@ -1,0 +1,42 @@
+{
+  "toolchain": {
+    "office": "LibreOffice 24.2.7.2 420(Build:2)",
+    "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+    "platform": "linux",
+    "dpi": 120,
+    "fonts": {
+      "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+      "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+      "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+      "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+    }
+  },
+  "rendered": {
+    "source": {
+      "pages": 2,
+      "drawnImageObjects": 4,
+      "pdfSHA256": "6a3ccbc8bde3092f32270d6ab37bb2b54db0b95fb3c2d00403b11b923da40833",
+      "pageImages": [
+        "native/source/page-1.png",
+        "native/source/page-2.png"
+      ]
+    },
+    "exported": {
+      "pages": 2,
+      "drawnImageObjects": 4,
+      "pdfSHA256": "ed3cf2d2764944a2066ec0f23ea0931cc998708841db012114c132d8e5d03976",
+      "pageImages": [
+        "native/exported/page-1.png",
+        "native/exported/page-2.png"
+      ]
+    }
+  },
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "exportedSHA256": "05f57e9ff7a9a28a67ff86cbe42971187728c887fd9807482d310cdfe525e1ac",
+  "status": "native render and required-content checks passed; visual comparison still requires inspection",
+  "pixelFidelityCertified": false,
+  "microsoftWordCertified": false,
+  "sourceImportReport": "source-report.json",
+  "actualBrowserConversionReport": "conversion-report.json",
+  "interchangeReport": "interchange-report.json"
+}

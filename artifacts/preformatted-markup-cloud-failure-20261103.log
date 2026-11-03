@@ -1,0 +1,100 @@
+Source commit c49be472c3b6786953a309467c389ec68c7f8c1d
+Run https://github.com/eddolo/fountainjs/actions/runs/41708582592
+Job 126170369118; decoded log excerpts, timestamps retained; unrelated setup and test output omitted.
+2026-11-03T20:12:20.4047594Z   1) [chromium] › tests/browser/editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+2026-11-03T20:12:20.4048575Z
+2026-11-03T20:12:20.4048924Z     Error: expect(locator).toContainText(expected) failed
+2026-11-03T20:12:20.4049340Z
+2026-11-03T20:12:20.4049626Z     Locator: locator('.demo-output').locator('pre')
+2026-11-03T20:12:20.4050540Z     Timeout: 5000ms
+2026-11-03T20:12:20.4050905Z     - Expected substring  - 4
+2026-11-03T20:12:20.4051341Z     + Received string     + 5
+2026-11-03T20:12:20.4051601Z
+2026-11-03T20:12:20.4051799Z     - Recovery note
+2026-11-03T20:12:20.4052281Z     + <pre data-language="text"><code class="language-text">Recovery note
+2026-11-03T20:12:20.4052734Z       first line
+2026-11-03T20:12:20.4053040Z         second line
+2026-11-03T20:12:20.4053354Z     - const n = 1;
+2026-11-03T20:12:20.4053659Z     -
+2026-11-03T20:12:20.4053939Z     -
+2026-11-03T20:12:20.4054261Z     + <code>const n = 1;</code><code>
+2026-11-03T20:12:20.4054610Z     + </code>
+2026-11-03T20:12:20.4054913Z     + </code></pre>
+2026-11-03T20:12:20.4055230Z     + <p></p>
+2026-11-03T20:12:20.4055456Z
+2026-11-03T20:12:20.4055825Z     Call log:
+2026-11-03T20:12:20.4056185Z       - Expect "toContainText" with timeout 5000ms
+2026-11-03T20:12:20.4056674Z       - waiting for locator('.demo-output').locator('pre')
+2026-11-03T20:12:20.4057524Z         14 × locator resolved to <pre tabindex="0" role="region" aria-label="Document output">…</pre>
+2026-11-03T20:12:20.4059202Z            - unexpected value "<pre data-language="text"><code class="language-text">Recovery note
+2026-11-03T20:12:20.4059886Z     first line
+2026-11-03T20:12:20.4060292Z       second line
+2026-11-03T20:12:20.4060624Z     <code>const n = 1;</code><code>
+2026-11-03T20:12:20.4060961Z     </code>
+2026-11-03T20:12:20.4061241Z     </code></pre>
+2026-11-03T20:12:20.4061537Z     <p></p>"
+2026-11-03T20:12:20.4061744Z
+2026-11-03T20:12:20.4061880Z
+2026-11-03T20:12:20.4062157Z        at markdown-paragraph-recovery-journey.ts:150
+2026-11-03T20:12:20.4062498Z
+2026-11-03T20:12:20.4062940Z       148 |   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
+2026-11-03T20:12:20.4063813Z       149 |   const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
+2026-11-03T20:12:20.4064471Z     > 150 |   await expect(output.locator('pre')).toContainText(recoveredText);
+2026-11-03T20:12:20.4064822Z           |                                       ^
+2026-11-03T20:12:20.4065301Z       151 |   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
+2026-11-03T20:12:20.4066148Z       152 |   const flowHTML = await output.locator('pre').innerText();
+2026-11-03T20:12:20.4066637Z       153 |   await capture('paragraph-flow-conversion.png');
+2026-11-03T20:12:20.4067298Z         at markdownParagraphRecoveryJourney (/home/runner/work/fountainjs/fountainjs/tests/browser/markdown-paragraph-recovery-journey.ts:150:39)
+2026-11-03T20:12:20.4067924Z         at /home/runner/work/fountainjs/fountainjs/tests/browser/editor.spec.ts:380:3
+2026-11-03T20:12:20.4068161Z
+2026-11-03T20:12:20.4068653Z     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+2026-11-03T20:12:20.4069337Z     test-results/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/test-failed-1.png
+2026-11-03T20:12:20.4070164Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2026-11-03T20:12:20.4070690Z
+2026-11-03T20:12:20.4071158Z     Error Context: test-results/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/error-context.md
+2026-11-03T20:12:20.4071616Z
+2026-11-03T20:12:20.4072026Z     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+2026-11-03T20:12:20.4072710Z     test-results/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/trace.zip
+2026-11-03T20:12:20.4073185Z     Usage:
+2026-11-03T20:12:20.4073289Z
+2026-11-03T20:12:20.4073779Z         pnpm exec playwright show-trace test-results/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/trace.zip
+2026-11-03T20:12:20.4074297Z
+2026-11-03T20:12:20.4074663Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2026-11-03T20:12:20.4074946Z
+2026-11-03T20:12:20.4075499Z     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+2026-11-03T20:12:20.4075917Z
+2026-11-03T20:12:20.4076094Z     Error: expect(locator).toContainText(expected) failed
+2026-11-03T20:12:20.4076310Z
+2026-11-03T20:12:20.4076460Z     Locator: locator('.demo-output').locator('pre')
+2026-11-03T20:12:20.4076745Z     Timeout: 5000ms
+2026-11-03T20:12:20.4076967Z     - Expected substring  - 4
+2026-11-03T20:12:20.4077207Z     + Received string     + 5
+2026-11-03T20:12:20.4077354Z
+2026-11-03T20:12:20.4077436Z     - Recovery note
+2026-11-03T20:12:20.4077770Z     + <pre data-language="text"><code class="language-text">Recovery note
+2026-11-03T20:12:20.4078106Z       first line
+2026-11-03T20:12:20.4078247Z         second line
+2026-11-03T20:12:20.4078373Z     - const n = 1;
+2026-11-03T20:12:20.4078498Z     -
+2026-11-03T20:12:20.4078615Z     -
+2026-11-03T20:12:20.4078747Z     + <code>const n = 1;</code><code>
+2026-11-03T20:12:20.4078903Z     + </code>
+2026-11-03T20:12:20.4079022Z     + </code></pre>
+2026-11-03T20:12:20.4079144Z     + <p></p>
+2026-11-03T20:12:20.4079219Z
+2026-11-03T20:12:20.4079271Z     Call log:
+2026-11-03T20:12:20.4079427Z       - Expect "toContainText" with timeout 5000ms
+2026-11-03T20:12:20.4079661Z       - waiting for locator('.demo-output').locator('pre')
+2026-11-03T20:12:20.4080042Z         14 × locator resolved to <pre tabindex="0" role="region" aria-label="Document output">…</pre>
+2026-11-03T20:12:20.4080423Z            - unexpected value "<pre data-language="text"><code class="language-text">Recovery note
+2026-11-03T20:12:20.4080674Z     first line
+2026-11-03T20:12:20.4080797Z       second line
+2026-11-03T20:12:20.4080938Z     <code>const n = 1;</code><code>
+2026-11-03T20:12:20.4081086Z     </code>
+2026-11-03T20:12:20.4081199Z     </code></pre>
+2026-11-03T20:12:20.4081320Z     <p></p>"
+2026-11-03T20:12:20.4081515Z
+2026-11-03T20:12:20.4081522Z
+2026-11-03T20:34:33.8230267Z   3 failed
+2026-11-03T20:34:33.8233709Z   16 skipped
+2026-11-03T20:34:33.8233910Z   839 passed (25.7m)

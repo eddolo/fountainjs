@@ -1,0 +1,50 @@
+{
+  "reviewed": [
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-editor.png",
+      "SHA256": "997485c2dc177af38fecf84050807a4458cf7ffd2317840d60762dd166a10b1c"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-reader.png",
+      "SHA256": "6e545ab142437df4c3e837c2b1e1f909dc8620ca83a9fb0bbc6fa611e3144b21"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-mobile.png",
+      "SHA256": "ffd2825b0cc94e427664c97822bb46fcd3093db34ac353f62f4af91847359f17"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-conversion.png",
+      "SHA256": "94a0867eee5b3ea1ec3efe71a7bee4f60e18cca1fe61b4108843b9b2fccc86a9"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-editor.png",
+      "SHA256": "04e8c4cf6e62be899894a4d5e46c77823eaf49b4e09897547cb052b874ea9006"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-reader.png",
+      "SHA256": "4c0b827d9c95aaf588b15bcf9c6fcf5ab6ab3482aae2800eb780dcd66d23538d"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-mobile.png",
+      "SHA256": "0db398ebe4633b58268caaf9cea18c380f2173e6fdffca5190a4dde4fe344c10"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-editor.png",
+      "SHA256": "7b2789f537ca8286960fbce16b6bc10ce4c5950a54a761431d2adfaa3969c8ea"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-reader.png",
+      "SHA256": "68ce45b280bf503780d86556605ee68c22ad223695f10f64330bf8f95bdd9e22"
+    },
+    {
+      "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-mobile.png",
+      "SHA256": "5168559aedc1e4b9a3edd6cfcf5dcce716ce8c1ccde7422c7e1c38c9e6ecc6e2"
+    }
+  ],
+  "findings": [
+    "Literal lines and leading spaces remain visible in code.",
+    "The editor retains its code formatting; the ordinary Markdown fence reports omitted marks.",
+    "Reopened readers remain readable at desktop and 390 CSS pixels in all three engines."
+  ],
+  "scope": "Ten selected captures inspected; other captures, videos and traces retained but not manually reviewed. Desktop narrow viewports are not physical-device evidence."
+}

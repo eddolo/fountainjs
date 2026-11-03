@@ -1,0 +1,80 @@
+                    Cooling study 2026
+
+Cooling experiment report
+Comparison of insulated and uninsulated vessels
+We compare how two vessels cool from 80 degrees C in a room held at 20 degrees C. The insulated
+vessel cools more slowly. The chart and measurements below describe the same cooling model.
+
+
+
+Experimental setup
+Each vessel contains the same water volume. A probe records temperature every five minutes. Keep
+the lid position and room conditions unchanged.
+   1. Record the initial temperature before starting the timer.
+   2. Keep both probes at the same depth.
+   3. Read the measurements without moving either vessel.
+
+
+
+
+Figure 1 Probe positions in the two vessels
+
+
+
+
+Figure 2 Cooling curves over thirty minutes
+
+
+
+
+                                                                    Thermal experiments Page 1
+                     Cooling study 2026
+Model and measurements
+Newton cooling model
+
+                                      T ( t )=T a +(T 0 − T a )e − kt
+
+Half cooling time
+                                                         ln 2
+                                                t 1/2=
+                                                          k
+The rate constants are 0.08 and 0.04 per minute. The half cooling times are approximately 8.66 and
+17.33 minutes respectively.
+
+
+
+Recorded temperatures
+                                 Water temperature in degrees C
+
+        Time in minutes                      Uninsulated                       Insulated
+
+                0                                 80.0                            80.0
+
+                5                                 60.2                            69.1
+
+                10                                47.0                            60.2
+
+                15                                38.1                            52.9
+
+                20                                32.1                            47.0
+
+                25                                28.1                            42.1
+
+                30                                25.4                            38.1
+Table 1 Measurements at five minute intervals
+
+
+
+Interpretation
+After thirty minutes, the insulated vessel remains approximately 12.6 degrees C warmer. 1
+Review decision: repeat the experiment with a second probe
+END OF REPORT Checked in Fountain.
+
+
+
+
+1
+ These values are generated from the stated model for conversion testing; they are not measured
+experimental data.
+                                                                      Thermal experiments Page 2
+

@@ -1,5 +1,21 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Browser assertion follow-up (2026-11-03, Unreleased): the broad formatting run
+had 839 passes, 16 skips and three identical stale serialized-HTML assertions.
+The strengthened journey checks exact parsed text/newlines and code-mark scope;
+all three desktop engines now pass locally. Ten captures were inspected and
+framework types pass. No runtime, reference oracle or numerical limits changed;
+the fresh broad cloud gate remains pending. [Details](SERVER_HTML.md#browser-assertion-follow-up-2026-11-03-unreleased).
+
+Independent native DOCX follow-up (2026-11-03, Unreleased): isolated CI now
+renders the unchanged scientific source and actual browser-downloaded export
+with LibreOffice/Poppler. Both have two Letter pages; all four native page
+images were inspected. The import crash on repeated identical shading is
+repaired, with full units 3,388 / 240 files and existing limits intact.
+Native font selection, list geometry/spacing and header placement still differ;
+source footnote rendering needs adjudication. FORMAT-05 remains partial, with
+no pixel or Microsoft Word certification. [Evidence and next gaps](DOCX_NATIVE_AUDIT.md).
+
 Unreleased supported preformatted formatting (2026-11-03): retain schema text
 marks and typed font/layout context across browser/server HTML import and safe
 HTML export. Keep code literal and disclose ordinary Markdown-fence losses.

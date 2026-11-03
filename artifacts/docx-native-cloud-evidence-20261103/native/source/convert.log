@@ -1,0 +1,2 @@
+convert /home/runner/work/fountainjs/fountainjs/artifacts/docx-native-audit/source.docx as a Writer document -> /home/runner/work/fountainjs/fountainjs/artifacts/docx-native-audit/native/source/source.pdf using filter : writer_pdf_Export
+Warning: failed to launch javaldx - java may not function correctly

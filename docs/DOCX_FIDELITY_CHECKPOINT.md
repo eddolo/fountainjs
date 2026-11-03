@@ -16,8 +16,13 @@ python-docx/framework types/size/site checks pass under the existing limits.
 
 An isolated Ubuntu CI job now provides the missing native-rendering path,
 separately rendering original and actual downloaded DOCX files with LibreOffice
-and all-page Poppler PNGs. Its first native result is pending; setup is not
-native fidelity approval. See [the workflow and contracts](DOCX_NATIVE_AUDIT.md).
+and all-page Poppler PNGs. The first run succeeds on `7101338`; both files have
+two Letter pages and all four native page images were inspected. Figures,
+equations, table content and the authored edit survive, while font faces,
+numbered-list geometry/spacing and header positioning differ. The source's
+missing rendered footnote text is an unresolved reference/renderer discrepancy.
+This resolves the missing verification environment, not native fidelity.
+See [the workflow, native results and remaining gaps](DOCX_NATIVE_AUDIT.md).
 The Windows bundled renderer remains unavailable; desktop Office is not used.
 
 ## Completed scrolling and flow desktop matrix 2026 10 06

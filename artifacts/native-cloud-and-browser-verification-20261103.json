@@ -1,0 +1,205 @@
+{
+  "baseCommit": "7101338addc0b2c3e0675a7dd55c20bc505079f8",
+  "scope": "Independent native DOCX visual results and strengthened serialized-HTML browser assertions",
+  "native": {
+    "sourceCommit": "7101338addc0b2c3e0675a7dd55c20bc505079f8",
+    "run": 41713938393,
+    "job": 126188896034,
+    "conclusion": "success",
+    "artifact": 13268303392,
+    "serverSuppliedArchiveDigest": "sha256:3b5d29037dc26d6c6e8ad726729eb2be1fc909466960cac25b258329a6768d0e",
+    "archiveDigestIndependentlyRehashed": false,
+    "reviewedPages": [
+      {
+        "path": "artifacts/docx-native-cloud-evidence-20261103/native/source/page-1.png",
+        "SHA256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d"
+      },
+      {
+        "path": "artifacts/docx-native-cloud-evidence-20261103/native/source/page-2.png",
+        "SHA256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223"
+      },
+      {
+        "path": "artifacts/docx-native-cloud-evidence-20261103/native/exported/page-1.png",
+        "SHA256": "1751342d72c0489ad3e25cd0d25559206d389a5ada6e53ee2572803a38fb8d59"
+      },
+      {
+        "path": "artifacts/docx-native-cloud-evidence-20261103/native/exported/page-2.png",
+        "SHA256": "0180fc60bfbee257d4c4d45cebe5e4f719a75521e0f54cdd9129795e2c9cf176"
+      }
+    ],
+    "findings": [
+      "Body figures and captions, both equations, numeric table and the authored final edit remain visible and readable.",
+      "Source title/heading fonts are Carlito; export selects Liberation Sans. Title size stays 25 pt.",
+      "First instruction text moves from x=75.7 pt to x=93.7 pt, with item spacing drift.",
+      "Headers and logos are present on both pages in both files, with horizontal position drift.",
+      "The source PDF displays only a footnote marker although note text exists in the source XML; the export displays the full note. Reserved source note types are absent, so source/renderer validity remains unresolved."
+    ],
+    "nextWork": [
+      "Resolve supported theme-language defaults: theme-fonts.ts currently rejects even the related en-US language, then uses the named Arial fallback. Preserve existing same-declaration and inheritance semantics.",
+      "Preserve numbering indentation and supported contextual spacing.",
+      "Adjudicate header inline positioning and source footnote metadata separately."
+    ],
+    "report": {
+      "toolchain": {
+        "office": "LibreOffice 24.2.7.2 420(Build:2)",
+        "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+        "platform": "linux",
+        "dpi": 120,
+        "fonts": {
+          "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+          "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+          "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+          "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+        }
+      },
+      "rendered": {
+        "source": {
+          "pages": 2,
+          "drawnImageObjects": 4,
+          "pdfSHA256": "6a3ccbc8bde3092f32270d6ab37bb2b54db0b95fb3c2d00403b11b923da40833",
+          "pageImages": [
+            "native/source/page-1.png",
+            "native/source/page-2.png"
+          ]
+        },
+        "exported": {
+          "pages": 2,
+          "drawnImageObjects": 4,
+          "pdfSHA256": "ed3cf2d2764944a2066ec0f23ea0931cc998708841db012114c132d8e5d03976",
+          "pageImages": [
+            "native/exported/page-1.png",
+            "native/exported/page-2.png"
+          ]
+        }
+      },
+      "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+      "exportedSHA256": "05f57e9ff7a9a28a67ff86cbe42971187728c887fd9807482d310cdfe525e1ac",
+      "status": "native render and required-content checks passed; visual comparison still requires inspection",
+      "pixelFidelityCertified": false,
+      "microsoftWordCertified": false,
+      "sourceImportReport": "source-report.json",
+      "actualBrowserConversionReport": "conversion-report.json",
+      "interchangeReport": "interchange-report.json"
+    },
+    "completePixelFidelity": false,
+    "microsoftWordCertification": false
+  },
+  "browser": {
+    "before": "3 failed at stale serialized-string assertion",
+    "intermediate": "Parsed HTML passed; exact DOM segmentation assertion failed because syntax decorations split marked runs.",
+    "final": "3 passed; exact parsed text/newlines and combined code-mark scope",
+    "reviewed": [
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-editor.png",
+        "SHA256": "997485c2dc177af38fecf84050807a4458cf7ffd2317840d60762dd166a10b1c"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-reader.png",
+        "SHA256": "6e545ab142437df4c3e837c2b1e1f909dc8620ca83a9fb0bbc6fa611e3144b21"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-mobile.png",
+        "SHA256": "ffd2825b0cc94e427664c97822bb46fcd3093db34ac353f62f4af91847359f17"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-conversion.png",
+        "SHA256": "94a0867eee5b3ea1ec3efe71a7bee4f60e18cca1fe61b4108843b9b2fccc86a9"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-editor.png",
+        "SHA256": "04e8c4cf6e62be899894a4d5e46c77823eaf49b4e09897547cb052b874ea9006"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-reader.png",
+        "SHA256": "4c0b827d9c95aaf588b15bcf9c6fcf5ab6ab3482aae2800eb780dcd66d23538d"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-mobile.png",
+        "SHA256": "0db398ebe4633b58268caaf9cea18c380f2173e6fdffca5190a4dde4fe344c10"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-editor.png",
+        "SHA256": "7b2789f537ca8286960fbce16b6bc10ce4c5950a54a761431d2adfaa3969c8ea"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-reader.png",
+        "SHA256": "68ce45b280bf503780d86556605ee68c22ad223695f10f64330bf8f95bdd9e22"
+      },
+      {
+        "path": "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-mobile.png",
+        "SHA256": "5168559aedc1e4b9a3edd6cfcf5dcce716ce8c1ccde7422c7e1c38c9e6ecc6e2"
+      }
+    ],
+    "types": "passed",
+    "website": "passed",
+    "fullCloudBrowser": "pending new source push",
+    "ordinaryMarkdownFormattingLoss": "reported; not claimed retained after Markdown reopen"
+  },
+  "unchanged": [
+    "runtime source",
+    "dependencies",
+    "public API",
+    "CommonMark v13 and fixture ranges",
+    "all numerical limits"
+  ],
+  "npm": "unchanged at 0.4.0-beta.2",
+  "sourceBinding": "SHA-256 of staged Git blobs; this manifest excluded to avoid circular hashes.",
+  "hashes": {
+    "artifacts/docx-native-cloud-artifact-metadata-20261103.json": "86302ff20e5a87aa02d377f45edaf3831a5c0b05a3de86b91abdb039f85b1e54",
+    "artifacts/docx-native-cloud-evidence-20261103/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-native-cloud-evidence-20261103/conversion-report.json": "c82bf98ed1ee8d1216c474545edfcbcdb9098c110ac5cd1078a8ddcf715ab712",
+    "artifacts/docx-native-cloud-evidence-20261103/exported.docx": "05f57e9ff7a9a28a67ff86cbe42971187728c887fd9807482d310cdfe525e1ac",
+    "artifacts/docx-native-cloud-evidence-20261103/interchange-report.json": "2b6a0a5391d9d49d4d03d39a7dea0c3b70ddc933fa82d0ad982ac3369749e735",
+    "artifacts/docx-native-cloud-evidence-20261103/native-report.json": "d86b8ef642c1b244e378bc073c31d1550d9cf73fb66b693796c96fef8b531803",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/convert.log": "7bc65c5465375eac36040397d5abe9db06de5dc50d557ac52d6b7e9f591687f6",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/exported.pdf": "ed3cf2d2764944a2066ec0f23ea0931cc998708841db012114c132d8e5d03976",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/images.txt": "974efe612a3c1b57b236bf105afe083e8a5161836a71a7c98a3e2b60d0508e93",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/page-1.png": "1751342d72c0489ad3e25cd0d25559206d389a5ada6e53ee2572803a38fb8d59",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/page-2.png": "0180fc60bfbee257d4c4d45cebe5e4f719a75521e0f54cdd9129795e2c9cf176",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/pdfinfo.txt": "0377211b566fdee8d915f6c1e1f6fa7581179c4b66a482399ba7f4c1303ae2bc",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/raster.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/text.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/docx-native-cloud-evidence-20261103/native/exported/text.txt": "0ac118ee40ed0a1eee8cb377f063a52b304dff2eb449e114b45d46058394e71a",
+    "artifacts/docx-native-cloud-evidence-20261103/native/font-Arial.txt": "e221c3d9356149ce4bf711a18babaaa79506ffe95cb91afdeb44971a03a2d8e1",
+    "artifacts/docx-native-cloud-evidence-20261103/native/font-Calibri.txt": "1a51ffae9abd1e654e4181c8d0212c194f9b7cbb6da641b406f6395e0db27ba1",
+    "artifacts/docx-native-cloud-evidence-20261103/native/font-Cambria.txt": "dceb6bcb4ed37c439070a285aa8563e1c83ded676e990a6224b50aa1f070177f",
+    "artifacts/docx-native-cloud-evidence-20261103/native/font-Consolas.txt": "036526647667764e2b45729eb96e881ae1504c7cf6e8a5f2c6c6908361a2bf76",
+    "artifacts/docx-native-cloud-evidence-20261103/native/office-version.txt": "56fd5c80e538053b29bda06f2437996e247aa134ffa01a12eb4641e2c3eb4b45",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/convert.log": "b776c6f6967ecc578320a7fa0172d5ace64f5b97d1e2e3bee4929b1e2bfb4381",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/images.txt": "ee74b48531b46beff90cffc8f93887be7abfe55803a5ef671c99d42ffb57c9f4",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/page-1.png": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/page-2.png": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/pdfinfo.txt": "f3d51f63a0705b76bdfc75a91333e93ac54bdd98c2760b7750b8536b22e7aadf",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/raster.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/source.pdf": "6a3ccbc8bde3092f32270d6ab37bb2b54db0b95fb3c2d00403b11b923da40833",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/text.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/docx-native-cloud-evidence-20261103/native/source/text.txt": "bac4753c940ed96cfa0e4321c2cce544431a0a2fbe205aed6b36b6a4fb6c68df",
+    "artifacts/docx-native-cloud-review-20261103.json": "7a2ab36c22286762a256eba2c979eb8786fd01d7e51a242e4e4981c4df1f1d34",
+    "artifacts/docx-native-font-layout-observations-20261103.json": "d6cd3f837cad5e83e0bb47310ca8e47c5cd2a847baa486e9dd284743afee7a09",
+    "artifacts/preformatted-markup-assertion-before-20261103.log": "9ba6813c7f4b4d9460ceec53c75d36e7a2c9e97fba7d80929d692594ecc76362",
+    "artifacts/preformatted-markup-assertion-final-20261103.log": "ed6db5f7ee7fc665c7925235c9b8b3ad988c672f008bde15addf4b0e00ede47f",
+    "artifacts/preformatted-markup-assertion-site-20261103.log": "9d1a9f9765934558c60cfdcb8ec3d12191c260a0b3efb4a3c17ec201dcac4221",
+    "artifacts/preformatted-markup-assertion-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/preformatted-markup-assertion-verified-20261103.log": "491ad977ceb947e2a87f26fc697addf463016d84d9e6684939cd8ce7311ee904",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-conversion.png": "94a0867eee5b3ea1ec3efe71a7bee4f60e18cca1fe61b4108843b9b2fccc86a9",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-editor.png": "997485c2dc177af38fecf84050807a4458cf7ffd2317840d60762dd166a10b1c",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-mobile.png": "ffd2825b0cc94e427664c97822bb46fcd3093db34ac353f62f4af91847359f17",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium/paragraph-flow-reader.png": "6e545ab142437df4c3e837c2b1e1f909dc8620ca83a9fb0bbc6fa611e3144b21",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-editor.png": "04e8c4cf6e62be899894a4d5e46c77823eaf49b4e09897547cb052b874ea9006",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-mobile.png": "0db398ebe4633b58268caaf9cea18c380f2173e6fdffca5190a4dde4fe344c10",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox/paragraph-flow-reader.png": "4c0b827d9c95aaf588b15bcf9c6fcf5ab6ab3482aae2800eb780dcd66d23538d",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-editor.png": "7b2789f537ca8286960fbce16b6bc10ce4c5950a54a761431d2adfaa3969c8ea",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-mobile.png": "5168559aedc1e4b9a3edd6cfcf5dcce716ce8c1ccde7422c7e1c38c9e6ecc6e2",
+    "artifacts/preformatted-markup-assertion-verified-20261103/editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit/paragraph-flow-reader.png": "68ce45b280bf503780d86556605ee68c22ad223695f10f64330bf8f95bdd9e22",
+    "artifacts/preformatted-markup-cloud-failure-20261103.log": "fef4111445a5824f977337fdcbcc41211c9c4a6c3c291bbebdfde8e3a944a3b4",
+    "artifacts/preformatted-markup-visual-review-20261103.json": "05f45445c5203686bf531d732e39d45453bfb8b19bbbb112ab31958b1379f837",
+    "artifacts/write-native-cloud-review-20261103.mjs": "4f996f9107426a6ac222162ac31dccfb8e8985307af1bdc704104d246ad7efb2",
+    "docs/DOCX_FIDELITY_CHECKPOINT.md": "ac6a21c8500fc5f13184801b56a578bab5946ba5cda275a69531d4460c15f928",
+    "docs/DOCX_NATIVE_AUDIT.md": "c5f7bf9fc0cf135668028ff8cf345048fd266fbaa6d0cba0e47438cc77b17d3a",
+    "docs/FORMAT_BRIDGE_PLAN.md": "1010bd5b93000ef7919fd951b1faffabbf092883d28f33f01d0b301507daf44d",
+    "docs/ROADMAP.md": "12f888749ad19dce13d8396e0a18c578361d3b2f6ae69b2528ceeec10b9c6401",
+    "docs/SERVER_HTML.md": "9b4b7b26bbb2c94b69e023526fce8a53666b871fa4c50c5e58130aaf532c5f6b",
+    "docs/TIPTAP_PARITY.md": "a6848f4c56525b8066afd3b59f5bd3162ebe4688c46416b533c6aa7eef1454bc",
+    "tests/browser/markdown-paragraph-recovery-journey.ts": "47918a68734201562bb901e23ff5d1294f593ad1c0d1f2c0809832ec100dcab9"
+  }
+}

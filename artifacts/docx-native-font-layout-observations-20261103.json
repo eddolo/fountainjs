@@ -1,0 +1,154 @@
+{
+  "source": {
+    "firstPageWords": [
+      {
+        "text": "Cooling",
+        "fontname": "BAAAAA+LiberationSans",
+        "size": 11.0,
+        "x0": 174.941,
+        "top": 46.071000000000026
+      },
+      {
+        "text": "Cooling",
+        "fontname": "CAAAAA+Carlito-Regular",
+        "size": 25.0,
+        "x0": 57.7,
+        "top": 62.60000000000002
+      },
+      {
+        "text": "Comparison",
+        "fontname": "DAAAAA+Carlito-Italic",
+        "size": 12.0,
+        "x0": 57.7,
+        "top": 110.26599999999996
+      },
+      {
+        "text": "Experimental",
+        "fontname": "FAAAAA+Carlito-Bold",
+        "size": 16.0,
+        "x0": 57.7,
+        "top": 187.938
+      },
+      {
+        "text": "Record",
+        "fontname": "BAAAAA+LiberationSans",
+        "size": 11.0,
+        "x0": 75.7,
+        "top": 244.471
+      },
+      {
+        "text": "Cooling",
+        "fontname": "EAAAAA+LiberationSans-Bold",
+        "size": 10.0,
+        "x0": 102.09000000000002,
+        "top": 671.96
+      }
+    ],
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "pdfSHA256": "6a3ccbc8bde3092f32270d6ab37bb2b54db0b95fb3c2d00403b11b923da40833",
+    "package": {
+      "evenAndOddHeaders": [],
+      "settingsPartPresent": true,
+      "footnoteTypes": [
+        [
+          "-1",
+          null
+        ],
+        [
+          "0",
+          null
+        ],
+        [
+          "1",
+          null
+        ]
+      ]
+    },
+    "lastPageHasFootnoteText": false
+  },
+  "exported": {
+    "firstPageWords": [
+      {
+        "text": "Cooling",
+        "fontname": "BAAAAA+LiberationSans",
+        "size": 11.0,
+        "x0": 156.84099999999998,
+        "top": 46.071000000000026
+      },
+      {
+        "text": "Cooling",
+        "fontname": "BAAAAA+LiberationSans",
+        "size": 25.0,
+        "x0": 57.7,
+        "top": 60.82499999999993
+      },
+      {
+        "text": "Comparison",
+        "fontname": "CAAAAA+LiberationSans-Italic",
+        "size": 12.0,
+        "x0": 57.7,
+        "top": 107.63200000000006
+      },
+      {
+        "text": "Experimental",
+        "fontname": "DAAAAA+LiberationSans-Bold",
+        "size": 16.0,
+        "x0": 57.7,
+        "top": 191.12599999999998
+      },
+      {
+        "text": "Record",
+        "fontname": "BAAAAA+LiberationSans",
+        "size": 11.0,
+        "x0": 93.7,
+        "top": 247.52100000000007
+      },
+      {
+        "text": "Cooling",
+        "fontname": "DAAAAA+LiberationSans-Bold",
+        "size": 10.0,
+        "x0": 102.09000000000002,
+        "top": 694.61
+      }
+    ],
+    "pageSizes": [
+      [
+        612.0,
+        792.0
+      ],
+      [
+        612.0,
+        792.0
+      ]
+    ],
+    "pdfSHA256": "ed3cf2d2764944a2066ec0f23ea0931cc998708841db012114c132d8e5d03976",
+    "package": {
+      "evenAndOddHeaders": [],
+      "settingsPartPresent": false,
+      "footnoteTypes": [
+        [
+          "-1",
+          "separator"
+        ],
+        [
+          "0",
+          "continuationSeparator"
+        ],
+        [
+          "1",
+          null
+        ]
+      ]
+    },
+    "lastPageHasFootnoteText": true
+  }
+}

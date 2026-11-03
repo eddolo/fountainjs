@@ -78,10 +78,47 @@ Seven regression cases failed before the repair. The focused table set passes
 file checks pass. All nine editor captures were inspected. The reopened numbered
 list has a different text indent, which remains a visible discrepancy; the native
 pair must adjudicate layout rather than normalizing the reference.
-The full suite passes 3,388 tests / 240 files. Native CI rendering is pending.
+The full suite passes 3,388 tests / 240 files.
 The existing code/CSS limits pass without a capacity change. No native/pixel fidelity
 or parity-percentage promotion is claimed from the local browser evidence.
 API (415 declarations), headless (113 modules), packed package loading,
 independent python-docx interoperability, framework types and website checks
 also pass. The implementation adds 54 bytes ESM / 19 CJS in aggregate by reusing
 the existing appearance selector; no dependency or numerical limit changes.
+
+## First independent native result 2026 11 03
+
+[Native audit run 41713938393](https://github.com/eddolo/fountainjs/actions/runs/41713938393)
+passes on source commit `7101338`. LibreOffice 24.2.7.2 renders both the original
+and actual browser-downloaded export to two Letter pages (612 × 792 pt). All
+four 120-DPI page images were inspected. Required visible prose/table anchors
+and drawn-image-object checks pass; these are bounded checks, not exhaustive
+semantic or pixel equivalence. The original and exported files remain unchanged.
+
+| Area | Observed native result |
+| --- | --- |
+| Figures and table | Both body figures, captions, numeric table rows and merged dark header remain visible and readable. The header logo is present on both pages in both files. |
+| Equations | Both expressions render with subscripts/exponents and a stacked fraction. This is LibreOffice evidence for this fixture, not general Office Math or Word certification. |
+| Typography | The source title uses Carlito at 25 pt; the export uses Liberation Sans at 25 pt. Source headings also switch face. The font environment substitutes Carlito for Calibri and Liberation Sans for Arial; the face selection, rather than title size, changes. |
+| Lists and spacing | The first instruction begins at 75.7 pt in the source and 93.7 pt in the export, an 18 pt shift. Item spacing also differs and pushes the following figure down. |
+| Header placement | Header logo/text repeat in both documents, with different horizontal positions. This is placement drift, not a missing second-page header. |
+| Footnote | The source XML contains the full note, but this LibreOffice source PDF shows only its marker. The exported PDF displays the full note. Source reserved separator notes omit their `type`; export writes explicit types. This is an unresolved reference/renderer discrepancy, not established Fountain content loss. |
+| Authored change | The final paragraph retains `Checked in Fountain.` in the downloaded Word file and native PDF. |
+
+The title's source font declaration contains both named and themed Latin slots.
+The current resolver already gives the same-declaration theme precedence and
+keeps font slots separate across inheritance. The concrete fallback is earlier:
+`src/docx/theme-fonts.ts` rejects every explicit theme language, including this
+source's related `w:themeFontLang w:val="en-US"`. The import report records
+`language-dependent-theme-font` and the named Arial fallback. The next repair
+must resolve supported regional defaults without guessing unimplemented
+language/script-specific selection or changing the original fixture. Keep
+same-declaration selection separate from style-hierarchy overrides, as explained by
+[Microsoft's run-font implementation notes](https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/aef3c9a6-5d6c-434b-90b7-85e761fd8e62).
+Native font choice, list geometry/spacing and header placement remain concrete
+work items. Source footnote validity/renderer behavior needs independent
+adjudication; the retained source must not be patched to manufacture agreement.
+
+The missing independent-rendering environment is now resolved through CI.
+FB-04 and FORMAT-05 remain partial. No pixel-parity, complete native Word,
+physical-device, assistive-technology or parity-percentage claim follows.

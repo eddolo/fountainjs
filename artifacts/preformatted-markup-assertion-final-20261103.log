@@ -1,0 +1,172 @@
+[WebServer] (node:7332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:18984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader (18.6s)
+(node:11276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader (23.9s)
+(node:16516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader (33.4s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 3
+
+      Array [
+    -   "const n = 1;",
+    -   "
+    +   "const n = ",
+    +   "1",
+    +   ";
+      ",
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at markdown-paragraph-recovery-journey.ts:180
+
+      178 |   const verifyFlowCodeMarks = async () => {
+      179 |     await expect.poll(() => editor.locator('pre code code').allTextContents())
+    > 180 |       .toEqual(['const n = 1;', '\n']);
+          |        ^
+      181 |   };
+      182 |   await verifyFlowCodeMarks();
+      183 |   await editor.locator('pre').click();
+        at verifyFlowCodeMarks (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:180:8)
+        at markdownParagraphRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:182:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:380:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 3
+
+      Array [
+    -   "const n = 1;",
+    -   "
+    +   "const n = ",
+    +   "1",
+    +   ";
+      ",
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at markdown-paragraph-recovery-journey.ts:180
+
+      178 |   const verifyFlowCodeMarks = async () => {
+      179 |     await expect.poll(() => editor.locator('pre code code').allTextContents())
+    > 180 |       .toEqual(['const n = 1;', '\n']);
+          |        ^
+      181 |   };
+      182 |   await verifyFlowCodeMarks();
+      183 |   await editor.locator('pre').click();
+        at verifyFlowCodeMarks (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:180:8)
+        at markdownParagraphRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:182:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:380:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 3
+
+      Array [
+    -   "const n = 1;",
+    -   "
+    +   "const n = ",
+    +   "1",
+    +   ";
+      ",
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at markdown-paragraph-recovery-journey.ts:180
+
+      178 |   const verifyFlowCodeMarks = async () => {
+      179 |     await expect.poll(() => editor.locator('pre code code').allTextContents())
+    > 180 |       .toEqual(['const n = 1;', '\n']);
+          |        ^
+      181 |   };
+      182 |   await verifyFlowCodeMarks();
+      183 |   await editor.locator('pre').click();
+        at verifyFlowCodeMarks (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:180:8)
+        at markdownParagraphRecoveryJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-paragraph-recovery-journey.ts:182:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:380:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-markup-assertion-final-20261103\editor-recovers-paragraph--2eea3-locks-and-a-reopened-reader-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+    [firefox] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader
+    [webkit] › tests\browser\editor.spec.ts:379:1 › recovers paragraph HTML into editable blocks and a reopened reader

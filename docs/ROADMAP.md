@@ -5,8 +5,11 @@ scientific source exposed and repaired a repeated-shading import crash. Full
 units pass 3,388 / 240 files; a real Chromium edit/history/download/reopen
 retains three image hashes, two equations, the table, footnote and manual break.
 Nine editor captures were inspected, with list-indent drift retained as an
-open discrepancy. The isolated LibreOffice/Poppler CI audit is ready for its
-first native render; no native/pixel fidelity or parity promotion yet.
+open discrepancy. The isolated LibreOffice/Poppler CI audit now succeeds;
+both files have two Letter pages, and all four native page images were inspected.
+The missing rendering environment is resolved, while font selection, list
+geometry/spacing, header positioning and source-footnote rendering remain open.
+No native/pixel fidelity or parity promotion yet.
 [Contracts and evidence](DOCX_NATIVE_AUDIT.md).
 
 Supported preformatted formatting (2026-11-03, Unreleased): browser/server HTML

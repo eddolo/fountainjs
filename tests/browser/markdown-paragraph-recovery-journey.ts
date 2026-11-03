@@ -147,7 +147,17 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
   await selectHTML();
   await page.getByRole('checkbox', { name: 'Recover Markdown text across HTML blocks' }).check();
   const recoveredText = 'Recovery note\nfirst line\n  second line\nconst n = 1;\n\n';
-  await expect(output.locator('pre')).toContainText(recoveredText);
+  // This output is serialized HTML. Retained inline marks interrupt its raw
+  // string, so verify exact literal text and mark scope with the browser parser.
+  await expect.poll(() => output.locator('pre').evaluate(element => {
+    const template = document.createElement('template');
+    template.innerHTML = element.textContent ?? '';
+    return {
+      preCount: template.content.querySelectorAll('pre').length,
+      text: template.content.querySelector('pre')?.textContent,
+      inlineCodeText: Array.from(template.content.querySelectorAll('pre code code'), node => node.textContent).join(''),
+    };
+  })).toEqual({ preCount: 1, text: recoveredText, inlineCodeText: 'const n = 1;\n' });
   await expect(page.getByRole('list', { name: 'Markdown HTML conversion details' })).toContainText('Block grouping/identity');
   const flowHTML = await output.locator('pre').innerText();
   await capture('paragraph-flow-conversion.png');
@@ -165,12 +175,19 @@ export async function markdownParagraphRecoveryJourney(page: Page, info: TestInf
     expect(await surface.locator('pre').evaluate(element => getComputedStyle(element).whiteSpace)).toMatch(/^(pre|pre-wrap|break-spaces)$/);
   };
   await verifyFlow(editor);
+  const verifyFlowCodeMarks = async () => {
+    // Syntax decorations can split a marked run into several DOM elements.
+    await expect.poll(async () => (await editor.locator('pre code code').allTextContents()).join(''))
+      .toBe('const n = 1;\n');
+  };
+  await verifyFlowCodeMarks();
   await editor.locator('pre').click();
   await page.keyboard.press('End');
   await page.keyboard.type(' changed');
   await expect(editor.locator('pre')).toContainText(' changed');
   await page.keyboard.press('ControlOrMeta+z');
   await verifyFlow(editor);
+  await verifyFlowCodeMarks();
   await capture('paragraph-flow-editor.png');
   const flowDownload = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download Markdown draft', exact: true }).click();

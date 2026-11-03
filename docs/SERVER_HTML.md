@@ -76,6 +76,29 @@ entry/CSS/runtime/heap limit, API/schema, dependency, fixture range or semantic
 oracle. Current-source cloud verification follows the push; no npm release or
 parity-row promotion is claimed from these local checks.
 
+## Browser assertion follow-up (2026-11-03, Unreleased)
+
+The first broad cloud run for `c49be47` finished with 839 passes, 16 skips and
+three failures: the same paragraph-recovery journey in Chromium, Firefox and
+WebKit. Its old assertion expected contiguous plain text inside serialized
+HTML. Preserved inline-code tags now correctly interrupt that raw string.
+
+The journey now parses that output in a detached native HTML template and
+checks the exact recovered text (including blank lines), one preformatted
+block and the exact inline-code text. The editor also checks code-mark scope
+before editing and after undo, allowing syntax decorations to split a marked
+run without changing its combined text. Existing structure, literal whitespace,
+typing/history, actual Markdown download/reopen and reader checks remain.
+Ordinary Markdown fences still disclose omitted formatting; the handoff does
+not promise those marks after reopening Markdown.
+
+All three desktop journeys pass locally, with recordings retained. Ten relevant
+captures were inspected: the Chromium conversion output plus editor, reader and
+390-pixel reader captures in each desktop engine. Framework types pass. This
+follow-up changes test assertions and documentation only; runtime source,
+CommonMark v13, fixture ranges and every numerical limit remain unchanged.
+A fresh broad cloud result is still required before npm publication.
+
 ## Read-only attribute inspection (2026-11-03, Unreleased)
 
 The server facade now inspects the parser's own attribute record without
