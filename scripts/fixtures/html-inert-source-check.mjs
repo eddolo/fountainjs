@@ -4,7 +4,8 @@ export function checkInertHTMLSource(core, server, inert) {
   const extension = inert.createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'lab.measurement'] });
   const rawExtension = inert.createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] });
   const blockExtension = inert.createInertHTMLBlockExtension({ tags: ['warning', 'lab-section'] });
-  const schema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...extension.nodes, ...rawExtension.nodes, ...blockExtension.nodes } });
+  const anchorExtension = inert.createInertHTMLAnchorExtension();
+  const schema = new Schema({ ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes, ...extension.nodes, ...rawExtension.nodes, ...blockExtension.nodes, ...anchorExtension.nodes } });
   const importer = new server.ServerHTMLImporter({ sourceTokens: true });
   const options = { parseHTMLDocument: importer.parseTextBlockFlow.bind(importer) };
   const source = "Before <FoO data-x='a'>outer <bar>inside</bar></FOO> after.\n";
@@ -107,6 +108,12 @@ export function checkInertHTMLSource(core, server, inert) {
       if (!redo(blockSession) || !redo(blockSession)) throw new Error('Inert block redo failed.');
       equal(blockSession.getJSON(), edited, 'block redo');
     } finally { blockSession.destroy(); }
+    const anchorDoc = importer.parse('<p><a href="javascript:bad()" data-owner="Ada">Evidence</a></p>', schema);
+    if (anchorDoc.child(0).child(0).type.name !== 'html_inert_anchor') throw new Error('Inert anchor data was omitted.');
+    const anchorHTML = HTMLExporter.export(anchorDoc, { document: false });
+    if (anchorHTML.includes('<a ') || anchorHTML.includes(' onclick=')) throw new Error('Inert anchor became active.');
+    equal(importer.parse(anchorHTML, schema).toJSON(), anchorDoc.toJSON(), 'anchor HTML reopen');
+    equal(MarkdownImporter.parse(MarkdownExporter.export(anchorDoc), schema, options).toJSON(), anchorDoc.toJSON(), 'anchor Markdown reopen');
     return true;
   } finally { editor.destroy(); }
 }

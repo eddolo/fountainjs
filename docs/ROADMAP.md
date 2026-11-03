@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+Anchor-retention follow-up (2026-11-03, Unreleased): the optional inert anchor
+adapter preserves otherwise unrepresented attributes and destinations with
+editable children and inactive reader carriers. Supported hyperlinks and native
+bookmarks keep their existing behavior. The explicit source-output CommonMark
+profile reaches 631/652; four conversion gaps and seventeen deliberate policies
+remain. Default/safe-reader profiles remain 563/613. See the
+[scope and import option](HTML_INERT_SOURCE.md#unsupported-anchor-retention-2026-11-03-unreleased).
+
 Position-mapping follow-up (2026-11-03, Unreleased): immutable copies now share
 a bounded checkpoint only across identical leading children. This reduces
 repeated size scans without a full index per history snapshot. Independent

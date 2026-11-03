@@ -1,5 +1,55 @@
 # Opt-in inert HTML source preservation (Unreleased)
 
+## Unsupported anchor retention (2026-11-03, Unreleased)
+
+`createInertHTMLAnchorExtension()` from `fountainjs-editor/html/inert` retains
+anchors that the built-in hyperlink mark cannot represent: extra attributes,
+unsupported targets, absent destinations or rejected URL data. The optional
+native bookmark extension takes priority for supported bookmarks. Supported
+hyperlinks keep their existing behavior, including Fountain's own destination
+carriers and generated `rel` attribute.
+
+```ts
+import { createInertHTMLAnchorExtension } from 'fountainjs-editor/html/inert';
+const extensions = [/* your existing extensions */, createInertHTMLAnchorExtension()];
+```
+
+The `html_inert_anchor` node stores bounded `attributes`, `tag: 'a'`, lexical
+`tokens`, and editable inline children. Its editor/reader output uses a span
+carrier and visible badge. Destinations, IDs, styles and event handlers remain
+data. The separate source-data exporter reconstructs the current anchor and
+attributes, including unsafe destinations; it must never supply reader HTML.
+Nested anchors that HTML would repair are refused by the source exporter.
+Oversized or damaged carriers are declined with readable descendants retained.
+
+The public inert-HTML workshop has an explicit anchor-retention option. Changing
+it starts a new sample and resets that workshop's document/history; the UI states
+this before the control is used. The sample includes an unsupported destination,
+an empty attributed anchor and an ordinary supported hyperlink.
+
+The unchanged CommonMark comparator now matches **631/652** cases in the optional
+source-output profile, including examples 616 and 631. Four format/semantic
+gaps remain (156–158 and 181), alongside seventeen intentional policies. Default
+and safe-reader scores remain 563/652 and 613/652. Exact untouched-source checks
+remain separate from semantic comparison and native document retention.
+
+Six targeted headless browser journeys pass across Chromium, Firefox and
+WebKit: native retained-anchor editing/history/JSON/Markdown/HTML reopening,
+plus the existing ordinary-link navigation and literal-Markdown workflow.
+Six new editor/reader screenshots were visually inspected. Videos were recorded
+but not reviewed. A first test-locator error and a stalled inner-frame screenshot
+capture are retained in the evidence; the final run captures the iframe element
+and keeps every editing/reopening assertion. This is focused regression coverage.
+
+Checkpoint validation passes 3,106 unit tests across 229 files, the 107-module
+DOM-free boundary, headless consumer types, framework type checks, packed
+ESM/CommonJS imports and anchor reopen contracts, all CommonMark profile gates,
+415 reviewed API declarations, bundle budgets and the production website build.
+The optional factory adds about 1 KiB of runtime code; only aggregate capacity
+was raised after retaining the original red budget result. Individual entry
+and CSS limits remain fixed. See the [source-bound evidence](../artifacts/inert-anchor-verification-20261103.json).
+This is not an npm release; the published version remains `0.4.0-beta.2`.
+
 ## Validated source-data export (2026-11-03, Unreleased)
 
 `fountainjs-editor/html/source` adds `exportHTMLSource(document, options?)`.

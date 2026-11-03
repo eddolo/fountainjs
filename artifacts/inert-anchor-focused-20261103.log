@@ -1,0 +1,73 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-inert-anchor.test.ts (14 tests | 1 failed) 77ms
+   ❯ explicit inert anchor fallback (14)
+     × keeps supported hyperlinks and higher-priority bookmarks native 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-inert-anchor.test.ts > explicit inert anchor fallback > keeps supported hyperlinks and higher-priority bookmarks native
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -4,23 +4,31 @@
+        "attrs": {
+          "align": "left",
+        },
+        "content": [
+          {
+-           "marks": [
+-             {
+            "attrs": {
+-                 "href": "folder/%09name",
+-                 "htmlHref": "folder/	name",
++             "attributes": {
++               "data-fountain-html-href": "folder/	name",
++               "href": "folder/name",
++               "rel": "noopener noreferrer nofollow",
+                "target": "_blank",
+-                 "title": "",
+              },
+-               "type": "link",
++             "tag": "a",
++             "tokens": {
++               "endTag": "</a>",
++               "origin": "html-input",
++               "startTag": "<a href=\"folder/name\" data-fountain-html-href=\"folder/&#9;name\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">",
+              },
+-           ],
++           },
++           "content": [
++             {
+                "text": "Link",
+                "type": "text",
++             },
++           ],
++           "type": "html_inert_anchor",
+          },
+        ],
+        "type": "paragraph",
+      },
+    ],
+
+ ❯ tests/html-inert-anchor.test.ts:81:96
+     79|     const encoded = importer.parse('<p><a href="folder/&#9;name">Link<…
+     80|     expect(retained(encoded)).toHaveLength(0);
+     81|     expect(importer.parse(HTMLExporter.export(encoded, { document: fal…
+       |                                                                                                ^
+     82|   });
+     83|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 89 passed (90)
+   Start at  01:01:22
+   Duration  3.40s (import 52%, transform 39%, tests 9%)
+
+    Isolate  3 workers spawned · ~129ms startup each (spawn + environment, per file)
+             at least ~259ms faster with isolate: false — reuses workers across files instead of one per file

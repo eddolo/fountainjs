@@ -1,5 +1,14 @@
 # Whole-document Markdown HTML conversion
 
+Unreleased anchor-retention follow-up (2026-11-03): an explicit inert anchor
+adapter retains otherwise unrepresented destinations/attributes in editable
+nodes and safe carrier HTML. Source-data export reconstructs them separately.
+Examples 616/631 now match in that source-output profile: **631/652**, with four
+conversion gaps plus seventeen existing policies remaining. The safe profile
+remains 613/652 and the default remains 563/652. This extends the earlier
+snapshot-only retention described below without relaxing active-link policy.
+See [the opt-in contract](HTML_INERT_SOURCE.md#unsupported-anchor-retention-2026-11-03-unreleased).
+
 Unreleased source-in-editor follow-up (2026-10-11): a real public-workshop
 journey exposed whole-source loss when StarterKit appended its default caret
 paragraph after an imported final list. Source matching now recognizes only

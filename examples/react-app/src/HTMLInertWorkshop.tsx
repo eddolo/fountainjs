@@ -4,10 +4,11 @@ import { EditorView, StarterKit, composeExtensions, createEditor, EditorState, S
   type Editor, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
 import { exportHTMLSource, type HTMLSourceResult } from 'fountainjs-editor/html/source';
-import { appendInertHTMLBlockParagraph, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
+import { appendInertHTMLBlockParagraph, createInertHTMLAnchorExtension, createInertHTMLBlockExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
 import './html-container-workshop.css';
 
 const samples = {
+  anchors: '<p>Review <a href="\\*" data-owner="Ada" onclick="globalThis.anchorPwned=1">the original evidence</a> before release.</p>\n<p><a foo="bar" _boolean zoop:33="zoop:33"></a> Empty anchor data is retained.</p>\n<p><a href="/safe" title="Ordinary link">Supported links stay links</a>.</p>',
   nested: "Before <FoO data-id='outer'>outside <bar data-id=inner>inside</bar> end</FOO> after.\n",
   empty: '<p><foo></foo> and <lab.measurement units="m">measurement</lab.measurement>.</p>',
   hostile: 'Before <fountain-unsafe onclick="globalThis.inertPwned=1" style="background:url(https://invalid.test/x)" href="javascript:alert(1)">Editable</fountain-unsafe> after.\n',
@@ -25,13 +26,23 @@ const options = { parseHTMLDocument: importer.parseTextBlockFlow.bind(importer) 
 
 /** A real public demo of the optional package entry, not a private schema copy. */
 export function HTMLInertWorkshop() {
+  const [preserveAnchors, setPreserveAnchors] = useState(false);
+  return <>
+    <label><input type="checkbox" checked={preserveAnchors} onChange={event => setPreserveAnchors(event.target.checked)} /> Preserve unsupported anchors (starts a new sample)</label>
+    <p>Changing this option resets this workshop's document and undo history. Save your work first.</p>
+    <HTMLInertWorkshopContent key={String(preserveAnchors)} preserveAnchors={preserveAnchors} />
+  </>;
+}
+
+function HTMLInertWorkshopContent({ preserveAnchors }: { preserveAnchors: boolean }) {
+  const initialSource = preserveAnchors ? samples.anchors : samples.nested;
   const mount = useRef<HTMLDivElement>(null);
   const editorRef = useRef<Editor | undefined>(undefined);
   const viewRef = useRef<EditorView | undefined>(undefined);
   const snapshot = useRef<MarkdownSourceSnapshot | undefined>(undefined);
   const [version, refresh] = useState(0);
   const [sourceResult, setSourceResult] = useState<{ document: Node; result: HTMLSourceResult }>();
-  const [input, setInput] = useState(samples.nested);
+  const [input, setInput] = useState(initialSource);
   const [inputFormat, setInputFormat] = useState<'Markdown' | 'HTML'>('Markdown');
   const [status, setStatus] = useState('Explicitly registered tags: foo, bar, lab.measurement and fountain-unsafe.');
   const [saved, setSaved] = useState('');
@@ -41,9 +52,10 @@ export function HTMLInertWorkshop() {
     const kit = composeExtensions([...StarterKit.extensions,
       createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'lab.measurement', 'fountain-unsafe'] }),
       createInertHTMLBlockExtension({ tags: ['lab-section', 'warning'] }),
+      ...(preserveAnchors ? [createInertHTMLAnchorExtension()] : []),
       createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] })]);
     const schema = new Schema(kit.schema);
-    const captured = MarkdownImporter.parseWithSource(samples.nested, schema, options);
+    const captured = MarkdownImporter.parseWithSource(initialSource, schema, options);
     snapshot.current = captured.source;
     const editor = createEditor({ schema: kit.schema, state: EditorState.create({ schema, doc: captured.document, plugins: kit.plugins }) });
     editorRef.current = editor;
@@ -58,7 +70,7 @@ export function HTMLInertWorkshop() {
   const destinations: unknown[] = [];
   const blockChoices: { path: readonly number[]; label: string }[] = [];
   editor?.state.doc.descendants((node, path) => {
-    if (['html_inert_inline', 'html_inert_raw_text', 'html_inert_block'].includes(node.type.name)) retained.push({ path, ...node.attrs });
+    if (['html_inert_inline', 'html_inert_raw_text', 'html_inert_block', 'html_inert_anchor'].includes(node.type.name)) retained.push({ path, ...node.attrs });
     if (node.type.name === 'html_inert_block') blockChoices.push({ path: [...path], label: `${String(node.attrs.tag)} (${path.join('.')})${node.childCount ? '' : ' — empty'}` });
     node.marks.forEach(mark => {
       if (mark.type.name !== 'link') return;
@@ -113,6 +125,7 @@ export function HTMLInertWorkshop() {
   const frame = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Inert source reader</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:"><style>body{font:16px/1.6 Arial;padding:16px;overflow-wrap:anywhere}p{min-height:1em;min-height:1lh}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;text-align:left}img{max-width:100%}[data-fountain-inert-badge]{color:#574384;font-size:.8em}[data-fountain-inert-raw-text] code{white-space:pre-wrap;display:inline-block;max-width:100%;min-width:1ch;overflow-wrap:anywhere}</style></head><body><main>${preview}</main></body></html>`;
   return <section id="inert-source" className="section-workshop" aria-label="Inert HTML preservation workshop" data-version={version}>
     <h2>Keep registered HTML as inert data</h2>
+    {preserveAnchors && <p>Unsupported anchor attributes and destinations are retained as inactive data. Edit their words normally; inspect their attributes below. Supported hyperlinks remain active links. Reconstructed source can restore the original destination and event attributes, so it is separate from the reader preview.</p>}
     <p>Unreleased, opt-in preservation for explicitly registered tags. Edit the words; inspect the original opening and closing tokens below. The tag, attributes and source spelling remain data, never live HTML behavior or layout. This is not arbitrary website reproduction or full CommonMark conformance.</p>
     <p>Source data can include secrets and hostile URLs. Retained does not mean private or trusted. No offsets or full original-file round-trip are promised for reconstructed Markdown input.</p>
     <p>Raw-text capture is separately opted in for script, style and textarea bodies. These remain literal source data: no execution, CSS application, live form control, or automatic language service. HTML parser newline/entity rules still apply; the source snapshot preserves untouched Markdown separately.</p>

@@ -14,7 +14,7 @@ export type HTMLSourceResult =
   | { readonly ok: true; readonly sourceHTML: string; readonly sanitized: false; readonly modelRoundTrip: 'equal-except-source-tokens' | 'different'; readonly issues: readonly HTMLSourceIssue[] }
   | { readonly ok: false; readonly issues: readonly HTMLSourceIssue[] };
 
-const types = new Set(['html_inert_inline', 'html_inert_block', 'html_inert_raw_text']);
+const types = new Set(['html_inert_inline', 'html_inert_block', 'html_inert_raw_text', 'html_inert_anchor']);
 const invalidUnicode = (value: string) => /\0|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(value);
 const escape = (value: string) => value.replace(/[&<>"'\r]/gu, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '\r': '&#13;' })[char]!);
 
@@ -27,7 +27,7 @@ function bodyTree(html: string): DefaultTreeAdapterMap['element'] {
 function projectCarriers(node: HTMLNode): void {
   if ('tagName' in node) {
     const get = (name: string) => node.attrs.find(attr => attr.name === name)?.value;
-    if (['inline', 'block', 'raw-text'].some(kind => get(`data-fountain-inert-${kind}`) === 'v1')) {
+    if (['inline', 'block', 'raw-text', 'anchor'].some(kind => get(`data-fountain-inert-${kind}`) === 'v1')) {
       const data = JSON.parse(get('data-fountain-inert-data') ?? 'null');
       const body = node.childNodes.find(child => 'attrs' in child && child.attrs.some(attr => attr.name === 'data-fountain-inert-content' && attr.value === 'true'));
       if (!data || !body || !('childNodes' in body)) throw new Error('Invalid source carrier in canonical HTML.');

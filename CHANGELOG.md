@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Optional `createInertHTMLAnchorExtension()` retains unsupported anchor
+  attributes/destinations as inactive editable source data. The public workshop
+  exposes an explicit opt-in; supported hyperlinks keep their behavior.
+
 - Reuse bounded shared-prefix position checkpoints across immutable document
   copies. Avoid repeated sibling-size scans without retaining full indexes for
   every historical snapshot; preserve branching edits, selection and undo.

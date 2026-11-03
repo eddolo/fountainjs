@@ -18,7 +18,7 @@ import {
 } from '../dist/index.js';
 import { ServerHTMLImporter } from '../dist/html-server.js';
 import { exportHTMLSource } from '../dist/html-source.js';
-import { createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from '../dist/html-inert.js';
+import { createInertHTMLAnchorExtension, createInertHTMLInlineExtension, createInertHTMLRawTextExtension } from '../dist/html-inert.js';
 import { checkMarkdownFlowBoundaries } from './check-markdown-flow-boundaries.mjs';
 import { checkMarkdownCodeLabels } from './check-markdown-code-labels.mjs';
 import { checkMarkdownDelimiterNeighbors } from './check-markdown-delimiter-neighbors.mjs';
@@ -1073,6 +1073,7 @@ for (const [preserveComments, preserveFlow, preserveAnchors, sourceOutput] of [[
     ...(preserveAnchors ? HTMLAnchorExtension.nodes : {}),
     ...(sourceOutput ? createInertHTMLInlineExtension({ tags: ['foo', 'bar', 'warning', 'bab', 'c2c', 'b2', 'responsive-image'] }).nodes : {}),
     ...(sourceOutput ? createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] }).nodes : {}),
+    ...(sourceOutput ? createInertHTMLAnchorExtension().nodes : {}),
   } });
   const counts = new Map();
   let retention = 0;

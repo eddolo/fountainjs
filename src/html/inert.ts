@@ -3,6 +3,7 @@ import { defineExtension, type FountainExtension } from '../extensions/extension
 import type { Editor } from '../core/editor';
 import { Selection } from '../core/selection';
 import { getNodeAtPath } from '../core/transaction/path';
+import { importedHTMLLinkURL } from '../core/importers/html-link-url';
 
 const payload = 'data-fountain-inert-data';
 const content = 'data-fountain-inert-content';
@@ -64,6 +65,14 @@ export function createInertHTMLBlockExtension(options: InertHTMLBlockOptions): F
   return createInertExtension(options?.tags, 'block');
 }
 
+/** Retain otherwise unrepresented anchors as inactive source with editable children.
+ * Ordinary supported hyperlinks and higher-priority bookmark rules still apply.
+ * Retained destinations/attributes never become navigation or live attributes.
+ */
+export function createInertHTMLAnchorExtension(): FountainExtension {
+  return createInertExtension(['a'], 'anchor');
+}
+
 /** Add an editable paragraph without silently changing an imported empty wrapper. */
 export function appendInertHTMLBlockParagraph(editor: Editor, path: readonly number[]): boolean {
   if (!editor.editable || !path.length || !path.every(index => Number.isInteger(index) && index >= 0)) return false;
@@ -76,15 +85,16 @@ export function appendInertHTMLBlockParagraph(editor: Editor, path: readonly num
   } catch { return false; }
 }
 
-function createInertExtension(supplied: readonly string[] | undefined, mode: 'inline' | 'raw' | 'block'): FountainExtension {
+function createInertExtension(supplied: readonly string[] | undefined, mode: 'inline' | 'raw' | 'block' | 'anchor'): FountainExtension {
   const rawText = mode === 'raw';
   const block = mode === 'block';
-  const marker = rawText ? 'data-fountain-inert-raw-text' : block ? 'data-fountain-inert-block' : 'data-fountain-inert-inline';
+  const anchor = mode === 'anchor';
+  const marker = rawText ? 'data-fountain-inert-raw-text' : block ? 'data-fountain-inert-block' : anchor ? 'data-fountain-inert-anchor' : 'data-fountain-inert-inline';
   const bodyTag = rawText ? 'code' : block ? 'div' : 'span';
   const shellTag = block ? 'div' : 'span';
   if (!Array.isArray(supplied) || supplied.length < 1 || supplied.length > 64
     || supplied.some(tag => typeof tag !== 'string' || !/^[a-z][a-z0-9.-]{0,63}$/u.test(tag)
-      || (rawText ? !['script', 'style', 'textarea'].includes(tag) : reserved.has(tag)))
+      || (rawText ? !['script', 'style', 'textarea'].includes(tag) : anchor ? tag !== 'a' : reserved.has(tag)))
     || new Set(supplied).size !== supplied.length) {
     throw new TypeError(rawText ? 'Inert raw text requires distinct script, style or textarea tags.'
       : `Inert HTML requires 1–64 distinct lowercase unknown ${mode} tags.`);
@@ -119,9 +129,9 @@ function createInertExtension(supplied: readonly string[] | undefined, mode: 'in
     catch { return false; }
   };
   return defineExtension({
-    name: rawText ? 'html-inert-raw-text' : block ? 'html-inert-block' : 'html-inert-inline',
+    name: rawText ? 'html-inert-raw-text' : block ? 'html-inert-block' : anchor ? 'html-inert-anchor' : 'html-inert-inline',
     ...(block ? { commands: { appendInertHTMLBlockParagraph } } : {}),
-    nodes: { [rawText ? 'html_inert_raw_text' : block ? 'html_inert_block' : 'html_inert_inline']: {
+    nodes: { [rawText ? 'html_inert_raw_text' : block ? 'html_inert_block' : anchor ? 'html_inert_anchor' : 'html_inert_inline']: {
       inline: !block, group: block ? 'block' : 'inline', content: rawText ? 'text*' : block ? 'block*' : 'inline*', ...(rawText ? { code: true } : {}), selectable: true, markdown: 'html',
       attrs: { tag: { validate: validTag }, attributes: { default: {}, validate: attributes }, tokens: { default: null, validate: tokens } },
       validate: node => JSON.stringify(data(node.attrs)).length <= 32_768,
@@ -129,6 +139,11 @@ function createInertExtension(supplied: readonly string[] | undefined, mode: 'in
         { tag: `${shellTag}[${marker}="v1"]`, priority: 100, getAttrs: carrier, contentElement: `:scope > ${bodyTag}[${content}="true"]` },
         { tag: [...names].map(tag => tag.replaceAll('.', '\\.')).join(','), priority: 0, getAttrs: element => {
           const keys = element.getAttributeNames?.();
+          if (anchor && keys && element.hasAttribute('href')
+            && keys.every(key => ['href', 'title', 'target', 'rel', 'data-fountain-link-href', 'data-fountain-html-href'].includes(key))
+            && [null, 'noopener noreferrer nofollow'].includes(element.getAttribute('rel'))
+            && [null, '_self', '_blank'].includes(element.getAttribute('target'))
+            && importedHTMLLinkURL(element.getAttribute('href')!) !== null) return false;
           return keys ? { tag: element.tagName.toLowerCase(),
             attributes: Object.fromEntries(keys.map(name => [name, element.getAttribute(name)])),
             tokens: element.getSourceTokens?.() ?? null } : false;
@@ -138,6 +153,7 @@ function createInertExtension(supplied: readonly string[] | undefined, mode: 'in
         [bodyTag, { [content]: 'true' }, 0],
         ['span', { 'data-fountain-inert-badge': 'true', contenteditable: 'false',
           title: rawText ? 'Literal source retained as data; scripts, styles and controls are not executed.'
+            : anchor ? 'Anchor attributes and destination retained as data; this is not an active link.'
             : 'Unknown HTML retained as data; behavior and layout are not reproduced.',
           'aria-label': `Preserved ${String(node.attrs.tag)} HTML` }, ` ⟦${String(node.attrs.tag)}: ${rawText ? 'inert source' : 'retained HTML'}⟧`]],
     } },

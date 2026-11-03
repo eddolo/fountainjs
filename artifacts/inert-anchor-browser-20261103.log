@@ -1,0 +1,148 @@
+[WebServer] (node:12760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:9708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:25264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:23848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:3200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening (12.8s)
+(node:24880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:63:1 › inspects and downloads retained HTML source without activating it (4.3s)
+(node:18004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [firefox] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening (6.2s)
+(node:5408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:63:1 › inspects and downloads retained HTML source without activating it (7.5s)
+(node:15376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [webkit] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening (3.9s)
+(node:25912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:63:1 › inspects and downloads retained HTML source without activating it (8.0s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening
+
+    Error: locator.evaluate: IndexSizeError: Failed to execute 'setStart' on 'Range': There is no child at offset 2.
+        at eval (eval at evaluate (:311:30), <anonymous>:3:11)
+        at UtilityScript.evaluate (<anonymous>:313:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:311:30), <anonymous>:3:11)
+        at UtilityScript.evaluate (<anonymous>:313:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at htmlInertAnchorJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-inert-anchor-journey.ts:18:28)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:61:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening
+
+    Error: locator.evaluate: Index or size is negative or greater than the allowed amount
+    @debugger eval code line 311 > eval:3:11
+    evaluate@debugger eval code:313:16
+    @debugger eval code:1:44
+    @debugger eval code:1:62
+
+        at @debugger eval code line 311 > eval:3:11
+        at evaluate@debugger eval code:313:16
+        at @debugger eval code:1:44
+        at @debugger eval code:1:62
+        at htmlInertAnchorJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-inert-anchor-journey.ts:18:28)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:61:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening
+
+    Error: locator.evaluate: IndexSizeError: The index is not in the allowed range.
+
+       at html-inert-anchor-journey.ts:18
+
+      16 |   const body = editor.locator('[data-fountain-inert-anchor]').first().locator('[data-fountain-inert-content]');
+      17 |   await body.scrollIntoViewIfNeeded();
+    > 18 |   const point = await body.evaluate(node => {
+         |                            ^
+      19 |     const text = document.createTreeWalker(node, NodeFilter.SHOW_TEXT).nextNode()!;
+      20 |     const range = document.createRange(); range.setStart(text, 2); range.setEnd(text, 3);
+      21 |     const rect = range.getBoundingClientRect(); return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+        at htmlInertAnchorJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\html-inert-anchor-journey.ts:18:28)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:61:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\inert-anchor-browser-20261103\editor-preserves-unsupport-3e2c0--history-and-safe-reopening-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening
+    [firefox] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening
+    [webkit] › tests\browser\editor.spec.ts:60:1 › preserves unsupported anchors through native editing history and safe reopening
+  3 passed (1.2m)
