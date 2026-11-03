@@ -1,0 +1,184 @@
+{
+  "baseCommit": "e8953e9ba42757a8821c983c2582b0f5db020c45",
+  "scope": "Declared Word theme languages, supplemental script fonts and regional defaults",
+  "verified": {
+    "newContracts": 25,
+    "beforeFailures": 20,
+    "focused": 48,
+    "fullUnitTests": 3413,
+    "files": 241,
+    "finalTestCleanup": "The full run preceded a test-only TS annotation cleanup; all 48 focused cases and framework types pass after it. Runtime source is unchanged.",
+    "actualBrowserJourneys": 3,
+    "reviewed": [
+      {
+        "path": "artifacts/docx-theme-language-real-20261103/chromium/editor-top.png",
+        "SHA256": "000e519cdf05f0f26ec7802fc388bb0b34e38c6a40960d1e3c4401021903a6ce"
+      },
+      {
+        "path": "artifacts/docx-theme-language-real-20261103/chromium/editor-reopened.png",
+        "SHA256": "2b82c7fbca8c2cf8a13fb178207c84e882a4b15b75ff23cb37c7dec889b2376a"
+      },
+      {
+        "path": "artifacts/docx-theme-language-real-20261103/firefox/editor-top.png",
+        "SHA256": "ed4ebcd64d60453ab2946f8dcc1e2bf093620bcc19a123765cfad47039aa26b4"
+      },
+      {
+        "path": "artifacts/docx-theme-language-real-20261103/firefox/editor-reopened.png",
+        "SHA256": "b2897d50070fa75e7f992b84cb3319520c527081276f076e92030b49e2b8b793"
+      },
+      {
+        "path": "artifacts/docx-theme-language-real-20261103/webkit/editor-top.png",
+        "SHA256": "c3862b56a5a476dc574b7587a51f3462268088bb7b2b67346ca8f43be4e0eab3"
+      },
+      {
+        "path": "artifacts/docx-theme-language-real-20261103/webkit/editor-reopened.png",
+        "SHA256": "990fecb74c348c41d9c41355a0f24af124abed06603a1e400565ff8c11871460"
+      }
+    ],
+    "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+    "exported": [
+      {
+        "engine": "chromium",
+        "exportedSHA256": "bd7d0124283a6112f8010849cee9f95103e0e464b69a177afaadd6bd9e3b8571",
+        "retainedImageSHA256": [
+          "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3"
+        ],
+        "completeJSONEquality": false
+      },
+      {
+        "engine": "firefox",
+        "exportedSHA256": "e2086ac6851430300570bc5a46a55051990e0366b6595c6abdff4282833d578b",
+        "retainedImageSHA256": [
+          "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3"
+        ],
+        "completeJSONEquality": false
+      },
+      {
+        "engine": "webkit",
+        "exportedSHA256": "137c9242a944265b8e3dc42284fee7984ff3a6fef83c323a9c5b5c803c258ed0",
+        "retainedImageSHA256": [
+          "1bd229eba23cb9f87ef155f0b85da2b6912ace199c0ce9c90f4ba81ac121de58",
+          "628104701f578c2eb21ffeb3772e6590639e8e643cb401b98fd84a49b22e26eb",
+          "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3"
+        ],
+        "completeJSONEquality": false
+      }
+    ],
+    "API": 415,
+    "headless": 113,
+    "packedESMAndCJSAndIndependentDOCXInterop": "passed",
+    "frameworkTypes": "passed",
+    "website": "passed"
+  },
+  "implementation": {
+    "sizes": {
+      "dist/docx.js": 189351,
+      "dist/docx.cjs": 153062,
+      "dist/styles.css": 89593
+    },
+    "addedESMBytes": 739,
+    "addedCJSBytes": 599,
+    "unrelatedBuiltFilesUnchanged": 166,
+    "sourceReferenceChanged": false,
+    "dependenciesOrAPISchemaChanged": false,
+    "Intl": "Explicit BCP-47 likely-script resolution; unavailable/invalid/indeterminate input retains fallback warnings. Runtime ICU versions may differ."
+  },
+  "capacity": {
+    "currentGate": "fails the four measured code caps",
+    "approval": "pending; proposal prepared and unapplied",
+    "proposal": "artifacts/docx-theme-language-capacity-proposal-20261103.patch",
+    "DOCXKiB": {
+      "ESM": [
+        184.25,
+        185
+      ],
+      "CJS": [
+        149,
+        149.5
+      ]
+    },
+    "aggregateKiB": {
+      "ESM": [
+        1651.75,
+        1652.5
+      ],
+      "CJS": [
+        1375,
+        1375.5
+      ]
+    },
+    "allLimitsChanged": false,
+    "runtimeHeapCSSOracleLimitsChanged": false
+  },
+  "remaining": [
+    "Independent native PDF/page review of this repair",
+    "Capacity approval before changing limits",
+    "List indentation/spacing, header positioning and other documented DOCX gaps",
+    "Fresh full cloud gate before npm release"
+  ],
+  "npm": "unchanged at 0.4.0-beta.2",
+  "sourceBinding": "SHA-256 of staged Git blobs; this manifest excluded to avoid circular hashes.",
+  "hashes": {
+    "CHANGELOG.md": "dab8e56cb0ef7cc7d90c28df2a270116d16609edd1330dd2bf2108251423d182",
+    "artifacts/docx-theme-language-api-20261103.log": "69c8bc9f702ecaa5b93250aca345240117f25448eba92ad7dd8ed003836f6589",
+    "artifacts/docx-theme-language-before-20261103.log": "d5e4d0bfab411fb39eeb0a51d08d7b04adc69be82ce4523d092159c846a204ac",
+    "artifacts/docx-theme-language-browser-20261103.log": "aa8d1f2b72bc89c24d26e6e8b3fd311c3df2661d4dc2554cdbc4fa1c25de9902",
+    "artifacts/docx-theme-language-browser.config.ts": "e49081cb759756400027a253711ff25f866c057faf5339714206b730c9d9585d",
+    "artifacts/docx-theme-language-build-20261103.log": "4ac5e02f48d4b14d23461c8b39f0ae066c6791d0dcf7466f02198adac71500f9",
+    "artifacts/docx-theme-language-capacity-proposal-20261103.patch": "846e28be34a3b4eaf510a6b95cbda590e7ed915164f8fe60376a72bada7dbaeb",
+    "artifacts/docx-theme-language-checks-20261103.json": "f7f22aa7b524c0871416f09b6fe1ee726efdeb50ebedaa623b1a8c329dad79b3",
+    "artifacts/docx-theme-language-focused-20261103.log": "9578493b0d389d0bfb911ddcd978482aca63ad7b0f6bb95ffbf8bcbb019b0a4e",
+    "artifacts/docx-theme-language-focused-final-20261103.log": "18f9da2e79169e9ef55127d7b2c2227a4938f7af3eefc981b7abddf3eea35bd8",
+    "artifacts/docx-theme-language-full-tests-20261103.log": "4e302d668bc73c4a1ee76c2fb117c4820d790013baa2943aaaee9549cf004311",
+    "artifacts/docx-theme-language-headless-20261103.log": "4bc782998160601df8f3b232cf13ed35459c5b2cce8b63895c6ed198e80b05df",
+    "artifacts/docx-theme-language-inspect-chromium-20261103.log": "35b0bb20c541c567de58f3c16aa34dc4dbbf1dc6cb5f6c730b5fc13dc0bc20cb",
+    "artifacts/docx-theme-language-inspect-firefox-20261103.log": "35b0bb20c541c567de58f3c16aa34dc4dbbf1dc6cb5f6c730b5fc13dc0bc20cb",
+    "artifacts/docx-theme-language-inspect-webkit-20261103.log": "35b0bb20c541c567de58f3c16aa34dc4dbbf1dc6cb5f6c730b5fc13dc0bc20cb",
+    "artifacts/docx-theme-language-interop-20261103.log": "23fe034426b06916a288a8ef86763b3975b4d08a78875166624eb3b6a3f63137",
+    "artifacts/docx-theme-language-package-20261103.log": "2d830157e3a610825f4a83155061bf1a73bdc2db2fe05dc01284cb1c2f8c022f",
+    "artifacts/docx-theme-language-prepare-chromium-20261103.log": "586d8d81b3658ae13f80a05206f791375cd2fbbeb128a226b268b40b45f537e0",
+    "artifacts/docx-theme-language-prepare-firefox-20261103.log": "586d8d81b3658ae13f80a05206f791375cd2fbbeb128a226b268b40b45f537e0",
+    "artifacts/docx-theme-language-prepare-webkit-20261103.log": "586d8d81b3658ae13f80a05206f791375cd2fbbeb128a226b268b40b45f537e0",
+    "artifacts/docx-theme-language-real-20261103/chromium/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-language-real-20261103/chromium/editor-reopened.png": "2b82c7fbca8c2cf8a13fb178207c84e882a4b15b75ff23cb37c7dec889b2376a",
+    "artifacts/docx-theme-language-real-20261103/chromium/editor-top.png": "000e519cdf05f0f26ec7802fc388bb0b34e38c6a40960d1e3c4401021903a6ce",
+    "artifacts/docx-theme-language-real-20261103/chromium/exported.docx": "bd7d0124283a6112f8010849cee9f95103e0e464b69a177afaadd6bd9e3b8571",
+    "artifacts/docx-theme-language-real-20261103/chromium/interchange-report.json": "98a6b9e4e4eac8abc21cc871eda57fd736256b19423fe54efdaceb35f6519ca6",
+    "artifacts/docx-theme-language-real-20261103/chromium/reopened-model.json": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01",
+    "artifacts/docx-theme-language-real-20261103/chromium/source-model.json": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690",
+    "artifacts/docx-theme-language-real-20261103/firefox/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-language-real-20261103/firefox/editor-reopened.png": "b2897d50070fa75e7f992b84cb3319520c527081276f076e92030b49e2b8b793",
+    "artifacts/docx-theme-language-real-20261103/firefox/editor-top.png": "ed4ebcd64d60453ab2946f8dcc1e2bf093620bcc19a123765cfad47039aa26b4",
+    "artifacts/docx-theme-language-real-20261103/firefox/exported.docx": "e2086ac6851430300570bc5a46a55051990e0366b6595c6abdff4282833d578b",
+    "artifacts/docx-theme-language-real-20261103/firefox/interchange-report.json": "02ec6e3292cf7615ee067b822ea2d5427692c77dc579ed1c3410079ce985de45",
+    "artifacts/docx-theme-language-real-20261103/firefox/reopened-model.json": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01",
+    "artifacts/docx-theme-language-real-20261103/firefox/source-model.json": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690",
+    "artifacts/docx-theme-language-real-20261103/webkit/browser-observations.json": "fdff66a3f1236e0872ff93500d71eef36253ede04d771f2bee71fd8e8c1ba049",
+    "artifacts/docx-theme-language-real-20261103/webkit/editor-reopened.png": "990fecb74c348c41d9c41355a0f24af124abed06603a1e400565ff8c11871460",
+    "artifacts/docx-theme-language-real-20261103/webkit/editor-top.png": "c3862b56a5a476dc574b7587a51f3462268088bb7b2b67346ca8f43be4e0eab3",
+    "artifacts/docx-theme-language-real-20261103/webkit/exported.docx": "137c9242a944265b8e3dc42284fee7984ff3a6fef83c323a9c5b5c803c258ed0",
+    "artifacts/docx-theme-language-real-20261103/webkit/interchange-report.json": "64840351d1651af1e1711ba48518bda2a4e90600de8639445158df305a6f7696",
+    "artifacts/docx-theme-language-real-20261103/webkit/reopened-model.json": "3eebb03ad1fec76f20296611e122911a98ab9bbe9d8a588b072a264bdc6e7b01",
+    "artifacts/docx-theme-language-real-20261103/webkit/source-model.json": "e008e9b1c0555ad492001fd47857b0bb57badc0a016cc770a74ddcbe1c0d3690",
+    "artifacts/docx-theme-language-runtime-scope-20261103.json": "0db329372548a6b84ff24756cf1d56b4f8c199689ffdc43432503a4cadb16af8",
+    "artifacts/docx-theme-language-site-20261103.log": "fe3c484ea015a5947eb28920161c1aa8918973a2ada052b40513e09aa70ca668",
+    "artifacts/docx-theme-language-size-20261103.log": "62d70e091307bd6676ce20fe07b51d9714d822fa3ee7aa8bb8b44c7688e0b350",
+    "artifacts/docx-theme-language-types-20261103.log": "4de17ba9921c72d7773e8b8dcc52b901c5795263fb05cf68b09d1011f89a861d",
+    "artifacts/docx-theme-language-types-final-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/docx-theme-language-visual-review-20261103.json": "fd82065c73cc2cd5afd17f3c19a09902556ecac2ac63f2f286b9560388808ff7",
+    "artifacts/write-docx-theme-language-verification-20261103.mjs": "7b8a6de0b495be6e1f9692ad2464319a375ec092254f8111bacb2deceb5edfcd",
+    "docs/DOCX_FIDELITY_CHECKPOINT.md": "b6061c24e786beee102535f7c67618e30e55cd1eea0f8df06df7f4963bdd8b22",
+    "docs/DOCX_NATIVE_AUDIT.md": "f8c699ed3da8cc876e94060ac5432f2de91b95d71a01fb7abbee0cc8ca0fba34",
+    "docs/ROADMAP.md": "cba6e7e613a21733f195d541bbdbf63724af84283c0126e980a1853e8a91169d",
+    "scripts/native-docx-audit.mjs": "4b344c80374da233390fe5dbd04ad852bcd311794e6be46707874ea250362f2d",
+    "scripts/smoke-package.mjs": "41c0e4f137744b14ed941ea21dd1e62dd96f0ef79a1c7fe1b1a3c6c41b498a41",
+    "src/docx/theme-fonts.ts": "ea65c240c1123337cd8cb5f444c1e9795de80030eb343f951964e9a0ce3c8e0a",
+    "tests/docx-theme-fonts.test.ts": "6d3c3ecf09aaaf2403a3c4404a7ce9be6b876989a4d2767bb488bf38c40434ad",
+    "tests/docx-theme-language.test.ts": "b6eb30181a7d4c8d1d8b6265561acfa897419b45491b0ac334401ada5f1c54fb",
+    "tests/native-docx/editor.spec.ts": "4eb40b4e0d3fd65bac3d2b6e7faed69fefe0a115563ade2da2018bb7f9fa0952"
+  }
+}

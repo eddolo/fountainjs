@@ -1,0 +1,22 @@
+[
+  {
+    "name": "api",
+    "exitCode": 0
+  },
+  {
+    "name": "headless",
+    "exitCode": 0
+  },
+  {
+    "name": "package",
+    "exitCode": 0
+  },
+  {
+    "name": "interop",
+    "exitCode": 0
+  },
+  {
+    "name": "types",
+    "exitCode": 1
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "compared": 168,
+  "different": [
+    "dist/docx.cjs",
+    "dist/docx.js"
+  ],
+  "sizes": {
+    "dist/docx.js": 189351,
+    "dist/docx.cjs": 153062,
+    "dist/styles.css": 89593
+  }
+}

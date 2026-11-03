@@ -1,0 +1,62 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+stderr | tests/docx-theme-language.test.ts > declared Word theme languages > falls back with a located warning if Intl.Locale is unavailable
+[vitest] The Locale mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+ ❯ tests/docx-theme-language.test.ts (25 tests | 2 failed) 238ms
+   ❯ declared Word theme languages (25)
+     × reports an unresolved language rather than silently claiming its fallback (und) 5ms
+     × falls back with a located warning if Intl.Locale is unavailable 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > reports an unresolved language rather than silently claiming its fallback (und)
+AssertionError: expected 'Calibri' to be 'Arial' // Object.is equality
+
+Expected: "Arial"
+Received: "Calibri"
+
+ ❯ tests/docx-theme-language.test.ts:65:37
+     63|   it.each(['zz-ZZ', 'not_a_tag', '', 'und', 'x'.repeat(129)])('reports…
+     64|     const result = importDOCX(source(`w:val="${language}"`), schema);
+     65|     expect(family(result.document)).toBe('Arial');
+       |                                     ^
+     66|     expect(result.report.issues.filter(issue => issue.code === 'font-t…
+     67|     expect(result.report.issues.some(issue => issue.code === 'theme-fo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > falls back with a located warning if Intl.Locale is unavailable
+AssertionError: expected { …(4) } to match object { …(2) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "code": "font-theme-not-resolved",
+    "path": [
+      0,
+-     0,
+    ],
+  }
+
+ ❯ tests/docx-theme-language.test.ts:78:37
+     76|     const result = importDOCX(source('w:val="en-US"'), schema);
+     77|     expect(family(result.document)).toBe('Arial');
+     78|     expect(result.report.issues[0]).toMatchObject({ code: 'font-theme-…
+       |                                     ^
+     79|   });
+     80|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 46 passed (48)
+   Start at  21:06:54
+   Duration  3.34s (transform 44%, import 43%, tests 13%)
+
+    Isolate  3 workers spawned · ~128ms startup each (spawn + environment, per file)
+             at least ~256ms faster with isolate: false — reuses workers across files instead of one per file

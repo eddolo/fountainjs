@@ -1,0 +1,18 @@
+[WebServer] (node:13920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:27468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\native-docx\editor.spec.ts:5:1 › edits the independent scientific Word source and downloads the native audit export (6.1s)
+(node:25652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\native-docx\editor.spec.ts:5:1 › edits the independent scientific Word source and downloads the native audit export (9.2s)
+(node:25504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\native-docx\editor.spec.ts:5:1 › edits the independent scientific Word source and downloads the native audit export (12.9s)
+
+  3 passed (35.2s)

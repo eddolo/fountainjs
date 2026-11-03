@@ -1,0 +1,211 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-theme-language.test.ts (25 tests | 20 failed) 173ms
+   ❯ declared Word theme languages (25)
+     × uses the embedded Latin default for en-US and keeps it through native export 18ms
+     × uses the embedded Latin default for fr-FR and keeps it through native export 3ms
+     × uses the embedded Latin default for de-DE and keeps it through native export 3ms
+     × uses the embedded Latin default for it-IT and keeps it through native export 2ms
+     × selects ja-JP supplemental fonts through the public import boundary 5ms
+     × selects ko-KR supplemental fonts through the public import boundary 2ms
+     × selects zh-CN supplemental fonts through the public import boundary 3ms
+     × selects zh-TW supplemental fonts through the public import boundary 2ms
+     × selects sr-Cyrl-RS supplemental fonts through the public import boundary 2ms
+     × selects sr-Latn-RS supplemental fonts through the public import boundary 2ms
+     × selects ar-SA supplemental fonts through the public import boundary 1ms
+     × selects he-IL supplemental fonts through the public import boundary 1ms
+     × keeps major/minor groups and all three language roles independent 2ms
+     × uses a regional default when the declared script has no supplemental entry 2ms
+     × reports an unresolved language rather than silently claiming its fallback () 1ms
+     × honours an explicit script even when it differs from the language default 2ms
+     × does not choose one of two declarations for the same supplemental script 3ms
+     × honours namespace aliases and ignores foreign font and attribute lookalikes 2ms
+     × reports an empty matching font instead of reviving a regional or named face as a theme match 3ms
+     × repairs font selection in the unchanged independently produced scientific document 106ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > uses the embedded Latin default for en-US and keeps it through native export
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > uses the embedded Latin default for fr-FR and keeps it through native export
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > uses the embedded Latin default for de-DE and keeps it through native export
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > uses the embedded Latin default for it-IT and keeps it through native export
+AssertionError: expected 'Arial' to be 'Calibri' // Object.is equality
+
+Expected: "Calibri"
+Received: "Arial"
+
+ ❯ tests/docx-theme-language.test.ts:32:37
+     30|     expect(typeof document).toBe('undefined');
+     31|     const result = importDOCX(source(`w:val="${language}"`), schema);
+     32|     expect(family(result.document)).toBe('Calibri');
+       |                                     ^
+     33|     expect(result.report.issues.map(issue => issue.code)).toEqual(['th…
+     34|     expect(family(importDOCX(exportDOCX(result.document).bytes, schema…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects ja-JP supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects ko-KR supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects zh-CN supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects zh-TW supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects sr-Cyrl-RS supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects sr-Latn-RS supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects ar-SA supplemental fonts through the public import boundary
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > selects he-IL supplemental fonts through the public import boundary
+AssertionError: expected 'Arial' to be 'Georgia' // Object.is equality
+
+Expected: "Georgia"
+Received: "Arial"
+
+ ❯ tests/docx-theme-language.test.ts:44:37
+     42|   ])('selects %s supplemental fonts through the public import boundary…
+     43|     const result = importDOCX(source(`w:val="${language}"`, '', theme(…
+     44|     expect(family(result.document)).toBe('Georgia');
+       |                                     ^
+     45|     expect(result.document.textContent).toBe('Preserved technical pros…
+     46|     expect(family(importDOCX(exportDOCX(result.document).bytes, schema…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > keeps major/minor groups and all three language roles independent
+AssertionError: expected { Object (reason) } to deeply equal { name: 'Calibri' }
+
+- Expected
++ Received
+
+  {
+-   "name": "Calibri",
++   "reason": "language-dependent-theme-font",
+  }
+
+ ❯ tests/docx-theme-language.test.ts:52:44
+     50|     const resolver = readWordThemeFonts(xml(theme('<a:font script="Jpa…
+     51|       '<a:font script="Jpan" typeface="Minor Japanese"/>')), xml(setti…
+     52|     expect(resolver.resolve('majorAscii')).toEqual({ name: 'Calibri' }…
+       |                                            ^
+     53|     expect(resolver.resolve('minorHAnsi')).toEqual({ name: 'Cambria' }…
+     54|     expect(resolver.resolve('majorEastAsia')).toEqual({ name: 'Japanes…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > uses a regional default when the declared script has no supplemental entry
+AssertionError: expected 'Arial' to be 'Calibri' // Object.is equality
+
+Expected: "Calibri"
+Received: "Arial"
+
+ ❯ tests/docx-theme-language.test.ts:60:74
+     58|
+     59|   it('uses a regional default when the declared script has no suppleme…
+     60|     expect(family(importDOCX(source('w:val="ja-JP"'), schema).document…
+       |                                                                          ^
+     61|   });
+     62|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > reports an unresolved language rather than silently claiming its fallback ()
+AssertionError: expected 'Calibri' to be 'Arial' // Object.is equality
+
+Expected: "Arial"
+Received: "Calibri"
+
+ ❯ tests/docx-theme-language.test.ts:65:37
+     63|   it.each(['zz-ZZ', 'not_a_tag', '', 'und', 'x'.repeat(129)])('reports…
+     64|     const result = importDOCX(source(`w:val="${language}"`), schema);
+     65|     expect(family(result.document)).toBe('Arial');
+       |                                     ^
+     66|     expect(result.report.issues.filter(issue => issue.code === 'font-t…
+     67|     expect(result.report.issues.some(issue => issue.code === 'theme-fo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > honours an explicit script even when it differs from the language default
+AssertionError: expected 'Arial' to be 'Georgia' // Object.is equality
+
+Expected: "Georgia"
+Received: "Arial"
+
+ ❯ tests/docx-theme-language.test.ts:71:136
+     69|
+     70|   it('honours an explicit script even when it differs from the languag…
+     71|     expect(family(importDOCX(source('w:val="en-Cyrl-US"', '', theme('<…
+       |                                                                                                                                        ^
+     72|   });
+     73|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > does not choose one of two declarations for the same supplemental script
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/docx-theme-language.test.ts:83:8
+     81|   it('does not choose one of two declarations for the same supplementa…
+     82|     expect(() => importDOCX(source('w:val="ja-JP"', '', theme('<a:font…
+     83|       .toThrow(/Ambiguous Word theme script Jpan/);
+       |        ^
+     84|   });
+     85|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > honours namespace aliases and ignores foreign font and attribute lookalikes
+AssertionError: expected 'Arial' to be 'Calibri' // Object.is equality
+
+Expected: "Calibri"
+Received: "Arial"
+
+ ❯ tests/docx-theme-language.test.ts:89:88
+     87|     const contents = theme('<x:font xmlns:x="urn:foreign" script="Jpan…
+     88|       .replaceAll('a:', 'd:').replace('xmlns:a=', 'xmlns:d=');
+     89|     expect(family(importDOCX(source('w:val="en-US"', '', contents), sc…
+       |                                                                                        ^
+     90|   });
+     91|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > reports an empty matching font instead of reviving a regional or named face as a theme match
+AssertionError: expected 'The Word ascii theme font was not res…' to contain 'missing-theme-font'
+
+Expected: "missing-theme-font"
+Received: "The Word ascii theme font was not resolved (language-dependent-theme-font). Any explicit Latin font remains a fallback, not a certified theme match."
+
+ ❯ tests/docx-theme-language.test.ts:95:45
+     93|     const result = importDOCX(source('w:val="ja-JP"', '', theme('<a:fo…
+     94|     expect(family(result.document)).toBe('Arial');
+     95|     expect(result.report.issues[0].message).toContain('missing-theme-f…
+       |                                             ^
+     96|   });
+     97|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯
+
+ FAIL  tests/docx-theme-language.test.ts > declared Word theme languages > repairs font selection in the unchanged independently produced scientific document
+AssertionError: expected 'Arial' to be 'Calibri' // Object.is equality
+
+Expected: "Calibri"
+Received: "Arial"
+
+ ❯ tests/docx-theme-language.test.ts:100:37
+     98|   it('repairs font selection in the unchanged independently produced s…
+     99|     const result = importDOCX(readFileSync(new URL('./fixtures/native-…
+    100|     expect(family(result.document)).toBe('Calibri');
+       |                                     ^
+    101|     expect(result.document.child(0).attrs.layout.fontFamily).toBe('Cal…
+    102|     expect(family(importDOCX(exportDOCX(result.document).bytes, schema…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/20]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  20 failed | 5 passed (25)
+   Start at  21:07:35
+   Duration  2.63s (transform 53%, import 40%, tests 7%)
