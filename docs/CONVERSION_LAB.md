@@ -11,6 +11,16 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+Preformatted formatting follow-up (2026-11-03, Unreleased): ordinary HTML
+imports now retain supported text marks in code buffers. Safe HTML export keeps
+those marks and typed font/layout context. **Check round trip** shows export
+findings under **Round-trip result**, separately from the original **Import
+report**. Ordinary Markdown fences keep literal code but report omitted text
+formatting/layout. Use the file tabs to return to the original draft after
+opening an export; its document and undo history remain separate. This is not
+arbitrary HTML/CSS or pixel-fidelity certification.
+[Supported boundary and evidence](SERVER_HTML.md#supported-preformatted-text-formatting-2026-11-03-unreleased).
+
 HTML structure follow-up (2026-11-02, Unreleased): select **Preserve supported
 HTML structure** under **Options for the next files**, then choose an HTML or
 Markdown file. The lab installs the optional section, comment, anonymous-flow

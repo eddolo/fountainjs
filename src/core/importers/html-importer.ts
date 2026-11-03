@@ -18,6 +18,7 @@ import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
 import { tableBackground } from '../table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
 import { readParagraphLayout } from '../paragraph-layout';
+import { preformattedContent } from './html-preformatted';
 import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../text-direction';
 import { readImageCaptionAttributes } from '../image-caption';
 import { readTableLayout, readTableRow } from '../table-layout';
@@ -478,15 +479,14 @@ function paragraph(element: Element, schema: Schema, childContext = false): Foun
   return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
-/** A real HTML break occupies a preformatted line even though textContent omits it. */
-function preformattedText(element: Element): string {
-  const walker = element.ownerDocument.createTreeWalker(element, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
-  let text = '';
-  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    if (node.nodeType === globalThis.Node.TEXT_NODE) text += node.textContent ?? '';
-    else if (node instanceof HTMLElement && node.tagName.toLowerCase() === 'br') text += '\n';
-  }
-  return text;
+function preformattedChildren(element: Element, schema: Schema): FountainNode[] {
+  return preformattedContent<globalThis.Node>(element, schema, {
+    kind: node => node.nodeType === globalThis.Node.TEXT_NODE ? 'text' : node.nodeType === globalThis.Node.ELEMENT_NODE ? 'element' : 'ignore',
+    children: node => Array.from(node.childNodes),
+    tag: node => node instanceof Element ? node.tagName.toLowerCase() : '',
+    text: node => node.textContent ?? '',
+    marks: (node, marks) => node instanceof HTMLElement ? elementMarks(node, schema, marks) : marks,
+  });
 }
 
 function tableCellWidths(cell: Element, colspan: number): number[] | null {
@@ -643,7 +643,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     lineNumbers: element.getAttribute('data-line-numbers') !== 'false',
     ...readParagraphLayout(element),
     ...(schema.nodes.code_block.spec.attrs?.dir ? readTextDirection(element, schema) : {}),
-  }, [schema.text(preformattedText(element))])];
+  }, preformattedChildren(element, schema))];
   if (tag === 'hr') return [schema.node('horizontal_rule')];
   if (tag === 'ul' || tag === 'ol') {
     const isTask = element.getAttribute('data-type') === 'task-list';

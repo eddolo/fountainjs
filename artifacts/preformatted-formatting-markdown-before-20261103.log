@@ -1,0 +1,59 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-preformatted-formatting.test.ts (29 tests | 2 failed) 157ms
+   × reports marks and layout omitted by ordinary Markdown fences while keeping code literal 8ms
+   × bounds repeated code-format diagnostics by mark type per block 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > reports marks and layout omitted by ordinary Markdown fences while keeping code literal
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "kind": "mark",
+  "path": [
+    0,
+    0,
+  ],
+  "type": "em",
+}
+
++ Received:
+[]
+
+ ❯ tests/html-preformatted-formatting.test.ts:111:25
+    109|   expect(result.markdown).toContain('**literal**\nx < y');
+    110|   expect(MarkdownImporter.parse(result.markdown, schema).textContent).…
+    111|   expect(result.losses).toContainEqual(expect.objectContaining({ kind:…
+       |                         ^
+    112|   expect(result.losses).toContainEqual(expect.objectContaining({ kind:…
+    113| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > bounds repeated code-format diagnostics by mark type per block
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/html-preformatted-formatting.test.ts:117:121
+    115| it('bounds repeated code-format diagnostics by mark type per block', (…
+    116|   const document = schema.node('doc', {}, [schema.node('code_block', {…
+    117|   expect(MarkdownExporter.exportWithReport(document).losses.filter(los…
+       |                                                                                                                         ^
+    118| });
+    119|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 27 passed (29)
+   Start at  19:24:27
+   Duration  4.22s (transform 35%, import 34%, environment 27%, tests 4%)

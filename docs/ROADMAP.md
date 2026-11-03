@@ -1,5 +1,24 @@
 # FountainJS opportunity roadmap
 
+Supported preformatted formatting (2026-11-03, Unreleased): browser/server HTML
+imports and safe HTML exports now retain supported text marks, safe links,
+registered mark adapters and typed font/layout context in literal code buffers.
+The standalone reader shares the source-aware palette; highlights retain owned
+foreground colours. Ordinary Markdown fences report omitted marks/layout.
+Five actual import/edit/history/download/native-reader/reopen journeys pass;
+22 final screenshots were inspected. Full units pass 3,377 / 240 files;
+packed/root/core Node/workerd contracts, types/API/headless, the unchanged
+CommonMark gate, performance/retention and site checks pass. Exact safe-HTML
+native reopens improve to 1,298/1,304; body scores stay 563/613/631/635.
+CSS cleanup fits its existing allowance, leaves all runtime bytes unchanged,
+and passes all five browser journeys with 22 byte-identical reviewed captures.
+The user explicitly approved the measured aggregate code-capacity adjustment;
+the size gate now passes. All entry/CSS/latency/heap and semantic limits remain
+unchanged. New-source cloud verification follows the push.
+No parity-row promotion or npm release. Arbitrary CSS/media/layout fidelity,
+physical devices and complete CommonMark certification remain open.
+[Contract and evidence](SERVER_HTML.md#supported-preformatted-text-formatting-2026-11-03-unreleased).
+
 Server attribute-inspection follow-up (2026-11-03, Unreleased): profile evidence
 finds repeated parser attribute-array construction. Read the same own record
 without those temporary objects, preserving lookup order, case handling,

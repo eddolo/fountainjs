@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve supported text formatting inside HTML preformatted code through
+  browser/server import and safe HTML export, including typed font/layout
+  context, safe links and extension-defined marks. Keep literal source intact.
+  Share the source-aware code palette with the standalone HTML reader and
+  preserve owned foreground colours inside highlights. Report formatting/layout
+  omitted by ordinary Markdown fences without false losses for exact source
+  reuse or an explicit HTML export policy. Arbitrary CSS/media/layout fidelity
+  and original text-leaf segmentation remain outside this bridge.
+
 - Avoid rebuilding parser attribute-object arrays for read-only server HTML
   lookups. Preserve case handling, lookup order, empty/missing values, frozen
   name enumeration and existing import/validation policies; retain no cache.

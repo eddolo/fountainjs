@@ -185,6 +185,9 @@ function reportNodeAttributes(
   if (name === 'code_block' && node.attrs.lineNumbers === false) {
     report(context, 'attribute', name, path, 'The code-block line-number preference is not represented by Markdown fences.');
   }
+  if (name === 'code_block' && node.attrs.layout != null) {
+    report(context, 'attribute', name, path, 'Code-block layout and font context are not represented by Markdown fences; retain Fountain JSON or safe HTML.');
+  }
   if (['inline_math', 'math_block'].includes(name) && node.attrs.ariaLabel) {
     report(context, 'attribute', name, path, 'The accessible math label is not represented by TeX delimiters.');
   }
@@ -237,7 +240,7 @@ function rubyBaseHTML(node: Node, context: RenderContext, path: readonly number[
     else if (name === 'code') value = `<code>${value}</code>`;
     else if (name === 'subscript') value = `<sub>${value}</sub>`;
     else if (name === 'superscript') value = `<sup>${value}</sup>`;
-    else if (name === 'highlight') value = `<mark style="background-color:${escapeHTML(mark.attrs.color)}">${value}</mark>`;
+    else if (name === 'highlight') value = `<mark style="background-color:${escapeHTML(mark.attrs.color)};color:inherit">${value}</mark>`;
     else if (name === 'text_color') value = `<span style="color:${escapeHTML(mark.attrs.color)}">${value}</span>`;
     else if (name === 'font_family') value = `<span style="font-family:${escapeHTML(fontFamilyCSS(mark.attrs.family))}">${value}</span>`;
     else if (name === 'font_size') value = `<span style="font-size:${escapeHTML(mark.attrs.size)}">${value}</span>`;
@@ -597,7 +600,15 @@ function render(
     }).join('\n');
     case 'list_item': case 'task_item': return node.content
       .map((child, index) => render(child, context, [...path, index])).join('\n\n');
-    case 'code_block': return fencedCode(node);
+    case 'code_block': {
+      let reported: Set<string> | undefined;
+      node.content.forEach((child, index) => child.marks.forEach(mark => {
+        if (reported?.has(mark.type.name)) return;
+        (reported ??= new Set()).add(mark.type.name);
+        report(context, 'mark', mark.type.name, [...path, index], 'Text formatting inside code is not represented by Markdown fences; retain Fountain JSON or safe HTML.');
+      }));
+      return fencedCode(node);
+    }
     case 'horizontal_rule': return '* * *';
     case 'hard_break': return '  \n';
     case 'math_block': return `$$\n${String(node.attrs.latex ?? '')}\n$$`;

@@ -1,0 +1,46 @@
+{
+  "nativeGaps": [
+    24,
+    48
+  ],
+  "editorGaps": [
+    23.09375,
+    46.1875
+  ],
+  "readerGaps": [
+    27.1875,
+    54.375
+  ],
+  "gutter": {
+    "supported": true,
+    "content": "\"1\\a 2\" / \"\"",
+    "codeHeight": 46.1875,
+    "gutterLineHeight": "23.1px",
+    "codeLineHeight": "23.1px",
+    "sourceOnlyText": "first\nsecond"
+  },
+  "accessibleCode": "- region \"text code\":\n  - text: text\n  - code: first second",
+  "nativeSelectedCode": "first\nsecond edited",
+  "nativeSelectedFormatted": "important ",
+  "externalClipboard": {
+    "trusted": true,
+    "plain": "first\nsecond edited",
+    "types": [
+      "text/plain",
+      "text/html",
+      "application/x-fountainjs+json"
+    ]
+  },
+  "nativeOwnedWidth": 114.078125,
+  "editorOwnedWidth": 114.078125,
+  "editorLiteralColor": "rgb(204, 0, 0)",
+  "editorFormattedBackground": "rgb(244, 241, 235)",
+  "explicitBRAndAdjacentLFAreIndependent": true,
+  "nativeTypingUndoRedo": true,
+  "formattedWordEditingUndoRedo": true,
+  "actualDownloadReopen": true,
+  "supportedEmphasisRetained": true,
+  "projectionNoticeDisclosed": true,
+  "actualMarkdownLossReportAndReopen": true,
+  "errors": []
+}

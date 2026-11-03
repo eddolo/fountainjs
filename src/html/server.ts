@@ -33,6 +33,7 @@ import { readParagraphLayout } from '../core/paragraph-layout';
 import { readTextAlignmentAttributes, readTextDirection, readContainerDirection, readSharedDirectionSource } from '../core/text-direction';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
+import { preformattedContent } from '../core/importers/html-preformatted';
 import { importDefinitionList } from '../core/importers/html-definition-list';
 import { parseMathExpressionJSON } from '../core/math-expression';
 import { readHTMLDocumentPageSettings } from '../core/importers/html-page-settings';
@@ -1130,13 +1131,19 @@ function paragraph(element: SourceElement, schema: Schema, context: ImportContex
   return schema.node('paragraph', { ...alignment(element, dir), ...dir, ...readExplicitEmphasis(element), ...readParagraphLayout(element) }, content.length ? content : childless ? [] : [schema.text('')]);
 }
 
-function preformattedText(node: SourceNode): string {
-  if (node.kind !== 'element') return node.textContent;
-  return node.tagName === 'br' ? '\n' : node.childNodes.map(preformattedText).join('');
+function preformattedChildren(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {
+  return preformattedContent<SourceNode>(element, schema, {
+    kind: node => node.kind === 'comment' ? 'ignore' : node.kind,
+    children: node => node.kind === 'element' ? node.childNodes : [],
+    tag: node => node.kind === 'element' ? node.tagName : '',
+    text: node => node.textContent,
+    marks: (node, marks) => node.kind === 'element' && htmlparser2Adapter.getNamespaceURI(node.raw) === 'http://www.w3.org/1999/xhtml'
+      ? elementMarks(node, schema, marks, context, true) : marks,
+  });
 }
 
 function hasProjectedPreformattedMarkup(element: SourceElement): boolean {
-  const accepted = ['data-language', 'data-line-numbers', 'dir', 'data-fountain-paragraph-layout',
+  const accepted = ['data-language', 'data-line-numbers', 'data-fountain-code-theme', 'dir', 'data-fountain-paragraph-layout',
     'data-fountain-direction-group', 'data-fountain-direction-origin'];
   if (element.getAttributeNames?.().some(name => !accepted.includes(name))) return true;
   return element.childNodes.some(child => child.kind !== 'text' && !(child.kind === 'element' && child.tagName === 'code'
@@ -1383,13 +1390,13 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       });
       reportOnce(context, {
         code: 'preformatted-html-projection',
-        message: 'Preformatted HTML became a code block. Text-node attributes and marks remain in the document; code exports render plain text, not HTML formatting. Explicit HTML breaks and physical soft breaks were restored, CR/CRLF normalized as HTML newlines, and HTML initial-LF handling applied. Other inline atoms require a specialized adapter.',
+        message: 'Preformatted HTML became a code block. Supported text marks remain in the document and safe HTML; explicit HTML breaks and physical soft breaks were restored, CR/CRLF normalized as HTML newlines, and HTML initial-LF handling applied. Other inline atoms require a specialized adapter.',
       });
     } else {
-      content = [schema.text(preformattedText(element))];
+      content = preformattedChildren(element, schema, context);
       if (hasProjectedPreformattedMarkup(element)) reportOnce(context, {
         code: 'preformatted-html-projection',
-        message: 'Preformatted HTML became plain code text. Explicit HTML breaks became literal newlines; unsupported attributes, child formatting, links, comments, media and block layout are not represented. Keep the original file when those properties matter.',
+        message: 'Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter.',
       });
     }
     return [reportStructuralDirection(element, schema.node('code_block', {

@@ -1,0 +1,12 @@
+{
+  "status": "proposed only; not applied; approval pending",
+  "target": "scripts/check-build-budgets.mjs",
+  "reason": "Supported preformatted HTML text formatting, shared platform-neutral traversal, safe reader palette, owned font context and located Markdown-fence omission reporting.",
+  "ESM": { "measuredBytes": 1691200, "previousCommitBytes": 1688848, "addedBytes": 2352, "currentLimitKiB": 1649.5, "proposedLimitKiB": 1651.75, "proposedHeadroomBytes": 192 },
+  "CommonJS": { "measuredBytes": 1407758, "previousCommitBytes": 1405869, "addedBytes": 1889, "currentLimitKiB": 1373, "proposedLimitKiB": 1375, "proposedHeadroomBytes": 242 },
+  "CSS": { "measuredBytes": 89593, "limitBytes": 89600, "limitChanged": false, "redundantResetRemovedBytes": 18, "finalCapturesByteIdenticalToReviewed": 22 },
+  "unchanged": ["individual entry ceilings", "stylesheet ceiling", "runtime latency/scaling/heap limits", "sampling", "dependencies", "public API", "schema", "CommonMark oracle and all fixture ranges"],
+  "evidence": { "unitTests": 3377, "unitFiles": 240, "recordedBrowserJourneys": 5, "runtimeFormattingContracts": 14, "exactSafeHTMLNativeReopens": "1298/1304", "localPerformance": "all unchanged limits pass in one normal run; historical failures retained" },
+  "currentSizeGate": "fails; do not claim all checks pass",
+  "npm": "unchanged at 0.4.0-beta.2"
+}

@@ -1,0 +1,373 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-preformatted-formatting.test.ts (18 tests | 18 failed) 86ms
+   ❯ browser preformatted text formatting (9)
+     × retains emphasis through safe HTML without interpreting source characters 24ms
+     × retains inline code through safe HTML without interpreting source characters 6ms
+     × retains colors through safe HTML without interpreting source characters 5ms
+     × retains safe link through safe HTML without interpreting source characters 5ms
+     × imports actual preformatted emphasis and independent BR/LF lines 5ms
+     × treats the sole code wrapper as structural while preserving nested inline code 5ms
+     × keeps an empty marked source position 7ms
+     × retains owned preformatted layout and direction 6ms
+     × keeps literal markup as source and rejects active navigation 5ms
+   ❯ server preformatted text formatting (9)
+     × retains emphasis through safe HTML without interpreting source characters 5ms
+     × retains inline code through safe HTML without interpreting source characters 2ms
+     × retains colors through safe HTML without interpreting source characters 1ms
+     × retains safe link through safe HTML without interpreting source characters 2ms
+     × imports actual preformatted emphasis and independent BR/LF lines 1ms
+     × treats the sole code wrapper as structural while preserving nested inline code 1ms
+     × keeps an empty marked source position 2ms
+     × retains owned preformatted layout and direction 3ms
+     × keeps literal markup as source and rejects active navigation 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > retains emphasis through safe HTML without interpreting source characters
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > retains emphasis through safe HTML without interpreting source characters
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -6,40 +6,12 @@
+          "lineNumbers": false,
+        },
+        "content": [
+          {
+            "text": "first
+- ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "type": "strong",
+-             },
+-             {
+-               "type": "em",
+-             },
+-             {
+-               "type": "underline",
+-             },
+-             {
+-               "type": "strike",
+-             },
+-             {
+-               "type": "subscript",
+-             },
+-             {
+-               "type": "superscript",
+-             },
+-           ],
+-           "text": "<em>literal</em>	😀
+- second",
+-           "type": "text",
+-         },
+-         {
+-           "text": "
++ <em>literal</em>	😀
++ second
+  last",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+
+ ❯ tests/html-preformatted-formatting.test.ts:24:33
+     22|       expect(html).toContain('&lt;em&gt;literal&lt;/em&gt;');
+     23|       const reopened = importer.parse(html, schema);
+     24|       expect(reopened.toJSON()).toEqual(document.toJSON());
+       |                                 ^
+     25|     });
+     26|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > retains inline code through safe HTML without interpreting source characters
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > retains inline code through safe HTML without interpreting source characters
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -6,25 +6,12 @@
+          "lineNumbers": false,
+        },
+        "content": [
+          {
+            "text": "first
+- ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "type": "code",
+-             },
+-           ],
+-           "text": "<em>literal</em>	😀
+- second",
+-           "type": "text",
+-         },
+-         {
+-           "text": "
++ <em>literal</em>	😀
++ second
+  last",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+
+ ❯ tests/html-preformatted-formatting.test.ts:24:33
+     22|       expect(html).toContain('&lt;em&gt;literal&lt;/em&gt;');
+     23|       const reopened = importer.parse(html, schema);
+     24|       expect(reopened.toJSON()).toEqual(document.toJSON());
+       |                                 ^
+     25|     });
+     26|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > retains colors through safe HTML without interpreting source characters
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > retains colors through safe HTML without interpreting source characters
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -6,34 +6,12 @@
+          "lineNumbers": false,
+        },
+        "content": [
+          {
+            "text": "first
+- ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "attrs": {
+-                 "color": "#cc0000",
+-               },
+-               "type": "text_color",
+-             },
+-             {
+-               "attrs": {
+-                 "color": "#ffee66",
+-               },
+-               "type": "highlight",
+-             },
+-           ],
+-           "text": "<em>literal</em>	😀
+- second",
+-           "type": "text",
+-         },
+-         {
+-           "text": "
++ <em>literal</em>	😀
++ second
+  last",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+
+ ❯ tests/html-preformatted-formatting.test.ts:24:33
+     22|       expect(html).toContain('&lt;em&gt;literal&lt;/em&gt;');
+     23|       const reopened = importer.parse(html, schema);
+     24|       expect(reopened.toJSON()).toEqual(document.toJSON());
+       |                                 ^
+     25|     });
+     26|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > retains safe link through safe HTML without interpreting source characters
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > retains safe link through safe HTML without interpreting source characters
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -6,30 +6,12 @@
+          "lineNumbers": false,
+        },
+        "content": [
+          {
+            "text": "first
+- ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "attrs": {
+-                 "href": "https://example.com/reference",
+-                 "target": "_self",
+-                 "title": "Reference",
+-               },
+-               "type": "link",
+-             },
+-           ],
+-           "text": "<em>literal</em>	😀
+- second",
+-           "type": "text",
+-         },
+-         {
+-           "text": "
++ <em>literal</em>	😀
++ second
+  last",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+
+ ❯ tests/html-preformatted-formatting.test.ts:24:33
+     22|       expect(html).toContain('&lt;em&gt;literal&lt;/em&gt;');
+     23|       const reopened = importer.parse(html, schema);
+     24|       expect(reopened.toJSON()).toEqual(document.toJSON());
+       |                                 ^
+     25|     });
+     26|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > imports actual preformatted emphasis and independent BR/LF lines
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > imports actual preformatted emphasis and independent BR/LF lines
+AssertionError: expected '' to be 'important\n\nline' // Object.is equality
+
+- Expected
++ Received
+
+- important
+-
+- line
+
+ ❯ tests/html-preformatted-formatting.test.ts:31:10
+     29|       expect(result.textContent).toBe('first important\n\nline last');
+     30|       expect(result.content.filter(node => node.marks.some(mark => mar…
+     31|         .toBe('important\n\nline');
+       |          ^
+     32|       expect(importer.parse(HTMLExporter.export(schema.node('doc', {},…
+     33|         .toEqual(schema.node('doc', {}, [result]).toJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > treats the sole code wrapper as structural while preserving nested inline code
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > treats the sole code wrapper as structural while preserving nested inline code
+AssertionError: expected [] to deeply equal [ 'literal' ]
+
+- Expected
++ Received
+
+- [
+-   "literal",
+- ]
++ []
+
+ ❯ tests/html-preformatted-formatting.test.ts:39:120
+     37|       const result = importer.parse('<pre><code class="language-python…
+     38|       expect(result.attrs.language).toBe('python');
+     39|       expect(result.content.filter(node => node.marks.some(mark => mar…
+       |                                                                                                                        ^
+     40|     });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > keeps an empty marked source position
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > keeps an empty marked source position
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -5,15 +5,10 @@
+          "language": "text",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "marks": [
+-             {
+-               "type": "em",
+-             },
+-           ],
+            "text": "",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+
+ ❯ tests/html-preformatted-formatting.test.ts:44:78
+     42|     it('keeps an empty marked source position', () => {
+     43|       const document = schema.node('doc', {}, [schema.node('code_block…
+     44|       expect(importer.parse(HTMLExporter.export(document), schema).toJ…
+       |                                                                              ^
+     45|     });
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > retains owned preformatted layout and direction
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > retains owned preformatted layout and direction
+AssertionError: expected '<!doctype html>\n<html lang="en">\n<h…' to contain 'data-fountain-paragraph-layout'
+
+- Expected
++ Received
+
+- data-fountain-paragraph-layout
++ <!doctype html>
++ <html lang="en">
++ <head>
++ <meta charset="utf-8">
++ <meta name="viewport" content="width=device-width,initial-scale=1">
++ <title>FountainJS document</title>
++ <style>body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}p{min-height:1em;min-height:1lh}dl{margin:1em 0}dt{font-weight:600}dd{margin:0 0 .8em;margin-inline-start:1.5em}:is(dt,dd)>p{margin:.3em 0}</style>
++ </head>
++ <body>
++ <pre data-language="lean" dir="rtl"><code class="language-lean">theorem retained : True := by trivial</code></pre>
++ </body>
++ </html>
+
+ ❯ tests/html-preformatted-formatting.test.ts:52:20
+     50|       }, [schema.text('theorem retained : True := by trivial')])]);
+     51|       const html = HTMLExporter.export(document);
+     52|       expect(html).toContain('data-fountain-paragraph-layout');
+       |                    ^
+     53|       expect(importer.parse(html, schema).toJSON()).toEqual(document.t…
+     54|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/18]⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > keeps literal markup as source and rejects active navigation
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > keeps literal markup as source and rejects active navigation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/html-preformatted-formatting.test.ts:60:130
+     58|       expect(result.textContent).toBe('<em>literal</em> unsafe kept');
+     59|       expect(result.child(0).content.some(node => node.marks.some(mark…
+     60|       expect(result.child(0).content.some(node => node.text === 'kept'…
+       |                                                                                                                                  ^
+     61|       expect(HTMLExporter.export(result)).not.toContain('javascript:');
+     62|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/18]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  18 failed (18)
+   Start at  18:56:27
+   Duration  3.69s (transform 36%, import 32%, environment 30%, tests 3%)

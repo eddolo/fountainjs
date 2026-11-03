@@ -14,6 +14,7 @@ import { checkHTMLAnchorLoss } from './fixtures/html-anchor-loss-check.mjs';
 import * as inertHTML from '../dist/html-inert.js';
 import { checkHTMLEmptyHeading } from './fixtures/html-empty-heading-check.mjs';
 import { checkHTMLPreformattedBreaks } from './fixtures/html-preformatted-breaks-check.mjs';
+import { checkHTMLPreformattedFormatting } from './fixtures/html-preformatted-formatting-check.mjs';
 
 for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationObserver']) {
   if (name in globalThis) throw new Error(`Server HTML runtime unexpectedly exposes ${name}.`);
@@ -22,6 +23,7 @@ for (const name of ['window', 'document', 'DOMParser', 'HTMLElement', 'MutationO
 const schema = new Schema(CoreSchemaSpec);
 console.log(`Compiled runtime: ${checkHTMLEmptyHeading(blockAtomCore, { ServerHTMLImporter })} empty-heading HTML contracts passed.`);
 console.log(`Compiled runtime: ${checkHTMLPreformattedBreaks(blockAtomCore, { ServerHTMLImporter })} preformatted-break HTML contracts passed.`);
+console.log(`Compiled runtime: ${checkHTMLPreformattedFormatting(blockAtomCore, { ServerHTMLImporter })} preformatted-formatting contracts passed.`);
 checkInertHTMLSource(blockAtomCore, { ServerHTMLImporter }, inertHTML);
 console.log(`Compiled runtime: ${checkHTMLLinkControls(blockAtomCore, { ServerHTMLImporter })} link normalization/security/history/destination contracts passed.`);
 console.log(`Compiled runtime: ${checkHTMLAnchorLoss(blockAtomCore, { ServerHTMLImporter })} anchor loss/privacy/retention contracts passed.`);

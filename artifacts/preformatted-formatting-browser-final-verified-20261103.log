@@ -1,0 +1,308 @@
+[WebServer] (node:10864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (13.2s)
+(node:7956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (20.1s)
+(node:17308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (18.8s)
+(node:22652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [mobile-chrome] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (11.3s)
+(node:15032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download (17.7s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+    Expected substring: "Text formatting inside code"
+    Received string:    "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+        14 × locator resolved to <div class="lab-notice">…</div>
+           - unexpected value "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+
+
+       at preformatted-breaks-journey.ts:275
+
+      273 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
+      274 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+    > 275 |   await expect(workspace.locator('.lab-notice')).toContainText('Text formatting inside code');
+          |                                                  ^
+      276 |   await expect(workspace.locator('.lab-notice')).toContainText('Code-block layout and font context');
+      277 |   const markdownPending = page.waitForEvent('download');
+      278 |   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:275:50)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\video-3.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\error-context.md
+
+    attachment #7: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+    Expected substring: "Text formatting inside code"
+    Received string:    "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+        13 × locator resolved to <div class="lab-notice">…</div>
+           - unexpected value "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+
+
+       at preformatted-breaks-journey.ts:275
+
+      273 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
+      274 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+    > 275 |   await expect(workspace.locator('.lab-notice')).toContainText('Text formatting inside code');
+          |                                                  ^
+      276 |   await expect(workspace.locator('.lab-notice')).toContainText('Code-block layout and font context');
+      277 |   const markdownPending = page.waitForEvent('download');
+      278 |   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:275:50)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\video-3.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\error-context.md
+
+    attachment #7: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+    Expected substring: "Text formatting inside code"
+    Received string:    "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+        13 × locator resolved to <div class="lab-notice">…</div>
+           - unexpected value "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+
+
+       at preformatted-breaks-journey.ts:275
+
+      273 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
+      274 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+    > 275 |   await expect(workspace.locator('.lab-notice')).toContainText('Text formatting inside code');
+          |                                                  ^
+      276 |   await expect(workspace.locator('.lab-notice')).toContainText('Code-block layout and font context');
+      277 |   const markdownPending = page.waitForEvent('download');
+      278 |   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:275:50)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-formatting-browser-final-verified-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile-chrome] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+    Expected substring: "Text formatting inside code"
+    Received string:    "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+        13 × locator resolved to <div class="lab-notice">…</div>
+           - unexpected value "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+
+
+       at preformatted-breaks-journey.ts:275
+
+      273 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
+      274 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+    > 275 |   await expect(workspace.locator('.lab-notice')).toContainText('Text formatting inside code');
+          |                                                  ^
+      276 |   await expect(workspace.locator('.lab-notice')).toContainText('Code-block layout and font context');
+      277 |   const markdownPending = page.waitForEvent('download');
+      278 |   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:275:50)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\mobile.spec.ts:7:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+    Expected substring: "Text formatting inside code"
+    Received string:    "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).locator('.lab-notice')
+        13 × locator resolved to <div class="lab-notice">…</div>
+           - unexpected value "Import reportThese are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.unmapped-inline-element — Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.preformatted-html-projection — Preformatted HTML became a code buffer with supported text formatting and literal newlines. This projection notice is not a loss count: unrepresented metadata, comments, media and block layout still require a specialized adapter. Keep the original file when those properties matter."
+
+
+       at preformatted-breaks-journey.ts:275
+
+      273 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
+      274 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+    > 275 |   await expect(workspace.locator('.lab-notice')).toContainText('Text formatting inside code');
+          |                                                  ^
+      276 |   await expect(workspace.locator('.lab-notice')).toContainText('Code-block layout and font context');
+      277 |   const markdownPending = page.waitForEvent('download');
+      278 |   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:275:50)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\mobile.spec.ts:7:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\video-2.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-formatting-browser-final-verified-20261103\mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+    [firefox] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+    [webkit] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+    [mobile-chrome] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download
+    [mobile-safari] › tests\browser\mobile.spec.ts:6:1 › preserves physical preformatted breaks through real mobile import editing and HTML download

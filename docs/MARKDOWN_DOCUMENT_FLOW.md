@@ -1,5 +1,14 @@
 # Whole-document Markdown HTML conversion
 
+Supported preformatted formatting follow-up (2026-11-03, Unreleased): ordinary
+HTML import/export retains schema text marks and typed font/layout context.
+Ordinary Markdown fences report their omission while keeping source literal;
+exact source reuse and explicit schema HTML output avoid false fence warnings.
+The protected Markdown flow algorithm and v13 semantic oracle are unchanged.
+This supersedes the plain-code limitation in the dated checkpoint immediately
+below, without claiming arbitrary CSS/media/layout or exact leaf segmentation.
+[Current contract and verification](SERVER_HTML.md#supported-preformatted-text-formatting-2026-11-03-unreleased).
+
 Latest physical-break follow-up (2026-11-03, Unreleased): raw and generated
 HTML breaks inside `pre` now become code-buffer LFs without erasing an adjacent
 renderer LF. Direct import reports unsupported preformatted markup/attributes

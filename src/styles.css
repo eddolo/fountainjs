@@ -254,6 +254,8 @@
 .fountain-editor pre.fjs-code-block { position: relative; tab-size: 2; }
 .fountain-editor pre.fjs-code-block::before { display: block; margin-bottom: 12px; white-space: normal; overflow-wrap: anywhere; color: #9298aa; font: 700 10px/1.2 ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .1em; content: attr(data-language); user-select: none; }
 .fountain-editor pre.fjs-code-block > code { display: block; min-width: max-content; }
+.fountain-editor pre[data-fountain-paragraph-layout] > code { font: inherit; }
+.fountain-editor pre code code { padding: 0; color: inherit; background: transparent; }
 /* CSS-only gutter: no non-editable widgets among native code text. The empty
    alternative text keeps decorative numbers out of the accessibility tree. */
 .fountain-editor pre.fjs-code-block[data-fountain-code-lines] { display: grid; grid-template-columns: max-content minmax(0, 1fr); }

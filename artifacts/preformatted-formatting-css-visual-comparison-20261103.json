@@ -1,0 +1,158 @@
+{
+  "comparisons": [
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png",
+      "SHA256": "f1ada93fbf45e28f2fee0fe7b386ae560202b8dfe08c52217954523abaa0b28e",
+      "baselineSHA256": "f1ada93fbf45e28f2fee0fe7b386ae560202b8dfe08c52217954523abaa0b28e",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png",
+      "SHA256": "e344037cfc5e436be6e79092c32683853020c569c01c491eb70518b0c7276b37",
+      "baselineSHA256": "e344037cfc5e436be6e79092c32683853020c569c01c491eb70518b0c7276b37",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png",
+      "SHA256": "f5cb7b2a05ae7287cebd49bb161f41dc99a52df2ed26f336025b2ec0ff889a64",
+      "baselineSHA256": "f5cb7b2a05ae7287cebd49bb161f41dc99a52df2ed26f336025b2ec0ff889a64",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png",
+      "SHA256": "60336aaeb38d54ad79a92cf32fb5ebe3bf161e79e0009d8b5e46b19d3bfd6e57",
+      "baselineSHA256": "60336aaeb38d54ad79a92cf32fb5ebe3bf161e79e0009d8b5e46b19d3bfd6e57",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png",
+      "SHA256": "a551ed784b7799d60fe96b73490ae063b79eb45a0c357773d5cc8ccf5951bd10",
+      "baselineSHA256": "a551ed784b7799d60fe96b73490ae063b79eb45a0c357773d5cc8ccf5951bd10",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png",
+      "SHA256": "841c96b84aca6ebe8b449317b5ff1b9e0254b6c8b19327cf9a96ade1570db7c9",
+      "baselineSHA256": "841c96b84aca6ebe8b449317b5ff1b9e0254b6c8b19327cf9a96ade1570db7c9",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png",
+      "SHA256": "30a90e5f152c6767b4225de28ea0a2cab79b6f9f44f8263549531e789d7024ec",
+      "baselineSHA256": "30a90e5f152c6767b4225de28ea0a2cab79b6f9f44f8263549531e789d7024ec",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png",
+      "SHA256": "394094cfa09cdfcda8c5900d4c0e69a97c929e8c880e1e68f54943c42e7fa9f5",
+      "baselineSHA256": "394094cfa09cdfcda8c5900d4c0e69a97c929e8c880e1e68f54943c42e7fa9f5",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png",
+      "SHA256": "d36a5cd773aa62b5291d9af4c8cfc9465efb39f9cb21d549a63d3efc3daa90c6",
+      "baselineSHA256": "d36a5cd773aa62b5291d9af4c8cfc9465efb39f9cb21d549a63d3efc3daa90c6",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png",
+      "SHA256": "8697cfc2f230113fed0ec16e94ea37235b4077b1edec11a49c9f0e6ffbbf4abe",
+      "baselineSHA256": "8697cfc2f230113fed0ec16e94ea37235b4077b1edec11a49c9f0e6ffbbf4abe",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png",
+      "SHA256": "c499e2ea4e2b87e481567e9dd76d7aa9543dd2ec3d96092d7e60c88d447d1a20",
+      "baselineSHA256": "c499e2ea4e2b87e481567e9dd76d7aa9543dd2ec3d96092d7e60c88d447d1a20",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png",
+      "SHA256": "33d4a819f76a323ebb1b8e5b194b0a8dbcf64d9e937c9dc6fb75a83b0d88711e",
+      "baselineSHA256": "33d4a819f76a323ebb1b8e5b194b0a8dbcf64d9e937c9dc6fb75a83b0d88711e",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png",
+      "SHA256": "a68901d45f98f795b16545bc62c769acb7edf9760fe2511805cdae161698f76d",
+      "baselineSHA256": "a68901d45f98f795b16545bc62c769acb7edf9760fe2511805cdae161698f76d",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png",
+      "SHA256": "b4f7e371d855a697d22f6f641e22dab985d3cf437d231e57e6e815cc1155e865",
+      "baselineSHA256": "b4f7e371d855a697d22f6f641e22dab985d3cf437d231e57e6e815cc1155e865",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png",
+      "SHA256": "57b5b0f854aa5ede719c582f0cdd70caefa18d8480820b3d853e5ec5e6484ff9",
+      "baselineSHA256": "57b5b0f854aa5ede719c582f0cdd70caefa18d8480820b3d853e5ec5e6484ff9",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png",
+      "SHA256": "135ecafac4d6324311299402ed0b67ae166ba5b6e4ab31fd559fe94505c9496f",
+      "baselineSHA256": "135ecafac4d6324311299402ed0b67ae166ba5b6e4ab31fd559fe94505c9496f",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png",
+      "SHA256": "9682baeffb8b6f0e7b8ac04ad3b99de0a3ce18b0df8c1202ecb7fa001999642d",
+      "baselineSHA256": "9682baeffb8b6f0e7b8ac04ad3b99de0a3ce18b0df8c1202ecb7fa001999642d",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png",
+      "SHA256": "b72ce37ad02e8627811e0547bc14768c0576e0e56fe8ca103aa6ccd4061597b4",
+      "baselineSHA256": "b72ce37ad02e8627811e0547bc14768c0576e0e56fe8ca103aa6ccd4061597b4",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png",
+      "SHA256": "10a768e0ed9256e977340fa6edd0ccaa82a4dd29ca04b1a87fa3f186917c2251",
+      "baselineSHA256": "10a768e0ed9256e977340fa6edd0ccaa82a4dd29ca04b1a87fa3f186917c2251",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png",
+      "SHA256": "af8d1662382afc1482f5413ae0f6fa9c7c7b44bcc78088d243b73fa35f8eff5c",
+      "baselineSHA256": "af8d1662382afc1482f5413ae0f6fa9c7c7b44bcc78088d243b73fa35f8eff5c",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png",
+      "SHA256": "f7ccde792b4863f7a34e8f7e65d7bdc9482166bb734883a2f3f0e474a7dce5ce",
+      "baselineSHA256": "f7ccde792b4863f7a34e8f7e65d7bdc9482166bb734883a2f3f0e474a7dce5ce",
+      "byteIdentical": true
+    },
+    {
+      "path": "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png",
+      "baseline": "artifacts/preformatted-formatting-browser-reviewed-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png",
+      "SHA256": "311ac555afbc396c7ae5a956febe3bd9b0d5eea64e5185e7c346b2f0474d7a43",
+      "baselineSHA256": "311ac555afbc396c7ae5a956febe3bd9b0d5eea64e5185e7c346b2f0474d7a43",
+      "byteIdentical": true
+    }
+  ]
+}

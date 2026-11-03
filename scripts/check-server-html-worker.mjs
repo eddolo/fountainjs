@@ -55,6 +55,8 @@ try {
   console.log('Cloudflare workerd (Miniflare): 24 empty-heading HTML contracts passed.');
   if (body.preformattedBreaksChecked !== 11) throw new Error('Worker preformatted break/source retention failed.');
   console.log('Cloudflare workerd (Miniflare): 11 preformatted-break HTML contracts passed.');
+  if (body.preformattedFormattingChecked !== 14) throw new Error('Worker preformatted formatting retention failed.');
+  console.log('Cloudflare workerd (Miniflare): 14 preformatted-formatting contracts passed.');
   if (body.flowChecked !== true) throw new Error('Worker anonymous HTML flow interchange failed.');
   if (body.blockAtomsChecked !== true) throw new Error('Worker protected Markdown block-atom interchange/refusal failed.');
   if (body.emphasisChecked !== 140) throw new Error('Worker native emphasis/partial-schema interchange failed.');

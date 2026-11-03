@@ -1,0 +1,114 @@
+{
+  "target": {
+    "top": 286.6875,
+    "left": 169.375,
+    "width": 8,
+    "height": 17
+  },
+  "codeBox": {
+    "x": 169.375,
+    "y": 260.546875,
+    "width": 994.4375,
+    "height": 46.1875
+  },
+  "position": {
+    "x": 4,
+    "y": 34.640625
+  },
+  "afterClick": {
+    "prefix": "first\n",
+    "anchorOffset": 6,
+    "anchorText": "first\nsecond",
+    "anchorParent": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "afterEnd": {
+    "prefix": "first\nsecond",
+    "anchorOffset": 12,
+    "anchorText": "first\nsecond",
+    "anchorParent": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "afterTyping": {
+    "prefix": "first\nsecond edited",
+    "anchorOffset": 19,
+    "anchorText": "first\nsecond edited",
+    "anchorParent": "<span data-fountain-text-path=\"1.0\">first\nsecond edited</span>",
+    "activeElement": "DIV",
+    "activeRole": "textbox"
+  },
+  "events": [
+    {
+      "type": "selectionchange",
+      "offset": 6,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "pointerup",
+      "offset": 6,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "keydown",
+      "key": "End",
+      "offset": 6,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "selectionchange",
+      "offset": 12,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    },
+    {
+      "type": "keydown",
+      "key": " ",
+      "offset": 12,
+      "text": "first\nsecond",
+      "parent": "SPAN"
+    }
+  ],
+  "pointers": [
+    {
+      "type": "pointerdown",
+      "x": 173,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 1804,
+      "viewport": {
+        "top": 0,
+        "pageTop": 1804
+      }
+    },
+    {
+      "type": "pointerup",
+      "x": 173,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 1804,
+      "viewport": {
+        "top": 0,
+        "pageTop": 1804
+      }
+    },
+    {
+      "type": "click",
+      "x": 173,
+      "y": 295,
+      "target": "<span data-fountain-text-path=\"1.0\">first\nsecond</span>",
+      "pre": "1",
+      "scrollY": 1804,
+      "viewport": {
+        "top": 0,
+        "pageTop": 1804
+      }
+    }
+  ]
+}

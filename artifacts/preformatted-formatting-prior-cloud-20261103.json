@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-11-03T19:48:18.4087629Z",
+  "commit": "6884928c9d1ed737e751a7b9478cfdfddcecaecb",
+  "ci": {
+    "url": "https://github.com/eddolo/fountainjs/actions/runs/41697361050",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "verify",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/eddolo/fountainjs/actions/runs/41697361050/job/126131306268"
+      },
+      {
+        "name": "performance",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/eddolo/fountainjs/actions/runs/41697361050/job/126131306828"
+      },
+      {
+        "name": "browser",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/eddolo/fountainjs/actions/runs/41697361050/job/126131306897"
+      },
+      {
+        "name": "lean-integration",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/eddolo/fountainjs/actions/runs/41697361050/job/126131307035"
+      }
+    ]
+  },
+  "pages": {
+    "head_sha": "6884928c9d1ed737e751a7b9478cfdfddcecaecb",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/eddolo/fountainjs/actions/runs/41697361198"
+  },
+  "scope": "Previous committed checkpoint only; does not certify uncommitted preformatted formatting work."
+}

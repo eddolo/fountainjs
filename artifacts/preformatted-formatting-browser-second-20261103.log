@@ -1,0 +1,64 @@
+[WebServer] (node:25840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:27012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download (8.3s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').nth(2).locator('code code')
+    Expected: "rgb(204, 0, 0)"
+    Received: "rgb(39, 36, 55)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('pre').nth(2).locator('code code')
+        14 × locator resolved to <code>…</code>
+           - unexpected value "rgb(39, 36, 55)"
+
+
+       at preformatted-breaks-journey.ts:74
+
+      72 |   await expect(code.nth(2)).toHaveText('first important second literal');
+      73 |   await expect(code.nth(2).locator('em')).toHaveCSS('font-style', 'italic');
+    > 74 |   await expect(code.nth(2).locator('code code')).toHaveCSS('color', 'rgb(204, 0, 0)');
+         |                                                  ^
+      75 |   await expect(code.nth(2).locator('code code')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      76 |   await expect(code.nth(3).locator(':scope > code')).toHaveCSS('font-family', /Georgia/);
+      77 |   const editorOwnedWidth = await code.nth(3).locator(':scope > code').evaluate(element => {
+        at preformattedBreaksJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\preformatted-breaks-journey.ts:74:50)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:54:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-second-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-second-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-second-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\preformatted-formatting-browser-second-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\preformatted-formatting-browser-second-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\preformatted-formatting-browser-second-20261103\editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\browser\editor.spec.ts:53:1 › preserves physical preformatted breaks through real import editing and HTML download

@@ -1,0 +1,12 @@
+--- a/scripts/check-build-budgets.mjs
++++ b/scripts/check-build-budgets.mjs
+@@ -591,3 +591,3 @@
+   // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
+-  'all ESM runtime code': 1649.5 * kibibyte,
++  'all ESM runtime code': 1651.75 * kibibyte,
+   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
+@@ -671,3 +671,3 @@
+   // Initial code/CSS cap failures are retained; no latency/heap relaxation.
+-  'all CommonJS runtime code': 1373 * kibibyte,
++  'all CommonJS runtime code': 1375 * kibibyte,
+ });

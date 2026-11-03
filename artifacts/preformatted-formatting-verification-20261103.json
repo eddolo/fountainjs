@@ -1,0 +1,407 @@
+{
+  "date": "2026-11-03",
+  "baseCommit": "6884928c9d1ed737e751a7b9478cfdfddcecaecb",
+  "scope": "Supported preformatted text marks, owned font/layout context, safe reader palette and honest Markdown fence-loss reporting",
+  "verification": {
+    "unitTests": 3377,
+    "unitFiles": 240,
+    "newContracts": 29,
+    "browserJourneys": 5,
+    "finalCaptures": [
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png",
+      "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png"
+    ],
+    "finalCapturesByteIdenticalToManuallyReviewed": 22,
+    "visualFindings": [
+      "Native source shows one physical BR line and a separate adjacent LF blank line. Imported editor and independently rendered downloaded HTML retain that distinction.",
+      "Emphasis, red literal inline code, red foreground on yellow highlight, and the blue Georgia owned-font sample remain visible in editor and exported reader. The source word important is deliberately edited to critical before export.",
+      "Editor language labels and CSS gutters are presentation; the exported reader intentionally omits those controls. Margins, container width, background and line height are not certified as source pixel parity.",
+      "Long literal code lines horizontally scroll in narrow editor and Safari reader viewports; the captures do not reveal the entire offscreen line. Desktop editor captures only show the upper portion of the fourth block.",
+      "Markdown report captures visibly disclose unsupported fence formatting/layout and show the downgraded plain-code preview. Mobile report lists are scrollable and their captures do not display every row. Firefox sticky navigation overlays part of the captured report paragraph; assertions verify report text separately.",
+      "Chromium and Firefox external destination screenshots show a native textarea with first and second edited on separate lines. Trusted native clipboard events and exact text are asserted in each observation JSON."
+    ],
+    "publicDeclarations": 415,
+    "headlessModules": 113,
+    "packageAndNodeAndWorkerdFormattingContracts": 14,
+    "independentRuntimeFilesByteIdenticalAfterCSSCleanup": 168,
+    "frameworksAndSite": "passed",
+    "checks": [
+      {
+        "name": "types",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-types-20261103.log"
+      },
+      {
+        "name": "api",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-api-20261103.log"
+      },
+      {
+        "name": "headless",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-headless-20261103.log"
+      },
+      {
+        "name": "package",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-package-20261103.log"
+      },
+      {
+        "name": "server-runtimes",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-server-runtimes-20261103.log"
+      },
+      {
+        "name": "corpus",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-corpus-20261103.log"
+      },
+      {
+        "name": "performance",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-performance-20261103.log"
+      },
+      {
+        "name": "direction-retention",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-direction-retention-20261103.log"
+      },
+      {
+        "name": "mapping-retention",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-mapping-retention-20261103.log"
+      },
+      {
+        "name": "size",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-approved-size-20261103.log"
+      },
+      {
+        "name": "site",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-site-20261103.log"
+      }
+    ],
+    "preApprovalChecks": [
+      {
+        "name": "types",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-types-20261103.log"
+      },
+      {
+        "name": "api",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-api-20261103.log"
+      },
+      {
+        "name": "headless",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-headless-20261103.log"
+      },
+      {
+        "name": "package",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-package-20261103.log"
+      },
+      {
+        "name": "server-runtimes",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-server-runtimes-20261103.log"
+      },
+      {
+        "name": "corpus",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-corpus-20261103.log"
+      },
+      {
+        "name": "performance",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-performance-20261103.log"
+      },
+      {
+        "name": "direction-retention",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-direction-retention-20261103.log"
+      },
+      {
+        "name": "mapping-retention",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-mapping-retention-20261103.log"
+      },
+      {
+        "name": "size",
+        "exitCode": 1,
+        "log": "artifacts/preformatted-formatting-size-20261103.log"
+      },
+      {
+        "name": "site",
+        "exitCode": 0,
+        "log": "artifacts/preformatted-formatting-site-20261103.log"
+      }
+    ],
+    "headless": true,
+    "workers": 1,
+    "affinityMask": 192,
+    "priority": "BelowNormal"
+  },
+  "retention": {
+    "projectionVersion": 13,
+    "bodyProfiles": [
+      563,
+      613,
+      631,
+      635
+    ],
+    "fixtureRangesChanged": false,
+    "untouchedSource": 1304,
+    "nativeJSON": 1304,
+    "safeHTMLNative": "1298/1304",
+    "previousSafeHTMLNative": "1288/1304",
+    "remainingNativeExamplesBothEndings": [
+      148,
+      187,
+      494
+    ],
+    "modelStatuses": {
+      "equal-except-source-tokens": 1292,
+      "different": 12
+    },
+    "allMetricsIndependent": true
+  },
+  "performance": {
+    "normalRuns": 1,
+    "failures": [],
+    "limitsAndSamplingChanged": false,
+    "serverHTMLP95Ms": {
+      "100": 27.28839999999991,
+      "1000": 82.09350000000018,
+      "5000": 261.02239999999983,
+      "10000": 493.78250000000025
+    },
+    "priorFailuresRetained": true,
+    "universalLatencyOrSpeedupClaimed": false,
+    "independentRetention": "passed"
+  },
+  "capacity": {
+    "status": "passes after explicit user-approved aggregate capacity adjustment",
+    "originalProposal": {
+      "status": "proposed only; not applied; approval pending",
+      "target": "scripts/check-build-budgets.mjs",
+      "reason": "Supported preformatted HTML text formatting, shared platform-neutral traversal, safe reader palette, owned font context and located Markdown-fence omission reporting.",
+      "ESM": {
+        "measuredBytes": 1691200,
+        "previousCommitBytes": 1688848,
+        "addedBytes": 2352,
+        "currentLimitKiB": 1649.5,
+        "proposedLimitKiB": 1651.75,
+        "proposedHeadroomBytes": 192
+      },
+      "CommonJS": {
+        "measuredBytes": 1407758,
+        "previousCommitBytes": 1405869,
+        "addedBytes": 1889,
+        "currentLimitKiB": 1373,
+        "proposedLimitKiB": 1375,
+        "proposedHeadroomBytes": 242
+      },
+      "CSS": {
+        "measuredBytes": 89593,
+        "limitBytes": 89600,
+        "limitChanged": false,
+        "redundantResetRemovedBytes": 18,
+        "finalCapturesByteIdenticalToReviewed": 22
+      },
+      "unchanged": [
+        "individual entry ceilings",
+        "stylesheet ceiling",
+        "runtime latency/scaling/heap limits",
+        "sampling",
+        "dependencies",
+        "public API",
+        "schema",
+        "CommonMark oracle and all fixture ranges"
+      ],
+      "evidence": {
+        "unitTests": 3377,
+        "unitFiles": 240,
+        "recordedBrowserJourneys": 5,
+        "runtimeFormattingContracts": 14,
+        "exactSafeHTMLNativeReopens": "1298/1304",
+        "localPerformance": "all unchanged limits pass in one normal run; historical failures retained"
+      },
+      "currentSizeGate": "fails; do not claim all checks pass",
+      "npm": "unchanged at 0.4.0-beta.2"
+    },
+    "approval": {
+      "date": "2026-11-03",
+      "userDecision": "Approve the measured code-size allowance",
+      "status": "applied after explicit user approval",
+      "target": "scripts/check-build-budgets.mjs",
+      "approvedLimitsKiB": {
+        "ESM": 1651.75,
+        "CommonJS": 1375
+      },
+      "previousLimitsKiB": {
+        "ESM": 1649.5,
+        "CommonJS": 1373
+      },
+      "CSSLimitKiB": 87.5,
+      "unchanged": [
+        "individual entry ceilings",
+        "CSS ceiling",
+        "runtime latency/scaling/heap limits",
+        "sampling",
+        "dependencies",
+        "public API",
+        "schema",
+        "CommonMark oracle and fixture ranges"
+      ],
+      "verificationLog": "artifacts/preformatted-formatting-approved-size-20261103.log",
+      "originalProposal": "artifacts/preformatted-formatting-capacity-proposal-20261103.json"
+    },
+    "stylesheetLimitChanged": false,
+    "aggregateCodeLimitsChanged": true,
+    "otherLimitsChanged": false
+  },
+  "limitations": {
+    "arbitraryCSSOrMediaLayout": false,
+    "exactTextLeafSegmentation": false,
+    "pixelParity": false,
+    "completeCommonMarkConformance": false,
+    "physicalDevices": false,
+    "videosManuallyWatched": false,
+    "newSourceCloudVerification": "pending push",
+    "parityRowsPromoted": 0,
+    "npm": "unchanged at 0.4.0-beta.2"
+  },
+  "sourceBinding": "SHA-256 of staged Git blobs, manifest excluded to avoid circular hashing; cloud verification must be checked separately.",
+  "hashes": {
+    "CHANGELOG.md": "0138937e678f736a860d8086732051953415de7b63afd178685dd1160ef5c193",
+    "artifacts/preformatted-formatting-adjacent-before-20261103.log": "3cea15eac8d30054007cb5e8700e3ce7904376b284b072271694a89ec35b394f",
+    "artifacts/preformatted-formatting-api-20261103.log": "69c8bc9f702ecaa5b93250aca345240117f25448eba92ad7dd8ed003836f6589",
+    "artifacts/preformatted-formatting-approved-size-20261103.log": "dafb451f035f32e65e83aa1599ca1a5d750908feac640a89ea01304c3d4df001",
+    "artifacts/preformatted-formatting-before-20261103.log": "4253e9e48e300d28714d3f2bae29ec2f3b0ed7dddd7da651c514a805b8d2b5d6",
+    "artifacts/preformatted-formatting-browser-before-20261103.log": "85e2448285f693600c5e021e1dfc5eb7f137b0e7d2a51a4372d58112eb3a999f",
+    "artifacts/preformatted-formatting-browser-complete-20261103.log": "d8b0270f10d671b4d3fff004d6d2df3dd6afecc4146b3f882621e8dc924abe74",
+    "artifacts/preformatted-formatting-browser-final-css-20261103.log": "d830e72b4319a612a0b12f2403a16d8ee7c3afa7aa8f2d8127289609e2449d40",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/downloaded-preformatted-reader.png": "f1ada93fbf45e28f2fee0fe7b386ae560202b8dfe08c52217954523abaa0b28e",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/external-code-paste.png": "e344037cfc5e436be6e79092c32683853020c569c01c491eb70518b0c7276b37",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/imported-preformatted-lines.png": "f5cb7b2a05ae7287cebd49bb161f41dc99a52df2ed26f336025b2ec0ff889a64",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/markdown-export-loss-report.png": "60336aaeb38d54ad79a92cf32fb5ebe3bf161e79e0009d8b5e46b19d3bfd6e57",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-code-caret.json": "da11b5df893a04aaaa18487f6c64c9b85367ae1e7e30e907f6f94d204356461d",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/native-preformatted-source.png": "a551ed784b7799d60fe96b73490ae063b79eb45a0c357773d5cc8ccf5951bd10",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-break-observations.json": "9754c8e782d4cfb5f1082ca6396703d5baa43a410147a62d349deef3f3b5facd",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-edited.html": "9e745f810aa91b3d5a8f6eec05556244c7e6d5fc8a4437e68b3333f7c779de90",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-chromium/preformatted-edited.md": "818d0af9b25575f81f7e08ef9dd3230db872611e1ff469c03506bcab016bf09e",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/downloaded-preformatted-reader.png": "841c96b84aca6ebe8b449317b5ff1b9e0254b6c8b19327cf9a96ade1570db7c9",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/external-code-paste.png": "30a90e5f152c6767b4225de28ea0a2cab79b6f9f44f8263549531e789d7024ec",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/imported-preformatted-lines.png": "394094cfa09cdfcda8c5900d4c0e69a97c929e8c880e1e68f54943c42e7fa9f5",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/markdown-export-loss-report.png": "d36a5cd773aa62b5291d9af4c8cfc9465efb39f9cb21d549a63d3efc3daa90c6",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-code-caret.json": "a7c79e8fd31a380f7911a038f0527e2c1749aae8da87c96acc70fee8bfdda2ab",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/native-preformatted-source.png": "8697cfc2f230113fed0ec16e94ea37235b4077b1edec11a49c9f0e6ffbbf4abe",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-break-observations.json": "7b17e4e056c2a62fbb337b9f547fe86308821d48f9812902939565a80fbba153",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-edited.html": "9e745f810aa91b3d5a8f6eec05556244c7e6d5fc8a4437e68b3333f7c779de90",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-firefox/preformatted-edited.md": "818d0af9b25575f81f7e08ef9dd3230db872611e1ff469c03506bcab016bf09e",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/downloaded-preformatted-reader.png": "c499e2ea4e2b87e481567e9dd76d7aa9543dd2ec3d96092d7e60c88d447d1a20",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/imported-preformatted-lines.png": "33d4a819f76a323ebb1b8e5b194b0a8dbcf64d9e937c9dc6fb75a83b0d88711e",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/markdown-export-loss-report.png": "a68901d45f98f795b16545bc62c769acb7edf9760fe2511805cdae161698f76d",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-code-caret.json": "60549c579259a5d1f4674007566c7dcb0e191fb5ae3d5e9565536aabdf24b036",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/native-preformatted-source.png": "b4f7e371d855a697d22f6f641e22dab985d3cf437d231e57e6e815cc1155e865",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-break-observations.json": "045ae712d1516ef0c9ef021c9c2f44c6897f357b9a0d6861a4257e6f5abfb087",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-edited.html": "9e745f810aa91b3d5a8f6eec05556244c7e6d5fc8a4437e68b3333f7c779de90",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/editor-preserves-physical--58ca6-t-editing-and-HTML-download-webkit/preformatted-edited.md": "818d0af9b25575f81f7e08ef9dd3230db872611e1ff469c03506bcab016bf09e",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/downloaded-preformatted-reader.png": "57b5b0f854aa5ede719c582f0cdd70caefa18d8480820b3d853e5ec5e6484ff9",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/imported-preformatted-lines.png": "135ecafac4d6324311299402ed0b67ae166ba5b6e4ab31fd559fe94505c9496f",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/markdown-export-loss-report.png": "9682baeffb8b6f0e7b8ac04ad3b99de0a3ce18b0df8c1202ecb7fa001999642d",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-code-caret.json": "cdbd53f4585425a128aab5cdddec073de3f622645c60d5def0fbfadec53d98de",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/native-preformatted-source.png": "b72ce37ad02e8627811e0547bc14768c0576e0e56fe8ca103aa6ccd4061597b4",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-break-observations.json": "68d44d00d02a70066380230f9093f0dae295901fa819bc319cb466833a2aeacf",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-edited.html": "9e745f810aa91b3d5a8f6eec05556244c7e6d5fc8a4437e68b3333f7c779de90",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-chrome/preformatted-edited.md": "818d0af9b25575f81f7e08ef9dd3230db872611e1ff469c03506bcab016bf09e",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/downloaded-preformatted-reader.png": "10a768e0ed9256e977340fa6edd0ccaa82a4dd29ca04b1a87fa3f186917c2251",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/imported-preformatted-lines.png": "af8d1662382afc1482f5413ae0f6fa9c7c7b44bcc78088d243b73fa35f8eff5c",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/markdown-export-loss-report.png": "f7ccde792b4863f7a34e8f7e65d7bdc9482166bb734883a2f3f0e474a7dce5ce",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-code-caret.json": "8c424fcdf03e5336de20cec3c5fc5e3d4060118289ac43a4ff45c2de9879dbe6",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/native-preformatted-source.png": "311ac555afbc396c7ae5a956febe3bd9b0d5eea64e5185e7c346b2f0474d7a43",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-break-observations.json": "8dafb9592ae388028b99cb3a24828b1695ef459533603c1a90d6b5d837e8e4ed",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-edited.html": "9e745f810aa91b3d5a8f6eec05556244c7e6d5fc8a4437e68b3333f7c779de90",
+    "artifacts/preformatted-formatting-browser-final-css-20261103/mobile-preserves-physical--e91df-t-editing-and-HTML-download-mobile-safari/preformatted-edited.md": "818d0af9b25575f81f7e08ef9dd3230db872611e1ff469c03506bcab016bf09e",
+    "artifacts/preformatted-formatting-browser-final-verified-20261103.log": "ba0d094c6250b9e43cd40b64d8df65ae43dbc59d5afa493e4b29e501d65018ec",
+    "artifacts/preformatted-formatting-browser-reviewed-20261103.log": "a12bb3a04cec2d9556002ad36c6dd7cbcc66f8c5011b764a8d3b12f6ca12402b",
+    "artifacts/preformatted-formatting-browser-second-20261103.log": "30ac024ccb112dd76a563584a83da4236125cf025a164209708ac65d7d137db6",
+    "artifacts/preformatted-formatting-browser-third-20261103.log": "cc2cc94809c6f63418a87208a35eef9a1abf35d938adc9f81c1215b818ee7f8d",
+    "artifacts/preformatted-formatting-browser-verified-20261103.log": "200354b5cf3742cd401f028b8b92257847e1a4f9d37b9843e33dd1a010aab11f",
+    "artifacts/preformatted-formatting-build-reviewed-20261103.log": "4851b1cea0aed0de290d7b2f0b8985ab17ec9a586812555bcef1cf5d1eaab503",
+    "artifacts/preformatted-formatting-capacity-approval-20261103.json": "7f95ad8af0cf276389410c97ad9b56ab498b6481bccdbba04bbe1dc1a73fed6a",
+    "artifacts/preformatted-formatting-capacity-proposal-20261103.json": "573e5ff15a709afa92f096dac04bea36bfbdea4cf261267d7425853d02a365a2",
+    "artifacts/preformatted-formatting-capacity-proposal-20261103.patch": "996526cfd4e884deff5e92d3ccac22e4a4a6cb18eb00eabfc31172f9c0295df1",
+    "artifacts/preformatted-formatting-check-results-20261103.json": "eab6e34fa26b3d307f649eb071ff60adfaad88869b1b70fe279137f46d8cbd6c",
+    "artifacts/preformatted-formatting-complete-corpus-20261103.json": "17d337837ff72760b55e74bf37eca319e8d2f45a0807f2bd3f472e71149b380b",
+    "artifacts/preformatted-formatting-corpus-20261103.log": "6d11ee60771d454f56f1de72e45a1a9875e265ea62d5ca6bd55984596a678081",
+    "artifacts/preformatted-formatting-css-runtime-comparison-20261103.json": "4dfd58cac86c80dc326f33f80859bbd2cfbd39e665f011bb4ccac0d81da1f5ca",
+    "artifacts/preformatted-formatting-css-visual-comparison-20261103.json": "3c26d0878f772b26bccda587983a4dfa2b83c9cef375f0f422e39b309f6c1e62",
+    "artifacts/preformatted-formatting-direction-retention-20261103.log": "a142b8c30cc2333b89d223d90831b9e5b982b507d5a2af912408cbae88056aec",
+    "artifacts/preformatted-formatting-final-full-tests-20261103.log": "603350fa347feca04bbbede1e612c4c9ef45cf3a669ca2a684d080299f450545",
+    "artifacts/preformatted-formatting-final-site-20261103.log": "6e4b12710e2cb13a2910f44a500bcdf99b6e34cd2fcd25f2d3acf49ddcc66f29",
+    "artifacts/preformatted-formatting-final-size-20261103.log": "f68fa7607320401f9f7856ed0f3d59e94f60b1b3d7d429151d7feabc2ac6c88b",
+    "artifacts/preformatted-formatting-focused-frozen-20261103.log": "0b958090c296c9648542941e826f5e471b33431ae404dbd95af823c9a6c31158",
+    "artifacts/preformatted-formatting-headless-20261103.log": "4bc782998160601df8f3b232cf13ed35459c5b2cce8b63895c6ed198e80b05df",
+    "artifacts/preformatted-formatting-highlight-before-20261103.log": "c8902c928992de92a5a8cc588146be79757ed623d5c869e115266889cff5dde9",
+    "artifacts/preformatted-formatting-mapping-retention-20261103.log": "f9361d3b75d4a056a61dabed440db1c742c7f564c4a981971271ba0c989d93b4",
+    "artifacts/preformatted-formatting-markdown-before-20261103.log": "6f30ca6bc5d800803ee3c6b89e5cd0558ceb65562d679d970586ad7ee7d6c19f",
+    "artifacts/preformatted-formatting-markdown-focused-20261103.log": "b14acbc8750c317b7fe71ba73abfe49cc813029996268e08759af359d16c26cc",
+    "artifacts/preformatted-formatting-package-20261103.log": "2d830157e3a610825f4a83155061bf1a73bdc2db2fe05dc01284cb1c2f8c022f",
+    "artifacts/preformatted-formatting-performance-20261103.log": "640725af8f7f3622854ff39b5705625b307349747d63b2beecdf12ccecb1278b",
+    "artifacts/preformatted-formatting-performance-report-20261103.json": "9c5199252534ef345cdea03fc961d41a2e63b1420c4f147a111e8443236df9e7",
+    "artifacts/preformatted-formatting-prior-cloud-20261103.json": "f422008064d248fd65ac5d455a38105e6428e028f128c535390a8968525c2aff",
+    "artifacts/preformatted-formatting-runtime-before-css-20261103.json": "e58127b60015e5eacb4cbc7101b1fa3e9338508715778153552be47e81c91611",
+    "artifacts/preformatted-formatting-server-runtimes-20261103.log": "b1785093dfb6458c361a9f3f049325ed3b26c28fdc087a514cfdf6a79f9c9ace",
+    "artifacts/preformatted-formatting-size-20261103.log": "35672088fe1e712d6c3a6d33f15b51b209b647ca6539ad9115c84403a4b25971",
+    "artifacts/preformatted-formatting-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/preformatted-formatting-visual-review-20261103.json": "ec9889704ba43ad251d78b5aba839bf607083b465ce5b7d5a2bee08324836309",
+    "artifacts/run-preformatted-formatting-checks-20261103.ps1": "d363ab49fe37fe9504cbb9b0e4be291a8f1d6e42694ed22af2900055c5b0b78c",
+    "artifacts/write-preformatted-formatting-verification-20261103.mjs": "ae6d8423ee000dcf411ece13ca761843c7888fab70f1f254ee27580ac06e8414",
+    "docs/CONVERSION_LAB.md": "3bed425d7192ea2916a2ab48695ee7f5780371b4e567b10796c44445900fa889",
+    "docs/MARKDOWN_DOCUMENT_FLOW.md": "967216c25f139971c480b3c109f03d894a63c2412054e33d5af8cf5fabd5b9de",
+    "docs/ROADMAP.md": "e2f67f0358c07518686a026e31c8bde6f55268b03b6b34ac012bc2417eb7ebeb",
+    "docs/SERVER_HTML.md": "585fc1a83bd246fd3145417d7a4c6525288d84b5073e6e69afbfe1a2d451cd83",
+    "docs/TIPTAP_PARITY.md": "38e17d44102a4a3bf2ca5c76b0e931b43961f11ea0727066cc957271a51eb627",
+    "scripts/check-build-budgets.mjs": "b004ab09dc34444f10a781b0244df78c15ad426e268c52cd500f61a8893c3971",
+    "scripts/check-server-html-worker.mjs": "f7907b4b42503d9f69e9c9a053ea75c05d802c0d8978ba0f2dbb6d63c78ccc95",
+    "scripts/fixtures/html-preformatted-formatting-check.mjs": "7a098203927172a3dc159a17810716f3830d6805a6e9262820650021ac6fef35",
+    "scripts/fixtures/server-html-worker.mjs": "86167934f328005e6c440442ae4e76eff928b63c5b9b010e701cc058590c35c5",
+    "scripts/smoke-package.mjs": "b165fdb9dd66fc7df7ff5429d2bbd0c35c4cd55a02910908b642f2a7d9c9eabd",
+    "scripts/smoke-server-html-runtime.mjs": "7d4a0c6fe13ef6079b65655e02b039530b7dc9712b7c91c33d648b2d9061da56",
+    "src/core/code-theme.ts": "044f134614b4c8917be34558ad3a871d9748d02b1f6faaf05030ba1e3002762f",
+    "src/core/exporters/html-exporter.ts": "9dcef932965d5ca84adfa80ae63dd85a932a204a15b2c6bada8d89db0f85014f",
+    "src/core/exporters/markdown-exporter.ts": "88f7b1c06bc51db4896172754cb568a07599f66bec84afeece4c57986ce51b62",
+    "src/core/importers/html-importer.ts": "7c91410b26f7063666510c7b48ec8fc2e55f85a45f04c8ae9721e4076f53f96d",
+    "src/core/importers/html-preformatted.ts": "dae1ca39b1b1184c44d5ad296d39da1e7d8fc82d2cce7ea3578b90afdf7bfb34",
+    "src/extensions/marks/highlight.ts": "6b8d284ed12130b886bd5eafe9a922680767f0999292e28aa6c9a704e90e21ea",
+    "src/extensions/plugins/syntax-highlight.ts": "71d44750a6e0821fcc801adcbc265ba2964a60260b53c2aa6efda345468b1875",
+    "src/html/server.ts": "a2a60c3ebd1f3790dac593715102a5f7e38b63497afabc8afd6833ad22ed5203",
+    "src/styles.css": "4c8007f4652ae63b3739ff8bdfd8c228d6c0108fb35f30663bc0b560a41abc96",
+    "tests/browser/preformatted-breaks-journey.ts": "5399150d3f9c54a93eb8edfd127cf199b50fe4926eba992e93f82fdf073e6f28",
+    "tests/html-preformatted-formatting.test.ts": "3cef1f812e3d2729f52acb29cda6ae9690ba2a302ba036cf749cf837644b3c95"
+  }
+}

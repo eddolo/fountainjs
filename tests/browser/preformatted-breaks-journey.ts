@@ -31,20 +31,34 @@ async function wordGeometry(pre: Locator) {
 async function wordGap(pre: Locator) { return (await wordGeometry(pre)).gap; }
 
 export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
+  const ownedLayout = JSON.stringify({ unit: 'pt', fontFamily: 'Georgia', fontSize: 14, lineHeight: 1.5,
+    lineHeightUnit: 'multiple', lineHeightRule: 'auto', background: '#fff4dd', spacingAfter: 12 }).replaceAll('"', '&quot;');
   const source = '<h2>Preformatted import check</h2><pre>first<br>second</pre>'
-    + '<pre>first<br>\nsecond</pre><pre>first <em>important</em> second</pre><p>Keep this sibling.</p>';
+    + '<pre>first<br>\nsecond</pre><pre>first <em>important</em> second <span style="color:#cc0000"><code>literal</code></span> <span style="color:#cc0000"><mark style="background-color:#ffee66;color:inherit">marked</mark></span></pre>'
+    + `<pre data-fountain-paragraph-layout="${ownedLayout}" style="font-family:Georgia;font-size:14pt;line-height:1.5;background-color:#fff4dd;color:#1420a0">Owned layout</pre>`
+    + '<p>Keep this sibling.</p>';
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   const native = await page.context().newPage();
   let nativeGaps: number[];
+  let nativeOwnedWidth = 0;
   let nativeSelectedCode = 'first\nsecond edited';
+  let nativeSelectedFormatted = 'important';
   try {
     await native.setContent('<style>body{font:16px system-ui}pre{font:16px/24px monospace}</style>' + source);
     nativeGaps = [await wordGap(native.locator('pre').nth(0)), await wordGap(native.locator('pre').nth(1))];
     expect(nativeGaps[0]).toBeGreaterThan(10);
     expect(nativeGaps[1] / nativeGaps[0]).toBeCloseTo(2, 1);
     await expect(native.locator('pre em')).toHaveCSS('font-style', 'italic');
+    nativeOwnedWidth = await native.locator('pre').nth(3).evaluate(element => {
+      const range = document.createRange(); range.selectNodeContents(element); return range.getBoundingClientRect().width;
+    });
     await native.screenshot({ path: info.outputPath('native-preformatted-source.png') });
+    if (!info.project.name.startsWith('mobile-')) {
+      await native.locator('pre em').dblclick();
+      nativeSelectedFormatted = await native.evaluate(() => getSelection()!.toString());
+      expect(['important', 'important ']).toContain(nativeSelectedFormatted);
+    }
     if (info.project.name === 'chromium' || info.project.name === 'firefox') {
       await native.setContent('<pre contenteditable="true" role="textbox" aria-label="Native code control">first\nsecond edited</pre>');
       await native.getByRole('textbox', { name: 'Native code control' }).click();
@@ -58,10 +72,32 @@ export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
   const workspace = page.getByRole('region', { name: 'Conversion workspace: preformatted.html', exact: true });
   const editor = workspace.getByRole('textbox', { name: 'Imported document editor', exact: true });
   const code = editor.locator('pre');
-  await expect(code).toHaveCount(3);
+  await expect(code).toHaveCount(4);
   await expect(code.nth(0)).toHaveText('first\nsecond');
   await expect(code.nth(1)).toHaveText('first\n\nsecond');
-  await expect(code.nth(2)).toHaveText('first important second');
+  await expect(code.nth(2)).toHaveText('first important second literal marked');
+  await expect(code.nth(2).locator('em')).toHaveCSS('font-style', 'italic');
+  // The renderer may place the color span inside the code mark. Observe the
+  // visible glyph's parent, not one particular equivalent wrapper order.
+  const editorLiteralColor = await code.nth(2).locator('code code').evaluate(element => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const text = walker.nextNode(); return getComputedStyle(text!.parentElement!).color;
+  });
+  expect(editorLiteralColor).toBe('rgb(204, 0, 0)');
+  const editorHighlightColor = await code.nth(2).locator('mark').evaluate(element => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    return getComputedStyle(walker.nextNode()!.parentElement!).color;
+  });
+  expect(editorHighlightColor).toBe('rgb(204, 0, 0)');
+  await expect(code.nth(2).locator('mark')).toHaveCSS('background-color', 'rgb(255, 238, 102)');
+  const editorFormattedBackground = await code.nth(2).evaluate(element => getComputedStyle(element).backgroundColor);
+  await expect(code.nth(2).locator('code code')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect(code.nth(3).locator(':scope > code')).toHaveCSS('font-family', /Georgia/);
+  await expect(code.nth(3)).toHaveAttribute('data-fountain-paragraph-layout');
+  const editorOwnedWidth = await code.nth(3).locator(':scope > code').evaluate(element => {
+    const range = document.createRange(); range.selectNodeContents(element); return range.getBoundingClientRect().width;
+  });
+  expect(editorOwnedWidth).toBeCloseTo(nativeOwnedWidth, 0);
   await expect(code.nth(0)).toHaveAttribute('data-fountain-code-lines', '1\n2');
   await expect(code.nth(1)).toHaveAttribute('data-fountain-code-lines', '1\n2\n3');
   await expect(code.locator('[data-fountain-widget]')).toHaveCount(0);
@@ -84,7 +120,7 @@ export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
   const accessibleCode = await code.nth(0).ariaSnapshot();
   expect(accessibleCode).not.toMatch(/\b[12]\b/u);
   await expect(workspace.locator('.lab-notice')).toContainText('preformatted-html-projection');
-  await expect(workspace.locator('.lab-notice')).toContainText('child formatting');
+  await expect(workspace.locator('.lab-notice')).toContainText('supported text formatting');
   await expect(workspace.getByLabel('Original source', { exact: true })).toHaveText(source);
   const editorGaps = [await wordGap(code.nth(0)), await wordGap(code.nth(1))];
   expect(editorGaps[0]).toBeGreaterThan(4);
@@ -166,11 +202,27 @@ export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
       await destination.screenshot({ path: info.outputPath('external-code-paste.png') });
     } finally { await destination.close(); }
   }
+  const formatted = code.nth(2).locator('em');
+  if (info.project.name.startsWith('mobile-')) {
+    await formatted.tap(); await page.keyboard.press('Home');
+    for (let index = 0; index < 6; index++) await page.keyboard.press('ArrowRight');
+    for (let index = 0; index < 9; index++) await page.keyboard.press('Shift+ArrowRight');
+  } else {
+    await formatted.dblclick();
+    expect(await page.evaluate(() => getSelection()?.toString())).toBe(nativeSelectedFormatted);
+    // Windows word selection can include the following space. A real key
+    // adjustment selects only the word, preserving its separator on replace.
+    if (nativeSelectedFormatted === 'important ') await page.keyboard.press('Shift+ArrowLeft');
+  }
+  expect(await page.evaluate(() => getSelection()?.toString())).toBe('important');
+  await page.keyboard.type('critical');
+  await expect(formatted).toHaveText('critical');
+  await page.keyboard.press('ControlOrMeta+z'); await expect(formatted).toHaveText('important');
+  await page.keyboard.press('ControlOrMeta+Shift+z'); await expect(formatted).toHaveText('critical');
   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
   await expect(workspace.getByLabel('Round-trip result', { exact: true }))
     .toContainText('Exact Fountain document equality after reopening.');
-  // Exact native equality does not mean the original emphasis was retained.
-  await expect(workspace.locator('.lab-notice')).toContainText('child formatting');
+  await expect(code.nth(2).locator('em')).toHaveText('critical');
   const pending = page.waitForEvent('download');
   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
   const download = await pending;
@@ -186,7 +238,26 @@ export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
     readerGaps = [await wordGap(reader.locator('pre').nth(0)), await wordGap(reader.locator('pre').nth(1))];
     expect(readerGaps[0]).toBeGreaterThan(4);
     expect(readerGaps[1] / readerGaps[0]).toBeCloseTo(2, 1);
-    await expect(reader.locator('pre em')).toHaveCount(0);
+    await expect(reader.locator('pre em')).toHaveCount(1);
+    await expect(reader.locator('pre em')).toHaveCSS('font-style', 'italic');
+    await expect(reader.locator('pre em')).toHaveText('critical');
+    const readerLiteralColor = await reader.locator('pre').nth(2).locator('code code').evaluate(element => {
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      const text = walker.nextNode(); return getComputedStyle(text!.parentElement!).color;
+    });
+    expect(readerLiteralColor).toBe('rgb(204, 0, 0)');
+    const readerHighlightColor = await reader.locator('pre').nth(2).locator('mark').evaluate(element => {
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      return getComputedStyle(walker.nextNode()!.parentElement!).color;
+    });
+    expect(readerHighlightColor).toBe('rgb(204, 0, 0)');
+    await expect(reader.locator('pre').nth(2).locator('mark')).toHaveCSS('background-color', 'rgb(255, 238, 102)');
+    await expect(reader.locator('pre').nth(2)).toHaveCSS('background-color', editorFormattedBackground);
+    await expect(reader.locator('pre').nth(3).locator(':scope > code')).toHaveCSS('font-family', /Georgia/);
+    const readerOwnedWidth = await reader.locator('pre').nth(3).locator(':scope > code').evaluate(element => {
+      const range = document.createRange(); range.selectNodeContents(element); return range.getBoundingClientRect().width;
+    });
+    expect(readerOwnedWidth).toBeCloseTo(nativeOwnedWidth, 0);
     await reader.screenshot({ path: info.outputPath('downloaded-preformatted-reader.png') });
   } finally { await reader.close(); }
   await page.getByLabel('Choose documents').setInputFiles({ name: 'reopened-preformatted.html', mimeType: 'text/html', buffer: Buffer.from(html) });
@@ -194,10 +265,35 @@ export async function preformattedBreaksJourney(page: Page, info: TestInfo) {
   const reopenedEditor = reopened.getByRole('textbox', { name: 'Imported document editor', exact: true });
   await expect(reopenedEditor.locator('pre').nth(0)).toHaveText('first\nsecond edited');
   await expect(reopenedEditor.locator('pre').nth(1)).toHaveText('first\n\nsecond');
+  await expect(reopenedEditor.locator('pre').nth(2).locator('em')).toHaveText('critical');
   await expect(reopenedEditor.locator('p')).toHaveText('Keep this sibling.');
+  // Ordinary fences retain literal code, but cannot carry its text marks or
+  // layout. Exercise the real UI report and actual downgraded file explicitly.
+  await page.getByRole('navigation', { name: 'Imported files', exact: true }).getByRole('button', { name: 'preformatted.html', exact: true }).click();
+  await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
+  await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+  const markdownReport = workspace.getByLabel('Round-trip result', { exact: true });
+  await expect(markdownReport).toContainText('Text formatting inside code');
+  await expect(markdownReport).toContainText('Code-block layout and font context');
+  await markdownReport.screenshot({ path: info.outputPath('markdown-export-loss-report.png') });
+  const markdownPending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const markdownDownload = await markdownPending, markdownPath = info.outputPath('preformatted-edited.md');
+  await markdownDownload.saveAs(markdownPath);
+  const markdown = await readFile(markdownPath, 'utf8');
+  await page.getByLabel('Choose documents').setInputFiles({ name: 'reopened-preformatted.md', mimeType: 'text/markdown', buffer: Buffer.from(markdown) });
+  const markdownEditor = page.getByRole('region', { name: 'Conversion workspace: reopened-preformatted.md', exact: true })
+    .getByRole('textbox', { name: 'Imported document editor', exact: true });
+  await expect(markdownEditor.locator('pre').nth(2)).toHaveText('first critical second literal marked');
+  await expect(markdownEditor.locator('pre em')).toHaveCount(0);
+  await page.getByRole('navigation', { name: 'Imported files', exact: true }).getByRole('button', { name: 'preformatted.html', exact: true }).click();
+  await expect(code.nth(2).locator('em')).toHaveText('critical');
   expect(errors).toEqual([]);
   await writeFile(info.outputPath('preformatted-break-observations.json'), JSON.stringify({
-    nativeGaps, editorGaps, readerGaps, gutter, accessibleCode, nativeSelectedCode, externalClipboard, explicitBRAndAdjacentLFAreIndependent: true,
-    nativeTypingUndoRedo: true, actualDownloadReopen: true, formattingLossDisclosed: true, errors,
+    nativeGaps, editorGaps, readerGaps, gutter, accessibleCode, nativeSelectedCode, nativeSelectedFormatted,
+    externalClipboard, nativeOwnedWidth, editorOwnedWidth, editorLiteralColor, editorFormattedBackground,
+    explicitBRAndAdjacentLFAreIndependent: true,
+    nativeTypingUndoRedo: true, formattedWordEditingUndoRedo: true, actualDownloadReopen: true,
+    supportedEmphasisRetained: true, projectionNoticeDisclosed: true, actualMarkdownLossReportAndReopen: true, errors,
   }, null, 2) + '\n');
 }

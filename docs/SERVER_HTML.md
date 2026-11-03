@@ -1,5 +1,81 @@
 # Server-native HTML conversion
 
+## Supported preformatted text formatting (2026-11-03, Unreleased)
+
+Ordinary browser/server HTML import now retains supported text marks inside
+`pre`: emphasis, inline code, safe links, colours and registered extension marks
+use the existing schema rules. The shared iterative traversal lives in
+`src/core/importers/html-preformatted.ts`; its tree boundary contains no DOM
+APIs. A sole outer `code` is structural; nested inline `code` remains a mark.
+Real BRs and adjacent LFs stay independent, encoded markup stays literal, and
+genuinely empty marked text positions survive. Equivalent nonempty runs merge;
+arbitrary original text-leaf segmentation is not promised.
+
+Safe HTML writes these marks and the existing typed paragraph layout/direction
+instead of flattening the code buffer. Owned fonts reach the inner code surface.
+The reader reuses the editor's source-aware code palette, without persisting a
+new theme field. Highlight wrappers inherit the surrounding foreground so a
+browser's default `mark` colour cannot silently replace an owned text colour.
+The engine's schema, literal code editing and protected Markdown flow stay intact.
+
+This supersedes the plain-code limitation at the historical checkpoints below,
+but does not preserve arbitrary CSS, comments, media, block layout or interactive
+NodeViews inside code. The conservative `preformatted-html-projection` notice
+describes that boundary; its presence is not a measured loss count. Original
+files remain necessary outside the supported profile. URL policy is unchanged.
+
+Ordinary Markdown fences cannot carry these text marks or font/layout context.
+Export reports their omission, once per mark type per block, and preserves
+literal source. Exact untouched source reuse and an explicit schema HTML export
+do not receive false canonical-fence warnings.
+
+Five recorded public conversion-lab journeys pass across Chromium, Firefox,
+WebKit and two mobile emulations. They type/edit/undo/redo, download actual HTML,
+inspect an independent native reader, reopen the bytes, then download/reopen
+the deliberately downgraded Markdown with its visible loss report. All 22 final
+PNGs were inspected. Native and exported glyph widths verify the owned Georgia
+font; computed glyph styles verify red foreground on yellow highlighting.
+Chromium/Firefox also paste into an independent native textarea. The mobile
+editor keeps horizontal scrolling for long code lines; viewport captures do not
+show all offscreen text or all scrollable report rows. Videos are recorded, not
+manually watched. This is not pixel or physical-device certification.
+
+The full suite passes **3,377 tests / 240 files**, including 29 new contracts.
+Packed ESM/CommonJS root/core, pure Node and real workerd each pass fourteen new
+formatting contracts. Framework types, the unchanged 415-file public API check,
+113-module headless boundary, retention and website checks pass.
+
+The unchanged v13 CommonMark gate retains its 563/613/631/635 body scores and
+all eight fixture ranges. Exact untouched source and native JSON each pass
+1,304 checks. Safe-HTML native reopens improve from **1,288 to 1,298/1,304**:
+169, 183, 184, 191 and 309 now retain their supported marks on both line endings.
+The six remaining cases are 148/187/494 on both endings, each with adjacent
+equivalent text-leaf merging. Source model statuses become 1,292
+`equal-except-source-tokens` / 12 `different`; the three EOF envelope cases stay
+separate. None of these retention counts is complete CommonMark conformance.
+
+One normal current-source performance run passes every unchanged limit, with
+100/1k/5k/10k server HTML p95 of 27.29/82.09/261.02/493.78 ms. Independent
+direction and mapping retention also pass. Earlier timing failures remain
+evidence; one passing run does not establish universal latency or a speedup.
+Previous commit `6884928` has successful CI verification, performance, browser,
+Lean and Pages jobs; these do not certify this uncommitted feature.
+
+A redundant transparent-code border-radius reset was removed during CSS review.
+CSS is now **89,593 / 89,600 bytes**, within the unchanged limit. All 168 built
+ESM/CommonJS files are byte-identical across that cleanup. Five final browser
+journeys pass again, and all 22 final PNGs are byte-identical to the reviewed
+captures. The rebuilt website passes.
+
+Measured aggregate code is **1,691,200 bytes ESM / 1,407,758 CJS**, up 2,352 /
+1,889 bytes from `6884928`, exceeding the existing caps by 2,112 / 1,806 bytes.
+The user explicitly approved the capacity-only adjustment of 1,649.5 →
+1,651.75 KiB ESM and 1,373 → 1,375 KiB CJS. The size gate now passes; the
+pre-approval failures and original proposal remain recorded. This changes no
+entry/CSS/runtime/heap limit, API/schema, dependency, fixture range or semantic
+oracle. Current-source cloud verification follows the push; no npm release or
+parity-row promotion is claimed from these local checks.
+
 ## Read-only attribute inspection (2026-11-03, Unreleased)
 
 The server facade now inspects the parser's own attribute record without

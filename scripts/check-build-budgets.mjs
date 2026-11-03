@@ -589,7 +589,7 @@ const limits = Object.freeze({
   // Physical preformatted breaks/reports and equivalent native caret affinity:
   // Including the smaller CSS-gutter plugin: +1,776 bytes, measured 1649.207 KiB.
   // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
-  'all ESM runtime code': 1649.5 * kibibyte,
+  'all ESM runtime code': 1651.75 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -669,7 +669,7 @@ const limits = Object.freeze({
   // Same heading marker/restoration: +295 bytes, measured 1371.318 KiB.
   // Same repair and smaller gutter: +1,585 bytes, measured 1372.867 KiB.
   // Initial code/CSS cap failures are retained; no latency/heap relaxation.
-  'all CommonJS runtime code': 1373 * kibibyte,
+  'all CommonJS runtime code': 1375 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

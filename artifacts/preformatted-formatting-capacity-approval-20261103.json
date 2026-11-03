@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-03",
+  "userDecision": "Approve the measured code-size allowance",
+  "status": "applied after explicit user approval",
+  "target": "scripts/check-build-budgets.mjs",
+  "approvedLimitsKiB": { "ESM": 1651.75, "CommonJS": 1375 },
+  "previousLimitsKiB": { "ESM": 1649.5, "CommonJS": 1373 },
+  "CSSLimitKiB": 87.5,
+  "unchanged": ["individual entry ceilings", "CSS ceiling", "runtime latency/scaling/heap limits", "sampling", "dependencies", "public API", "schema", "CommonMark oracle and fixture ranges"],
+  "verificationLog": "artifacts/preformatted-formatting-approved-size-20261103.log",
+  "originalProposal": "artifacts/preformatted-formatting-capacity-proposal-20261103.json"
+}

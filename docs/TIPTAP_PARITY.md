@@ -1,5 +1,19 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Unreleased supported preformatted formatting (2026-11-03): retain schema text
+marks and typed font/layout context across browser/server HTML import and safe
+HTML export. Keep code literal and disclose ordinary Markdown-fence losses.
+Five recorded public browser journeys pass; 22 final captures were inspected.
+Full units pass 3,377 / 240 files; package/runtime/types/API/headless, unchanged
+CommonMark, performance/retention and site checks pass. Safe-HTML native reopens
+improve to 1,298/1,304, independently of unchanged body-semantic scores.
+The user explicitly approved the measured aggregate code-capacity adjustment;
+the size gate now passes. CSS remains within its existing limit;
+five final browser journeys pass with 22 byte-identical reviewed captures.
+No feature-row or npm promotion; this does not certify
+arbitrary HTML styling, all leaf segmentation, physical devices or pixel parity.
+[Scope and evidence](SERVER_HTML.md#supported-preformatted-text-formatting-2026-11-03-unreleased).
+
 Unreleased attribute-inspection follow-up (2026-11-03): eliminate repeated
 parser attribute-object arrays while preserving source inspection semantics.
 Thirteen new contracts, full units 3,348 / 239 files, package/runtime/type/

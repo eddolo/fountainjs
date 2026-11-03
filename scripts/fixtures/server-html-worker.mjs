@@ -14,6 +14,7 @@ import { checkHTMLAnchorLoss } from './html-anchor-loss-check.mjs';
 import * as inertHTML from '../../dist/html-inert.js';
 import { checkHTMLEmptyHeading } from './html-empty-heading-check.mjs';
 import { checkHTMLPreformattedBreaks } from './html-preformatted-breaks-check.mjs';
+import { checkHTMLPreformattedFormatting } from './html-preformatted-formatting-check.mjs';
 
 const schema = new Schema(CoreSchemaSpec);
 
@@ -53,6 +54,7 @@ export default {
       anchorsChecked: checkHTMLAnchorLoss(blockAtomCore, { ServerHTMLImporter }),
       emptyHeadingsChecked: checkHTMLEmptyHeading(blockAtomCore, { ServerHTMLImporter }),
       preformattedBreaksChecked: checkHTMLPreformattedBreaks(blockAtomCore, { ServerHTMLImporter }),
+      preformattedFormattingChecked: checkHTMLPreformattedFormatting(blockAtomCore, { ServerHTMLImporter }),
       paragraphRecovered: paragraph.childCount === 4 && paragraph.child(1).type.name === 'heading'
         && paragraph.child(1).textContent === 'Heading',
     }), { headers: { 'content-type': 'application/json' } });

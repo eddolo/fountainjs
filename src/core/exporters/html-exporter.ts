@@ -13,6 +13,8 @@ import { htmlCommentSource } from '../html-comment';
 import { literalLinkAttributes } from '../link-destination';
 import { textDirectionDOMAttributes } from '../text-direction';
 import { sharedDirectionDOMAttributes } from '../shared-direction';
+import { paragraphLayoutDOMAttributes } from '../paragraph-layout';
+import { codeTheme } from '../code-theme';
 
 export interface HTMLExportOptions {
   document?: boolean;
@@ -176,7 +178,7 @@ function renderMarks(content: string, marks: readonly Mark[]): string {
       case 'underline': content = `<u>${content}</u>`; break;
       case 'strike': content = `<s>${content}</s>`; break;
       case 'code': content = `<code>${content}</code>`; break;
-      case 'highlight': content = `<mark style="background-color:${escapeHTML(mark.attrs.color)}">${content}</mark>`; break;
+      case 'highlight': content = `<mark style="background-color:${escapeHTML(mark.attrs.color)};color:inherit">${content}</mark>`; break;
       case 'text_color': content = `<span style="color:${escapeHTML(mark.attrs.color)}">${content}</span>`; break;
       case 'subscript': content = `<sub>${content}</sub>`; break;
       case 'superscript': content = `<sup>${content}</sup>`; break;
@@ -277,7 +279,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     case 'list_item': return `<li${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</li>`;
     case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
     case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;
-    case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${node.attrs.lineNumbers === false ? ' data-line-numbers="false"' : ''}${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><code class="language-${escapeHTML(node.attrs.language)}">${escapeHTML(node.textContent)}</code></pre>`;
+    case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${node.attrs.lineNumbers === false ? ' data-line-numbers="false"' : ''}${codeTheme(node) === 'light' ? ' data-fountain-code-theme="light"' : ''}${renderDOMAttributes({ ...paragraphLayoutDOMAttributes(node.attrs.layout), ...textDirectionDOMAttributes(node.attrs) })}><code class="language-${escapeHTML(node.attrs.language)}">${children()}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';
     case 'inline_math': return `<span class="fountain-math fountain-math--inline" data-fountain-math="inline" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></span>`;
@@ -347,7 +349,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
   }
 }
 
-const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
+const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}pre[data-fountain-paragraph-layout]>code{font:inherit}pre[data-fountain-code-theme="light"]{color:#272437;background:#f4f1eb}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
 
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {

@@ -1,0 +1,57 @@
+[
+  {
+    "name": "types",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-types-20261103.log"
+  },
+  {
+    "name": "api",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-api-20261103.log"
+  },
+  {
+    "name": "headless",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-headless-20261103.log"
+  },
+  {
+    "name": "package",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-package-20261103.log"
+  },
+  {
+    "name": "server-runtimes",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-server-runtimes-20261103.log"
+  },
+  {
+    "name": "corpus",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-corpus-20261103.log"
+  },
+  {
+    "name": "performance",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-performance-20261103.log"
+  },
+  {
+    "name": "direction-retention",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-direction-retention-20261103.log"
+  },
+  {
+    "name": "mapping-retention",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-mapping-retention-20261103.log"
+  },
+  {
+    "name": "size",
+    "exitCode": 1,
+    "log": "artifacts/preformatted-formatting-size-20261103.log"
+  },
+  {
+    "name": "site",
+    "exitCode": 0,
+    "log": "artifacts/preformatted-formatting-site-20261103.log"
+  }
+]

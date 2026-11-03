@@ -1,0 +1,40 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/html-preformatted-formatting.test.ts (20 tests | 2 failed) 152ms
+   ❯ browser preformatted text formatting (10)
+     × coalesces equivalent adjacent runs without inventing empty marked positions 9ms
+   ❯ server preformatted text formatting (10)
+     × coalesces equivalent adjacent runs without inventing empty marked positions 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/html-preformatted-formatting.test.ts > browser preformatted text formatting > coalesces equivalent adjacent runs without inventing empty marked positions
+ FAIL  tests/html-preformatted-formatting.test.ts > server preformatted text formatting > coalesces equivalent adjacent runs without inventing empty marked positions
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/html-preformatted-formatting.test.ts:49:33
+     47|     it('coalesces equivalent adjacent runs without inventing empty mar…
+     48|       const result = importer.parse('<pre><em>first</em><em><span>seco…
+     49|       expect(result.childCount).toBe(1);
+       |                                 ^
+     50|       expect(result.child(0).text).toBe('firstsecond');
+     51|       expect(result.child(0).marks.map(mark => mark.type.name)).toEqua…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 18 passed (20)
+   Start at  19:00:40
+   Duration  5.35s (transform 40%, import 30%, environment 27%, tests 3%)
+
+  Transform  transforming modules took 2.06s · 40% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
