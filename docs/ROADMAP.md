@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Container-reference source follow-up (2026-11-04, unreleased): native
+lists/quotes can retain embedded definitions during edits while preserving their
+document-wide link meaning. Complete-result checks protect precedence after
+movement; an unprefixed fallback footer protects references when an owner is
+removed or replaced. All 3,876 units / 265 files and the focused 213-test set pass;
+three recorded desktop workflows include toolbar quote removal/undo and actual
+download reopening. Twenty-four exports reopen completely; captures and sampled
+video were reviewed. Types/API/headless, package/workerd, unchanged conformance
+and performance/retention checks pass. The initial sample/expectation failures
+and documentation-only API review are retained. Aggregate size ceilings and full
+current-head CI remain open. Footnote/nested-HTML/inline ownership and full CommonMark stay open.
+[Contract](MARKDOWN_SOURCE.md#container-carried-shared-definitions-2026-11-04-unreleased-follow-up).
+
 Nested root-reference source follow-up (2026-11-04, unreleased): native
 list/quote/task edits can retain unrelated source using the captured root link
 scope. Parser spans extend capture to loose lists and adjacent blocks while

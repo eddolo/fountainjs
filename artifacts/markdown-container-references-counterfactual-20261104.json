@@ -1,0 +1,8 @@
+{
+  "baseline": "actual PR #13 tarball",
+  "baselineTarballSHA256": "e684488c040777acae594d62af33b8ec012cc13aa847b7f4475edbbc57b1c09b",
+  "baselineFirstFailure": "Container-carried definitions caused unrelated source rewriting.",
+  "baselineStopsAtFirstFailure": true,
+  "currentChecks": 36,
+  "scope": "Source spelling retention; not a claim that the baseline lost visible document content"
+}

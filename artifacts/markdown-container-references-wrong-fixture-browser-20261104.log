@@ -1,0 +1,154 @@
+[WebServer] (node:24460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:25024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (14.6s)
+(node:19720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (16.3s)
+(node:2108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (18.8s)
+
+
+  1) [chromium] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: container-tasks.md', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).getByRole('link', { name: 'proof', exact: true })
+    Expected: "/target"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: container-tasks.md', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).getByRole('link', { name: 'proof', exact: true })
+
+
+       at ..\browser\markdown-container-reference-journey.ts:84
+
+      82 |   await expect(checkbox).toBeChecked();
+      83 |   expect(await download('task-checked.md', tasksWorkspace)).toBe(tasks.replace('[ ]', '[x]'));
+    > 84 |   await expect(tasksEditor.getByRole('link', { name: 'proof', exact: true })).toHaveAttribute('href', '/target');
+         |                                                                               ^
+      85 |   await tasksEditor.screenshot({ path: resolve(root, 'task-checked.png'), caret: 'initial' });
+      86 |   await checkbox.click();
+      87 |   await expect(checkbox).not.toBeChecked();
+        at runMarkdownContainerReferenceJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-container-reference-journey.ts:84:79)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-container-reference-real.spec.ts:4:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: container-tasks.md', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).getByRole('link', { name: 'proof', exact: true })
+    Expected: "/target"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: container-tasks.md', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).getByRole('link', { name: 'proof', exact: true })
+
+
+       at ..\browser\markdown-container-reference-journey.ts:84
+
+      82 |   await expect(checkbox).toBeChecked();
+      83 |   expect(await download('task-checked.md', tasksWorkspace)).toBe(tasks.replace('[ ]', '[x]'));
+    > 84 |   await expect(tasksEditor.getByRole('link', { name: 'proof', exact: true })).toHaveAttribute('href', '/target');
+         |                                                                               ^
+      85 |   await tasksEditor.screenshot({ path: resolve(root, 'task-checked.png'), caret: 'initial' });
+      86 |   await checkbox.click();
+      87 |   await expect(checkbox).not.toBeChecked();
+        at runMarkdownContainerReferenceJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-container-reference-journey.ts:84:79)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-container-reference-real.spec.ts:4:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: container-tasks.md', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).getByRole('link', { name: 'proof', exact: true })
+    Expected: "/target"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: container-tasks.md', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).getByRole('link', { name: 'proof', exact: true })
+
+
+       at ..\browser\markdown-container-reference-journey.ts:84
+
+      82 |   await expect(checkbox).toBeChecked();
+      83 |   expect(await download('task-checked.md', tasksWorkspace)).toBe(tasks.replace('[ ]', '[x]'));
+    > 84 |   await expect(tasksEditor.getByRole('link', { name: 'proof', exact: true })).toHaveAttribute('href', '/target');
+         |                                                                               ^
+      85 |   await tasksEditor.screenshot({ path: resolve(root, 'task-checked.png'), caret: 'initial' });
+      86 |   await checkbox.click();
+      87 |   await expect(checkbox).not.toBeChecked();
+        at runMarkdownContainerReferenceJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-container-reference-journey.ts:84:79)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-container-reference-real.spec.ts:4:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-container-references-browser-20261104\markdown-container-referen-52ff9--removal-undo-and-downloads-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads 
+    [firefox] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads 
+    [webkit] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads 

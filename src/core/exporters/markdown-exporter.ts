@@ -5,7 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceSeparator } from '../markdown-source-boundary';
+import { markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator } from '../markdown-source-boundary';
 import { hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
@@ -788,9 +788,9 @@ export class MarkdownExporter {
       }
       // Reference-style output needs a new document-level definition section;
       // fall back rather than risk colliding with source-owned definitions.
-      const markdown = withSourceFrontmatter(source, body);
-      if (boundariesValid && preservedBlocks > 0 && context.references.size === 0
-        && markdownSourceProjectionMatches(source, markdown, node)) {
+      const markdown = boundariesValid && preservedBlocks > 0 && context.references.size === 0
+        ? markdownSourceProjectionWithReferences(source, withSourceFrontmatter(source, body), node) : null;
+      if (markdown !== null) {
         context.losses.forEach(loss => options.onLoss?.(loss));
         return Object.freeze({
           markdown,

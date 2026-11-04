@@ -1,5 +1,55 @@
 # Markdown semantics and source fidelity
 
+## Container-carried shared definitions (2026-11-04, unreleased follow-up)
+
+Native list/quote source capture can now retain definitions physically written
+inside a container, while keeping their document-wide link meaning. The parser's
+own definition discovery supplies an unprefixed fallback footer in original
+discovery order. This is source data, not a foreign AST or an executable extension.
+Unrelated nested text edits and checkbox changes retain their literal source,
+including the original embedded definitions.
+
+These snapshots also validate the complete proposed document with the original
+parser policy. Checking each fragment against a frozen reference map alone cannot
+prove what a real reader sees after containers are reordered. Conflicting first
+definitions therefore cannot silently rebind distant links. Removing a defining
+container retains the captured definitions when needed for unchanged references;
+replacing it with another block can require the same repair even if root block
+count stays unchanged. A candidate with an appended footer is accepted only after
+complete Fountain-node equality. Otherwise canonical fallback and loss reports
+remain. Structural exports may remove container prefixes in the fallback footer;
+they do not promise identical spelling of the complete changed file.
+
+Materialized footnotes, nested HTML-adapter ownership, independent inline source
+ownership and broader CommonMark remain open. Existing source depth/ownership
+bounds remain. Native imports without these nonlocal scopes keep their local
+verification path. No schema, public API, runtime parser dependency or acceptance
+limit is added.
+
+All 3,876 units / 265 files pass, including 36 new cases and the focused 213-test
+set. One older fallback expectation was updated to require exact source retention
+while preserving its complete-model equality assertion; the initial failing run
+and final full pass are retained. The API review confirms only documentation
+changed in two declaration files; signatures are identical and all 419 declaration
+hashes are checked. Types/headless, package/workerd, unchanged conformance and
+latency/memory checks pass.
+
+Recorded Chromium/Firefox/WebKit journeys edit quote/list text, remove a quote
+using the toolbar, undo it, export and upload the actual unwrapped draft, and
+operate task checkboxes. Twenty-four actual CRLF exports reopen completely.
+Twelve captures and six video samples per engine were inspected. The first browser
+attempt exposed an incorrectly indented task sample; its failed records are
+retained, and the corrected sample asserts a linked paragraph before interacting.
+
+The complete-result proof costs about 1,425 ms for repeated export of a throttled
+5,000-paragraph quote with 5,000 embedded definitions, versus 31 ms for the parent's
+canonical rewrite. Capture is about 953 / 803 ms. Root/core closures grow about
+1.11 KiB raw / 0.28 KiB gzip; React/DOCX stay unchanged. This additional fidelity
+work is not a speed advantage. Schedule expensive serialization deliberately.
+The two aggregate size ceilings and full current-head CI remain open; individual
+entry/CSS caps pass. No acceptance limits or conformance scores changed. Evidence:
+`artifacts/markdown-container-references-verification-20261104.json`.
+
 ## Nested root-reference source (2026-11-04, unreleased follow-up)
 
 Native Markdown source capture now carries the original root reference map into

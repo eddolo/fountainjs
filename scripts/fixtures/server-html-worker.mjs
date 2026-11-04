@@ -20,6 +20,7 @@ import { checkMarkdownNestedSource } from './markdown-nested-source-check.mjs';
 import { checkMarkdownReferenceBoundaries } from './markdown-reference-boundary-check.mjs';
 import { checkMarkdownHTMLSourceBoundaries } from './markdown-html-source-boundary-check.mjs';
 import { checkMarkdownNestedReferences } from './markdown-nested-reference-check.mjs';
+import { checkMarkdownContainerReferences } from './markdown-container-reference-check.mjs';
 
 const schema = new Schema(CoreSchemaSpec);
 
@@ -48,6 +49,7 @@ export default {
       markdownReferenceBoundariesChecked: checkMarkdownReferenceBoundaries(blockAtomCore),
       markdownHTMLSourceBoundariesChecked: checkMarkdownHTMLSourceBoundaries(blockAtomCore),
       markdownNestedReferencesChecked: checkMarkdownNestedReferences(blockAtomCore),
+      markdownContainerReferencesChecked: checkMarkdownContainerReferences(blockAtomCore),
       blocks: result.document.childCount,
       text: result.document.textContent,
       html: HTMLExporter.export(result.document, { document: false }),

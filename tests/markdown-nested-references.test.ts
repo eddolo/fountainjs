@@ -78,13 +78,14 @@ describe('nested source with shared reference definitions', () => {
       if (action !== 'delete-heading') expect(result.markdown).toContain('# Keep [link][ref] ###');
     });
 
-    it(`declines ownership when a container carries a shared definition (${JSON.stringify(ending)})`, () => {
+    it(`retains a container-carried duplicate without changing global precedence (${JSON.stringify(ending)})`, () => {
       const schema = new Schema(CoreSchemaSpec);
       const source = ['[ref]: /first "First"', '', '> [ref]: /ignored "Ignored"', '>', '> Edit.', '', 'Keep [link][ref].', ''].join(ending);
       const imported = MarkdownImporter.parseWithSource(source, schema);
       const changed = replace(imported.document, [0, 0], schema.node('paragraph', {}, [schema.text('Changed.')]));
       const result = MarkdownExporter.exportWithSource(changed, imported.source);
-      expect(result.preservation).toBe('canonical');
+      expect(result.preservation).toBe('blocks');
+      expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
       expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(changed.toJSON());
     });
   }

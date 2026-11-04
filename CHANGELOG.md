@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve supported Markdown source with local HTML adapters and shared link
+  definitions, including nested list/quote/task edits. Validate nonlocal source
+  projections against the complete Fountain document. Retain external links
+  when a defining container is moved, removed, replaced or unwrapped by keeping
+  a proven fallback definition footer. Clarify that the existing
+  `MarkdownSourceSnapshot.referenceDefinitions` property can include definitions
+  recovered from containers; its TypeScript signature is unchanged. Materialized
+  footnote, nested HTML-adapter and independent inline source ownership remain
+  open. No CommonMark-score or release-certification promotion.
+
 - Validate source-preserving Markdown boundaries with the original link-reference
   context, including the appended definition footer. Close unsafe moved/terminal
   fences instead of allowing them to consume document content. Retain original

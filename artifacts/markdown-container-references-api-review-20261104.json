@@ -1,0 +1,19 @@
+{
+  "publicSignaturesChanged": false,
+  "commentsOnly": true,
+  "comparison": "Exact equality after removing block comments only",
+  "files": [
+    {
+      "path": "dist/core/importers/markdown-importer.d.ts",
+      "beforeSHA256": "95028d6bc6192a7e80077691c3c386a907ddcd663748bcf60cdaa103a6670942",
+      "afterSHA256": "4acccea89becf02438439780d9f1142d7ecb5940b43c71f6e0081dcb402dcca1",
+      "nonCommentDeclarationEqual": true
+    },
+    {
+      "path": "dist/core/importers/markdown-importer.d.cts",
+      "beforeSHA256": "7daa08500fe4b805aa28b910c98931dacc135de2b8444bce5ebf4a67253ea989",
+      "afterSHA256": "26400e5ca0ea01c0a5d53626cc835a4459731112d65165ef961b026560be95eb",
+      "nonCommentDeclarationEqual": true
+    }
+  ]
+}

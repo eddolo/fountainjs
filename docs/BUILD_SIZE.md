@@ -121,3 +121,24 @@ The first closure diagnostic incorrectly used `dist` as its package root and
 failed before producing a measurement. The corrected invocation uses `.`; both
 logs remain. See `artifacts/nested-reference-loaded-build-size-review-20261104.json`
 and `artifacts/markdown-nested-references-performance-review-20261104.json`.
+
+## Container-reference source checkpoint, 2026-11-04
+
+Keeping container-carried definitions and proving complete-result semantics adds
+about 1.11 KiB raw / 0.28 KiB gzip to root/core closures. Root is now 737.2 KiB
+raw / 227.8 KiB gzip; core is 396.6 / 133.0 KiB. React/DOCX closures stay unchanged.
+Existing individual entry/CSS ceilings pass. The two aggregate ceilings remain
+unchanged and fail by about 15.9 KiB ESM / 12.0 KiB CommonJS.
+
+For a quote containing 100 / 1,000 / 5,000 paragraphs and the same number of
+embedded reference definitions, repeated preserving export takes about
+34 / 277 / 1,425 ms versus 1.1 / 6.4 / 31 ms for the actual parent's canonical
+rewrite. Capture takes 19 / 188 / 953 ms versus 26 / 160 / 803 ms. These are
+five-sample medians on a throttled Windows machine; both paths reopen to the
+complete intended model, while only the new path retains untouched source.
+Full-result verification is synchronous serialization work and should be kept
+off a large document's per-keystroke path. Existing general editor latency and
+retained-memory limits pass without changes. No competitive speed claim follows.
+
+See `artifacts/container-reference-loaded-build-size-review-20261104.json` and
+`artifacts/markdown-container-references-performance-review-20261104.json`.

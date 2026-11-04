@@ -1,0 +1,875 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-container-references.test.ts (29 tests | 27 failed) 110ms
+   ❯ source ownership for container-carried shared definitions (29)
+     × retains quote-leading source and cross-block references ("\n") 21ms
+     × retains quote-trailing source and cross-block references ("\n") 16ms
+     × retains list source and cross-block references ("\n") 5ms
+     × retains ordered source and cross-block references ("\n") 3ms
+     × retains list-in-quote source and cross-block references ("\n") 2ms
+     × retains quote-in-list source and cross-block references ("\n") 3ms
+     × keeps external links after move of a defining container ("\n") 2ms
+     × keeps external links after delete of a defining container ("\n") 2ms
+     × keeps external links after replace of a defining container ("\n") 3ms
+     × retains quote-leading source and cross-block references ("\r\n") 2ms
+     × retains quote-trailing source and cross-block references ("\r\n") 1ms
+     × retains list source and cross-block references ("\r\n") 2ms
+     × retains ordered source and cross-block references ("\r\n") 10ms
+     × retains list-in-quote source and cross-block references ("\r\n") 5ms
+     × retains quote-in-list source and cross-block references ("\r\n") 3ms
+     × keeps external links after move of a defining container ("\r\n") 1ms
+     × keeps external links after delete of a defining container ("\r\n") 2ms
+     × keeps external links after replace of a defining container ("\r\n") 1ms
+     × retains quote-leading source and cross-block references ("\r") 3ms
+     × retains quote-trailing source and cross-block references ("\r") 3ms
+     × retains list source and cross-block references ("\r") 2ms
+     × retains ordered source and cross-block references ("\r") 2ms
+     × retains list-in-quote source and cross-block references ("\r") 2ms
+     × retains quote-in-list source and cross-block references ("\r") 2ms
+     × keeps external links after move of a defining container ("\r") 2ms
+     × keeps external links after delete of a defining container ("\r") 4ms
+     × keeps external links after replace of a defining container ("\r") 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 27 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-leading source and cross-block references ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\n\n> [ref]: /t…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+-
+- > [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+- >
++
+- > First __source__ [link][ref].
+- >
+-   > Changed.
++ > First **source** [link](/target "Original title").
++ > 
++ > Changed.
+- >
+-  > Last _source_ [ref].
+-
+- After [link][ref].
+-
++ > 
++ > Last *source* [ref](/target "Original title").
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-trailing source and cross-block references ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\n\n> First __s…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ # Keep [link](/target "Original title")
+
+- > First __source__ [link][ref].
+- >
+-   > Changed.
++ > First **source** [link](/target "Original title").
++ > 
++ > Changed.
+- >
+-  > Last _source_ [ref].
+- >
+- > [ref]: /target "Original title"
++ > 
++ > Last *source* [ref](/target "Original title").
+
+- After [link][ref].
+-
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains list source and cross-block references ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\n\n*   [ref]: …' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+-
+- *   [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+
+-     First __source__ [link][ref].
++ - First **source** [link](/target "Original title").
+-
+-     Changed.
++   
++   Changed.
+-
+-     Last _source_ [ref].
+-
+- *   Tail.
+-
+- After [link][ref].
+-
++   
++   Last *source* [ref](/target "Original title").
++ - Tail.
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains ordered source and cross-block references ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\n\n7) [ref]: /…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+-
+- 7) [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+
+-    First __source__ [link][ref].
+-
++ 7. First **source** [link](/target "Original title").
++    
+     Changed.
+-
++    
+-    Last _source_ [ref].
+-
+- 11) Tail.
+-
+- After [link][ref].
+-
++    Last *source* [ref](/target "Original title").
++ 8. Tail.
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains list-in-quote source and cross-block references ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\n\n> *   [ref]…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+-
+- > *   [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+- >
++
+- >     First __source__ [link][ref].
+- >
+- >     Changed.
++ > - First **source** [link](/target "Original title").
++ >   
++ >   Changed.
+- >
+- >     Last _source_ [ref].
+- >
+- > *   Tail.
+-
+- After [link][ref].
+-
++ >   
++ >   Last *source* [ref](/target "Original title").
++ > - Tail.
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-in-list source and cross-block references ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\n\n*   > [ref]…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+-
+- *   > [ref]: /target "Original title"
+-     >
+-     > First __source__ [link][ref].
+-     >
+-     > Changed.
++ # Keep [link](/target "Original title")
++
++ - > First **source** [link](/target "Original title").
++   > 
++   > Changed.
+-     >
++   > 
+-     > Last _source_ [ref].
+-
+- After [link][ref].
+-
++   > Last *source* [ref](/target "Original title").
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after move of a defining container ("\n")
+AssertionError: expected '> Visible **source**.\n\n# Keep [link…' to contain '# Keep [link][ref] ###'
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ > Visible **source**.
++
++ # Keep [link](/target "Original title")
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after delete of a defining container ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to contain '# Keep [link][ref] ###'
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ # Keep [link](/target "Original title")
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after replace of a defining container ("\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to contain '# Keep [link][ref] ###'
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ # Keep [link](/target "Original title")
++
++ Replacement.
++
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-leading source and cross-block references ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\n\r\n> [ref]…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+- 
+- > [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+- >
++ 
+- > First __source__ [link][ref].
++ > First **source** [link](/target "Original title").
+- >
++ > 
+-   > Changed.
++ > Changed.
+- >
++ > 
+-  > Last _source_ [ref].
+- 
+- After [link][ref].
+-
++ > Last *source* [ref](/target "Original title").
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-trailing source and cross-block references ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\n\r\n> First…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ # Keep [link](/target "Original title")
+  
+- > First __source__ [link][ref].
++ > First **source** [link](/target "Original title").
+- >
++ > 
+-   > Changed.
++ > Changed.
+- >
++ > 
+-  > Last _source_ [ref].
+- >
+- > [ref]: /target "Original title"
++ > Last *source* [ref](/target "Original title").
+  
+- After [link][ref].
+-
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains list source and cross-block references ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\n\r\n*   [re…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+- 
+- *   [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+  
+-     First __source__ [link][ref].
+- 
+-     Changed.
++ - First **source** [link](/target "Original title").
++   
++   Changed.
+- 
+-     Last _source_ [ref].
+- 
+- *   Tail.
+- 
+- After [link][ref].
+-
++   
++   Last *source* [ref](/target "Original title").
++ - Tail.
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains ordered source and cross-block references ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\n\r\n7) [ref…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+- 
+- 7) [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+  
+-    First __source__ [link][ref].
+- 
++ 7. First **source** [link](/target "Original title").
++    
+     Changed.
+- 
++    
+-    Last _source_ [ref].
+- 
+- 11) Tail.
+- 
+- After [link][ref].
+-
++    Last *source* [ref](/target "Original title").
++ 8. Tail.
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains list-in-quote source and cross-block references ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\n\r\n> *   […' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+- 
+- > *   [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+- >
++ 
+- >     First __source__ [link][ref].
++ > - First **source** [link](/target "Original title").
+- >
++ >   
+- >     Changed.
++ >   Changed.
+- >
++ >   
+- >     Last _source_ [ref].
+- >
+- > *   Tail.
+- 
+- After [link][ref].
+-
++ >   Last *source* [ref](/target "Original title").
++ > - Tail.
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-in-list source and cross-block references ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\n\r\n*   > […' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
+- 
+- *   > [ref]: /target "Original title"
++ # Keep [link](/target "Original title")
+-     >
+-     > First __source__ [link][ref].
++ 
++ - > First **source** [link](/target "Original title").
+-     >
++   > 
+-     > Changed.
++   > Changed.
+-     >
++   > 
+-     > Last _source_ [ref].
+- 
+- After [link][ref].
+-
++   > Last *source* [ref](/target "Original title").
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after move of a defining container ("\r\n")
+AssertionError: expected '> Visible **source**.\r\n\r\n# Keep […' to contain '# Keep [link][ref] ###'
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ > Visible **source**.
++ 
++ # Keep [link](/target "Original title")
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after delete of a defining container ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to contain '# Keep [link][ref] ###'
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ # Keep [link](/target "Original title")
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after replace of a defining container ("\r\n")
+AssertionError: expected '# Keep [link](/target "Original title…' to contain '# Keep [link][ref] ###'
+
+- Expected
++ Received
+
+- # Keep [link][ref] ###
++ # Keep [link](/target "Original title")
++ 
++ Replacement.
++ 
++ After [link](/target "Original title").
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-leading source and cross-block references ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\r> [ref]: /t…' // Object.is equality
+
+Expected: "# Keep [link][ref] ###·
+> [ref]: /target "Original title"
+>
+> First __source__ [link][ref].
+>
+  > Changed.
+>
+ > Last _source_ [ref].·
+After [link][ref].
+"
+Received: "# Keep [link](/target "Original title")·
+> First **source** [link](/target "Original title").
+>·
+> Changed.
+>·
+> Last *source* [ref](/target "Original title").·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-trailing source and cross-block references ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\r> First __s…' // Object.is equality
+
+Expected: "# Keep [link][ref] ###·
+> First __source__ [link][ref].
+>
+  > Changed.
+>
+ > Last _source_ [ref].
+>
+> [ref]: /target "Original title"·
+After [link][ref].
+"
+Received: "# Keep [link](/target "Original title")·
+> First **source** [link](/target "Original title").
+>·
+> Changed.
+>·
+> Last *source* [ref](/target "Original title").·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains list source and cross-block references ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\r*   [ref]: …' // Object.is equality
+
+Expected: "# Keep [link][ref] ###·
+*   [ref]: /target "Original title"·
+    First __source__ [link][ref].·
+    Changed.·
+    Last _source_ [ref].·
+*   Tail.·
+After [link][ref].
+"
+Received: "# Keep [link](/target "Original title")·
+- First **source** [link](/target "Original title").···
+  Changed.···
+  Last *source* [ref](/target "Original title").
+- Tail.·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains ordered source and cross-block references ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\r7) [ref]: /…' // Object.is equality
+
+Expected: "# Keep [link][ref] ###·
+7) [ref]: /target "Original title"·
+   First __source__ [link][ref].·
+   Changed.·
+   Last _source_ [ref].·
+11) Tail.·
+After [link][ref].
+"
+Received: "# Keep [link](/target "Original title")·
+7. First **source** [link](/target "Original title").····
+   Changed.····
+   Last *source* [ref](/target "Original title").
+8. Tail.·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains list-in-quote source and cross-block references ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\r> *   [ref]…' // Object.is equality
+
+Expected: "# Keep [link][ref] ###·
+> *   [ref]: /target "Original title"
+>
+>     First __source__ [link][ref].
+>
+>     Changed.
+>
+>     Last _source_ [ref].
+>
+> *   Tail.·
+After [link][ref].
+"
+Received: "# Keep [link](/target "Original title")·
+> - First **source** [link](/target "Original title").
+>···
+>   Changed.
+>···
+>   Last *source* [ref](/target "Original title").
+> - Tail.·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > retains quote-in-list source and cross-block references ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to be '# Keep [link][ref] ###\r\r*   > [ref]…' // Object.is equality
+
+Expected: "# Keep [link][ref] ###·
+*   > [ref]: /target "Original title"
+    >
+    > First __source__ [link][ref].
+    >
+    > Changed.
+    >
+    > Last _source_ [ref].·
+After [link][ref].
+"
+Received: "# Keep [link](/target "Original title")·
+- > First **source** [link](/target "Original title").
+  >·
+  > Changed.
+  >·
+  > Last *source* [ref](/target "Original title").·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:25:31
+     23|       const changed = replace(imported.document, path, schema.node('pa…
+     24|       const result = MarkdownExporter.exportWithSource(changed, import…
+     25|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     26|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     27|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after move of a defining container ("\r")
+AssertionError: expected '> Visible **source**.\r\r# Keep [link…' to contain '# Keep [link][ref] ###'
+
+Expected: "# Keep [link][ref] ###"
+Received: "> Visible **source**.·
+# Keep [link](/target "Original title")·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after delete of a defining container ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to contain '# Keep [link][ref] ###'
+
+Expected: "# Keep [link][ref] ###"
+Received: "# Keep [link](/target "Original title")·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/27]⎯
+
+ FAIL  tests/markdown-container-references.test.ts > source ownership for container-carried shared definitions > keeps external links after replace of a defining container ("\r")
+AssertionError: expected '# Keep [link](/target "Original title…' to contain '# Keep [link][ref] ###'
+
+Expected: "# Keep [link][ref] ###"
+Received: "# Keep [link](/target "Original title")·
+Replacement.·
+After [link](/target "Original title")."
+
+ ❯ tests/markdown-container-references.test.ts:38:31
+     36|       const result = MarkdownExporter.exportWithSource(changed, import…
+     37|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     38|       expect(result.markdown).toContain('# Keep [link][ref] ###');
+       |                               ^
+     39|     });
+     40|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/27]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  27 failed | 2 passed (29)
+   Start at  20:02:36
+   Duration  3.26s (transform 51%, import 45%, tests 4%)
+

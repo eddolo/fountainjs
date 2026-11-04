@@ -1,0 +1,17 @@
+{
+  "engine": "chromium",
+  "nativeTyping": true,
+  "untouchedNestedSourceRetained": true,
+  "crossBlockReferenceDestinationsRetained": true,
+  "undoOriginalExact": true,
+  "redoExact": true,
+  "nativeTaskCheckboxRetained": true,
+  "duplicateDefinitionPrecedenceRetained": true,
+  "nativeQuoteUnwrap": true,
+  "quoteUndoRestoresSource": true,
+  "expectedUnwrappedCompleteModelChecked": true,
+  "actualDownloadUploadedAgain": true,
+  "editedFullModelReopened": true,
+  "CRLFDownloadsRetained": true,
+  "errors": []
+}

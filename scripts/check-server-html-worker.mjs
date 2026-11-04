@@ -43,6 +43,8 @@ try {
   const body = await response.json();
   if (body.markdownHTMLSourceBoundariesChecked !== 50) throw new Error('Worker HTML-adapted Markdown source checks failed.');
   if (body.markdownNestedReferencesChecked !== 42) throw new Error('Worker nested reference source checks failed.');
+  if (body.markdownContainerReferencesChecked !== 36) throw new Error('Worker container reference source checks failed.');
+  console.log('Cloudflare workerd (Miniflare): 36 container reference source contracts passed.');
   console.log('Cloudflare workerd (Miniflare): 42 nested reference source contracts passed.');
   console.log('Cloudflare workerd (Miniflare): 50 HTML-adapted Markdown source contracts passed.');
   if (body.markdownReferenceBoundariesChecked !== 12) throw new Error('Worker reference-scoped Markdown boundary repair failed.');

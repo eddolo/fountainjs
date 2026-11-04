@@ -1,0 +1,62 @@
+[
+  {
+    "name": "unit",
+    "exitCode": 1,
+    "log": "artifacts/markdown-container-references-unit-20261104.log"
+  },
+  {
+    "name": "types",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-types-20261104.log"
+  },
+  {
+    "name": "api",
+    "exitCode": 1,
+    "log": "artifacts/markdown-container-references-api-20261104.log"
+  },
+  {
+    "name": "headless",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-headless-20261104.log"
+  },
+  {
+    "name": "conformance",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-conformance-20261104.log"
+  },
+  {
+    "name": "package",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-package-20261104.log"
+  },
+  {
+    "name": "worker",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-worker-20261104.log"
+  },
+  {
+    "name": "size",
+    "exitCode": 1,
+    "log": "artifacts/markdown-container-references-size-20261104.log"
+  },
+  {
+    "name": "loaded-size",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-loaded-size-20261104.log"
+  },
+  {
+    "name": "latency",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-latency-20261104.log"
+  },
+  {
+    "name": "direction-retention",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-direction-retention-20261104.log"
+  },
+  {
+    "name": "mapping-retention",
+    "exitCode": 0,
+    "log": "artifacts/markdown-container-references-mapping-retention-20261104.log"
+  }
+]

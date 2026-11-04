@@ -203,11 +203,16 @@ export interface MarkdownSourceBlockSnapshot {
   matches(document: Node): boolean;
 }
 
+interface MarkdownReferenceSourceScope {
+  readonly definitions: References;
+  readonly containerDefinitions: boolean;
+}
+
 interface MarkdownBlockCapture {
   readonly leading: string;
   readonly blocks: readonly MarkdownSourceBlockSnapshot[];
   readonly referenceDefinitions?: string;
-  readonly referenceScope?: References;
+  readonly referenceScope?: MarkdownReferenceSourceScope;
 }
 
 /**
@@ -225,7 +230,8 @@ export class MarkdownSourceSnapshot {
   readonly frontmatter?: MarkdownFrontmatter;
   /** Exact source trivia (whitespace/root definitions) before the first block. */
   readonly leading: string;
-  /** Root reference definitions in original order, retained after structural edits. */
+  /** Shared definitions retained after structural edits; a container's structural
+   * prefixes are removed only in its fallback definition footer. */
   readonly referenceDefinitions: string;
   /**
    * Conservatively mapped top-level blocks. An empty array means this source was
@@ -320,7 +326,7 @@ export class MarkdownSourceSnapshot {
       parseHTMLFlow: undefined, parseHTMLBlock: undefined, parseHTMLInline: undefined, parseHTMLParagraph: undefined } : options;
     const capture = documentHTMLScope ? undefined : captureMarkdownBlocks(parts.body, schema, document, captureOptions);
     const snapshot = new MarkdownSourceSnapshot(source, parts, document, capture);
-    if (capture?.blocks.length && (options.parseHTMLDocument || options.parseHTMLFlow
+    if (capture?.blocks.length && (capture.referenceScope?.containerDefinitions || options.parseHTMLDocument || options.parseHTMLFlow
       || options.parseHTMLBlock || options.parseHTMLInline || options.parseHTMLParagraph)) {
       const quietOptions = quietMarkdownOptions(options);
       registerMarkdownSourceProjection(snapshot, value => new MarkdownImporter().parse(splitMarkdownSource(value).body, schema, quietOptions));
@@ -404,12 +410,7 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
   return { leading: source.slice(0, firstStart), blocks };
 }
 
-/**
- * Capture only when blank-line-delimited source regions independently map
- * one-to-one to the parsed top-level nodes. Root reference-definition prefixes
- * are source trivia, shared with every block's inline parser. Container
- * definitions and ambiguous block boundaries still fail closed.
- */
+/** Silence observational hooks while checking speculative source ownership. */
 function quietMarkdownOptions(options: MarkdownImportOptions): MarkdownImportOptions {
   return { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
     onHTMLParagraphFallback: undefined, onHTMLFlowFallback: undefined, onTeXTableIssue: undefined };
@@ -453,34 +454,34 @@ interface NestedSourceBudget { remaining: number }
 const NESTED_SOURCE_CONTAINERS = new Set(['blockquote', 'bullet_list', 'ordered_list', 'task_list']);
 
 function nestedContainerCapture(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedCapture | undefined {
+  budget: NestedSourceBudget, depth: number, scope?: MarkdownReferenceSourceScope): MarkdownNestedCapture | undefined {
   if (!NESTED_SOURCE_CONTAINERS.has(node.type.name) || depth > 32) return undefined;
   return { build: () => captureNestedContainer(source, node, schema, options, budget, depth, scope) };
 }
 
 function nestedSequenceCapture(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedCapture {
+  budget: NestedSourceBudget, depth: number, scope?: MarkdownReferenceSourceScope): MarkdownNestedCapture {
   return { build: () => captureNestedSequence(source, node, schema, options, budget, depth, scope) };
 }
 
-function nestedFragmentParser(schema: Schema, options: MarkdownImportOptions, scope?: References): (source: string) => readonly Node[] {
+function nestedFragmentParser(schema: Schema, options: MarkdownImportOptions, scope?: MarkdownReferenceSourceScope): (source: string) => readonly Node[] {
   return source => {
     const context = references(source, schema, options);
-    if (context.definitions.size || extractFootnoteDefinitions(source, schema, options).definitions.length) return [];
-    return parseBlocks(context.lines, schema, scope ?? context.definitions, options);
+    if ((context.definitions.size && !scope?.containerDefinitions) || extractFootnoteDefinitions(source, schema, options).definitions.length) return [];
+    return parseBlocks(context.lines, schema, scope?.definitions ?? context.definitions, options);
   };
 }
 
 function captureNestedSequence(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedRecord | null {
+  budget: NestedSourceBudget, depth: number, scope?: MarkdownReferenceSourceScope): MarkdownNestedRecord | null {
   if (depth > 32 || node.childCount + 1 > budget.remaining) return null;
   budget.remaining -= node.childCount + 1;
   const physical = sourceLines(source);
   const context = references(source, schema, options);
-  if (context.definitions.size || physical.length !== context.lines.length) return null;
+  if ((context.definitions.size && !scope?.containerDefinitions) || physical.length !== context.lines.length) return null;
   const spans: MarkdownBlockSpan[] = [];
   let valid = true;
-  const parsed = parseBlocks(context.lines, schema, scope ?? context.definitions, options, undefined, undefined, span => {
+  const parsed = parseBlocks(context.lines, schema, scope?.definitions ?? context.definitions, options, undefined, undefined, span => {
     if (span.blocks.length !== 1) valid = false;
     else spans.push(span);
   });
@@ -497,7 +498,7 @@ function captureNestedSequence(source: string, node: Node, schema: Schema, optio
 }
 
 function nestedLineView(source: string, node: Node, values: readonly string[], continuations: readonly string[],
-  schema: Schema, options: MarkdownImportOptions, budget: NestedSourceBudget, depth: number, checkbox?: number, scope?: References): MarkdownNestedRecord | null {
+  schema: Schema, options: MarkdownImportOptions, budget: NestedSourceBudget, depth: number, checkbox?: number, scope?: MarkdownReferenceSourceScope): MarkdownNestedRecord | null {
   const physical = sourceLines(source);
   if (physical.length !== values.length || !physical.every((line, index) => line.value.endsWith(values[index]))) return null;
   const lines: MarkdownSourceLineView[] = [];
@@ -513,7 +514,7 @@ function nestedLineView(source: string, node: Node, values: readonly string[], c
 }
 
 function nestedItemCapture(source: string, node: Node, indent: number, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedCapture {
+  budget: NestedSourceBudget, depth: number, scope?: MarkdownReferenceSourceScope): MarkdownNestedCapture {
   return { build: () => {
     if (depth > 32 || budget.remaining-- <= 0) return null;
     const physical = sourceLines(source);
@@ -529,7 +530,7 @@ function nestedItemCapture(source: string, node: Node, indent: number, schema: S
 }
 
 function captureNestedContainer(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedRecord | null {
+  budget: NestedSourceBudget, depth: number, scope?: MarkdownReferenceSourceScope): MarkdownNestedRecord | null {
   if (depth > 32 || budget.remaining-- <= 0) return null;
   const physical = sourceLines(source);
   if (node.type.name === 'blockquote') {
@@ -541,7 +542,7 @@ function captureNestedContainer(source: string, node: Node, schema: Schema, opti
   if (node.childCount > budget.remaining) return null;
   budget.remaining -= node.childCount;
   const context = references(source, schema, options);
-  if (context.definitions.size || context.lines.length !== physical.length) return null;
+  if ((context.definitions.size && !scope?.containerDefinitions) || context.lines.length !== physical.length) return null;
   const first = listMarker(context.lines[0]);
   if (!first) return null;
   const children: Extract<MarkdownNestedRecord, { kind: 'sequence' }>['children'][number][] = [];
@@ -550,7 +551,7 @@ function captureNestedContainer(source: string, node: Node, schema: Schema, opti
     const marker = listMarker(context.lines[index]);
     if (!marker || marker.kind !== first.kind || marker.m !== first.m || children.length >= node.childCount) return null;
     const start = index;
-    const item = collectListItem(context.lines, index, schema, scope ?? context.definitions, options);
+    const item = collectListItem(context.lines, index, schema, scope?.definitions ?? context.definitions, options);
     index = item.nextIndex;
     const from = physical[start].start, to = physical[index - 1].end;
     const child = node.child(children.length);
@@ -639,7 +640,10 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
       // other blocks' destinations. Do not claim independent provenance there.
       if (local.definitions.size) return undefined;
       parsed = parseBlocks(local.lines, schema, context, quietOptions);
-    } else parsed = new MarkdownImporter().parse(segment.source, schema, quietOptions).content;
+    } else {
+      if (segment.source.includes('[') && references(segment.source, schema, quietOptions).definitions.size) return undefined;
+      parsed = new MarkdownImporter().parse(segment.source, schema, quietOptions).content;
+    }
     const original = document.content[index];
     if (parsed.length !== 1 || !parsed[0].eq(original)) return undefined;
     const block = Object.freeze({
@@ -655,7 +659,7 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
     leading,
     blocks: Object.freeze(blocks),
     referenceDefinitions,
-    referenceScope: ownsReferenceBoundaries ? context : undefined,
+    referenceScope: ownsReferenceBoundaries ? { definitions: context, containerDefinitions: false } : undefined,
   });
 }
 
@@ -665,9 +669,9 @@ interface MarkdownBlockSpan {
   readonly blocks: readonly Node[];
 }
 
-/** Capture physical regions from the parser itself when blank-line splitting
- * cannot own a fence/container or adjacent blocks. Reference extraction and
- * external projections keep their existing conservative capture contract.
+/** Capture physical regions when blank-line splitting cannot own a container or
+ * adjacent blocks. Container definitions require full-result global-scope proof;
+ * footnotes and external projections retain their conservative contract.
  */
 function captureParserMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   if (options.parseHTMLDocument || options.parseHTMLFlow || options.parseHTMLBlock
@@ -699,19 +703,37 @@ function captureParserMarkdownBlocks(source: string, schema: Schema, document: N
     || (index > 0 && span.start <= spans[index - 1].end))) return undefined;
   let referenceDefinitions: string | undefined;
   let referenceScopes: readonly References[] = [];
+  let containerDefinitions = false;
   if (context.definitions.size) {
-    // Definitions may occur only in root trivia. Moving a captured container
-    // must never move its definition ownership or alter another block's links.
-    if (spans.some(span => references(source.slice(physical[span.start].start, physical[span.end].end), schema, quietOptions).definitions.size)) return undefined;
+    const blockContexts = spans.map(span => references(source.slice(physical[span.start].start, physical[span.end].end), schema, quietOptions));
+    containerDefinitions = blockContexts.some(value => value.definitions.size > 0);
     const gaps = [source.slice(0, physical[spans[0].start].start), ...spans.map((span, index) =>
       source.slice(physical[span.end].end, spans[index + 1] ? physical[spans[index + 1].start].start : source.length))];
     const contexts = gaps.map(gap => ({ gap, parsed: references(gap, schema, quietOptions) }));
     if (contexts.some(value => value.parsed.lines.some(line => line.trim()))) return undefined;
     const definitions = contexts.filter(value => value.parsed.definitions.size);
-    if (!definitions.length) return undefined;
-    referenceDefinitions = definitions.map(value => value.gap.replace(/(?:\r\n|\r|\n)$/u, ''))
-      .join(sourceLineEnding(source).repeat(2));
-    referenceScopes = definitions.map(value => value.parsed.definitions);
+    if (containerDefinitions) {
+      // Reuse the parser's own definition discovery after removing structural
+      // prefixes. This footer keeps external links alive if an owner is deleted.
+      // Complete-result verification also checks actual global precedence after
+      // a move, rather than trusting the captured reference map alone.
+      const sources: string[] = [];
+      references(input, schema, quietOptions, sources);
+      referenceDefinitions = sources.map(value => value.replaceAll('\n', sourceLineEnding(source)))
+        .join(sourceLineEnding(source).repeat(2));
+      const footer = references(referenceDefinitions, schema, quietOptions);
+      if (footer.lines.some(line => line.trim()) || footer.definitions.size !== context.definitions.size
+        || [...context.definitions].some(([name, value]) => {
+          const actual = footer.definitions.get(name);
+          return !actual || actual.href !== value.href || actual.title !== value.title;
+        })) return undefined;
+      referenceScopes = [...definitions.map(value => value.parsed.definitions), ...blockContexts.map(value => value.definitions), footer.definitions];
+    } else {
+      if (!definitions.length) return undefined;
+      referenceDefinitions = definitions.map(value => value.gap.replace(/(?:\r\n|\r|\n)$/u, ''))
+        .join(sourceLineEnding(source).repeat(2));
+      referenceScopes = definitions.map(value => value.parsed.definitions);
+    }
   }
   const parse = referenceDefinitions ? referenceSourceParser(referenceDefinitions, true, context.definitions, referenceScopes, schema, quietOptions)
     : (value: string): readonly Node[] => new MarkdownImporter().parse(value, schema, quietOptions).content;
@@ -728,7 +750,7 @@ function captureParserMarkdownBlocks(source: string, schema: Schema, document: N
     return block;
   });
   return Object.freeze({ leading: source.slice(0, physical[spans[0].start].start), blocks: Object.freeze(blocks),
-    referenceDefinitions, referenceScope: referenceDefinitions ? context.definitions : undefined });
+    referenceDefinitions, referenceScope: referenceDefinitions ? { definitions: context.definitions, containerDefinitions } : undefined });
 }
 
 function isOpeningDelimiter(value: string): boolean {
@@ -2615,7 +2637,7 @@ function finishHTMLBlocks(blocks: Node[], htmlBlocks: Map<Node, string>, lines: 
   });
 }
 
-function references(markdown: string, schema: Schema, options: MarkdownImportOptions): { lines: string[]; definitions: References } {
+function references(markdown: string, schema: Schema, options: MarkdownImportOptions, sourceDefinitions?: string[]): { lines: string[]; definitions: References } {
   const definitions = new Map<string, ReferenceDefinition>();
   const originalLines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const sourceLines = originalLines.map(line => line.replace(/^((?: {0,3}>| *(?:[-*+]|\d{1,9}[.)]))?)(\t+)/u, (_, marker, tabs) => (
@@ -2646,7 +2668,7 @@ function references(markdown: string, schema: Schema, options: MarkdownImportOpt
         prefixes.push(nested[0]);
         contents.push(sourceLines[cursor].slice(nested[0].length));
       }
-      const extracted = references(contents.join('\n'), schema, options);
+      const extracted = references(contents.join('\n'), schema, options, sourceDefinitions);
       extracted.definitions.forEach((definition, name) => {
         if (!definitions.has(name)) definitions.set(name, definition);
       });
@@ -2700,7 +2722,7 @@ function references(markdown: string, schema: Schema, options: MarkdownImportOpt
     if (marker && marker.indent < 4 && !thematicBreak(line)
       && (!paragraphOpen || startsBlock(sourceLines, index, definitions, schema, options))) {
       const item = collectListItem(sourceLines, index, schema, definitions, options);
-      const extracted = references(item.lines.join('\n'), schema, options);
+      const extracted = references(item.lines.join('\n'), schema, options, sourceDefinitions);
       extracted.definitions.forEach((definition, name) => {
         if (!definitions.has(name)) definitions.set(name, definition);
       });
@@ -2718,6 +2740,7 @@ function references(markdown: string, schema: Schema, options: MarkdownImportOpt
     }
     const definition = paragraphOpen ? null : referenceDefinitionAt(sourceLines, index);
     if (definition) {
+      sourceDefinitions?.push(originalLines.slice(index, index + definition.lineCount).join('\n'));
       if (!definitions.has(definition.label)) definitions.set(definition.label, {
         href: definition.href,
         title: definition.title,
