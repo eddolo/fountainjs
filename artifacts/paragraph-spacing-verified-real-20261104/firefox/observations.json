@@ -1,0 +1,28 @@
+{
+  "initialGap": 2.66650390625,
+  "listGap": -0.000244140625,
+  "followingListGap": 2.666748046875,
+  "enteredLineHeight": 18.666656494140625,
+  "afterDeletionGap": 16,
+  "readerGap": 16.00000762939453,
+  "reopenGap": 16,
+  "originalDeclaredSecond": {
+    "unit": "pt",
+    "fontFamily": "Arial",
+    "fontSize": 11,
+    "lineHeight": 14,
+    "lineHeightUnit": "pt",
+    "lineHeightRule": "exact",
+    "spacingGroup": "body",
+    "spacingBefore": 12,
+    "spacingAfter": 0,
+    "contextualSpacing": false
+  },
+  "enterUndoRedoBackspace": true,
+  "backwardSelectionAndDeletion": true,
+  "actualJSONDownload": true,
+  "actualHTMLDownloadReaderReopen": true,
+  "nativeWordUnsupportedRuleReported": true,
+  "nativeWordSpacingCertified": false,
+  "errors": []
+}

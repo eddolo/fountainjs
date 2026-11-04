@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add optional opaque `spacingGroup` and `contextualSpacing` paragraph-layout
+  data, DOM-free gap resolution, and schema-defined paragraph flows. Keep the
+  declarations through JSON/HTML, history, reordering and collaboration; derive
+  current margins for mounted/virtualized editor views and HTML readers.
+  Native markers use the paragraph's declared font context to avoid Chromium
+  adding an unintended list-item gap. Native Word style/group mapping remains
+  unfinished and is reported explicitly on export. No full DOCX spacing claim.
+
 - Resolve Word contextual-spacing on/off declarations through the bounded
   paragraph cascade, including explicit false overrides. Locate the remaining
   adjacency-rule loss on each affected paragraph; this does not yet implement

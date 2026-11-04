@@ -92,7 +92,89 @@ does not establish complete native Word or whole-document visual fidelity.
 An actual packed local tarball additionally passes ESM/CommonJS root/core HTML
 and native DOCX list-geometry consumer checks in Node. It was not published.
 
-## Contextual-spacing declaration checkpoint
+## Portable contextual-spacing implementation (2026 11 04)
+
+Optional `ParagraphLayout.spacingGroup` is an opaque, case-sensitive identity;
+`contextualSpacing` is a retained boolean intent. These are application data,
+not a binding to Word's style hierarchy. Identical appearance or shared ancestry
+does not imply identical groups. A participating paragraph owns its before/after
+space, with omitted spacing values treated as zero. Old JSON without these
+fields behaves as before; older consumers need the updated layout schema.
+
+`resolveParagraphGap()` and `paragraphSpacingAt()` operate on the immutable
+document without a DOM. They preserve original declarations, combine adjacent
+space with a maximum, then subtract enabled same-group contributions with a
+zero floor. The following carrier owns the resulting gap. The renderer and HTML
+serializer project that value without adding editable DOM or writing computed
+margins back into document state.
+
+`NodeSpec.paragraphFlow` explicitly classifies a text carrier, transparent
+container or isolated flow. Paragraphs, headings and code blocks are carriers;
+lists, items and definition-list containers are transparent. Other/custom blocks
+default to isolated flows. Table cells, quote containers and separate stories
+do not acquire implicit cross-boundary adjacency. Extensions can opt their own
+containers into flow instead of relying on their HTML tag names.
+
+An unchanged mounted paragraph refreshes after adjacent edits; offscreen
+neighbours are resolved from the model. The local tests cover original JSON,
+safe HTML, splitting/history, deletion/reordering, Yjs changes and virtualized
+DOM reuse with an actually unmounted predecessor. The original Word-source
+fixture is unchanged.
+
+Two additional custom-view regressions were reproduced before repair. A reused
+view now receives its unprojected base styles before `update()`, preventing a new
+plain value equal to the previous derived value from restoring stale margins.
+The final projection also runs after `updateDocument()` callbacks, so their
+base-style refresh cannot overwrite the current model-derived gap.
+
+The first recorded browser attempt exposed a Chromium-only 5 px list gap despite
+zero paragraph margins. An isolated native-HTML probe reproduced it and showed
+that matching only the marker's declared font context removes the gap; switching
+to `flow-root list-item` does not. The shared editor/reader marker rule applies
+font context to native markers without changing descendant text or replacing
+the semantic list. The initial Firefox/WebKit journeys also needed an audit
+navigation correction: after selecting a new file, the old workspace is no
+longer active. Numerical gap assertions and the timeout were not relaxed.
+
+The editor uses the supplied stylesheet; a standalone full HTML export embeds
+the same marker rule. Style-free fragments preserve declarations and semantic
+lists, but an external client's own marker fonts can change their appearance.
+The fragment contract does not certify another application's clipboard/layout.
+
+Three final recorded journeys pass in Chromium, Firefox and WebKit. Native
+bounding-box measurements verify 2 pt between the two research paragraphs,
+zero extra space between same-group list items, and a restored 12 pt gap after
+deleting the first observation. Enter/Undo/Redo/Backspace, backward selection,
+actual JSON download, HTML download/reader/reopen and explicit DOCX loss display
+are included. Original 12 pt declarations survive while the current gap is 2 pt.
+The entered empty paragraph has a measured 14 pt line box in all three engines;
+the check does not merely count an invisible model node. All fifteen final
+captures were reviewed, eight by byte identity with already reviewed captures
+and seven by fresh visual inspection.
+The reader uses its own presentation; this is not whole-document pixel parity.
+
+This checkpoint passes 3,509 unit tests in 249 files (28 new contracts), types,
+419 public declarations, package-entry checks, the 118-module headless boundary,
+and both retention checks. An actual packed archive passes ESM/CommonJS root
+and core consumer checks in pure Node. The new gap/transaction/HTML behavior
+also passes in real Cloudflare workerd without browser globals.
+
+Seven unchanged size ceilings still fail: core ESM/CommonJS, DOCX ESM/CommonJS,
+CSS and both runtime aggregates. The standalone 100-block server-HTML p95 gate
+also failed at 48.13 ms and again at 35.38 ms against its unchanged 35 ms limit.
+The retained baseline passed its standalone run. An alternating-order diagnostic
+shows slow samples in both builds, but does not resolve the regression or replace
+the failed gate. No acceptance threshold was changed. Full logs, fixture/source
+hashes and final browser observations are bound in
+[the verification record](../artifacts/paragraph-spacing-verification-20261104.json).
+
+Native Word import still reports the unresolved source rule. Export of these
+new portable fields reports `paragraph-contextual-spacing-not-exported`, including
+caption metadata where present. Word style identities/group bindings and native
+contextual-spacing output are the next bridge work. Do not describe this as a
+completed DOCX spacing repair or merge/publish it while acceptance gates fail.
+
+## Earlier contextual-spacing declaration checkpoint (1a4481a)
 
 The Word reader/cascade now preserves the three distinct declaration states:
 omitted, enabled and explicitly disabled. Namespace aliases, invalid values,

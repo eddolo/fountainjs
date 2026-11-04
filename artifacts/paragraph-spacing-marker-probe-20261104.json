@@ -1,0 +1,110 @@
+{
+  "actual": {
+    "html": "<ol data-fountain-node=\"ordered_list\" data-fountain-path=\"5\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\" style=\"margin-block: 0px;\"><li data-fountain-node=\"list_item\" data-fountain-path=\"5.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\" style=\"margin-block: 0px;\"><p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11,&quot;lineHeight&quot;:14,&quot;lineHeightUnit&quot;:&quot;pt&quot;,&quot;lineHeightRule&quot;:&quot;exact&quot;,&quot;spacingGroup&quot;:&quot;steps&quot;,&quot;spacingBefore&quot;:12,&quot;spacingAfter&quot;:10,&quot;contextualSpacing&quot;:true}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 12pt 0pt; line-height: 14pt;\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.0.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.0.0.0\">Step one: record the measurement.</span></p></li><li data-fountain-node=\"list_item\" data-fountain-path=\"5.1\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\" style=\"margin-block: 0px;\"><p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11,&quot;lineHeight&quot;:14,&quot;lineHeightUnit&quot;:&quot;pt&quot;,&quot;lineHeightRule&quot;:&quot;exact&quot;,&quot;spacingGroup&quot;:&quot;steps&quot;,&quot;spacingBefore&quot;:12,&quot;spacingAfter&quot;:10,&quot;contextualSpacing&quot;:true}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 14pt;\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\">Step two: confirm the reading.</span></p></li></ol>",
+    "editorFont": "16px / 27.2px ui-sans-serif, system-ui, sans-serif",
+    "elements": [
+      {
+        "tag": "OL",
+        "text": "Step one: record the measurement.Step two: confirm the reading.",
+        "x": 96.1875,
+        "y": 2140.421875,
+        "height": 47.34375,
+        "display": "block",
+        "font": "16px / 27.2px ui-sans-serif, system-ui, sans-serif",
+        "lineHeight": "27.2px",
+        "margin": "0px",
+        "padding": "0px 0px 0px 40px",
+        "border": "0px none rgb(23, 25, 35)",
+        "inline": "margin-block: 0px;"
+      },
+      {
+        "tag": "LI",
+        "text": "Step one: record the measurement.",
+        "x": 136.1875,
+        "y": 2140.421875,
+        "height": 23.671875,
+        "display": "list-item",
+        "font": "16px / 25.6px ui-sans-serif, system-ui, sans-serif",
+        "lineHeight": "25.6px",
+        "margin": "0px",
+        "padding": "0px",
+        "border": "0px none rgb(23, 25, 35)",
+        "inline": "margin-block: 0px;"
+      },
+      {
+        "tag": "P",
+        "text": "Step one: record the measurement.",
+        "x": 136.1875,
+        "y": 2145.421875,
+        "height": 18.671875,
+        "display": "block",
+        "font": "14.6667px / 18.6667px Arial",
+        "lineHeight": "18.6667px",
+        "margin": "16px 0px 0px",
+        "padding": "0px",
+        "border": "0px none rgb(23, 25, 35)",
+        "inline": "font-family: Arial; font-size: 11pt; margin-block: 12pt 0pt; line-height: 14pt;"
+      },
+      {
+        "tag": "LI",
+        "text": "Step two: confirm the reading.",
+        "x": 136.1875,
+        "y": 2164.09375,
+        "height": 23.671875,
+        "display": "list-item",
+        "font": "16px / 25.6px ui-sans-serif, system-ui, sans-serif",
+        "lineHeight": "25.6px",
+        "margin": "0px",
+        "padding": "0px",
+        "border": "0px none rgb(23, 25, 35)",
+        "inline": "margin-block: 0px;"
+      },
+      {
+        "tag": "P",
+        "text": "Step two: confirm the reading.",
+        "x": 136.1875,
+        "y": 2169.09375,
+        "height": 18.671875,
+        "display": "block",
+        "font": "14.6667px / 18.6667px Arial",
+        "lineHeight": "18.6667px",
+        "margin": "0px",
+        "padding": "0px",
+        "border": "0px none rgb(23, 25, 35)",
+        "inline": "font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 14pt;"
+      }
+    ]
+  },
+  "experiments": [
+    {
+      "name": "native",
+      "gap": 5,
+      "itemDisplay": "list-item"
+    },
+    {
+      "name": "flow-root-list-item",
+      "gap": 5,
+      "itemDisplay": "flow-root list-item"
+    },
+    {
+      "name": "marker-font",
+      "gap": 0,
+      "itemDisplay": "list-item"
+    },
+    {
+      "name": "marker-longhand-font",
+      "gap": 0,
+      "itemDisplay": "list-item"
+    },
+    {
+      "name": "marker-line-only",
+      "gap": 1,
+      "itemDisplay": "list-item"
+    },
+    {
+      "name": "matching-owner-font",
+      "gap": 0,
+      "itemDisplay": "list-item"
+    }
+  ]
+}

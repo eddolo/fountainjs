@@ -31,6 +31,7 @@ import {
   type MountedNodeView,
 } from './dom-renderer';
 import { refreshSharedDirectionDOM } from './shared-direction';
+import { refreshParagraphSpacingDOM } from './paragraph-spacing';
 import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import { DropCursorManager, type DropCursorOptions } from './drop-cursor';
@@ -365,6 +366,7 @@ export class EditorView {
         catch (error) { contextErrors.push(error); }
       }
     });
+    refreshParagraphSpacingDOM(this.dom, document);
     if (
       focusedNodeView
       && retained.has(focusedNodeView.nodeView)

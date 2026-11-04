@@ -2141,6 +2141,10 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
 }
 
 function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote: QuoteProjection = false, list?: ExportList, definition?: DefinitionLayout): string {
+  if (isParagraphLayout(node.attrs.layout) && node.attrs.layout.spacingGroup !== undefined) context.issues.push({
+    code: 'paragraph-contextual-spacing-not-exported', severity: 'warning', path,
+    message: 'Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule.',
+  });
   if (!['paragraph', 'heading'].includes(node.type.name)) reportDirectionLoss(node, context, path);
   if (node.type.name === 'math_block') {
     const math = nativeMath(node, context, path);
@@ -2220,6 +2224,10 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       const captionRuns = node.childCount ? textRuns(node, context, [...path, 0], node.attrs.captionLayout)
         : `<w:r>${runProperties([], context.issues, path, false, captionFont).xml}<w:t>${xmlEscape(caption)}</w:t></w:r>`;
       const captionParagraph = { type: node.type, attrs: { align: node.attrs.captionAlign ?? 'center', layout: node.attrs.captionLayout } };
+      if (isParagraphLayout(node.attrs.captionLayout) && node.attrs.captionLayout.spacingGroup !== undefined) context.issues.push({
+        code: 'paragraph-contextual-spacing-not-exported', severity: 'warning', path,
+        message: 'Caption paragraph spacing-group identity is not yet mapped to native Word styles. Declared caption spacing is exported; keep Fountain JSON for the rule.',
+      });
       const captionProperties = paragraphProperties(captionParagraph);
       const captionStyle = captionProperties ? captionProperties.replace('<w:pPr>', '<w:pPr><w:pStyle w:val="Caption"/>') : '<w:pPr><w:pStyle w:val="Caption"/></w:pPr>';
       return `<w:p><w:pPr><w:jc w:val="${align}"/><w:spacing w:before="120" w:after="80"/></w:pPr>${drawing}</w:p>${caption ? `<w:p>${captionStyle}${captionRuns}</w:p>` : ''}`;

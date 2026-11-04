@@ -1,5 +1,14 @@
 # FountainJS opportunity roadmap
 
+Paragraph-flow checkpoint (2026-11-04, unmerged): retain opaque spacing-group
+identity and contextual intent in portable JSON/HTML, then derive gaps from the
+current model, including offscreen neighbours and Yjs edits. Recorded desktop
+editing and actual HTML-reader/reopen journeys pass the 2/0/12 pt profile.
+Native Word style/group mapping, the existing size failures and a failed
+100-block server-HTML timing gate remain next work;
+no format-fidelity or parity-percentage completion is claimed.
+[Implementation and remaining bridge work](DOCX_LIST_LAYOUT.md).
+
 Workflow usability follow-up (2026-11-03): task deletion/recovery, empty state,
 neighbour focus and clickable breadcrumb/parent navigation now work in the
 product demos. Five new desktop/touch journeys and three existing workflow

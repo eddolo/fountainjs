@@ -1,0 +1,140 @@
+[WebServer] (node:3548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:1080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader (2.5s)
+(node:17700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader (1.5m)
+(node:16044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader (1.6m)
+
+
+  1) [chromium] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 0
+    Received: 5
+
+    Expected precision:    1
+    Expected difference: < 0.05
+    Received difference:   5
+
+      28 |   expect(initialGap).toBeCloseTo(8 / 3, 1);
+      29 |   const listGap = await physicalGap(paragraph('Step one: record the measurement.'), paragraph('Step two: confirm the reading.'));
+    > 30 |   expect(listGap).toBeCloseTo(0, 1);
+         |                   ^
+      31 |   const followingListGap = await physicalGap(paragraph('Step two: confirm the reading.'), paragraph('Following note stays in the same step group.'));
+      32 |   expect(followingListGap).toBeCloseTo(8 / 3, 1);
+      33 |   await editor.screenshot({ path: resolve(root, 'initial.png') });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\paragraph-spacing-real.spec.ts:30:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: spacing-review.html', exact: true }).getByRole('combobox', { name: 'Export format', exact: true })
+
+
+      89 |   expect(reopenGap).toBeCloseTo(16, 1);
+      90 |   await reopened.screenshot({ path: resolve(root, 'reopened.png') });
+    > 91 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
+         |                                                                                 ^
+      92 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+      93 |   await expect(workspace.locator('[aria-label="Round-trip result"]')).toContainText('paragraph-contextual-spacing-not-exported');
+      94 |   expect(errors).toEqual([]);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\paragraph-spacing-real.spec.ts:91:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Conversion workspace: spacing-review.html', exact: true }).getByRole('combobox', { name: 'Export format', exact: true })
+
+
+      89 |   expect(reopenGap).toBeCloseTo(16, 1);
+      90 |   await reopened.screenshot({ path: resolve(root, 'reopened.png') });
+    > 91 |   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
+         |                                                                                 ^
+      92 |   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
+      93 |   await expect(workspace.locator('[aria-label="Round-trip result"]')).toContainText('paragraph-contextual-spacing-not-exported');
+      94 |   expect(errors).toEqual([]);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\paragraph-spacing-real.spec.ts:91:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\paragraph-spacing-browser-20261104\paragraph-spacing-real-a-f-1bde6--the-actual-exported-reader-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader
+    [firefox] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader
+    [webkit] › tests\manual\paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader

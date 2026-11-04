@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Portable paragraph-flow work (2026-11-04, unmerged): opaque spacing groups now
+drive DOM-free gap resolution and live editor/full-HTML projections without
+rewriting source declarations. Three recorded desktop journeys verify 2/0/12 pt
+gaps through structural editing, JSON download and HTML reader/reopen. A real
+Chromium marker-font discrepancy was reproduced and repaired. Native Word group
+mapping, size acceptance and server-HTML timing acceptance remain unfinished; FB-04/FORMAT-05 and parity
+percentages are not promoted. [Contracts and evidence](DOCX_LIST_LAYOUT.md).
+
 Workflow usability follow-up (2026-11-03): task deletion now has recovery that
 retains edits, metadata and independent editor history. Empty state, focus and
 20-task limits are exercised. Workflow pages expose clickable breadcrumbs and

@@ -1,0 +1,214 @@
+{
+  "comparisons": [
+    {
+      "engine": "chromium",
+      "name": "initial",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/chromium/initial.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/chromium/initial.png",
+      "sha256": "101da3825fe74d23e1cf0390ebfafb8bf0f9a8dee01bf6325f814da2a080eba9",
+      "byteIdentical": true
+    },
+    {
+      "engine": "chromium",
+      "name": "entered",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/chromium/entered.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/chromium/entered.png",
+      "sha256": "3f4cb665288e29e1d43344c9ae9836acd48364bdf99a9f313fc5bbd3b1a3a9c4",
+      "byteIdentical": false
+    },
+    {
+      "engine": "chromium",
+      "name": "deleted",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/chromium/deleted.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/chromium/deleted.png",
+      "sha256": "5918e43f91db794f05154cec3d08ae724806cd46fca73d478669a125c11364e1",
+      "byteIdentical": true
+    },
+    {
+      "engine": "chromium",
+      "name": "reader",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/chromium/reader.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/chromium/reader.png",
+      "sha256": "40188f4525e26dbdab698a432ee2a9594b47a3698c43e132c6a0acb9eb01ceb3",
+      "byteIdentical": true
+    },
+    {
+      "engine": "chromium",
+      "name": "reopened",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/chromium/reopened.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/chromium/reopened.png",
+      "sha256": "cb5258c87eab4509bebe03975e8c0f0e3c37822836acfbf42b62c84b8ad45df0",
+      "byteIdentical": true
+    },
+    {
+      "engine": "firefox",
+      "name": "initial",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/firefox/initial.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/firefox/initial.png",
+      "sha256": "0112b12c9d2ef4a3c7cfea135bda42e5982eca3c4021e54195a3db8d0275836a",
+      "byteIdentical": true
+    },
+    {
+      "engine": "firefox",
+      "name": "entered",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/firefox/entered.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/firefox/entered.png",
+      "sha256": "ac1a70e2f1493a535ab179fb0d6e0a225cbb34e4fa21f40f48186786f856d536",
+      "byteIdentical": true
+    },
+    {
+      "engine": "firefox",
+      "name": "deleted",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/firefox/deleted.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/firefox/deleted.png",
+      "sha256": "5bd7c69591284a6280a3bfab3731612d556e77b784481575f983f5b9e2c46622",
+      "byteIdentical": true
+    },
+    {
+      "engine": "firefox",
+      "name": "reader",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/firefox/reader.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/firefox/reader.png",
+      "sha256": "e81f59c21c56e387c01a4b20b30280b91709b7c06ab7d4b2ee5356b2358bdb16",
+      "byteIdentical": true
+    },
+    {
+      "engine": "firefox",
+      "name": "reopened",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/firefox/reopened.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/firefox/reopened.png",
+      "sha256": "86c359a71e59d97037f5aac5b166952f5277dfa0308f2cb5c5651db0af62a7ed",
+      "byteIdentical": true
+    },
+    {
+      "engine": "webkit",
+      "name": "initial",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/webkit/initial.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/webkit/initial.png",
+      "sha256": "ef5164bbd921039586db2addd0fd0357d4e4622cfcc4002bf25285a590690deb",
+      "byteIdentical": true
+    },
+    {
+      "engine": "webkit",
+      "name": "entered",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/webkit/entered.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/webkit/entered.png",
+      "sha256": "faaace6883e1344f292e2b6778c0016950ea2c95e90bee718e37692156d31e47",
+      "byteIdentical": true
+    },
+    {
+      "engine": "webkit",
+      "name": "deleted",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/webkit/deleted.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/webkit/deleted.png",
+      "sha256": "a03199586457b50cdad07ecf38c338593aa86786b31fdf0feccab9f2e661608c",
+      "byteIdentical": true
+    },
+    {
+      "engine": "webkit",
+      "name": "reader",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/webkit/reader.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/webkit/reader.png",
+      "sha256": "ed86078f5b3f7444582c210566e38bdee8a420101e0e5e34e94ad336ccd401fe",
+      "byteIdentical": true
+    },
+    {
+      "engine": "webkit",
+      "name": "reopened",
+      "current": "artifacts/paragraph-spacing-verified-real-20261104/webkit/reopened.png",
+      "previous": "artifacts/paragraph-spacing-fixed-real-20261104/webkit/reopened.png",
+      "sha256": "25987e4638cf0a8759a3d506146e8f52ffb577ad612cf1b77126203fc03cc1f2",
+      "byteIdentical": true
+    }
+  ],
+  "observations": {
+    "chromium": {
+      "initialGap": 2.65625,
+      "listGap": 0,
+      "followingListGap": 2.65625,
+      "enteredLineHeight": 18.671875,
+      "afterDeletionGap": 16,
+      "readerGap": 16,
+      "reopenGap": 16,
+      "originalDeclaredSecond": {
+        "unit": "pt",
+        "fontFamily": "Arial",
+        "fontSize": 11,
+        "lineHeight": 14,
+        "lineHeightUnit": "pt",
+        "lineHeightRule": "exact",
+        "spacingGroup": "body",
+        "spacingBefore": 12,
+        "spacingAfter": 0,
+        "contextualSpacing": false
+      },
+      "enterUndoRedoBackspace": true,
+      "backwardSelectionAndDeletion": true,
+      "actualJSONDownload": true,
+      "actualHTMLDownloadReaderReopen": true,
+      "nativeWordUnsupportedRuleReported": true,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    },
+    "firefox": {
+      "initialGap": 2.66650390625,
+      "listGap": -0.000244140625,
+      "followingListGap": 2.666748046875,
+      "enteredLineHeight": 18.666656494140625,
+      "afterDeletionGap": 16,
+      "readerGap": 16.00000762939453,
+      "reopenGap": 16,
+      "originalDeclaredSecond": {
+        "unit": "pt",
+        "fontFamily": "Arial",
+        "fontSize": 11,
+        "lineHeight": 14,
+        "lineHeightUnit": "pt",
+        "lineHeightRule": "exact",
+        "spacingGroup": "body",
+        "spacingBefore": 12,
+        "spacingAfter": 0,
+        "contextualSpacing": false
+      },
+      "enterUndoRedoBackspace": true,
+      "backwardSelectionAndDeletion": true,
+      "actualJSONDownload": true,
+      "actualHTMLDownloadReaderReopen": true,
+      "nativeWordUnsupportedRuleReported": true,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    },
+    "webkit": {
+      "initialGap": 2.65625,
+      "listGap": 0,
+      "followingListGap": 2.65625,
+      "enteredLineHeight": 18.65625,
+      "afterDeletionGap": 16,
+      "readerGap": 16,
+      "reopenGap": 16,
+      "originalDeclaredSecond": {
+        "unit": "pt",
+        "fontFamily": "Arial",
+        "fontSize": 11,
+        "lineHeight": 14,
+        "lineHeightUnit": "pt",
+        "lineHeightRule": "exact",
+        "spacingGroup": "body",
+        "spacingBefore": 12,
+        "spacingAfter": 0,
+        "contextualSpacing": false
+      },
+      "enterUndoRedoBackspace": true,
+      "backwardSelectionAndDeletion": true,
+      "actualJSONDownload": true,
+      "actualHTMLDownloadReaderReopen": true,
+      "nativeWordUnsupportedRuleReported": true,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    }
+  },
+  "tarball": {
+    "path": "artifacts/paragraph-spacing-tarball-consumer-20261104/fountainjs-editor-0.4.0-beta.2.tgz",
+    "sha256": "d31ab924ed2e1f3dd6a7b3a81eb62347311eabde6940ebf9d6b1a088bcf56dbc"
+  }
+}

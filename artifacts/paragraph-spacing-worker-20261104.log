@@ -1,0 +1,2 @@
+Real Cloudflare workerd: DOM-free contextual gaps, immutable declarations, transactions and HTML retention passed.
+{"before":2,"after":12,"retainedDeclaredBefore":12,"htmlEqual":true,"noDOM":true}
