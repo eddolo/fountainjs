@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Load optional demo-site fonts without delaying editor startup. Keep the original
+  typography and system fallbacks; prove native typing while the font response
+  is pending in Chromium, Firefox and WebKit production journeys. Library
+  runtime, public API and acceptance ceilings are unchanged.
+
 - Keep full Markdown serialization out of issue-workflow typing. Check source
   preservation/losses on request, source entry or download; invalidate displayed
   reports when document, source snapshot or export option changes. Use viewport

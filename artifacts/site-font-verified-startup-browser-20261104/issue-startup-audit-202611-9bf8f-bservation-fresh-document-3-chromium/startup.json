@@ -1,0 +1,117 @@
+{
+  "attempt": 3,
+  "externalFontControl": false,
+  "gotoMs": 327.8621000000003,
+  "observation": {
+    "readyAt": 275.10000002384186,
+    "paints": [
+      {
+        "name": "first-paint",
+        "startTime": 112
+      },
+      {
+        "name": "first-contentful-paint",
+        "startTime": 304
+      }
+    ],
+    "longTasks": [
+      {
+        "startTime": 220.70000004768372,
+        "duration": 54
+      }
+    ],
+    "navigation": [
+      {
+        "name": "http://127.0.0.1:4195/issue-editor.html",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 284.9000000357628,
+        "navigationId": 9655,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.10000002384185791,
+        "domainLookupStart": 1.9000000357627869,
+        "domainLookupEnd": 2.5,
+        "connectStart": 2.5,
+        "secureConnectionStart": 0,
+        "connectEnd": 3.100000023841858,
+        "requestStart": 3.200000047683716,
+        "responseStart": 14.200000047683716,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 14.200000047683716,
+        "responseEnd": 17.700000047683716,
+        "transferSize": 820,
+        "encodedBodySize": 520,
+        "decodedBodySize": 1319,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 49.10000002384186,
+        "domContentLoadedEventStart": 177.4000000357628,
+        "domContentLoadedEventEnd": 179.80000001192093,
+        "domComplete": 284,
+        "loadEventStart": 284.9000000357628,
+        "loadEventEnd": 284.9000000357628,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "low"
+        }
+      }
+    ],
+    "scripts": [
+      {
+        "name": "http://127.0.0.1:4195/assets/issueEditor-DW1tb-uq.js",
+        "entryType": "resource",
+        "startTime": 21.80000001192093,
+        "duration": 37.40000003576279,
+        "navigationId": 9655,
+        "initiatorType": "script",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/javascript",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 21.80000001192093,
+        "domainLookupStart": 21.80000001192093,
+        "domainLookupEnd": 21.80000001192093,
+        "connectStart": 21.80000001192093,
+        "secureConnectionStart": 0,
+        "connectEnd": 21.80000001192093,
+        "requestStart": 28.5,
+        "responseStart": 50,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 50,
+        "responseEnd": 59.200000047683716,
+        "transferSize": 5014,
+        "encodedBodySize": 4714,
+        "decodedBodySize": 12103,
+        "responseStatus": 200,
+        "serverTiming": []
+      }
+    ]
+  }
+}

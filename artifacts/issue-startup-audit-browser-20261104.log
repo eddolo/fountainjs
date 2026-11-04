@@ -1,0 +1,17 @@
+[WebServer] (node:11928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:21640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"attempt":1,"gotoMs":10059.887499999999,"readyAt":10064.700000047684,"navigation":[{"requestStart":6.400000035762787,"responseStart":10.300000011920929,"domInteractive":26.900000035762787,"loadEventEnd":9961.300000011921}],"paints":[{"name":"first-paint","startTime":9968},{"name":"first-contentful-paint","startTime":10092}],"longTasks":[]}
+  ok 1 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 1 (11.4s)
+{"attempt":2,"gotoMs":480.7587000000003,"readyAt":481.10000002384186,"navigation":[{"requestStart":2.5,"responseStart":4.699999988079071,"domInteractive":17.600000023841858,"loadEventEnd":188.89999997615814}],"paints":[{"name":"first-paint","startTime":160},{"name":"first-contentful-paint","startTime":484}],"longTasks":[]}
+  ok 2 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 2 (1.2s)
+{"attempt":3,"gotoMs":248.23409999999967,"readyAt":255.19999998807907,"navigation":[{"requestStart":2.699999988079071,"responseStart":4.300000011920929,"domInteractive":19,"loadEventEnd":161.0999999642372}],"paints":[{"name":"first-paint","startTime":152},{"name":"first-contentful-paint","startTime":284}],"longTasks":[]}
+  ok 3 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 3 (929ms)
+
+  3 passed (19.2s)

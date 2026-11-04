@@ -1,0 +1,9 @@
+{
+  "engine": "webkit",
+  "requests": 2,
+  "nativeTypingBeforeFontResponse": true,
+  "stylesheetAppliedAfterRelease": true,
+  "contentRetained": true,
+  "scope": "Delayed synthetic font stylesheet; actual external typography is checked separately.",
+  "errors": []
+}

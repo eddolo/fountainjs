@@ -1,3 +1,4 @@
+import { runSiteFontJourney } from './site-font-journey';
 import { expect, test, type Locator } from '@playwright/test';
 import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';
 
@@ -7652,4 +7653,8 @@ test('repairs source after native nested heading-to-paragraph changes', async ({
 
 test('keeps full Markdown export out of real large-issue typing', async ({ page }, info) => {
   await runIssueInputJourney(page, info);
+});
+
+test('optional site fonts do not block issue editing', async ({ page }, info) => {
+  await runSiteFontJourney(page, info);
 });
