@@ -24,13 +24,16 @@ def run(args, destination, environment=None):
 
 # This bounded fixture profile compares independent PDF coordinates, not our
 # imported model or declarations. It is deliberately narrower than full layout.
-LAYOUT_PHRASES = ["Experimental setup",
+PARAGRAPH_PHRASES = ["Experimental setup",
                   "Record the initial temperature before starting the timer.",
                   "Keep both probes at the same depth.",
                   "Read the measurements without moving either vessel."]
+CAPTION_PHRASES = ["Figure 1 Probe positions in the two vessels",
+                   "Figure 2 Cooling curves over thirty minutes"]
+LAYOUT_PHRASES = PARAGRAPH_PHRASES + CAPTION_PHRASES
 
 
-def paragraph_positions(pdf, destination, pdftotext):
+def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES):
     bbox = run([str(pdftotext), "-bbox-layout", str(pdf), "-"], destination)
     document = ET.fromstring(bbox)
     pages = [item for item in document.iter() if item.tag.rsplit("}", 1)[-1] == "page"]
@@ -39,7 +42,7 @@ def paragraph_positions(pdf, destination, pdftotext):
     words = [item for item in pages[0].iter() if item.tag.rsplit("}", 1)[-1] == "word"]
     text = ["".join(item.itertext()) for item in words]
     result = {}
-    for phrase in LAYOUT_PHRASES:
+    for phrase in phrases:
         target = phrase.split()
         indices = [index for index in range(len(text) - len(target) + 1)
                    if text[index:index + len(target)] == target]
@@ -50,9 +53,9 @@ def paragraph_positions(pdf, destination, pdftotext):
     return result
 
 
-def position_deltas(source, exported):
+def position_deltas(source, exported, phrases=LAYOUT_PHRASES):
     return {phrase: {axis: exported[phrase][axis] - source[phrase][axis] for axis in ["x", "y"]}
-            for phrase in LAYOUT_PHRASES}
+            for phrase in phrases}
 
 
 parser = argparse.ArgumentParser()
@@ -121,14 +124,26 @@ for name in ["source", "exported"]:
 # catches a vacuous comparison without rewriting the independent source.
 control = Path("artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native")
 control_positions = {name: paragraph_positions(control / name / f"{name}.pdf",
-                    native / f"negative-control-{name}-bbox.txt", tools["pdftotext"])
+                    native / f"negative-control-{name}-bbox.txt", tools["pdftotext"], PARAGRAPH_PHRASES)
                     for name in ["source", "exported"]}
-negative = position_deltas(control_positions["source"], control_positions["exported"])
+negative = position_deltas(control_positions["source"], control_positions["exported"], PARAGRAPH_PHRASES)
 if not all(abs(delta["x"]) <= 0.01 and abs(delta["y"] - 7) <= 0.01 for delta in negative.values()):
     raise RuntimeError("The retained pre-repair PDF did not exhibit its known 7 pt offset.")
+
+# A separate actual pre-image-layout export catches caption-only regressions;
+# its paragraph defaults are already repaired, so it is a different control.
+caption_control = Path("artifacts/docx-settings-gate-evidence-20261104/unpacked/native")
+caption_positions = {name: paragraph_positions(caption_control / name / f"{name}.pdf",
+                    native / f"caption-negative-control-{name}-bbox.txt", tools["pdftotext"], CAPTION_PHRASES)
+                    for name in ["source", "exported"]}
+caption_negative = position_deltas(caption_positions["source"], caption_positions["exported"], CAPTION_PHRASES)
+for phrase, expected_y in zip(CAPTION_PHRASES, [-3.2, -6.4]):
+    if abs(caption_negative[phrase]["x"]) > 0.01 or abs(caption_negative[phrase]["y"] - expected_y) > 0.01:
+        raise RuntimeError("The retained image-layout control did not exhibit its known caption drift.")
 deltas = position_deltas(results["source"]["paragraphPositions"], results["exported"]["paragraphPositions"])
 layout_check = {"scope": LAYOUT_PHRASES, "tolerancePt": 0.01, "deltasPt": deltas,
-                "negativeControl": {"retainedPreRepairPDF": str(control), "deltasPt": negative, "correctlyRejected": True}}
+                "negativeControl": {"retainedPreRepairPDF": str(control), "deltasPt": negative, "correctlyRejected": True},
+                "captionNegativeControl": {"retainedPreRepairPDF": str(caption_control), "deltasPt": caption_negative, "correctlyRejected": True}}
 (root / "paragraph-position-report.json").write_text(json.dumps(layout_check, indent=2) + "\n", encoding="utf-8")
 if any(abs(value) > 0.01 for delta in deltas.values() for value in delta.values()):
     raise RuntimeError("Native paragraph position regression; inspect paragraph-position-report.json.")
