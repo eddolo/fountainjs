@@ -1,0 +1,1120 @@
+{
+  "implementationCommit": "c39d92dc0145927c22dd1b7a8799a687f0ec3b38",
+  "nativeGateCommit": "497eb5eb05e164cd167630412e06ebee484b49a5",
+  "unitTests": 3609,
+  "unitFiles": 256,
+  "browserEngines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "nativeReview": {
+    "implementationCommit": "c39d92dc0145927c22dd1b7a8799a687f0ec3b38",
+    "nativeRun": 41770211766,
+    "nativeJob": 126377895538,
+    "archiveSHA256": "834441907fc033c5f2c7dcfd6aa644f0610c9e04c48711bd04a9f44cc04243dd",
+    "completePixelFidelityCertified": false,
+    "microsoftWordCertified": false,
+    "source": {
+      "pages": 2,
+      "targets": {
+        "Experimental setup": {
+          "x0": 57.7,
+          "top": 187.938,
+          "bottom": 203.938
+        },
+        "Record the initial temperature": {
+          "x0": 75.7,
+          "top": 244.471,
+          "bottom": 255.471
+        },
+        "Keep both probes": {
+          "x0": 75.7,
+          "top": 258.971,
+          "bottom": 269.971
+        },
+        "Read the measurements": {
+          "x0": 75.7,
+          "top": 273.471,
+          "bottom": 284.471
+        },
+        "Figure 1": {
+          "x0": 57.7,
+          "top": 439.66,
+          "bottom": 449.66
+        },
+        "Figure 2": {
+          "x0": 57.7,
+          "top": 671.96,
+          "bottom": 681.96
+        },
+        "Model and measurements": {
+          "x0": 57.7,
+          "top": 60.638000000000034,
+          "bottom": 76.63800000000003
+        },
+        "Newton cooling model": {
+          "x0": 57.7,
+          "top": 81.17100000000005,
+          "bottom": 92.17100000000005
+        },
+        "Half cooling time": {
+          "x0": 57.7,
+          "top": 128.37099999999998,
+          "bottom": 139.37099999999998
+        },
+        "The rate constants": {
+          "x0": 57.7,
+          "top": 187.17100000000005,
+          "bottom": 198.17100000000005
+        },
+        "Recorded temperatures": {
+          "x0": 57.7,
+          "top": 242.08799999999997,
+          "bottom": 258.08799999999997
+        }
+      },
+      "pageImages": [
+        {
+          "path": "artifacts/math-paragraph-native-evidence-20261104/unpacked/native/source/page-1.png",
+          "sha256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d"
+        },
+        {
+          "path": "artifacts/math-paragraph-native-evidence-20261104/unpacked/native/source/page-2.png",
+          "sha256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223"
+        }
+      ]
+    },
+    "exported": {
+      "pages": 2,
+      "targets": {
+        "Experimental setup": {
+          "x0": 57.7,
+          "top": 187.938,
+          "bottom": 203.938
+        },
+        "Record the initial temperature": {
+          "x0": 75.7,
+          "top": 244.471,
+          "bottom": 255.471
+        },
+        "Keep both probes": {
+          "x0": 75.7,
+          "top": 258.971,
+          "bottom": 269.971
+        },
+        "Read the measurements": {
+          "x0": 75.7,
+          "top": 273.471,
+          "bottom": 284.471
+        },
+        "Figure 1": {
+          "x0": 57.7,
+          "top": 439.66,
+          "bottom": 449.66
+        },
+        "Figure 2": {
+          "x0": 57.7,
+          "top": 671.96,
+          "bottom": 681.96
+        },
+        "Model and measurements": {
+          "x0": 57.7,
+          "top": 60.638000000000034,
+          "bottom": 76.63800000000003
+        },
+        "Newton cooling model": {
+          "x0": 57.7,
+          "top": 81.17100000000005,
+          "bottom": 92.17100000000005
+        },
+        "Half cooling time": {
+          "x0": 57.7,
+          "top": 128.37099999999998,
+          "bottom": 139.37099999999998
+        },
+        "The rate constants": {
+          "x0": 57.7,
+          "top": 187.17100000000005,
+          "bottom": 198.17100000000005
+        },
+        "Recorded temperatures": {
+          "x0": 57.7,
+          "top": 242.08799999999997,
+          "bottom": 258.08799999999997
+        }
+      },
+      "pageImages": [
+        {
+          "path": "artifacts/math-paragraph-native-evidence-20261104/unpacked/native/exported/page-1.png",
+          "sha256": "1428b7c0638b5cfc9fba2e8f934f71b7bf081d4a849ad5e8122c99b68d6f540f"
+        },
+        {
+          "path": "artifacts/math-paragraph-native-evidence-20261104/unpacked/native/exported/page-2.png",
+          "sha256": "deaf42c96afd9194dd834856c1f3dfd88242f731745603f1ad959c207df90ea4"
+        }
+      ]
+    },
+    "deltasPt": {
+      "Experimental setup": {
+        "x0": 0,
+        "top": 0
+      },
+      "Record the initial temperature": {
+        "x0": 0,
+        "top": 0
+      },
+      "Keep both probes": {
+        "x0": 0,
+        "top": 0
+      },
+      "Read the measurements": {
+        "x0": 0,
+        "top": 0
+      },
+      "Figure 1": {
+        "x0": 0,
+        "top": 0
+      },
+      "Figure 2": {
+        "x0": 0,
+        "top": 0
+      },
+      "Model and measurements": {
+        "x0": 0,
+        "top": 0
+      },
+      "Newton cooling model": {
+        "x0": 0,
+        "top": 0
+      },
+      "Half cooling time": {
+        "x0": 0,
+        "top": 0
+      },
+      "The rate constants": {
+        "x0": 0,
+        "top": 0
+      },
+      "Recorded temperatures": {
+        "x0": 0,
+        "top": 0
+      }
+    },
+    "sourceRastersUnchanged": true,
+    "exportedPageOneRasterUnchanged": true,
+    "actualPreviousDriftPt": {
+      "Half cooling time": 1,
+      "The rate constants": 2,
+      "Recorded temperatures": 2
+    },
+    "expandedGate": {
+      "commit": "497eb5eb05e164cd167630412e06ebee484b49a5",
+      "run": 41770809283,
+      "job": 126379807178,
+      "archiveSHA256": "30aacd6b8633b4910182ae2edf039181bdcb8943342c47cab6a13941b506bc6e",
+      "allFourRastersEqualReviewedImplementationRun": true,
+      "report": {
+        "scope": [
+          "Experimental setup",
+          "Record the initial temperature before starting the timer.",
+          "Keep both probes at the same depth.",
+          "Read the measurements without moving either vessel.",
+          "Figure 1 Probe positions in the two vessels",
+          "Figure 2 Cooling curves over thirty minutes",
+          "Model and measurements",
+          "Newton cooling model",
+          "Half cooling time",
+          "The rate constants are 0.08 and 0.04 per minute.",
+          "Recorded temperatures"
+        ],
+        "tolerancePt": 0.01,
+        "deltasPt": {
+          "Experimental setup": {
+            "x": 0,
+            "y": 0
+          },
+          "Record the initial temperature before starting the timer.": {
+            "x": 0,
+            "y": 0
+          },
+          "Keep both probes at the same depth.": {
+            "x": 0,
+            "y": 0
+          },
+          "Read the measurements without moving either vessel.": {
+            "x": 0,
+            "y": 0
+          },
+          "Figure 1 Probe positions in the two vessels": {
+            "x": 0,
+            "y": 0
+          },
+          "Figure 2 Cooling curves over thirty minutes": {
+            "x": 0,
+            "y": 0
+          },
+          "Model and measurements": {
+            "x": 0,
+            "y": 0
+          },
+          "Newton cooling model": {
+            "x": 0,
+            "y": 0
+          },
+          "Half cooling time": {
+            "x": 0,
+            "y": 0
+          },
+          "The rate constants are 0.08 and 0.04 per minute.": {
+            "x": 0,
+            "y": 0
+          },
+          "Recorded temperatures": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "negativeControl": {
+          "retainedPreRepairPDF": "artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native",
+          "deltasPt": {
+            "Experimental setup": {
+              "x": 0,
+              "y": 7
+            },
+            "Record the initial temperature before starting the timer.": {
+              "x": 0,
+              "y": 7
+            },
+            "Keep both probes at the same depth.": {
+              "x": 0,
+              "y": 7
+            },
+            "Read the measurements without moving either vessel.": {
+              "x": 0,
+              "y": 7
+            }
+          },
+          "correctlyRejected": true
+        },
+        "captionNegativeControl": {
+          "retainedPreRepairPDF": "artifacts/docx-settings-gate-evidence-20261104/unpacked/native",
+          "deltasPt": {
+            "Figure 1 Probe positions in the two vessels": {
+              "x": 0,
+              "y": -3.1999999999999886
+            },
+            "Figure 2 Cooling curves over thirty minutes": {
+              "x": 0,
+              "y": -6.399999999999977
+            }
+          },
+          "correctlyRejected": true
+        },
+        "mathNegativeControl": {
+          "retainedPreRepairPDF": "artifacts/image-paragraph-native-evidence-20261104/unpacked/native",
+          "deltasPt": {
+            "Half cooling time": {
+              "x": 0,
+              "y": 1
+            },
+            "The rate constants are 0.08 and 0.04 per minute.": {
+              "x": 0,
+              "y": 2
+            },
+            "Recorded temperatures": {
+              "x": 0,
+              "y": 2
+            }
+          },
+          "correctlyRejected": true
+        }
+      }
+    },
+    "visualReview": {
+      "newlyInspected": "exported/page-2.png",
+      "unchangedFromPreviouslyInspected": [
+        "source/page-1.png",
+        "source/page-2.png",
+        "exported/page-1.png"
+      ],
+      "completeRasterSHA256EqualityRequired": true
+    },
+    "remainingScope": [
+      "Header placement and title raster differences",
+      "Footnote renderer differences",
+      "HTML math/page-template fallbacks",
+      "Mixed paragraph reconstruction",
+      "Contextual math/image flow",
+      "Size/timing/release acceptance"
+    ]
+  },
+  "logs": [
+    {
+      "path": "artifacts/math-paragraph-layout-baseline-20261104.log",
+      "sha256": "e09b5a09fd397386280bcb62c578d09ddbed86e5fde049cad5ad3e4d50de09db",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-layout-full-unit-20261104.log",
+      "sha256": "8466d9cd1ac7db370f16277d191d5a69e2430a10cb09a4bd5c31e92c1bee597a",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-layout-final-unit-20261104.log",
+      "sha256": "fd193fb0aa153b4261124a99312316b581a895de051bd3f05d1ee33a6f99d1a2",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-layout-browser-20261104.log",
+      "sha256": "8ab0bfa78618eefd1be909ae2d7e048184e4d3a60f90778035724935753932da",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-layout-build-20261104.log",
+      "sha256": "d3bf1a43fd39a539a0dc65fcac8282d66a2fe9a807e006ff688fe5d5ecc2b7e2",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-types-20261104.log",
+      "sha256": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-package-20261104.log",
+      "sha256": "70ef428735d73dfd2409c14b3a20e0a85d1b4659de28bc1a7fd7e2547b18b913",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-headless-20261104.log",
+      "sha256": "4aaa4a4f393979025ef1943d03f74a7f7a4be61096bf86b501c554b93f6b189d",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-interop-20261104.log",
+      "sha256": "d44e93ce4dfdd90a764014a0cb9278a66e2ed2d325cc3685bf5697ef8b15dab3",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-api-20261104.log",
+      "sha256": "afddd642e06e192a8ef738d534149265d327ce71b2ba6044c03e966b1ca067d1",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-markdown-20261104.log",
+      "sha256": "ffad58c2314a9dc85082003f6a53d2882279f1bacac6a519b9b04c60df946941",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-server-runtimes-20261104.log",
+      "sha256": "b1785093dfb6458c361a9f3f049325ed3b26c28fdc087a514cfdf6a79f9c9ace",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-packed-consumer-20261104.log",
+      "sha256": "99335d46730beae55dbb5ca7ef1e669695191fd870d51afa668b772120fa7e03",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-worker-20261104.log",
+      "sha256": "4d1b9b4c3325afc5aed0cb1788d3c24daf234ee15c2da7a91a4c94e60e079dbb",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-performance-20261104.log",
+      "sha256": "0f81c6483ff7a79f131e69ca876d86826b8188faf6732bd5a72db2b430dd6f7f",
+      "canonicalText": "UTF-8 LF with one final newline"
+    },
+    {
+      "path": "artifacts/math-paragraph-budget-20261104.log",
+      "sha256": "9332728113f627f1b62c2aa9a93d0ef48ea37850ec00a6d2624afbc195ba08f8",
+      "canonicalText": "UTF-8 LF with one final newline"
+    }
+  ],
+  "runtimeChanges": [
+    {
+      "path": "commands-CalDZZNk.cjs",
+      "current": {
+        "bytes": 66326,
+        "sha256": "f3ff474196b4def493b0a9980e96cbd113d0d5394f799d82365f9d023d1d3675"
+      }
+    },
+    {
+      "path": "commands-CiBYU4p1.js",
+      "current": {
+        "bytes": 75204,
+        "sha256": "f5028a5b38ac4ef834737d8d99cb1c702a87f41c01234d7b23e8c4848a3c6ee3"
+      }
+    },
+    {
+      "path": "commands-H3HqR4a2.cjs",
+      "previous": {
+        "bytes": 66326,
+        "sha256": "c71b63434cde08819dd283d6d41a5451297b347d3a97bd271be8d8140dabbf76"
+      }
+    },
+    {
+      "path": "commands-uVeBvvxy.js",
+      "previous": {
+        "bytes": 75204,
+        "sha256": "2fc68fd31ce4468376941cb5f5334c9fa37b6aeebaf9076a8dc26b387cdd8047"
+      }
+    },
+    {
+      "path": "core.cjs",
+      "previous": {
+        "bytes": 8795,
+        "sha256": "8cc54b4f6a99adabe27dc7f3aba6fbc0315e6ff5a82e82a4094a1f76f06fb1bc"
+      },
+      "current": {
+        "bytes": 8795,
+        "sha256": "b3be9feba06462fcb7afc5cc80b411a895dd77470f402380ce48f90f7a65d055"
+      }
+    },
+    {
+      "path": "core.js",
+      "previous": {
+        "bytes": 9669,
+        "sha256": "c132e691cfd1f7fdab51024b52d59262bf26598403db56eeebf219463d080d4d"
+      },
+      "current": {
+        "bytes": 9669,
+        "sha256": "32e3d267583c30c50e6ff918995bd17572d3f1d7be4d1ad234e7f5f636de28ca"
+      }
+    },
+    {
+      "path": "details.cjs",
+      "previous": {
+        "bytes": 6355,
+        "sha256": "19ca11582ec9fe15a3fe4b921418e2c3a5ec9e79e06c3427fd82c383e5a95241"
+      },
+      "current": {
+        "bytes": 6355,
+        "sha256": "7eb99278cc987bb1997979e0ee8bb9c76924cd448a14aa0205e4e2faf59845a0"
+      }
+    },
+    {
+      "path": "details.js",
+      "previous": {
+        "bytes": 7728,
+        "sha256": "5f67fa4c7b1287140d12028280b125bbe95a74530d5ddc25f5991f97ed6cf834"
+      },
+      "current": {
+        "bytes": 7728,
+        "sha256": "e811065d83338fecb406435753916a82c5513e01818dd20830af19dc460cbbbf"
+      }
+    },
+    {
+      "path": "direction-scope-CDP55ai5.js",
+      "previous": {
+        "bytes": 90004,
+        "sha256": "ee416491ba34d6b7ceb775b658109c45d7901d39366acf49c8a85f3d7d7bfc8f"
+      }
+    },
+    {
+      "path": "direction-scope-DPFBotzy.cjs",
+      "current": {
+        "bytes": 70807,
+        "sha256": "977bfc0e03809589496d692f166c295b69742db3d93703b006ca46b9ead8de42"
+      }
+    },
+    {
+      "path": "direction-scope-DY35bTIc.js",
+      "current": {
+        "bytes": 90205,
+        "sha256": "69156ec1f10bf9063b46607c539a702bfe62d5062f0a4f083dd204fe56b1f56f"
+      }
+    },
+    {
+      "path": "direction-scope-gmjZ0iVW.cjs",
+      "previous": {
+        "bytes": 70619,
+        "sha256": "9b661db8163e016981eb8ecdd5d559d6981f6203c55e96417deb9b30daad5b98"
+      }
+    },
+    {
+      "path": "document-utilities.cjs",
+      "previous": {
+        "bytes": 19379,
+        "sha256": "deb620e5b1fa6bd98337e02a67500ffe468b70c7c7fdf338aae695c03b86dfe9"
+      },
+      "current": {
+        "bytes": 19379,
+        "sha256": "2d826ee38f576412b6b082b4022e22138b4a949c12bf53454ad0ad8cb1c682ac"
+      }
+    },
+    {
+      "path": "document-utilities.js",
+      "previous": {
+        "bytes": 23886,
+        "sha256": "4ed128d3fe9aef6d5328aadf5d7be1627325708c9b3900f73464c278da025894"
+      },
+      "current": {
+        "bytes": 23886,
+        "sha256": "4bf5c55ab0915d15610cf38310eb37674e54dd723235cf9e84cbbc2d6e4db751"
+      }
+    },
+    {
+      "path": "docx.cjs",
+      "previous": {
+        "bytes": 174105,
+        "sha256": "fac056c46f667eedfbad07b67e7e0b439a72ae68947889e11f747b8343d67d3a"
+      },
+      "current": {
+        "bytes": 174757,
+        "sha256": "42f2a29526ded9322487e41f672b0ad14596f29a8955dec702acd9401c4b8331"
+      }
+    },
+    {
+      "path": "docx.js",
+      "previous": {
+        "bytes": 214928,
+        "sha256": "f9685792e9b7120f51569f3b254146ea6ce911be0579290935a1e86a6bd2457a"
+      },
+      "current": {
+        "bytes": 215650,
+        "sha256": "181afae42f47cea46586fe0ef2c5b64253b1498d9767abf5f19a3aa1fd12ee5c"
+      }
+    },
+    {
+      "path": "emoji-B2CVMZ_H.cjs",
+      "previous": {
+        "bytes": 14668,
+        "sha256": "153fabbc4b4d3a21db2bbb0fa0b006ccf5c108241f7b73d1ca69ecef4518bb26"
+      }
+    },
+    {
+      "path": "emoji-BAoRVh3a.js",
+      "previous": {
+        "bytes": 17420,
+        "sha256": "cf8b56d65c7445fad6bce6e44ec130135b1c146f58e91d3deb9c87c011a1a18f"
+      }
+    },
+    {
+      "path": "emoji-GqgRT5v1.cjs",
+      "current": {
+        "bytes": 14668,
+        "sha256": "9a1dc12093d2a27c27375ff1d8135b07a0500e85e58918b9acc51928a362bd90"
+      }
+    },
+    {
+      "path": "emoji-XTtQQra2.js",
+      "current": {
+        "bytes": 17420,
+        "sha256": "9e5fd2095b05406f74f4179f7548815f0071bedb89e5291c829c975b899c7e2b"
+      }
+    },
+    {
+      "path": "emoji-data.cjs",
+      "previous": {
+        "bytes": 274549,
+        "sha256": "45d72db573a9d148b8507fc0891ea10aa1acac3bc23a6e6cf457fa5b5c66e73d"
+      },
+      "current": {
+        "bytes": 274549,
+        "sha256": "bb5a4141dd5350c481cc037c7c2bef2cfff773651a9709488010fc78569b4368"
+      }
+    },
+    {
+      "path": "emoji-data.js",
+      "previous": {
+        "bytes": 331400,
+        "sha256": "82f75f7c9878321d176b6f508ed6c9e3d42bb19f530f43a9bd3db2c2bcf58633"
+      },
+      "current": {
+        "bytes": 331400,
+        "sha256": "f7cd71d525982129cefe47cdda439eedbc54c0d584b58d84824955d25d072f1c"
+      }
+    },
+    {
+      "path": "extensions-C0op_USV.js",
+      "previous": {
+        "bytes": 35404,
+        "sha256": "85db822428802a2120c473e5aba315cf1d2fd82fdb1d0e808f5ada731d3eba6b"
+      }
+    },
+    {
+      "path": "extensions-CkI7nqPv.js",
+      "current": {
+        "bytes": 35404,
+        "sha256": "f3561b7784010d02dc93c48cb44b6f6b0568eeafdee935c3c1d9c89ab72e0bde"
+      }
+    },
+    {
+      "path": "extensions-Cr0fPmtc.cjs",
+      "current": {
+        "bytes": 32719,
+        "sha256": "e62b85977a781022271779ee21d98d21c99ec97faaef403ed2c611146d9999b1"
+      }
+    },
+    {
+      "path": "extensions-DbovN0f7.cjs",
+      "previous": {
+        "bytes": 32719,
+        "sha256": "210beff3b2e5e94b30dca8632c96c7df425a21e6831eaac00abb25aa0b3aa1ca"
+      }
+    },
+    {
+      "path": "html-exporter-C9FR6rYd.cjs",
+      "current": {
+        "bytes": 17708,
+        "sha256": "30e4775c1f9f79e6409dc538219b3f12879fc5ca8dd52ac258144f66b21b8f40"
+      }
+    },
+    {
+      "path": "html-exporter-CFqDsLHe.js",
+      "previous": {
+        "bytes": 20237,
+        "sha256": "ac1e2b355d9def2de92675418f28c1587bf0e6b60e410cce7b3f9fe3c5a24364"
+      }
+    },
+    {
+      "path": "html-exporter-CL2pJqwS.js",
+      "current": {
+        "bytes": 20260,
+        "sha256": "ca2658ef853eca7fd7ffe39be6af68e7203b0c5f7d489f8fce0bc5660525403c"
+      }
+    },
+    {
+      "path": "html-exporter-CZijZo3B.cjs",
+      "previous": {
+        "bytes": 17683,
+        "sha256": "e64169e10432d450b52231edac90fb2056df95b1dfde69dff71d36cfb99acc17"
+      }
+    },
+    {
+      "path": "html-server.cjs",
+      "previous": {
+        "bytes": 172,
+        "sha256": "84a29acabe5bc4af88492abb2c1236fdeaacd85adbe8c006a3eb0b0cf7804e7d"
+      },
+      "current": {
+        "bytes": 172,
+        "sha256": "a5489a5e89e6d87a261d03afce2f28d7e2de18048c23160a1cfffad6f8d76dd5"
+      }
+    },
+    {
+      "path": "html-server.js",
+      "previous": {
+        "bytes": 113,
+        "sha256": "1ee84dcbaf836d54a4244f7be2f501e5cd6d4bcf7f683f516e43a9f1872fab20"
+      },
+      "current": {
+        "bytes": 113,
+        "sha256": "234b0f99acd52f650dab1fcf250105e909e3fb9d7a6beeabee1f19d17eccfce8"
+      }
+    },
+    {
+      "path": "html-source.cjs",
+      "previous": {
+        "bytes": 11808,
+        "sha256": "f4b516eded2d66d8d1684142f5c32fd9363dc0b93bc8400a2dc68719fa0a0a94"
+      },
+      "current": {
+        "bytes": 11808,
+        "sha256": "6b060c908fcf76ff63727241eaadc21ff379535620ad25165312f7ac5bd3eab1"
+      }
+    },
+    {
+      "path": "html-source.js",
+      "previous": {
+        "bytes": 14214,
+        "sha256": "e60ebdd4265351ad759bc11d0e68c7748771cb36d75b20113b73ba6d7afb3631"
+      },
+      "current": {
+        "bytes": 14214,
+        "sha256": "c1b469e2b697e769b76acb379c4b7d0f42501b3c56e4d8ca1d541ee24c1602da"
+      }
+    },
+    {
+      "path": "index.cjs",
+      "previous": {
+        "bytes": 74432,
+        "sha256": "d50d5eba6efa6661e2164233444bd399d03351f6f2bc154dac427e806e035c45"
+      },
+      "current": {
+        "bytes": 74873,
+        "sha256": "5d37a8ee783e76465e1e388295ce4cb70318a26b119fbc6a1bff81daf1d28d3b"
+      }
+    },
+    {
+      "path": "index.js",
+      "previous": {
+        "bytes": 87890,
+        "sha256": "04cdaba2d51f60aa32575ecc4f1a3c65e499026ac4c62f03cafe027e536bd1d0"
+      },
+      "current": {
+        "bytes": 88410,
+        "sha256": "d31b45f65ec7db56b80b3dfcdd47c91bc798c4673610814bf37aac0853aa844f"
+      }
+    },
+    {
+      "path": "integrity-dom.cjs",
+      "previous": {
+        "bytes": 4360,
+        "sha256": "f57416e5f053f3ac78d58a7899d291950676aa1c099bbc658932c41177b4c6d0"
+      },
+      "current": {
+        "bytes": 4360,
+        "sha256": "2c4fc87ab1e5ad277f10ead80e0ca60ef099fd5f5b048de5304b0df3d9befd0d"
+      }
+    },
+    {
+      "path": "integrity-dom.js",
+      "previous": {
+        "bytes": 5079,
+        "sha256": "6f7d4c9dfb21d3457ca7cd01658600e7536721d00a20c9b3a9702c21599f0fcd"
+      },
+      "current": {
+        "bytes": 5079,
+        "sha256": "cc242854ac7be9d61a5b081aa3d01a75a64b7fe03114f3769d52c6ae9051c4da"
+      }
+    },
+    {
+      "path": "link-behavior-BYhD6UhF.cjs",
+      "previous": {
+        "bytes": 16211,
+        "sha256": "3a950323080822f9cb10387894d1bb6c6b9d148c23938e61916e65e4f8576a07"
+      }
+    },
+    {
+      "path": "link-behavior-BfBmkwPk.js",
+      "previous": {
+        "bytes": 18011,
+        "sha256": "0634ae1975c2fe7c298ff79202e1559b5c5a4793baf39a6acc9fe92f39457672"
+      }
+    },
+    {
+      "path": "link-behavior-Bxxy4O-q.js",
+      "current": {
+        "bytes": 18011,
+        "sha256": "71dc577bf3ce4d4c2c7acb19850327e7d4970ca9144440fac8ee33142771c281"
+      }
+    },
+    {
+      "path": "link-behavior-ByzfpepT.cjs",
+      "current": {
+        "bytes": 16211,
+        "sha256": "56c254fff14c904647ebddddb8a82a7c6edd16c9e8190cb46daad139e353fa87"
+      }
+    },
+    {
+      "path": "media-B8ZLwp64.js",
+      "previous": {
+        "bytes": 44084,
+        "sha256": "8731663d7707809bc9410d6c2d4dc8d9a90caeaa01d053820afa2a0a4eb2f183"
+      }
+    },
+    {
+      "path": "media-Dzfm0hV0.cjs",
+      "current": {
+        "bytes": 36305,
+        "sha256": "baca98e6495ec8c877cb259ff7050ccecb46d05ff0aea469c3802f3efdbd19ec"
+      }
+    },
+    {
+      "path": "media-_NCBgA9R.cjs",
+      "previous": {
+        "bytes": 36295,
+        "sha256": "37a98865b90dba6176eb6a9c473196c21acb305c4a35c396cb2a209e8f324251"
+      }
+    },
+    {
+      "path": "media-r9EoeNN6.js",
+      "current": {
+        "bytes": 44097,
+        "sha256": "3c73f6feaf4108e1227e07e67bb1c520c9d2781bcee1ce3a9f62d432b0d47eb1"
+      }
+    },
+    {
+      "path": "menu-position-BFdaPnnl.js",
+      "previous": {
+        "bytes": 8238,
+        "sha256": "a3767ea86574a05cada1c30c50ea126dcfb87688bbd7e378b9fb2003ebfcc698"
+      }
+    },
+    {
+      "path": "menu-position-CpR_1dfb.js",
+      "current": {
+        "bytes": 8238,
+        "sha256": "6e36db2549eda22b953d1f5446b3b016e4cd596bd54cac574969a3e07649091c"
+      }
+    },
+    {
+      "path": "menu-position-DFqNOF55.cjs",
+      "previous": {
+        "bytes": 7213,
+        "sha256": "e7d02c496786c3dd19c8f9466ece33d81f3b712cf182c4a7b8bc4cec053b2410"
+      }
+    },
+    {
+      "path": "menu-position-eDmhTsKM.cjs",
+      "current": {
+        "bytes": 7213,
+        "sha256": "150a130585c08e9089625d8d0a28697e486b9339e5d918a564587ecdb2734c32"
+      }
+    },
+    {
+      "path": "pages.cjs",
+      "previous": {
+        "bytes": 9367,
+        "sha256": "acba94088cb980f2ae957d46f192c5d04d03de220526cc7af6b3cf23a8f704d7"
+      },
+      "current": {
+        "bytes": 9367,
+        "sha256": "45fa7fa3735b57b7286c4f918ce12a5401877a974ca12b1c4d3365b9c6dd0ea1"
+      }
+    },
+    {
+      "path": "pages.js",
+      "previous": {
+        "bytes": 11277,
+        "sha256": "c3773688b28b6590265a676635efbe8c6df1e46b6ea18161c493245bd0fe795e"
+      },
+      "current": {
+        "bytes": 11277,
+        "sha256": "cfa28182dc237198cc73bd700b45e2b121f1715d610a221d37d50a7cc6e56d44"
+      }
+    },
+    {
+      "path": "react.cjs",
+      "previous": {
+        "bytes": 71018,
+        "sha256": "f2d41006bb7ee366cb3e4e9a16ece658b30756b125ae620a9f7909f0d448fd88"
+      },
+      "current": {
+        "bytes": 71018,
+        "sha256": "305501648dd4ac58eed4294e2869cbadad14f943382bb83146ca9adf41b85e7d"
+      }
+    },
+    {
+      "path": "react.js",
+      "previous": {
+        "bytes": 94791,
+        "sha256": "545dd856e6513142529247723e6a0708d16c5606487e32f6d9df59c9c7e097c2"
+      },
+      "current": {
+        "bytes": 94791,
+        "sha256": "0b9c4fb06650a46a379629c4302392dec23c7b14ed40c5085bf55bd04c9705a4"
+      }
+    },
+    {
+      "path": "server-Bu2_l2Zs.cjs",
+      "previous": {
+        "bytes": 216530,
+        "sha256": "4d6752d4f6440766603ced0acfd74a8fe5d34d6edcb811a06c8346bc7965718b"
+      }
+    },
+    {
+      "path": "server-CJQ6Vumj.js",
+      "previous": {
+        "bytes": 266019,
+        "sha256": "26ae11dae4bad10609ce7a900d43d33af5aeaa66c87e7db10ddd9aadb440b0a9"
+      }
+    },
+    {
+      "path": "server-DHxXNTHW.cjs",
+      "current": {
+        "bytes": 216540,
+        "sha256": "0ef04c845cb4802ea01605533637c123223af3bbd1c608f9042bd1221252fcd2"
+      }
+    },
+    {
+      "path": "server-DKjOL4eX.js",
+      "current": {
+        "bytes": 266032,
+        "sha256": "11d8960c05d84658034379c876ea9ae8c8efc4bc926c8937e0a5fdf47b0f7bc7"
+      }
+    },
+    {
+      "path": "svelte.cjs",
+      "previous": {
+        "bytes": 891,
+        "sha256": "c08af4badf104a6288a24c5d27a04cdefba9dfade5d56a01a43fa984d28955fb"
+      },
+      "current": {
+        "bytes": 891,
+        "sha256": "45a9793440c5e2d6a02382449e0c1c2346f506b36968d7a4bcb02587f4264f5b"
+      }
+    },
+    {
+      "path": "svelte.js",
+      "previous": {
+        "bytes": 1083,
+        "sha256": "955847d54535886e5f2a9b9be6b940e34872eca0146bb85bc5de0458cd7c05af"
+      },
+      "current": {
+        "bytes": 1083,
+        "sha256": "19d1b1c7b6e1b936973a5c20c72a3116320d3e0a1c78cf0adee7503b0a28c0fa"
+      }
+    },
+    {
+      "path": "testing.cjs",
+      "previous": {
+        "bytes": 5439,
+        "sha256": "bbfae3d9259a2447d2fc70b85cf043d51c8174b3965c18f3c4da6577ed6f45ed"
+      },
+      "current": {
+        "bytes": 5439,
+        "sha256": "360e3d15ab124b8d0c8a261e6c8761448afa2ea5865ef5bb57cc9d29391c2ddd"
+      }
+    },
+    {
+      "path": "testing.js",
+      "previous": {
+        "bytes": 6494,
+        "sha256": "c4c456c3527638496cd25674aaeaa56763595f47c9edcbcad6c105946db63fc3"
+      },
+      "current": {
+        "bytes": 6494,
+        "sha256": "021e7af571a45ef0eb5e25d7bd4c8f1b08e090bdb99db9d107be7492f65a299f"
+      }
+    },
+    {
+      "path": "text-style-BBIs0pCL.cjs",
+      "current": {
+        "bytes": 5095,
+        "sha256": "7b632808f4ffa4968bee8675389c414625d43e4535622dde61b12be0cc0d705a"
+      }
+    },
+    {
+      "path": "text-style-CPIuLsBT.js",
+      "current": {
+        "bytes": 4836,
+        "sha256": "e20fbef579411ce40280a18d31c90b8ea2f3684f949b3dac5d0d714052c7ad63"
+      }
+    },
+    {
+      "path": "text-style-DbDrcJef.js",
+      "previous": {
+        "bytes": 4836,
+        "sha256": "ddf570b945cc731366acb1805cfd38ac73053f191ce33c623397e3d7852f5b7d"
+      }
+    },
+    {
+      "path": "text-style-jRSMD8Tf.cjs",
+      "previous": {
+        "bytes": 5095,
+        "sha256": "7d6950471c9f5efe4d28a2a832f2419120f276f7562b78fafed8f0eb0da42997"
+      }
+    },
+    {
+      "path": "text-style.cjs",
+      "previous": {
+        "bytes": 878,
+        "sha256": "1c20985d857bb62e7da6a771e7d91104b26bbefb0fe7912af33f6ed402f6d4bf"
+      },
+      "current": {
+        "bytes": 878,
+        "sha256": "ccab75f8760f2e025d0757c7f38646cf28279db427d1d36d57847eadabf04de1"
+      }
+    },
+    {
+      "path": "text-style.js",
+      "previous": {
+        "bytes": 876,
+        "sha256": "59648b84bb7f48a61c319bf56efcb918233cf3f6facbc625653b85b885a04b9b"
+      },
+      "current": {
+        "bytes": 876,
+        "sha256": "b41fc4f1de19cb04e392ebdde14a110da104da6d32c67eee2ecab467129aca55"
+      }
+    },
+    {
+      "path": "view-3LZIrI-i.js",
+      "previous": {
+        "bytes": 125533,
+        "sha256": "8f78fa0c37566a27d0bcc08fce5deec290914f68593b64386bf7d2d42f6647bf"
+      }
+    },
+    {
+      "path": "view-CONMW9iT.cjs",
+      "current": {
+        "bytes": 106941,
+        "sha256": "e11c12d534ee8dbe1b266b4ee1875d65fe8877280327883ac5f4e94f46976dce"
+      }
+    },
+    {
+      "path": "view-CTxugFJ2.cjs",
+      "previous": {
+        "bytes": 106941,
+        "sha256": "e0e0d4f2ac39133a10753fe4bd574f0039d588e9c46d2f08030b3b6a7634200a"
+      }
+    },
+    {
+      "path": "view-CVG50Ufx.js",
+      "current": {
+        "bytes": 125533,
+        "sha256": "0a6a3eee9934ca892cfa2e2659b7feb8fc46d4fb6115b97ba3723a9d63dea5a7"
+      }
+    },
+    {
+      "path": "vue.cjs",
+      "previous": {
+        "bytes": 1456,
+        "sha256": "f133821c217b6c040f489f9d00e8b2d06f0445ec5074b898a200adb6902e69c5"
+      },
+      "current": {
+        "bytes": 1456,
+        "sha256": "dcdb2b63bceaf63a27ba4dd3427544c30c485f3868a119d448f2c8913ffda606"
+      }
+    },
+    {
+      "path": "vue.js",
+      "previous": {
+        "bytes": 1720,
+        "sha256": "b3686dc5256f31fd5444ae28f1610a5219fe4d31183eccd99c965e5c52f64166"
+      },
+      "current": {
+        "bytes": 1720,
+        "sha256": "f70185bcaa07b0e9f964ecbe52c00d350fb50ca71f1c10a0b2dcf753774b58cd"
+      }
+    },
+    {
+      "path": "widgets.cjs",
+      "previous": {
+        "bytes": 7337,
+        "sha256": "a672d8b82d49e819557d3c98a27e63ef969a051c952840f3e9e62e883864ea28"
+      },
+      "current": {
+        "bytes": 7337,
+        "sha256": "332d0f7ef55a0065f6fc18fc2788ee2b9e59ce33b5adad9b52e6277be27b4744"
+      }
+    },
+    {
+      "path": "widgets.js",
+      "previous": {
+        "bytes": 8784,
+        "sha256": "fad6784ff92a7bef089a1e7b0ff10ccfae1e53083ba6b685a12e973745b6cea9"
+      },
+      "current": {
+        "bytes": 8784,
+        "sha256": "ff83fa6a2049c952b8bcc3553d3ae9a8ee6a36ae92ce5acf33fcf9352242e677"
+      }
+    }
+  ],
+  "packedSHA256": "17d4398e0a11004de43fd59f6cc65f625524005ed26a94c197bdfbbbc7d5f76f",
+  "apiDeclarationsChanged": false,
+  "cssChanged": false,
+  "performanceAndRetentionGatePassedThisRun": true,
+  "priorTimingFailuresRetained": true,
+  "parserPerformanceRepairClaimed": false,
+  "approvedLimitsKiB": {
+    "docxESM": 185,
+    "docxCJS": 149.5,
+    "aggregateESM": 1652.5,
+    "aggregateCJS": 1375.5
+  },
+  "sizeGatePassed": false,
+  "failingLimits": [
+    "core ESM",
+    "core CJS",
+    "DOCX ESM",
+    "DOCX CJS",
+    "CSS",
+    "aggregate ESM",
+    "aggregate CJS"
+  ],
+  "released": false,
+  "fullFidelityCertified": false
+}

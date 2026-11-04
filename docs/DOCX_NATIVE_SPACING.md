@@ -1,5 +1,11 @@
 # Native paragraph spacing bridge (2026-11-04, unmerged)
 
+Later checkpoints repair the retained paper's figure/caption offsets and
+cumulative equation drift. See [image paragraph layout](IMAGE_PARAGRAPH_LAYOUT.md)
+and [display-equation paragraph context](MATH_PARAGRAPH_LAYOUT.md) for the current
+3,609-test verification and 11-position native profile. The sections below retain
+their original checkpoint measurements rather than rewriting the audit history.
+
 ## Native document-default initialization
 
 The remaining common 7 pt offset is now repaired. The exporter previously wrote

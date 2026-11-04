@@ -35,4 +35,53 @@ control, receiving-schema loss, mixed fragments, list/quote ownership, spacing
 identity, source editing/history, complete HTML reopening, invalid values and
 style clearing. Three recorded desktop browser journeys pass actual TeX editing,
 rendering, undo, list editing, caption editing, HTML download and DOCX reopening.
-The complete unit suite and independent native re-render are in progress.
+The complete suite passes 3,609 tests across 256 files. Existing fixtures that
+omit equation layout now explicitly expect the generated Word Normal defaults
+on reopen (Arial 11, 8 pt after, 1.15 line spacing), while retaining the complete
+model comparison. No geometry is filtered out to manufacture equality.
+
+## Independent native result
+
+The source fixture remains SHA-256
+`52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495`.
+Implementation `c39d92dc0145927c22dd1b7a8799a687f0ec3b38` passed the isolated
+[native rendering run](https://github.com/eddolo/fountainjs/actions/runs/41770211766).
+The downloaded archive matches GitHub's SHA-256
+`834441907fc033c5f2c7dcfd6aa644f0610c9e04c48711bd04a9f44cc04243dd`.
+
+| Independent PDF target | Previous y difference | Current y difference |
+| --- | ---: | ---: |
+| Model heading and Newton-model label | 0 pt | 0 pt |
+| Half-cooling-time label | +1 pt | 0 pt |
+| Rate-constants paragraph | +2 pt | 0 pt |
+| Recorded-temperatures heading | +2 pt | 0 pt |
+| Earlier heading, three instructions, two captions | 0 pt | 0 pt |
+
+The updated exported second page was visually inspected. Both source rasters and
+the exported first page exactly match previously inspected pages. A separate
+[expanded gate run](https://github.com/eddolo/fountainjs/actions/runs/41770809283)
+checks all 11 positions at the unchanged 0.01 pt tolerance, rejects the actual
+pre-repair paragraph/caption/equation PDF controls, and reproduces all four
+implementation rasters exactly. This is a bounded fixture profile, not whole-page
+or Microsoft Word certification. Header/title raster differences, table/footnote
+details, mixed paragraphs and standalone-HTML math/page-template fallbacks remain
+outside that claim. The extra end-of-report text is the audit's intentional edit.
+
+Build, framework types, package exports, the 419-declaration API surface,
+119-module headless boundary, independent DOCX interoperability, existing
+Markdown conformance gate, server runtimes, actual packed root/core ESM/CommonJS
+consumers and real workerd pass. Packed/worker probes include equation context,
+complete HTML reopening, native export/reopen, source edits and exact undo without
+DOM globals. Existing partial CommonMark semantic scores remain explicitly
+recorded; this change does not complete CommonMark conformance.
+
+The latest unchanged performance/retention gate passes: 100-block server-HTML
+p95 is 28.61 ms / 35 ms, and the 10,000-block profile is 846.35 ms / 900 ms.
+Earlier timing failures remain recorded; no parser optimization or durable
+timing-failure repair is claimed. Seven size limits still fail, including the
+previously approved DOCX/aggregate ceilings. No new limit allowance, merge or
+npm publication is included.
+
+Evidence: [complete browser models](../artifacts/math-paragraph-layout-real-20261104/evidence.json),
+[native review and negative controls](../artifacts/math-paragraph-native-review-20261104.json),
+[package/runtime verification](../artifacts/math-paragraph-verification-20261104.json).

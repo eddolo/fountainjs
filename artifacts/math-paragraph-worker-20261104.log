@@ -1,0 +1,2 @@
+Real workerd actual Word fixture: equation paragraph context, complete HTML, native reopening, source editing and exact undo passed without DOM globals.
+{"noDOM":true,"equations":2,"spacingAfter":[7,7],"fontSize":[11,11],"nativeSpacing":[7,7],"htmlEqual":true,"sourceEdit":true,"undoExact":true,"originalUnchanged":true}

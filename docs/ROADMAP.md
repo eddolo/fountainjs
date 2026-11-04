@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+Display-equation paragraph checkpoint (2026-11-04, unmerged): inherited/native
+paragraph geometry and font context now survive equation-only Word import,
+source editing/undo, safe HTML and native DOCX reopening. Mixed paragraphs and
+receiving-schema omissions are reported; list/quote structure remains intact.
+The real paper's cumulative +1/+2 pt equation drift is repaired to zero, including
+the page-two table heading. Eleven independently extracted PDF positions and
+three actual pre-repair PDF controls now gate regressions. Three recorded browser
+journeys, 3,609 units / 256 files, build/types/package/headless/API/interoperability,
+actual packed ESM/CJS and workerd pass. Latest unchanged performance/retention
+checks pass; earlier timing failures remain in the evidence, without claiming a
+parser optimization. Seven size failures and broader fidelity/release work remain.
+No percentage promotion or release.
+[Contract, native evidence and remaining scope](MATH_PARAGRAPH_LAYOUT.md).
+
 Image paragraph-layout checkpoint (2026-11-04, unmerged): native import retains
 the image body's paragraph geometry separately from its caption. Fractional
 dimensions now return to exact native units. Three recorded browser journeys

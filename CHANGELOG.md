@@ -11,7 +11,10 @@ policy on reopen. Native layout certification remains outstanding.
   preserve it through live source edits, history, safe HTML and native semantic
   DOCX export. Report missing receiving-schema ownership and mixed-paragraph
   geometry loss. Inline math and unsupported contextual-flow boundaries remain
-  separate. Independent native layout verification is in progress.
+  separate. Independent native PDFs now match all 11 profiled paragraph/caption
+  positions, repairing the cumulative +1/+2 pt equation drift. Full units pass
+  3,609; recorded desktop, packed ESM/CJS and real workerd checks pass. Broader
+  fidelity and size acceptance remain unfinished.
 
 - Retain an image body's portable paragraph layout separately from its caption
   through JSON, safe HTML and native DOCX. Validate and expose the optional body,
