@@ -6104,7 +6104,13 @@ test('checks actual DOCX retention beside an independent viewer without hiding i
   const expectedImage = defaults.content![2]!;
   const projectedImage = {
     ...expectedImage,
-    attrs: { ...expectedImage.attrs, caption: '', captionAlign: 'center', captionLayout: {
+    // The generated image paragraph declares 120/80 twentieths of a point.
+    // Its newly retained layout must remain visible in the complete comparison.
+    attrs: { ...expectedImage.attrs, imageLayout: {
+      unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 6, spacingAfter: 4,
+      lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
+      keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
+    }, caption: '', captionAlign: 'center', captionLayout: {
       unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8,
       lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
       keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
@@ -6121,6 +6127,8 @@ test('checks actual DOCX retention beside an independent viewer without hiding i
   expect(summary.reopened).toEqual(expected);
   const archive = unzipSync(Uint8Array.from(summary.bytes));
   const xml = strFromU8(archive['word/document.xml']);
+  const imageParagraph = xml.match(/<w:p(?:\s[^>]*)?>[\s\S]*?<\/w:p>/g)!.find(paragraph => paragraph.includes('<w:drawing>'))!;
+  expect(imageParagraph).toContain('<w:spacing w:before="120" w:after="80"/>');
   expect(xml).toContain('Feature'); expect(xml).toContain('Result');
   expect(xml.match(/urn:fountainjs:docx:table-header:col:v1/g)).toHaveLength(2);
   expect(xml.match(/<w:shd w:val="clear" w:color="auto" w:fill="EDE9FE"\/>/g)).toHaveLength(2);

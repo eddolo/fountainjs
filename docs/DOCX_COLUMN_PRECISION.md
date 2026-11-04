@@ -22,7 +22,19 @@ resize contracts remain covered. Live ratios and HTML geometry use the same mode
 Focused verification passes 57 cases, including 19 new Node/DOM cases. Three
 recorded Chromium/Firefox/WebKit workflows pass actual cell typing, stationary
 handle use, a 12 px drag, undo, equation/caption editing, HTML reading and DOCX
-download/reopen. Full units and independent native rendering are in progress.
+download/reopen. Full units pass 3,628 tests across 258 files. Independent native
+rendering confirms exact 3312-unit columns and a 496.75 pt painted merged width;
+the table remains shifted 0.3 pt horizontally, as described below.
+
+The broad PR browser run passed 847 cases and failed the same DOCX expectation
+in three engines. The expectation omitted the newly retained image-paragraph
+layout. It now explicitly expects the generated 6 pt / 4 pt spacing and verifies
+the corresponding 120 / 80 native-unit XML declaration; complete-document equality
+remains required. That journey passes locally in Chromium, Firefox and WebKit
+(`artifacts/docx-retention-expectation-browser-20261104.log`). The broad cloud
+matrix must still run against this correction. Performance and real Lean cloud
+checks passed on the preceding commit. Seven size failures remain; no limit or
+runtime code changes are included in this expectation correction.
 
 ## Remaining placement boundaries
 
