@@ -1,0 +1,66 @@
+[WebServer] (node:23340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:21408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (19.2s)
+
+
+  1) [chromium] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre')
+    Timeout: 5000ms
+    - Expected  - 0
+    + Received  + 2
+
+      first
+    +
+    + [ref]: /target "Original title"
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre')
+        14 × locator resolved to <pre title="js" tabindex="0" role="region" aria-label="js code" data-fountain-path="2" data-line-numbers="true" data-language="javascript" data-fountain-node="code_block" data-fountain-code-lines="1↵2↵3" data-fountain-decoration="syntax-block-2" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "first
+    
+    [ref]: /target "Original title""
+
+
+       at ..\browser\issue-html-source-journey.ts:45
+
+      43 |   // old export visibly puts its definition footer inside the code block.
+      44 |   await upload.setInputFiles(first.path);
+    > 45 |   await expect(editor.locator('pre')).toHaveText('first');
+         |                                       ^
+      46 |   await expect(heading.getByRole('link')).toHaveAttribute('href', '/target');
+      47 |   expect(first.text).toBe(expected);
+      48 |   expect(MarkdownImporter.parse(first.text, schema, issueMarkdownOptions).toJSON()).toEqual(editedModel.toJSON());
+        at runIssueHTMLSourceJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-html-source-journey.ts:45:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-html-source-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-html-source-before-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-html-source-before-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-html-source-before-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-html-source-before-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-html-source-before-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads 

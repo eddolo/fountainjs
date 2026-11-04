@@ -1,6 +1,6 @@
 import { Mark, Node, type Schema, type Attributes } from '../schema';
 import { matchesWithoutAutomaticTrailingParagraph } from '../editing-provenance';
-import { registerMarkdownSourceBoundary } from '../markdown-source-boundary';
+import { registerMarkdownSourceBoundary, registerMarkdownSourceProjection } from '../markdown-source-boundary';
 import { registerMarkdownNestedSource, type MarkdownNestedCapture, type MarkdownNestedRecord, type MarkdownSourceLineView } from '../markdown-nested-source';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
@@ -318,10 +318,13 @@ export class MarkdownSourceSnapshot {
     const captureOptions = documentAdapter ? { ...options, parseHTMLDocument: undefined,
       parseHTMLFlow: undefined, parseHTMLBlock: undefined, parseHTMLInline: undefined, parseHTMLParagraph: undefined } : options;
     const capture = documentHTMLScope ? undefined : captureMarkdownBlocks(parts.body, schema, document, captureOptions);
-    return Object.freeze({
-      document,
-      source: new MarkdownSourceSnapshot(source, parts, document, capture),
-    });
+    const snapshot = new MarkdownSourceSnapshot(source, parts, document, capture);
+    if (capture?.blocks.length && (options.parseHTMLDocument || options.parseHTMLFlow
+      || options.parseHTMLBlock || options.parseHTMLInline || options.parseHTMLParagraph)) {
+      const quietOptions = quietMarkdownOptions(options);
+      registerMarkdownSourceProjection(snapshot, value => new MarkdownImporter().parse(splitMarkdownSource(value).body, schema, quietOptions));
+    }
+    return Object.freeze({ document, source: snapshot });
   }
 }
 
@@ -406,6 +409,11 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
  * are source trivia, shared with every block's inline parser. Container
  * definitions and ambiguous block boundaries still fail closed.
  */
+function quietMarkdownOptions(options: MarkdownImportOptions): MarkdownImportOptions {
+  return { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
+    onHTMLParagraphFallback: undefined, onHTMLFlowFallback: undefined, onTeXTableIssue: undefined };
+}
+
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   if (!document.childCount || document.childCount > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
   const separated = captureSeparatedMarkdownBlocks(source, schema, document, options)
@@ -413,9 +421,8 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
   if (!separated) return undefined;
   // Blank separators alone cannot keep adjacent lists/indented code distinct,
   // or terminate an EOF-open fence after a move. Validate those captures too.
-  if (!separated.referenceDefinitions && !options.parseHTMLDocument && !options.parseHTMLFlow
-    && !options.parseHTMLBlock && !options.parseHTMLInline && !options.parseHTMLParagraph) {
-    const quietOptions = { ...options, onTeXTableIssue: undefined };
+  if (!separated.referenceDefinitions && !options.parseHTMLDocument) {
+    const quietOptions = quietMarkdownOptions(options);
     const scopedReferences = source.includes('[') && (references(source, schema, quietOptions).definitions.size
       || extractFootnoteDefinitions(source, schema, quietOptions).definitions.length);
     if (!scopedReferences) {
@@ -423,7 +430,8 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
       const budget = { remaining: MAX_MARKDOWN_SOURCE_BLOCKS - separated.blocks.length };
       separated.blocks.forEach((block, index) => {
         registerMarkdownSourceBoundary(block, parse);
-        const capture = nestedContainerCapture(block.source, document.child(index), schema, quietOptions, budget, 0);
+        const capture = !options.parseHTMLFlow && !options.parseHTMLBlock && !options.parseHTMLInline && !options.parseHTMLParagraph
+          ? nestedContainerCapture(block.source, document.child(index), schema, quietOptions, budget, 0) : undefined;
         if (capture) registerMarkdownNestedSource(block, capture, parse);
       });
     }
@@ -546,8 +554,7 @@ function captureNestedContainer(source: string, node: Node, schema: Schema, opti
 function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   const segments = markdownBlockSegments(source);
   if (!segments.blocks.length || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
-  const quietOptions = { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
-    onHTMLFlowFallback: undefined, onTeXTableIssue: undefined };
+  const quietOptions = quietMarkdownOptions(options);
   const definitionPrefix = (value: string): string => {
     if (!/^ {0,3}\[/u.test(value)) return '';
     // Keep physical endings and indentation separately from the parser's lines.
@@ -577,8 +584,7 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
   // map when checking a new adjacency, rather than parsing either neighbour in
   // an empty scope or repeatedly prepending every definition. External HTML
   // projections and footnote materialization still need their own ownership.
-  const ownsReferenceBoundaries = context && !options.parseHTMLDocument && !options.parseHTMLFlow
-    && !options.parseHTMLBlock && !options.parseHTMLInline && !options.parseHTMLParagraph
+  const ownsReferenceBoundaries = context && !options.parseHTMLDocument
     && !extractFootnoteDefinitions(source, schema, quietOptions).definitions.length;
   const originalReferenceValues = new Set<string>();
   if (ownsReferenceBoundaries) {

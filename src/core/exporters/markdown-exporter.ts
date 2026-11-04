@@ -5,7 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { markdownReferenceFooterValid, markdownSourceSeparator } from '../markdown-source-boundary';
+import { markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceSeparator } from '../markdown-source-boundary';
 import { hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
@@ -788,10 +788,12 @@ export class MarkdownExporter {
       }
       // Reference-style output needs a new document-level definition section;
       // fall back rather than risk colliding with source-owned definitions.
-      if (boundariesValid && preservedBlocks > 0 && context.references.size === 0) {
+      const markdown = withSourceFrontmatter(source, body);
+      if (boundariesValid && preservedBlocks > 0 && context.references.size === 0
+        && markdownSourceProjectionMatches(source, markdown, node)) {
         context.losses.forEach(loss => options.onLoss?.(loss));
         return Object.freeze({
-          markdown: withSourceFrontmatter(source, body),
+          markdown,
           losses: Object.freeze([...context.losses]),
           preservation: 'blocks' as const,
         });
@@ -861,12 +863,11 @@ export class MarkdownExporter {
         // Definitions have document-wide scope. Moves/deletions must not strand
         // an unchanged reference, or reorder duplicate-definition precedence.
         if (source.referenceDefinitions) body += `${source.lineEnding}${source.lineEnding}${source.referenceDefinitions}`;
-        context.losses.forEach(loss => options.onLoss?.(loss));
-        return Object.freeze({
-          markdown: withSourceFrontmatter(source, body),
-          losses: Object.freeze([...context.losses]),
-          preservation: 'mapped-blocks' as const,
-        });
+        const markdown = withSourceFrontmatter(source, body);
+        if (markdownSourceProjectionMatches(source, markdown, node)) {
+          context.losses.forEach(loss => options.onLoss?.(loss));
+          return Object.freeze({ markdown, losses: Object.freeze([...context.losses]), preservation: 'mapped-blocks' as const });
+        }
       }
     }
     const canonical = this.exportWithReport(node, options);

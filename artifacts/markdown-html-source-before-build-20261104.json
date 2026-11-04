@@ -1,0 +1,8 @@
+{
+  "builtSourceCommit": "588be248e66767b0f4c7efd5d5b75596d5224077",
+  "sourceMapSHA256": {
+    "src/core/markdown-source-boundary.ts": "356a190deac87d1e33aa5b67e0b95dfc0f2e991e8e42e1ed47f80db1822f3ea2",
+    "src/core/importers/markdown-importer.ts": "666537ac720083ed509d763258956e947def8bf40fa4189aa00b7fd5e3aa74ed",
+    "src/core/exporters/markdown-exporter.ts": "5aca756471e1b76634c4c79a128d7b569809fc727f31b0c67abd12022b97fd87"
+  }
+}

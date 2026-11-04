@@ -1,0 +1,23 @@
+[
+  {
+    "count": 100,
+    "parentNativeWarmMoveMs": 0.8500000000000227,
+    "currentNativeWarmMoveMs": 0.8509000000000242,
+    "HTMLPolicyWarmMoveMs": 7.136000000000081,
+    "HTMLPolicyWarmEditMs": 10.06490000000008
+  },
+  {
+    "count": 1000,
+    "parentNativeWarmMoveMs": 3.2899999999999636,
+    "currentNativeWarmMoveMs": 3.4062000000003536,
+    "HTMLPolicyWarmMoveMs": 65.32180000000062,
+    "HTMLPolicyWarmEditMs": 64.16310000000067
+  },
+  {
+    "count": 5000,
+    "parentNativeWarmMoveMs": 19.021600000000035,
+    "currentNativeWarmMoveMs": 18.241699999998673,
+    "HTMLPolicyWarmMoveMs": 311.4370999999992,
+    "HTMLPolicyWarmEditMs": 311.22339999999895
+  }
+]
