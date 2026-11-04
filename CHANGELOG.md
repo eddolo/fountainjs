@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Repair Markdown boundaries in affected sequences before proposing complete
+  source after a child block changes kind. Avoid the repeated rejected-draft
+  path for supported heading/code-to-paragraph conversions; retain unaffected
+  compact source, complete-document proof and existing fallback. Add permanent
+  three-engine toolbar/history/download coverage and ordered/bulleted package/
+  Worker cases. Public signatures, syntax scores and numerical limits stay the
+  same; broader failed-draft and host input responsiveness work remains open.
+
 - Reduce redundant parsing during source-preserving Markdown export when a
   captured complete-document parser can prove the proposed result. Retain exact
   Fountain-node equality, original-policy validation and the existing repair

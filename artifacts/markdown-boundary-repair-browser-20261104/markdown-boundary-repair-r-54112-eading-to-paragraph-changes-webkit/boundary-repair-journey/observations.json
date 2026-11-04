@@ -1,0 +1,13 @@
+{
+  "engine": "webkit",
+  "nativeParagraphToolbar": true,
+  "nestedParagraphToolbar": true,
+  "nativeTyping": true,
+  "undoOriginalExact": true,
+  "redoExact": true,
+  "onlyNecessarySeparatorsChanged": true,
+  "referencesRetained": true,
+  "completeExpectedModelsChecked": true,
+  "actualDownloadedFileReopened": true,
+  "errors": []
+}

@@ -174,3 +174,24 @@ See `artifacts/markdown-source-export-proof-performance-review-20261104.json`,
 `artifacts/source-proof-loaded-build-size-review-20261104.json`, and the before/
 after CPU summaries. Earlier pre-observer-fix timings and the failing observer
 regression are retained. This measurement does not certify a release or parity.
+
+## Block-kind repair checkpoint, 2026-11-04
+
+Check/repair a changed child block's sequence before the complete draft proof.
+This adds 47 raw bytes to root/core static closures, and 22/23 gzip bytes. Root
+is 738.3 KiB raw / 228.1 KiB gzip; core is 397.7 / 133.3 KiB. React/DOCX remain
+unchanged. Individual entries and CSS pass; aggregate ceilings are unchanged and
+fail by about 17.0 KiB ESM / 12.8 KiB CommonJS. No capacity proposal was applied.
+
+Against the actual 979c670 archive, the 1,000-paragraph heading-to-paragraph repair
+probe improves from 521.7 to 186.2 ms, keeping exact source outside the necessary
+separator repair and complete model equality. A 5,000-paragraph ordinary text edit
+measures 366.2 / 364.1 ms; no general capture or small-sample improvement is
+claimed. These are five-sample throttled Windows serialization timings. Existing
+editor latency/growth and retained-memory gates pass unchanged; no full input-
+responsiveness claim follows. Host scheduling of complete export remains a
+separate audit, beginning with the issue workflow's eager export memo.
+
+See `artifacts/markdown-boundary-repair-performance-review-20261104.json`,
+`artifacts/boundary-repair-loaded-build-size-review-20261104.json` and the sampled
+CPU profiles/summaries. Before/after archives retain the same supported source.

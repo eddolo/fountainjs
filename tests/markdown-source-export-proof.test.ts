@@ -46,6 +46,27 @@ describe('complete-document proof before accepting source drafts', () => {
     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(document.toJSON());
   });
 
+  it.each(['\n', '\r\n', '\r'])('repairs block-kind boundaries without changing unrelated compact source (%j)', ending => {
+    const schema = new Schema(CoreSchemaSpec);
+    const cases = [
+      { lines: ['> # Title ###', '> Following __source__ [ref].', '>', '> ## Other ###', '> Last.'],
+        before: '> # Title ###', after: ['> Changed.', '> '], path: [1, 0] },
+      { lines: ['> > # Title ###', '> > Following __source__ [ref].', '> >', '> > ## Other ###', '> > Last.'],
+        before: '> > # Title ###', after: ['> > Changed.', '> > '], path: [1, 0, 0] },
+      { lines: ['> ```js', '> first', '> ```', '> Following __source__ [ref].', '>', '> ## Other ###', '> Last.'],
+        before: ['> ```js', '> first', '> ```'].join(ending), after: ['> Changed.', '> '], path: [1, 0] },
+    ];
+    for (const item of cases) {
+      const source = ['# Keep [link][ref] ###', '', '> [ref]: /target', '>', ...item.lines, ''].join(ending);
+      const imported = MarkdownImporter.parseWithSource(source, schema);
+      const document = replace(imported.document, item.path, schema.node('paragraph', {}, [schema.text('Changed.')]));
+      const result = MarkdownExporter.exportWithSource(document, imported.source);
+      expect(result.preservation).toBe('blocks');
+      expect(result.markdown).toBe(source.replace(item.before + ending, item.after.join(ending) + ending));
+      expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(document.toJSON());
+    }
+  });
+
   it('does not leak generated reference definitions from discarded drafts', () => {
     const schema = new Schema(CoreSchemaSpec);
     const imported = MarkdownImporter.parseWithSource(original.replaceAll('[ref]', '[ref-1]'), schema);

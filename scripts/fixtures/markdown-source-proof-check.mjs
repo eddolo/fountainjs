@@ -32,6 +32,37 @@ export function checkMarkdownSourceProof(api, specification = api.CoreSchemaSpec
       || !equal(api.MarkdownImporter.parse(result.markdown, schema), document)) throw Error('Draft rejection bypassed separator repair.');
     checks++;
   }
+  for (const ending of ['\n', '\r\n', '\r']) {
+    for (const item of [
+      { lines: ['> # Title ###', '> Following __source__ [ref].', '>', '> ## Other ###', '> Last.'],
+        before: '> # Title ###', after: ['> Changed.', '> '], path: [1, 0] },
+      { lines: ['> > # Title ###', '> > Following __source__ [ref].', '> >', '> > ## Other ###', '> > Last.'],
+        before: '> > # Title ###', after: ['> > Changed.', '> > '], path: [1, 0, 0] },
+      { lines: ['> ```js', '> first', '> ```', '> Following __source__ [ref].', '>', '> ## Other ###', '> Last.'],
+        before: ['> ```js', '> first', '> ```'].join(ending), after: ['> Changed.', '> '], path: [1, 0] },
+    ]) {
+      const raw = ['# Keep [link][ref] ###', '', '> [ref]: /target', '>', ...item.lines, ''].join(ending);
+      const captured = api.MarkdownImporter.parseWithSource(raw, schema);
+      const document = replace(captured.document, item.path, schema.node('paragraph', {}, [schema.text('Changed.')]));
+      const result = api.MarkdownExporter.exportWithSource(document, captured.source);
+      if (result.markdown !== raw.replace(item.before + ending, item.after.join(ending) + ending)
+        || !equal(api.MarkdownImporter.parse(result.markdown, schema), document)) throw Error('Kind-change repair rewrote unrelated compact source.');
+      checks++;
+    }
+  }
+  for (const ending of ['\n', '\r\n', '\r']) for (const prefix of ['*   ', '7) ']) {
+    const continuation = ' '.repeat(prefix.length);
+    const raw = ['# Keep [link][ref] ###', '', prefix + '[ref]: /target', '', continuation + '# Title ###',
+      continuation + 'Following __source__ [ref].', '', prefix + 'Tail.', ''].join(ending);
+    const captured = api.MarkdownImporter.parseWithSource(raw, schema), list = captured.document.child(1), item = list.child(0);
+    const document = captured.document.copy([captured.document.child(0), list.copy([item.copy([
+      schema.node('paragraph', {}, [schema.text('Changed.')]), ...item.content.slice(1),
+    ]), ...list.content.slice(1)])]);
+    const result = api.MarkdownExporter.exportWithSource(document, captured.source);
+    if (result.markdown !== raw.replace(continuation + '# Title ###' + ending, continuation + 'Changed.' + ending + continuation + ending)
+      || !equal(api.MarkdownImporter.parse(result.markdown, schema), document)) throw Error('List kind-change repair lost source or content.');
+    checks++;
+  }
   const references = api.MarkdownImporter.parseWithSource(source.replaceAll('[ref]', '[ref-1]'), schema);
   const linked = replace(references.document, [1, 1], schema.node('paragraph', {}, [schema.text('New link', [schema.mark('link', { href: '/new' })])]));
   const result = api.MarkdownExporter.exportWithSource(linked, references.source, { linkStyle: 'reference' });

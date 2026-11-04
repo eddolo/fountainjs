@@ -1,5 +1,42 @@
 # Markdown semantics and source fidelity
 
+## Block-kind boundary repair (2026-11-04, unreleased follow-up)
+
+Changing a captured child block's kind can remove the syntax that separated it
+from its neighbour: a heading followed immediately by text becomes two paragraphs
+that need a blank line. The affected sequence now runs its existing local
+boundary proof/repair before proposing the complete source candidate. Other
+sequences keep their original compact spelling. Complete-document equality with
+the captured parser policy is still mandatory; failed proposals retain the
+existing fallback. Native captures without a complete parser retain their local
+validation path. This adds no acceptance cache or parser dependency.
+
+All 3,888 units / 266 files pass. Three new parameterized tests cover nine quote,
+nested-quote and code-block kind/line-ending combinations. Public package and
+Worker checks also cover six ordered/bulleted list combinations. Types/API/
+headless, package/workerd, unchanged conformance and local latency/retention gates
+pass. Three recorded desktop journeys use the real Paragraph toolbar in Chromium,
+Firefox and WebKit, with nested demotion, undo/redo, native typing, complete-model
+checks and actual downloaded-file reopening. Eighteen CRLF exports reopen
+correctly; twelve captures and six sampled frames per recording were reviewed.
+
+The 1,000-paragraph kind-change repair probe improves from about 522 to 186 ms
+against the actual 979c670 archive, preserving the same source and model. The
+ordinary 5,000-paragraph text-edit probe measures about 366 / 364 ms; capture and
+small-sample timings vary, with no claimed improvement. These are five-sample
+throttled Windows serialization measurements, not keystroke or competitive
+benchmarks. This supersedes the earlier heading-to-paragraph repair regression;
+it does not remove every possible failed-draft cost.
+
+Root/core import closures add 47 raw bytes and 22/23 gzip bytes; React/DOCX stay
+unchanged. Existing individual entry/CSS caps pass; aggregate capacity acceptance
+and full current-head CI remain open. The next direct UI audit includes eager
+host serialization, such as `IssueEditor.tsx`'s `exportWithSource` memo on document
+changes. Export timing alone does not prove input responsiveness. Footnote,
+nested HTML-adapter and independent inline source ownership, broader CommonMark
+and release certification remain open. Evidence:
+`artifacts/markdown-boundary-repair-verification-20261104.json`.
+
 ## Complete-result source proof (2026-11-04, unreleased follow-up)
 
 Snapshots with a private complete-document parser first propose source patches

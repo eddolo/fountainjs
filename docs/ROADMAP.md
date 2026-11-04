@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Block-kind boundary repair follow-up (2026-11-04, unreleased): validate/repair
+only an affected sequence when a changed child kind removes a Markdown boundary,
+then still require complete Fountain-document proof. The 1,000-paragraph repair
+probe falls from 522 to 186 ms; the 5,000-paragraph text-edit probe stays near
+366 / 364 ms. Root/core import closures add 47 raw bytes. All 3,888 units / 266
+files, three recorded Paragraph-toolbar journeys, types/API/headless, package/
+workerd, unchanged conformance and latency/retention gates pass. Captures and
+sampled recordings were reviewed. Full current-head CI and aggregate capacity
+remain open. Next audit actual large-workflow input responsiveness, starting with
+`IssueEditor.tsx:66`'s eager export memo. Other failed-draft costs, source ownership
+and full CommonMark remain open. No parity or release promotion.
+[Contract](MARKDOWN_SOURCE.md#block-kind-boundary-repair-2026-11-04-unreleased-follow-up).
+
 Complete-result source-proof optimization (2026-11-04, unreleased): remove
 redundant fragment checks only when the original complete parser proves exact
 Fountain-node equality. Keep repair/fallback, source spelling, reference scope

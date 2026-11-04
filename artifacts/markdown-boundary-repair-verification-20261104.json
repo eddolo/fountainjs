@@ -1,0 +1,533 @@
+{
+  "branch": "perf/markdown-boundary-repair-20261104",
+  "parentRuntimeCommit": "979c670a754422aeadd1c99861e4c7f2d62f3705",
+  "runtimeSourceSHA256": {
+    "src/core/importers/markdown-importer.ts": "8e5d00ae7a6ae412d1f432f4f5795f94dcb00f88ed4850b3eff643983607a359",
+    "src/core/markdown-nested-source.ts": "1c984a09db915ec3d4458819ebcf140337d0589d636ed3e52bffe0abfed15e53",
+    "src/core/markdown-source-boundary.ts": "1633cff94a7ac64db1eb3a04c4be9922d4e31e14362426542497ba4b910ccf95",
+    "src/core/exporters/markdown-exporter.ts": "9b3f56bb7cdd3e473ddbd668e346115725f54220b95c01975afa900d629709e7"
+  },
+  "builtSourceMapMatchesCurrentRuntimeSources": true,
+  "unitTests": 3888,
+  "unitFiles": 266,
+  "newParameterizedUnitTests": 3,
+  "quoteAndCodeKindChangeCombinations": 9,
+  "additionalPortableListCombinations": 6,
+  "recordedDesktopJourneys": [
+    {
+      "observations": {
+        "engine": "chromium",
+        "nativeParagraphToolbar": true,
+        "nestedParagraphToolbar": true,
+        "nativeTyping": true,
+        "undoOriginalExact": true,
+        "redoExact": true,
+        "onlyNecessarySeparatorsChanged": true,
+        "referencesRetained": true,
+        "completeExpectedModelsChecked": true,
+        "actualDownloadedFileReopened": true,
+        "errors": []
+      },
+      "videoSHA256": "d71b17b68eb6e0a83bdc12451624b5753134ef27871ad2078757d792aa78b17f"
+    },
+    {
+      "observations": {
+        "engine": "firefox",
+        "nativeParagraphToolbar": true,
+        "nestedParagraphToolbar": true,
+        "nativeTyping": true,
+        "undoOriginalExact": true,
+        "redoExact": true,
+        "onlyNecessarySeparatorsChanged": true,
+        "referencesRetained": true,
+        "completeExpectedModelsChecked": true,
+        "actualDownloadedFileReopened": true,
+        "errors": []
+      },
+      "videoSHA256": "af521259d23efc55f8048b39ce364fb9b9255781d7225b98e4c251a0cb2d8442"
+    },
+    {
+      "observations": {
+        "engine": "webkit",
+        "nativeParagraphToolbar": true,
+        "nestedParagraphToolbar": true,
+        "nativeTyping": true,
+        "undoOriginalExact": true,
+        "redoExact": true,
+        "onlyNecessarySeparatorsChanged": true,
+        "referencesRetained": true,
+        "completeExpectedModelsChecked": true,
+        "actualDownloadedFileReopened": true,
+        "errors": []
+      },
+      "videoSHA256": "302aa63fb35d58764f6bbe756cf146516b56fedf3a99240b2ba8c3758546f2ee"
+    }
+  ],
+  "downloadedMarkdownFiles": 18,
+  "inputMarkdownFiles": 3,
+  "browserFiles": [
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/both-demoted.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "43048ef067b3dfc25a213b301841ded3e6f9d6de1b2b9f0b7246097651bcab27"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/demoted.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "ed34763406f35169fe1e81619df155090a430b88a510ab98cffb7487e0d26a6e"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/edited.md",
+      "kind": "download",
+      "bytes": 247,
+      "sha256": "ad594f3b00e6e7fbd1744f7f3153b9cd923a875878af519285ab50361fb0c001"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/original.md",
+      "kind": "input",
+      "bytes": 240,
+      "sha256": "707ad290136ad1c6e4488a66a817a1aba3a9e5494be42d98cc09798165ae358a"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/redone.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "ed34763406f35169fe1e81619df155090a430b88a510ab98cffb7487e0d26a6e"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/reopened.md",
+      "kind": "download",
+      "bytes": 247,
+      "sha256": "ad594f3b00e6e7fbd1744f7f3153b9cd923a875878af519285ab50361fb0c001"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-chromium/boundary-repair-journey/undone.md",
+      "kind": "download",
+      "bytes": 240,
+      "sha256": "707ad290136ad1c6e4488a66a817a1aba3a9e5494be42d98cc09798165ae358a"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/both-demoted.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "43048ef067b3dfc25a213b301841ded3e6f9d6de1b2b9f0b7246097651bcab27"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/demoted.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "ed34763406f35169fe1e81619df155090a430b88a510ab98cffb7487e0d26a6e"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/edited.md",
+      "kind": "download",
+      "bytes": 247,
+      "sha256": "ad594f3b00e6e7fbd1744f7f3153b9cd923a875878af519285ab50361fb0c001"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/original.md",
+      "kind": "input",
+      "bytes": 240,
+      "sha256": "707ad290136ad1c6e4488a66a817a1aba3a9e5494be42d98cc09798165ae358a"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/redone.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "ed34763406f35169fe1e81619df155090a430b88a510ab98cffb7487e0d26a6e"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/reopened.md",
+      "kind": "download",
+      "bytes": 247,
+      "sha256": "ad594f3b00e6e7fbd1744f7f3153b9cd923a875878af519285ab50361fb0c001"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-firefox/boundary-repair-journey/undone.md",
+      "kind": "download",
+      "bytes": 240,
+      "sha256": "707ad290136ad1c6e4488a66a817a1aba3a9e5494be42d98cc09798165ae358a"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/both-demoted.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "43048ef067b3dfc25a213b301841ded3e6f9d6de1b2b9f0b7246097651bcab27"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/demoted.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "ed34763406f35169fe1e81619df155090a430b88a510ab98cffb7487e0d26a6e"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/edited.md",
+      "kind": "download",
+      "bytes": 247,
+      "sha256": "ad594f3b00e6e7fbd1744f7f3153b9cd923a875878af519285ab50361fb0c001"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/original.md",
+      "kind": "input",
+      "bytes": 240,
+      "sha256": "707ad290136ad1c6e4488a66a817a1aba3a9e5494be42d98cc09798165ae358a"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/redone.md",
+      "kind": "download",
+      "bytes": 238,
+      "sha256": "ed34763406f35169fe1e81619df155090a430b88a510ab98cffb7487e0d26a6e"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/reopened.md",
+      "kind": "download",
+      "bytes": 247,
+      "sha256": "ad594f3b00e6e7fbd1744f7f3153b9cd923a875878af519285ab50361fb0c001"
+    },
+    {
+      "path": "artifacts/markdown-boundary-repair-browser-20261104/markdown-boundary-repair-r-54112-eading-to-paragraph-changes-webkit/boundary-repair-journey/undone.md",
+      "kind": "download",
+      "bytes": 240,
+      "sha256": "707ad290136ad1c6e4488a66a817a1aba3a9e5494be42d98cc09798165ae358a"
+    }
+  ],
+  "visualReview": {
+    "editorCaptures": 12,
+    "sampledFramesPerRecording": 6,
+    "fullFrameByFramePlayback": false,
+    "finding": "Expected demotion, preserved nested quotes/links, native text edit and matching reopened document visible; no additional anomaly observed within this scope."
+  },
+  "permanentCIJourneyRegistered": true,
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 244,
+    "noFakeDOM": true,
+    "proofResults": [
+      25,
+      25,
+      25,
+      25
+    ],
+    "containerResults": [
+      36,
+      36,
+      36,
+      36
+    ]
+  },
+  "tarballSHA256": "d6a00b452c1c6c6b927ecb379bd398a07fef9379fd91eafb337629e98eb03935",
+  "archiveDistFilesByteEqualToVerifiedBuild": 865,
+  "actualBaselineTarballSHA256": "e811388990beeb3611de2f6f065c99ef51676b7d45f03d3cfa1e60abdd76e1ea",
+  "realWorkerdProofContracts": 25,
+  "publicDeclarationFiles": 419,
+  "headlessSourceModules": 122,
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "sourceExportPerformance": {
+    "baseline": "actual 979c670 tarball",
+    "samples": 5,
+    "hardLimitsChanged": false,
+    "rejectedDraftProbe": {
+      "count": 1000,
+      "scenario": "Heading changed to paragraph requires quoted blank-line repair",
+      "before": {
+        "medianMs": 521.6765000000014,
+        "samplesMs": [
+          521.6765000000014,
+          522.0169999999998,
+          519.5617999999959,
+          522.6618000000017,
+          517.2200999999986
+        ]
+      },
+      "after": {
+        "medianMs": 186.1898000000001,
+        "samplesMs": [
+          186.0613000000012,
+          188.33069999999861,
+          185.04669999999896,
+          189.07180000000517,
+          186.1898000000001
+        ]
+      }
+    },
+    "scope": "Source-preserving serialization of one edited quoted paragraph with container-carried global definitions; not keystroke latency",
+    "records": [
+      {
+        "count": 100,
+        "referenceCount": 100,
+        "inputCodeUnits": 7083,
+        "before": {
+          "distinctExports": {
+            "medianMs": 9.609300000000019,
+            "samplesMs": [
+              10.140899999999988,
+              9.8279,
+              7.641500000000008,
+              9.609300000000019,
+              8.1447
+            ]
+          },
+          "firstEditExportMs": 31.34989999999999,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 24.09639999999996,
+            "samplesMs": [
+              24.09639999999996,
+              21.290099999999995,
+              20.622900000000016,
+              28.39300000000003,
+              26.834900000000005
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 7.619499999999903,
+            "samplesMs": [
+              7.619499999999903,
+              6.922199999999975,
+              7.3238999999999805,
+              14.36080000000004,
+              11.455299999999966
+            ]
+          }
+        },
+        "after": {
+          "distinctExports": {
+            "medianMs": 8.595900000000029,
+            "samplesMs": [
+              9.897199999999998,
+              8.595900000000029,
+              8.942699999999945,
+              8.55239999999992,
+              7.927099999999996
+            ]
+          },
+          "firstEditExportMs": 32.16899999999998,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 23.689200000000028,
+            "samplesMs": [
+              23.689200000000028,
+              21.21939999999995,
+              36.6567,
+              18.51290000000006,
+              30.672899999999913
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 11.402799999999957,
+            "samplesMs": [
+              8.909999999999968,
+              6.489599999999996,
+              12.324700000000007,
+              11.402799999999957,
+              25.7491
+            ]
+          }
+        }
+      },
+      {
+        "count": 1000,
+        "referenceCount": 1000,
+        "inputCodeUnits": 74583,
+        "before": {
+          "distinctExports": {
+            "medianMs": 79.45910000000003,
+            "samplesMs": [
+              80.11419999999998,
+              79.45910000000003,
+              89.25800000000004,
+              72.75,
+              76.33030000000008
+            ]
+          },
+          "firstEditExportMs": 172.9813999999999,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 217.3474000000001,
+            "samplesMs": [
+              217.3474000000001,
+              223.45110000000022,
+              214.79820000000018,
+              245.52829999999994,
+              212.39879999999994
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 75.33800000000019,
+            "samplesMs": [
+              73.42970000000014,
+              75.33800000000019,
+              77.66830000000027,
+              74.09620000000041,
+              87.77359999999999
+            ]
+          }
+        },
+        "after": {
+          "distinctExports": {
+            "medianMs": 73.49250000000029,
+            "samplesMs": [
+              73.49250000000029,
+              73.46020000000044,
+              74.15489999999954,
+              72.16089999999986,
+              74.1884
+            ]
+          },
+          "firstEditExportMs": 151.1520999999998,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 212.45730000000003,
+            "samplesMs": [
+              212.45730000000003,
+              229.02289999999994,
+              208.30389999999989,
+              213.84850000000006,
+              209.15599999999995
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 72.1869999999999,
+            "samplesMs": [
+              71.99039999999968,
+              72.89980000000014,
+              72.1869999999999,
+              80.91030000000046,
+              70.51370000000043
+            ]
+          }
+        }
+      },
+      {
+        "count": 5000,
+        "referenceCount": 5000,
+        "inputCodeUnits": 390583,
+        "before": {
+          "distinctExports": {
+            "medianMs": 376.83979999999974,
+            "samplesMs": [
+              382.04399999999987,
+              374.57340000000113,
+              384.86129999999866,
+              376.83979999999974,
+              373.21420000000035
+            ]
+          },
+          "firstEditExportMs": 714.3167000000003,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 1072.6497999999992,
+            "samplesMs": [
+              1074.6021,
+              1072.6497999999992,
+              1068.6724999999988,
+              1130.1683999999987,
+              1063.987799999999
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 366.16400000000067,
+            "samplesMs": [
+              366.16400000000067,
+              364.4624999999978,
+              363.84519999999975,
+              371.31440000000293,
+              369.66259999999966
+            ]
+          }
+        },
+        "after": {
+          "distinctExports": {
+            "medianMs": 368.07780000000275,
+            "samplesMs": [
+              368.07780000000275,
+              364.1262999999999,
+              354.8283999999985,
+              373.2128999999986,
+              369.3019999999997
+            ]
+          },
+          "firstEditExportMs": 694.5489000000016,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 1159.5400000000009,
+            "samplesMs": [
+              1058.943800000001,
+              1067.7681999999986,
+              1201.6440999999977,
+              1159.5400000000009,
+              1223.253099999998
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 364.14979999999923,
+            "samplesMs": [
+              394.6919000000016,
+              364.14979999999923,
+              363.66059999999925,
+              368.08410000000003,
+              361.6367999999966
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "sampledCPU": {
+    "before": {
+      "rawSHA256": "2e5b2fdb34b1430a2b7ca1c10c8844f2d2beb2290d73b6a12c7a2e03121ac8e0",
+      "gzipSHA256": "e09fdae745eda361b68b51c1a07b8695444c0fbfe832294377d26a43bb6039d9",
+      "summary": {
+        "method": "V8 sampled CPU time attributed through shipped source maps to nearest validation/capture ancestor; includes four exports and initial capture",
+        "milliseconds": {
+          "complete-document validation": 851.24,
+          "nested patch construction and validation": 847.93,
+          "other": 549.99,
+          "adjacent-block validation": 471.66,
+          "initial source capture": 178.46
+        }
+      }
+    },
+    "after": {
+      "rawSHA256": "b70200088c55a6affefc0dddb86206e65d0dbeab8474f22e5ceba067f5d85037",
+      "gzipSHA256": "e2c7a07d3b20fb851b83c7b115e73be50ccb7b4be9569bb7d3807c738b9bbcfc",
+      "summary": {
+        "method": "V8 sampled CPU time attributed through shipped source maps to nearest validation/capture ancestor; includes four exports and initial capture",
+        "milliseconds": {
+          "nested patch construction and validation": 607.56,
+          "other": 408.87,
+          "complete-document validation": 304.46,
+          "initial source capture": 166.92
+        }
+      }
+    }
+  },
+  "localLatencyAndRetentionAcceptance": "passed without changed limits",
+  "sizeAcceptance": {
+    "changedLimits": false,
+    "failures": [
+      "all ESM runtime code exceeds its budget by 17.0 KiB",
+      "all CommonJS runtime code exceeds its budget by 12.8 KiB"
+    ],
+    "individualEntriesAndCSS": "passed"
+  },
+  "remainingScope": [
+    "other failed-draft costs",
+    "large-workflow input responsiveness and eager host serialization",
+    "footnote source ownership",
+    "nested HTML-adapter ownership",
+    "independent inline source ownership",
+    "full CommonMark",
+    "fresh full CI",
+    "aggregate size review"
+  ],
+  "fullParityOrPublicationCertified": false
+}

@@ -80,15 +80,21 @@ function edits(capture: MarkdownNestedCapture, current: Node, canonical: Canonic
   if (record.kind === 'sequence') {
     if (current.childCount !== record.children.length) return null;
     const result: MarkdownSourceEdit[] = [];
+    let checkBoundary = validate;
     for (const [index, child] of record.children.entries()) {
       const value = current.child(index);
       if (child.node.eq(value)) continue;
       const nested = child.capture ? edits(child.capture, value, canonical, [...path, index], false, validate) : null;
       if (nested !== null) result.push(...nested.map(edit => ({ ...edit, from: child.from + edit.from, to: child.from + edit.to })));
-      else if (child.canonical) result.push({ from: child.from, to: child.to, text: canonical(value, [...path, index]) });
+      else if (child.canonical) {
+        // A different block kind can remove a delimiter separating neighbours.
+        // Repair only this affected sequence before proposing a complete draft.
+        checkBoundary ||= child.node.type.name !== value.type.name;
+        result.push({ from: child.from, to: child.to, text: canonical(value, [...path, index]) });
+      }
       else return null;
     }
-    if (validate && record.parse) {
+    if (checkBoundary && record.parse) {
       const matches = (changes: readonly MarkdownSourceEdit[]): boolean => {
         const candidate = apply(record.source, changes);
         if (candidate === null) return false;

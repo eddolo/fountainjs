@@ -36,6 +36,7 @@ import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boun
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
 import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
 import { runMarkdownContainerReferenceJourney } from './markdown-container-reference-journey';
+import { runMarkdownBoundaryRepairJourney } from './markdown-boundary-repair-journey';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
@@ -7642,4 +7643,8 @@ test('shows specific discarded HTML and rejected URL losses in both conversion s
   await expect(htmlNotes).toContainText('Images with missing or unsafe');
   await expect(htmlNotes).not.toContainText('private');
   await expect(output.locator('pre')).toHaveText('<p>Notice label end</p>');
+});
+
+test('repairs source after native nested heading-to-paragraph changes', async ({ page }, info) => {
+  await runMarkdownBoundaryRepairJourney(page, info);
 });
