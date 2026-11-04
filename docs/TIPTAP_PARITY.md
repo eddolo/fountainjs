@@ -1,5 +1,12 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Capacity follow-up (2026-11-04, unmerged): the user approved the reviewed
+seven-limit layout allowance. The exact patch is applied and the authoritative
+build-size gate passes. Other limits and semantic/reference/performance checks
+are unchanged. This supersedes the size-blocker status in the earlier checkpoints
+below; refreshed full CI and the remaining capability/fidelity work are still
+required. No capability row or completion percentage is promoted.
+
 Table/release checkpoint (2026-11-04, unmerged): fractional column geometry and
 stationary-resize history are repaired, with 3,628 unit cases, three recorded
 desktop workflows, packed ESM/CJS, workerd and independent native width evidence.

@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+Approved release-capacity checkpoint (2026-11-04, unmerged): the user approved
+the exact seven-limit layout proposal after reviewing its measurements and
+unapplied patch. Those seven raw-size ceilings are now applied; the authoritative
+size gate passes. All other limits, runtime/retention and semantic/reference
+checks remain unchanged. The earlier failing logs and original proposal remain
+as historical evidence. Full CI on this checkpoint is still required before
+release; broader format and CommonMark gaps remain open. No parity promotion.
+
 Release-validation checkpoint (2026-11-04, unmerged): document-schema resolution
 now works in TypeScript's legacy mode. Validation discovers all 40 applicable
 public entries rather than an incomplete fixed list, with Angular's ESM-only

@@ -33,8 +33,9 @@ the corresponding 120 / 80 native-unit XML declaration; complete-document equali
 remains required. That journey passes locally in Chromium, Firefox and WebKit
 (`artifacts/docx-retention-expectation-browser-20261104.log`). The broad cloud
 matrix must still run against this correction. Performance and real Lean cloud
-checks passed on the preceding commit. Seven size failures remain; no limit or
-runtime code changes are included in this expectation correction.
+checks passed on the preceding commit. The user subsequently approved the exact
+seven-limit layout allowance; the authoritative size gate now passes. The
+expectation correction itself changes no runtime code. Full CI remains required.
 
 ## Remaining placement boundaries
 
@@ -52,5 +53,5 @@ renderer default as ordinary Fountain image spacing. The next boundary decision
 is faithful source-declaration retention and an explicit receiving-renderer policy.
 [Pinned LibreOffice implementation](https://github.com/LibreOffice/core/blob/libreoffice-24.2.7.2/writerfilter/source/dmapper/GraphicImport.cxx#L282).
 
-These are ongoing fidelity repairs. They do not change completion percentages or
-authorize a release, new capacity allowance or npm publication.
+These are ongoing fidelity repairs. The approved capacity allowance does not
+change completion percentages or authorize a release or npm publication.

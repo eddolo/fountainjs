@@ -10,8 +10,9 @@ policy on reopen. Native layout certification remains outstanding.
 - Resolve the published document schema in TypeScript's legacy module-resolution
   mode. CI and release validation now discover public entry points automatically,
   including newer integrity, table-of-contents and HTML modules; Angular remains
-  separately checked under its ESM-only contract. Mandatory build-size limits are
-  unchanged.
+  separately checked under its ESM-only contract. That metadata repair changes
+  no runtime/declaration bytes. The separately reviewed seven-limit layout
+  capacity allowance is now approved and applied; other limits remain unchanged.
 
 - Preserve fractional table-column widths through Word and safe HTML instead of
   rounding at import. Retain partial unknown-column metadata, report actual native
@@ -19,7 +20,8 @@ policy on reopen. Native layout certification remains outstanding.
   Stationary resize handles no longer change widths or consume undo. Native table
   placement and broader fidelity remain separate work. Full units pass 3,628;
   recorded desktop journeys, packed ESM/CJS, workerd and independent native column
-  geometry pass. Size acceptance and the refreshed broad cloud matrix remain open.
+  geometry pass. The approved size gate passes; refreshed full cloud CI and broader
+  fidelity remain open.
 
 - Retain equation-only Word paragraph geometry and font context on display math;
   preserve it through live source edits, history, safe HTML and native semantic

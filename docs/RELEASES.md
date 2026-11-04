@@ -147,16 +147,17 @@ Unmerged validation checkpoint, 2026-11-04: the packed schema-resolution repair
 passes strict analysis of 40 discovered entries, separate Angular ESM analysis,
 package loading, publint and the site build. See
 `artifacts/package-schema-verification-20261104.json` and the corresponding logs.
-These checks do not certify a release. The seven current size failures remain
-enforced. A measured candidate allowance is prepared in
+These checks do not certify a release. The measured candidate allowance in
 `artifacts/layout-capacity-proposal-20261104.patch`, with exact byte measurements
-in `artifacts/layout-capacity-measurements-20261104.json`; it is unapplied and not
-covered by the earlier, smaller theme-language allowance approval. It changes
-only seven raw-size ceilings, using quarter-KiB rounding; all other entry,
-runtime-performance, retention, semantic and reference checks remain unchanged.
-The candidate passes the existing size checker in a separate artifact file;
-the authoritative checker still fails. This is capacity for implemented
-fidelity/geometry code, not a speed improvement or format-parity certification.
+in `artifacts/layout-capacity-measurements-20261104.json`, received separate user
+approval after the smaller theme-language allowance. The exact seven-limit patch
+is now applied and the authoritative size gate passes. The original unapplied
+proposal, candidate check and pre-approval failure remain historical evidence;
+`artifacts/layout-capacity-approval-verification-20261104.json` records the applied
+contract. Only those seven raw-size ceilings change, using quarter-KiB rounding;
+all other entry, runtime-performance, retention, semantic and reference checks
+remain unchanged. This is capacity for implemented fidelity/geometry code, not a
+speed improvement or format-parity certification. Fresh full CI is still required.
 
 The release workflow must never publish from an arbitrary branch head or infer
 a version from a GitHub release title.

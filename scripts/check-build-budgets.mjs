@@ -10,11 +10,11 @@ const limits = Object.freeze({
   // Platform-neutral semantic-math validation adds ~0.4 KiB to the facade.
   // Shared serializer chunk aliases add 17/23 bytes to the ESM/CJS facades
   // for the optional source writer; neither facade imports the source parser.
-  'dist/core.js': 9 * kibibyte + 64,
+  'dist/core.js': 9.5 * kibibyte,
   // Row schema metadata reshuffles shared CJS aliases by less than 128 bytes.
   // Two additive bookmark exports: facade measured 8,329 bytes (+9 over the
   // prior ceiling). This 64-byte capacity adjustment adds no dependency.
-  'dist/core.cjs': 8 * kibibyte + 256,
+  'dist/core.cjs': 8.75 * kibibyte,
   // Provider-neutral document tools are an isolated, DOM-free entry. Their
   // bounded reads, complete portable function schemas, strict structural
   // validation, and reviewed schema-valid mutations are all opt-in.
@@ -86,8 +86,8 @@ const limits = Object.freeze({
   // capacity only, not permission to relax conversion/runtime/heap contracts.
   // Approved theme-language capacity: +739 / 599 measured bytes.
   // Retain all independent semantic, CSS, runtime and heap gates.
-  'dist/docx.js': 185 * kibibyte,
-  'dist/docx.cjs': 149.5 * kibibyte,
+  'dist/docx.js': 210.75 * kibibyte,
+  'dist/docx.cjs': 170.75 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -258,7 +258,7 @@ const limits = Object.freeze({
   // highlights add ~0.2 KiB. Bound the stylesheet at 86.4 KiB.
   // A separate accessible CSS code gutter replaces inline line-number widgets:
   // +612 bytes, measured 87.330 KiB. Keep only 174 bytes of raw CSS headroom.
-  'dist/styles.css': 87.5 * kibibyte,
+  'dist/styles.css': 88.75 * kibibyte,
   // The aggregate includes every independently loadable surface. The optional
   // slash registry added about 10 KiB and contextual-menu core/React support
   // added about 9.5 KiB. Framework-neutral nested block controls add another
@@ -591,7 +591,7 @@ const limits = Object.freeze({
   // Physical preformatted breaks/reports and equivalent native caret affinity:
   // Including the smaller CSS-gutter plugin: +1,776 bytes, measured 1649.207 KiB.
   // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
-  'all ESM runtime code': 1652.5 * kibibyte,
+  'all ESM runtime code': 1691.25 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -671,7 +671,7 @@ const limits = Object.freeze({
   // Same heading marker/restoration: +295 bytes, measured 1371.318 KiB.
   // Same repair and smaller gutter: +1,585 bytes, measured 1372.867 KiB.
   // Initial code/CSS cap failures are retained; no latency/heap relaxation.
-  'all CommonJS runtime code': 1375.5 * kibibyte,
+  'all CommonJS runtime code': 1408.75 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
