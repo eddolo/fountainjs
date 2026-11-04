@@ -44,7 +44,16 @@ describe('opt-in bound DOCX math-source restoration', () => {
     const bytes = exportFile();
     const reopened = read(bytes);
     expect(allMath(reopened.document)).toEqual(allMath(doc));
-    expect(withoutExpressions(reopened.document.toJSON())).toEqual(withDOCXExportDefaults(doc.toJSON()));
+    const expected = withDOCXExportDefaults(doc.toJSON());
+    // This fixture omits display-paragraph context. Its generated Word Normal
+    // style independently declares Arial 11, 8 pt after and 1.15 line spacing;
+    // reopening now exposes those defaults instead of silently discarding them.
+    const content = expected.content!.map((node, index) => index === 1 ? { ...node, attrs: { ...node.attrs,
+      layout: { unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8,
+        lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto', keepWithNext: false,
+        keepLinesTogether: false, pageBreakBefore: false },
+    } } : node);
+    expect(withoutExpressions(reopened.document.toJSON())).toEqual({ ...expected, content });
     expect(reopened.document.child(0).child(1).attrs.expression).toEqual(expect.objectContaining({ type: 'text', value: 'x' }));
     expect(reopened.document.child(1).attrs.expression).toEqual(expect.objectContaining({ type: 'fraction' }));
     expect(reopened.report.fidelity).toBe('lossy');

@@ -30,7 +30,9 @@ PARAGRAPH_PHRASES = ["Experimental setup",
                   "Read the measurements without moving either vessel."]
 CAPTION_PHRASES = ["Figure 1 Probe positions in the two vessels",
                    "Figure 2 Cooling curves over thirty minutes"]
-LAYOUT_PHRASES = PARAGRAPH_PHRASES + CAPTION_PHRASES
+SECOND_PAGE_PHRASES = ["Model and measurements", "Newton cooling model", "Half cooling time",
+                       "The rate constants are 0.08 and 0.04 per minute.", "Recorded temperatures"]
+LAYOUT_PHRASES = PARAGRAPH_PHRASES + CAPTION_PHRASES + SECOND_PAGE_PHRASES
 
 
 def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES):
@@ -39,15 +41,18 @@ def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES):
     pages = [item for item in document.iter() if item.tag.rsplit("}", 1)[-1] == "page"]
     if not pages:
         raise RuntimeError("No independently extracted PDF page coordinates.")
-    words = [item for item in pages[0].iter() if item.tag.rsplit("}", 1)[-1] == "word"]
-    text = ["".join(item.itertext()) for item in words]
     result = {}
     for phrase in phrases:
+        page_index = 1 if phrase in SECOND_PAGE_PHRASES else 0
+        if page_index >= len(pages):
+            raise RuntimeError(f"Missing independent PDF page {page_index + 1}.")
+        words = [item for item in pages[page_index].iter() if item.tag.rsplit("}", 1)[-1] == "word"]
+        text = ["".join(item.itertext()) for item in words]
         target = phrase.split()
         indices = [index for index in range(len(text) - len(target) + 1)
                    if text[index:index + len(target)] == target]
         if len(indices) != 1:
-            raise RuntimeError(f"Expected one first-page paragraph: {phrase}")
+            raise RuntimeError(f"Expected one page {page_index + 1} paragraph: {phrase}")
         first = words[indices[0]]
         result[phrase] = {"x": float(first.attrib["xMin"]), "y": float(first.attrib["yMin"])}
     return result
@@ -140,10 +145,21 @@ caption_negative = position_deltas(caption_positions["source"], caption_position
 for phrase, expected_y in zip(CAPTION_PHRASES, [-3.2, -6.4]):
     if abs(caption_negative[phrase]["x"]) > 0.01 or abs(caption_negative[phrase]["y"] - expected_y) > 0.01:
         raise RuntimeError("The retained image-layout control did not exhibit its known caption drift.")
+
+math_control = Path("artifacts/image-paragraph-native-evidence-20261104/unpacked/native")
+math_phrases = SECOND_PAGE_PHRASES[2:]
+math_positions = {name: paragraph_positions(math_control / name / f"{name}.pdf",
+                 native / f"math-negative-control-{name}-bbox.txt", tools["pdftotext"], math_phrases)
+                 for name in ["source", "exported"]}
+math_negative = position_deltas(math_positions["source"], math_positions["exported"], math_phrases)
+for phrase, expected_y in zip(math_phrases, [1, 2, 2]):
+    if abs(math_negative[phrase]["x"]) > 0.01 or abs(math_negative[phrase]["y"] - expected_y) > 0.01:
+        raise RuntimeError("The retained equation-layout control did not exhibit its known cumulative drift.")
 deltas = position_deltas(results["source"]["paragraphPositions"], results["exported"]["paragraphPositions"])
 layout_check = {"scope": LAYOUT_PHRASES, "tolerancePt": 0.01, "deltasPt": deltas,
                 "negativeControl": {"retainedPreRepairPDF": str(control), "deltasPt": negative, "correctlyRejected": True},
-                "captionNegativeControl": {"retainedPreRepairPDF": str(caption_control), "deltasPt": caption_negative, "correctlyRejected": True}}
+                "captionNegativeControl": {"retainedPreRepairPDF": str(caption_control), "deltasPt": caption_negative, "correctlyRejected": True},
+                "mathNegativeControl": {"retainedPreRepairPDF": str(math_control), "deltasPt": math_negative, "correctlyRejected": True}}
 (root / "paragraph-position-report.json").write_text(json.dumps(layout_check, indent=2) + "\n", encoding="utf-8")
 if any(abs(value) > 0.01 for delta in deltas.values() for value in delta.values()):
     raise RuntimeError("Native paragraph position regression; inspect paragraph-position-report.json.")
