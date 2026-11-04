@@ -26,6 +26,33 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   await expect(workspace.locator('li code').filter({ hasText: /^paragraph-contextual-spacing-not-imported$/ })).toHaveCount(0);
   await editor.screenshot({ path: resolve(root, 'imported.png') });
 
+  const figures = editor.locator('figure:has(> img[data-fountain-paragraph-layout])');
+  await expect(figures).toHaveCount(2);
+  const sourceImageLayouts = [];
+  const sourceImageCaptionGaps = [];
+  for (const figure of await figures.all()) {
+    const image = figure.locator(':scope > img');
+    const caption = figure.locator(':scope > figcaption');
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0)).toBe(true);
+    const layout = JSON.parse(await image.getAttribute('data-fountain-paragraph-layout') ?? 'null');
+    expect(layout).toMatchObject({ unit: 'pt', spacingBefore: 0, spacingAfter: 7, fontFamily: 'Arial', fontSize: 11 });
+    sourceImageLayouts.push(layout);
+    sourceImageCaptionGaps.push(await gap(image, caption));
+    expect(sourceImageCaptionGaps.at(-1)).toBeCloseTo(28 / 3, 1);
+  }
+  const captionContent = figures.first().locator('[data-fountain-image-caption-content]');
+  const originalCaption = await captionContent.innerText();
+  await captionContent.click(); await page.keyboard.press('End'); await page.keyboard.type(' checked');
+  await expect(captionContent).toHaveText(originalCaption + ' checked');
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(captionContent).toHaveText(originalCaption);
+  // Playwright's default caret hiding mutates every [contenteditable] style,
+  // including protected custom blocks elsewhere in this scientific document.
+  // Their DOM-restoration observer can replace this screenshot's old handle.
+  // Capture the unmodified live page instead of injecting those style writes.
+  await figures.first().screenshot({ path: resolve(root, 'image-caption-restored.png'), caret: 'initial' });
+
   await paragraphs.first().click(); await page.keyboard.press('End'); await page.keyboard.press('Enter');
   await expect(items).toHaveCount(4);
   const empty = paragraphs.filter({ hasText: /^$/ });
@@ -94,9 +121,13 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   await expect(reopenedParagraphs).toHaveCount(3);
   const nativeReopenGap = await gap(reopenedParagraphs.nth(0), reopenedParagraphs.nth(1));
   expect(nativeReopenGap).toBeCloseTo(0, 1);
+  const reopenedImageLayouts = await reopened.locator('figure > img[data-fountain-paragraph-layout]').evaluateAll(images =>
+    images.map(image => JSON.parse(image.getAttribute('data-fountain-paragraph-layout') ?? 'null')));
+  expect(reopenedImageLayouts).toEqual(sourceImageLayouts);
   await reopened.screenshot({ path: resolve(root, 'native-export-reopened.png') });
   expect(errors).toEqual([]);
   await writeFile(resolve(root, 'observations.json'), JSON.stringify({ initialGaps, enteredHeight, emptyMarkerDiagnostic, readerGap, readerImages, nativeReopenGap,
+    sourceImageLayouts, reopenedImageLayouts, sourceImageCaptionGaps, captionTypedAndUndone: true,
     actualWordSource: true, enterUndoRedoBackspace: true, originalDeclaredAfterPt: 7,
     actualJSONAndHTMLDownloads: true, actualDOCXDownloadReopened: true,
     nativeExportRuleRetained: true, nativeWordSpacingCertified: false, errors }, null, 2) + '\n');

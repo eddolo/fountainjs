@@ -21,7 +21,7 @@ import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-e
 import { readParagraphLayout } from '../paragraph-layout';
 import { preformattedContent } from './html-preformatted';
 import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../text-direction';
-import { readImageCaptionAttributes } from '../image-caption';
+import { readImageCaptionAttributes, readImageParagraphAttributes } from '../image-caption';
 import { readTableLayout, readTableRow } from '../table-layout';
 import { readTableAppearance } from '../table-appearance';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
@@ -373,7 +373,7 @@ function imageNode(
       sizes: image.getAttribute('sizes') ?? '',
       loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '') ? image.getAttribute('decoding') : 'async',
-      ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement) } : {}),
+      ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
     }, caption, undefined, marks);
   } catch { return null; }
 }

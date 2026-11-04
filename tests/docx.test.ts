@@ -270,6 +270,11 @@ describe('DOCX interchange', () => {
     expect(archive['word/media/image1.png']).toEqual(Uint8Array.from(Buffer.from(ONE_PIXEL_PNG, 'base64')));
     const reopened = importDOCX(exported.bytes, schema).document.child(0);
     expect(reopened.toJSON()).toEqual({ ...original, attrs: { ...original.attrs,
+      imageLayout: {
+        unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 6, spacingAfter: 4,
+        lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
+        keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
+      },
       caption: '', captionAlign: 'center', captionLayout: {
         unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 8,
         lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto',

@@ -14,9 +14,9 @@ const EMPTY_STYLES = createWordRunStyleCascade({ styles: [] });
  * declaration somewhere in the imported document. Unused style identities do
  * not add foreign-format metadata to otherwise ordinary Fountain paragraphs.
  */
-export function retainWordSpacingGroups(blocks: readonly Node[], warn?: (path: readonly number[], caption: boolean) => void, owned: Iterable<string> = []): readonly Node[] {
+export function retainWordSpacingGroups(blocks: readonly Node[], warn?: (path: readonly number[], key: 'layout' | 'imageLayout' | 'captionLayout') => void, owned: Iterable<string> = []): readonly Node[] {
   const used = new Set<string>(owned);
-  const keys = ['layout', 'captionLayout'] as const;
+  const keys = ['layout', 'imageLayout', 'captionLayout'] as const;
   for (const block of blocks) block.descendants(node => {
     for (const key of keys) {
       const layout = node.attrs[key];
@@ -33,7 +33,7 @@ export function retainWordSpacingGroups(blocks: readonly Node[], warn?: (path: r
       const layout = result.attrs[key];
       if (!isParagraphLayout(layout) || layout.spacingGroup === undefined) continue;
       if (used.has(layout.spacingGroup)) {
-        if (key === 'captionLayout' || node.type.spec.paragraphFlow !== 'text') warn?.(path, key === 'captionLayout');
+        if (key !== 'layout' || node.type.spec.paragraphFlow !== 'text') warn?.(path, key);
         continue;
       }
       const { spacingGroup, ...declarations } = layout;

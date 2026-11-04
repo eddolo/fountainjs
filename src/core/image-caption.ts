@@ -1,6 +1,18 @@
 import type { Attributes } from './schema';
 import { paragraphLayoutAttribute, paragraphLayoutDOMAttributes, readParagraphLayout } from './paragraph-layout';
 
+/** The image body and its optional caption are separate paragraph contexts. */
+export const imageParagraphAttributes = { imageLayout: paragraphLayoutAttribute };
+
+export function imageParagraphDOMAttributes(attrs: Record<string, unknown>): Attributes {
+  return paragraphLayoutDOMAttributes(attrs.imageLayout);
+}
+
+export function readImageParagraphAttributes(element: { getAttribute(name: string): string | null }) {
+  const { layout } = readParagraphLayout(element);
+  return layout === undefined ? {} : { imageLayout: layout };
+}
+
 export const imageCaptionAttributes = {
   captionAlign: { default: undefined, validate: (value: unknown) => value === undefined || ['left', 'center', 'right', 'justify'].includes(String(value)) },
   captionLayout: paragraphLayoutAttribute,

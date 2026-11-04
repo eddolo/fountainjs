@@ -6,7 +6,7 @@ import { isSafeURL } from '../url';
 import { tableBackground } from '../table-background';
 import { quoteDOMAttributes, textBlockDOMAttributes } from '../explicit-emphasis';
 import { isMathExpression } from '../math-expression';
-import { imageCaptionDOMAttributes } from '../image-caption';
+import { imageCaptionDOMAttributes, imageParagraphDOMAttributes } from '../image-caption';
 import { tableDOMSpec, tableRowDOMSpec } from '../table-layout';
 import { cellAppearanceDOMAttributes } from '../table-appearance';
 import type { NodeDOMContext } from '../schema';
@@ -317,7 +317,9 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
       const height = imageSize(node.attrs.height, 'auto');
       const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
       const captionAttributes = Object.entries(imageCaptionDOMAttributes(node.attrs)).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
-      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="width:${escapeHTML(width)};max-width:100%"><img ${attributes} style="width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
+      const { style: imageStyle, ...imageLayout } = imageParagraphDOMAttributes(node.attrs);
+      const imageLayoutAttributes = Object.entries(imageLayout).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
+      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="width:${escapeHTML(width)};max-width:100%"><img ${attributes}${imageLayoutAttributes} style="${imageStyle ? `${escapeHTML(imageStyle)};` : ''}width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
     }
     case 'audio': {
       const attributes = playbackAttributes(node);

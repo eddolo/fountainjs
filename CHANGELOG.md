@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain an image body's portable paragraph layout separately from its caption
+  through JSON, safe HTML and native DOCX. Validate and expose the optional body,
+  caption-layout and caption-alignment fields in the block-image factory; remove
+  stale live image styles when formatting is cleared. Keep fractional image sizes
+  until conversion to Word integer units, and report paragraph layout omitted by
+  ordinary Markdown. Native visual verification is in progress; image/caption
+  contextual-flow projection remains explicitly unsupported.
+
 - Emit native document settings for every DOCX export so receiving engines
   initialize Word paragraph-spacing defaults. Repair the retained paper's
   initial 7 pt offset without rewriting its spacing declarations. Independent

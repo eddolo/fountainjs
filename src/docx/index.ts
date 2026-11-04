@@ -389,7 +389,9 @@ function wordPartPath(target: string, sourcePart = 'word/document.xml'): string 
 
 function pxFromEMU(value: string | undefined): string {
   const emu = Number(value);
-  return Number.isFinite(emu) && emu > 0 ? `${Math.max(1, Math.round(emu / 9525))}px` : 'auto';
+  // Six decimal CSS pixels resolve more finely than one native EMU;
+  // whole-pixel rounding changes figure size and every following caption.
+  return Number.isFinite(emu) && emu > 0 ? `${Math.max(1, Number((emu / 9525).toFixed(6)))}px` : 'auto';
 }
 
 function embeddedImageNode(
@@ -728,9 +730,14 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     message: 'Word quote paragraphs become separate isolated quote containers. Spacing intent is retained, but same-style adjacency across those containers is not projected.',
   });
   if (type === 'paragraph' && !isQuote && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
-    if (layout?.contextualSpacing !== undefined) issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
-      message: 'An image-only Word paragraph became an image block. Its original contextual paragraph spacing rule is not represented on that block.' });
-    return { node: schema.node('image_super', { ...content[0].attrs, align, caption: '' }) };
+    const retained = schema.nodes.image_super.spec.attrs?.imageLayout && layout;
+    if (layout && !retained) {
+      issues.push({ code: 'image-paragraph-layout-not-imported', severity: 'warning', path,
+        message: 'The receiving image schema cannot retain its Word paragraph geometry and font context. The image remains; keep the original for its paragraph layout.' });
+      if (layout.contextualSpacing !== undefined) issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
+        message: 'An image-only Word paragraph became an image block whose schema cannot retain contextual paragraph intent.' });
+    }
+    return { node: schema.node('image_super', { ...content[0].attrs, align, caption: '', ...(retained ? { imageLayout: layout } : {}) }) };
   }
   // Word may put text, page breaks and display equations in one paragraph. Preserve their
   // order as separate Fountain blocks, never force a block into inline content.
@@ -1652,9 +1659,10 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     return Object.freeze({ path, declaredBytes, handling });
   }));
   const fallback = schema.nodes.paragraph ? schema.node('paragraph') : undefined;
-  const document = schema.node('doc', pageSettings ? { pageSettings } : {}, retainWordSpacingGroups(blocks.length ? blocks : fallback ? [fallback] : [], (path, caption) => {
+  const document = schema.node('doc', pageSettings ? { pageSettings } : {}, retainWordSpacingGroups(blocks.length ? blocks : fallback ? [fallback] : [], (path, key) => {
     issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
-      message: caption ? 'Caption spacing intent is retained, but caption adjacency is not projected as a paragraph flow.'
+      message: key === 'imageLayout' ? 'Image paragraph spacing intent is retained, but image/caption adjacency is not projected as a paragraph flow.'
+        : key === 'captionLayout' ? 'Caption spacing intent is retained, but caption adjacency is not projected as a paragraph flow.'
         : 'The host node does not declare the paragraph-flow text-carrier contract. Spacing intent is retained without claiming a live gap projection.' });
   }, paragraphBridge?.identities));
   schema.validate(document);
@@ -1846,7 +1854,7 @@ function imageMedia(node: FountainNode, context: ExportContext, path: readonly n
 function imagePixels(value: unknown, fallback: number): number {
   const match = /^(\d+(?:\.\d+)?)px$/.exec(String(value ?? ''));
   const pixels = match ? Number(match[1]) : fallback;
-  return Math.max(1, Math.min(4096, Math.round(pixels)));
+  return Math.max(1, Math.min(4096, pixels));
 }
 
 function imageRun(node: FountainNode, context: ExportContext, path: readonly number[]): string | undefined {
@@ -1855,8 +1863,8 @@ function imageRun(node: FountainNode, context: ExportContext, path: readonly num
   const block = node.type.name === 'image_super';
   const width = imagePixels(node.attrs.width, block ? 640 : 160);
   const height = imagePixels(node.attrs.height, block ? 360 : 120);
-  const cx = width * 9525;
-  const cy = height * 9525;
+  const cx = Math.round(width * 9525);
+  const cy = Math.round(height * 9525);
   const drawingId = context.nextDrawingId++;
   const alt = xmlEscape(node.attrs.alt ?? '');
   const title = xmlEscape(node.attrs.title ?? '');
@@ -2307,7 +2315,13 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       const captionID = caption && nativeStyle ? context.paragraphBridge.role(context.sourcePart, nativeStyle) : undefined;
       const captionProperties = paragraphProperties(captionParagraph, undefined, false, undefined, nativeStyle);
       const captionStyle = nativeStyle ? captionProperties : captionProperties ? captionProperties.replace('<w:pPr>', '<w:pPr><w:pStyle w:val="Caption"/>') : '<w:pPr><w:pStyle w:val="Caption"/></w:pPr>';
-      return `<w:p><w:pPr><w:jc w:val="${align}"/><w:spacing w:before="120" w:after="80"/></w:pPr>${drawing}</w:p>${caption ? `<w:p${captionID ? ` w14:paraId="${captionID}"` : ''}>${captionStyle}${captionRuns}</w:p>` : ''}`;
+      const imageLayout = isParagraphLayout(node.attrs.imageLayout) ? node.attrs.imageLayout : undefined;
+      if (imageLayout?.spacingGroup !== undefined) context.issues.push({ code: 'paragraph-contextual-spacing-not-exported', severity: 'warning', path,
+        message: 'Image paragraph identity and declarations are retained natively, but image/caption adjacency has no matching portable paragraph-flow projection.' });
+      const imageStyle = context.paragraphBridge.style(imageLayout);
+      const imageProperties = imageLayout ? paragraphProperties({ type: node.type, attrs: { align, layout: imageLayout } }, undefined, false, undefined, imageStyle)
+        : `<w:pPr><w:jc w:val="${align}"/><w:spacing w:before="120" w:after="80"/></w:pPr>`;
+      return `<w:p>${imageProperties}${drawing}</w:p>${caption ? `<w:p${captionID ? ` w14:paraId="${captionID}"` : ''}>${captionStyle}${captionRuns}</w:p>` : ''}`;
     }
     case 'horizontal_rule': return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/></w:pBdr></w:pPr></w:p>';
     default:

@@ -1,6 +1,6 @@
 import { readListLayout } from '../core/list-layout';
 import { compile as compileSelector, selectAll } from 'css-select';
-import { readImageCaptionAttributes } from '../core/image-caption';
+import { readImageCaptionAttributes, readImageParagraphAttributes } from '../core/image-caption';
 import { readTableLayout, readTableRow } from '../core/table-layout';
 import { readTableAppearance } from '../core/table-appearance';
 import { parse as parseDocument, parseFragment, type ParserError } from 'parse5';
@@ -1023,7 +1023,7 @@ function imageNode(
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '')
         ? image.getAttribute('decoding')
         : 'async',
-      ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement) } : {}),
+      ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
     }, caption, undefined, marks);
   } catch { return null; }
 }

@@ -3,12 +3,16 @@ import { NodeSelection, Selection } from './selection';
 import { Node, type Attributes } from './schema';
 import { getNodeAtPath } from './transaction/path';
 import { isSafeURL } from './url';
+import type { ParagraphLayout } from './paragraph-layout';
 
 export interface ImageAttributes extends Attributes {
   src: string;
   alt?: string;
   title?: string;
   caption?: string;
+  imageLayout?: ParagraphLayout;
+  captionLayout?: ParagraphLayout;
+  captionAlign?: 'left' | 'center' | 'right' | 'justify';
   width?: string;
   height?: string;
   align?: 'left' | 'center' | 'right';
@@ -29,12 +33,15 @@ export function createImageNode(editor: Editor, attrs: ImageAttributes, inline =
   const source = attrs.src.trim();
   const type = editor.state.schema.nodes[inline ? 'inline_image' : 'image_super'];
   if (!type || !isSafeURL(source, { allowDataImage: true })) return null;
+  for (const key of ['imageLayout', 'captionLayout', 'captionAlign'] as const) {
+    if (attrs[key] !== undefined && (inline || !type.spec.attrs?.[key])) return null;
+  }
   try {
     return type.create({
       src: source,
       alt: attrs.alt ?? '',
       title: attrs.title ?? '',
-      ...(inline ? {} : { caption: attrs.caption ?? '' }),
+      ...(inline ? {} : { caption: attrs.caption ?? '', imageLayout: attrs.imageLayout, captionLayout: attrs.captionLayout, captionAlign: attrs.captionAlign }),
       width: attrs.width ?? (inline ? 'auto' : '100%'),
       height: attrs.height ?? (inline ? '1em' : 'auto'),
       align: attrs.align ?? 'center',
