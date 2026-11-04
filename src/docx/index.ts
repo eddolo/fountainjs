@@ -23,6 +23,7 @@ import { projectWordRunStyle, wordStyleChild, wordStyleReference } from './style
 import type { XMLElement, XMLChild } from './xml-types';
 import { parseDOCXXML as parseXML } from './xml-parser';
 import { projectWordParagraphStyle, retainWordSpacingGroups } from './paragraph-style';
+import { createParagraphBridge, readParagraphBridge, PARAGRAPH_BRIDGE_NS, PARAGRAPH_BRIDGE_PART, WORD_PARAGRAPH_ID_NS } from './paragraph-bridge';
 import { readWordTableAppearance, readWordTableProperty, wordTableAppearanceXML } from './table-appearance';
 import { isTableAppearance, type TableAppearance } from '../core/table-appearance';
 import { readWordTableWidth, wordTableWidthXML } from './table-width';
@@ -360,6 +361,7 @@ interface ImportMediaContext {
   readonly styles?: ReturnType<typeof readWordStyleSheet>;
   readonly tableText?: WordTableTextFormatting;
   readonly definitionIndent?: number;
+  readonly paragraphBridge?: ReturnType<typeof readParagraphBridge>;
 }
 
 function packagePartPath(sourcePart: string, target: string): string | undefined {
@@ -645,7 +647,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   level ??= 0;
   const definition = numId && numId !== '0' ? numbering.get(`${numId}:${level}`) : undefined;
   const isQuote = /^(?:(?:intense)?quote|FountainExplicitQuote)$/i.test(style) && Boolean(schema.nodes.blockquote);
-  const { align, alignExplicit, layout: geometry } = projectWordParagraphStyle(properties, media.styles, (code, message) => {
+  const { align, alignExplicit, layout: geometry, outlineLevel, styleId } = projectWordParagraphStyle(properties, media.styles, (code, message) => {
     issues.push({ code, severity: 'warning', message, path });
   }, media.tableText, definition?.properties);
   const content = inlineContent(element, schema, media, issues, path);
@@ -678,7 +680,12 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
       else fontContext.fontSize = Number(value.slice(0, -2));
     }
   }
-  let layout = geometry && Object.freeze({ ...geometry, ...fontContext });
+  const ownedGroup = styleId && media.paragraphBridge?.groups.get(styleId);
+  let layout = geometry && Object.freeze({ ...geometry, ...fontContext, ...(ownedGroup === undefined ? {} : { spacingGroup: ownedGroup }) });
+  const role = media.paragraphBridge?.role(element, media.sourcePart ?? 'word/document.xml', styleId, outlineLevel, () => issues.push({
+    code: 'paragraph-role-binding-invalid', severity: 'warning', path, sourcePart: media.sourcePart ?? 'word/document.xml',
+    message: 'The paragraph role has an ambiguous identity or changed native style/outline. Native content and formatting remain authoritative; the stale role was ignored.',
+  }));
   let listLayout: ListLayout | undefined;
   if (definition && layout && !isQuote) {
     const listType = definition.ordered ? 'ordered_list' : 'bullet_list';
@@ -700,12 +707,15 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   let type = 'paragraph';
   let attrs: Record<string, unknown> = { align, ...(layout ? { layout } : {}) };
   const heading = /^heading([1-6])$/i.exec(style);
-  if (heading && schema.nodes.heading) {
+  const headingLevel = outlineLevel === undefined ? heading && Number(heading[1]) : outlineLevel < 6 ? outlineLevel + 1 : undefined;
+  if (outlineLevel !== undefined && outlineLevel >= 6 && outlineLevel < 9) issues.push({ code: 'paragraph-outline-level-not-imported', severity: 'warning', path,
+    message: 'Word outline levels 7–9 have no supplied six-level Fountain heading equivalent; content remains a paragraph.' });
+  if (headingLevel && schema.nodes.heading) {
     type = 'heading';
-    attrs = { level: Number(heading[1]), align, ...(layout ? { layout } : {}) };
-  } else if (/code/i.test(style) && schema.nodes.code_block) {
+    attrs = { level: headingLevel, align, ...(layout ? { layout } : {}) };
+  } else if ((role?.kind === 'code' || /code/i.test(style)) && schema.nodes.code_block) {
     type = 'code_block';
-    attrs = { language: '', ...(layout && schema.nodes.code_block.spec.attrs?.layout ? { layout } : {}) };
+    attrs = { language: role?.language ?? '', ...(role ? { lineNumbers: role.lineNumbers } : {}), ...(layout && schema.nodes.code_block.spec.attrs?.layout ? { layout } : {}) };
     if (layout && !schema.nodes.code_block.spec.attrs?.layout) issues.push({ code: 'code-paragraph-layout-not-imported', severity: 'warning', message: 'The schema cannot represent Word paragraph layout on this code block.', path });
   }
   if ((type === 'paragraph' || type === 'heading') && (media.styles || hasExplicitWordEmphasis(element))) {
@@ -728,6 +738,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   let inline: FountainNode[] = [];
   const flush = () => {
     if (!inline.length) return;
+    if (type === 'code_block' && role?.kind === 'code') inline = inline.map(node => node.type.name === 'hard_break' ? schema.text('\n', node.marks) : node);
     if (type === 'code_block' && inline.some(node => !node.isText)) {
       parts.push(schema.node('paragraph', { align, ...(alignExplicit ? { alignExplicit: true } : {}), ...(layout ? { layout } : {}) }, inline));
       issues.push({ code: 'code-style-not-applied', severity: 'warning', message: 'The Word code-styled paragraph contains rich content; it was preserved as a paragraph rather than invalid text-only code.', path });
@@ -768,7 +779,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
       start: 1,
     },
   };
-  return { node: paragraph, continuation, caption: !continuation.length && /^caption$/i.test(style) };
+  return { node: paragraph, continuation, caption: !continuation.length && (role?.kind === 'caption' || /^caption$/i.test(style)) };
 }
 
 function groupLists(items: readonly ParsedParagraph[], schema: Schema, issues: DOCXIssue[], origin = 0): FountainNode[] {
@@ -1421,6 +1432,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
       if (selectedParts.has(file.name)) throw new Error('DOCX contains duplicate selected ZIP parts.');
       selectedParts.add(file.name);
       expanded += file.originalSize;
+      if (file.name === PARAGRAPH_BRIDGE_PART && file.originalSize > 8_000_000) throw new RangeError('DOCX paragraph metadata exceeds its expanded byte limit.');
       if (file.originalSize > limits.maxDocumentXmlBytes || expanded > limits.maxExpandedBytes) throw new RangeError('DOCX story content exceeds the XML or selected expanded byte limit.');
       return true;
     } }));
@@ -1456,6 +1468,25 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const themeFonts = theme.xml && !themeSettings.unavailable ? readWordThemeFonts(theme.xml, themeSettings.xml) : undefined;
   const stylePart = definitionPart('styles');
   const styles = stylePart.xml ? readWordStyleSheet(stylePart.xml) : undefined;
+  let paragraphBridge: ReturnType<typeof readParagraphBridge> | undefined;
+  const bridgeRelationships = (relationshipXML ? descendants(relationshipXML, 'Relationship') : []).filter(item =>
+    expandedName(item) === `${REL_NS}|Relationship` && item.attrs.Type === `${OFFICE_REL_NS}/customXml`
+    && packagePartPath('word/document.xml', item.attrs.Target ?? '') === PARAGRAPH_BRIDGE_PART);
+  if (bridgeRelationships.length) {
+    const relationship = bridgeRelationships[0]!;
+    if (bridgeRelationships.length !== 1 || relationship.attrs.TargetMode && relationship.attrs.TargetMode !== 'Internal' || !entryPaths.has(PARAGRAPH_BRIDGE_PART)) {
+      issues.push({ code: 'invalid-paragraph-metadata', severity: 'warning', sourcePart: 'word/_rels/document.xml.rels',
+        message: 'Paragraph metadata has an ambiguous, external or missing internal relationship; no role or group alias was restored.' });
+    } else {
+      // Expansion failures remain fatal: do not catch a consumed archive budget.
+      readExtraParts([PARAGRAPH_BRIDGE_PART]);
+      try {
+        paragraphBridge = readParagraphBridge(parse(PARAGRAPH_BRIDGE_PART)!, new Set(styles?.styles.filter(item => item.kind === 'paragraph').map(item => item.id)), limits.maxXmlNodes);
+        paragraphBridge.register('word/document.xml', documentXML);
+      } catch (error) { issues.push({ code: 'invalid-paragraph-metadata', severity: 'warning', sourcePart: PARAGRAPH_BRIDGE_PART,
+        message: error instanceof Error ? error.message : String(error) }); }
+    }
+  }
   let footnotePart: string | undefined;
   let footnoteRels: XMLElement | undefined;
   let footnotes: Map<string, XMLElement> | undefined;
@@ -1472,6 +1503,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
       const relPart = `${target.slice(0, split + 1)}_rels/${target.slice(split + 1)}.rels`;
       readExtraParts([target, relPart, 'word/settings.xml']);
       const root = parse(target);
+      if (root) paragraphBridge?.register(target, root);
       const container = root && elements(root).find(item => expandedName(item) === `${WORD_NS}|footnotes`);
       if (!container) throw new Error('Invalid DOCX footnotes root.');
       footnotes = new Map();
@@ -1510,7 +1542,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     catch (error) { issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) }); }
   }
   const importedParts = new Set<string>();
-  const media: ImportMediaContext = { archive, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles };
+  const media: ImportMediaContext = { archive, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge };
   const blocks = parseBlocks(body, schema, media, numbering, issues, []);
   const importedStories = new Set<string>();
   const sections = descendants(body, 'sectPr').filter(item => expandedName(item) === `${WORD_NS}|sectPr`);
@@ -1557,6 +1589,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
           const relPart = `${target.slice(0, split + 1)}_rels/${target.slice(split + 1)}.rels`;
           readExtraParts([target, relPart]);
           const root = parse(target);
+          if (root) paragraphBridge?.register(target, root);
           const story = root && elements(root).find(item => expandedName(item) === `${WORD_NS}|${kind === 'header' ? 'hdr' : 'ftr'}`);
           if (!story) throw new Error('Invalid DOCX header/footer root.');
           const start = issues.length;
@@ -1623,7 +1656,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
       message: caption ? 'Caption spacing intent is retained, but caption adjacency is not projected as a paragraph flow.'
         : 'The host node does not declare the paragraph-flow text-carrier contract. Spacing intent is retained without claiming a live gap projection.' });
-  }));
+  }, paragraphBridge?.identities));
   schema.validate(document);
   return Object.freeze({ document, report: report(issues), packageParts });
 }
@@ -1706,6 +1739,8 @@ interface ExportedMedia {
 }
 
 interface ExportContext {
+  readonly paragraphBridge: ReturnType<typeof createParagraphBridge>;
+  sourcePart: string;
   readonly footnotes: ReadonlyMap<string, { id: string; node: FountainNode; path: readonly number[] }>;
   readonly numbering: string[];
   readonly numberingDefinitions: string[];
@@ -1843,10 +1878,24 @@ function paragraphFontProperties(layout: ParagraphLayout | undefined, issues: DO
   return { family, size };
 }
 
-function runProperties(marks: readonly Mark[], issues: DOCXIssue[] = [], path: readonly number[] = [], explicitEmphasis = false, paragraphFont?: { family: string; size: string }): { xml: string; hyperlink?: string; unsupported: string[] } {
+interface ParagraphRunDefaults { family: string; size: string; bold?: boolean; color?: string }
+
+function paragraphRunDefaults(node: Pick<FountainNode, 'type' | 'attrs'>, definition?: DefinitionLayout): ParagraphRunDefaults | undefined {
+  if (node.type.name === 'heading') return { ...paragraphFontProperties({ unit: 'pt', fontFamily: 'Arial', fontSize: [32, 26, 22, 18, 15, 13][Math.max(0, Math.min(5, Number(node.attrs.level) - 1))] }, [], []), bold: true, color: '181426' };
+  if (node.type.name === 'code_block') return paragraphFontProperties({ unit: 'pt', fontFamily: 'Consolas', fontSize: 10 }, [], []);
+  if (definition?.term) return { family: '', size: '', bold: true };
+}
+
+function runProperties(marks: readonly Mark[], issues: DOCXIssue[] = [], path: readonly number[] = [], explicitEmphasis = false, paragraphFont?: { family: string; size: string }, defaults?: ParagraphRunDefaults): { xml: string; hyperlink?: string; unsupported: string[] } {
   const properties: string[] = [];
   if (paragraphFont?.family && !marks.some(mark => mark.type.name === 'font_family')) properties.push(paragraphFont.family);
   if (paragraphFont?.size && !marks.some(mark => mark.type.name === 'font_size')) properties.push(paragraphFont.size);
+  // CodeChar owns its face but has no size declaration: retain the enclosing
+  // paragraph's size, just as with the generated legacy Heading style.
+  if (!marks.some(mark => mark.type.name === 'code') && !paragraphFont?.family && defaults?.family && !marks.some(mark => mark.type.name === 'font_family')) properties.push(defaults.family);
+  if (!paragraphFont?.size && defaults?.size && !marks.some(mark => mark.type.name === 'font_size')) properties.push(defaults.size);
+  if (!explicitEmphasis && defaults?.bold && !marks.some(mark => mark.type.name === 'strong')) properties.push('<w:b/>');
+  if (defaults?.color && !marks.some(mark => mark.type.name === 'text_color')) properties.push(`<w:color w:val="${defaults.color}"/>`);
   if (explicitEmphasis && !marks.some(mark => mark.type.name === 'strong')) properties.push('<w:b w:val="0"/>');
   if (explicitEmphasis && !marks.some(mark => mark.type.name === 'em')) properties.push('<w:i w:val="0"/>');
   let hyperlink: string | undefined;
@@ -1907,7 +1956,7 @@ function runProperties(marks: readonly Mark[], issues: DOCXIssue[] = [], path: r
   return { xml: properties.length ? `<w:rPr>${properties.join('')}</w:rPr>` : '', hyperlink, unsupported };
 }
 
-function textRuns(node: FountainNode, context: ExportContext, path: readonly number[], layout: unknown = node.attrs.layout): string {
+function textRuns(node: FountainNode, context: ExportContext, path: readonly number[], layout: unknown = node.attrs.layout, defaults?: ParagraphRunDefaults): string {
   if (isParagraphLayout(layout) && (layout.fontFamily === undefined || layout.fontSize === undefined)) {
     context.issues.push({ code: 'paragraph-font-defaulted', severity: 'warning',
       message: 'Unresolved paragraph fonts use generated Word style defaults. Inline fonts remain; line geometry may change.', path });
@@ -1915,7 +1964,7 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
   const paragraphFont = paragraphFontProperties(isParagraphLayout(layout) ? layout : undefined, context.issues, path);
   return node.content.map((inline, index) => {
     if (inline.type.name === 'page_field') {
-      const props = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont);
+      const props = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont, defaults);
       if (props.hyperlink || props.unsupported.length) context.issues.push({ code: 'page-field-mark-omitted', severity: 'warning', message: 'Unsupported marks or links on a page field were omitted.', path: [...path, index] });
       const instruction = inline.attrs.kind === 'page-count' ? 'NUMPAGES' : 'PAGE';
       return `<w:fldSimple w:instr="${instruction}" w:dirty="true"><w:r>${props.xml}<w:t>1</w:t></w:r></w:fldSimple>`;
@@ -1923,7 +1972,7 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
     if (inline.type.name === 'footnote_reference') {
       const note = context.footnotes.get(String(inline.attrs.id));
       if (!note) throw new Error('DOCX footnote reference has no exportable definition.');
-      const properties = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont);
+      const properties = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont, defaults);
       if (properties.hyperlink || properties.unsupported.length) context.issues.push({ code: 'footnote-reference-mark-omitted', severity: 'warning', message: 'Unsupported marks or a hyperlink on the footnote marker were not exported.', path: [...path, index] });
       const style = '<w:rStyle w:val="FootnoteReference"/>';
       const rPr = properties.xml ? properties.xml.replace('<w:rPr>', `<w:rPr>${style}`) : `<w:rPr>${style}</w:rPr>`;
@@ -1933,7 +1982,7 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
       const math = nativeMath(inline, context, [...path, index]);
       if (math) return math;
     }
-    if (inline.type.name === 'hard_break') return `<w:r>${runProperties(inline.marks, context.issues, [...path, index], false, paragraphFont).xml}<w:br/></w:r>`;
+    if (inline.type.name === 'hard_break') return `<w:r>${runProperties(inline.marks, context.issues, [...path, index], false, paragraphFont, defaults).xml}<w:br/></w:r>`;
     if (inline.type.name === 'inline_image') {
       const drawing = imageRun(inline, context, [...path, index]);
       if (drawing) return drawing;
@@ -1941,12 +1990,17 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
     if (!inline.isText) {
       context.issues.push({ code: 'inline-fallback', severity: 'warning', message: `${inline.type.name} was exported as readable fallback text.`, path: [...path, index] });
     }
-    const value = inline.textContent;
-    const { xml, hyperlink, unsupported } = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont);
+    let value = inline.textContent;
+    if (node.type.name === 'code_block' && value.includes('\r')) {
+      context.issues.push({ code: 'code-line-endings-normalized', severity: 'warning', path: [...path, index],
+        message: 'CR/CRLF code line endings became native Word line breaks; reimport uses LF. Retain Fountain JSON for exact original line-ending bytes.' });
+      value = value.replace(/\r\n?/g, '\n');
+    }
+    const { xml, hyperlink, unsupported } = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont, defaults);
     unsupported.forEach((name) => context.issues.push({ code: 'unsupported-mark', severity: 'warning', message: `Word export omitted the ${name} mark.`, path: [...path, index] }));
     const preserve = /^\s|\s$|\s{2,}|\t/.test(value) ? ' xml:space="preserve"' : '';
     const pieces = inline.isText && value === '' ? '<w:t/>'
-      : value.split('\t').map((part, pieceIndex) => `${pieceIndex ? '<w:tab/>' : ''}${part ? `<w:t${preserve}>${xmlEscape(part)}</w:t>` : ''}`).join('');
+      : value.split(node.type.name === 'code_block' ? /(\t|\n)/ : /(\t)/).map(part => part === '\t' ? '<w:tab/>' : part === '\n' && node.type.name === 'code_block' ? '<w:br/>' : part ? `<w:t${preserve}>${xmlEscape(part)}</w:t>` : '').join('');
     const run = `<w:r>${xml}${pieces}</w:r>`;
     if (!hyperlink) return run;
     if (!isSafeURL(hyperlink, { allowEmpty: false })) {
@@ -1963,13 +2017,17 @@ type ExportList = { numId: number; level: number; continuation?: boolean; textIn
 type DefinitionLayout = { indent: number; term: boolean };
 type QuoteProjection = boolean | 'explicit';
 
-function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: ExportList, quote: QuoteProjection = false, definition?: DefinitionLayout): string {
+function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: ExportList, quote: QuoteProjection = false, definition?: DefinitionLayout, nativeStyle?: string): string {
   const properties: string[] = [];
-  if (node.type.name === 'heading') properties.push(`<w:pStyle w:val="Heading${Math.max(1, Math.min(6, Number(node.attrs.level) || 1))}"/>`);
+  if (nativeStyle) properties.push(`<w:pStyle w:val="${nativeStyle}"/>`);
+  else if (node.type.name === 'heading') properties.push(`<w:pStyle w:val="Heading${Math.max(1, Math.min(6, Number(node.attrs.level) || 1))}"/>`);
   else if (node.type.name === 'code_block') properties.push('<w:pStyle w:val="Code"/>');
   else if (quote) properties.push(`<w:pStyle w:val="${quote === 'explicit' ? 'FountainExplicitQuote' : 'Quote'}"/>`);
   else if (definition?.term) properties.push('<w:pStyle w:val="FountainDefinitionTerm"/>');
-  const layout = isParagraphLayout(node.attrs.layout) ? node.attrs.layout : undefined;
+  const rawLayout = isParagraphLayout(node.attrs.layout) ? node.attrs.layout : undefined;
+  const layout = nativeStyle && rawLayout ? { ...(node.type.name === 'heading' ? { keepWithNext: true, keepLinesTogether: true }
+    : definition?.term ? { keepWithNext: true } : {}), ...(node.type.name === 'code_block' ? { background: '#f2eff8' } : {}), ...rawLayout,
+    spacingBefore: rawLayout.spacingBefore ?? 0, spacingAfter: rawLayout.spacingAfter ?? 0 } : rawLayout;
   for (const [key, name] of [['keepWithNext', 'keepNext'], ['keepLinesTogether', 'keepLines'], ['pageBreakBefore', 'pageBreakBefore']] as const) {
     if (layout?.[key] !== undefined) properties.push(`<w:${name} w:val="${layout[key] ? '1' : '0'}"/>`);
   }
@@ -2008,14 +2066,17 @@ function paragraphProperties(node: Pick<FountainNode, 'type' | 'attrs'>, list?: 
   if ([left, right, firstLine, hanging].some(value => value !== undefined)) {
     properties.push(`<w:ind${left === undefined ? '' : ` w:left="${left}"`}${right === undefined ? '' : ` w:right="${right}"`}${firstLine === undefined ? '' : ` w:firstLine="${firstLine}"`}${hanging === undefined ? '' : ` w:hanging="${hanging}"`}/>`);
   }
+  if (nativeStyle && layout?.contextualSpacing !== undefined) properties.push(`<w:contextualSpacing w:val="${layout.contextualSpacing ? '1' : '0'}"/>`);
   const declaredAlign = String(node.attrs.align ?? 'left');
   const align = declaredAlign === 'start' ? node.attrs.dir === 'rtl' ? 'right' : 'left'
     : declaredAlign === 'end' ? node.attrs.dir === 'rtl' ? 'left' : 'right' : declaredAlign;
   if (align !== 'left' || node.attrs.alignExplicit === true) properties.push(`<w:jc w:val="${align === 'justify' ? 'both' : xmlEscape(align)}"/>`);
+  if (nativeStyle && node.type.name === 'heading') properties.push(`<w:outlineLvl w:val="${Math.max(0, Math.min(5, Number(node.attrs.level) - 1))}"/>`);
   // One paragraph-mark rPr group only. Inline runs get the same defaults when
   // unmarked, since Word's pPr/rPr is not a text-run formatting declaration.
   const font = paragraphFontProperties(layout, [], []);
-  const markProperties = `${node.attrs.emphasis === 'explicit' ? '<w:b w:val="0"/><w:i w:val="0"/>' : ''}${font.family}${font.size}`;
+  const defaults = nativeStyle ? paragraphRunDefaults(node, definition) : undefined;
+  const markProperties = `${node.attrs.emphasis === 'explicit' ? '<w:b w:val="0"/><w:i w:val="0"/>' : defaults?.bold ? '<w:b/>' : ''}${font.family || defaults?.family || ''}${font.size || defaults?.size || ''}${defaults?.color ? `<w:color w:val="${defaults.color}"/>` : ''}`;
   if (markProperties) properties.push(`<w:rPr>${markProperties}</w:rPr>`);
   return properties.length ? `<w:pPr>${properties.join('')}</w:pPr>` : '';
 }
@@ -2029,7 +2090,9 @@ function paragraphXML(node: FountainNode, context: ExportContext, path: readonly
   reportDirectionLoss(node, context, path);
   if (['start', 'end'].includes(String(node.attrs.align))) context.issues.push({ code: 'logical-alignment-projected', severity: 'warning',
     message: 'Logical start/end alignment became physical left/right using an explicit RTL override, otherwise LTR. Auto/inherited direction is not resolved; use Fountain JSON or HTML for exact semantics.', path });
-  return `<w:p>${paragraphProperties(node, list, quote, definition)}${textRuns(node, context, path)}</w:p>`;
+  const nativeStyle = !quote ? context.paragraphBridge.style(isParagraphLayout(node.attrs.layout) ? node.attrs.layout : undefined) : undefined;
+  const id = node.type.name === 'code_block' ? context.paragraphBridge.role(context.sourcePart, nativeStyle ?? 'Code', node) : undefined;
+  return `<w:p${id ? ` w14:paraId="${id}"` : ''}>${paragraphProperties(node, list, quote, definition, nativeStyle)}${textRuns(node, context, path, node.attrs.layout, nativeStyle ? paragraphRunDefaults(node, definition) : undefined)}</w:p>`;
 }
 
 function exportTableShading(cell: FountainNode, context: ExportContext, path: readonly number[]): string {
@@ -2153,9 +2216,9 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
 }
 
 function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote: QuoteProjection = false, list?: ExportList, definition?: DefinitionLayout): string {
-  if (isParagraphLayout(node.attrs.layout) && node.attrs.layout.spacingGroup !== undefined) context.issues.push({
+  if (isParagraphLayout(node.attrs.layout) && node.attrs.layout.spacingGroup !== undefined && (quote || !['paragraph', 'heading', 'code_block'].includes(node.type.name))) context.issues.push({
     code: 'paragraph-contextual-spacing-not-exported', severity: 'warning', path,
-    message: 'Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule.',
+    message: 'This isolated/custom block does not have a verified native paragraph-flow mapping. Declared spacing remains; retain Fountain JSON for the spacing-group relationship.',
   });
   if (!['paragraph', 'heading'].includes(node.type.name)) reportDirectionLoss(node, context, path);
   if (node.type.name === 'math_block') {
@@ -2238,11 +2301,13 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
       const captionParagraph = { type: node.type, attrs: { align: node.attrs.captionAlign ?? 'center', layout: node.attrs.captionLayout } };
       if (isParagraphLayout(node.attrs.captionLayout) && node.attrs.captionLayout.spacingGroup !== undefined) context.issues.push({
         code: 'paragraph-contextual-spacing-not-exported', severity: 'warning', path,
-        message: 'Caption paragraph spacing-group identity is not yet mapped to native Word styles. Declared caption spacing is exported; keep Fountain JSON for the rule.',
+        message: 'Caption identity and declarations are retained natively, but the portable view does not project image/caption adjacency as a paragraph flow. Native layout may differ.',
       });
-      const captionProperties = paragraphProperties(captionParagraph);
-      const captionStyle = captionProperties ? captionProperties.replace('<w:pPr>', '<w:pPr><w:pStyle w:val="Caption"/>') : '<w:pPr><w:pStyle w:val="Caption"/></w:pPr>';
-      return `<w:p><w:pPr><w:jc w:val="${align}"/><w:spacing w:before="120" w:after="80"/></w:pPr>${drawing}</w:p>${caption ? `<w:p>${captionStyle}${captionRuns}</w:p>` : ''}`;
+      const nativeStyle = context.paragraphBridge.style(isParagraphLayout(node.attrs.captionLayout) ? node.attrs.captionLayout : undefined);
+      const captionID = caption && nativeStyle ? context.paragraphBridge.role(context.sourcePart, nativeStyle) : undefined;
+      const captionProperties = paragraphProperties(captionParagraph, undefined, false, undefined, nativeStyle);
+      const captionStyle = nativeStyle ? captionProperties : captionProperties ? captionProperties.replace('<w:pPr>', '<w:pPr><w:pStyle w:val="Caption"/>') : '<w:pPr><w:pStyle w:val="Caption"/></w:pPr>';
+      return `<w:p><w:pPr><w:jc w:val="${align}"/><w:spacing w:before="120" w:after="80"/></w:pPr>${drawing}</w:p>${caption ? `<w:p${captionID ? ` w14:paraId="${captionID}"` : ''}>${captionStyle}${captionRuns}</w:p>` : ''}`;
     }
     case 'horizontal_rule': return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/></w:pBdr></w:pPr></w:p>';
     default:
@@ -2311,6 +2376,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     issues.push({ code: 'footnote-definition-position-normalized', severity: 'info', message: 'DOCX stores notes separately from body blocks; reimport places definitions after the body rather than retaining their editor block positions.' });
   }
   const context: ExportContext = {
+    paragraphBridge: createParagraphBridge(), sourcePart: 'word/document.xml',
     footnotes, hyperlinks: new Map(), mediaBySource: new Map(), media: [], issues, options, numbering: [], numberingDefinitions: [],
     maxMediaBytes: exportLimit(options.maxMediaBytes, DEFAULT_LIMITS.maxMediaBytes, 'maxMediaBytes'),
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
@@ -2318,6 +2384,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   };
   const body = node.content.map((block, index) => blockXML(block, context, [index])).join('');
   const noteXML = [...footnotes.values()].map(note => {
+    context.sourcePart = 'word/footnotes.xml';
     let content = note.node.content.map((block, index) => blockXML(block, context, [...note.path, index])).join('');
     const marker = '<w:r><w:rPr><w:rStyle w:val="FootnoteReference"/></w:rPr><w:footnoteRef/></w:r>';
     if (content.startsWith('<w:p>')) content = content.replace(/^(<w:p>(?:<w:pPr>[\s\S]*?<\/w:pPr>)?)/, `$1${marker}`);
@@ -2339,6 +2406,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     ] as Array<[string, { node: FountainNode; path: readonly number[] } | undefined]>;
     for (const [variant, template] of requested) {
       const name = `${kind}${templateParts.length + 1}.xml`;
+      context.sourcePart = `word/${name}`;
       templateParts.push({ kind, variant, name, id: `rIdPageTemplate${templateParts.length + 1}`, xml: template ? template.node.content.map((block, index) => blockXML(block, context, [...template.path, index])).join('') : '<w:p/>' });
     }
     if (get('odd')) issues.push({ code: 'page-template-variant-normalized', severity: 'warning', message: 'Fountain odd/default fallbacks were mapped to Word default/even references. Page selection is represented, but template identity and duplication can change on reimport.', path: get('odd')!.path });
@@ -2346,7 +2414,8 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   if (templates.size) issues.push({ code: 'page-template-projection', severity: 'info', message: 'Headers/footers are stored as separate native parts and reimported after body blocks. Original styles, section geometry and exact template block positions are not certified.' });
   if (templateParts.some(part => part.xml.includes('<w:fldSimple'))) issues.push({ code: 'page-field-recalculation-required', severity: 'warning', message: 'Dynamic PAGE/NUMPAGES fields need recalculation by the receiving layout engine. Cached values are placeholders, not verified page numbers.' });
   const section = `<w:sectPr>${templateParts.map(part => `<w:${part.kind}Reference w:type="${part.variant}" r:id="${part.id}"/>`).join('')}${wordPageSettingsXML(node, options, issues)}${firstPages ? '<w:titlePg/>' : ''}</w:sectPr>`;
-  const documentXML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>${body}${section}</w:body></w:document>`;
+  const paragraphNamespaces = context.paragraphBridge.roles.length ? ` xmlns:w14="${WORD_PARAGRAPH_ID_NS}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="w14"` : '';
+  const documentXML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}><w:body>${body}${section}</w:body></w:document>`;
   const documentRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdNumbering" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map((item) => `<Relationship Id="${item.relationshipId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`;
   const now = new Date().toISOString();
   const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEscape(options.title)}</dc:title><dc:creator>${xmlEscape(options.creator ?? 'FountainJS')}</dc:creator><dc:description>${xmlEscape(options.description)}</dc:description><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`;
@@ -2367,15 +2436,23 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     parts[MATH_SOURCE_PART] = strToU8(`<f:mathSources xmlns:f="${MATH_SOURCE_NS}">${xmlEscape(JSON.stringify(context.mathSources))}</f:mathSources>`);
     parts['word/_rels/document.xml.rels'] = strToU8(documentRels.replace('</Relationships>', '<Relationship Id="rIdFountainMathSources" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml" Target="../customXml/fountainMath.xml"/></Relationships>'));
   }
+  if (context.paragraphBridge.groups.size || context.paragraphBridge.roles.length) {
+    const groups = [...context.paragraphBridge.groups].map(([group, style]) => [style, group]);
+    parts['word/styles.xml'] = strToU8(strFromU8(parts['word/styles.xml']!).replace('</w:styles>', `${groups.map(([style]) => `<w:style w:type="paragraph" w:styleId="${style}"><w:name w:val="${style}"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr></w:style>`).join('')}</w:styles>`));
+    const metadata = strToU8(`<f:paragraphs xmlns:f="${PARAGRAPH_BRIDGE_NS}" version="1">${xmlEscape(JSON.stringify({ groups, roles: context.paragraphBridge.roles }))}</f:paragraphs>`);
+    if (metadata.length > 8_000_000) throw new RangeError('DOCX paragraph metadata exceeds its expanded byte limit.');
+    parts[PARAGRAPH_BRIDGE_PART] = metadata;
+    parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdFountainParagraphs" Type="${OFFICE_REL_NS}/customXml" Target="../${PARAGRAPH_BRIDGE_PART}"/></Relationships>`));
+  }
   if (footnotes.size) {
     parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', '<Override PartName="/word/footnotes.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/></Types>'));
     parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdFootnotes" Type="${OFFICE_REL_NS}/footnotes" Target="footnotes.xml"/></Relationships>`));
-    parts['word/footnotes.xml'] = strToU8(`<w:footnotes xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:footnote w:type="separator" w:id="-1"><w:p><w:r><w:separator/></w:r></w:p></w:footnote><w:footnote w:type="continuationSeparator" w:id="0"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:footnote>${noteXML}</w:footnotes>`);
+    parts['word/footnotes.xml'] = strToU8(`<w:footnotes xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}><w:footnote w:type="separator" w:id="-1"><w:p><w:r><w:separator/></w:r></w:p></w:footnote><w:footnote w:type="continuationSeparator" w:id="0"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:footnote>${noteXML}</w:footnotes>`);
     parts['word/_rels/footnotes.xml.rels'] = strToU8(`<Relationships xmlns="${REL_NS}">${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="${OFFICE_REL_NS}/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map(item => `<Relationship Id="${item.relationshipId}" Type="${OFFICE_REL_NS}/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`);
     parts['word/styles.xml'] = strToU8(strFromU8(parts['word/styles.xml']!).replace('</w:styles>', '<w:style w:type="character" w:styleId="FootnoteReference"><w:name w:val="footnote reference"/><w:rPr><w:vertAlign w:val="superscript"/></w:rPr></w:style></w:styles>'));
   }
   for (const template of templateParts) {
-    parts[`word/${template.name}`] = strToU8(`<w:${template.kind === 'header' ? 'hdr' : 'ftr'} xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">${template.xml}</w:${template.kind === 'header' ? 'hdr' : 'ftr'}>`);
+    parts[`word/${template.name}`] = strToU8(`<w:${template.kind === 'header' ? 'hdr' : 'ftr'} xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}>${template.xml}</w:${template.kind === 'header' ? 'hdr' : 'ftr'}>`);
     parts[`word/_rels/${template.name}.rels`] = strToU8(`<Relationships xmlns="${REL_NS}">${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="${OFFICE_REL_NS}/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map(item => `<Relationship Id="${item.relationshipId}" Type="${OFFICE_REL_NS}/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`);
     parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', `<Override PartName="/word/${template.name}" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.${template.kind}+xml"/></Types>`));
     parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="${template.id}" Type="${OFFICE_REL_NS}/${template.kind}" Target="${template.name}"/></Relationships>`));

@@ -146,7 +146,7 @@ describe('native Word paragraph identity joins the portable spacing model', () =
     expect(contextualLoss(result).map(issue => issue.path)).toEqual([[0]]);
   });
 
-  it('preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished', () => {
+  it('preserves a native same-style relationship through editing, JSON, HTML and native export/reopen', () => {
     const result = importDOCX(source(paragraph('One', 'Body', '<w:contextualSpacing/>') + paragraph('Two', 'Body'), style('Body', spacing)), schema);
     const editor = createEditor({ schema: StarterKit.schema, content: result.document.toJSON() });
     try {
@@ -158,7 +158,9 @@ describe('native Word paragraph identity joins the portable spacing model', () =
       expect(before.content?.[1]?.attrs?.layout).toEqual(editor.state.doc.child(1).attrs.layout);
       expect(editor.state.schema.nodeFromJSON(editor.state.doc.toJSON()).eq(editor.state.doc)).toBe(true);
       expect(new HTMLExporter().export(editor.state.doc)).toContain('margin-block-start:12pt');
-      expect(exportDOCX(editor.state.doc).report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-exported').map(issue => issue.path)).toEqual([[0], [1]]);
+      const word = exportDOCX(editor.state.doc);
+      expect(word.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-exported')).toEqual([]);
+      expect(paragraphSpacingAt(importDOCX(word.bytes, schema).document, [1])?.spacingBefore).toBe(12);
     } finally { editor.destroy(); }
   });
 

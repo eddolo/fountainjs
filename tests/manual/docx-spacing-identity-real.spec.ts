@@ -9,7 +9,7 @@ async function gap(a: Locator, b: Locator) {
   return second.y - first.y - first.height;
 }
 
-test('a researcher edits the actual Word paper, preserves its HTML rule and sees the remaining native export loss', async ({ page }, info) => {
+test('a researcher edits the actual Word paper and retains spacing through HTML and native export/reopen', async ({ page }, info) => {
   const root = resolve(`${process.env.FOUNTAIN_DOCX_SPACING_AUDIT_DIR ?? 'artifacts/docx-spacing-identity-real-20261104'}/${info.project.name}`);
   await mkdir(root);
   const errors: string[] = [];
@@ -84,7 +84,8 @@ test('a researcher edits the actual Word paper, preserves its HTML rule and sees
 
   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
   await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
-  await expect(workspace.locator('[aria-label="Round-trip result"]')).toContainText('paragraph-contextual-spacing-not-exported');
+  await expect(workspace.locator('[aria-label="Round-trip result"]')).toBeVisible();
+  await expect(workspace.locator('[aria-label="Round-trip result"]')).not.toContainText('paragraph-contextual-spacing-not-exported');
   await download('docx', 'actual-export.docx');
   await page.getByLabel('Choose documents').setInputFiles(resolve(root, 'actual-export.docx'));
   const reopened = page.getByRole('region', { name: 'Conversion workspace: actual-export.docx', exact: true })
@@ -92,13 +93,11 @@ test('a researcher edits the actual Word paper, preserves its HTML rule and sees
   const reopenedParagraphs = reopened.locator('ol > li > p');
   await expect(reopenedParagraphs).toHaveCount(3);
   const nativeReopenGap = await gap(reopenedParagraphs.nth(0), reopenedParagraphs.nth(1));
-  // This is the measured, explicitly reported remaining export loss. It is
-  // deliberately not a successful native-fidelity assertion.
-  expect(nativeReopenGap).toBeCloseTo(28 / 3, 1);
-  await reopened.screenshot({ path: resolve(root, 'native-export-loss.png') });
+  expect(nativeReopenGap).toBeCloseTo(0, 1);
+  await reopened.screenshot({ path: resolve(root, 'native-export-reopened.png') });
   expect(errors).toEqual([]);
   await writeFile(resolve(root, 'observations.json'), JSON.stringify({ initialGaps, enteredHeight, emptyMarkerDiagnostic, readerGap, readerImages, nativeReopenGap,
     actualWordSource: true, enterUndoRedoBackspace: true, originalDeclaredAfterPt: 7,
     actualJSONAndHTMLDownloads: true, actualDOCXDownloadReopened: true,
-    nativeExportRuleRetained: false, nativeWordSpacingCertified: false, errors }, null, 2) + '\n');
+    nativeExportRuleRetained: true, nativeWordSpacingCertified: false, errors }, null, 2) + '\n');
 });

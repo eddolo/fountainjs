@@ -6,7 +6,7 @@ import type { Node } from '../core/schema';
 import { wordStyleChild, wordStyleReference } from './style-projection';
 
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-const SUPPORTED = new Set(['jc', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing', 'shd', 'pBdr']);
+const SUPPORTED = new Set(['jc', 'outlineLvl', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing', 'shd', 'pBdr']);
 const EMPTY_STYLES = createWordRunStyleCascade({ styles: [] });
 
 /** Spacing groups are a rule dependency, not a general Word-style binding.
@@ -14,8 +14,8 @@ const EMPTY_STYLES = createWordRunStyleCascade({ styles: [] });
  * declaration somewhere in the imported document. Unused style identities do
  * not add foreign-format metadata to otherwise ordinary Fountain paragraphs.
  */
-export function retainWordSpacingGroups(blocks: readonly Node[], warn?: (path: readonly number[], caption: boolean) => void): readonly Node[] {
-  const used = new Set<string>();
+export function retainWordSpacingGroups(blocks: readonly Node[], warn?: (path: readonly number[], caption: boolean) => void, owned: Iterable<string> = []): readonly Node[] {
+  const used = new Set<string>(owned);
   const keys = ['layout', 'captionLayout'] as const;
   for (const block of blocks) block.descendants(node => {
     for (const key of keys) {
@@ -59,7 +59,7 @@ function paragraphIssue(issue: WordStyleReadIssue) {
  */
 export function projectWordParagraphStyle(properties: XMLElement | undefined,
   sheet: ReturnType<typeof readWordStyleSheet> | undefined,
-  warn: (code: string, message: string) => void, table?: WordTableTextFormatting, numberingProperties?: XMLElement): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly layout?: ParagraphLayout } {
+  warn: (code: string, message: string) => void, table?: WordTableTextFormatting, numberingProperties?: XMLElement): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly outlineLevel?: number; readonly styleId?: string; readonly layout?: ParagraphLayout } {
   const paragraphStyle = wordStyleReference(properties, 'pStyle');
   const filtered = properties && {
     ...properties,
@@ -150,5 +150,6 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
       ...(border.space === undefined ? {} : { space: border.space }) });
   }
   if (Object.keys(borders).length) layout.borders = Object.freeze(borders);
-  return Object.freeze({ align, ...(source.align === 'left' ? { alignExplicit: true as const } : {}), ...(Object.keys(layout).length > 1 ? { layout: Object.freeze(layout) as ParagraphLayout } : {}) });
+  return Object.freeze({ align, outlineLevel: source.outlineLevel, styleId: resolved.paragraphStyle,
+    ...(source.align === 'left' ? { alignExplicit: true as const } : {}), ...(Object.keys(layout).length > 1 ? { layout: Object.freeze(layout) as ParagraphLayout } : {}) });
 }

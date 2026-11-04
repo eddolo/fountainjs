@@ -37,6 +37,8 @@ export interface WordParagraphBorder {
 }
 export interface WordParagraphFormatting {
   readonly align?: string;
+  /** Native outline level: 0–8 outline, 9 body text. */
+  readonly outlineLevel?: number;
   /** Twentieths of a point, except auto line spacing which is 240ths of a line. */
   readonly spacingBefore?: number;
   readonly spacingAfter?: number;
@@ -141,7 +143,7 @@ function copyFormatting(input: WordRunFormatting = {}): WordRunFormatting {
 }
 
 const PARAGRAPH_VALUE_KEYS = [
-  'align', 'spacingBefore', 'spacingAfter', 'contextualSpacing', 'line', 'lineRule', 'indentLeft', 'indentRight',
+  'align', 'outlineLevel', 'spacingBefore', 'spacingAfter', 'contextualSpacing', 'line', 'lineRule', 'indentLeft', 'indentRight',
   'firstLine', 'hanging', 'keepNext', 'keepLines', 'pageBreakBefore', 'background',
 ] as const;
 
@@ -150,7 +152,9 @@ function copyParagraphFormatting(input: WordParagraphFormatting = {}): WordParag
   for (const key of PARAGRAPH_VALUE_KEYS) {
     const value = own(input, key);
     if (value === undefined) continue;
-    if (['spacingBefore', 'spacingAfter', 'line'].includes(key)) {
+    if (key === 'outlineLevel') {
+      if (typeof value !== 'number' || !Number.isInteger(value) || value < 0 || value > 9) throw new Error('Invalid Word paragraph outline level.');
+    } else if (['spacingBefore', 'spacingAfter', 'line'].includes(key)) {
       if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0 || value > 20_000_000) throw new Error(`Invalid Word paragraph ${key}.`);
     } else if (['indentLeft', 'indentRight'].includes(key)) {
       if (typeof value !== 'number' || !Number.isSafeInteger(value) || Math.abs(value) > 20_000_000) throw new Error(`Invalid Word paragraph ${key}.`);

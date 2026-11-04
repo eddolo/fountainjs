@@ -1,5 +1,11 @@
 # DOCX list-layout repair in progress
 
+Latest native-export work: [the paragraph spacing bridge](DOCX_NATIVE_SPACING.md)
+now retains the paper's zero internal list gaps through recorded browser
+download/reopen in all three desktop engines. Independent native rendering is
+being verified; the earlier native measurements below remain historical evidence,
+not a new layout certification.
+
 The initial retained scientific source audit exposed an 18 pt shift in
 the first numbered instruction: source text begins at 75.7 pt; the exported
 text begins at 93.7 pt. Source numbering uses a 360-twip text indent and hanging

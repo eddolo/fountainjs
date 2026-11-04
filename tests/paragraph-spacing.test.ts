@@ -4,7 +4,7 @@ import { CoreSchemaSpec, Schema, HTMLExporter, MarkdownExporter, isParagraphLayo
   paragraphSpacingAt, paragraphSpacingDOMAttributes, resolveParagraphGap, PARAGRAPH_SPACING_STYLES, type ParagraphLayout } from '../src';
 import { readFileSync } from 'node:fs';
 import { ServerHTMLImporter } from '../src/html/server';
-import { exportDOCX } from '../src/docx';
+import { exportDOCX, importDOCX } from '../src/docx';
 
 const schema = new Schema(CoreSchemaSpec);
 const before: ParagraphLayout = { unit: 'pt', spacingGroup: 'body', spacingBefore: 0, spacingAfter: 10, contextualSpacing: true };
@@ -100,7 +100,9 @@ describe('portable contextual paragraph spacing', () => {
     expect(schema.nodeFromJSON(source.toJSON()).eq(source)).toBe(true);
     expect(ServerHTMLImporter.parse(html, schema).eq(source)).toBe(true);
     expect(MarkdownExporter.exportWithReport(source).losses.some(loss => loss.detail.includes('Paragraph spacing'))).toBe(true);
-    expect(exportDOCX(source).report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-exported').map(issue => issue.path)).toEqual([[0], [1]]);
+    const word = exportDOCX(source);
+    expect(word.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-exported')).toEqual([]);
+    expect(paragraphSpacingAt(importDOCX(word.bytes, schema).document, [1])?.spacingBefore).toBe(2);
   });
 
   it('uses one opaque identity across paragraph, heading and code carriers, independently of their presentation', () => {

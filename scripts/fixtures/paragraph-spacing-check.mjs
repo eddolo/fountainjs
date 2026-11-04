@@ -24,7 +24,12 @@ export function checkParagraphSpacing(api, server, word, spec) {
     assert.equal(document.child(1).attrs.layout.spacingBefore, 12);
     assert.equal(api.paragraphSpacingAt(document, [1]).spacingBefore, 2);
   } finally { editor.destroy(); }
-  assert.deepEqual(word.exportDOCX(document).report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-exported').map(issue => issue.path), [[0], [1]]);
+  const exported = word.exportDOCX(document);
+  assert.deepEqual(exported.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-exported'), []);
+  const reopened = word.importDOCX(exported.bytes, schema).document;
+  assert.equal(api.paragraphSpacingAt(reopened, [1]).spacingBefore, 2);
+  assert.equal(reopened.child(0).attrs.layout.spacingGroup, 'body');
+  assert.equal(reopened.child(1).attrs.layout.contextualSpacing, false);
   const namespace = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
   const native = zipSync({
     'word/document.xml': strToU8(`<w:document xmlns:w="${namespace}"><w:body><w:p><w:pPr><w:spacing w:before="0" w:after="200"/><w:contextualSpacing/></w:pPr><w:r><w:t>Before</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="240" w:after="0"/><w:contextualSpacing w:val="0"/></w:pPr><w:r><w:t>After</w:t></w:r></w:p></w:body></w:document>`),

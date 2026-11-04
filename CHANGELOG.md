@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Write native DOCX paragraph-group identities and contextual spacing rules;
+  retain declared geometry through export/reopen. Use native heading outlines
+  and bounded part/paragraph bindings for code/caption roles, while treating
+  native formatting as authoritative. Record unsupported flows and code line-ending
+  normalization. Browser round-trip verification passes; native layout and release
+  acceptance remain under review.
+
 - Verify numbered-marker paint and complete document retention through
   Enter/Backspace in three recorded real-paper browser journeys, with independent
   positive/negative paint controls. Correct the earlier missing-marker report;
@@ -16,7 +23,7 @@ policy on reopen. Native layout certification remains outstanding.
   including default styles and omitted/off neighbours, without rewriting declared
   spacing. The retained paper's imported and standalone-HTML list gaps now resolve
   to zero. Diagnose unsupported flow conversions and unresolved identities.
-  Native DOCX export still drops the rule with an explicit warning; no full
+  The later native bridge above repairs supported export/reopen flows; no full
   Word-fidelity or release-readiness claim.
 
 - Add optional opaque `spacingGroup` and `contextualSpacing` paragraph-layout
@@ -24,8 +31,9 @@ policy on reopen. Native layout certification remains outstanding.
   declarations through JSON/HTML, history, reordering and collaboration; derive
   current margins for mounted/virtualized editor views and HTML readers.
   Native markers use the paragraph's declared font context to avoid Chromium
-  adding an unintended list-item gap. Native Word style/group mapping remains
-  unfinished and is reported explicitly on export. No full DOCX spacing claim.
+  adding an unintended list-item gap. Native Word mapping is covered by the later
+  bridge above; isolated/custom flows remain explicitly unfinished. No full DOCX
+  spacing claim.
 
 - Resolve Word contextual-spacing on/off declarations through the bounded
   paragraph cascade, including explicit false overrides. Locate the remaining

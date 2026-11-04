@@ -297,7 +297,7 @@ console.log(`Packed ESM root/core: ${checkHTMLPreformattedFormatting(esmCore, es
 console.log(`Built ESM root/core: ${checkListLayout(esmCore, esmServerHTML, esmDOCX, esmCore.CoreSchemaSpec)}/${checkListLayout(esmHeadlessCore, esmServerHTML, esmDOCX, esmCore.CoreSchemaSpec)} portable list geometry contracts passed.`);
 checkParagraphSpacing(esmCore, esmServerHTML, esmDOCX, esmCore.CoreSchemaSpec);
 checkParagraphSpacing(esmHeadlessCore, esmServerHTML, esmDOCX, esmCore.CoreSchemaSpec);
-console.log('Built ESM root/core: contextual spacing model, HTML, transactions and explicit native loss contracts passed.');
+console.log('Built ESM root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.');
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
 const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
 if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
@@ -451,7 +451,7 @@ console.log(`Packed CommonJS root/core: ${checkHTMLPreformattedFormatting(cjsCor
 console.log(`Built CommonJS root/core: ${checkListLayout(cjsCore, cjsServerHTML, cjsDOCX, cjsCore.CoreSchemaSpec)}/${checkListLayout(cjsHeadlessCore, cjsServerHTML, cjsDOCX, cjsCore.CoreSchemaSpec)} portable list geometry contracts passed.`);
 checkParagraphSpacing(cjsCore, cjsServerHTML, cjsDOCX, cjsCore.CoreSchemaSpec);
 checkParagraphSpacing(cjsHeadlessCore, cjsServerHTML, cjsDOCX, cjsCore.CoreSchemaSpec);
-console.log('Built CommonJS root/core: contextual spacing model, HTML, transactions and explicit native loss contracts passed.');
+console.log('Built CommonJS root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.');
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
 const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
 if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');

@@ -43,6 +43,10 @@ export function readWordParagraphFormatting(properties: XMLElement | undefined, 
       const value = take('val');
       if (!value || value.length > 64) issue('invalid-paragraph-property', local);
       else result.align = value;
+    } else if (local === 'outlineLvl') {
+      const value = integer(take('val'), local);
+      if (value !== undefined && value <= 9) result.outlineLevel = value;
+      else if (value !== undefined) issue('invalid-paragraph-property', local);
     } else if (local === 'spacing') {
       const before = take('before'); const after = take('after'); const line = take('line'); const rule = take('lineRule');
       if (before !== undefined) result.spacingBefore = integer(before, 'spacing/before');
