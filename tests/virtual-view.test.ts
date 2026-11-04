@@ -44,6 +44,93 @@ function setup(count = 1_000) {
 }
 
 describe('virtual EditorView', () => {
+  it.each([
+    { key: 'End', ctrlKey: true, metaKey: false, index: 999, offset: 'Virtual block 999'.length },
+    { key: 'Home', ctrlKey: true, metaKey: false, index: 0, offset: 0 },
+    { key: 'ArrowDown', ctrlKey: false, metaKey: true, index: 999, offset: 'Virtual block 999'.length },
+    { key: 'ArrowUp', ctrlKey: false, metaKey: true, index: 0, offset: 0 },
+  ])('navigates the full virtual model with $key', async item => {
+    const { editor, view } = setup();
+    const before = editor.state.doc;
+    view.focus();
+    const event = new KeyboardEvent('keydown', { ...item, bubbles: true, cancelable: true });
+    view.dom.dispatchEvent(event);
+    await Promise.resolve();
+    expect(event.defaultPrevented).toBe(true);
+    expect(editor.state.selection.eq(Selection.cursor([item.index, 0], item.offset))).toBe(true);
+    expect(view.dom.querySelector(`[data-fountain-path="${item.index}"]`)).not.toBeNull();
+    // Visible rows plus at most three pinned blocks at each selection endpoint.
+    expect(view.dom.querySelectorAll(':scope > [data-fountain-path]').length).toBeLessThanOrEqual(Math.ceil(window.innerHeight / 40) + 6);
+    expect(editor.state.doc).toBe(before);
+    view.destroy(); editor.destroy();
+  });
+
+  it.each(['Home', 'End'])('extends a native selection to document %s and retains its anchor', async key => {
+    const { editor, view } = setup();
+    editor.dispatch(editor.state.createTransaction().setSelection(Selection.cursor([500, 0], 4)));
+    view.focus();
+    const event = new KeyboardEvent('keydown', { key, ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true });
+    view.dom.dispatchEvent(event);
+    await Promise.resolve();
+    const expected = key === 'Home' ? Selection.range([0, 0], 0, [500, 0], 4)
+      : Selection.range([500, 0], 4, [999, 0], 'Virtual block 999'.length);
+    expect(editor.state.selection.eq(expected)).toBe(true);
+    const native = document.getSelection()!;
+    expect(native.anchorNode?.parentElement?.closest<HTMLElement>('[data-fountain-text-path]')?.dataset.fountainTextPath).toBe('500.0');
+    expect(native.anchorOffset).toBe(4);
+    const other = key === 'Home' ? 'End' : 'Home';
+    view.dom.dispatchEvent(new KeyboardEvent('keydown', { key: other, ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true }));
+    await Promise.resolve();
+    expect(editor.state.selection.eq(other === 'Home' ? Selection.range([0, 0], 0, [500, 0], 4)
+      : Selection.range([500, 0], 4, [999, 0], 'Virtual block 999'.length))).toBe(true);
+    expect(document.getSelection()!.anchorOffset).toBe(4);
+    // Visible rows plus at most three pinned blocks at each selection endpoint.
+    expect(view.dom.querySelectorAll(':scope > [data-fountain-path]').length).toBeLessThanOrEqual(Math.ceil(window.innerHeight / 40) + 6);
+    view.destroy(); editor.destroy();
+  });
+
+  it('navigates a read-only virtual reader without changing content', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: content(1000), editable: false });
+    const view = new EditorView(document.body.appendChild(document.createElement('div')), editor, { virtualization: true });
+    const before = editor.state.doc;
+    view.focus();
+    view.dom.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true, bubbles: true, cancelable: true }));
+    expect(editor.state.selection.eq(Selection.cursor([999, 0], 'Virtual block 999'.length))).toBe(true);
+    expect(editor.state.doc).toBe(before);
+    view.destroy(); editor.destroy();
+  });
+
+  it('respects plugin ownership of document navigation', () => {
+    const editor = createEditor({ schema: CoreSchemaSpec, content: content(1000), plugins: [new Plugin({
+      props: { handleKeyDown: (_editor, event) => event.key === 'End' },
+    })] });
+    const view = new EditorView(document.body.appendChild(document.createElement('div')), editor, { virtualization: true });
+    view.focus();
+    const before = editor.state.selection;
+    view.dom.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true, bubbles: true, cancelable: true }));
+    expect(editor.state.selection.eq(before)).toBe(true);
+    view.destroy(); editor.destroy();
+  });
+
+  it('leaves composition and embedded control navigation alone and removes its listener on destroy', () => {
+    const { editor, view } = setup();
+    view.focus();
+    const before = editor.state.selection;
+    const composing = new KeyboardEvent('keydown', { key: 'End', ctrlKey: true, isComposing: true, bubbles: true, cancelable: true });
+    view.dom.dispatchEvent(composing);
+    expect(composing.defaultPrevented).toBe(false);
+    const control = view.dom.appendChild(document.createElement('textarea'));
+    const local = new KeyboardEvent('keydown', { key: 'End', ctrlKey: true, bubbles: true, cancelable: true });
+    control.dispatchEvent(local);
+    expect(local.defaultPrevented).toBe(false);
+    expect(editor.state.selection.eq(before)).toBe(true);
+    view.destroy();
+    const detached = new KeyboardEvent('keydown', { key: 'End', ctrlKey: true, bubbles: true, cancelable: true });
+    view.dom.dispatchEvent(detached);
+    expect(detached.defaultPrevented).toBe(false);
+    editor.destroy();
+  });
+
   it('rejects invalid options without leaving a half-mounted editor surface', () => {
     const editor = createEditor({ schema: CoreSchemaSpec, content: content(10) });
     const mount = document.body.appendChild(document.createElement('div'));

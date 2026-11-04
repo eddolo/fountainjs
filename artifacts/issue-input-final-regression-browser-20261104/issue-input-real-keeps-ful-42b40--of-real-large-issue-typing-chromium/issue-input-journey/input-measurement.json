@@ -1,0 +1,123 @@
+{
+  "engine": "chromium",
+  "documentParagraphs": 5000,
+  "moduleURL": "http://127.0.0.1:4195/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/index.js",
+  "importExports": 0,
+  "mountedParagraphs": 37,
+  "exports": [],
+  "inputs": [
+    {
+      "data": "X",
+      "toTwoFramesMs": 37.69999998807907
+    },
+    {
+      "data": "Y",
+      "toTwoFramesMs": 37.69999998807907
+    },
+    {
+      "data": "Z",
+      "toTwoFramesMs": 35.200000047683716
+    }
+  ],
+  "events": [
+    {
+      "type": "pointerdown",
+      "ctrl": false,
+      "meta": false,
+      "anchor": null,
+      "offset": 0,
+      "scrollY": 333,
+      "target": "1"
+    },
+    {
+      "type": "pointerup",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 20,
+      "scrollY": 333,
+      "target": "1"
+    },
+    {
+      "type": "keydown",
+      "key": "End",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 20,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keyup",
+      "key": "End",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 20,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keydown",
+      "key": "X",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 20,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keyup",
+      "key": "X",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 21,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keydown",
+      "key": "Y",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 21,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keyup",
+      "key": "Y",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 22,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keydown",
+      "key": "Z",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 22,
+      "scrollY": 333,
+      "target": null
+    },
+    {
+      "type": "keyup",
+      "key": "Z",
+      "ctrl": false,
+      "meta": false,
+      "anchor": "1.0",
+      "offset": 23,
+      "scrollY": 333,
+      "target": null
+    }
+  ],
+  "errors": []
+}

@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep full Markdown serialization out of issue-workflow typing. Check source
+  preservation/losses on request, source entry or download; invalidate displayed
+  reports when document, source snapshot or export option changes. Use viewport
+  rendering for long author/reader documents. Virtual Ctrl+Home/End and Mac
+  document-boundary keys now navigate the model, support native Shift anchors,
+  and respect plugins, embedded controls and composition. Acquire owned text
+  pointer focus without scrolling to a remembered offscreen caret. Public signatures are
+  unchanged; two declaration hashes are reviewed for one new private view field.
+
 - Repair Markdown boundaries in affected sequences before proposing complete
   source after a child block changes kind. Avoid the repeated rejected-draft
   path for supported heading/code-to-paragraph conversions; retain unaffected

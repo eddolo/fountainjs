@@ -1,0 +1,60 @@
+[WebServer] (node:23176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (10.2s)
+
+
+  1) [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator(':scope > p').first()
+    Expected: "Edit this paragraph.XYZQ"
+    Received: "Paragraph 4970 with source link."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator(':scope > p').first()
+        14 × locator resolved to <p data-fountain-path="4971" data-fountain-content-dom="" data-fountain-node="paragraph">…</p>
+           - unexpected value "Paragraph 4970 with source link."
+
+
+       at ..\browser\issue-input-journey.ts:120
+
+      118 |   await page.screenshot({ path: resolve(result.root, 'last-edited.png') });
+      119 |   await page.getByLabel('Open Markdown draft file', { exact: true }).setInputFiles(editedFile);
+    > 120 |   await expect(result.first).toHaveText('Edit this paragraph.XYZQ');
+          |                              ^
+      121 |   await pending();
+      122 |   expect(await countExports()).toBe(3);
+      123 |   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
+        at runIssueInputJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-input-journey.ts:120:30)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-input-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-navigation-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-navigation-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-navigation-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-navigation-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-navigation-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 

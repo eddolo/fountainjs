@@ -27,8 +27,12 @@ export async function issueTableHandoffJourney(page: Page, info: TestInfo): Prom
     await page.screenshot({ path: info.outputPath(name), fullPage: true });
   };
   await verify(editor);
+  await expect(page.getByLabel('Markdown export warnings')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Check Markdown export', exact: true }).click();
   await expect(page.getByLabel('Markdown export warnings')).toContainText('first row column headers');
   await page.getByLabel('Table export', { exact: true }).selectOption('html');
+  await expect(page.getByLabel('Markdown export warnings')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Check Markdown export', exact: true }).click();
   await expect(page.getByLabel('Markdown export warnings')).not.toContainText('first row column headers');
   await capture('table-before-handoff.png');
   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();

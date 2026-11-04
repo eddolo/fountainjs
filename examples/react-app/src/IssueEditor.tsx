@@ -38,8 +38,15 @@ function download(name: string, value: string, type: string): void {
 
 function Reader({ json }: { json: ReturnType<ReturnType<typeof useFountain>['getJSON']> }) {
   const editor = useFountain({ schema: StarterKit.schema, content: json, editable: false });
-  return <FountainEditor editor={editor} ariaLabel="Issue preview" />;
+  return <FountainEditor editor={editor} ariaLabel="Issue preview" virtualization />;
 }
+
+type ExportCheck = {
+  readonly doc: EditorState['doc'];
+  readonly snapshot: ReturnType<typeof MarkdownImporter.parseWithSource>['source'];
+  readonly tableFormat: 'pipe' | 'html';
+  readonly result: ReturnType<typeof MarkdownExporter.exportWithSource>;
+};
 
 export function IssueEditor() {
   const initial = useMemo(() => {
@@ -63,7 +70,33 @@ export function IssueEditor() {
     return localImage(file, context);
   }, []);
   const upload = useRef<HTMLInputElement>(null);
-  const result = useMemo(() => MarkdownExporter.exportWithSource(state.doc, snapshot, { tableFormat }), [state.doc, snapshot, tableFormat]);
+  const [checked, setChecked] = useState<ExportCheck | null>(null);
+  const result = mode !== 'markdown' && checked?.doc === state.doc
+    && checked.snapshot === snapshot && checked.tableFormat === tableFormat ? checked.result : null;
+  // Keep complete serialization out of render/input. A report describes only
+  // the immutable document, source snapshot and export options actually checked.
+  const exportCurrent = () => {
+    try {
+      const doc = editor.state.doc;
+      const next = MarkdownExporter.exportWithSource(doc, snapshot, { tableFormat });
+      setChecked({ doc, snapshot, tableFormat, result: next });
+      return next;
+    } catch (cause) { setChecked(null); throw cause; }
+  };
+  const checkExport = () => {
+    try {
+      const next = exportCurrent();
+      setError('');
+      setMessage(`Checked current Markdown export: ${next.losses.length} warning${next.losses.length === 1 ? '' : 's'}.`);
+    } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
+  };
+  const downloadDraft = () => {
+    try {
+      download('issue-description.md', mode === 'markdown' ? raw : exportCurrent().markdown, 'text/markdown;charset=utf-8');
+      setError('');
+      setMessage('Downloaded description Markdown. Keep the host title separately; this does not create an online issue.');
+    } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
+  };
 
   const switchMode = (next: typeof mode) => {
     if (next === mode) return;
@@ -74,7 +107,7 @@ export function IssueEditor() {
           throw new Error('The editor rejected the Markdown update. Your source is still available.');
         }
         setSnapshot(parsed.source);
-      } else if (next === 'markdown') setRaw(result.markdown);
+      } else if (next === 'markdown') setRaw(exportCurrent().markdown);
       setError('');
       setMode(next);
     } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
@@ -104,19 +137,19 @@ export function IssueEditor() {
         <label className="issue-title">Issue title<input value={title} onChange={event => setTitle(event.target.value)} /></label>
         <section className="issue-card" aria-label="Issue description">
           <nav className="issue-modes" aria-label="Description mode">{(['visual', 'markdown', 'preview'] as const).map(value => <button key={value} aria-pressed={mode === value} onClick={() => switchMode(value)}>{value === 'visual' ? 'Visual editor' : value === 'markdown' ? 'Markdown source' : 'Reader preview'}</button>)}</nav>
-          <div hidden={mode !== 'visual'}><FountainComposer editor={editor} ariaLabel="Issue description editor" toolbarProps={toolbar} imageUpload={uploadImage} onError={reportError} /></div>
+          <div hidden={mode !== 'visual'}><FountainComposer editor={editor} ariaLabel="Issue description editor" virtualization toolbarProps={toolbar} imageUpload={uploadImage} onError={reportError} /></div>
           {mode === 'markdown' && <div className="issue-source"><label htmlFor="issue-markdown">Markdown description</label><textarea id="issue-markdown" aria-describedby="issue-source-help" spellCheck={false} value={raw} onChange={event => setRaw(event.target.value)} /><small id="issue-source-help">Source changes apply when you open Visual editor or Reader preview. Raw source is never injected as HTML.</small></div>}
           {mode === 'preview' && <div className="issue-reader"><p>READ-ONLY DESCRIPTION · NO AUTHOR TOOLBAR</p><Reader json={state.doc.toJSON()} /></div>}
         </section>
         {error && <p role="alert" className="issue-error">{error}</p>}
         <div className="issue-table-format"><label htmlFor="issue-table-format">Table export</label><select id="issue-table-format" aria-describedby="issue-table-format-help" value={tableFormat} disabled={mode === 'markdown'} onChange={event => setTableFormat(event.target.value as 'pipe' | 'html')}><option value="pipe">Markdown pipes · widest compatibility</option><option value="html">HTML tables · preserve cell structure</option></select></div>
         <p id="issue-table-format-help">HTML tables retain supported cell roles, spans and rich content when reopened here. Other readers must support HTML tables. This choice affects regenerated tables; untouched source stays unchanged. In source mode, download saves your raw text as written.</p>
-        <div className="issue-actions"><button onClick={() => { download('issue-description.md', mode === 'markdown' ? raw : result.markdown, 'text/markdown;charset=utf-8'); setMessage('Downloaded description Markdown. Keep the host title separately; this does not create an online issue.'); }}>Download Markdown draft</button><button onClick={() => upload.current?.click()}>Open Markdown draft</button><input ref={upload} type="file" accept=".md,.markdown,text/markdown,text/plain" aria-label="Open Markdown draft file" hidden onChange={event => { const file = event.target.files?.[0]; if (file) void reopen(file); event.target.value = ''; }} /></div>
+        <div className="issue-actions"><button onClick={downloadDraft}>Download Markdown draft</button><button onClick={() => upload.current?.click()}>Open Markdown draft</button><input ref={upload} type="file" accept=".md,.markdown,text/markdown,text/plain" aria-label="Open Markdown draft file" hidden onChange={event => { const file = event.target.files?.[0]; if (file) void reopen(file); event.target.value = ''; }} /></div>
         <p role="status">{message}</p>
       </section>
-      <aside className="issue-diagnostics" aria-label="Fountain diagnostics"><h2>Fountain diagnostics</h2><dl><dt>Engine</dt><dd>FountainJS · React surface</dd><dt>Document blocks</dt><dd>{state.doc.childCount} top-level blocks</dd><dt>Source preservation</dt><dd>{mode === 'markdown' ? 'Raw buffer — not yet applied' : result.preservation}</dd><dt>Export warnings</dt><dd>{result.losses.length}</dd><dt>Images</dt><dd>Local raster uploads · imported image URLs may load remotely</dd><dt>Collaboration / pagination</dt><dd>Not enabled in this workflow</dd><dt>Virtualization / server runtimes</dt><dd>Not measured by this page</dd></dl>
-        <details><summary>What does preservation mean?</summary><p>Exact means the unchanged source string is retained. Blocks or mapped-blocks retain safely matched untouched blocks and root reference definitions, including definitions directly before a paragraph; edited blocks are regenerated. Canonical means regeneration was necessary. Definitions inside containers and ambiguous source regions can still force canonical export after editing. This is not a guarantee that every imported syntax is understood.</p></details>
-        {result.losses.length > 0 && <ul aria-label="Markdown export warnings">{result.losses.map((loss, index) => <li key={index}>{loss.type}: {loss.detail}</li>)}</ul>}
+      <aside className="issue-diagnostics" aria-label="Fountain diagnostics"><h2>Fountain diagnostics</h2><button onClick={checkExport} disabled={mode === 'markdown'}>Check Markdown export</button><p>Check the current draft before sharing. Opening source or downloading also checks it; editing stays separate.</p><dl><dt>Engine</dt><dd>FountainJS · React surface</dd><dt>Document blocks</dt><dd>{state.doc.childCount} top-level blocks</dd><dt>Source preservation</dt><dd>{mode === 'markdown' ? 'Raw buffer — not yet applied' : result?.preservation ?? 'Not checked for this draft'}</dd><dt>Export warnings</dt><dd>{result ? result.losses.length : 'Not checked for this draft'}</dd><dt>Images</dt><dd>Local raster uploads · imported image URLs may load remotely</dd><dt>Collaboration / pagination</dt><dd>Not enabled in this workflow</dd><dt>Viewport rendering</dt><dd>Enabled above 250 top-level blocks</dd><dt>Server runtimes</dt><dd>Not measured by this page</dd></dl>
+        <details><summary>What does preservation mean?</summary><p>Exact means the unchanged source string is retained. Blocks or mapped-blocks retain safely matched untouched blocks and root reference definitions, including definitions directly before a paragraph; edited blocks are regenerated. Canonical means regeneration was necessary. Supported native list/quote edits can retain shared definitions, including container definitions. Other ambiguous or unsupported source regions can still require canonical export. Reports apply to the draft and table option actually checked; a change needs another check. This is not a guarantee that every imported syntax is understood.</p></details>
+        {result && result.losses.length > 0 && <ul aria-label="Markdown export warnings">{result.losses.map((loss, index) => <li key={index}>{loss.type}: {loss.detail}</li>)}</ul>}
         <div className="issue-exercise"><h3>Try the source-fidelity check</h3><ol><li>Open Markdown source and find the tilde code fence and double underscores.</li><li>Return to Visual editor. Edit only the first paragraph.</li><li>Switch back. Check that the untouched source is still there.</li><li>Download, reopen, and preview your draft.</li></ol></div>
       </aside>
     </div>

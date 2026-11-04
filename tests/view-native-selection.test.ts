@@ -97,3 +97,35 @@ it('restores native endpoints after a document edit replaces their text node', a
     expect(native.isCollapsed).toBe(true);
   } finally { view.destroy(); editor.destroy(); mount.remove(); document.getSelection()?.removeAllRanges(); }
 });
+
+
+it('lets a new text pointer acquire focus before placing its native caret', async () => {
+  const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'First text' }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Last text' }] },
+  ] } });
+  const mount = document.body.appendChild(document.createElement('div'));
+  const view = new EditorView(mount, editor);
+  // Reflect the real browser attribute; jsdom's contentEditable setter does not.
+  view.dom.setAttribute('contenteditable', 'true');
+  await Promise.resolve();
+  const outside = document.body.appendChild(document.createElement('input'));
+  const first = view.dom.querySelector<HTMLElement>('[data-fountain-text-path="0.0"]')!;
+  const last = view.dom.querySelector<HTMLElement>('[data-fountain-text-path="1.0"]')!;
+  const native = document.getSelection()!;
+  try {
+    outside.focus();
+    native.setBaseAndExtent(last.firstChild!, 9, last.firstChild!, 9);
+    const before = editor.state.doc;
+    const blocked = new MouseEvent('pointerdown', { bubbles: true, cancelable: true, button: 0 });
+    blocked.preventDefault(); first.dispatchEvent(blocked);
+    expect(document.activeElement).toBe(outside);
+    first.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, button: 0 }));
+    expect(document.activeElement).toBe(view.dom);
+    expect(editor.state.doc).toBe(before);
+    native.setBaseAndExtent(first.firstChild!, 2, first.firstChild!, 2);
+    first.dispatchEvent(new MouseEvent('pointerup', { bubbles: true, cancelable: true, button: 0 }));
+    expect(editor.state.selection).toMatchObject({ path: [0, 0], from: 2, to: 2 });
+    expect(editor.state.doc).toBe(before);
+  } finally { view.destroy(); editor.destroy(); outside.remove(); }
+});

@@ -19,3 +19,6 @@
 /artifacts/markdown-source-export-proof-final-browser-20261104/**/issue-html-source-journey/*.md -text
 /artifacts/markdown-source-proof-webkit-repeat-20261104/**/issue-html-source-journey/*.md -text
 /artifacts/markdown-boundary-repair-browser-20261104/**/boundary-repair-journey/*.md -text
+/artifacts/issue-input-regression-browser-20261104/**/*.md -text
+/artifacts/issue-input-final-regression-browser-20261104/**/*.md -text
+/artifacts/issue-input-production-browser-20261104/**/*.md -text

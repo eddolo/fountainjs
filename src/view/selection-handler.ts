@@ -386,7 +386,15 @@ export class SelectionHandler {
     // selection. Only bypass the shell that owns this editable region.
     const emptyTextBlock = atom.dataset.fountainEmptyTextBlock === 'true'
       && contentRegion && atom.contains(contentRegion);
-    if (contentRegion && atom.contains(contentRegion) && !emptyTextBlock) return;
+    if (contentRegion && atom.contains(contentRegion) && !emptyTextBlock) {
+      // Establish focus without revealing an old offscreen caret before the
+      // browser places this pointer's native text selection (notably Firefox).
+      if (!event.defaultPrevented && event.button === 0 && document.activeElement !== this.dom
+        && target.closest('input, textarea, select, button, [contenteditable]') === this.dom) {
+        this.dom.focus({ preventScroll: true });
+      }
+      return;
+    }
     try {
       const path = parseNodePath(atom);
       const node = getNodeAtPath(this.editor.state.doc, path);

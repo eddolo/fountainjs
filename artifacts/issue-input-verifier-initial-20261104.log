@@ -1,0 +1,1 @@
+First evidence-verifier attempt stopped at package/package.json byte equality. pnpm pack deliberately removes packageManager and scripts.prepublishOnly. The corrected verifier requires semantic equality after removing only those exact fields; emitted runtime and docs must still match current files byte-for-byte.

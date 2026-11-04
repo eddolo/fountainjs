@@ -1,0 +1,41 @@
+{
+  "engine": "chromium",
+  "documentParagraphs": 5000,
+  "moduleURL": "http://127.0.0.1:4195/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/index.js",
+  "importExports": 2,
+  "exports": [
+    {
+      "durationMs": 148
+    },
+    {
+      "durationMs": 241.10000002384186
+    },
+    {
+      "durationMs": 159.10000002384186
+    },
+    {
+      "durationMs": 116
+    },
+    {
+      "durationMs": 138.0999999642372
+    },
+    {
+      "durationMs": 115.80000001192093
+    }
+  ],
+  "inputs": [
+    {
+      "data": "X",
+      "toTwoFramesMs": 539.7999999523163
+    },
+    {
+      "data": "Y",
+      "toTwoFramesMs": 411.5
+    },
+    {
+      "data": "Z",
+      "toTwoFramesMs": 360.60000002384186
+    }
+  ],
+  "errors": []
+}

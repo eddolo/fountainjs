@@ -1,0 +1,54 @@
+[WebServer] (node:9204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:8480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (11.3s)
+
+
+  1) [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 
+
+    Error: Observe the actual module used by the host before instrumenting it.
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+       at ..\browser\issue-input-journey.ts:23
+
+      21 |   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+      22 |   await expect(editor).toBeVisible();
+    > 23 |   expect(moduleURLs.length, 'Observe the actual module used by the host before instrumenting it.').toBeGreaterThan(0);
+         |                                                                                                    ^
+      24 |   const moduleURL = moduleURLs.at(-1)!;
+      25 |   await page.evaluate(async url => {
+      26 |     const { MarkdownExporter } = await import(/* @vite-ignore */ url);
+        at measureIssueInput (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-input-journey.ts:23:100)
+        at runIssueInputJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-input-journey.ts:61:18)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-input-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-before-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-before-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-before-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-before-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-before-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 

@@ -1,5 +1,22 @@
 # FountainJS opportunity roadmap
 
+Issue-workflow input follow-up (2026-11-04, unreleased): remove full Markdown
+export from React rendering/typing and check only on explicit request, source
+entry or download. Reports become pending after document/source/option changes;
+raw-buffer downloads remain unconverted. Long author/reader drafts use viewport
+rendering. Virtual document-boundary keys now reach the full model, retain Shift
+anchors, and respect plugins, embedded controls and IME; pointer focus is acquired
+without revealing an old offscreen caret. Verified locally: 3,898 tests / 266
+files, 12 recorded browser journeys across Chromium/Firefox/WebKit, a production
+Chromium issue journey, 244 checks against the actual package without fake DOM,
+and unchanged API/headless/package/worker/conformance checks. The first final
+latency run failed the 100-block server-HTML p95 limit; one isolated unchanged
+rerun passed. Both are retained. Aggregate size limits still fail; full current-
+head CI, capacity review, remaining CommonMark and production parity stay open.
+The production recording also shows a long blank initial navigation; trace-based
+startup profiling is the next workflow follow-up, with no cause established.
+[Workflow contract](ISSUE_EDITOR_DEMO.md#export-checks-and-long-drafts).
+
 Block-kind boundary repair follow-up (2026-11-04, unreleased): validate/repair
 only an affected sequence when a changed child kind removes a Markdown boundary,
 then still require complete Fountain-document proof. The 1,000-paragraph repair
