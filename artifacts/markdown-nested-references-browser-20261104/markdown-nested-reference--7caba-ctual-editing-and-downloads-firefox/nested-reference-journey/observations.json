@@ -1,0 +1,14 @@
+{
+  "engine": "firefox",
+  "nativeTyping": true,
+  "untouchedNestedSourceRetained": true,
+  "referenceDestinationsAndTitlesRetained": true,
+  "undoOriginalExact": true,
+  "redoExact": true,
+  "nativeTaskCheckboxRetained": true,
+  "duplicateDefinitionPrecedenceRetained": true,
+  "actualDownloadUploadedAgain": true,
+  "editedFullModelReopened": true,
+  "CRLFDownloadsRetained": true,
+  "errors": []
+}

@@ -1,0 +1,17 @@
+[ref]: /target "Original title"
+
+# Research notes ###
+
+> First __quoted__ [link][ref].
+>
+  > Reviewed this quote.
+>
+ > Last _quoted_ [ref].
+
+*   First __source__ [link][ref].
+
+*   Reviewed this item.
+
+*   Last _source_ [ref].
+
+After the list.

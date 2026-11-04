@@ -34,6 +34,7 @@ import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries
 import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
 import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boundaries-journey';
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
+import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
@@ -6097,6 +6098,10 @@ test('keeps reference definitions outside a terminal fence after real structural
 
 test('reopens source-preserved issue drafts with the real HTML table adapter enabled', async ({ page }, info) => {
   await runIssueHTMLSourceJourney(page, info);
+});
+
+test('preserves nested reference Markdown through real list quote and task editing', async ({ page }, info) => {
+  await runMarkdownNestedReferenceJourney(page, info);
 });
 
 test('records native DOCX viewer disagreements without certifying math fidelity', async ({ page }, info) => {

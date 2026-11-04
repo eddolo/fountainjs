@@ -1,5 +1,50 @@
 # Markdown semantics and source fidelity
 
+## Nested root-reference source (2026-11-04, unreleased follow-up)
+
+Native Markdown source capture now carries the original root reference map into
+lazy list/quote ownership. Editing one item, quoted paragraph or task checkbox
+can retain unrelated reference labels, emphasis delimiters, nonsequential list
+markers, quote prefixes and LF/CRLF/CR spelling. Definitions before or after
+the container retain their original first-definition precedence and titles.
+The original immutable source snapshot remains reusable after repeated edits.
+
+Parser-derived root spans also capture loose lists and adjacent blocks in these
+scopes. Root definitions are owned only as trivia outside the captured content
+regions. If a loose list consumes blank placeholders left by reference extraction,
+the trailing region is released only after reparsing proves the complete same
+Fountain node. Boundary/footer checks still validate structural edits and moved
+open fences against the original shared scope. A generated definition cannot
+claim original separator ownership merely by using a familiar label.
+
+Every proposed nested replacement must reparse to the complete intended node,
+including attributes and marks. New reference-style generation, ambiguous source
+mapping, unsupported layout or changes to container structure retain canonical
+fallback and loss reporting. Containers that themselves carry shared definitions,
+footnote materialization, independent inline ownership and nested HTML-adapter
+ownership remain open. Source capture retains its existing depth/ownership bounds;
+reaching them does not limit ordinary parsing. No foreign AST, new runtime parser
+dependency, schema change or public API is introduced.
+
+All 3,840 units / 264 files pass, including the focused 177-test set and 53 new
+cases. Recorded Chromium/Firefox/WebKit conversion-lab journeys use native typing,
+undo/redo and task checkboxes. Eighteen actual exports retain exact CRLF source
+and reopen to the complete intended model; an actual downloaded draft is uploaded
+again in each engine. Twelve editor captures and six video samples per engine
+were inspected. Types/API/headless, package, real workerd, unchanged conformance,
+latency and retained-memory checks pass. The initial bundle-diagnostic invocation
+used the wrong directory; its corrected invocation and failed log are retained.
+
+The throttled 5,000-item/reference probe retains the untouched loose-list source
+at a repeated-export median of about 181 ms versus 34 ms for the parent's canonical
+rewrite. Capture costs about 1,363 versus 993 ms. Root/core static closures grow
+about 1.44 KiB raw / 0.37 KiB gzip; React/DOCX closures remain unchanged. These
+are serialization/capture measurements, not typing-speed claims. Full current-head
+CI and the two aggregate size ceilings remain open; individual entry/CSS ceilings
+pass. No acceptance limits or conformance scores changed. See [measured costs](BUILD_SIZE.md).
+Verification details: `artifacts/markdown-nested-references-verification-20261104.json`.
+This is not full CommonMark conformance or a release claim.
+
 ## HTML-adapted source boundaries (2026-11-04, unreleased follow-up)
 
 Registering `parseHTMLBlock`, `parseHTMLInline`, `parseHTMLParagraph` or

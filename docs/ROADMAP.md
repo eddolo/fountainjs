@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Nested root-reference source follow-up (2026-11-04, unreleased): native
+list/quote/task edits can retain unrelated source using the captured root link
+scope. Parser spans extend capture to loose lists and adjacent blocks while
+keeping definitions in root trivia. All 3,840 units / 264 files, focused 177-test
+set, three recorded desktop journeys, unchanged conformance, local performance/
+retention and package/workerd checks pass. Eighteen actual exports retain exact
+source and reopen completely; captures and sampled video were reviewed. Full CI
+and the two aggregate size ceilings remain open. Container-owned definitions, footnotes,
+nested HTML ownership and full CommonMark remain open. No parity or release promotion.
+[Contract](MARKDOWN_SOURCE.md#nested-root-reference-source-2026-11-04-unreleased-follow-up).
+
 Native-model Markdown audit (2026-11-04, no runtime change): the complete-source
 profile's six different native-model cases were inspected on LF and CRLF.
 Examples 148/187/494 combine adjacent identically formatted text leaves on HTML

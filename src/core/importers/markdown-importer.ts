@@ -207,6 +207,7 @@ interface MarkdownBlockCapture {
   readonly leading: string;
   readonly blocks: readonly MarkdownSourceBlockSnapshot[];
   readonly referenceDefinitions?: string;
+  readonly referenceScope?: References;
 }
 
 /**
@@ -435,6 +436,15 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
         if (capture) registerMarkdownNestedSource(block, capture, parse);
       });
     }
+  } else if (separated.referenceScope && !options.parseHTMLDocument && !options.parseHTMLFlow
+    && !options.parseHTMLBlock && !options.parseHTMLInline && !options.parseHTMLParagraph) {
+    const quietOptions = quietMarkdownOptions(options);
+    const parse = nestedFragmentParser(schema, quietOptions, separated.referenceScope);
+    const budget = { remaining: MAX_MARKDOWN_SOURCE_BLOCKS - separated.blocks.length };
+    separated.blocks.forEach((block, index) => {
+      const capture = nestedContainerCapture(block.source, document.child(index), schema, quietOptions, budget, 0, separated.referenceScope);
+      if (capture) registerMarkdownNestedSource(block, capture, parse);
+    });
   }
   return separated;
 }
@@ -443,26 +453,26 @@ interface NestedSourceBudget { remaining: number }
 const NESTED_SOURCE_CONTAINERS = new Set(['blockquote', 'bullet_list', 'ordered_list', 'task_list']);
 
 function nestedContainerCapture(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number): MarkdownNestedCapture | undefined {
+  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedCapture | undefined {
   if (!NESTED_SOURCE_CONTAINERS.has(node.type.name) || depth > 32) return undefined;
-  return { build: () => captureNestedContainer(source, node, schema, options, budget, depth) };
+  return { build: () => captureNestedContainer(source, node, schema, options, budget, depth, scope) };
 }
 
 function nestedSequenceCapture(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number): MarkdownNestedCapture {
-  return { build: () => captureNestedSequence(source, node, schema, options, budget, depth) };
+  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedCapture {
+  return { build: () => captureNestedSequence(source, node, schema, options, budget, depth, scope) };
 }
 
-function nestedFragmentParser(schema: Schema, options: MarkdownImportOptions): (source: string) => readonly Node[] {
+function nestedFragmentParser(schema: Schema, options: MarkdownImportOptions, scope?: References): (source: string) => readonly Node[] {
   return source => {
     const context = references(source, schema, options);
     if (context.definitions.size || extractFootnoteDefinitions(source, schema, options).definitions.length) return [];
-    return parseBlocks(context.lines, schema, context.definitions, options);
+    return parseBlocks(context.lines, schema, scope ?? context.definitions, options);
   };
 }
 
 function captureNestedSequence(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number): MarkdownNestedRecord | null {
+  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedRecord | null {
   if (depth > 32 || node.childCount + 1 > budget.remaining) return null;
   budget.remaining -= node.childCount + 1;
   const physical = sourceLines(source);
@@ -470,7 +480,7 @@ function captureNestedSequence(source: string, node: Node, schema: Schema, optio
   if (context.definitions.size || physical.length !== context.lines.length) return null;
   const spans: MarkdownBlockSpan[] = [];
   let valid = true;
-  const parsed = parseBlocks(context.lines, schema, context.definitions, options, undefined, undefined, span => {
+  const parsed = parseBlocks(context.lines, schema, scope ?? context.definitions, options, undefined, undefined, span => {
     if (span.blocks.length !== 1) valid = false;
     else spans.push(span);
   });
@@ -478,16 +488,16 @@ function captureNestedSequence(source: string, node: Node, schema: Schema, optio
     || parsed.some((child, index) => !child.eq(node.child(index)) || !child.eq(spans[index].blocks[0]))) return null;
   if (spans.some((span, index) => span.end < span.start || span.end >= physical.length
     || (index > 0 && span.start <= spans[index - 1].end))) return null;
-  return { kind: 'sequence', node, source, parse: nestedFragmentParser(schema, options), children: spans.map((span, index) => {
+  return { kind: 'sequence', node, source, parse: nestedFragmentParser(schema, options, scope), children: spans.map((span, index) => {
     const from = physical[span.start].start, to = physical[span.end].end;
     const child = node.child(index);
     return { from, to, node: child, canonical: true,
-      capture: nestedContainerCapture(source.slice(from, to), child, schema, options, budget, depth + 1) };
+      capture: nestedContainerCapture(source.slice(from, to), child, schema, options, budget, depth + 1, scope) };
   }) };
 }
 
 function nestedLineView(source: string, node: Node, values: readonly string[], continuations: readonly string[],
-  schema: Schema, options: MarkdownImportOptions, budget: NestedSourceBudget, depth: number, checkbox?: number): MarkdownNestedRecord | null {
+  schema: Schema, options: MarkdownImportOptions, budget: NestedSourceBudget, depth: number, checkbox?: number, scope?: References): MarkdownNestedRecord | null {
   const physical = sourceLines(source);
   if (physical.length !== values.length || !physical.every((line, index) => line.value.endsWith(values[index]))) return null;
   const lines: MarkdownSourceLineView[] = [];
@@ -499,11 +509,11 @@ function nestedLineView(source: string, node: Node, values: readonly string[], c
     body += value + line.ending;
   });
   return { kind: 'view', node, source, lines, checkbox,
-    body: nestedSequenceCapture(body, node, schema, options, budget, depth + 1) };
+    body: nestedSequenceCapture(body, node, schema, options, budget, depth + 1, scope) };
 }
 
 function nestedItemCapture(source: string, node: Node, indent: number, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number): MarkdownNestedCapture {
+  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedCapture {
   return { build: () => {
     if (depth > 32 || budget.remaining-- <= 0) return null;
     const physical = sourceLines(source);
@@ -514,19 +524,19 @@ function nestedItemCapture(source: string, node: Node, indent: number, schema: S
     const firstPrefix = physical[0].value.slice(0, physical[0].value.length - values[0].length);
     const checkbox = marker.kind === 'task' ? firstPrefix.lastIndexOf('[') + 1 : undefined;
     if (checkbox !== undefined && (checkbox <= 0 || !/[ xX]/u.test(firstPrefix[checkbox] ?? '') || firstPrefix[checkbox + 1] !== ']')) return null;
-    return nestedLineView(source, node, values, values.map(() => ' '.repeat(indent)), schema, options, budget, depth, checkbox);
+    return nestedLineView(source, node, values, values.map(() => ' '.repeat(indent)), schema, options, budget, depth, checkbox, scope);
   } };
 }
 
 function captureNestedContainer(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
-  budget: NestedSourceBudget, depth: number): MarkdownNestedRecord | null {
+  budget: NestedSourceBudget, depth: number, scope?: References): MarkdownNestedRecord | null {
   if (depth > 32 || budget.remaining-- <= 0) return null;
   const physical = sourceLines(source);
   if (node.type.name === 'blockquote') {
     const prefixes = physical.map(line => BLOCKQUOTE.exec(line.value)?.[0] ?? '');
     const fallback = prefixes.find(Boolean) ?? '> ';
     return nestedLineView(source, node, physical.map((line, index) => line.value.slice(prefixes[index].length)),
-      prefixes.map(prefix => prefix || fallback), schema, options, budget, depth);
+      prefixes.map(prefix => prefix || fallback), schema, options, budget, depth, undefined, scope);
   }
   if (node.childCount > budget.remaining) return null;
   budget.remaining -= node.childCount;
@@ -540,15 +550,33 @@ function captureNestedContainer(source: string, node: Node, schema: Schema, opti
     const marker = listMarker(context.lines[index]);
     if (!marker || marker.kind !== first.kind || marker.m !== first.m || children.length >= node.childCount) return null;
     const start = index;
-    const item = collectListItem(context.lines, index, schema, context.definitions, options);
+    const item = collectListItem(context.lines, index, schema, scope ?? context.definitions, options);
     index = item.nextIndex;
     const from = physical[start].start, to = physical[index - 1].end;
     const child = node.child(children.length);
     children.push({ from, to, node: child, canonical: false,
-      capture: nestedItemCapture(source.slice(from, to), child, marker.contentIndent, schema, options, budget, depth + 1) });
+      capture: nestedItemCapture(source.slice(from, to), child, marker.contentIndent, schema, options, budget, depth + 1, scope) });
     while (index < context.lines.length && !context.lines[index].trim()) index++;
   }
   return children.length === node.childCount ? { kind: 'sequence', node, source, children } : null;
+}
+
+function referenceSourceParser(footer: string, footerIsPure: boolean, scope: References, originals: readonly References[],
+  schema: Schema, options: MarkdownImportOptions): (value: string) => readonly Node[] {
+  const values = new Set<string>();
+  for (const definitions of originals) for (const [label, definition] of definitions) {
+    values.add(JSON.stringify([label, definition.href, definition.title]));
+  }
+  return value => {
+    if (footerIsPure && value === footer) return [];
+    const local = references(value.replace(/\r\n$|[\r\n]$/u, ''), schema, options);
+    for (const [label, definition] of local.definitions) {
+      if (!values.has(JSON.stringify([label, definition.href, definition.title]))) {
+        throw new Error('Changed reference scope cannot retain an independent Markdown boundary.');
+      }
+    }
+    return parseBlocks(local.lines, schema, scope, options);
+  };
 }
 
 function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
@@ -586,31 +614,10 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
   // projections and footnote materialization still need their own ownership.
   const ownsReferenceBoundaries = context && !options.parseHTMLDocument
     && !extractFootnoteDefinitions(source, schema, quietOptions).definitions.length;
-  const originalReferenceValues = new Set<string>();
-  if (ownsReferenceBoundaries) {
-    // An original separator may contain an ignored duplicate definition.
-    // Retain those spellings while preserving document-wide first precedence;
-    // a newly introduced value must not masquerade as source-owned trivia.
-    const scopes = definitionRegions.length === 1 ? [context]
-      : definitionRegions.map(region => references(region.prefix, schema, quietOptions).definitions);
-    for (const scope of scopes) {
-      for (const [label, definition] of scope) {
-        originalReferenceValues.add(JSON.stringify([label, definition.href, definition.title]));
-      }
-    }
-  }
-  const parseReferenceBoundary = ownsReferenceBoundaries ? (value: string): readonly Node[] => {
-    // This exact immutable footer was already parsed above. Pure definitions
-    // contribute no model nodes; changed/combined strings still use the parser.
-    if (referenceFooterIsPure && value === referenceDefinitions) return [];
-    const local = references(value.replace(/\r\n$|[\r\n]$/u, ''), schema, quietOptions);
-    for (const [label, definition] of local.definitions) {
-      if (!originalReferenceValues.has(JSON.stringify([label, definition.href, definition.title]))) {
-        throw new Error('Changed reference scope cannot retain an independent Markdown boundary.');
-      }
-    }
-    return parseBlocks(local.lines, schema, context, quietOptions);
-  } : undefined;
+  // Separators may contain ignored duplicate definitions. Keep their original
+  // values without allowing newly generated definitions to claim that trivia.
+  const parseReferenceBoundary = ownsReferenceBoundaries ? referenceSourceParser(referenceDefinitions, referenceFooterIsPure, context,
+    definitionRegions.length === 1 ? [context] : definitionRegions.map(region => references(region.prefix, schema, quietOptions).definitions), schema, quietOptions) : undefined;
   const contentRegions: Array<{ source: string; separatorAfter: string }> = [];
   let leading = segments.leading;
   for (const region of regions) {
@@ -648,6 +655,7 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
     leading,
     blocks: Object.freeze(blocks),
     referenceDefinitions,
+    referenceScope: ownsReferenceBoundaries ? context : undefined,
   });
 }
 
@@ -667,7 +675,7 @@ function captureParserMarkdownBlocks(source: string, schema: Schema, document: N
   const quietOptions = { ...options, onTeXTableIssue: undefined };
   const input = source.replace(/\r\n$|[\r\n]$/u, '');
   const context = references(input, schema, quietOptions);
-  if (context.definitions.size || extractFootnoteDefinitions(source, schema, quietOptions).definitions.length) return undefined;
+  if (extractFootnoteDefinitions(source, schema, quietOptions).definitions.length) return undefined;
   const physical = sourceLines(input);
   if (physical.length !== context.lines.length) return undefined;
   const spans: MarkdownBlockSpan[] = [];
@@ -678,9 +686,35 @@ function captureParserMarkdownBlocks(source: string, schema: Schema, document: N
   });
   if (!valid || spans.length !== document.childCount || parsed.length !== document.childCount
     || parsed.some((node, index) => !node.eq(document.child(index)) || !node.eq(spans[index].blocks[0]))) return undefined;
+  if (context.definitions.size) spans.forEach((span, index) => {
+    // A loose list may consume blank placeholders where root definitions were
+    // removed. Release its trailing trivia only after proving the same node.
+    let end = span.end;
+    while (end > span.start && !context.lines[end].trim()) end--;
+    if (end === span.end) return;
+    const content = parseBlocks(context.lines.slice(span.start, end + 1), schema, context.definitions, quietOptions);
+    if (content.length === 1 && content[0].eq(document.child(index))) spans[index] = { ...span, end };
+  });
   if (spans.some((span, index) => span.start < 0 || span.end < span.start || span.end >= physical.length
     || (index > 0 && span.start <= spans[index - 1].end))) return undefined;
-  const parse = (value: string): readonly Node[] => new MarkdownImporter().parse(value, schema, quietOptions).content;
+  let referenceDefinitions: string | undefined;
+  let referenceScopes: readonly References[] = [];
+  if (context.definitions.size) {
+    // Definitions may occur only in root trivia. Moving a captured container
+    // must never move its definition ownership or alter another block's links.
+    if (spans.some(span => references(source.slice(physical[span.start].start, physical[span.end].end), schema, quietOptions).definitions.size)) return undefined;
+    const gaps = [source.slice(0, physical[spans[0].start].start), ...spans.map((span, index) =>
+      source.slice(physical[span.end].end, spans[index + 1] ? physical[spans[index + 1].start].start : source.length))];
+    const contexts = gaps.map(gap => ({ gap, parsed: references(gap, schema, quietOptions) }));
+    if (contexts.some(value => value.parsed.lines.some(line => line.trim()))) return undefined;
+    const definitions = contexts.filter(value => value.parsed.definitions.size);
+    if (!definitions.length) return undefined;
+    referenceDefinitions = definitions.map(value => value.gap.replace(/(?:\r\n|\r|\n)$/u, ''))
+      .join(sourceLineEnding(source).repeat(2));
+    referenceScopes = definitions.map(value => value.parsed.definitions);
+  }
+  const parse = referenceDefinitions ? referenceSourceParser(referenceDefinitions, true, context.definitions, referenceScopes, schema, quietOptions)
+    : (value: string): readonly Node[] => new MarkdownImporter().parse(value, schema, quietOptions).content;
   const blocks = spans.map((span, index): MarkdownSourceBlockSnapshot => {
     const end = physical[span.end].end;
     const next = spans[index + 1];
@@ -693,7 +727,8 @@ function captureParserMarkdownBlocks(source: string, schema: Schema, document: N
     registerMarkdownSourceBoundary(block, parse);
     return block;
   });
-  return Object.freeze({ leading: source.slice(0, physical[spans[0].start].start), blocks: Object.freeze(blocks) });
+  return Object.freeze({ leading: source.slice(0, physical[spans[0].start].start), blocks: Object.freeze(blocks),
+    referenceDefinitions, referenceScope: referenceDefinitions ? context.definitions : undefined });
 }
 
 function isOpeningDelimiter(value: string): boolean {
