@@ -1,0 +1,57 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-settings.test.ts (5 tests | 4 failed) 56ms
+   ❯ generated Word document settings (5)
+     × owns an internal settings part for an ordinary document without changing its source model 17ms
+     × retains the default header and only enables even-page selection when requested 5ms
+     × retains the first header and only enables even-page selection when requested 5ms
+     × keeps original spacing declarations rather than subtracting the observed native layout offset 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-settings.test.ts > generated Word document settings > owns an internal settings part for an ordinary document without changing its source model
+AssertionError: Generate settings even without page templates: receiving applications must initialize Word document defaults.: expected undefined to be defined
+ ❯ assertSettingsPackage tests/docx-settings.test.ts:22:153
+     20| function assertSettingsPackage(bytes: Uint8Array) {
+     21|   const archive = unzipSync(bytes);
+     22|   expect(archive['word/settings.xml'], 'Generate settings even without…
+       |                                                                                                                                                         ^
+     23|   const settings = children(xml(archive['word/settings.xml']!));
+     24|   expect(settings).toHaveLength(1);
+ ❯ tests/docx-settings.test.ts:44:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/docx-settings.test.ts > generated Word document settings > retains the default header and only enables even-page selection when requested
+ FAIL  tests/docx-settings.test.ts > generated Word document settings > retains the first header and only enables even-page selection when requested
+AssertionError: Generate settings even without page templates: receiving applications must initialize Word document defaults.: expected undefined to be defined
+ ❯ assertSettingsPackage tests/docx-settings.test.ts:22:153
+     20| function assertSettingsPackage(bytes: Uint8Array) {
+     21|   const archive = unzipSync(bytes);
+     22|   expect(archive['word/settings.xml'], 'Generate settings even without…
+       |                                                                                                                                                         ^
+     23|   const settings = children(xml(archive['word/settings.xml']!));
+     24|   expect(settings).toHaveLength(1);
+ ❯ tests/docx-settings.test.ts:55:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/docx-settings.test.ts > generated Word document settings > keeps original spacing declarations rather than subtracting the observed native layout offset
+AssertionError: Generate settings even without page templates: receiving applications must initialize Word document defaults.: expected undefined to be defined
+ ❯ assertSettingsPackage tests/docx-settings.test.ts:22:153
+     20| function assertSettingsPackage(bytes: Uint8Array) {
+     21|   const archive = unzipSync(bytes);
+     22|   expect(archive['word/settings.xml'], 'Generate settings even without…
+       |                                                                                                                                                         ^
+     23|   const settings = children(xml(archive['word/settings.xml']!));
+     24|   expect(settings).toHaveLength(1);
+ ❯ tests/docx-settings.test.ts:68:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  02:49:13
+   Duration  2.89s (transform 52%, import 45%, tests 2%)

@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Emit native document settings for every DOCX export so receiving engines
+  initialize Word paragraph-spacing defaults. Repair the retained paper's
+  initial 7 pt offset without rewriting its spacing declarations. Independent
+  PDF coordinates now gate the setup heading and instruction positions, with
+  an actual pre-fix PDF as the negative control. Full units pass 3,582; broader
+  figure/caption/header layout and release acceptance remain unfinished.
+
 - Write native DOCX paragraph-group identities and contextual spacing rules;
   retain declared geometry through export/reopen. Use native heading outlines
   and bounded part/paragraph bindings for code/caption roles, while treating

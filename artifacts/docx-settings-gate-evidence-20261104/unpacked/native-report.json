@@ -1,0 +1,127 @@
+{
+  "toolchain": {
+    "office": "LibreOffice 24.2.7.2 420(Build:2)",
+    "python": "3.13.17 (main, Oct 22 2026, 02:40:32) [GCC 13.3.0]",
+    "platform": "linux",
+    "dpi": 120,
+    "fonts": {
+      "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+      "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+      "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+      "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+    }
+  },
+  "rendered": {
+    "source": {
+      "pages": 2,
+      "drawnImageObjects": 4,
+      "paragraphPositions": {
+        "Experimental setup": {
+          "x": 57.7,
+          "y": 184.418
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 75.7,
+          "y": 243.195
+        },
+        "Keep both probes at the same depth.": {
+          "x": 75.7,
+          "y": 257.695
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 75.7,
+          "y": 272.195
+        }
+      },
+      "pdfSHA256": "cee61a807d6c0418cd650251f1c7df4bec7a2f56f2ed8aeec8cab32d4d43769c",
+      "pageImages": [
+        "native/source/page-1.png",
+        "native/source/page-2.png"
+      ]
+    },
+    "exported": {
+      "pages": 2,
+      "drawnImageObjects": 4,
+      "paragraphPositions": {
+        "Experimental setup": {
+          "x": 57.7,
+          "y": 184.418
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 75.7,
+          "y": 243.195
+        },
+        "Keep both probes at the same depth.": {
+          "x": 75.7,
+          "y": 257.695
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 75.7,
+          "y": 272.195
+        }
+      },
+      "pdfSHA256": "fb730fc9b27ce86cc7898817b0902594646e80ca29f712ebe62988fb82654960",
+      "pageImages": [
+        "native/exported/page-1.png",
+        "native/exported/page-2.png"
+      ]
+    }
+  },
+  "paragraphPositionCheck": {
+    "scope": [
+      "Experimental setup",
+      "Record the initial temperature before starting the timer.",
+      "Keep both probes at the same depth.",
+      "Read the measurements without moving either vessel."
+    ],
+    "tolerancePt": 0.01,
+    "deltasPt": {
+      "Experimental setup": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Keep both probes at the same depth.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Read the measurements without moving either vessel.": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    "negativeControl": {
+      "retainedPreRepairPDF": "artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native",
+      "deltasPt": {
+        "Experimental setup": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Keep both probes at the same depth.": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 0.0,
+          "y": 7.0
+        }
+      },
+      "correctlyRejected": true
+    }
+  },
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "exportedSHA256": "2a4226e14aa216f2a1e1305e3fd8940dff94adcde32058b1e93cbdd237b50066",
+  "status": "native render and required-content checks passed; visual comparison still requires inspection",
+  "pixelFidelityCertified": false,
+  "microsoftWordCertified": false,
+  "sourceImportReport": "source-report.json",
+  "actualBrowserConversionReport": "conversion-report.json",
+  "interchangeReport": "interchange-report.json"
+}

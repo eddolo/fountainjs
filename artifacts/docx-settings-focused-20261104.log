@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx.test.ts (17 tests | 1 failed) 161ms
+   ❯ DOCX interchange (17)
+     × exports a valid bounded OOXML package and imports its structure in pure JavaScript 43ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx.test.ts > DOCX interchange > exports a valid bounded OOXML package and imports its structure in pure JavaScript
+AssertionError: expected [ '[Content_Types].xml', …(8) ] to deeply equal [ '[Content_Types].xml', …(7) ]
+
+- Expected
++ Received
+
+@@ -4,7 +4,8 @@
+    "docProps/app.xml",
+    "docProps/core.xml",
+    "word/_rels/document.xml.rels",
+    "word/document.xml",
+    "word/numbering.xml",
++   "word/settings.xml",
+    "word/styles.xml",
+  ]
+
+ ❯ tests/docx.test.ts:124:41
+    122|
+    123|     const archive = unzipSync(exported.bytes);
+    124|     expect(Object.keys(archive).sort()).toEqual([
+       |                                         ^
+    125|       '[Content_Types].xml', '_rels/.rels', 'docProps/app.xml', 'docPr…
+    126|       'word/_rels/document.xml.rels', 'word/document.xml', 'word/numbe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 36 passed (37)
+      Tests  1 failed | 590 passed (591)
+   Start at  02:49:34
+   Duration  22.73s (import 51%, tests 29%, transform 19%, worker 1%)
+
+     Import  310 modules were evaluated 452 times · 8.70s total, 51% of tracked time
+             ~2.73s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

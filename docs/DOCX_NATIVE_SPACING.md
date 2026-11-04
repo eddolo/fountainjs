@@ -1,5 +1,73 @@
 # Native paragraph spacing bridge (2026-11-04, unmerged)
 
+## Native document-default initialization
+
+The remaining common 7 pt offset is now repaired. The exporter previously wrote
+`word/settings.xml` only for even-page templates. LibreOffice applies Word's
+paragraph-spacing defaults when it reads that part; without it, this export
+retained additive Writer spacing. The same 7 pt after-space and 24 pt before-space
+therefore accumulated instead of using their maximum.
+
+Every generated DOCX now has an internal settings relationship, content-type
+registration and a settings root. It stays empty unless even-page templates
+require their existing flag. Original paragraph declarations, styles, document
+model and source fixture remain unchanged. This initializes generated Word
+defaults; it does not copy unrelated source settings or certify legacy
+compatibility-mode retention. See LibreOffice's pinned
+[settings dispatch](https://github.com/LibreOffice/core/blob/libreoffice-24.2.7.2/writerfilter/source/dmapper/DomainMapper.cxx)
+and [settings application](https://github.com/LibreOffice/core/blob/libreoffice-24.2.7.2/writerfilter/source/dmapper/DomainMapper_Impl.cxx).
+
+Implementation commit `0255f600ff3704f610e80ad3ee62acc38e96ceb0` adds five
+contracts; four fail on the preceding implementation and the even-page case
+already passes. The complete suite passes **3,582 tests / 252 files**. Build,
+framework types, packed ESM/CommonJS consumers, independent DOCX interoperability,
+the 119-module headless boundary, 419-declaration API surface and real workerd
+pass. The actual tarball SHA-256 is
+`9a64e32912c357cb1e46405371c2f6555020edb754b70d3877580cfa67618f9f`.
+Only the two DOCX bundles differ from the preceding package: **+7 ESM / +5 CJS
+bytes**. The other 167 runtime/CSS files are byte-identical. Seven size ceilings
+and the prior HTML timing failure remain unresolved; no limit changed.
+
+Three recorded one-worker headless browser journeys pass. All imported,
+reopened and standalone-reader captures are byte-identical to the previously
+inspected captures. Complete edited models and downloaded reader HTML also
+match the preceding audit. Native package differences are only the new settings
+part, its relationship/content-type registration and export timestamps;
+`word/document.xml` and `word/styles.xml` are byte-identical.
+
+[Native audit 41763890327](https://github.com/eddolo/fountainjs/actions/runs/41763890327)
+passes on verification commit `9e15472c9cdde46cd8b0bcb9a031df0dedd1e807`.
+Its archive SHA-256 matches GitHub's digest:
+`8770a0c7f0d656779692212ee01d750eddf656751a7aa8648104a700a9d0c4df`.
+All four final native page images equal the four inspected images from the first
+post-fix run. Source page images also equal the preceding audit. Both documents
+retain two Letter pages and four drawn image objects.
+
+Source and export now put the setup heading at **187.938 pt** vertically and
+the three instruction texts at **244.471 / 258.971 / 273.471 pt**. Instruction
+text remains at **75.7 pt** horizontally. Both the initial offset and accumulating
+list-gap errors are repaired for this unchanged fixture.
+
+The standard native workflow now independently extracts first-page PDF text
+coordinates with Poppler and requires these four paragraphs to match within
+**0.01 pt**. A retained, actual pre-fix PDF is the negative control: it must show
+the known **7 pt** offset and fail the current-position profile. Both controls
+pass. This is a bounded native regression check, not full pixel/Word certification.
+
+Other differences remain measured: figure-caption tops differ by **−3.2 / −6.4
+pt**, and the page-two recorded-temperatures heading differs by **+2 pt**.
+Header positioning, the original-footnote renderer discrepancy, richer flows
+and standalone HTML math/page-template rendering remain separate work. Source
+settings that explicitly request legacy/additive spacing still need a portable
+contract or dedicated import diagnostics before claiming that profile.
+
+Evidence: [verification](../artifacts/docx-settings-verification-20261104.json),
+[native review](../artifacts/docx-settings-native-review-20261104.json),
+[independent coordinate gate](../artifacts/docx-settings-gate-evidence-20261104/unpacked/paragraph-position-report.json),
+and [actual native export](../artifacts/docx-settings-gate-evidence-20261104/unpacked/native/exported/exported.pdf).
+
+## Earlier bridge checkpoint
+
 The DOCX adapter now writes a shared native paragraph style for each portable
 spacing group and direct `w:contextualSpacing` on/off declarations. Original
 before/after values remain declarations; the adapter never substitutes the
@@ -85,7 +153,7 @@ the other **167 runtime/CSS files** are byte-identical. The optional adapter add
 11,269 ESM / 9,319 CJS bytes in this checkpoint; no dependency, public entry,
 core/view code or acceptance limit changes.
 
-## Independent native result
+## Earlier independent native result (before document-default initialization)
 
 [Native audit 41761593707](https://github.com/eddolo/fountainjs/actions/runs/41761593707)
 passes on that source commit. The downloaded archive SHA-256 matches GitHub's

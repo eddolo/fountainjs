@@ -1,5 +1,15 @@
 # FountainJS opportunity roadmap
 
+Native Word defaults follow-up (2026-11-04, unmerged): emitting settings for every
+export repairs the retained paper's common 7 pt offset. Independent native PDF
+coordinates now match the source for the setup heading and all three instructions;
+the standard native gate rejects the actual pre-fix PDF as a negative control.
+Full units pass 3,582 / 252 files; recorded Chromium/Firefox/WebKit journeys,
+package/framework/headless/workerd checks pass. Only the optional DOCX bundles
+change (+7/+5 bytes). Figure/caption/header and other layout differences,
+unsupported flows, size/timing acceptance and release work remain open.
+[Implementation, native evidence and remaining scope](DOCX_NATIVE_SPACING.md).
+
 Native Word spacing bridge (2026-11-04, unmerged): shared native paragraph-style
 identities now retain contextual rules through actual DOCX download/reopen in
 Chromium, Firefox and WebKit. Original 7 pt declarations remain; internal list
