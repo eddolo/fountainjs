@@ -1,0 +1,18 @@
+[WebServer] (node:1596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:18208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\docx-spacing-identity-real.spec.ts:12:1 › a researcher edits the actual Word paper, preserves its HTML rule and sees the remaining native export loss (9.2s)
+(node:23204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\docx-spacing-identity-real.spec.ts:12:1 › a researcher edits the actual Word paper, preserves its HTML rule and sees the remaining native export loss (14.8s)
+(node:22144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\docx-spacing-identity-real.spec.ts:12:1 › a researcher edits the actual Word paper, preserves its HTML rule and sees the remaining native export loss (16.5s)
+
+  3 passed (49.3s)

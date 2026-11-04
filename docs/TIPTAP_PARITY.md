@@ -1,5 +1,13 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Word-import follow-up (2026-11-04, unmerged): default/exact style identities and
+explicit off overrides now feed portable contextual spacing. Real-paper editor
+and standalone-HTML list gaps resolve to zero in three desktop engines. Actual
+DOCX export/reopen still exposes the reported 7 pt rule loss; the entered empty
+item's missing number is another visual defect. Native fidelity, marker repair,
+size and timing acceptance remain open; no parity row/percentage is promoted.
+[Scope and evidence](DOCX_LIST_LAYOUT.md).
+
 Portable paragraph-flow work (2026-11-04, unmerged): opaque spacing groups now
 drive DOM-free gap resolution and live editor/full-HTML projections without
 rewriting source declarations. Three recorded desktop journeys verify 2/0/12 pt

@@ -22,7 +22,7 @@ import type { WordTableTextFormatting } from './style-cascade';
 import { projectWordRunStyle, wordStyleChild, wordStyleReference } from './style-projection';
 import type { XMLElement, XMLChild } from './xml-types';
 import { parseDOCXXML as parseXML } from './xml-parser';
-import { projectWordParagraphStyle } from './paragraph-style';
+import { projectWordParagraphStyle, retainWordSpacingGroups } from './paragraph-style';
 import { readWordTableAppearance, readWordTableProperty, wordTableAppearanceXML } from './table-appearance';
 import { isTableAppearance, type TableAppearance } from '../core/table-appearance';
 import { readWordTableWidth, wordTableWidthXML } from './table-width';
@@ -713,7 +713,13 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     else if (media.styles) issues.push({ code: 'block-emphasis-not-imported', severity: 'warning', message: 'The schema cannot represent explicit Word block emphasis; host heading/quote defaults may differ.', path });
   }
   if ((type === 'paragraph' || type === 'heading') && alignExplicit) attrs.alignExplicit = true;
+  if (isQuote && layout?.contextualSpacing !== undefined) issues.push({
+    code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
+    message: 'Word quote paragraphs become separate isolated quote containers. Spacing intent is retained, but same-style adjacency across those containers is not projected.',
+  });
   if (type === 'paragraph' && !isQuote && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
+    if (layout?.contextualSpacing !== undefined) issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
+      message: 'An image-only Word paragraph became an image block. Its original contextual paragraph spacing rule is not represented on that block.' });
     return { node: schema.node('image_super', { ...content[0].attrs, align, caption: '' }) };
   }
   // Word may put text, page breaks and display equations in one paragraph. Preserve their
@@ -734,6 +740,8 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
   }
   flush();
   if (!parts.length) parts.push(schema.node(type, attrs));
+  if (parts.length > 1 && layout?.contextualSpacing !== undefined) issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
+    message: 'A Word paragraph with contextual spacing was split into multiple blocks. Rule data remains on prose, but the original single-paragraph adjacency is not preserved.' });
   if (parts.length > 1 && content.some(node => node.type.name === 'math_block')) issues.push({ code: 'display-math-paragraph-split', severity: 'info', message: 'A mixed Word paragraph was split into prose and display-equation blocks without changing their order.', path });
   if (parts.length > 1 && content.some(node => node.type.name === 'page_break')) issues.push({ code: 'page-break-paragraph-split', severity: 'warning', message: 'An inline Word page break became a Fountain block boundary. Text order and break count remain, but the original shared paragraph identity and spacing need native layout verification.', path });
   if (isQuote) {
@@ -1611,7 +1619,11 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     return Object.freeze({ path, declaredBytes, handling });
   }));
   const fallback = schema.nodes.paragraph ? schema.node('paragraph') : undefined;
-  const document = schema.node('doc', pageSettings ? { pageSettings } : {}, blocks.length ? blocks : fallback ? [fallback] : []);
+  const document = schema.node('doc', pageSettings ? { pageSettings } : {}, retainWordSpacingGroups(blocks.length ? blocks : fallback ? [fallback] : [], (path, caption) => {
+    issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
+      message: caption ? 'Caption spacing intent is retained, but caption adjacency is not projected as a paragraph flow.'
+        : 'The host node does not declare the paragraph-flow text-carrier contract. Spacing intent is retained without claiming a live gap projection.' });
+  }));
   schema.validate(document);
   return Object.freeze({ document, report: report(issues), packageParts });
 }

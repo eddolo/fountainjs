@@ -1,0 +1,61 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (22 tests | 2 failed) 265ms
+   ❯ native Word paragraph identity joins the portable spacing model (22)
+     × reports an image-only paragraph rule lost when the image becomes a block 35ms
+     × reports a contextual paragraph split by a page break instead of claiming shared identity is preserved 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > reports an image-only paragraph rule lost when the image becomes a block
+AssertionError: expected [] to deeply equal [ [ +0 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-spacing-identity.test.ts:115:61
+    113|     expect(result.document.child(0).type.name).toBe('image_super');
+    114|     expect(result.document.child(0).attrs.src).toBe(image.attrs.src);
+    115|     expect(contextualLoss(result).map(issue => issue.path)).toEqual([[…
+       |                                                             ^
+    116|   });
+    117|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > reports a contextual paragraph split by a page break instead of claiming shared identity is preserved
+AssertionError: expected [] to deeply equal [ [ +0 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-spacing-identity.test.ts:123:61
+    121|     const result = importDOCX(source(body), splitSchema);
+    122|     expect(result.document.content.map(node => node.type.name)).toEqua…
+    123|     expect(contextualLoss(result).map(issue => issue.path)).toEqual([[…
+       |                                                             ^
+    124|   });
+    125|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 20 passed (22)
+   Start at  01:02:20
+   Duration  3.34s (transform 49%, import 42%, tests 8%)

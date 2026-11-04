@@ -1,0 +1,10 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+tests/manual/docx-spacing-identity-real.spec.ts(76,65): error TS2339: Property 'complete' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'complete' does not exist on type 'HTMLElement'.
+tests/manual/docx-spacing-identity-real.spec.ts(76,85): error TS2339: Property 'naturalWidth' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'naturalWidth' does not exist on type 'HTMLElement'.
+tests/manual/docx-spacing-identity-real.spec.ts(77,75): error TS2339: Property 'naturalWidth' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'naturalWidth' does not exist on type 'HTMLElement'.
+tests/manual/docx-spacing-identity-real.spec.ts(77,105): error TS2339: Property 'naturalHeight' does not exist on type 'HTMLElement | SVGElement'.
+  Property 'naturalHeight' does not exist on type 'HTMLElement'.
+[ELIFECYCLE] Command failed with exit code 1.

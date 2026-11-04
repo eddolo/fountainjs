@@ -1,0 +1,67 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (20 tests | 2 failed) 273ms
+   ❯ native Word paragraph identity joins the portable spacing model (20)
+     × reports a host carrier without the paragraph-flow contract while retaining its rule data 8ms
+     × reports Word quote adjacency across separate isolated quote containers as unfinished 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > reports a host carrier without the paragraph-flow contract while retaining its rule data
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-spacing-identity.test.ts:96:61
+     94|     const result = importDOCX(source(paragraph('One', 'Body') + paragr…
+     95|     expect(result.document.child(0).attrs.layout).toMatchObject({ cont…
+     96|     expect(contextualLoss(result).map(issue => issue.path)).toEqual([[…
+       |                                                             ^
+     97|   });
+     98|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > reports Word quote adjacency across separate isolated quote containers as unfinished
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-spacing-identity.test.ts:103:61
+    101|     expect(result.document.content.map(node => node.type.name)).toEqua…
+    102|     expect(result.document.child(0).child(0).attrs.layout.contextualSp…
+    103|     expect(contextualLoss(result).map(issue => issue.path)).toEqual([[…
+       |                                                             ^
+    104|   });
+    105|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 18 passed (20)
+   Start at  00:59:21
+   Duration  4.13s (transform 51%, import 42%, tests 7%)

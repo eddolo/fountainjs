@@ -1,0 +1,24 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+tests/docx-spacing-identity.test.ts(36,12): error TS18046: 'first' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(37,12): error TS18046: 'second' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(37,38): error TS18046: 'first' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(38,12): error TS18046: 'second' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(39,12): error TS18046: 'first' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(48,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(48,73): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(55,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(55,69): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(56,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(56,73): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(58,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ParagraphLayout | undefined'.
+tests/docx-spacing-identity.test.ts(65,32): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ParagraphLayout | undefined'.
+tests/docx-spacing-identity.test.ts(66,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(66,73): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(77,48): error TS18046: 'node.attrs.layout' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(78,48): error TS18046: 'node.attrs.layout' is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(102,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(128,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(134,12): error TS2571: Object is of type 'unknown'.
+tests/docx-spacing-identity.test.ts(145,19): error TS2698: Spread types may only be created from object types.
+tests/docx-spacing-identity.test.ts(159,19): error TS2571: Object is of type 'unknown'.
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,5 +1,13 @@
 # FountainJS opportunity roadmap
 
+Word-import follow-up (2026-11-04, unmerged): actual paragraph-style identities
+now drive contextual spacing, including omitted/off neighbours. Three recorded
+real-paper journeys verify imported/HTML zero list gaps and explicitly expose
+the remaining 7 pt DOCX-export loss. Visual review also identifies an invisible
+empty-item number after Enter. Native output, that marker defect, size acceptance
+and the prior HTML timing failure remain open. No percentage promotion.
+[Evidence scope and remaining work](DOCX_LIST_LAYOUT.md).
+
 Paragraph-flow checkpoint (2026-11-04, unmerged): retain opaque spacing-group
 identity and contextual intent in portable JSON/HTML, then derive gaps from the
 current model, including offscreen neighbours and Yjs edits. Recorded desktop

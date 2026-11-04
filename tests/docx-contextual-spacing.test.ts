@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { strToU8, zipSync } from 'fflate';
-import { Schema } from '../src/core';
+import { paragraphSpacingAt, Schema } from '../src/core';
 import { StarterKit } from '../src/extensions';
 import { importDOCX } from '../src/docx';
 import { parseDOCXXML } from '../src/docx/xml-parser';
@@ -66,12 +66,14 @@ describe('Word contextual-spacing declaration ownership', () => {
     expect(() => createWordRunStyleCascade({ styles: [], paragraphDefaults: { contextualSpacing: value as unknown as boolean } })).toThrow(/contextualSpacing/);
   });
 
-  it('reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it', () => {
+  it('retains the effective adjacency rule and actual style identity without rewriting declared spacing', () => {
     const result = importDOCX(source(), schema);
     expect(result.document.textContent).toBe('FirstSecond');
     const issues = result.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-imported');
-    expect(issues.map(issue => issue.path)).toEqual([[0], [1]]);
-    expect(result.document.child(0).attrs.layout).toMatchObject({ spacingAfter: 7 });
+    expect(issues).toEqual([]);
+    expect(result.document.child(0).attrs.layout).toMatchObject({ spacingAfter: 7, contextualSpacing: true, spacingGroup: 'word:style:Body' });
+    expect(result.document.child(1).attrs.layout).toMatchObject({ spacingAfter: 7, contextualSpacing: true, spacingGroup: 'word:style:Body' });
+    expect(paragraphSpacingAt(result.document, [1])?.spacingBefore).toBe(0);
     expect(result.report.issues.some(issue => issue.code === 'unresolved-paragraph-properties' && issue.message.includes('contextualSpacing'))).toBe(false);
   });
 
@@ -79,15 +81,19 @@ describe('Word contextual-spacing declaration ownership', () => {
     const result = importDOCX(source('<w:contextualSpacing w:val="false"/>'), schema);
     expect(result.report.issues.some(issue => issue.code === 'paragraph-contextual-spacing-not-imported')).toBe(false);
     const direct = importDOCX(source('<w:contextualSpacing/>', '<w:contextualSpacing w:val="false"/>'), schema);
-    expect(direct.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-imported').map(issue => issue.path)).toEqual([[1]]);
+    expect(direct.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-imported')).toEqual([]);
+    expect(direct.document.child(0).attrs.layout).toMatchObject({ contextualSpacing: false, spacingGroup: 'word:style:Body' });
+    expect(direct.document.child(1).attrs.layout).toMatchObject({ contextualSpacing: true, spacingGroup: 'word:style:Body' });
+    expect(paragraphSpacingAt(direct.document, [1])?.spacingBefore).toBe(7);
   });
 
-  it('identifies the retained scientific source rule without changing its fixture or claiming layout is fixed', () => {
+  it('represents the retained scientific source rule without changing its fixture or claiming native export is fixed', () => {
     const result = importDOCX(readFileSync('tests/fixtures/native-docx/cooling-report.docx'), schema);
     // The retained source enables the rule on its title as well as the three
-    // numbered paragraphs; unused list styles must not add more diagnostics.
-    expect(result.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-imported').map(issue => issue.path)).toEqual([[0], [5], [6], [7]]);
+    // numbered paragraphs; original declarations remain independent of gaps.
+    expect(result.document.child(0).attrs.layout).toMatchObject({ contextualSpacing: true, spacingGroup: 'word:style:Title' });
+    expect(result.report.issues.filter(issue => issue.code === 'paragraph-contextual-spacing-not-imported')).toEqual([]);
     const list = result.document.content.find(node => node.type.name === 'ordered_list')!;
-    expect(list.child(0).child(0).attrs.layout).toMatchObject({ spacingAfter: 7 });
+    expect(list.child(0).child(0).attrs.layout).toMatchObject({ spacingAfter: 7, contextualSpacing: true, spacingGroup: 'word:style:ListNumber' });
   });
 });

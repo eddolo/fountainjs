@@ -1,0 +1,208 @@
+{
+  "captures": [
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/chromium/imported.png",
+      "sha256": "47e611a007547ffdf0b2488b461132886a42eeb801510d579200144d17f19aad",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/chromium/imported.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/chromium/entered.png",
+      "sha256": "9f3469b8ac9a3d66d97ed1bcadabe81346db5647693503bcfb570772fdbb42d0",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/chromium/entered.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/chromium/reader.png",
+      "sha256": "f15e14de5e4053d20b97a8838e3ccd3844445b43e51084ab56a41ce4b5ef2cb6",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/chromium/reader.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/chromium/native-export-loss.png",
+      "sha256": "81ca9789ca5092efa80d0e42cc450f636a020001358003d46391770e5778af8d",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/chromium/native-export-loss.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/firefox/imported.png",
+      "sha256": "e791f3d9662554fea24a93df533e1096350162861df3ceb343eb1dd9ddd1cf6a",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/firefox/imported.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/firefox/entered.png",
+      "sha256": "af805a8ae0082dca4a3e9a3d08b95f876424bafa00279b48cf173c4c21f0e1b5",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/firefox/entered.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/firefox/reader.png",
+      "sha256": "90ee650da9358a243831b2e132951adbad51c83e9b1851523883b1c1c1ac6abb",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/firefox/reader.png",
+      "byteIdentical": false,
+      "needsFreshReview": true
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/firefox/native-export-loss.png",
+      "sha256": "622f9ff03cb3a2116a6c02a2aa19f210ce3b562ca5d89e62d139a83468566ae5",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/firefox/native-export-loss.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/webkit/imported.png",
+      "sha256": "cf325ecedf02f391da4e30f24b00e1e35f214fed6da8dd6acd082d5299d283cd",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/webkit/imported.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/webkit/entered.png",
+      "sha256": "5b48f95b1f963c1c9c02e5d1ea0753ced98ff357b956a2fe4680dbe64ea37668",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/webkit/entered.png",
+      "byteIdentical": true,
+      "needsFreshReview": false
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/webkit/reader.png",
+      "sha256": "85eb7fc3fa114a59afe92f94d9ccc91668b0c31d107240c7f8bc9d852b969fa4",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/webkit/reader.png",
+      "byteIdentical": false,
+      "needsFreshReview": true
+    },
+    {
+      "path": "artifacts/docx-spacing-identity-verified-real-20261104/webkit/native-export-loss.png",
+      "sha256": "9a1f5045b4713b9527fff949007dc5413eb88e3983b8eb2a32eaabc522f2c277",
+      "prior": "artifacts/docx-spacing-identity-real-20261104/webkit/native-export-loss.png",
+      "byteIdentical": true,
+      "needsFreshReview": true
+    }
+  ],
+  "observations": {
+    "chromium": {
+      "initialGaps": [
+        0,
+        0
+      ],
+      "enteredHeight": 16.859375,
+      "emptyMarkerDiagnostic": {
+        "paragraph": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "item": "<li data-fountain-node=\"list_item\" data-fountain-path=\"5.1\" data-fountain-paragraph-marker-font=\"\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\" style=\"margin-block: 0px; --fountain-paragraph-marker-family: Arial; --fountain-paragraph-marker-size: 11pt; --fountain-paragraph-marker-line: 1.15;\"><p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></li>",
+        "beforeContent": "\"\" counter(list-item) \".\"",
+        "beforeDisplay": "inline-block",
+        "markerVariable": "\"\" counter(list-item,decimal) \".\""
+      },
+      "readerGap": 0,
+      "readerImages": [
+        {
+          "width": 1000,
+          "height": 320
+        },
+        {
+          "width": 1200,
+          "height": 560
+        },
+        {
+          "width": 480,
+          "height": 100
+        }
+      ],
+      "nativeReopenGap": 9.328125,
+      "actualWordSource": true,
+      "enterUndoRedoBackspace": true,
+      "originalDeclaredAfterPt": 7,
+      "actualJSONAndHTMLDownloads": true,
+      "actualDOCXDownloadReopened": true,
+      "nativeExportRuleRetained": false,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    },
+    "firefox": {
+      "initialGaps": [
+        0,
+        -0.000244140625
+      ],
+      "enteredHeight": 16.866668701171875,
+      "emptyMarkerDiagnostic": {
+        "paragraph": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "item": "<li data-fountain-node=\"list_item\" data-fountain-path=\"5.1\" style=\"margin-block: 0px; --fountain-paragraph-marker-family: Arial; --fountain-paragraph-marker-size: 11pt; --fountain-paragraph-marker-line: 1.15;\" data-fountain-paragraph-marker-font=\"\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></li>",
+        "beforeContent": "\"\" counter(list-item) \".\"",
+        "beforeDisplay": "inline-block",
+        "markerVariable": "\"\" counter(list-item,decimal) \".\""
+      },
+      "readerGap": 0,
+      "readerImages": [
+        {
+          "width": 1000,
+          "height": 320
+        },
+        {
+          "width": 1200,
+          "height": 560
+        },
+        {
+          "width": 480,
+          "height": 100
+        }
+      ],
+      "nativeReopenGap": 9.3333740234375,
+      "actualWordSource": true,
+      "enterUndoRedoBackspace": true,
+      "originalDeclaredAfterPt": 7,
+      "actualJSONAndHTMLDownloads": true,
+      "actualDOCXDownloadReopened": true,
+      "nativeExportRuleRetained": false,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    },
+    "webkit": {
+      "initialGaps": [
+        0,
+        0
+      ],
+      "enteredHeight": 16.84375,
+      "emptyMarkerDiagnostic": {
+        "paragraph": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "item": "<li data-fountain-node=\"list_item\" data-fountain-path=\"5.1\" data-fountain-paragraph-marker-font=\"\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\" style=\"margin-block: 0px; --fountain-paragraph-marker-family: Arial; --fountain-paragraph-marker-size: 11pt; --fountain-paragraph-marker-line: 1.15;\"><p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></li>",
+        "beforeContent": "\"\" counter(list-item) \".\"",
+        "beforeDisplay": "inline-block",
+        "markerVariable": "\"\" counter(list-item,decimal) \".\""
+      },
+      "readerGap": 0,
+      "readerImages": [
+        {
+          "width": 1000,
+          "height": 320
+        },
+        {
+          "width": 1200,
+          "height": 560
+        },
+        {
+          "width": 480,
+          "height": 100
+        }
+      ],
+      "nativeReopenGap": 9.328125,
+      "actualWordSource": true,
+      "enterUndoRedoBackspace": true,
+      "originalDeclaredAfterPt": 7,
+      "actualJSONAndHTMLDownloads": true,
+      "actualDOCXDownloadReopened": true,
+      "nativeExportRuleRetained": false,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    }
+  },
+  "tarball": {
+    "path": "artifacts/docx-spacing-identity-tarball-consumer-20261104/fountainjs-editor-0.4.0-beta.2.tgz",
+    "sha256": "157f62091d1ffaea165148c766600df1f693901901f439c77f4907de3cf8c439"
+  }
+}

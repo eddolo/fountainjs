@@ -1,10 +1,11 @@
 # DOCX list-layout repair in progress
 
-The retained scientific source and its native audit expose an 18 pt shift in
+The initial retained scientific source audit exposed an 18 pt shift in
 the first numbered instruction: source text begins at 75.7 pt; the exported
 text begins at 93.7 pt. Source numbering uses a 360-twip text indent and hanging
-indent, while the generated definition uses a 720-twip text indent. Reopening
-also applies paragraph geometry on top of the browser list gutter.
+indent, while the original generated definition used a 720-twip text indent.
+The portable-geometry checkpoint below repairs that horizontal drift; vertical
+native-export spacing and broader fidelity remain unfinished.
 
 This work is on `fix/docx-numbering-layout-20261103`, separate from the published
 font repair. It is not yet a completed layout feature or release candidate.
@@ -92,7 +93,78 @@ does not establish complete native Word or whole-document visual fidelity.
 An actual packed local tarball additionally passes ESM/CommonJS root/core HTML
 and native DOCX list-geometry consumer checks in Node. It was not published.
 
-## Portable contextual-spacing implementation (2026 11 04)
+## Word import joins portable paragraph flows (2026 11 04)
+
+The importer now keeps the actual valid Word paragraph-style identity, including
+an omitted `pStyle` that selects the declared default. It does not compare display
+names, formatting equality or a shared ancestor. Styles are case-sensitive. An
+unnamed default has its own identity; an unresolved explicit reference does not
+invent a same-style relationship. Both an enabled and an explicitly disabled
+unrepresentable rule produce a located warning.
+
+Only identities needed by a contextual-spacing declaration become portable
+spacing groups. Every member of such a group is retained, including neighbours
+with an omitted or disabled rule. Styles with no declaration anywhere in the
+imported document do not introduce unrelated Word metadata into ordinary
+paragraphs. Original before/after values remain unchanged. These document-local
+opaque identities are not a stylesheet transplant or a globally unique style
+registry; applications combining independent documents must remap local groups.
+
+On the unchanged cooling-report source, exactly four paragraphs acquire rule
+data: its Title and three ListNumber paragraphs. The complete expected model
+comparison includes those additions and every existing node/attribute; no
+attributes or assets are removed to obtain equality. The list retains its
+original 7 pt after-spacing while deriving zero gaps between its instructions.
+The rest of the model, including figures, table, equations and separate stories,
+matches the retained package exactly.
+
+Recorded Chromium, Firefox and WebKit journeys use the actual Word source, not
+a synthetic Fountain replacement. They cover Enter, a visible empty line,
+Undo/Redo/Backspace, actual JSON/HTML downloads, a standalone HTML reader, and
+an actual DOCX download/reopen. The imported and reader list gaps measure zero;
+the reopened DOCX still measures about 9.33 CSS px (7 pt). That last measurement
+records a remaining loss, not native-fidelity success.
+
+Native export remains unfinished and reports
+`paragraph-contextual-spacing-not-exported`. With the same clock input and the
+unchanged lab MathJax adapter, all 18 native export parts and the complete ZIP
+remain byte-identical to `ec2f4a2`; no native rendering improvement is inferred.
+No new LibreOffice run is substituted for this explicit unchanged-output proof.
+The earlier native PDF evidence still describes the exported spacing defect.
+
+Word quote paragraphs that become separate isolated containers, a contextual
+paragraph split by a page break/equation, an image-only paragraph promoted to a
+block, captions without paragraph-flow projection, and custom carriers lacking
+the flow contract retain explicit import diagnostics. This is not complete
+contextual spacing for every Word structure.
+
+Visual review also found an empty-item marker problem: the entered blank
+numbered item has no visible number while the following items advance to 3/4.
+The line and spacing checks pass; that does not certify marker visibility. This
+defect remains work before release. Standalone HTML currently displays math
+source and separate header/footer stories, not native paginated Word output.
+
+The final image audit scrolls each embedded image into view and waits for a
+successful decode before taking the full-reader capture. All three images load
+in every engine. An earlier Firefox full-page capture showed the header image's
+alt text because that offscreen image was still lazy-loaded; this was an audit
+timing issue, not evidence that the packaged image was missing.
+
+Verification: 3,532 unit tests in 250 files, including 23 new import contracts;
+framework types; package-entry checks; the 118-module headless boundary; DOCX
+interoperability; and the unchanged 419-file public API surface pass. Actual
+packed ESM/CommonJS root/core consumers and real Cloudflare workerd also exercise
+native Word bytes, the 10/12-to-2 pt case, retained off intent, transactions and
+HTML reopening without browser globals. Twelve final captures were reviewed:
+nine by byte identity with inspected captures and three by fresh inspection.
+Of 169 built runtime/CSS artifacts, only DOCX ESM/CommonJS changed.
+[Bound source, checks and visual observations](../artifacts/docx-spacing-identity-verification-20261104.json).
+
+The larger feature branch still fails size acceptance and has an unresolved
+server-HTML timing gate. This checkpoint does not change budgets, dependencies,
+CSS or public API declarations, and does not promote a parity percentage.
+
+## Earlier portable contextual-spacing checkpoint (ec2f4a2)
 
 Optional `ParagraphLayout.spacingGroup` is an opaque, case-sensitive identity;
 `contextualSpacing` is a retained boolean intent. These are application data,
@@ -168,7 +240,7 @@ the failed gate. No acceptance threshold was changed. Full logs, fixture/source
 hashes and final browser observations are bound in
 [the verification record](../artifacts/paragraph-spacing-verification-20261104.json).
 
-Native Word import still reports the unresolved source rule. Export of these
+At that checkpoint native Word import still reported the unresolved source rule. Export of these
 new portable fields reports `paragraph-contextual-spacing-not-exported`, including
 caption metadata where present. Word style identities/group bindings and native
 contextual-spacing output are the next bridge work. Do not describe this as a

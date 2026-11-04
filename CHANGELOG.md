@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Bind imported Word contextual-spacing rules to actual paragraph identities,
+  including default styles and omitted/off neighbours, without rewriting declared
+  spacing. The retained paper's imported and standalone-HTML list gaps now resolve
+  to zero. Diagnose unsupported flow conversions and unresolved identities.
+  Native DOCX export still drops the rule with an explicit warning; no full
+  Word-fidelity or release-readiness claim.
+
 - Add optional opaque `spacingGroup` and `contextualSpacing` paragraph-layout
   data, DOM-free gap resolution, and schema-defined paragraph flows. Keep the
   declarations through JSON/HTML, history, reordering and collaboration; derive

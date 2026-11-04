@@ -72,6 +72,8 @@ export interface WordTableTextFormatting {
 }
 export interface ResolvedWordParagraph {
   readonly formatting: WordParagraphFormatting;
+  /** Actual valid paragraph style, not its ancestor or display name. */
+  readonly paragraphStyle?: string;
   readonly paragraphChain: readonly string[];
   readonly issues: readonly WordStyleIssue[];
 }
@@ -303,7 +305,8 @@ export function createWordRunStyleCascade(input: {
       });
     },
     resolveParagraph(input: { readonly paragraphStyle?: string; readonly direct?: WordParagraphFormatting; readonly table?: WordTableTextFormatting; readonly numbering?: WordParagraphFormatting } = {}): ResolvedWordParagraph {
-      const paragraph = chain(input.paragraphStyle ?? defaultParagraph, 'paragraph');
+      const identity = input.paragraphStyle ?? defaultParagraph;
+      const paragraph = chain(identity, 'paragraph');
       // Word's implementation applies numbering after paragraph styles, unlike
       // the generic ISO ordering. Direct paragraph declarations remain nearest.
       const layers = [paragraphDefaults, ...input.table?.paragraphs.map(copyParagraphFormatting) ?? [], ...paragraph.styles.map(style => style.paragraph!), copyParagraphFormatting(input.numbering), copyParagraphFormatting(input.direct)];
@@ -322,6 +325,7 @@ export function createWordRunStyleCascade(input: {
       if (Object.keys(borders).length) output.borders = Object.freeze(borders);
       return Object.freeze({
         formatting: Object.freeze(output),
+        ...(identity !== undefined && styles.get(identity)?.kind === 'paragraph' ? { paragraphStyle: identity } : {}),
         paragraphChain: Object.freeze(paragraph.styles.map(style => style.id)),
         issues: paragraph.issues,
       });
