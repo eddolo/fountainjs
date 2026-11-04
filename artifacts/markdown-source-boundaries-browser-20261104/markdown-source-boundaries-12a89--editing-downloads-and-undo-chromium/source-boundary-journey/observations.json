@@ -1,0 +1,11 @@
+{
+  "engine": "chromium",
+  "nativeTyping": true,
+  "downloadedExactEditedSource": true,
+  "downloadedExactUndoSource": true,
+  "redoExact": true,
+  "headingTypeChangeSeparatedParagraphs": true,
+  "untouchedFencesListsQuotesRetained": true,
+  "fullReopenedModelEquality": true,
+  "errors": []
+}

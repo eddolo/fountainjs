@@ -4,3 +4,5 @@
 *.jpeg binary
 *.gif binary
 *.webp binary
+# Downloaded source fixtures are evidence; preserve their literal CRLF bytes.
+/artifacts/markdown-source-boundaries-browser-20261104/**/source-boundary-journey/*.md -text

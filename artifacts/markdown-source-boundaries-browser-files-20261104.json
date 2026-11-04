@@ -1,0 +1,92 @@
+[
+  {
+    "engine": "chromium",
+    "file": "original.md",
+    "sha256": "8bad8bdee09ed0503bde6dd26a816294a3391d0f9d42c47b8d30eb40ae7e405c"
+  },
+  {
+    "engine": "chromium",
+    "file": "edited.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "chromium",
+    "file": "undone.md",
+    "sha256": "8bad8bdee09ed0503bde6dd26a816294a3391d0f9d42c47b8d30eb40ae7e405c"
+  },
+  {
+    "engine": "chromium",
+    "file": "redone.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "chromium",
+    "file": "changed-type.md",
+    "sha256": "5b61d9c0af25639c3e9af3eac7dd7a2803791d394730b3601e902f7a4c465649"
+  },
+  {
+    "engine": "chromium",
+    "file": "type-undone.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "firefox",
+    "file": "original.md",
+    "sha256": "8bad8bdee09ed0503bde6dd26a816294a3391d0f9d42c47b8d30eb40ae7e405c"
+  },
+  {
+    "engine": "firefox",
+    "file": "edited.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "firefox",
+    "file": "undone.md",
+    "sha256": "8bad8bdee09ed0503bde6dd26a816294a3391d0f9d42c47b8d30eb40ae7e405c"
+  },
+  {
+    "engine": "firefox",
+    "file": "redone.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "firefox",
+    "file": "changed-type.md",
+    "sha256": "5b61d9c0af25639c3e9af3eac7dd7a2803791d394730b3601e902f7a4c465649"
+  },
+  {
+    "engine": "firefox",
+    "file": "type-undone.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "webkit",
+    "file": "original.md",
+    "sha256": "8bad8bdee09ed0503bde6dd26a816294a3391d0f9d42c47b8d30eb40ae7e405c"
+  },
+  {
+    "engine": "webkit",
+    "file": "edited.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "webkit",
+    "file": "undone.md",
+    "sha256": "8bad8bdee09ed0503bde6dd26a816294a3391d0f9d42c47b8d30eb40ae7e405c"
+  },
+  {
+    "engine": "webkit",
+    "file": "redone.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  },
+  {
+    "engine": "webkit",
+    "file": "changed-type.md",
+    "sha256": "5b61d9c0af25639c3e9af3eac7dd7a2803791d394730b3601e902f7a4c465649"
+  },
+  {
+    "engine": "webkit",
+    "file": "type-undone.md",
+    "sha256": "f059f98d4e9c25a426cada157446b4291f0554344c0fb6e9cc43b12193782986"
+  }
+]

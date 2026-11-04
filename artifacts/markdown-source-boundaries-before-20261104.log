@@ -1,0 +1,238 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-source-boundaries.test.ts (9 tests | 9 failed) 39ms
+   ❯ parser-owned Markdown source boundaries (9)
+     × preserves adjacent heading spelling around an edit ("\n") 23ms
+     × preserves adjacent heading spelling around an edit ("\r\n") 2ms
+     × preserves adjacent heading spelling around an edit ("\r") 1ms
+     × keeps an entire blank-containing fence when a neighbour changes ("\n") 4ms
+     × keeps an entire blank-containing fence when a neighbour changes ("\r\n") 1ms
+     × keeps an entire blank-containing fence when a neighbour changes ("\r") 1ms
+     × inserts a necessary separator when a heading becomes a paragraph 1ms
+     × keeps loose list source, nested quotes and fences around an unrelated edit 3ms
+     × retains parser-owned code regions during structural moves 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > preserves adjacent heading spelling around an edit ("\n")
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > preserves adjacent heading spelling around an edit ("\r\n")
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > preserves adjacent heading spelling around an edit ("\r")
+AssertionError: expected [] to deeply equal [ '# Keep this heading ###', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "# Keep this heading ###",
+-   "Edit this paragraph.",
+- ]
++ []
+
+ ❯ tests/markdown-source-boundaries.test.ts:12:63
+     10|       schema.node('paragraph', {}, [schema.text('Changed paragraph.')]…
+     11|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     12|     expect(imported.source.blocks.map(block => block.source)).toEqual(…
+       |                                                               ^
+     13|     expect(result.markdown).toBe(source.replace('Edit this paragraph.'…
+     14|     expect(result.preservation).toBe('blocks');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > keeps an entire blank-containing fence when a neighbour changes ("\n")
+AssertionError: expected 'Changed.\n\n```typescript\nconst firs…' to be 'Changed.\n\n~~~~typescript\nconst fir…' // Object.is equality
+
+- Expected
++ Received
+
+  Changed.
+
+- ~~~~typescript
++ ```typescript
+  const first = 1;
+
+  [reference]: ./literal.md
+
+  const last = 2;
+- ~~~~
++ ```
+
+- Last __untouched__ paragraph.
++ Last **untouched** paragraph.
+-
+
+ ❯ tests/markdown-source-boundaries.test.ts:25:29
+     23|     const changed = schema.node('doc', {}, [schema.node('paragraph', {…
+     24|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     25|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     26|     expect(result.preservation).toBe('blocks');
+     27|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > keeps an entire blank-containing fence when a neighbour changes ("\r\n")
+AssertionError: expected 'Changed.\r\n\r\n```typescript\r\ncons…' to be 'Changed.\r\n\r\n~~~~typescript\r\ncon…' // Object.is equality
+
+- Expected
++ Received
+
+  Changed.
+  
+- ~~~~typescript
++ ```typescript
+  const first = 1;
+  
+  [reference]: ./literal.md
+  
+  const last = 2;
+- ~~~~
++ ```
+  
+- Last __untouched__ paragraph.
+-
++ Last **untouched** paragraph.
+
+ ❯ tests/markdown-source-boundaries.test.ts:25:29
+     23|     const changed = schema.node('doc', {}, [schema.node('paragraph', {…
+     24|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     25|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     26|     expect(result.preservation).toBe('blocks');
+     27|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > keeps an entire blank-containing fence when a neighbour changes ("\r")
+AssertionError: expected 'Changed.\r\r```typescript\rconst firs…' to be 'Changed.\r\r~~~~typescript\rconst fir…' // Object.is equality
+
+Expected: "Changed.·
+~~~~typescript
+const first = 1;·
+[reference]: ./literal.md·
+const last = 2;
+~~~~·
+Last __untouched__ paragraph.
+"
+Received: "Changed.·
+```typescript
+const first = 1;·
+[reference]: ./literal.md·
+const last = 2;
+```·
+Last **untouched** paragraph."
+
+ ❯ tests/markdown-source-boundaries.test.ts:25:29
+     23|     const changed = schema.node('doc', {}, [schema.node('paragraph', {…
+     24|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     25|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     26|     expect(result.preservation).toBe('blocks');
+     27|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > inserts a necessary separator when a heading becomes a paragraph
+AssertionError: expected 'Changed type.\n\nFollowing **source**.' to be 'Changed type.\n\nFollowing __source__…' // Object.is equality
+
+- Expected
++ Received
+
+  Changed type.
+
+- Following __source__.
+-
++ Following **source**.
+
+ ❯ tests/markdown-source-boundaries.test.ts:35:29
+     33|     const changed = schema.node('doc', {}, [schema.node('paragraph', {…
+     34|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     35|     expect(result.markdown).toBe('Changed type.\n\nFollowing __source_…
+       |                             ^
+     36|     expect(result.preservation).toBe('blocks');
+     37|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > keeps loose list source, nested quotes and fences around an unrelated edit
+AssertionError: expected 'Changed.\n\n- First **source** item\n…' to be 'Changed.\n\n*   First __source__ item…' // Object.is equality
+
+- Expected
++ Received
+
+  Changed.
+
+- *   First __source__ item
++ - First **source** item
+-
+- *   Second item
++ - Second item
+-
+-     > quoted _source_
++   
++   > quoted *source*
+-     >
+-     > ~~~text
++   > 
++   > ```text
+-     > first
++   > first
+-     >
+-     > last
++   > 
++   > last
+-     > ~~~
++   > ```
+
+- After __source__.
+-
++ After **source**.
+
+ ❯ tests/markdown-source-boundaries.test.ts:48:29
+     46|     const changed = schema.node('doc', {}, [schema.node('paragraph', {…
+     47|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     48|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     49|     expect(result.preservation).toBe('blocks');
+     50|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/markdown-source-boundaries.test.ts > parser-owned Markdown source boundaries > retains parser-owned code regions during structural moves
+AssertionError: expected '# Keep\n\n```js\nfirst\n\nlast\n```' to be '# Keep ###\n\n~~~~js\nfirst\n\nlast\n…' // Object.is equality
+
+- Expected
++ Received
+
+- # Keep ###
+-
+- ~~~~js
++ # Keep
++
++ ```js
+  first
+
+  last
+- ~~~~
++ ```
+
+ ❯ tests/markdown-source-boundaries.test.ts:59:29
+     57|     const changed = schema.node('doc', {}, [imported.document.child(1)…
+     58|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     59|     expect(result.markdown).toBe('# Keep ###\n\n~~~~js\nfirst\n\nlast\…
+       |                             ^
+     60|     expect(result.preservation).toBe('mapped-blocks');
+     61|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed (9)
+   Start at  16:00:33
+   Duration  5.98s (transform 61%, import 38%, tests 1%, worker 1%)
+
+  Transform  transforming modules took 3.24s · 61% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

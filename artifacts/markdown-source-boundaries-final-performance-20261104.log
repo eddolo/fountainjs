@@ -1,0 +1,30 @@
+100 blocks: local p50 0.03 ms, p95 0.16 ms; incremental remote p50 0.03 ms, p95 0.07 ms; JSON boundary p50 1.10 ms, p95 1.76 ms
+  first edit / initial p95 / initial peak: local 1.58 ms / 0.15 ms / 1.58 ms; incremental remote 0.43 ms / 0.09 ms / 0.65 ms
+1,000 blocks: local p50 0.03 ms, p95 0.05 ms; incremental remote p50 0.03 ms, p95 0.08 ms; JSON boundary p50 8.80 ms, p95 29.66 ms
+  first edit / initial p95 / initial peak: local 0.63 ms / 0.06 ms / 0.63 ms; incremental remote 0.07 ms / 0.06 ms / 0.52 ms
+5,000 blocks: local p50 0.09 ms, p95 0.12 ms; incremental remote p50 0.10 ms, p95 0.12 ms; JSON boundary p50 61.28 ms, p95 77.10 ms
+  first edit / initial p95 / initial peak: local 6.17 ms / 0.14 ms / 10.91 ms; incremental remote 0.41 ms / 0.21 ms / 2.00 ms
+10,000 blocks: local p50 0.24 ms, p95 0.26 ms; incremental remote p50 0.21 ms, p95 0.24 ms; JSON boundary p50 80.58 ms, p95 122.47 ms
+  first edit / initial p95 / initial peak: local 11.60 ms / 0.30 ms / 11.60 ms; incremental remote 1.29 ms / 0.36 ms / 17.52 ms
+100 HTML blocks: server parse p50 15.71 ms, p95 35.23 ms
+1,000 HTML blocks: server parse p50 67.40 ms, p95 97.90 ms
+5,000 HTML blocks: server parse p50 253.50 ms, p95 301.56 ms
+10,000 HTML blocks: server parse p50 511.72 ms, p95 850.06 ms
+server HTML 1,000→10,000 median growth: 7.59x / 15x
+local 1,000→10,000 median growth: 8.67x / 15x
+incremental remote 1,000→10,000 median growth: 6.94x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.08 MiB / 16 MiB
+retained 10,000-block server HTML document: 15.20 MiB / 48 MiB
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:219
+if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);
+                           ^
+
+Error: Performance budget failed:
+- 100-block server HTML p95 35.23 ms exceeds 35 ms
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/check-performance-budgets.mjs:219:28
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1
