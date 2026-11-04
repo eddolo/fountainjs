@@ -1,0 +1,23 @@
+[
+  {
+    "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium",
+    "sourceImages": [
+      "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png",
+      "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png",
+      "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png",
+      "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png"
+    ],
+    "contact": "artifacts/issue-input-production-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium.png",
+    "video": "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/video.webm",
+    "durationSeconds": 14.08,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-production-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium-recording.png"
+  }
+]

@@ -223,6 +223,7 @@ jobs:
             test-results/**/nested-reference-journey/**
             test-results/**/container-reference-journey/**
             test-results/**/boundary-repair-journey/**
+            test-results/**/issue-input-journey/**
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

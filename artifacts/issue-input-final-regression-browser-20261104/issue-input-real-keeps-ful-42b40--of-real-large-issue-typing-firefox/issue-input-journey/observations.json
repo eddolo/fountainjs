@@ -1,0 +1,21 @@
+{
+  "engine": "firefox",
+  "noExportsDuringTyping": true,
+  "nativeFarEndEditing": true,
+  "nativeFocusReturn": true,
+  "complete5000ParagraphDocumentRetained": true,
+  "currentDocumentSnapshotAndOptionsChecked": true,
+  "noStaleWarnings": true,
+  "rawDownloadUnconverted": true,
+  "actualFileReopened": true,
+  "virtualReader": true,
+  "observedRequestedExports": 8,
+  "pipeWarnings": [
+    "table_row: Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.",
+    "table_cell: Multiple or non-paragraph cell blocks are flattened into one Markdown table cell."
+  ],
+  "htmlWarnings": [
+    "table: HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed."
+  ],
+  "errors": []
+}

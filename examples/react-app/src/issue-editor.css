@@ -8,7 +8,7 @@
 .issue-title input, .issue-source textarea { width: 100%; box-sizing: border-box; background: white; border: 1px solid #c9c5d6; border-radius: 8px; padding: 14px; color: inherit; font: inherit; }
 .issue-card { border: 1px solid #d5d1e1; border-radius: 12px; overflow: hidden; background: white; }
 .issue-modes { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; background: #eeecf5; border-bottom: 1px solid #d5d1e1; }
-.issue-modes button, .issue-actions button { border: 1px solid #bdb5d5; border-radius: 7px; padding: 11px 14px; font: inherit; background: white; color: #322650; cursor: pointer; }
+.issue-modes button, .issue-actions button, .issue-diagnostics button { border: 1px solid #bdb5d5; border-radius: 7px; padding: 11px 14px; font: inherit; background: white; color: #322650; cursor: pointer; }
 .issue-modes button[aria-pressed=true], .issue-actions button:first-child { background: #5b3bc4; color: white; border-color: #5b3bc4; }
 .issue-site button:hover { filter: brightness(.93); }
 .issue-site :focus-visible { outline: 3px solid #8d71fa; outline-offset: 3px; }
@@ -33,3 +33,6 @@
 #issue-table-format-help { font-size: 13px; color: #655e76; }
 .issue-integration { max-width: 1050px; margin: 0 auto; padding: 30px 32px 80px; }
 @media (max-width: 900px) { .issue-layout { grid-template-columns: minmax(0, 1fr); padding: 30px 18px; } .issue-diagnostics { margin-top: 0; } .issue-card [data-fountain-root] > [contenteditable] { padding: 18px; } }
+
+.issue-diagnostics button:disabled { opacity: .55; cursor: default; }
+.issue-diagnostics > p { font-size: 13px; line-height: 1.6; }

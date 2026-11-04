@@ -1,0 +1,11 @@
+{
+  "engine": "firefox",
+  "actualIssueHTMLBlockPolicy": true,
+  "nativeEnterAndTyping": true,
+  "actualFileReopened": true,
+  "expectedCompleteModelChecked": true,
+  "undoRedo": true,
+  "sourceAndReaderModes": true,
+  "CRLFDownloadsRetained": true,
+  "errors": []
+}

@@ -33,6 +33,68 @@ It is featured above the ten environment integrations in the gallery and in the
   title is not Markdown content and stays host-owned. JSON metadata/history and
   arbitrary extensions are not preserved by claiming Markdown is a native format.
 
+## Export checks and long drafts
+
+Full Markdown serialization runs when the author chooses **Check Markdown
+export**, opens source, or downloads from the visual/reader surface. It does not
+run during document rendering or each keystroke. The diagnostics show **Not
+checked for this draft** until a result exists for the current immutable document,
+source snapshot and table option. A different document/snapshot/option hides the
+old result and warnings. A title-only change does not invalidate a document report.
+Every requested structured export uses the editor's current state; it does not
+reuse an older report for download. Export errors remain visible in the host form.
+
+Raw mode has a separate unapplied text buffer. Its check button is disabled and
+its download saves that buffer without converting it. Opening Visual editor or
+Reader preview applies a successfully parsed update before returning to structured
+editing. Reports do not claim to describe uncommitted raw edits.
+
+The author and reader opt into the existing viewport renderer above 250 top-level
+blocks. The complete document remains in the model; only the visible window and
+selection endpoints mount in the DOM. The demo does not claim that every block is
+mounted, that browser-native find can search unmounted content, or that a 100k
+benchmark ran on this page. The editor's document search and explicit full-document
+exports operate on the model. Applications can choose full rendering instead when
+needed by their accessibility, capture or native-DOM workflows.
+
+The native document-boundary path now uses that full model for Ctrl+Home/End and
+Mac-style Command+Up/Down, with Shift retaining the native selection anchor.
+It reuses existing focus targets, endpoint pinning and selection mapping, respects
+plugin handlers/embedded controls/composition, and supports read-only readers.
+The public view signatures are unchanged; the API review compares the two changed
+declarations against the actual parent archive and removes only the added private
+handler line before requiring exact equality.
+
+`tests/browser/issue-input-journey.ts` imports a 5,000-paragraph draft through the
+real file control and types native keys. Its observer wraps the actual loaded
+public exporter and delegates unchanged; requested exports are positive controls.
+It records before-input-to-two-animation-frame samples without treating them as
+paint/INP certification or imposing timing allowances. The journey checks zero
+exports during typing/import, checks at explicit actions, native first/last edits,
+full expected-model/source equality after download/reopen, raw-buffer download,
+virtual reader navigation, and invalidation of real pipe-table warnings before a
+fresh HTML compatibility notice. This does not suppress legitimate export warnings.
+
+The nonempty contentDOM pointer path acquires root focus with `preventScroll`
+before native placement, when the root owns the event and no embedded control
+owns focus. A recorded regression returns from the far model caret through the
+host title and inserts/deletes at the clicked first paragraph. An earlier Firefox
+journey inserted at the old last paragraph; the exact intermittent browser cause
+is not proven. Three repeated Firefox journeys and the final three-engine matrix
+pass the strengthened native focus check. This is scoped evidence, not a general
+Firefox or physical mobile certification.
+
+Local verification: 3,898 unit tests in 266 files; twelve recorded desktop
+journeys; 45 captures plus six sampled frames per recording reviewed; a separate
+production Chromium writing/download/reopen journey; 244 actual-packed-package
+checks through root/core ESM/CommonJS without a fake DOM. Full current-head CI and
+aggregate size review remain open. The first final performance run failed one
+server-HTML timing limit; an isolated unchanged rerun passed, with both retained.
+See `artifacts/issue-input-verification-20261104.json` for measurements and limits.
+The production recording shows a long blank startup before the editor renders.
+Startup profiling remains open; successful writing/file handoff is not startup
+responsiveness certification.
+
 ## Table handoff policy
 
 The **Table export** selector exposes the existing `tableFormat: 'pipe' | 'html'`
@@ -79,8 +141,9 @@ clipboard payload handler, not an operating-system clipboard permission audit.
    alt text and exported Markdown before storing anything in a real product.
 
 Root reference definitions, whether standalone or directly before content,
-survive unrelated visual edits and block moves/deletions. Container definitions and other
-ambiguous mappings, can still force canonical export after an edit.
+survive unrelated visual edits and block moves/deletions. Supported native nested
+list/quote edits also retain shared container definitions. Other ambiguous or
+unsupported mappings can still require canonical export after an edit.
 Exact untouched-document source preservation does
 not mean Fountain understands all syntax. See [the full contract](MARKDOWN_SOURCE.md).
 

@@ -1,0 +1,74 @@
+[WebServer] (node:22748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:15852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (8.2s)
+
+
+  1) [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 
+
+    Error: Typing must not serialize the full document.
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 20
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "durationMs": 148,
+    +   },
+    +   Object {
+    +     "durationMs": 241.10000002384186,
+    +   },
+    +   Object {
+    +     "durationMs": 159.10000002384186,
+    +   },
+    +   Object {
+    +     "durationMs": 116,
+    +   },
+    +   Object {
+    +     "durationMs": 138.0999999642372,
+    +   },
+    +   Object {
+    +     "durationMs": 115.80000001192093,
+    +   },
+    + ]
+
+       at ..\browser\issue-input-journey.ts:62
+
+      60 | export async function runIssueInputJourney(page: Page, info: TestInfo): Promise<void> {
+      61 |   const result = await measureIssueInput(page, info);
+    > 62 |   expect(result.measured.exports, 'Typing must not serialize the full document.').toEqual([]);
+         |                                                                                   ^
+      63 | }
+      64 |
+        at runIssueInputJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-input-journey.ts:62:83)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-input-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-baseline-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-baseline-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-baseline-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-baseline-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-baseline-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 

@@ -1,0 +1,251 @@
+[
+  {
+    "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/video.webm",
+    "durationSeconds": 15.08,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium-recording.png"
+  },
+  {
+    "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/edited-source-fidelity.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/mobile-issue.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reader-preview.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reopened-issue.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/video.webm",
+    "durationSeconds": 7.16,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox-recording.png"
+  },
+  {
+    "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/edited-source-fidelity.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/mobile-issue.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reader-preview.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reopened-issue.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/video.webm",
+    "durationSeconds": 9.16,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit-recording.png"
+  },
+  {
+    "journey": "issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/imported.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reader.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reopened.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/video.webm",
+    "durationSeconds": 4.04,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium-recording.png"
+  },
+  {
+    "journey": "issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/edited.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/imported.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reader.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reopened.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/video.webm",
+    "durationSeconds": 4.48,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox-recording.png"
+  },
+  {
+    "journey": "issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/edited.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/imported.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reader.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reopened.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/video.webm",
+    "durationSeconds": 7.96,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit-recording.png"
+  },
+  {
+    "journey": "issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/fresh-warning-check.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/last-edited.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/reader.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/typed.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/video.webm",
+    "durationSeconds": 8.52,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium-recording.png"
+  },
+  {
+    "journey": "issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/fresh-warning-check.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/last-edited.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/reader.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/typed.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/video.webm",
+    "durationSeconds": 11.52,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox-recording.png"
+  },
+  {
+    "journey": "issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/fresh-warning-check.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/last-edited.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/reader.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/typed.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/video.webm",
+    "durationSeconds": 18.8,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit-recording.png"
+  },
+  {
+    "journey": "issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-before-handoff.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-reopened-mobile.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-reopened-reader.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/video.webm",
+    "durationSeconds": 3.68,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium-recording.png"
+  },
+  {
+    "journey": "issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-before-handoff.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-reopened-mobile.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-reopened-reader.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/video.webm",
+    "durationSeconds": 4.8,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox-recording.png"
+  },
+  {
+    "journey": "issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit",
+    "sourceImages": [
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-before-handoff.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-reopened-mobile.png",
+      "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-reopened-reader.png"
+    ],
+    "contact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit.png",
+    "video": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/video.webm",
+    "durationSeconds": 7.44,
+    "sampleFractions": [
+      0.15,
+      0.3,
+      0.45,
+      0.6,
+      0.75,
+      0.9
+    ],
+    "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit-recording.png"
+  }
+]

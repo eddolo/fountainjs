@@ -195,3 +195,33 @@ separate audit, beginning with the issue workflow's eager export memo.
 See `artifacts/markdown-boundary-repair-performance-review-20261104.json`,
 `artifacts/boundary-repair-loaded-build-size-review-20261104.json` and the sampled
 CPU profiles/summaries. Before/after archives retain the same supported source.
+
+## Issue-workflow input checkpoint, 2026-11-04
+
+The host now requests full source export only for a check, source entry or
+export download. Raw-source download writes the unapplied buffer directly.
+This is scheduling, not a weaker semantic proof or an engine acceptance cache.
+Viewport rendering uses the existing 250-block threshold. Keyboard navigation
+and pointer focus repairs add 2,003 raw bytes to root/React static import
+closures: +479/+480 gzip bytes respectively. Core and DOCX closures are unchanged.
+Individual entry and CSS limits pass; unchanged aggregate ceilings fail by
+18.9 KiB ESM / 14.5 KiB CommonJS. No capacity proposal was applied.
+
+In the actual Vite development issue host, three native input events in a
+5,000-paragraph document previously triggered six full exports and measured
+539.8/411.5/360.6 ms from beforeinput to two animation frames. The final Chromium
+journey records 37.7/37.7/35.2 ms, Firefox 36/42/42 ms and WebKit 160/88/99 ms,
+with zero typing/import exports and 37 initially mounted paragraphs. Eight
+explicit exports per engine are positive controls; complete downloads and
+expected models are checked. Development React behavior, three samples and two
+animation frames are not production INP/paint certification. The separate
+production Chromium journey checks normal writing/file handoff, not those large-
+document timings. Export itself remains synchronous when explicitly requested.
+
+3,898 tests and twelve desktop browser journeys pass. The final latency queue
+failed only 100-block server-HTML p95 (47.34 ms / 35 ms); an isolated rerun of the
+unchanged script passes (23.20 ms). Both reports remain available; this is not
+proof the earlier failure cannot recur. Heap, growth and retention checks pass.
+See `artifacts/issue-input-verification-20261104.json`, the final/recheck logs and
+`artifacts/issue-input-final-loaded-build-size-review-20261104.json`. Full fresh
+CI and release/capacity review remain required.

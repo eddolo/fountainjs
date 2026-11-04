@@ -1,0 +1,27 @@
+[WebServer] (node:12480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:6800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (14.3s)
+  ok  2 [chromium] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (3.1s)
+  ok  3 [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (8.0s)
+  ok  4 [chromium] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff (3.1s)
+(node:1580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (7.3s)
+  ok  6 [firefox] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (3.8s)
+  ok  7 [firefox] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (10.8s)
+  ok  8 [firefox] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff (4.2s)
+(node:26020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (8.7s)
+  ok 10 [webkit] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (7.2s)
+  ok 11 [webkit] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (18.1s)
+  ok 12 [webkit] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff (6.8s)
+
+  12 passed (1.8m)

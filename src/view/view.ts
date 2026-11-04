@@ -21,7 +21,7 @@ import {
   type CommandManager,
   type CommandRegistry,
 } from '../extensions/command-manager';
-import { getNodeAtPath } from '../core/transaction/path';
+import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import {
   reconcileDocument,
@@ -454,6 +454,7 @@ export class EditorView {
   private startVirtualization(): void {
     if (!this.virtualLayout || !this.virtualScrollTarget) return;
     this.virtualScrollTarget.addEventListener('scroll', this.onVirtualViewportChange, { passive: true });
+    this.dom.addEventListener('keydown', this.onVirtualKeyDown);
     const ownerWindow = this.dom.ownerDocument.defaultView;
     ownerWindow?.addEventListener('resize', this.onVirtualViewportChange, { passive: true });
     ownerWindow?.addEventListener('beforeprint', this.onVirtualBeforePrint);
@@ -468,6 +469,7 @@ export class EditorView {
   private stopVirtualization(): void {
     const ownerWindow = this.dom.ownerDocument.defaultView;
     this.virtualScrollTarget?.removeEventListener('scroll', this.onVirtualViewportChange);
+    this.dom.removeEventListener('keydown', this.onVirtualKeyDown);
     ownerWindow?.removeEventListener('resize', this.onVirtualViewportChange);
     ownerWindow?.removeEventListener('beforeprint', this.onVirtualBeforePrint);
     ownerWindow?.removeEventListener('afterprint', this.onVirtualAfterPrint);
@@ -479,6 +481,35 @@ export class EditorView {
     this.virtualMeasureFrame = undefined;
     this.virtualRestoreTimer = undefined;
   }
+
+  private onVirtualKeyDown = (event: KeyboardEvent): void => {
+    if (!this.virtualized || event.defaultPrevented || event.altKey || event.isComposing || this.input.composing
+      || (!event.ctrlKey && !event.metaKey)) return;
+    const start = event.key === 'Home' || (event.metaKey && event.key === 'ArrowUp');
+    const end = event.key === 'End' || (event.metaKey && event.key === 'ArrowDown');
+    if (!start && !end) return;
+    const target = event.target;
+    if (!(target instanceof Element) || (target !== this.dom
+      && target.closest('input, textarea, select, button, [contenteditable]') !== this.dom)
+      || this.shouldStopNodeViewEvent(event)) return;
+    event.preventDefault();
+    // Browser document boundaries see only mounted DOM. Navigate the model,
+    // then reuse selection pinning and native direction handling for the range.
+    this.moveSelection(start ? 'start' : 'end', event.shiftKey);
+    this.dom.focus({ preventScroll: true });
+    this.selections.sync(this.editor.state.selection);
+    const native = this.dom.ownerDocument.getSelection();
+    if (event.shiftKey && native?.rangeCount && !native.isCollapsed) {
+      const range = native.getRangeAt(0);
+      if (start) native.setBaseAndExtent(range.endContainer, range.endOffset, range.startContainer, range.startOffset);
+      else native.setBaseAndExtent(range.startContainer, range.startOffset, range.endContainer, range.endOffset);
+      this.selections.capture();
+    }
+    const selection = this.editor.state.selection;
+    const path = selection instanceof NodeSelection ? selection.nodePath : start ? selection.path : selection.endPath;
+    this.dom.querySelector<HTMLElement>(`[data-fountain-path="${path[0]}"]`)
+      ?.scrollIntoView?.({ block: start ? 'start' : 'end', inline: 'nearest' });
+  };
 
   private onVirtualViewportChange = (): void => {
     if (!this.virtualized || this.virtualRenderFrame !== undefined) return;
@@ -602,7 +633,7 @@ export class EditorView {
     return DecorationSet.create(state.doc, decorations);
   }
 
-  private moveSelection(position: EditorFocusPosition): void {
+  private moveSelection(position: EditorFocusPosition, extend = false): void {
     if (position === 'current') return;
     const doc = this.editor.state.doc, path: number[] = [];
     const forward = position === 'start';
@@ -630,6 +661,15 @@ export class EditorView {
     };
     visit(doc);
     if (!target) return;
+    if (extend) {
+      const previous = this.editor.state.selection, native = this.dom.ownerDocument.getSelection();
+      const range = native?.rangeCount ? native.getRangeAt(0) : undefined;
+      const backward = range && !native!.isCollapsed && native!.anchorNode === range.endContainer && native!.anchorOffset === range.endOffset;
+      const anchorPath = backward ? previous.endPath : previous.path, anchorOffset = backward ? previous.to : previous.from;
+      const order = comparePaths(target.path, anchorPath) || target.from - anchorOffset;
+      target = order <= 0 ? Selection.range(target.path, target.from, anchorPath, anchorOffset)
+        : Selection.range(anchorPath, anchorOffset, target.path, target.from);
+    }
     this.editor.dispatch(this.editor.state.createTransaction().setSelection(target));
   }
 

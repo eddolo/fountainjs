@@ -1,0 +1,1303 @@
+{
+  "branch": "perf/issue-export-on-demand-20261104",
+  "parentCommit": "46c420ddf069655d11fbd2db6caa00539516fc18",
+  "unitTests": 3898,
+  "unitFiles": 266,
+  "newUnitTests": 10,
+  "localChecks": [
+    {
+      "name": "unit",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-unit-20261104.log"
+    },
+    {
+      "name": "types",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-types-20261104.log"
+    },
+    {
+      "name": "api",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-api-20261104.log"
+    },
+    {
+      "name": "headless",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-headless-20261104.log"
+    },
+    {
+      "name": "conformance",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-conformance-20261104.log"
+    },
+    {
+      "name": "package",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-package-20261104.log"
+    },
+    {
+      "name": "worker",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-worker-20261104.log"
+    },
+    {
+      "name": "size",
+      "exitCode": 1,
+      "log": "artifacts/issue-input-final-size-20261104.log"
+    },
+    {
+      "name": "loaded-size",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-loaded-size-20261104.log"
+    },
+    {
+      "name": "latency",
+      "exitCode": 1,
+      "log": "artifacts/issue-input-final-latency-20261104.log"
+    },
+    {
+      "name": "direction-retention",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-direction-retention-20261104.log"
+    },
+    {
+      "name": "mapping-retention",
+      "exitCode": 0,
+      "log": "artifacts/issue-input-final-mapping-retention-20261104.log"
+    }
+  ],
+  "runtimeNormalizedLFSHA256": {
+    "src/view/view.ts": "157d1fb3df0d800cea030cbe7da12e64affdfd10df96904cfb8995a9eb7eb913",
+    "src/view/selection-handler.ts": "8825295a9b50a9cffb5f603ec4b6d10481b3773636b522faef3ced20d426a438"
+  },
+  "sourceMapsMatchRuntime": true,
+  "apiReview": {
+    "publicSignaturesChanged": false,
+    "newPrivateFieldOnly": true,
+    "files": [
+      {
+        "path": "dist/view/view.d.ts",
+        "beforeSHA256": "e9ee57c8a2455eeca7d6d8f3bb9a2dc7cc6ab0309e80f8b2d30097c0cba21c58",
+        "afterSHA256": "3d258f1a73d3478160d00d1d03fb540449023317fc8281fc25a8a07c19caa2c8",
+        "equalAfterRemovingOnlyNewPrivateField": true
+      },
+      {
+        "path": "dist/view/view.d.cts",
+        "beforeSHA256": "dd2e1203ea4990166aab8654f7d4529a8fa294d6cdbfcc70c8798429161f805b",
+        "afterSHA256": "2b67a536b0dede0b6da6e46e23b076701d0959f391e8d802921dc068a9fae256",
+        "equalAfterRemovingOnlyNewPrivateField": true
+      }
+    ]
+  },
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 244,
+    "noFakeDOM": true,
+    "proofResults": [
+      25,
+      25,
+      25,
+      25
+    ],
+    "containerResults": [
+      36,
+      36,
+      36,
+      36
+    ]
+  },
+  "tarballSHA256": "871b5791e90ccf3a2c8109a035f2898d7e81312e4314a1e501f8182542e97e52",
+  "archiveDistFilesMatchBuild": 865,
+  "browserMatrix": {
+    "recordedJourneys": 12,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "downloads": 27,
+    "inputs": 6,
+    "largeDraftJourneys": [
+      {
+        "measurement": {
+          "engine": "chromium",
+          "documentParagraphs": 5000,
+          "moduleURL": "http://127.0.0.1:4195/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/index.js",
+          "importExports": 0,
+          "mountedParagraphs": 37,
+          "exports": [],
+          "inputs": [
+            {
+              "data": "X",
+              "toTwoFramesMs": 37.69999998807907
+            },
+            {
+              "data": "Y",
+              "toTwoFramesMs": 37.69999998807907
+            },
+            {
+              "data": "Z",
+              "toTwoFramesMs": 35.200000047683716
+            }
+          ],
+          "events": [
+            {
+              "type": "pointerdown",
+              "ctrl": false,
+              "meta": false,
+              "anchor": null,
+              "offset": 0,
+              "scrollY": 333,
+              "target": "1"
+            },
+            {
+              "type": "pointerup",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": "1"
+            },
+            {
+              "type": "keydown",
+              "key": "End",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "End",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "X",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "X",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 21,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "Y",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 21,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "Y",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 22,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "Z",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 22,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "Z",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 23,
+              "scrollY": 333,
+              "target": null
+            }
+          ],
+          "errors": []
+        },
+        "observations": {
+          "engine": "chromium",
+          "noExportsDuringTyping": true,
+          "nativeFarEndEditing": true,
+          "nativeFocusReturn": true,
+          "complete5000ParagraphDocumentRetained": true,
+          "currentDocumentSnapshotAndOptionsChecked": true,
+          "noStaleWarnings": true,
+          "rawDownloadUnconverted": true,
+          "actualFileReopened": true,
+          "virtualReader": true,
+          "observedRequestedExports": 8,
+          "pipeWarnings": [
+            "table_row: Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.",
+            "table_cell: Multiple or non-paragraph cell blocks are flattened into one Markdown table cell."
+          ],
+          "htmlWarnings": [
+            "table: HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed."
+          ],
+          "errors": []
+        }
+      },
+      {
+        "measurement": {
+          "engine": "firefox",
+          "documentParagraphs": 5000,
+          "moduleURL": "http://127.0.0.1:4195/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/index.js",
+          "importExports": 0,
+          "mountedParagraphs": 37,
+          "exports": [],
+          "inputs": [
+            {
+              "data": "X",
+              "toTwoFramesMs": 36
+            },
+            {
+              "data": "Y",
+              "toTwoFramesMs": 42
+            },
+            {
+              "data": "Z",
+              "toTwoFramesMs": 42
+            }
+          ],
+          "events": [
+            {
+              "type": "pointerdown",
+              "ctrl": false,
+              "meta": false,
+              "anchor": null,
+              "offset": 0,
+              "scrollY": 333,
+              "target": "1"
+            },
+            {
+              "type": "pointerup",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": "1"
+            },
+            {
+              "type": "keydown",
+              "key": "End",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "End",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "X",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "X",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 21,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "Y",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 21,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "Y",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 22,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "Z",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 22,
+              "scrollY": 333,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "Z",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 23,
+              "scrollY": 333,
+              "target": null
+            }
+          ],
+          "errors": []
+        },
+        "observations": {
+          "engine": "firefox",
+          "noExportsDuringTyping": true,
+          "nativeFarEndEditing": true,
+          "nativeFocusReturn": true,
+          "complete5000ParagraphDocumentRetained": true,
+          "currentDocumentSnapshotAndOptionsChecked": true,
+          "noStaleWarnings": true,
+          "rawDownloadUnconverted": true,
+          "actualFileReopened": true,
+          "virtualReader": true,
+          "observedRequestedExports": 8,
+          "pipeWarnings": [
+            "table_row: Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.",
+            "table_cell: Multiple or non-paragraph cell blocks are flattened into one Markdown table cell."
+          ],
+          "htmlWarnings": [
+            "table: HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed."
+          ],
+          "errors": []
+        }
+      },
+      {
+        "measurement": {
+          "engine": "webkit",
+          "documentParagraphs": 5000,
+          "moduleURL": "http://127.0.0.1:4195/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/index.js",
+          "importExports": 0,
+          "mountedParagraphs": 37,
+          "exports": [],
+          "inputs": [
+            {
+              "data": "X",
+              "toTwoFramesMs": 160
+            },
+            {
+              "data": "Y",
+              "toTwoFramesMs": 88
+            },
+            {
+              "data": "Z",
+              "toTwoFramesMs": 99
+            }
+          ],
+          "events": [
+            {
+              "type": "pointerdown",
+              "ctrl": false,
+              "meta": false,
+              "anchor": null,
+              "offset": 0,
+              "scrollY": 31,
+              "target": "1"
+            },
+            {
+              "type": "pointerup",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 31,
+              "target": "1"
+            },
+            {
+              "type": "keydown",
+              "key": "End",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "End",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "X",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 20,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "X",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 21,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "Y",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 21,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "Y",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 22,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keydown",
+              "key": "Z",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 22,
+              "scrollY": 31,
+              "target": null
+            },
+            {
+              "type": "keyup",
+              "key": "Z",
+              "ctrl": false,
+              "meta": false,
+              "anchor": "1.0",
+              "offset": 23,
+              "scrollY": 31,
+              "target": null
+            }
+          ],
+          "errors": []
+        },
+        "observations": {
+          "engine": "webkit",
+          "noExportsDuringTyping": true,
+          "nativeFarEndEditing": true,
+          "nativeFocusReturn": true,
+          "complete5000ParagraphDocumentRetained": true,
+          "currentDocumentSnapshotAndOptionsChecked": true,
+          "noStaleWarnings": true,
+          "rawDownloadUnconverted": true,
+          "actualFileReopened": true,
+          "virtualReader": true,
+          "observedRequestedExports": 8,
+          "pipeWarnings": [
+            "table_row: Pipe Markdown makes the first row column headers and later rows data cells. Use HTML tables to preserve different cell roles.",
+            "table_cell: Multiple or non-paragraph cell blocks are flattened into one Markdown table cell."
+          ],
+          "htmlWarnings": [
+            "table: HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed."
+          ],
+          "errors": []
+        }
+      }
+    ]
+  },
+  "production": {
+    "chromiumWritingJourney": "passed",
+    "downloads": 1,
+    "largeDocumentLatencyMeasured": false,
+    "navigationMilliseconds": [
+      10074.683,
+      9990.483
+    ],
+    "startupFinding": "Recording shows a long blank initial navigation before the editor renders. Cause and startup optimization remain open; this journey does not certify startup responsiveness."
+  },
+  "browserFiles": [
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/issue-description.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/issue-description.md",
+      "kind": "download",
+      "bytes": 494,
+      "sha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8",
+      "storedSHA256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/issue-description.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/issue-description.md",
+      "kind": "download",
+      "bytes": 494,
+      "sha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8",
+      "storedSHA256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/issue-description.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/issue-description.md",
+      "kind": "download",
+      "bytes": 494,
+      "sha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8",
+      "storedSHA256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/original.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/original.md",
+      "kind": "input",
+      "bytes": 76,
+      "sha256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857",
+      "storedSHA256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reader.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reader.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/redone.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/redone.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/undone.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/undone.md",
+      "kind": "download",
+      "bytes": 116,
+      "sha256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897",
+      "storedSHA256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/edited.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/edited.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/original.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/original.md",
+      "kind": "input",
+      "bytes": 76,
+      "sha256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857",
+      "storedSHA256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reader.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reader.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/redone.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/redone.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/undone.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/undone.md",
+      "kind": "download",
+      "bytes": 116,
+      "sha256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897",
+      "storedSHA256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/edited.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/edited.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/original.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/original.md",
+      "kind": "input",
+      "bytes": 76,
+      "sha256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857",
+      "storedSHA256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reader.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reader.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/redone.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/redone.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501",
+      "storedSHA256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/undone.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/undone.md",
+      "kind": "download",
+      "bytes": 116,
+      "sha256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897",
+      "storedSHA256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/edited.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/edited.md.gz",
+      "kind": "download",
+      "bytes": 233945,
+      "sha256": "bd8d7d4662145b15bbcffc9d137afbbe3ffb439d8a8daf36fd4782b7f17c824f",
+      "storedSHA256": "343e709a9c5535b6d55d360c0f0c72f7c90cdc9c5e6cf8d027505eeb4b529eef"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/original.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/original.md.gz",
+      "kind": "input",
+      "bytes": 233920,
+      "sha256": "5d8de2d0d00203d2846d1cdbe4daaf95701ea103771dd9f18d951c8e0dc6f966",
+      "storedSHA256": "71b4c008c71a57491c3b33539eb4d8d82c29f6af1736b690d03db51252a29590"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/raw-buffer.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/raw-buffer.md.gz",
+      "kind": "download",
+      "bytes": 223956,
+      "sha256": "25172033eb045c3fb7ebcae9d2821c598ec67eacb3f4be5bf4b80a34dd3cc355",
+      "storedSHA256": "ce8293c352041364d1c2c715d4609f88ec78d5a8c4f1424aa22b6526fd3e9641"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/reader.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/reader.md.gz",
+      "kind": "download",
+      "bytes": 223956,
+      "sha256": "25172033eb045c3fb7ebcae9d2821c598ec67eacb3f4be5bf4b80a34dd3cc355",
+      "storedSHA256": "ce8293c352041364d1c2c715d4609f88ec78d5a8c4f1424aa22b6526fd3e9641"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/edited.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/edited.md.gz",
+      "kind": "download",
+      "bytes": 233945,
+      "sha256": "bd8d7d4662145b15bbcffc9d137afbbe3ffb439d8a8daf36fd4782b7f17c824f",
+      "storedSHA256": "343e709a9c5535b6d55d360c0f0c72f7c90cdc9c5e6cf8d027505eeb4b529eef"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/original.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/original.md.gz",
+      "kind": "input",
+      "bytes": 233920,
+      "sha256": "5d8de2d0d00203d2846d1cdbe4daaf95701ea103771dd9f18d951c8e0dc6f966",
+      "storedSHA256": "71b4c008c71a57491c3b33539eb4d8d82c29f6af1736b690d03db51252a29590"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/raw-buffer.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/raw-buffer.md.gz",
+      "kind": "download",
+      "bytes": 223956,
+      "sha256": "25172033eb045c3fb7ebcae9d2821c598ec67eacb3f4be5bf4b80a34dd3cc355",
+      "storedSHA256": "ce8293c352041364d1c2c715d4609f88ec78d5a8c4f1424aa22b6526fd3e9641"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/reader.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/reader.md.gz",
+      "kind": "download",
+      "bytes": 223956,
+      "sha256": "25172033eb045c3fb7ebcae9d2821c598ec67eacb3f4be5bf4b80a34dd3cc355",
+      "storedSHA256": "ce8293c352041364d1c2c715d4609f88ec78d5a8c4f1424aa22b6526fd3e9641"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/edited.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/edited.md.gz",
+      "kind": "download",
+      "bytes": 233945,
+      "sha256": "bd8d7d4662145b15bbcffc9d137afbbe3ffb439d8a8daf36fd4782b7f17c824f",
+      "storedSHA256": "343e709a9c5535b6d55d360c0f0c72f7c90cdc9c5e6cf8d027505eeb4b529eef"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/original.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/original.md.gz",
+      "kind": "input",
+      "bytes": 233920,
+      "sha256": "5d8de2d0d00203d2846d1cdbe4daaf95701ea103771dd9f18d951c8e0dc6f966",
+      "storedSHA256": "71b4c008c71a57491c3b33539eb4d8d82c29f6af1736b690d03db51252a29590"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/raw-buffer.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/raw-buffer.md.gz",
+      "kind": "download",
+      "bytes": 223956,
+      "sha256": "25172033eb045c3fb7ebcae9d2821c598ec67eacb3f4be5bf4b80a34dd3cc355",
+      "storedSHA256": "ce8293c352041364d1c2c715d4609f88ec78d5a8c4f1424aa22b6526fd3e9641"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/reader.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/reader.md.gz",
+      "kind": "download",
+      "bytes": 223956,
+      "sha256": "25172033eb045c3fb7ebcae9d2821c598ec67eacb3f4be5bf4b80a34dd3cc355",
+      "storedSHA256": "ce8293c352041364d1c2c715d4609f88ec78d5a8c4f1424aa22b6526fd3e9641"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/incident-owners.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/incident-owners.md",
+      "kind": "download",
+      "bytes": 375,
+      "sha256": "6827f373d85428c81fde10440e307de02cb6552e057704e4098547ff1ad46004",
+      "storedSHA256": "6827f373d85428c81fde10440e307de02cb6552e057704e4098547ff1ad46004"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/incident-owners.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/incident-owners.md",
+      "kind": "download",
+      "bytes": 375,
+      "sha256": "6827f373d85428c81fde10440e307de02cb6552e057704e4098547ff1ad46004",
+      "storedSHA256": "6827f373d85428c81fde10440e307de02cb6552e057704e4098547ff1ad46004"
+    },
+    {
+      "path": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/incident-owners.md",
+      "storedPath": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/incident-owners.md",
+      "kind": "download",
+      "bytes": 375,
+      "sha256": "6827f373d85428c81fde10440e307de02cb6552e057704e4098547ff1ad46004",
+      "storedSHA256": "6827f373d85428c81fde10440e307de02cb6552e057704e4098547ff1ad46004"
+    },
+    {
+      "path": "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/issue-description.md",
+      "storedPath": "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/issue-description.md",
+      "kind": "download",
+      "bytes": 494,
+      "sha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8",
+      "storedSHA256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    }
+  ],
+  "visualReview": {
+    "captures": 49,
+    "recordings": 13,
+    "sampledFramesPerRecording": 6,
+    "fullFrameByFramePlayback": false,
+    "finding": "Expected edits, links, tables, separate reader and narrow layout visible. Final focus/first/last model assertions pass; no extra content anomaly seen in this scope. Startup delay remains open.",
+    "assets": [
+      {
+        "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/video.webm",
+        "durationSeconds": 15.08,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium-recording.png",
+        "contactSHA256": "2c2e99ea2bef6929249a3b238fed68512b88944767faca69afbee5808f7ec9ca",
+        "recordingContactSHA256": "3afadc9682775b1c0020fbf87611916a248a86eed07e383e2eb6763d4e6e1268",
+        "videoSHA256": "d61dd472b4ebd92dde38eea1ac9193b3069514ab1bad36ff135719fe1708a6da",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png": "ad8824707a9d7d6e18cf543e1bfe4b894999f319f9511da2f02a596e0fd003de",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png": "eae72b91539e15c9c62ba2733e6c7ccc92cc69b41e9e5409a7ffc53a8a0340fd",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png": "a20bab14c1bf95bace29d766c1fa474c37820c85dd31ab3fc2da29cfd0dcf357",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png": "7a14dc31b851c6cb284471971ef42653f1fe7cc4bae06cca807a9736d1dd8312"
+        }
+      },
+      {
+        "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/edited-source-fidelity.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/mobile-issue.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reader-preview.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reopened-issue.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/video.webm",
+        "durationSeconds": 7.16,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox-recording.png",
+        "contactSHA256": "80a9b48a7a4698d6501b3f59b9edbbdd5eac6e53c6ca7a17b490c19231132233",
+        "recordingContactSHA256": "602638649d18a0fd2fbca7c95472cfe7aee38ff54082708fa1f37c8702b814d0",
+        "videoSHA256": "c34a0763e3ae3ad676f7157825f246f8671672511831073844867c36c2c05348",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/edited-source-fidelity.png": "750bdea3ce5c69450d86d762f38e746e22cc036028f96eb05294452a0d219ad4",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/mobile-issue.png": "bbe6080c69fef109cf7179f304b6ed685a93c7e05b519855a572b944880c9e93",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reader-preview.png": "f508d6ee1de4b77b09271c652113a766d823a0b10058a6e712f0914f7f37588f",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reopened-issue.png": "0d415cd653460023ecdd8c070a7c5ada866e6a460ba7c2324e0d0c66e06fc1fe"
+        }
+      },
+      {
+        "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/edited-source-fidelity.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/mobile-issue.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reader-preview.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reopened-issue.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/video.webm",
+        "durationSeconds": 9.16,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit-recording.png",
+        "contactSHA256": "dba9c0d19757b24b7c649329c1af206861a3ddb1ec2b46c1d94deca7bb7409d8",
+        "recordingContactSHA256": "84e2165fca0e55861b408b57b30dabc8d1ca8b30b731496705d901bf1c6e3fb6",
+        "videoSHA256": "48f95285e2025923bf3ffe28ca915f3584689fc6c4430496b9e28d867c8a7236",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/edited-source-fidelity.png": "aa3805ff63bcbd2a172458ce9ffc5f63d5bf31d099e639677b39cad0acbc75e3",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/mobile-issue.png": "0f5343d7a55cea99f1c714241d7598bce96bc2e5e511f904a053757ae7a781e9",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reader-preview.png": "b63a138f0a204e65d08cb19887a80d55f5b20e3898130cba3d0972b404cfb277",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reopened-issue.png": "c580d02fec222ae00ba45d0e4b6806959b0f29467227b146e3bb89c7d12ea6e0"
+        }
+      },
+      {
+        "journey": "issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/imported.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reader.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reopened.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/video.webm",
+        "durationSeconds": 4.04,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium-recording.png",
+        "contactSHA256": "45d171e087ed8ba11b0769133f6683f116b9454b2c21a9cd834b67c034dc881a",
+        "recordingContactSHA256": "acb38af067a3ddcfb3341e6f2bc7f0770ae66c7f421c15b823e075e35d5dd314",
+        "videoSHA256": "902b08a8a1a6e91113b32ccce4092c667bbfac7c1c90e31019aa84d31246afcb",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.png": "e1bb781b5b3d8637416c56747914c192f90029c5ed0236792b41d07c74913610",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/imported.png": "34897f356e48b8632dbfb9cbcf8ecd72ba08f2b0af2c97c5e2d615248b85edcb",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reader.png": "37fb601a59d36b52eea920f5a02ed4886203acc2a4ced775cae468a4694d1f8b",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reopened.png": "e2a18b280c20c07f6bdf2fc608598d19ec03c9d992388f9563e851add2f71976"
+        }
+      },
+      {
+        "journey": "issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/edited.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/imported.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reader.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reopened.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/video.webm",
+        "durationSeconds": 4.48,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox-recording.png",
+        "contactSHA256": "568b9ea78943b744b5c21cc6dec6162938397ad04f0c3b7ff8ea558c716b6aa9",
+        "recordingContactSHA256": "129cda089d1bd2d30dd7daf25d85bff5d2a49a58c23e9e03d630f85b1aa35452",
+        "videoSHA256": "26f6fbe6d4a3d73721243b5088f7547ae797f3f5165c218492f5afbf0dc07391",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/edited.png": "e606c9e069f09768508f0526ea28acbe465fbd1b9655d4bbbb2bc403d3cf59bf",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/imported.png": "283d488d4c96782362c507d630a63b1f7e9be315e777d689d25f1979fd61b553",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reader.png": "1814279b8300b0f1cb7478f4612f753f6fe6a3b49af3ac062a99276c004ba4e3",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reopened.png": "53783d905673d519f4721ed6f8f89b1e0bfe8bd16a43abc627aee3dd88faf461"
+        }
+      },
+      {
+        "journey": "issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/edited.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/imported.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reader.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reopened.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/video.webm",
+        "durationSeconds": 7.96,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit-recording.png",
+        "contactSHA256": "0908800c5f0e96bec50d629c969ab8bdd3721f182a9a7b6236a98cbfd5beb2f0",
+        "recordingContactSHA256": "685a5ef97cdcb48527064381ba2582a604a59264a71911f81c6134304a68ec3e",
+        "videoSHA256": "b9f0c3aab12d55ef412b5f79fd28ad6072d9db9e2897347da0d82c4adb2a387f",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/edited.png": "a3e854ff47ba6916ec8fbdec23a56d38219fc41d0e5d5bcb0bbf6b3ff5b37680",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/imported.png": "8c5ebdc979091683ce432ca1abb6ee52e222ca3924b3ed0ad501ec92cbfa4476",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reader.png": "b21e45492258acde7a41af72bc707f7257821dc482b8cb8adf02974b605c8019",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reopened.png": "e4b97a6fe6fbdf72ca32509afb7d07e65f01576547252703a43c4e71d4e8b641"
+        }
+      },
+      {
+        "journey": "issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/fresh-warning-check.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/last-edited.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/reader.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/typed.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/video.webm",
+        "durationSeconds": 8.52,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium-recording.png",
+        "contactSHA256": "03fe4e95be961dcaa39b7888b773068e8f48216399facc54ad4559349c8b3bf6",
+        "recordingContactSHA256": "f18054988d29edc6161337168ba2b2bc79c4010f7450ba61df6fba00e80d59fd",
+        "videoSHA256": "51d9f37d73d599e5b103dc5e92dd506267899916ff1c1e23528e6063572e9781",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/fresh-warning-check.png": "cd5ca98348dc45ab5afb49ca66bccae049d630a8993e1779e517cbd120b62878",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/last-edited.png": "a825131ef1f68335a0cc0d3f8343ec7ca251dfbbcbbf525eabf1af3a9231bf86",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/reader.png": "ea0c6c6a1c0c494095bbde43ae51a93193b5add174ac4fb8379ec404d6dc1139",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-chromium/issue-input-journey/typed.png": "90e886edbda4aa4f4db398a8182d2685e071fe184904b90b892e3f15281d4ebb"
+        }
+      },
+      {
+        "journey": "issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/fresh-warning-check.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/last-edited.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/reader.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/typed.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/video.webm",
+        "durationSeconds": 11.52,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox-recording.png",
+        "contactSHA256": "d7df6cdd9c8b746652dab5db05af5dddab15db98c690bb16003b71e49f8c2bd6",
+        "recordingContactSHA256": "248dfcc719a8576f5a56218c0f7e14086126e105d5542851190751ca527323ea",
+        "videoSHA256": "dd736084e21d6da72648d75d7b864821e50f8e321f63069aca89bde18597a0a0",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/fresh-warning-check.png": "4024fe909a3b7bfa1073ab67fc4c758ef8095c1e9e36c351ede0673497dcd0fc",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/last-edited.png": "9dcc5fb1d4d554a469b9424692313f680fec813abad222e96445ce959b3305b6",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/reader.png": "3ae00c81c85b5e6f13be4a4f31ec2ecd2155b99f1029825d2f0b0e0a4f2bc2e9",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox/issue-input-journey/typed.png": "815881ec6decf91e61b45851e11f2b179a81c00cfd4a295ed4ab3e875d6d7fcd"
+        }
+      },
+      {
+        "journey": "issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/fresh-warning-check.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/last-edited.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/reader.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/typed.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/video.webm",
+        "durationSeconds": 18.8,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit-recording.png",
+        "contactSHA256": "78b71e107e9f5f04ad8b7810394d86a1c444fa6edbfeb40f1246aa69fe0638eb",
+        "recordingContactSHA256": "144bfc6beb3a49f46a99f7c49158fa06317dc7f2edecfd1e59109fd718b18720",
+        "videoSHA256": "e928691cfd637e35222aa389be64c2c1a7084a7bfcb6b025e5166082cfdfa623",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/fresh-warning-check.png": "c49515897e120c38ce3ecb5c88cf87746a34a937eea839d03deb231e092da678",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/last-edited.png": "4577dfef6c87e46777cb760778235e4203f75b6860ba7dc27a9ea73a75c00bbf",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/reader.png": "1c1eb3353b4726fcc210b1e71cfb3e52c55c3204f5ee68ef7e5c9024742d1c0c",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-webkit/issue-input-journey/typed.png": "48c3e58cc361720ceb551f75b899752bd1812d30cbe43d73ad87f117ba371e56"
+        }
+      },
+      {
+        "journey": "issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-before-handoff.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-reopened-mobile.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-reopened-reader.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/video.webm",
+        "durationSeconds": 3.68,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium-recording.png",
+        "contactSHA256": "0f0b012b584e56428e394a037eb5ca9bb5fa7f438c0df01b7d89139ac59573a3",
+        "recordingContactSHA256": "b1cf2e2a64affcc9aa4451e456ce24ccbc9bae2dfdae9e6fbb722f87852f9db0",
+        "videoSHA256": "a84e3d68904ba275c3abbabef9083577949c6ef22a134a86c43a12f58054d007",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-before-handoff.png": "1feae4f6f8569eadcbc678fe3406b094821a1c308cb9b502b5447d4a06b150eb",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-reopened-mobile.png": "3ad1675020a34f4c932b2950a03286209b687c39c38e926d7b90a790862336ea",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium/table-reopened-reader.png": "5016d256ead768dfd27db893b27e233b9e97ec99647caecd17b3ded64942103f"
+        }
+      },
+      {
+        "journey": "issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-before-handoff.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-reopened-mobile.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-reopened-reader.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/video.webm",
+        "durationSeconds": 4.8,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox-recording.png",
+        "contactSHA256": "61da6af8247942c4965639797def518d6803aa4d791ec75875d55e44d678e2dd",
+        "recordingContactSHA256": "6f93736c2c27fc7dc1d4ac46cec01e62de4a311310201767109ed015c7cb20dc",
+        "videoSHA256": "9cc6779d691a4fc8f903abc86927f6f19f10c74b02ed243643beac6f8c9d35a7",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-before-handoff.png": "760e72e2b19e86bb7ea03360a465a8ca33dbdcb48a5d59ff6a52f802cc494745",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-reopened-mobile.png": "5aa95a7f4c805defcd0ee1a86c3cd7ad46dcc1ba4b287f8d881be662dbe996b6",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox/table-reopened-reader.png": "dc564e736db2723767e49cdf1e5c3a399c2853de3ae6506a69abdee9881dd749"
+        }
+      },
+      {
+        "journey": "issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit",
+        "sourceImages": [
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-before-handoff.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-reopened-mobile.png",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-reopened-reader.png"
+        ],
+        "contact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit.png",
+        "video": "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/video.webm",
+        "durationSeconds": 7.44,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-visual-review-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit-recording.png",
+        "contactSHA256": "81fa2676a22a384b4e4e5565b773073ed6bda750f8837c292b239f4fe3a141e9",
+        "recordingContactSHA256": "50cdc280c3cb54abb558437d55b05ab4a282dede6f204fa62dccdc5cc96a5dfe",
+        "videoSHA256": "488113876011429c572a5e9691949901ab3698c5fc873a6199f80dbf68927824",
+        "captureSHA256": {
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-before-handoff.png": "ee9480fc16a09c0096f1159c3a22ba45c7c1921d3ce76887ef22987fc07f87bf",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-reopened-mobile.png": "8d97e1d7a716372b535a8244d09cddb833006db91986fef22e03430ae19c50fe",
+          "artifacts/issue-input-final-regression-browser-20261104/issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit/table-reopened-reader.png": "ee9a2d6c2917577276e11a9da96197dd8fa5391e4c310b4731f5e3c61ebcf310"
+        }
+      },
+      {
+        "journey": "issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium",
+        "sourceImages": [
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png",
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png",
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png",
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png"
+        ],
+        "contact": "artifacts/issue-input-production-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium.png",
+        "video": "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/video.webm",
+        "durationSeconds": 14.08,
+        "sampleFractions": [
+          0.15,
+          0.3,
+          0.45,
+          0.6,
+          0.75,
+          0.9
+        ],
+        "recordingContact": "artifacts/issue-input-production-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium-recording.png",
+        "contactSHA256": "2c2e99ea2bef6929249a3b238fed68512b88944767faca69afbee5808f7ec9ca",
+        "recordingContactSHA256": "9989d5aa2204d2dd65e2fb88c09492cfc52acff3c69c433173d92f014fa4a814",
+        "videoSHA256": "e65d257789e3a913252a7235d3f5be84fad70ad884149d6dff5f7c1acc429000",
+        "captureSHA256": {
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png": "ad8824707a9d7d6e18cf543e1bfe4b894999f319f9511da2f02a596e0fd003de",
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png": "eae72b91539e15c9c62ba2733e6c7ccc92cc69b41e9e5409a7ffc53a8a0340fd",
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png": "a20bab14c1bf95bace29d766c1fa474c37820c85dd31ab3fc2da29cfd0dcf357",
+          "artifacts/issue-input-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png": "7a14dc31b851c6cb284471971ef42653f1fe7cc4bae06cca807a9736d1dd8312"
+        }
+      }
+    ],
+    "rawVideoTraceAndIndividualPNGs": "Retained locally; contact sheets and hashes retained in Git. CI collects fresh journey outputs."
+  },
+  "performance": {
+    "firstFinalFailures": [
+      "100-block server HTML p95 47.34 ms exceeds 35 ms"
+    ],
+    "isolatedUnchangedRecheckFailures": [],
+    "limitsChanged": false,
+    "measurementScope": "Three beforeinput-to-two-animation-frame samples in a Vite development host; not INP, paint, or production certification."
+  },
+  "loadedClosureDeltaBytes": {
+    ".": {
+      "closureRawBytes": 2003,
+      "closureGzipBytes": 479,
+      "closureBrotliBytes": 358
+    },
+    "./core": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./react": {
+      "closureRawBytes": 2003,
+      "closureGzipBytes": 480,
+      "closureBrotliBytes": 332
+    },
+    "./docx": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    }
+  },
+  "sizeAcceptance": {
+    "limitsChanged": false,
+    "failures": [
+      "all ESM runtime code exceeds its budget by 18.9 KiB",
+      "all CommonJS runtime code exceeds its budget by 14.5 KiB"
+    ],
+    "individualAndCSS": "passed"
+  },
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "retainedFailures": [
+    "issue-input-before-browser-20261104.log: module discovery assumption",
+    "issue-input-baseline-browser-20261104.log: eager serialization negative control",
+    "issue-input-complete-chromium-20261104.log: actual virtual Ctrl+End gap",
+    "issue-input-navigation-chromium-20261104.log: first-mounted is not first-model fixture assumption",
+    "issue-input-reopen-chromium-20261104.log: legitimate HTML compatibility warning, fixture expectation corrected",
+    "issue-input-regression-browser-20261104.log: three legacy automatic-report assumptions and one Firefox far-caret insertion failure",
+    "issue-input-final-latency-20261104.log: server-HTML p95 failure retained"
+  ],
+  "remainingScope": [
+    "fresh full current-head CI",
+    "aggregate capacity review",
+    "production startup delay",
+    "general virtual structural/atomic boundary selection",
+    "remaining CommonMark",
+    "footnote/nested HTML/independent inline source ownership",
+    "full parity and release validation"
+  ],
+  "fullParityOrPublicationCertified": false
+}

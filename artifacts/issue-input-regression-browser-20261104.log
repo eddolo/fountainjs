@@ -1,0 +1,214 @@
+[WebServer] (node:18116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:14732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (14.4s)
+  ok  2 [chromium] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (3.7s)
+  ok  3 [chromium] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (8.6s)
+  x   4 [chromium] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff (6.6s)
+(node:21664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (8.6s)
+  ok  6 [firefox] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (4.7s)
+  x   7 [firefox] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (8.1s)
+(node:22740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   8 [firefox] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff (9.5s)
+(node:1684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (9.4s)
+  ok 10 [webkit] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (7.9s)
+  ok 11 [webkit] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing (19.2s)
+  x  12 [webkit] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff (7.5s)
+
+
+  1) [chromium] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Markdown export warnings')
+    Expected substring: "first row column headers"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Markdown export warnings')
+
+
+       at ..\browser\issue-table-handoff-journey.ts:30
+
+      28 |   };
+      29 |   await verify(editor);
+    > 30 |   await expect(page.getByLabel('Markdown export warnings')).toContainText('first row column headers');
+         |                                                             ^
+      31 |   await page.getByLabel('Table export', { exact: true }).selectOption('html');
+      32 |   await expect(page.getByLabel('Markdown export warnings')).not.toContainText('first row column headers');
+      33 |   await capture('table-before-handoff.png');
+        at issueTableHandoffJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-table-handoff-journey.ts:30:61)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-table-handoff-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator(':scope > p').first()
+    Expected: "Edit this paragraph.XYZ"
+    Received: "Paragraph 4954 with source link."
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator(':scope > p').first()
+        14 × locator resolved to <p data-fountain-path="4955" data-fountain-content-dom="" data-fountain-node="paragraph">…</p>
+           - unexpected value "Paragraph 4954 with source link."
+
+
+       at ..\browser\issue-input-journey.ts:54
+
+      52 |     await expect.poll(() => page.evaluate(() => window.__issueInputProbe.inputs.length)).toBe(index + 1);
+      53 |   }
+    > 54 |   await expect(first).toHaveText('Edit this paragraph.XYZ');
+         |                       ^
+      55 |   const measured = await page.evaluate(() => window.__issueInputProbe);
+      56 |   await page.screenshot({ path: resolve(root, 'typed.png') });
+      57 |   await writeFile(resolve(root, 'input-measurement.json'), JSON.stringify({ engine: info.project.name, documentParagraphs: 5000,
+        at measureIssueInput (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-input-journey.ts:54:23)
+        at runIssueInputJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-input-journey.ts:63:18)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-input-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-regression-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-regression-browser-20261104\issue-input-real-keeps-ful-42b40--of-real-large-issue-typing-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Markdown export warnings')
+    Expected substring: "first row column headers"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Markdown export warnings')
+
+
+       at ..\browser\issue-table-handoff-journey.ts:30
+
+      28 |   };
+      29 |   await verify(editor);
+    > 30 |   await expect(page.getByLabel('Markdown export warnings')).toContainText('first row column headers');
+         |                                                             ^
+      31 |   await page.getByLabel('Table export', { exact: true }).selectOption('html');
+      32 |   await expect(page.getByLabel('Markdown export warnings')).not.toContainText('first row column headers');
+      33 |   await capture('table-before-handoff.png');
+        at issueTableHandoffJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-table-handoff-journey.ts:30:61)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-table-handoff-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [webkit] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Markdown export warnings')
+    Expected substring: "first row column headers"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Markdown export warnings')
+
+
+       at ..\browser\issue-table-handoff-journey.ts:30
+
+      28 |   };
+      29 |   await verify(editor);
+    > 30 |   await expect(page.getByLabel('Markdown export warnings')).toContainText('first row column headers');
+         |                                                             ^
+      31 |   await page.getByLabel('Table export', { exact: true }).selectOption('html');
+      32 |   await expect(page.getByLabel('Markdown export warnings')).not.toContainText('first row column headers');
+      33 |   await capture('table-before-handoff.png');
+        at issueTableHandoffJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\issue-table-handoff-journey.ts:30:61)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\issue-table-handoff-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\issue-input-regression-browser-20261104\issue-table-handoff-audit--3a826-ugh-source-and-file-handoff-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [chromium] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff 
+    [firefox] › tests\manual\issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing 
+    [firefox] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff 
+    [webkit] › tests\manual\issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff 
+  8 passed (2.0m)

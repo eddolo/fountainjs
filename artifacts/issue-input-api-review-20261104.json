@@ -1,0 +1,18 @@
+{
+  "publicSignaturesChanged": false,
+  "newPrivateFieldOnly": true,
+  "files": [
+    {
+      "path": "dist/view/view.d.ts",
+      "beforeSHA256": "e9ee57c8a2455eeca7d6d8f3bb9a2dc7cc6ab0309e80f8b2d30097c0cba21c58",
+      "afterSHA256": "3d258f1a73d3478160d00d1d03fb540449023317fc8281fc25a8a07c19caa2c8",
+      "equalAfterRemovingOnlyNewPrivateField": true
+    },
+    {
+      "path": "dist/view/view.d.cts",
+      "beforeSHA256": "dd2e1203ea4990166aab8654f7d4529a8fa294d6cdbfcc70c8798429161f805b",
+      "afterSHA256": "2b67a536b0dede0b6da6e46e23b076701d0959f391e8d802921dc068a9fae256",
+      "equalAfterRemovingOnlyNewPrivateField": true
+    }
+  ]
+}
