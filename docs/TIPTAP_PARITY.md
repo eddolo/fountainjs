@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Table/release checkpoint (2026-11-04, unmerged): fractional column geometry and
+stationary-resize history are repaired, with 3,628 unit cases, three recorded
+desktop workflows, packed ESM/CJS, workerd and independent native width evidence.
+Native table placement remains 0.3 pt off; no full-page certification is claimed.
+Schema package resolution is repaired and automatic validation covers all 40
+applicable public entries, plus Angular separately. Package/type-resolution,
+publint and website checks pass. Refreshed broad browser CI and seven existing
+size failures remain open. No capability-row or percentage promotion.
+[Detailed scope](DOCX_COLUMN_PRECISION.md).
+
 Marker-audit correction (2026-11-04): focused paint checks and byte-identical
 original marker patches show that the empty item's `2.` was already visible.
 The earlier defect report was a review error. Three recorded journeys also

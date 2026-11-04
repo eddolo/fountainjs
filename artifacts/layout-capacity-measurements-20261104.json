@@ -1,0 +1,79 @@
+{
+  "applied": false,
+  "roundingUnitBytes": 256,
+  "rows": [
+    {
+      "name": "dist/core.js",
+      "measuredBytes": 9669,
+      "existingLimitBytes": 9280,
+      "proposedLimitBytes": 9728,
+      "measuredKiB": 9.4423828125,
+      "existingLimitKiB": 9.0625,
+      "proposedLimitKiB": 9.5,
+      "gzipBytes": 3333,
+      "brotliBytes": 2831
+    },
+    {
+      "name": "dist/core.cjs",
+      "measuredBytes": 8795,
+      "existingLimitBytes": 8448,
+      "proposedLimitBytes": 8960,
+      "measuredKiB": 8.5888671875,
+      "existingLimitKiB": 8.25,
+      "proposedLimitKiB": 8.75,
+      "gzipBytes": 2596,
+      "brotliBytes": 2296
+    },
+    {
+      "name": "dist/docx.js",
+      "measuredBytes": 215704,
+      "existingLimitBytes": 189440,
+      "proposedLimitBytes": 215808,
+      "measuredKiB": 210.6484375,
+      "existingLimitKiB": 185,
+      "proposedLimitKiB": 210.75,
+      "gzipBytes": 62009,
+      "brotliBytes": 52328
+    },
+    {
+      "name": "dist/docx.cjs",
+      "measuredBytes": 174798,
+      "existingLimitBytes": 153088,
+      "proposedLimitBytes": 174848,
+      "measuredKiB": 170.701171875,
+      "existingLimitKiB": 149.5,
+      "proposedLimitKiB": 170.75,
+      "gzipBytes": 55554,
+      "brotliBytes": 47934
+    },
+    {
+      "name": "dist/styles.css",
+      "measuredBytes": 90738,
+      "existingLimitBytes": 89600,
+      "proposedLimitBytes": 90880,
+      "measuredKiB": 88.611328125,
+      "existingLimitKiB": 87.5,
+      "proposedLimitKiB": 88.75,
+      "gzipBytes": 13447,
+      "brotliBytes": 11389
+    },
+    {
+      "name": "all ESM runtime code",
+      "measuredBytes": 1731811,
+      "existingLimitBytes": 1692160,
+      "proposedLimitBytes": 1731840,
+      "measuredKiB": 1691.2216796875,
+      "existingLimitKiB": 1652.5,
+      "proposedLimitKiB": 1691.25
+    },
+    {
+      "name": "all CommonJS runtime code",
+      "measuredBytes": 1442472,
+      "existingLimitBytes": 1408512,
+      "proposedLimitBytes": 1442560,
+      "measuredKiB": 1408.6640625,
+      "existingLimitKiB": 1375.5,
+      "proposedLimitKiB": 1408.75
+    }
+  ]
+}

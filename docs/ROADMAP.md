@@ -1,5 +1,23 @@
 # FountainJS opportunity roadmap
 
+Release-validation checkpoint (2026-11-04, unmerged): document-schema resolution
+now works in TypeScript's legacy mode. Validation discovers all 40 applicable
+public entries rather than an incomplete fixed list, with Angular's ESM-only
+contract checked separately. Actual tarball resolution, package loading, publint
+and website build pass; runtime/declaration bytes are unchanged. CI retains the
+mandatory size gate after the remaining functional checks so its failure cannot
+hide their results. No release or parity promotion follows.
+
+Fractional table-column checkpoint (2026-11-04, unmerged): Word's 3312-unit grid
+now stays 220.8 px throughout HTML, editing, pointer resizing and history instead
+of becoming 221 px / 3315 units. Stationary handle use changes no data/history.
+Full units pass 3,628 / 258 files, three recorded desktop workflows pass, and
+actual packed ESM/CJS plus workerd pass. Independent native output retains the
+exact grid and painted column widths. The separate 0.3 pt horizontal placement
+gap remains. The broad run's three stale DOCX expectations now have explicit
+native-default assertions and pass locally; refreshed cloud coverage is pending.
+Seven unchanged size limits still fail. [Evidence and scope](DOCX_COLUMN_PRECISION.md).
+
 Display-equation paragraph checkpoint (2026-11-04, unmerged): inherited/native
 paragraph geometry and font context now survive equation-only Word import,
 source editing/undo, safe HTML and native DOCX reopening. Mixed paragraphs and
