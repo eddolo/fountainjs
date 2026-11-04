@@ -1,0 +1,2057 @@
+{
+  "scope": "Six exact-native-model diagnostics; no conformance, retention or public API changes",
+  "diagnosticControls": {
+    "validTextCoalescing": 1,
+    "textMarkAndAttributeCorruptionsRejected": 3
+  },
+  "findings": [
+    {
+      "examples": [
+        148,
+        187,
+        494
+      ],
+      "category": "Adjacent text leaves combine; characters, marks and attributes agree under the explicitly weaker diagnostic projection.",
+      "exactNativeModelRetention": false,
+      "nextAction": "Decide whether native text-leaf boundaries need a separate carrier; do not report this as lost visible content or relax node/JSON equality."
+    },
+    {
+      "examples": [
+        156,
+        157,
+        158
+      ],
+      "category": "Source export generates the default HTML5 declaration; the EOF-aware document importer records it as root htmlSourceEnvelope metadata.",
+      "exactNativeModelRetention": false,
+      "nextAction": "Review an explicit origin/provenance contract before changing generated or authored declaration handling; preserve exact authored spelling and quirks mode."
+    }
+  ],
+  "records": [
+    {
+      "number": 148,
+      "ending": "\n",
+      "source": "<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "table_row",
+                "content": [
+                  {
+                    "type": "table_cell",
+                    "attrs": {
+                      "colspan": 1,
+                      "rowspan": 1,
+                      "colwidth": null,
+                      "background": ""
+                    },
+                    "content": [
+                      {
+                        "type": "code_block",
+                        "attrs": {
+                          "language": "text",
+                          "lineNumbers": true
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "**Hello**,\n"
+                          },
+                          {
+                            "type": "text",
+                            "text": "world",
+                            "marks": [
+                              {
+                                "type": "em"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": "."
+                          },
+                          {
+                            "type": "text",
+                            "text": "\n"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "table_row",
+                "content": [
+                  {
+                    "type": "table_cell",
+                    "attrs": {
+                      "colspan": 1,
+                      "rowspan": 1,
+                      "colwidth": null,
+                      "background": ""
+                    },
+                    "content": [
+                      {
+                        "type": "code_block",
+                        "attrs": {
+                          "language": "text",
+                          "lineNumbers": true
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "**Hello**,\n"
+                          },
+                          {
+                            "type": "text",
+                            "text": "world",
+                            "marks": [
+                              {
+                                "type": "em"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": ".\n"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "table_row",
+                "content": [
+                  {
+                    "type": "table_cell",
+                    "attrs": {
+                      "colspan": 1,
+                      "rowspan": 1,
+                      "colwidth": null,
+                      "background": ""
+                    },
+                    "content": [
+                      {
+                        "type": "code_block",
+                        "attrs": {
+                          "language": "text",
+                          "lineNumbers": true
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "**Hello**,\n"
+                          },
+                          {
+                            "type": "text",
+                            "text": "world",
+                            "marks": [
+                              {
+                                "type": "em"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": ".\n"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.2.text",
+          "before": ".",
+          "after": ".\n"
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "\n"
+          },
+          "after": null
+        }
+      ],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.2.text",
+          "before": ".",
+          "after": ".\n"
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "\n"
+          },
+          "after": null
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><table><tbody><tr><td colspan=\"1\" rowspan=\"1\"><pre data-language=\"text\"><code class=\"language-text\">**Hello**,\n<em>world</em>.\n</code></pre><p></p></td></tr></tbody></table></body></html>",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 148,
+      "ending": "\r\n",
+      "source": "<table><tr><td>\r\n<pre>\r\n**Hello**,\r\n\r\n_world_.\r\n</pre>\r\n</td></tr></table>\r\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "table_row",
+                "content": [
+                  {
+                    "type": "table_cell",
+                    "attrs": {
+                      "colspan": 1,
+                      "rowspan": 1,
+                      "colwidth": null,
+                      "background": ""
+                    },
+                    "content": [
+                      {
+                        "type": "code_block",
+                        "attrs": {
+                          "language": "text",
+                          "lineNumbers": true
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "**Hello**,\n"
+                          },
+                          {
+                            "type": "text",
+                            "text": "world",
+                            "marks": [
+                              {
+                                "type": "em"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": "."
+                          },
+                          {
+                            "type": "text",
+                            "text": "\n"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "table_row",
+                "content": [
+                  {
+                    "type": "table_cell",
+                    "attrs": {
+                      "colspan": 1,
+                      "rowspan": 1,
+                      "colwidth": null,
+                      "background": ""
+                    },
+                    "content": [
+                      {
+                        "type": "code_block",
+                        "attrs": {
+                          "language": "text",
+                          "lineNumbers": true
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "**Hello**,\n"
+                          },
+                          {
+                            "type": "text",
+                            "text": "world",
+                            "marks": [
+                              {
+                                "type": "em"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": ".\n"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "table",
+            "content": [
+              {
+                "type": "table_row",
+                "content": [
+                  {
+                    "type": "table_cell",
+                    "attrs": {
+                      "colspan": 1,
+                      "rowspan": 1,
+                      "colwidth": null,
+                      "background": ""
+                    },
+                    "content": [
+                      {
+                        "type": "code_block",
+                        "attrs": {
+                          "language": "text",
+                          "lineNumbers": true
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "**Hello**,\n"
+                          },
+                          {
+                            "type": "text",
+                            "text": "world",
+                            "marks": [
+                              {
+                                "type": "em"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": ".\n"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": ""
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.2.text",
+          "before": ".",
+          "after": ".\n"
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "\n"
+          },
+          "after": null
+        }
+      ],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.2.text",
+          "before": ".",
+          "after": ".\n"
+        },
+        {
+          "path": "$.content.0.content.0.content.0.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "\n"
+          },
+          "after": null
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><table><tbody><tr><td colspan=\"1\" rowspan=\"1\"><pre data-language=\"text\"><code class=\"language-text\">**Hello**,\n<em>world</em>.\n</code></pre><p></p></td></tr></tbody></table></body></html>",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 156,
+      "ending": "\n",
+      "source": "<div id=\"foo\"\n*hi*\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\"\n*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\"\n*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "attrs": {
+          "htmlSourceEnvelope": {
+            "version": 1,
+            "doctype": "<!doctype html>",
+            "mode": "no-quirks"
+          }
+        },
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\"\n*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.attrs",
+          "before": null,
+          "after": {
+            "htmlSourceEnvelope": {
+              "version": 1,
+              "doctype": "<!doctype html>",
+              "mode": "no-quirks"
+            }
+          }
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><div id=\"foo\"\n*hi*",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 156,
+      "ending": "\r\n",
+      "source": "<div id=\"foo\"\r\n*hi*\r\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\"\n*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\"\n*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "attrs": {
+          "htmlSourceEnvelope": {
+            "version": 1,
+            "doctype": "<!doctype html>",
+            "mode": "no-quirks"
+          }
+        },
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div id=\"foo\"\n*hi*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.attrs",
+          "before": null,
+          "after": {
+            "htmlSourceEnvelope": {
+              "version": 1,
+              "doctype": "<!doctype html>",
+              "mode": "no-quirks"
+            }
+          }
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><div id=\"foo\"\n*hi*",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 157,
+      "ending": "\n",
+      "source": "<div class\nfoo\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class\nfoo"
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class\nfoo"
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "attrs": {
+          "htmlSourceEnvelope": {
+            "version": 1,
+            "doctype": "<!doctype html>",
+            "mode": "no-quirks"
+          }
+        },
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class\nfoo"
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.attrs",
+          "before": null,
+          "after": {
+            "htmlSourceEnvelope": {
+              "version": 1,
+              "doctype": "<!doctype html>",
+              "mode": "no-quirks"
+            }
+          }
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><div class\nfoo",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 157,
+      "ending": "\r\n",
+      "source": "<div class\r\nfoo\r\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class\nfoo"
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class\nfoo"
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "attrs": {
+          "htmlSourceEnvelope": {
+            "version": 1,
+            "doctype": "<!doctype html>",
+            "mode": "no-quirks"
+          }
+        },
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div class\nfoo"
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.attrs",
+          "before": null,
+          "after": {
+            "htmlSourceEnvelope": {
+              "version": 1,
+              "doctype": "<!doctype html>",
+              "mode": "no-quirks"
+            }
+          }
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><div class\nfoo",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 158,
+      "ending": "\n",
+      "source": "<div *???-&&&-<---\n*foo*\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---\n*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---\n*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "attrs": {
+          "htmlSourceEnvelope": {
+            "version": 1,
+            "doctype": "<!doctype html>",
+            "mode": "no-quirks"
+          }
+        },
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---\n*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.attrs",
+          "before": null,
+          "after": {
+            "htmlSourceEnvelope": {
+              "version": 1,
+              "doctype": "<!doctype html>",
+              "mode": "no-quirks"
+            }
+          }
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><div *???-&&&-<---\n*foo*",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 158,
+      "ending": "\r\n",
+      "source": "<div *???-&&&-<---\r\n*foo*\r\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---\n*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---\n*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "attrs": {
+          "htmlSourceEnvelope": {
+            "version": 1,
+            "doctype": "<!doctype html>",
+            "mode": "no-quirks"
+          }
+        },
+        "content": [
+          {
+            "type": "html_source_eof",
+            "content": [
+              {
+                "type": "text",
+                "text": "<div *???-&&&-<---\n*foo*"
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.attrs",
+          "before": null,
+          "after": {
+            "htmlSourceEnvelope": {
+              "version": 1,
+              "doctype": "<!doctype html>",
+              "mode": "no-quirks"
+            }
+          }
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><div *???-&&&-<---\n*foo*",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 187,
+      "ending": "\n",
+      "source": "Foo\n<a href=\"bar\">\nbaz\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Foo"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "text",
+                "text": " ",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Foo "
+              },
+              {
+                "type": "text",
+                "text": " baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Foo "
+              },
+              {
+                "type": "text",
+                "text": " baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "Foo",
+          "after": "Foo "
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": " baz"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "bar",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": " ",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "baz",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "Foo",
+          "after": "Foo "
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": " baz"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "bar",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": " ",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "baz",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><p>Foo <a href=\"bar\" target=\"_blank\" rel=\"noopener noreferrer nofollow\"> baz</a></p><a href=\"bar\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">\n</a></body></html>",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 187,
+      "ending": "\r\n",
+      "source": "Foo\r\n<a href=\"bar\">\r\nbaz\r\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Foo"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "text",
+                "text": " ",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Foo "
+              },
+              {
+                "type": "text",
+                "text": " baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Foo "
+              },
+              {
+                "type": "text",
+                "text": " baz",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "link",
+                    "attrs": {
+                      "href": "bar",
+                      "title": "",
+                      "target": "_blank"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "Foo",
+          "after": "Foo "
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": " baz"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "bar",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": " ",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "baz",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "Foo",
+          "after": "Foo "
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": " baz"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "bar",
+                "title": "",
+                "target": "_blank"
+              }
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": " ",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": "baz",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "bar",
+                  "title": "",
+                  "target": "_blank"
+                }
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><p>Foo <a href=\"bar\" target=\"_blank\" rel=\"noopener noreferrer nofollow\"> baz</a></p><a href=\"bar\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">\n</a></body></html>",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 494,
+      "ending": "\n",
+      "source": "[a](<b)c\n[a](<b)c>\n[a](<b>c)\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "[a](<b)c"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "text",
+                "text": "[a](<b)c>"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "text",
+                "text": "[a]("
+              },
+              {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "[a](<b)c [a](<b)c> [a]("
+              },
+              {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "[a](<b)c [a](<b)c> [a]("
+              },
+              {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "[a](<b)c",
+          "after": "[a](<b)c [a](<b)c> [a]("
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": "c)"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": "[a](<b)c>"
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": " "
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.4",
+          "before": {
+            "type": "text",
+            "text": "[a]("
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.5",
+          "before": {
+            "type": "text",
+            "text": "c)",
+            "marks": [
+              {
+                "type": "strong"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "[a](<b)c",
+          "after": "[a](<b)c [a](<b)c> [a]("
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": "c)"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": "[a](<b)c>"
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": " "
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.4",
+          "before": {
+            "type": "text",
+            "text": "[a]("
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.5",
+          "before": {
+            "type": "text",
+            "text": "c)",
+            "marks": [
+              {
+                "type": "strong"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><p>[a](&lt;b)c [a](&lt;b)c&gt; [a](<strong>c)</strong></p><strong>\n</strong></body></html>",
+      "sourceModelStatus": "different"
+    },
+    {
+      "number": 494,
+      "ending": "\r\n",
+      "source": "[a](<b)c\r\n[a](<b)c>\r\n[a](<b>c)\r\n",
+      "original": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "[a](<b)c"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "text",
+                "text": "[a](<b)c>"
+              },
+              {
+                "type": "text",
+                "text": " "
+              },
+              {
+                "type": "text",
+                "text": "[a]("
+              },
+              {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "[a](<b)c [a](<b)c> [a]("
+              },
+              {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sourceReopened": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "[a](<b)c [a](<b)c> [a]("
+              },
+              {
+                "type": "text",
+                "text": "c)",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "html_flow",
+            "content": [
+              {
+                "type": "text",
+                "text": "\n",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "safeDifferences": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "[a](<b)c",
+          "after": "[a](<b)c [a](<b)c> [a]("
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": "c)"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": "[a](<b)c>"
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": " "
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.4",
+          "before": {
+            "type": "text",
+            "text": "[a]("
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.5",
+          "before": {
+            "type": "text",
+            "text": "c)",
+            "marks": [
+              {
+                "type": "strong"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "sourceDifferencesExcludingOldTokens": [
+        {
+          "path": "$.content.0.content.0.text",
+          "before": "[a](<b)c",
+          "after": "[a](<b)c [a](<b)c> [a]("
+        },
+        {
+          "path": "$.content.0.content.1.text",
+          "before": " ",
+          "after": "c)"
+        },
+        {
+          "path": "$.content.0.content.1.marks",
+          "before": null,
+          "after": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "path": "$.content.0.content.2",
+          "before": {
+            "type": "text",
+            "text": "[a](<b)c>"
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.3",
+          "before": {
+            "type": "text",
+            "text": " "
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.4",
+          "before": {
+            "type": "text",
+            "text": "[a]("
+          },
+          "after": null
+        },
+        {
+          "path": "$.content.0.content.5",
+          "before": {
+            "type": "text",
+            "text": "c)",
+            "marks": [
+              {
+                "type": "strong"
+              }
+            ]
+          },
+          "after": null
+        }
+      ],
+      "safeEqualOnlyAfterJoiningAdjacentText": true,
+      "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true,
+      "sourceHTML": "<!doctype html><html><head><meta charset=\"utf-8\"></head><body><p>[a](&lt;b)c [a](&lt;b)c&gt; [a](<strong>c)</strong></p><strong>\n</strong></body></html>",
+      "sourceModelStatus": "different"
+    }
+  ]
+}

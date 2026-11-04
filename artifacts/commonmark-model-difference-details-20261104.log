@@ -1,0 +1,74 @@
+[
+  {
+    "number": 148,
+    "ending": "\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true
+  },
+  {
+    "number": 148,
+    "ending": "\r\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true
+  },
+  {
+    "number": 156,
+    "ending": "\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false
+  },
+  {
+    "number": 156,
+    "ending": "\r\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false
+  },
+  {
+    "number": 157,
+    "ending": "\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false
+  },
+  {
+    "number": 157,
+    "ending": "\r\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false
+  },
+  {
+    "number": 158,
+    "ending": "\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false
+  },
+  {
+    "number": 158,
+    "ending": "\r\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": false
+  },
+  {
+    "number": 187,
+    "ending": "\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true
+  },
+  {
+    "number": 187,
+    "ending": "\r\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true
+  },
+  {
+    "number": 494,
+    "ending": "\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true
+  },
+  {
+    "number": 494,
+    "ending": "\r\n",
+    "safeEqualOnlyAfterJoiningAdjacentText": true,
+    "sourceEqualOnlyAfterJoiningAdjacentTextAndExcludingOldTokens": true
+  }
+]
