@@ -301,7 +301,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     case 'mention': case 'emoji': return node.type.spec.toDOM
       ? renderDOMOutputSpec(node.type.spec.toDOM(node, context), children())
       : escapeHTML(node.textContent);
-    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
+    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block"${renderDOMAttributes(paragraphLayoutDOMAttributes(node.attrs.layout))} data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'inline_image': {
       const attributes = imageAttributes(node);
       if (!attributes) return '';

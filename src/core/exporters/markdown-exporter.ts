@@ -191,6 +191,9 @@ function reportNodeAttributes(
   if (name === 'code_block' && node.attrs.layout != null) {
     report(context, 'attribute', name, path, 'Code-block layout and font context are not represented by Markdown fences; retain Fountain JSON or safe HTML.');
   }
+  if (name === 'math_block' && node.attrs.layout != null) {
+    report(context, 'attribute', name, path, 'Display-equation paragraph layout and font context are not represented by TeX delimiters; retain Fountain JSON or safe HTML.');
+  }
   if (['inline_math', 'math_block'].includes(name) && node.attrs.ariaLabel) {
     report(context, 'attribute', name, path, 'The accessible math label is not represented by TeX delimiters.');
   }

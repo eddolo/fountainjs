@@ -623,7 +623,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
     const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
-    try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
+    try { return [schema.node('math_block', { latex, ariaLabel, expression, ...readParagraphLayout(element) })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {

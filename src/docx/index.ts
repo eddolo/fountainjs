@@ -739,6 +739,13 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     }
     return { node: schema.node('image_super', { ...content[0].attrs, align, caption: '', ...(retained ? { imageLayout: layout } : {}) }) };
   }
+  const displayMath = content.filter(node => node.type.name === 'math_block');
+  const ownsDisplayLayout = content.length === 1 && schema.nodes.math_block?.spec.attrs?.layout;
+  if (displayMath.length && layout && !ownsDisplayLayout) {
+    issues.push({ code: 'display-math-paragraph-layout-not-imported', severity: 'warning', path,
+      message: content.length === 1 ? 'The receiving math schema cannot retain the equation paragraph layout and font context.'
+        : 'One Word paragraph was split around display equations. Its paragraph geometry cannot be copied to every fragment without changing spacing; retain the original for the shared paragraph layout.' });
+  }
   // Word may put text, page breaks and display equations in one paragraph. Preserve their
   // order as separate Fountain blocks, never force a block into inline content.
   const parts: FountainNode[] = [];
@@ -753,7 +760,11 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     inline = [];
   };
   for (const node of content) {
-    if (node.type.name === 'math_block' || node.type.name === 'page_break') { flush(); parts.push(node); }
+    if (node.type.name === 'math_block' || node.type.name === 'page_break') {
+      flush();
+      parts.push(node.type.name === 'math_block' && ownsDisplayLayout && layout
+        ? schema.node('math_block', { ...node.attrs, layout }) : node);
+    }
     else inline.push(node);
   }
   flush();
@@ -2231,7 +2242,10 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
   if (!['paragraph', 'heading'].includes(node.type.name)) reportDirectionLoss(node, context, path);
   if (node.type.name === 'math_block') {
     const math = nativeMath(node, context, path);
-    if (math) return `<w:p>${paragraphProperties(node, list, quote, definition)}${math}</w:p>`;
+    if (math) {
+      const style = context.paragraphBridge.style(isParagraphLayout(node.attrs.layout) ? node.attrs.layout : undefined);
+      return `<w:p>${paragraphProperties(node, list, quote, definition, style)}${math}</w:p>`;
+    }
   }
   switch (node.type.name) {
     case 'footnote_definition': case 'page_header': case 'page_footer': return '';

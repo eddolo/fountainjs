@@ -11,6 +11,7 @@ import {
   type NodeViewLike,
 } from '../core';
 import { isMathExpression } from '../core/math-expression';
+import { paragraphLayoutAttribute, paragraphLayoutDOMAttributes } from '../core/paragraph-layout';
 import { getNodeAtPath } from '../core/transaction/path';
 import { MarkdownImporter } from '../core/importers/markdown-importer';
 import { defineExtension, type FountainExtension } from './extension';
@@ -110,6 +111,7 @@ function createMathNodeView(
     private readonly sourceEditor = document.createElement(displayMode ? 'div' : 'span');
     private readonly sourceInput = document.createElement('textarea');
     private current: Node;
+    private layoutCSS = '';
     private renderedDocument?: Node;
     readonly updateDocument?: (document: Node) => void;
 
@@ -231,6 +233,15 @@ function createMathNodeView(
     };
 
     private render(): void {
+      if (displayMode) {
+        const appearance = paragraphLayoutDOMAttributes(this.current.attrs.layout);
+        for (const declaration of this.layoutCSS.split(';')) this.dom.style.removeProperty(declaration.split(':', 1)[0]!);
+        this.layoutCSS = String(appearance.style ?? '');
+        this.dom.style.cssText += `;${this.layoutCSS}`;
+        const value = appearance['data-fountain-paragraph-layout'];
+        if (value === undefined) this.dom.removeAttribute('data-fountain-paragraph-layout');
+        else this.dom.setAttribute('data-fountain-paragraph-layout', String(value));
+      }
       const latex = String(this.current.attrs.latex ?? '');
       this.dom.dataset.latex = latex;
       this.dom.title = latex;
@@ -296,12 +307,13 @@ function mathNodeSpecs(options: MathExtensionOptions): { inline_math: NodeSpec; 
     math_block: {
       group: 'block',
       atom: true,
-      attrs: mathAttributes,
+      attrs: { ...mathAttributes, layout: paragraphLayoutAttribute },
       toText: (node) => String(node.attrs.latex ?? ''),
       nodeView: MathBlockView,
       toDOM: (node) => ['div', {
         class: 'fountain-math fountain-math--display',
         'data-fountain-math': 'block',
+        ...paragraphLayoutDOMAttributes(node.attrs.layout),
         'data-fountain-math-appearance': appearance,
         'data-latex': node.attrs.latex,
         'data-math-aria-label': node.attrs.ariaLabel,

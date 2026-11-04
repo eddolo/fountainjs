@@ -53,6 +53,27 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   // Capture the unmodified live page instead of injecting those style writes.
   await figures.first().screenshot({ path: resolve(root, 'image-caption-restored.png'), caret: 'initial' });
 
+  const equations = editor.locator('[data-fountain-math="block"]');
+  await expect(equations).toHaveCount(2);
+  const mathParagraphLayouts = await equations.evaluateAll(elements => elements.map(element =>
+    JSON.parse(element.getAttribute('data-fountain-paragraph-layout') ?? 'null')));
+  for (const value of mathParagraphLayouts) expect(value).toMatchObject({ unit: 'pt', spacingAfter: 7, fontFamily: 'Arial', fontSize: 11 });
+  const firstEquation = equations.first();
+  const originalEquation = await firstEquation.getAttribute('data-latex');
+  await firstEquation.locator('.fountain-math__output').click();
+  const equationSource = firstEquation.getByLabel('Edit math source', { exact: true });
+  await expect(equationSource).toHaveValue(originalEquation!);
+  await equationSource.fill('x^{2} + y^{2} = z^{2}');
+  await equationSource.press('Control+Enter');
+  await expect(firstEquation).toHaveAttribute('data-latex', 'x^{2} + y^{2} = z^{2}');
+  await expect(firstEquation.locator('.katex')).toBeVisible();
+  await firstEquation.screenshot({ path: resolve(root, 'equation-edited.png'), caret: 'initial' });
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(firstEquation).toHaveAttribute('data-latex', originalEquation!);
+  await expect(firstEquation.locator('annotation')).toHaveText(originalEquation!);
+  expect(JSON.parse(await firstEquation.getAttribute('data-fountain-paragraph-layout') ?? 'null')).toEqual(mathParagraphLayouts[0]);
+  await firstEquation.screenshot({ path: resolve(root, 'equation-restored.png'), caret: 'initial' });
+
   await paragraphs.first().click(); await page.keyboard.press('End'); await page.keyboard.press('Enter');
   await expect(items).toHaveCount(4);
   const empty = paragraphs.filter({ hasText: /^$/ });
@@ -124,10 +145,14 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   const reopenedImageLayouts = await reopened.locator('figure > img[data-fountain-paragraph-layout]').evaluateAll(images =>
     images.map(image => JSON.parse(image.getAttribute('data-fountain-paragraph-layout') ?? 'null')));
   expect(reopenedImageLayouts).toEqual(sourceImageLayouts);
+  const reopenedMathLayouts = await reopened.locator('[data-fountain-math="block"]').evaluateAll(elements => elements.map(element =>
+    JSON.parse(element.getAttribute('data-fountain-paragraph-layout') ?? 'null')));
+  expect(reopenedMathLayouts).toEqual(mathParagraphLayouts);
   await reopened.screenshot({ path: resolve(root, 'native-export-reopened.png') });
   expect(errors).toEqual([]);
   await writeFile(resolve(root, 'observations.json'), JSON.stringify({ initialGaps, enteredHeight, emptyMarkerDiagnostic, readerGap, readerImages, nativeReopenGap,
     sourceImageLayouts, reopenedImageLayouts, sourceImageCaptionGaps, captionTypedAndUndone: true,
+    mathParagraphLayouts, reopenedMathLayouts, mathEditedAndUndone: true,
     actualWordSource: true, enterUndoRedoBackspace: true, originalDeclaredAfterPt: 7,
     actualJSONAndHTMLDownloads: true, actualDOCXDownloadReopened: true,
     nativeExportRuleRetained: true, nativeWordSpacingCertified: false, errors }, null, 2) + '\n');
