@@ -1,0 +1,175 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: issue-html-source-real.spec.ts >> an issue author preserves reference bindings and code through real draft downloads
+- Location: tests\manual\issue-html-source-real.spec.ts:4:1
+
+# Error details
+
+```
+Test timeout of 90000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - link "F FountainJS" [ref=e5]:
+      - /url: ./
+      - generic [ref=e6]: F
+      - text: FountainJS
+    - navigation "Primary navigation" [ref=e7]:
+      - link "Home" [ref=e8]:
+        - /url: ./
+        - generic [ref=e10]: ↗
+      - link "10 demos" [ref=e11]:
+        - /url: ./demos.html
+        - generic [ref=e13]: ↗
+      - link "Workflows" [ref=e14]:
+        - /url: ./workflows.html
+        - generic [ref=e16]: ↗
+      - link "Developers" [ref=e17]:
+        - /url: ./developers.html
+        - generic [ref=e19]: ↗
+    - link "How this is built ↓" [ref=e20]:
+      - /url: "#integration"
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - navigation "Breadcrumb" [ref=e23]:
+        - list [ref=e24]:
+          - listitem [ref=e25]:
+            - link "Home" [ref=e26]:
+              - /url: ./
+          - listitem [ref=e27]:
+            - generic [ref=e28]: /
+            - link "Workflow lab" [ref=e29]:
+              - /url: ./workflows.html
+          - listitem [ref=e30]:
+            - generic [ref=e31]: /
+            - generic [ref=e32]: GitLab-style issue editor (unofficial)
+        - link "Back to workflow lab" [ref=e33]:
+          - /url: ./workflows.html
+          - generic [ref=e34]: ←
+          - text: Back to workflow lab
+      - heading "A bug report, from draft to review." [level=1] [ref=e35]
+      - paragraph [ref=e36]: Write visually, inspect the Markdown, and preview what a reader sees. This is a FountainJS implementation of an issue-writing workflow, not a GitLab integration or a full GitLab Flavored Markdown implementation.
+      - generic [ref=e37]:
+        - text: Issue title
+        - textbox "Issue title" [ref=e38]: Room switch leaves stale content
+      - region "Issue description" [ref=e39]:
+        - navigation "Description mode" [ref=e40]:
+          - button "Visual editor" [pressed] [ref=e41] [cursor=pointer]
+          - button "Markdown source" [ref=e42] [cursor=pointer]
+          - button "Reader preview" [ref=e43] [cursor=pointer]
+        - generic [ref=e45]:
+          - toolbar "Formatting and rich content" [ref=e47]:
+            - group "History and search" [ref=e48]:
+              - button "Undo" [ref=e49] [cursor=pointer]
+              - button "Redo" [disabled] [ref=e50]
+              - button "Find and replace" [ref=e51] [cursor=pointer]
+            - group "Block types" [ref=e52]:
+              - button "Paragraph" [ref=e53] [cursor=pointer]
+              - button "H1 — Heading 1" [ref=e54] [cursor=pointer]:
+                - img:
+                  - generic: H1
+              - button "H2 — Heading 2" [ref=e55] [cursor=pointer]:
+                - img:
+                  - generic: H2
+              - button "H3 — Heading 3" [ref=e56] [cursor=pointer]:
+                - img:
+                  - generic: H3
+            - group "Text formatting" [ref=e57]:
+              - button "Bold" [ref=e58] [cursor=pointer]
+              - button "Italic" [ref=e59] [cursor=pointer]
+              - button "Strikethrough" [ref=e60] [cursor=pointer]
+              - button "Inline code" [ref=e61] [cursor=pointer]
+              - button "Add or edit link" [ref=e62] [cursor=pointer]
+              - button "Remove link" [disabled] [ref=e63]
+            - group "Insert rich content" [ref=e64]:
+              - button "Insert definition list" [ref=e65] [cursor=pointer]
+              - button "Quote selected blocks" [ref=e66] [cursor=pointer]
+              - button "Bullet list" [ref=e67] [cursor=pointer]
+              - button "123 — Numbered list" [ref=e68] [cursor=pointer]:
+                - img:
+                  - generic: "1"
+                  - generic: "2"
+                  - generic: "3"
+              - button "Task list" [ref=e69] [cursor=pointer]
+              - button "Lift list item" [disabled] [ref=e70]
+              - button "Indent list item" [disabled] [ref=e71]
+              - button "Code block and language" [ref=e72] [cursor=pointer]
+              - button "Insert table" [ref=e73] [cursor=pointer]
+              - button "Insert image from URL" [ref=e74] [cursor=pointer]
+              - button "Upload image" [ref=e75] [cursor=pointer]
+              - button "Divider" [ref=e76] [cursor=pointer]
+              - button "Line break" [ref=e77] [cursor=pointer]
+          - textbox "Issue description editor" [active] [ref=e79]:
+            - heading [level=1] [ref=e80]:
+              - text: Keep
+              - link "link" [ref=e81]:
+                - /url: /target
+            - paragraph [ref=e82]: Added in issue workflow.
+            - region "js code" [ref=e83]:
+              - text: javascript
+              - code [ref=e84]: first
+      - generic [ref=e85]:
+        - generic [ref=e86]: Table export
+        - combobox "Table export" [ref=e87]:
+          - option "Markdown pipes · widest compatibility" [selected]
+          - option "HTML tables · preserve cell structure"
+      - paragraph [ref=e88]: HTML tables retain supported cell roles, spans and rich content when reopened here. Other readers must support HTML tables. This choice affects regenerated tables; untouched source stays unchanged. In source mode, download saves your raw text as written.
+      - generic [ref=e89]:
+        - button "Download Markdown draft" [ref=e90] [cursor=pointer]
+        - button "Open Markdown draft" [ref=e91] [cursor=pointer]
+      - status [ref=e92]: Opened issue-references.md locally. The title belongs to the host form and is not part of Markdown.
+    - complementary "Fountain diagnostics" [ref=e93]:
+      - heading "Fountain diagnostics" [level=2] [ref=e94]
+      - generic [ref=e95]:
+        - term [ref=e96]: Engine
+        - definition [ref=e97]: FountainJS · React surface
+        - term [ref=e98]: Document blocks
+        - definition [ref=e99]: 3 top-level blocks
+        - term [ref=e100]: Source preservation
+        - definition [ref=e101]: mapped-blocks
+        - term [ref=e102]: Export warnings
+        - definition [ref=e103]: "0"
+        - term [ref=e104]: Images
+        - definition [ref=e105]: Local raster uploads · imported image URLs may load remotely
+        - term [ref=e106]: Collaboration / pagination
+        - definition [ref=e107]: Not enabled in this workflow
+        - term [ref=e108]: Virtualization / server runtimes
+        - definition [ref=e109]: Not measured by this page
+      - group [ref=e110]:
+        - generic "What does preservation mean?" [ref=e111] [cursor=pointer]
+      - generic [ref=e112]:
+        - heading "Try the source-fidelity check" [level=3] [ref=e113]
+        - list [ref=e114]:
+          - listitem [ref=e115]: Open Markdown source and find the tilde code fence and double underscores.
+          - listitem [ref=e116]: Return to Visual editor. Edit only the first paragraph.
+          - listitem [ref=e117]: Switch back. Check that the untouched source is still there.
+          - listitem [ref=e118]: Download, reopen, and preview your draft.
+  - generic [ref=e119]:
+    - heading "Build this into your product" [level=2] [ref=e120]
+    - paragraph [ref=e121]:
+      - text: The host owns the title, file controls and submission. Fountain owns the description model, history, selection and formatting. Switching modes uses
+      - code [ref=e122]: parseWithSource
+      - text: ","
+      - code [ref=e123]: exportWithSource
+      - text: and a document-replacement transaction. The preview creates a separate read-only editor; read-only UI is not access control.
+    - paragraph [ref=e124]: Images here use a bounded local file adapter. A real issue tracker supplies its own authenticated upload service, permissions and API submission. Drafts are not automatically persisted. External links and images in imported content may make network requests; this is not an offline sandbox.
+    - paragraph [ref=e125]:
+      - link "Developer guide ↗" [ref=e126]:
+        - /url: ./developers.html
+      - text: ·
+      - link "Workflow API walkthrough ↗" [ref=e127]:
+        - /url: https://github.com/eddolo/fountainjs/blob/master/docs/ISSUE_EDITOR_DEMO.md
+      - text: ·
+      - link "Demo source ↗" [ref=e128]:
+        - /url: https://github.com/eddolo/fountainjs/blob/master/examples/react-app/src/IssueEditor.tsx
+```

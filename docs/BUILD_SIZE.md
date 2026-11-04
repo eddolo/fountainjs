@@ -142,3 +142,35 @@ retained-memory limits pass without changes. No competitive speed claim follows.
 
 See `artifacts/container-reference-loaded-build-size-review-20261104.json` and
 `artifacts/markdown-container-references-performance-review-20261104.json`.
+
+## Complete-result proof checkpoint, 2026-11-04
+
+Avoiding redundant fragment checks when complete-result validation succeeds adds
+about 1.04 KiB raw / 0.24 KiB gzip to root/core closures. Root is 738.2 / 228.1 KiB
+raw/gzip; core is 397.6 / 133.3 KiB. React and DOCX closures stay unchanged. These
+static closures exclude external peers/dynamic imports and do not apply consumer
+tree shaking. All individual entries and CSS pass. Aggregate ESM is 1,708.2 KiB
+and CommonJS 1,421.5 KiB; their unchanged ceilings fail by 16.9 / 12.8 KiB.
+The separate capacity proposal remains unapplied.
+
+The actual a658e30 archive already retains the same source. In a throttled
+Windows five-sample probe, repeated preserving export of a quote with 100 /
+1,000 / 5,000 paragraphs and matching embedded definitions falls from about
+31 / 303 / 1,568 ms to 11 / 70 / 348 ms. Distinct edited 5,000-paragraph inputs
+fall from 1,573 to 347 ms, and cold export from 1,922 to 666 ms. Complete-result
+parsing still runs on every proposed edit. Capture is about 1,052 / 1,021 ms
+for 5,000 paragraphs; this optimization targets export, not capture.
+
+This is not a universal speedup: a 1,000-paragraph heading-to-paragraph edit
+requiring boundary repair rises from about 359 to 492 ms because the rejected
+draft adds verification before the original repair path. Both versions retain
+the required blank-line repair and complete model. Keep large synchronous
+serialization off the per-keystroke path. General editor latency/growth and
+retained-memory gates pass without changed limits. Sampled CPU profiles show
+the repeated nested and pair-validation work removed from the successful path;
+profile samples include initial capture and are not ordinary wall-clock timings.
+
+See `artifacts/markdown-source-export-proof-performance-review-20261104.json`,
+`artifacts/source-proof-loaded-build-size-review-20261104.json`, and the before/
+after CPU summaries. Earlier pre-observer-fix timings and the failing observer
+regression are retained. This measurement does not certify a release or parity.

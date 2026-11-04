@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reduce redundant parsing during source-preserving Markdown export when a
+  captured complete-document parser can prove the proposed result. Retain exact
+  Fountain-node equality, original-policy validation and the existing repair
+  fallback; do not cache acceptance of different edited documents. Contain loss
+  observer errors consistently on aligned and structurally mapped source paths,
+  and deliver only accepted conversion reports. Syntax coverage and release
+  certification are unchanged.
+
 - Preserve supported Markdown source with local HTML adapters and shared link
   definitions, including nested list/quote/task edits. Validate nonlocal source
   projections against the complete Fountain document. Retain external links

@@ -1,0 +1,48 @@
+[WebServer] (node:21556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:13092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (13.6s)
+  ok 2 [chromium] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (6.0s)
+(node:6396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (6.7s)
+  ok 4 [firefox] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (6.9s)
+(node:26048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [webkit] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads (1.6m)
+(node:9544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 6 [webkit] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (13.2s)
+
+
+  1) [webkit] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads 
+
+    Test timeout of 90000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-source-export-proof-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-source-export-proof-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-source-export-proof-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-source-export-proof-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-source-export-proof-browser-20261104\issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\manual\issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads 
+  5 passed (2.6m)

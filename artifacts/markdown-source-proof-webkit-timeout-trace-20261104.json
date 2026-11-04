@@ -1,0 +1,46 @@
+{
+  "trace": "artifacts/markdown-source-export-proof-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/trace.zip",
+  "traceSHA256": "27810c002a155fd8c4f7fcb2ab369e4ae23965c13249c9bf0952145cae66a9ec",
+  "pendingCallEvents": [
+    {
+      "type": "before",
+      "callId": "call@39",
+      "startTime": 47440.26,
+      "class": "Frame",
+      "method": "click",
+      "params": {
+        "selector": "internal:role=button[name=\"Download Markdown draft\"s]",
+        "strict": true
+      },
+      "stepId": "pw:api@47",
+      "pageId": "page@5bd4a05e03828cdd110cb2bed297af31",
+      "beforeSnapshot": "before@call@39"
+    },
+    {
+      "type": "log",
+      "callId": "call@39",
+      "time": 47444.602,
+      "message": "waiting for getByRole('button', { name: 'Download Markdown draft', exact: true })"
+    },
+    {
+      "type": "log",
+      "callId": "call@39",
+      "time": 47494.521,
+      "message": "  locator resolved to <button>Download Markdown draft</button>"
+    },
+    {
+      "type": "log",
+      "callId": "call@39",
+      "time": 47495.989,
+      "message": "attempting click action"
+    },
+    {
+      "type": "log",
+      "callId": "call@39",
+      "time": 47496.046,
+      "message": "  waiting for element to be visible, enabled and stable"
+    }
+  ],
+  "rootCauseEstablished": false,
+  "interpretation": "Trace stopped waiting for download-button actionability before a completed click; not evidence of an export assertion failure."
+}

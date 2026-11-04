@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Complete-result source-proof optimization (2026-11-04, unreleased): remove
+redundant fragment checks only when the original complete parser proves exact
+Fountain-node equality. Keep repair/fallback, source spelling, reference scope
+and automatic caret semantics. Contain loss-observer failures on all accepted
+source paths. All 3,885 units / 266 files, six recorded desktop journeys, types/
+API/headless, package/workerd, unchanged conformance and local performance/
+retention checks pass. Repeated 5,000-paragraph preserving export falls from
+1,568 to 348 ms; a rejected-draft repair probe rises from 359 to 492 ms. Captures
+and sampled recordings were reviewed. Full current-head CI, aggregate capacity,
+failed-draft export cost, footnote/nested-HTML/inline ownership and full CommonMark
+remain open. No score or release promotion.
+[Contract](MARKDOWN_SOURCE.md#complete-result-source-proof-2026-11-04-unreleased-follow-up).
+
 Container-reference source follow-up (2026-11-04, unreleased): native
 lists/quotes can retain embedded definitions during edits while preserving their
 document-wide link meaning. Complete-result checks protect precedence after

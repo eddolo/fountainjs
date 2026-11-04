@@ -1,5 +1,54 @@
 # Markdown semantics and source fidelity
 
+## Complete-result source proof (2026-11-04, unreleased follow-up)
+
+Snapshots with a private complete-document parser first propose source patches
+without repeating every fragment and adjacent-block parse. The complete candidate
+must still reparse to the exact intended Fountain node using the captured parser
+policy. Every different edit is checked; there is no cache accepting an unproven
+changed document. Captures without a complete parser keep their existing local
+validation path.
+
+If the draft fails, the existing nested-source and separator repair pipeline
+still runs. Generated reference definitions and speculative loss reports remain
+isolated until a result is accepted. A valid fallback definition footer is still
+required when a defining container is replaced. The real editor's automatic
+trailing caret paragraph remains part of complete-document equality.
+
+Loss observers are observational: an exception in `onLoss` cannot prevent an
+otherwise valid export. This now also holds when deferred reports are delivered
+from aligned or structurally mapped source exports. Returned loss reports remain
+available, and rejected drafts do not deliver duplicate callbacks.
+
+This changes verification cost rather than supported Markdown syntax. Footnote,
+nested HTML-adapter and independent inline source ownership, full CommonMark,
+aggregate capacity acceptance and release certification remain separate work.
+No public signature, parser dependency, conformance expectation or numerical
+acceptance limit changes.
+
+All 3,885 units / 266 files pass, including nine targeted proof/reporting tests.
+Types/API/headless, package/workerd, unchanged conformance, local latency and
+retained-memory checks pass. Six recorded desktop journeys cover the issue editor
+and conversion lab in Chromium, Firefox and WebKit. Thirty-six downloaded CRLF
+exports reopen correctly. Twenty-four captures and six sampled frames from each
+recording were reviewed. An initial WebKit actionability timeout before clicking
+the download button is retained; the separate repeat and all six final journeys
+pass without forced clicks or longer timeouts. Its root cause is not established.
+
+Against the actual preceding tarball, repeated preserving export of one edited
+paragraph in a 5,000-paragraph quote with 5,000 definitions falls from about
+1,568 to 348 ms; distinct edited inputs take 1,573 / 347 ms, and cold export
+1,922 / 666 ms. Both builds retain exact unrelated source and reopen completely.
+The fallback case remains important: changing a heading into a paragraph in a
+1,000-paragraph quote needs blank-line repair and takes about 359 / 492 ms.
+Failed drafts add work. These five-sample throttled Windows measurements are
+serialization costs, not keystroke or competitive benchmarks.
+
+Root/core static closures grow by about 1.04 KiB raw / 0.24 KiB gzip; React and
+DOCX are unchanged. Individual entry/CSS caps pass; the existing aggregate caps
+and full current-head CI remain open. Evidence:
+`artifacts/markdown-source-export-proof-verification-20261104.json`.
+
 ## Container-carried shared definitions (2026-11-04, unreleased follow-up)
 
 Native list/quote source capture can now retain definitions physically written

@@ -1,0 +1,23 @@
+[
+  {
+    "count": 100,
+    "beforeCaptureMs": 18.937599999999975,
+    "afterCaptureMs": 23.34629999999993,
+    "beforeWarmExportMs": 29.458999999999946,
+    "afterWarmExportMs": 10.819500000000062
+  },
+  {
+    "count": 1000,
+    "beforeCaptureMs": 209.60599999999977,
+    "afterCaptureMs": 205.96960000000036,
+    "beforeWarmExportMs": 315.59729999999945,
+    "afterWarmExportMs": 69.90469999999914
+  },
+  {
+    "count": 5000,
+    "beforeCaptureMs": 1078.6791000000012,
+    "afterCaptureMs": 1029.6461999999956,
+    "beforeWarmExportMs": 1584.9519999999975,
+    "afterWarmExportMs": 347.43909999999596
+  }
+]

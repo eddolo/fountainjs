@@ -20,6 +20,10 @@ export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot,
   projections.set(source, parse);
 }
 
+export function hasMarkdownSourceProjection(source: MarkdownSourceSnapshot): boolean {
+  return projections.has(source);
+}
+
 /** HTML adapters and container definitions can affect distant blocks. Captures
  * without nonlocal scope keep their existing local proof path. */
 export function markdownSourceProjectionMatches(source: MarkdownSourceSnapshot, value: string, document: Node): boolean {
