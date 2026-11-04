@@ -1,0 +1,369 @@
+
+fountainjs-editor v0.4.0-beta.2
+
+Build tools:
+- typescript@^7.0.2
+- vite@^8.2.2
+
+ No problems found 🌟
+
+
+"fountainjs-editor"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/html/inert"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/html/source"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/core"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/ai/document-tools"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/ai/conversation"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/ai/generated-media"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/docx"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/document-utilities"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/emoji-data"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/react"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/vue"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/svelte"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/yjs"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/comments"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/react/comments"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/tracked-changes"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/react/tracked-changes"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/versions"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/react/versions"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/react/integrity"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/details"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/ruby"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/text-style"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/testing"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/migrations"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/node-ids"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/table-of-contents"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/integrity"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/integrity/dom"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/structured-attributes"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/html/server"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/widgets"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/widgets/dom"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/react/widgets"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/pages"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/pages/dom"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/pages/preview"
+
+node10: 🟢 
+node16 (from CJS): 🟢 (CJS)
+node16 (from ESM): 🟢 (ESM)
+bundler: 🟢 
+
+***********************************
+
+"fountainjs-editor/schema/document.json"
+
+node10: 🟢 (JSON)
+node16 (from CJS): 🟢 (JSON)
+node16 (from ESM): 🟢 (JSON)
+bundler: 🟢 (JSON)
+
+***********************************
+
+"fountainjs-editor/package.json"
+
+node10: 🟢 (JSON)
+node16 (from CJS): 🟢 (JSON)
+node16 (from ESM): 🟢 (JSON)
+bundler: 🟢 (JSON)
+
+***********************************

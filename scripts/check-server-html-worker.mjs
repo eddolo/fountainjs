@@ -41,6 +41,8 @@ try {
   });
   if (!response.ok) throw new Error(`Worker returned ${response.status}: ${await response.text()}`);
   const body = await response.json();
+  if (body.markdownSourceBoundariesChecked !== 12) throw new Error('Worker parser-owned Markdown source boundaries failed.');
+  console.log('Cloudflare workerd (Miniflare): 12 parser-owned Markdown source-boundary contracts passed.');
   if (body.blocks !== 2 || body.text !== 'Workerreal workerd conversion') {
     throw new Error(`Worker returned an unexpected document: ${JSON.stringify(body)}`);
   }

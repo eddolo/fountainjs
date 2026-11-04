@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Markdown source retention (2026-11-04, unreleased follow-up): parser-owned regions
+extend partial export beyond blank-line segmentation. Real pre-repair controls
+show moved-fence and adjacent-list/code content loss; the repair preserves full
+reopened models and avoids rewriting other proven regions. Unit contracts,
+recorded desktop downloads, actual packed consumers and real workerd pass.
+Nested ownership, full CI, local latency acceptance and aggregate capacity remain
+open. The 563 default / 635 explicit-body CommonMark profiles are unchanged.
+No row or percentage promotion. [Evidence and limits](MARKDOWN_SOURCE.md#parser-owned-source-boundaries-2026-11-04-unreleased-follow-up).
+
 Capacity follow-up (2026-11-04, unmerged): the user approved the reviewed
 seven-limit layout allowance. The exact patch is applied and the authoritative
 build-size gate passes. Other limits and semantic/reference/performance checks

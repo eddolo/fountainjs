@@ -1,0 +1,64 @@
+{
+  "branch": "feat/markdown-source-boundaries-20261104",
+  "runtimeSourceSHA256": {
+    "src/core/importers/markdown-importer.ts": "769979be7986d593aa3c8c30dba697e98b2e1ae9ee1a89d191e2a3ca05db41bb",
+    "src/core/exporters/markdown-exporter.ts": "4cc0c0efc31ba750a4fda8002dd1c633e7c2cec84942f3c53e0081ce0bad1869",
+    "src/core/markdown-source-boundary.ts": "9e0102275be42022a5010582079dd2612f11a578392e89d139f8b473ac15990d"
+  },
+  "unitTests": 3656,
+  "unitFiles": 259,
+  "newBoundaryCases": 28,
+  "permutationChecks": 90,
+  "recordedDesktopJourneys": 3,
+  "downloadedMarkdownFiles": 18,
+  "visualReview": {
+    "screenshots": "edited/type-changed states in all three engines",
+    "recordings": "six sampled frames per engine; complete files retained",
+    "notFullFrameByFramePlayback": true
+  },
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 48,
+    "noFakeDOM": true,
+    "results": [
+      12,
+      12,
+      12,
+      12
+    ]
+  },
+  "tarballSHA256": "d3c997a5ed1d298388db27b93f3dd69f0d97055033a9921eeb07d86924a54457",
+  "realWorkerdContracts": 12,
+  "publicDeclarationFiles": 419,
+  "headlessSourceModules": 121,
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "latencyAcceptance": "pending: original and paired current/control failures retained",
+  "currentLatencyFailures": [
+    "100-block server HTML p95 35.23 ms exceeds 35 ms"
+  ],
+  "previousPackedControlFailures": [
+    "1000-block server HTML p95 142.76 ms exceeds 120 ms",
+    "5000-block server HTML p95 592.38 ms exceeds 500 ms"
+  ],
+  "retentionChecks": {
+    "sharedDirection": "passed",
+    "positionMapping": "passed"
+  },
+  "sizeAcceptance": "two aggregate ceilings fail; no additional limit changes",
+  "parentLayoutCI": {
+    "commit": "f8bff232d034d3e39a43cec991fa132c088ef9bd",
+    "ciRun": 41861990819,
+    "nativeRun": 41861990774,
+    "allJobs": "success",
+    "remainingMatrixPassed": 850,
+    "skipped": 16
+  },
+  "nestedSourceOwnershipComplete": false,
+  "fullParityOrPublicationCertified": false
+}

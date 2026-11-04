@@ -1,5 +1,50 @@
 # Markdown semantics and source fidelity
 
+## Parser-owned source boundaries (2026-11-04, unreleased follow-up)
+
+Source capture can now use Fountain's actual parser spans when blank-line
+segmentation cannot own an entire region. This retains adjacent heading syntax,
+blank-containing fences, indented code, and whole loose lists or quotes while
+another top-level block changes. LF, CRLF and CR source slices remain literal;
+tab expansion and semantic parsing do not rewrite the retained original text.
+The existing 10,000-block provenance bound remains, with whole-source exactness
+available beyond that limit while the model is unchanged.
+
+Boundary validation uses the original import policy and Fountain's own schema.
+If changing a heading into a paragraph would merge it with the next paragraph,
+export adds the required blank separator. Structural changes also check that
+retained source regions remain independent. An EOF-open fence moved before new
+content is closed through canonical rendering of that region; separate lists
+and indented code regions must not silently merge. Other proven source regions
+can remain exact. If safe boundaries cannot be established, canonical fallback
+remains explicit. Source preservation still does not sanitize authored content.
+
+This extends the existing top-level capture contract. Reference/footnote scopes
+and externally projected HTML keep their earlier conservative ownership rules.
+Editing inside a container still canonicalizes that container; individual nested
+items and inline spans do not yet have independent source ownership. No CommonMark
+semantic score, public API or native AST representation is changed.
+
+Verification: 3,656 unit tests / 259 files, including 28 new source-boundary cases
+and 90 block-order permutations, pass. Three recorded desktop workflows use the
+actual conversion lab, native typing, toolbar type changes, undo/redo and six
+real Markdown downloads per engine. All 18 files are checked byte-for-byte;
+screenshots and sampled recording frames were inspected. Actual tarball
+ESM/CommonJS root/core consumers pass 48 contracts without fake DOM globals;
+real workerd passes 12. Build, framework types, 419 public declaration checks,
+headless boundaries and the unchanged conformance profiles pass.
+
+An initial source-boundary implementation reparsed every structural adjacency:
+the 1,000-paragraph probe took about 224 ms. Reusing exact original adjacency
+proof reduced that case to a few milliseconds. The initial profile is retained;
+this is not a general performance advantage claim. The separate existing latency
+gate still has local failures under the throttled Windows run. A paired previous
+packed-build control also fails, at different HTML sizes; this does not establish
+the cause. Direction/mapping retention gates pass. The unchanged latency limits
+and fresh full CI remain required. This follow-up adds about 3.6 KiB ESM / 2.6 KiB
+CJS beyond the currently approved aggregate allowances; no further limits have
+been changed. There is no release or capability-percentage promotion.
+
 ## Automatic caret repair and exact source (2026-10-11, Unreleased)
 
 An untouched import ending in a list, table or other non-editable root block

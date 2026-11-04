@@ -211,6 +211,13 @@ jobs:
             structural-direction-preflight-results/**/auto-scope-observations.json
           if-no-files-found: ignore
           retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: markdown-source-boundary-evidence
+          path: test-results/**/source-boundary-journey/**
+          if-no-files-found: ignore
+          retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.
       # Preserve this evidence on success too; it is not Word fidelity approval.
       - uses: actions/upload-artifact@v4

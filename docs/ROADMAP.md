@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Markdown source-boundary follow-up (2026-11-04, separate unreleased branch):
+parser spans now preserve adjacent headings and blank-containing fences or
+containers around unrelated edits. Partial exports prevent moved open fences,
+separate lists and indented code from swallowing/merging neighbours. Three
+actual pre-repair packed-build cases independently reproduce content loss.
+Full units pass 3,656 / 259 files; recorded desktop journeys, 18 exact downloads,
+actual packed ESM/CJS, workerd, types/API/headless and unchanged conformance
+profiles pass. Full CI, latency acceptance and the small aggregate capacity
+increment remain pending. Nested source ownership remains open. This is not full
+CommonMark completion or a parity-percentage increase.
+[Contracts, evidence and remaining scope](MARKDOWN_SOURCE.md#parser-owned-source-boundaries-2026-11-04-unreleased-follow-up).
+
 Approved release-capacity checkpoint (2026-11-04, unmerged): the user approved
 the exact seven-limit layout proposal after reviewing its measurements and
 unapplied patch. Those seven raw-size ceilings are now applied; the authoritative

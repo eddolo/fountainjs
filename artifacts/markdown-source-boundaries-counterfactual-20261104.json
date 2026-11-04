@@ -1,0 +1,32 @@
+{
+  "baseline": "actual table-column checkpoint packed consumer",
+  "records": [
+    {
+      "name": "open fence",
+      "source": "# Keep ###\n\n~~~~js\nfirst\n",
+      "exported": "~~~~js\nfirst\n\n# Keep ###",
+      "preservation": "mapped-blocks",
+      "expectedBlocks": 2,
+      "reopenedBlocks": 1,
+      "semanticLossReproduced": true
+    },
+    {
+      "name": "adjacent lists",
+      "source": "* First\n\n# Keep ###\n\n* Second\n",
+      "exported": "# Keep ###\n\n* First\n\n* Second",
+      "preservation": "mapped-blocks",
+      "expectedBlocks": 3,
+      "reopenedBlocks": 2,
+      "semanticLossReproduced": true
+    },
+    {
+      "name": "adjacent indented code",
+      "source": "    first\n\n# Keep ###\n\n    second\n",
+      "exported": "# Keep ###\n\n    first\n\n    second",
+      "preservation": "mapped-blocks",
+      "expectedBlocks": 3,
+      "reopenedBlocks": 2,
+      "semanticLossReproduced": true
+    }
+  ]
+}

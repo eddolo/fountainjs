@@ -1,0 +1,31 @@
+100 blocks: local p50 0.03 ms, p95 0.07 ms; incremental remote p50 0.02 ms, p95 0.05 ms; JSON boundary p50 1.11 ms, p95 1.72 ms
+  first edit / initial p95 / initial peak: local 1.16 ms / 0.10 ms / 1.16 ms; incremental remote 0.46 ms / 0.06 ms / 0.46 ms
+1,000 blocks: local p50 0.03 ms, p95 0.06 ms; incremental remote p50 0.03 ms, p95 0.05 ms; JSON boundary p50 12.32 ms, p95 21.95 ms
+  first edit / initial p95 / initial peak: local 0.79 ms / 0.06 ms / 0.79 ms; incremental remote 0.08 ms / 0.06 ms / 0.61 ms
+5,000 blocks: local p50 0.11 ms, p95 0.14 ms; incremental remote p50 0.07 ms, p95 0.10 ms; JSON boundary p50 36.24 ms, p95 47.79 ms
+  first edit / initial p95 / initial peak: local 9.50 ms / 1.17 ms / 16.29 ms; incremental remote 0.37 ms / 0.13 ms / 2.06 ms
+10,000 blocks: local p50 0.14 ms, p95 0.16 ms; incremental remote p50 0.13 ms, p95 0.30 ms; JSON boundary p50 90.65 ms, p95 284.01 ms
+  first edit / initial p95 / initial peak: local 8.88 ms / 0.35 ms / 8.88 ms; incremental remote 1.41 ms / 0.54 ms / 6.06 ms
+100 HTML blocks: server parse p50 12.25 ms, p95 28.45 ms
+1,000 HTML blocks: server parse p50 61.71 ms, p95 142.76 ms
+5,000 HTML blocks: server parse p50 274.19 ms, p95 592.38 ms
+10,000 HTML blocks: server parse p50 562.59 ms, p95 610.84 ms
+server HTML 1,000→10,000 median growth: 9.12x / 15x
+local 1,000→10,000 median growth: 4.20x / 15x
+incremental remote 1,000→10,000 median growth: 4.28x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.08 MiB / 16 MiB
+retained 10,000-block server HTML document: 15.18 MiB / 48 MiB
+file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/markdown-source-boundaries-baseline-performance-check-20261104.mjs:219
+if (failures.length) throw new Error(`Performance budget failed:\n- ${failures.join('\n- ')}`);
+                           ^
+
+Error: Performance budget failed:
+- 1000-block server HTML p95 142.76 ms exceeds 120 ms
+- 5000-block server HTML p95 592.38 ms exceeds 500 ms
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/markdown-source-boundaries-baseline-performance-check-20261104.mjs:219:28
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1
