@@ -39,7 +39,9 @@ jobs:
       - run: bun scripts/smoke-server-html-runtime.mjs
       - run: deno run --allow-read scripts/smoke-server-html-runtime.mjs
       - run: pnpm dlx publint@0.3.24
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./docx ./document-utilities ./emoji-data ./react ./vue ./svelte ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+      # Discover all public modules, with Angular checked separately and the
+      # stylesheet excluded from JavaScript/TypeScript resolution analysis.
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./styles.css
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
       - run: pnpm pack --dry-run
       - name: Verify npm trusted publisher

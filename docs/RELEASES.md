@@ -118,9 +118,17 @@ long-lived npm token belongs in GitHub or the repository.
    pnpm test:browser
    pnpm audit:ui
    pnpm dlx publint@0.3.24
-   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints . ./core ./ai/document-tools ./ai/conversation ./ai/generated-media ./docx ./document-utilities ./emoji-data ./react ./yjs ./comments ./react/comments ./tracked-changes ./react/tracked-changes ./versions ./react/versions ./details ./ruby ./text-style ./testing ./migrations ./node-ids ./structured-attributes ./html/server ./widgets ./widgets/dom ./react/widgets ./pages ./pages/dom ./pages/preview
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./styles.css
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
    pnpm pack --dry-run
    ```
+
+   Resolution validation discovers the published export map, including the
+   document schema JSON. CSS is a stylesheet asset rather than a JavaScript
+   module. Angular retains its documented ESM-only validation separately. Where
+   npm is unavailable locally, create a tarball with `pnpm pack` and supply its
+   path to the same validator in place of `--pack .`; do not reduce entry-point
+   coverage or ignore resolution errors to bypass packing-tool availability.
 
    Do not treat `pnpm audit:ui` as another assertion-only test. Watch the
    generated WebM under `artifacts/manual-ui-audit/` and inspect its screenshots
@@ -134,6 +142,21 @@ long-lived npm token belongs in GitHub or the repository.
    then approve with maintainer 2FA.
 7. Verify clean installation in an empty consumer and check the live website.
 8. Add the immutable release/run links to the parity ledger.
+
+Unmerged validation checkpoint, 2026-11-04: the packed schema-resolution repair
+passes strict analysis of 40 discovered entries, separate Angular ESM analysis,
+package loading, publint and the site build. See
+`artifacts/package-schema-verification-20261104.json` and the corresponding logs.
+These checks do not certify a release. The seven current size failures remain
+enforced. A measured candidate allowance is prepared in
+`artifacts/layout-capacity-proposal-20261104.patch`, with exact byte measurements
+in `artifacts/layout-capacity-measurements-20261104.json`; it is unapplied and not
+covered by the earlier, smaller theme-language allowance approval. It changes
+only seven raw-size ceilings, using quarter-KiB rounding; all other entry,
+runtime-performance, retention, semantic and reference checks remain unchanged.
+The candidate passes the existing size checker in a separate artifact file;
+the authoritative checker still fails. This is capacity for implemented
+fidelity/geometry code, not a speed improvement or format-parity certification.
 
 The release workflow must never publish from an arbitrary branch head or infer
 a version from a GitHub release title.

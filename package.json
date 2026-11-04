@@ -127,6 +127,9 @@
       ],
       "pages/preview": [
         "dist/pages/preview.d.ts"
+      ],
+      "schema/document.json": [
+        "schemas/fountain-document.schema.json"
       ]
     }
   },
