@@ -7,6 +7,17 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Validate source-preserving Markdown boundaries with the original link-reference
+  context, including the appended definition footer. Close unsafe moved/terminal
+  fences instead of allowing them to consume document content. Retain original
+  definition precedence and unrelated source. Fix Enter at the end of a linked
+  block carrying that link into a new empty paragraph; keep emphasis and existing
+  linked text on mid-link splits. Bound exact-input footer-check caching avoids
+  repeated parsing of unchanged large definition sections; cold and warm export
+  costs are recorded separately. All 3,719 units, recorded three-engine workflows,
+  package/workerd, types/API/headless, unchanged conformance and local performance
+  checks pass. Aggregate size review and full CI remain pending.
+
 - Preserve untouched source inside existing reference-free Markdown lists and
   quotes after supported nested edits, including task-checkbox characters and
   quoted paragraph-boundary repair. Validate patches against complete Fountain

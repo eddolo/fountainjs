@@ -564,12 +564,47 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
     return physical.slice(0, index).join('');
   };
   const regions = segments.blocks.map(block => ({ ...block, prefix: definitionPrefix(block.source) }));
-  const referenceDefinitions = regions.filter(region => region.prefix)
+  const definitionRegions = regions.filter(region => region.prefix);
+  const referenceDefinitions = definitionRegions
     .map(region => region.prefix.replace(/(?:\r\n|\r|\n)$/u, ''))
     .join(`${sourceLineEnding(source)}${sourceLineEnding(source)}`);
   // Parse the definition context once; appending every definition to every
   // block would multiply large reference sets by the number of document blocks.
-  const context = referenceDefinitions ? references(referenceDefinitions, schema, quietOptions).definitions : null;
+  const referenceContext = referenceDefinitions ? references(referenceDefinitions, schema, quietOptions) : null;
+  const context = referenceContext?.definitions ?? null;
+  const referenceFooterIsPure = referenceContext?.lines.every(line => !line.trim()) ?? false;
+  // Reference definitions belong to the complete document. Reuse its captured
+  // map when checking a new adjacency, rather than parsing either neighbour in
+  // an empty scope or repeatedly prepending every definition. External HTML
+  // projections and footnote materialization still need their own ownership.
+  const ownsReferenceBoundaries = context && !options.parseHTMLDocument && !options.parseHTMLFlow
+    && !options.parseHTMLBlock && !options.parseHTMLInline && !options.parseHTMLParagraph
+    && !extractFootnoteDefinitions(source, schema, quietOptions).definitions.length;
+  const originalReferenceValues = new Set<string>();
+  if (ownsReferenceBoundaries) {
+    // An original separator may contain an ignored duplicate definition.
+    // Retain those spellings while preserving document-wide first precedence;
+    // a newly introduced value must not masquerade as source-owned trivia.
+    const scopes = definitionRegions.length === 1 ? [context]
+      : definitionRegions.map(region => references(region.prefix, schema, quietOptions).definitions);
+    for (const scope of scopes) {
+      for (const [label, definition] of scope) {
+        originalReferenceValues.add(JSON.stringify([label, definition.href, definition.title]));
+      }
+    }
+  }
+  const parseReferenceBoundary = ownsReferenceBoundaries ? (value: string): readonly Node[] => {
+    // This exact immutable footer was already parsed above. Pure definitions
+    // contribute no model nodes; changed/combined strings still use the parser.
+    if (referenceFooterIsPure && value === referenceDefinitions) return [];
+    const local = references(value.replace(/\r\n$|[\r\n]$/u, ''), schema, quietOptions);
+    for (const [label, definition] of local.definitions) {
+      if (!originalReferenceValues.has(JSON.stringify([label, definition.href, definition.title]))) {
+        throw new Error('Changed reference scope cannot retain an independent Markdown boundary.');
+      }
+    }
+    return parseBlocks(local.lines, schema, context, quietOptions);
+  } : undefined;
   const contentRegions: Array<{ source: string; separatorAfter: string }> = [];
   let leading = segments.leading;
   for (const region of regions) {
@@ -594,11 +629,13 @@ function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document
     } else parsed = new MarkdownImporter().parse(segment.source, schema, quietOptions).content;
     const original = document.content[index];
     if (parsed.length !== 1 || !parsed[0].eq(original)) return undefined;
-    blocks.push(Object.freeze({
+    const block = Object.freeze({
       source: segment.source,
       separatorAfter: segment.separatorAfter,
       matches: (current: Node) => original.eq(current),
-    }));
+    });
+    if (parseReferenceBoundary) registerMarkdownSourceBoundary(block, parseReferenceBoundary);
+    blocks.push(block);
   }
 
   return Object.freeze({

@@ -1,5 +1,56 @@
 # Markdown semantics and source fidelity
 
+## Reference-aware boundary repair (2026-11-04, unreleased follow-up)
+
+Existing top-level source captures with document-wide link definitions now check
+new block boundaries against their captured reference context. Moving an EOF-open
+fence, adding a paragraph around it, or deleting its heading must not consume
+another block. Structural export also checks the final code block against the
+definition section it appends; even a last/only open fence must not swallow that
+section. Canonical rendering closes an unsafe fence while other proven source
+regions can remain literal. The original first-definition precedence, titles,
+relative destinations, duplicate definition spelling and physical line endings
+remain part of the contract.
+
+The captured definition map is reused rather than prepending every definition
+to every block. Only original definition values can qualify as source-owned
+trivia. External HTML projections, footnote materialization and nested source
+ownership in shared reference scopes retain their conservative rules. No foreign
+AST, dependency, public API or CommonMark semantic-score change is introduced.
+
+The real-browser audit also found that Enter after a terminal hyperlink made
+the generated empty block inherit that link. A newly split empty block now exits
+the hyperlink while retaining other inline formatting. Splitting inside linked
+text preserves both existing linked halves. The original linked text and authored
+empty content are not removed. Paragraphs, headings, quotes, lists, tasks and table
+cells have explicit typing/history checks for this behavior.
+
+Completed footer checks use a private weak cache with at most two exact-input
+results per captured block. Parser identity, both source strings and the separator
+must agree before reusing a result; changed boundaries are parsed again. The
+already-parsed, pure original definition footer contributes no document nodes.
+Capture also reuses the existing definition map for a single definition region.
+This avoids reparsing large unchanged definition sets for every export.
+
+In the throttled Windows 5,000-reference probe, an uncached implementation took
+about 678 ms per repeated structural export. Exact-input reuse reduced that to
+about 25 ms; the first checked export still took about 216 ms versus about 21 ms
+for the parent. Cold and warm measurements are recorded separately. This is
+additional correctness work, not a claim of faster first exports. The earlier
+uncached report remains as evidence.
+
+Current evidence: 34 reference-boundary cases and seven link-split cases pass,
+along with all 3,719 unit tests / 262 files and the preceding source contracts.
+Framework types, 419 declaration files, 122 headless modules, package checks,
+real workerd and unchanged conformance profiles pass. Recorded Chromium/Firefox/WebKit
+workflows use native Enter, typing, undo/redo and actual Markdown downloads;
+edited models reopen completely and nine editor captures were inspected. Existing
+latency, growth-curve and retained-memory checks pass without changed limits.
+The two aggregate size ceilings still fail by 12.9 KiB ESM / 9.6 KiB CJS;
+individual entries and CSS fit. Full CI, aggregate capacity review and broader
+scope remain open. This is not full reference-scope source ownership, full
+CommonMark conformance or a release certification.
+
 ## Nested source edits (2026-11-04, unreleased follow-up)
 
 For reference-free imports using Fountain's own Markdown parser, edits inside

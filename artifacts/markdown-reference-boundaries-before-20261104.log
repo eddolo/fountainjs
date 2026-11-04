@@ -1,0 +1,218 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-reference-boundaries.test.ts (18 tests | 9 failed) 45ms
+   ❯ source boundaries with document-wide reference definitions (18)
+     × move retains the complete document with references ("\n", blank code line false) 16ms
+     × append retains the complete document with references ("\n", blank code line false) 4ms
+     × edit-and-append retains the complete document with references ("\n", blank code line false) 4ms
+     × move retains the complete document with references ("\r\n", blank code line false) 1ms
+     × append retains the complete document with references ("\r\n", blank code line false) 2ms
+     × edit-and-append retains the complete document with references ("\r\n", blank code line false) 2ms
+     × move retains the complete document with references ("\r", blank code line false) 2ms
+     × append retains the complete document with references ("\r", blank code line false) 2ms
+     × edit-and-append retains the complete document with references ("\r", blank code line false) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > move retains the complete document with references ("\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > move retains the complete document with references ("\r\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > move retains the complete document with references ("\r", blank code line false)
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -5,41 +5,18 @@
+          "language": "js",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "text": "first",
++           "text": "first
++
++ # Keep [link][ref] ###
++
++ [ref]: /target",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+-     },
+-     {
+-       "attrs": {
+-         "align": "left",
+-         "level": 1,
+-       },
+-       "content": [
+-         {
+-           "text": "Keep ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "attrs": {
+-                 "href": "/target",
+-                 "target": "_blank",
+-                 "title": "",
+-               },
+-               "type": "link",
+-             },
+-           ],
+-           "text": "link",
+-           "type": "text",
+-         },
+-       ],
+-       "type": "heading",
+      },
+    ],
+    "type": "doc",
+  }
+
+ ❯ tests/markdown-reference-boundaries.test.ts:19:78
+     17|             : [action === 'edit-and-append' ? heading.copy([schema.tex…
+     18|           const exported = MarkdownExporter.exportWithSource(changed, …
+     19|           expect(MarkdownImporter.parse(exported.markdown, schema).toJ…
+       |                                                                              ^
+     20|           if (imported.source.blocks.length && action !== 'edit-and-ap…
+     21|             expect(exported.markdown).toContain('# Keep [link][ref] ##…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > append retains the complete document with references ("\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > append retains the complete document with references ("\r\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > append retains the complete document with references ("\r", blank code line false)
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -5,25 +5,11 @@
+          "align": "left",
+          "level": 1,
+        },
+        "content": [
+          {
+-           "text": "Keep ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "attrs": {
+-                 "href": "/target",
+-                 "target": "_blank",
+-                 "title": "",
+-               },
+-               "type": "link",
+-             },
+-           ],
+-           "text": "link",
++           "text": "Keep [link][ref]",
+            "type": "text",
+          },
+        ],
+        "type": "heading",
+      },
+@@ -32,26 +18,18 @@
+          "language": "js",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "text": "first",
++           "text": "first
++
++ Keep appended text.
++
++ [ref]: /target",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+-     },
+-     {
+-       "attrs": {
+-         "align": "left",
+-       },
+-       "content": [
+-         {
+-           "text": "Keep appended text.",
+-           "type": "text",
+-         },
+-       ],
+-       "type": "paragraph",
+      },
+    ],
+    "type": "doc",
+  }
+
+ ❯ tests/markdown-reference-boundaries.test.ts:19:78
+     17|             : [action === 'edit-and-append' ? heading.copy([schema.tex…
+     18|           const exported = MarkdownExporter.exportWithSource(changed, …
+     19|           expect(MarkdownImporter.parse(exported.markdown, schema).toJ…
+       |                                                                              ^
+     20|           if (imported.source.blocks.length && action !== 'edit-and-ap…
+     21|             expect(exported.markdown).toContain('# Keep [link][ref] ##…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > edit-and-append retains the complete document with references ("\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > edit-and-append retains the complete document with references ("\r\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > edit-and-append retains the complete document with references ("\r", blank code line false)
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -18,26 +18,18 @@
+          "language": "js",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "text": "first",
++           "text": "first
++
++ Keep appended text.
++
++ [ref]: /target",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+-     },
+-     {
+-       "attrs": {
+-         "align": "left",
+-       },
+-       "content": [
+-         {
+-           "text": "Keep appended text.",
+-           "type": "text",
+-         },
+-       ],
+-       "type": "paragraph",
+      },
+    ],
+    "type": "doc",
+  }
+
+ ❯ tests/markdown-reference-boundaries.test.ts:19:78
+     17|             : [action === 'edit-and-append' ? heading.copy([schema.tex…
+     18|           const exported = MarkdownExporter.exportWithSource(changed, …
+     19|           expect(MarkdownImporter.parse(exported.markdown, schema).toJ…
+       |                                                                              ^
+     20|           if (imported.source.blocks.length && action !== 'edit-and-ap…
+     21|             expect(exported.markdown).toContain('# Keep [link][ref] ##…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 9 passed (18)
+   Start at  18:00:54
+   Duration  3.29s (transform 50%, import 49%, tests 1%)
+

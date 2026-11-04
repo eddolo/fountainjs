@@ -1272,7 +1272,13 @@ export function splitBlock(editor: Editor): boolean {
         ...(block.attrs.align !== undefined && nextType.spec.attrs?.align ? { align: block.attrs.align } : {}),
         ...(block.attrs.alignExplicit === true && nextType.spec.attrs?.alignExplicit ? { alignExplicit: true } : {}),
       };
-  const right = nextType.create(nextAttrs, [text.withText(rightText), ...block.content.slice(textIndex + 1)]);
+  const following = block.content.slice(textIndex + 1);
+  const atBlockEnd = rightText.length === 0 && following.every(node => node.isText && !node.text?.length);
+  // Keep emphasis for continued typing, but an empty new block is outside the
+  // preceding hyperlink. Nonempty linked text on the right keeps its marks.
+  const rightTextNode = atBlockEnd ? text.withText(rightText).withMarks(text.marks.filter(mark => mark.type.name !== 'link'))
+    : text.withText(rightText);
+  const right = nextType.create(nextAttrs, [rightTextNode, ...following]);
   const itemPath = blockPath.slice(0, -1);
   const item = itemPath.length ? getNodeAtPath(state.doc, itemPath) : undefined;
   if (item && LIST_ITEMS.includes(item.type.name)) {

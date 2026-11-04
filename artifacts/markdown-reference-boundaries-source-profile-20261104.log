@@ -1,0 +1,29 @@
+[
+  {
+    "count": 100,
+    "beforeCaptureMs": 28.428499999999985,
+    "afterCaptureMs": 18.479900000000043,
+    "beforeFirstMoveMs": 2.178299999999979,
+    "afterFirstMoveMs": 11.074299999999994,
+    "beforeMoveMs": 1.4788000000000352,
+    "afterMoveMs": 0.8156000000000176
+  },
+  {
+    "count": 1000,
+    "beforeCaptureMs": 186.3279,
+    "afterCaptureMs": 174.25960000000032,
+    "beforeFirstMoveMs": 3.8863000000000056,
+    "afterFirstMoveMs": 45.32099999999991,
+    "beforeMoveMs": 4.367999999999938,
+    "afterMoveMs": 4.478900000000067
+  },
+  {
+    "count": 5000,
+    "beforeCaptureMs": 891.3390999999992,
+    "afterCaptureMs": 871.1919999999991,
+    "beforeFirstMoveMs": 20.623999999999796,
+    "afterFirstMoveMs": 216.38880000000063,
+    "beforeMoveMs": 23.64890000000014,
+    "afterMoveMs": 25.356199999998353
+  }
+]

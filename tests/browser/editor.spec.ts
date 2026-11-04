@@ -32,6 +32,7 @@ import { strFromU8, unzipSync } from 'fflate';
 import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries-journey';
 import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
+import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boundaries-journey';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
@@ -6087,6 +6088,10 @@ test('preserves parser-owned Markdown source through native editing, type change
 
 test('preserves nested Markdown source through real list and quote editing', async ({ page }, info) => {
   await runMarkdownNestedSourceJourney(page, info);
+});
+
+test('keeps reference definitions outside a terminal fence after real structural editing', async ({ page }, info) => {
+  await runMarkdownReferenceBoundariesJourney(page, info);
 });
 
 test('records native DOCX viewer disagreements without certifying math fidelity', async ({ page }, info) => {

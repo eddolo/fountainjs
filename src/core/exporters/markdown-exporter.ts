@@ -5,7 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { markdownSourceSeparator } from '../markdown-source-boundary';
+import { markdownReferenceFooterValid, markdownSourceSeparator } from '../markdown-source-boundary';
 import { hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
@@ -842,8 +842,18 @@ export class MarkdownExporter {
           preservedBlocks--;
         }
       }
-      const boundariesValid = canonicalized.size === 0 || renderedBlocks.every((block, index) => index === renderedBlocks.length - 1
-        || originalBoundary(index) || markdownSourceSeparator(mappedBlocks[index], mappedBlocks[index + 1], block, renderedBlocks[index + 1], separator) !== null);
+      const lastIndex = renderedBlocks.length - 1;
+      const referenceFooterValid = (): boolean => !source.referenceDefinitions || lastIndex < 0
+        || markdownReferenceFooterValid(mappedBlocks[lastIndex], renderedBlocks[lastIndex], source.referenceDefinitions, separator);
+      // A terminal open fence can also consume the definition section that
+      // structural export appends, even when it has no following model block.
+      if (!referenceFooterValid() && mappedBlocks[lastIndex] && !canonicalized.has(lastIndex)) {
+        renderedBlocks[lastIndex] = withLineEnding(render(node.content[lastIndex], context, [lastIndex]).trimEnd(), source.lineEnding);
+        canonicalized.add(lastIndex);
+        preservedBlocks--;
+      }
+      const boundariesValid = referenceFooterValid() && (canonicalized.size === 0 || renderedBlocks.every((block, index) => index === renderedBlocks.length - 1
+        || originalBoundary(index) || markdownSourceSeparator(mappedBlocks[index], mappedBlocks[index + 1], block, renderedBlocks[index + 1], separator) !== null));
       // Structural output uses canonical separators. This avoids assigning
       // source-owned whitespace to a different neighbor after a move/delete.
       if (boundariesValid && preservedBlocks > 0 && context.references.size === 0) {

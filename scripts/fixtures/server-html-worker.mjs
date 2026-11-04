@@ -17,6 +17,7 @@ import { checkHTMLPreformattedBreaks } from './html-preformatted-breaks-check.mj
 import { checkHTMLPreformattedFormatting } from './html-preformatted-formatting-check.mjs';
 import { checkMarkdownSourceBoundaries } from './markdown-source-boundary-check.mjs';
 import { checkMarkdownNestedSource } from './markdown-nested-source-check.mjs';
+import { checkMarkdownReferenceBoundaries } from './markdown-reference-boundary-check.mjs';
 
 const schema = new Schema(CoreSchemaSpec);
 
@@ -42,6 +43,7 @@ export default {
     return new Response(JSON.stringify({
       markdownSourceBoundariesChecked: checkMarkdownSourceBoundaries(blockAtomCore),
       markdownNestedSourceChecked: checkMarkdownNestedSource(blockAtomCore),
+      markdownReferenceBoundariesChecked: checkMarkdownReferenceBoundaries(blockAtomCore),
       blocks: result.document.childCount,
       text: result.document.textContent,
       html: HTMLExporter.export(result.document, { document: false }),

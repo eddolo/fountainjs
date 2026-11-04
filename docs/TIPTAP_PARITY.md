@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Reference-boundary follow-up (2026-11-04, unreleased): existing root captures
+reuse their original link-definition scope to prevent open fences consuming
+other blocks or the definition footer. Native Enter now exits a terminal
+hyperlink without removing emphasis or changing existing linked text. All 3,719
+units, three recorded browser workflows, package/workerd, types/API/headless,
+unchanged conformance and local latency/retention gates pass. Two aggregate size
+ceilings and full CI remain open. No conformance-score or parity-percentage promotion.
+[Contract](MARKDOWN_SOURCE.md#reference-aware-boundary-repair-2026-11-04-unreleased-follow-up).
+
 Nested-source follow-up (2026-11-04, unreleased): list/quote edits and task-checkbox
 changes can retain untouched nested source, with complete Fountain-node reparse
 before accepting a patch. All 3,678 units, recorded three-engine editor journeys,

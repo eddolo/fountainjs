@@ -1,0 +1,23 @@
+[
+  {
+    "count": 100,
+    "beforeCaptureMs": 24.618600000000015,
+    "afterCaptureMs": 16.780899999999974,
+    "beforeMoveMs": 0.58299999999997,
+    "afterMoveMs": 14.8442
+  },
+  {
+    "count": 1000,
+    "beforeCaptureMs": 147.11400000000003,
+    "afterCaptureMs": 175.1794,
+    "beforeMoveMs": 3.9266999999999825,
+    "afterMoveMs": 131.3829999999998
+  },
+  {
+    "count": 5000,
+    "beforeCaptureMs": 725.6617000000006,
+    "afterCaptureMs": 907.6309000000001,
+    "beforeMoveMs": 19.96680000000015,
+    "afterMoveMs": 677.9811000000009
+  }
+]

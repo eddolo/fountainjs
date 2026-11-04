@@ -54,3 +54,22 @@ Evidence is recorded in `artifacts/loaded-build-size-review-20261104.json`,
 `artifacts/markdown-nested-source-performance-review-20261104.json` and
 `artifacts/markdown-nested-source-latency-20261104.json`. These measurements
 do not certify full parity or authorize a release.
+
+## Reference-boundary and Enter checkpoint, 2026-11-04
+
+The later reference-scope/Enter repair measures 1,704.2 KiB total ESM and 1,418.4
+KiB CommonJS. Relative to the nested checkpoint, the root/core static closures
+grow by about 1.6 KiB raw / 0.5 KiB gzip. React's closure grows slightly through
+the shared Enter command; DOCX stays unchanged. Individual entries and CSS fit;
+the two existing aggregate ceilings fail by 12.9 / 9.6 KiB. No ceilings changed.
+
+A 5,000-reference structural export initially took about 678 ms repeatedly.
+Reusing exact-input footer proofs and the original parsed definition context
+reduces repeated exports to about 25 ms. The first checked export still takes
+about 216 ms, versus about 21 ms for the parent; capture is about 871 / 891 ms
+in that same five-sample probe. These are separate cold/warm operations on a
+throttled Windows machine, not competitive benchmarks. Earlier uncached results
+are retained. The existing editor latency and memory gates pass unchanged.
+
+See `artifacts/reference-loaded-build-size-review-20261104.json` and
+`artifacts/markdown-reference-boundaries-performance-review-20261104.json`.

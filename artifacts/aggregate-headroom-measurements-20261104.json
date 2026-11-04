@@ -1,0 +1,20 @@
+{
+  "applied": false,
+  "policy": "8% above measured aggregate, rounded up to 64 KiB; proposal only",
+  "ESM": {
+    "measuredBytes": 1745082,
+    "measuredKiB": 1704.181640625,
+    "oldLimitKiB": 1691.25,
+    "proposedLimitKiB": 1856,
+    "headroomKiB": 151.818359375
+  },
+  "CommonJS": {
+    "measuredBytes": 1452401,
+    "measuredKiB": 1418.3603515625,
+    "oldLimitKiB": 1408.75,
+    "proposedLimitKiB": 1536,
+    "headroomKiB": 117.6396484375
+  },
+  "otherAcceptanceLimitsChanged": false,
+  "releaseApproved": false
+}

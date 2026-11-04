@@ -1,0 +1,115 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-reference-boundaries.test.ts (33 tests | 6 failed) 53ms
+   ❯ source boundaries with document-wide reference definitions (33)
+     × delete-heading retains the complete document with references ("\n", blank code line false) 7ms
+     × insert-before-fence retains the complete document with references ("\n", blank code line false) 3ms
+     × delete-heading retains the complete document with references ("\r\n", blank code line false) 1ms
+     × insert-before-fence retains the complete document with references ("\r\n", blank code line false) 3ms
+     × delete-heading retains the complete document with references ("\r", blank code line false) 1ms
+     × insert-before-fence retains the complete document with references ("\r", blank code line false) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > delete-heading retains the complete document with references ("\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > delete-heading retains the complete document with references ("\r\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > delete-heading retains the complete document with references ("\r", blank code line false)
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', content: [ { …(3) } ] }
+
+- Expected
++ Received
+
+@@ -5,11 +5,13 @@
+          "language": "js",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "text": "first",
++           "text": "first
++
++ [ref]: /target",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+      },
+
+ ❯ tests/markdown-reference-boundaries.test.ts:34:78
+     32|               : [action === 'edit-and-append' ? heading.copy([schema.t…
+     33|           const exported = MarkdownExporter.exportWithSource(changed, …
+     34|           expect(MarkdownImporter.parse(exported.markdown, schema).toJ…
+       |                                                                              ^
+     35|           if (imported.source.blocks.length && action !== 'edit-and-ap…
+     36|             expect(exported.markdown).toContain('# Keep [link][ref] ##…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > insert-before-fence retains the complete document with references ("\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > insert-before-fence retains the complete document with references ("\r\n", blank code line false)
+ FAIL  tests/markdown-reference-boundaries.test.ts > source boundaries with document-wide reference definitions > insert-before-fence retains the complete document with references ("\r", blank code line false)
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -5,25 +5,11 @@
+          "align": "left",
+          "level": 1,
+        },
+        "content": [
+          {
+-           "text": "Keep ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "attrs": {
+-                 "href": "/target",
+-                 "target": "_blank",
+-                 "title": "",
+-               },
+-               "type": "link",
+-             },
+-           ],
+-           "text": "link",
++           "text": "Keep [link][ref]",
+            "type": "text",
+          },
+        ],
+        "type": "heading",
+      },
+@@ -44,11 +30,13 @@
+          "language": "js",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "text": "first",
++           "text": "first
++
++ [ref]: /target",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+      },
+
+ ❯ tests/markdown-reference-boundaries.test.ts:34:78
+     32|               : [action === 'edit-and-append' ? heading.copy([schema.t…
+     33|           const exported = MarkdownExporter.exportWithSource(changed, …
+     34|           expect(MarkdownImporter.parse(exported.markdown, schema).toJ…
+       |                                                                              ^
+     35|           if (imported.source.blocks.length && action !== 'edit-and-ap…
+     36|             expect(exported.markdown).toContain('# Keep [link][ref] ##…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 27 passed (33)
+   Start at  18:06:38
+   Duration  2.67s (transform 52%, import 46%, tests 2%)
+

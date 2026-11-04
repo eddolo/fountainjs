@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Reference-aware boundary follow-up (2026-11-04, unreleased): protect moved or
+terminal EOF-open fences and the exported link-definition footer in existing
+root captures. Preserve original definition precedence and unrelated source.
+The native browser workflow also exposed hyperlink carryover after Enter;
+new empty blocks now exit that link while mid-link splits retain existing text.
+All 3,719 units, reference/link/history checks, recorded desktop workflows,
+package/workerd, types/API/headless, unchanged conformance and local latency/
+retention gates pass. Two aggregate size ceilings and full CI remain open;
+nested reference ownership and full
+CommonMark remain open. [Contract](MARKDOWN_SOURCE.md#reference-aware-boundary-repair-2026-11-04-unreleased-follow-up).
+
 Nested Markdown source follow-up (2026-11-04, unreleased): edits within existing
 lists and quotes can preserve unrelated source slices; checkbox updates preserve
 the rest of the task source. Complete-node reparse validates every proposed

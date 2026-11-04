@@ -1,0 +1,11 @@
+{
+  "engine": "firefox",
+  "nativeEnterAndTyping": true,
+  "actualDownloads": 3,
+  "completeEditedModelsReopened": true,
+  "referenceDestinationAndTitleRetained": true,
+  "definitionFooterOutsideFence": true,
+  "untouchedHeadingSourceRetained": true,
+  "undoRedo": true,
+  "errors": []
+}
