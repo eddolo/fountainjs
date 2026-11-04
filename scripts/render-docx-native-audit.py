@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 
 
 def run(args, destination, environment=None):
@@ -19,6 +20,39 @@ def run(args, destination, environment=None):
     if result.returncode:
         raise RuntimeError(f"Native tool exited {result.returncode}; inspect {destination}")
     return result.stdout
+
+
+# This bounded fixture profile compares independent PDF coordinates, not our
+# imported model or declarations. It is deliberately narrower than full layout.
+LAYOUT_PHRASES = ["Experimental setup",
+                  "Record the initial temperature before starting the timer.",
+                  "Keep both probes at the same depth.",
+                  "Read the measurements without moving either vessel."]
+
+
+def paragraph_positions(pdf, destination, pdftotext):
+    bbox = run([str(pdftotext), "-bbox-layout", str(pdf), "-"], destination)
+    document = ET.fromstring(bbox)
+    pages = [item for item in document.iter() if item.tag.rsplit("}", 1)[-1] == "page"]
+    if not pages:
+        raise RuntimeError("No independently extracted PDF page coordinates.")
+    words = [item for item in pages[0].iter() if item.tag.rsplit("}", 1)[-1] == "word"]
+    text = ["".join(item.itertext()) for item in words]
+    result = {}
+    for phrase in LAYOUT_PHRASES:
+        target = phrase.split()
+        indices = [index for index in range(len(text) - len(target) + 1)
+                   if text[index:index + len(target)] == target]
+        if len(indices) != 1:
+            raise RuntimeError(f"Expected one first-page paragraph: {phrase}")
+        first = words[indices[0]]
+        result[phrase] = {"x": float(first.attrib["xMin"]), "y": float(first.attrib["yMin"])}
+    return result
+
+
+def position_deltas(source, exported):
+    return {phrase: {axis: exported[phrase][axis] - source[phrase][axis] for axis in ["x", "y"]}
+            for phrase in LAYOUT_PHRASES}
 
 
 parser = argparse.ArgumentParser()
@@ -78,10 +112,27 @@ for name in ["source", "exported"]:
     captures = sorted(folder.glob("page-*.png"))
     if len(captures) != pages or not all(path.stat().st_size > 0 for path in captures):
         raise RuntimeError(f"Incomplete native page images for {name}.")
+    coordinates = paragraph_positions(pdf, folder / "paragraph-bbox.txt", tools["pdftotext"])
     results[name] = {"pages": pages, "drawnImageObjects": image_count,
+                     "paragraphPositions": coordinates,
                      "pdfSHA256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
                      "pageImages": [str(path.relative_to(root)) for path in captures]}
-summary = {"toolchain": versions, "rendered": results,
+# A retained, actual pre-repair export must fail the coordinate profile. This
+# catches a vacuous comparison without rewriting the independent source.
+control = Path("artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native")
+control_positions = {name: paragraph_positions(control / name / f"{name}.pdf",
+                    native / f"negative-control-{name}-bbox.txt", tools["pdftotext"])
+                    for name in ["source", "exported"]}
+negative = position_deltas(control_positions["source"], control_positions["exported"])
+if not all(abs(delta["x"]) <= 0.01 and abs(delta["y"] - 7) <= 0.01 for delta in negative.values()):
+    raise RuntimeError("The retained pre-repair PDF did not exhibit its known 7 pt offset.")
+deltas = position_deltas(results["source"]["paragraphPositions"], results["exported"]["paragraphPositions"])
+layout_check = {"scope": LAYOUT_PHRASES, "tolerancePt": 0.01, "deltasPt": deltas,
+                "negativeControl": {"retainedPreRepairPDF": str(control), "deltasPt": negative, "correctlyRejected": True}}
+(root / "paragraph-position-report.json").write_text(json.dumps(layout_check, indent=2) + "\n", encoding="utf-8")
+if any(abs(value) > 0.01 for delta in deltas.values() for value in delta.values()):
+    raise RuntimeError("Native paragraph position regression; inspect paragraph-position-report.json.")
+summary = {"toolchain": versions, "rendered": results, "paragraphPositionCheck": layout_check,
            "sourceSHA256": interchange["sourceSHA256"], "exportedSHA256": interchange["exportedSHA256"],
            "status": "native render and required-content checks passed; visual comparison still requires inspection",
            "pixelFidelityCertified": False, "microsoftWordCertified": False,
