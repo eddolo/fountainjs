@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+Image paragraph-layout checkpoint (2026-11-04, unmerged): native import retains
+the image body's paragraph geometry separately from its caption. Fractional
+dimensions now return to exact native units. Three recorded browser journeys
+verify caption editing/undo, image gaps and actual DOCX export/reopen; complete
+saved JSON equals the initial live model. Full units pass 3,597 / 254 files;
+actual packed ESM/CJS and workerd pass without DOM globals. Independent native
+rendering repairs the retained paper's -3.2/-6.4 pt caption drift to zero, while
+the setup heading and instructions remain aligned. Four page images were
+inspected. Header/title raster differences, page-two layout, footnotes, HTML
+fallbacks, unsupported image contextual flow and size/timing acceptance remain
+open. The four explicitly approved theme-language code limits were applied;
+the seven larger size failures remain. No parity-percentage promotion or release.
+[Contract, evidence and remaining scope](IMAGE_PARAGRAPH_LAYOUT.md).
+
 Native Word defaults follow-up (2026-11-04, unmerged): emitting settings for every
 export repairs the retained paper's common 7 pt offset. Independent native PDF
 coordinates now match the source for the setup heading and all three instructions;

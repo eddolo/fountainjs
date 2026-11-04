@@ -56,10 +56,55 @@ fractional native dimensions. Three recorded Chromium/Firefox/WebKit journeys
 pass caption typing/undo, source-declared image gaps, list editing, HTML reading
 and actual DOCX download/reopen. All three complete saved JSON documents equal
 their initial live document, including plugin-owned trailing content. Independent
-native rendering and the complete suite are being checked for this source.
+native rendering and the complete suite now pass the bounded profile below.
 
 The figure screenshot uses Playwright's `caret: 'initial'`: its default caret
 hiding writes styles to every `[contenteditable]`, including protected custom
 blocks elsewhere in the paper, and can trigger their DOM-restoration observer.
 The capture therefore retains the actual live caret instead of injecting those
 style mutations. This changes no editor behavior or content assertion.
+
+## Independent native result
+
+The unchanged two-page scientific source retains SHA-256
+`52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495`.
+The implementation checkpoint is `e5fb6c5`; the independent
+[native run](https://github.com/eddolo/fountainjs/actions/runs/41768523557)
+uses LibreOffice in isolated Ubuntu CI. Its downloaded archive matches GitHub's
+SHA-256 `bcb3b3215fdff08497667ef6562304d7f5bec7b0e4a2646ff09eedb2f6b8dc86`.
+All four source/export page images were inspected. The source raster remains
+identical to the preceding audit.
+
+| Independent PDF target | Previous y difference | Current y difference |
+| --- | ---: | ---: |
+| Setup heading and all three instructions | 0 pt | 0 pt |
+| Figure 1 caption | -3.2 pt | 0 pt |
+| Figure 2 caption | -6.4 pt | 0 pt |
+| Page-two recorded-temperatures heading | +2 pt | +2 pt |
+
+The native coordinate gate adds both complete caption phrases, retaining its
+0.01 pt threshold. It has separate actual pre-repair PDF controls: the earlier
+7 pt paragraph offset and the later caption-only drift. This is a fixture
+regression profile, not general Word certification. The
+[expanded gate run](https://github.com/eddolo/fountainjs/actions/runs/41768955941)
+passes all six positions and both negative controls; its four page rasters
+exactly equal the independently inspected implementation run. Native header/title raster
+differences, page-two equation/table layout and source/export footnote behavior
+remain visible. Standalone HTML still shows equation source and linear page
+templates/page fields; it does not reproduce the native pages.
+
+Full verification: 3,597 unit tests / 254 files; build, framework types, package
+exports, 419 declaration files, headless boundary across 119 modules, independent
+DOCX interoperability, recorded desktop journeys, actual packed root/core ESM
+and CommonJS consumers, server runtime contracts and real workerd. The existing
+Markdown conformance gate passes with its recorded partial semantic profiles;
+this checkpoint does not claim complete CommonMark conformance.
+
+The explicitly approved theme-language limits are now DOCX 185/149.5 KiB and
+aggregate ESM/CJS 1,652.5/1,375.5 KiB. Seven existing size failures still exceed
+those or unchanged core/CSS limits. Prior HTML timing acceptance is unresolved.
+No additional allowances, merge or npm publication are included.
+
+Evidence: [browser complete-model comparison](../artifacts/image-paragraph-layout-capture-real-20261104/evidence.json),
+[verification and runtime hashes](../artifacts/image-paragraph-verification-20261104.json),
+[independent native review](../artifacts/image-paragraph-native-review-20261104.json).

@@ -12,8 +12,11 @@ policy on reopen. Native layout certification remains outstanding.
   caption-layout and caption-alignment fields in the block-image factory; remove
   stale live image styles when formatting is cleared. Keep fractional image sizes
   until conversion to Word integer units, and report paragraph layout omitted by
-  ordinary Markdown. Native visual verification is in progress; image/caption
-  contextual-flow projection remains explicitly unsupported.
+  ordinary Markdown. Four native page images were reviewed; the retained paper's
+  two caption offsets are now zero (previously -3.2/-6.4 pt). The complete 3,597-test
+  suite, three recorded browser journeys, actual packed ESM/CJS and workerd pass.
+  Image/caption contextual-flow projection remains explicitly unsupported; broader
+  layout and release acceptance are unfinished.
 
 - Emit native document settings for every DOCX export so receiving engines
   initialize Word paragraph-spacing defaults. Repair the retained paper's
