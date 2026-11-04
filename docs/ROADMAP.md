@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+HTML-policy boundary follow-up (2026-11-04, unreleased): ordinary Markdown
+captures remain safe with local HTML adapters installed, including the real
+issue editor. Complete candidate validation also prevents nonlocal host-flow
+callbacks from changing unrelated blocks during partial export. All 3,787 units,
+200 actual-tarball contracts, 50 workerd contracts and three recorded desktop
+journeys pass. Twelve real exports reopen correctly with CRLF retained; visual
+captures and sampled recordings were inspected. Unchanged performance gates
+pass on a separate repeat after one marginal server-HTML p95 failure; both
+results remain. Types/API/headless, conformance and retention checks pass.
+Two aggregate size ceilings, full current-head CI and broader Markdown source
+scope remain open. No parity-score or release promotion.
+[Contract and measured cost](MARKDOWN_SOURCE.md#html-adapted-source-boundaries-2026-11-04-unreleased-follow-up).
+
 Reference-aware boundary follow-up (2026-11-04, unreleased): protect moved or
 terminal EOF-open fences and the exported link-definition footer in existing
 root captures. Preserve original definition precedence and unrelated source.

@@ -1,5 +1,53 @@
 # Markdown semantics and source fidelity
 
+## HTML-adapted source boundaries (2026-11-04, unreleased follow-up)
+
+Registering `parseHTMLBlock`, `parseHTMLInline`, `parseHTMLParagraph` or
+`parseHTMLFlow` must not let an unchanged EOF-open fence consume moved blocks
+or an appended link-definition footer. Local HTML policies now participate in
+the existing parser-owned boundary checks, including captured reference scope.
+This fixes the actual issue-editor demo, whose HTML-table adapter is installed
+even when a draft contains only ordinary Markdown. Native-only imports retain
+their existing path; nested source ownership under HTML policies remains
+conservative. Whole-document HTML conversion still disables per-block capture
+when invoked.
+
+Pairwise boundary checks cannot establish arbitrary host-adapter semantics.
+A flow adapter can change the first block based on a third block. Therefore
+HTML-adapted partial-source exports also reparse the complete proposed body
+with the original policy and compare the complete Fountain node, including
+attributes and marks. A mismatch or exception rejects partial reuse and falls
+back to canonical export. Frontmatter remains inert and is excluded from that
+body parse. This checks Fountain's own model, not equality with a foreign AST.
+Canonical export remains subject to normal schema/format loss reporting; no
+arbitrary adapter is promised a lossless Markdown representation.
+
+HTML callbacks must be synchronous, deterministic and safe to call repeatedly
+during capture/export verification. Built-in import fallback and TeX issue
+callbacks are silenced for speculative checks. Side effects or diagnostics
+performed inside a host's adapter remain the host's responsibility. No callback,
+runtime parser dependency, public API or semantic-score change is added.
+
+All 3,787 unit tests / 263 files pass, including 68 new cases. Actual packed
+ESM/CommonJS root/core imports pass 200 contracts without fake DOM; real workerd
+passes 50. The three recorded issue-editor journeys use actual file uploads,
+Enter/typing, downloads, reopening, undo/redo and source/reader modes. Twelve
+actual exports retain CRLF and reopen to the intended complete model. Twelve
+editor/reader captures and six sampled video frames per engine were inspected.
+The pre-repair browser failure, original downloaded bytes and an explicitly
+labelled reopening of that old download in the current viewer are retained.
+
+Types, API/headless boundaries, package, conformance and direction/mapping
+retention checks pass. The first performance run narrowly failed the 100-block
+server-HTML p95 cap (35.86 ms / 35 ms); a separate repeat passed unchanged limits
+(30.46 ms), and both reports are retained. Custom HTML source export has an
+additional whole-body parse cost: the throttled 5,000-reference probe measures
+about 311 ms versus 18 ms for native-only repeated structural export. These
+are serialization operations, not typing latency. See [measured costs](BUILD_SIZE.md).
+The two aggregate size ceilings and full current-head CI remain open. Broader
+source ownership, full CommonMark conformance and release certification remain
+unproven. Evidence: `artifacts/markdown-html-source-verification-20261104.json`.
+
 ## Reference-aware boundary repair (2026-11-04, unreleased follow-up)
 
 Existing top-level source captures with document-wide link definitions now check

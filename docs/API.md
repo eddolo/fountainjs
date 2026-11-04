@@ -2092,6 +2092,15 @@ snapshot. See
 [MARKDOWN_SOURCE.md](MARKDOWN_SOURCE.md) for the exact frontmatter contract,
 initial standards-oriented fixture corpus, and explicit conformance limits.
 
+With local HTML import callbacks, partial-source export validates the complete
+candidate body using the original policy and complete Fountain-node equality;
+failed checks use canonical fallback. Registered callbacks must be synchronous,
+deterministic and safe to repeat during capture/export. Speculative checks mute
+Fountain's import fallback/TeX issue callbacks; side effects or reporting inside
+host callbacks remain host-owned. Whole-document HTML projection retains its
+conservative capture boundary. Whole-body verification adds serialization cost;
+schedule large exports deliberately. See [HTML-adapted source boundaries](MARKDOWN_SOURCE.md#html-adapted-source-boundaries-2026-11-04-unreleased-follow-up).
+
 `MarkdownExporter.export(stateOrNode, options?)` returns a string. Set
 `options.linkStyle` to `"reference"` for stable `ref-1`, `ref-2`, … definitions
 deduplicated by destination and title. The default is `"inline"`.

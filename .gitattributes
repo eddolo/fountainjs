@@ -8,3 +8,5 @@
 /artifacts/markdown-source-boundaries-browser-20261104/**/source-boundary-journey/*.md -text
 /artifacts/markdown-nested-source-browser-20261104/**/nested-source-journey/*.md -text
 /artifacts/markdown-reference-boundaries-browser-20261104/**/reference-boundary-journey/*.md -text
+/artifacts/markdown-html-source-browser-20261104/**/issue-html-source-journey/*.md -text
+/artifacts/markdown-html-source-before-browser-20261104/**/issue-html-source-journey/*.md -text

@@ -1,0 +1,123 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-html-source-boundaries.test.ts (17 tests | 5 failed) 61ms
+   ❯ Markdown source boundaries with optional HTML conversion enabled (17)
+     × keeps referenced Markdown with an unused inline HTML adapter 17ms
+     × keeps referenced Markdown with an unused block HTML adapter 3ms
+     × keeps referenced Markdown with an unused flow HTML adapter 2ms
+     × keeps referenced Markdown with an unused paragraph HTML adapter 2ms
+     × checks complete container semantics rather than trusting independent pairs of HTML-adapted blocks 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-html-source-boundaries.test.ts > Markdown source boundaries with optional HTML conversion enabled > keeps referenced Markdown with an unused inline HTML adapter
+ FAIL  tests/markdown-html-source-boundaries.test.ts > Markdown source boundaries with optional HTML conversion enabled > keeps referenced Markdown with an unused block HTML adapter
+ FAIL  tests/markdown-html-source-boundaries.test.ts > Markdown source boundaries with optional HTML conversion enabled > keeps referenced Markdown with an unused flow HTML adapter
+ FAIL  tests/markdown-html-source-boundaries.test.ts > Markdown source boundaries with optional HTML conversion enabled > keeps referenced Markdown with an unused paragraph HTML adapter
+AssertionError: expected { type: 'doc', content: [ { …(3) } ] } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -5,41 +5,18 @@
+          "language": "js",
+          "lineNumbers": true,
+        },
+        "content": [
+          {
+-           "text": "first",
++           "text": "first
++
++ # Keep [link][ref] ###
++
++ [ref]: /target \"Original title\"",
+            "type": "text",
+          },
+        ],
+        "type": "code_block",
+-     },
+-     {
+-       "attrs": {
+-         "align": "left",
+-         "level": 1,
+-       },
+-       "content": [
+-         {
+-           "text": "Keep ",
+-           "type": "text",
+-         },
+-         {
+-           "marks": [
+-             {
+-               "attrs": {
+-                 "href": "/target",
+-                 "target": "_blank",
+-                 "title": "Original title",
+-               },
+-               "type": "link",
+-             },
+-           ],
+-           "text": "link",
+-           "type": "text",
+-         },
+-       ],
+-       "type": "heading",
+      },
+    ],
+    "type": "doc",
+  }
+
+ ❯ tests/markdown-html-source-boundaries.test.ts:20:81
+     18|     const changed = imported.document.copy([code, heading]);
+     19|     const exported = MarkdownExporter.exportWithSource(changed, import…
+     20|     expect(MarkdownImporter.parse(exported.markdown, schema, options).…
+       |                                                                                 ^
+     21|     expect(exported.markdown).toContain('# Keep [link][ref] ###');
+     22|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/markdown-html-source-boundaries.test.ts > Markdown source boundaries with optional HTML conversion enabled > checks complete container semantics rather than trusting independent pairs of HTML-adapted blocks
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -4,10 +4,15 @@
+        "attrs": {
+          "align": "left",
+        },
+        "content": [
+          {
++           "marks": [
++             {
++               "type": "strong",
++             },
++           ],
+            "text": "<aside>Original.</aside>",
+            "type": "text",
+          },
+        ],
+        "type": "paragraph",
+
+ ❯ tests/markdown-html-source-boundaries.test.ts:36:79
+     34|     const changed = imported.document.copy([...imported.document.conte…
+     35|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     36|     expect(MarkdownImporter.parse(result.markdown, schema, options).to…
+       |                                                                               ^
+     37|     expect(result.preservation).toBe('canonical');
+     38|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 12 passed (17)
+   Start at  19:00:16
+   Duration  4.95s (transform 51%, import 47%, tests 1%)
+
+  Transform  transforming modules took 2.45s · 51% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

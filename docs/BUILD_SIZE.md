@@ -73,3 +73,29 @@ are retained. The existing editor latency and memory gates pass unchanged.
 
 See `artifacts/reference-loaded-build-size-review-20261104.json` and
 `artifacts/markdown-reference-boundaries-performance-review-20261104.json`.
+
+## HTML-adapted source checkpoint, 2026-11-04
+
+The subsequent HTML-policy boundary repair adds about 0.42 KiB raw to the
+root/core static closures. React and DOCX closures are unchanged. Root is
+734.6 KiB raw / 227.2 KiB gzip; core is 394.0 / 132.4 KiB. Individual entries
+and CSS pass existing ceilings. Aggregate emitted ESM / CommonJS still exceed
+their unchanged ceilings by about 13.3 / 9.9 KiB. These aggregate inventories
+are distribution measurements, not a user's combined download.
+
+Custom HTML policies can have nonlocal effects, so a proposed partial-source
+export now reparses its whole body before acceptance. In a throttled Windows
+five-sample probe, warm structural export for 100 / 1,000 / 5,000 references
+takes about 7 / 65 / 311 ms with an HTML policy, versus 0.85 / 3.4 / 18.2 ms
+on the native-only path. The actual preceding native tarball measured
+0.85 / 3.3 / 19.0 ms in the same probe. This is explicit serialization cost;
+applications should avoid repeatedly exporting large documents on each keypress.
+It is not a typing-speed benchmark or proof about arbitrary host adapters.
+
+The first general performance run narrowly missed the 100-block server-HTML
+p95 cap (35.86 ms versus 35 ms). A separate repeat passed (30.46 ms); both raw
+reports remain, and no latency/heap limits changed. The aggregate headroom
+proposal remains separate and unapplied. See
+`artifacts/html-source-loaded-build-size-review-20261104.json`,
+`artifacts/markdown-html-source-performance-review-20261104.json` and both
+`artifacts/markdown-html-source-latency*-20261104.json` reports.

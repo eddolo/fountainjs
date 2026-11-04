@@ -3,6 +3,7 @@ import { checkParagraphSpacing } from './fixtures/paragraph-spacing-check.mjs';
 import { checkMarkdownSourceBoundaries } from './fixtures/markdown-source-boundary-check.mjs';
 import { checkMarkdownNestedSource } from './fixtures/markdown-nested-source-check.mjs';
 import { checkMarkdownReferenceBoundaries } from './fixtures/markdown-reference-boundary-check.mjs';
+import { checkMarkdownHTMLSourceBoundaries } from './fixtures/markdown-html-source-boundary-check.mjs';
 import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
@@ -304,6 +305,7 @@ console.log('Built ESM root/core: contextual spacing model, HTML, transactions a
 console.log(`Built ESM root/core: ${checkMarkdownSourceBoundaries(esmCore)}/${checkMarkdownSourceBoundaries(esmHeadlessCore, esmCore.CoreSchemaSpec)} parser-owned Markdown source-boundary contracts passed.`);
 console.log(`Built ESM root/core: ${checkMarkdownNestedSource(esmCore)}/${checkMarkdownNestedSource(esmHeadlessCore, esmCore.CoreSchemaSpec)} nested Markdown source contracts passed.`);
 console.log(`Built ESM root/core: ${checkMarkdownReferenceBoundaries(esmCore)}/${checkMarkdownReferenceBoundaries(esmHeadlessCore, esmCore.CoreSchemaSpec)} reference-scoped Markdown boundary contracts passed.`);
+console.log(`Built ESM root/core: ${checkMarkdownHTMLSourceBoundaries(esmCore)}/${checkMarkdownHTMLSourceBoundaries(esmHeadlessCore, esmCore.CoreSchemaSpec)} HTML-adapted Markdown source contracts passed.`);
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
 const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
 if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
@@ -461,6 +463,7 @@ console.log('Built CommonJS root/core: contextual spacing model, HTML, transacti
 console.log(`Built CommonJS root/core: ${checkMarkdownSourceBoundaries(cjsCore)}/${checkMarkdownSourceBoundaries(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} parser-owned Markdown source-boundary contracts passed.`);
 console.log(`Built CommonJS root/core: ${checkMarkdownNestedSource(cjsCore)}/${checkMarkdownNestedSource(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} nested Markdown source contracts passed.`);
 console.log(`Built CommonJS root/core: ${checkMarkdownReferenceBoundaries(cjsCore)}/${checkMarkdownReferenceBoundaries(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} reference-scoped Markdown boundary contracts passed.`);
+console.log(`Built CommonJS root/core: ${checkMarkdownHTMLSourceBoundaries(cjsCore)}/${checkMarkdownHTMLSourceBoundaries(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} HTML-adapted Markdown source contracts passed.`);
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
 const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
 if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');

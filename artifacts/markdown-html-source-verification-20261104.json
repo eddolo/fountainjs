@@ -1,0 +1,492 @@
+{
+  "branch": "fix/markdown-html-source-boundaries-20261104",
+  "parentSourceCommit": "588be248e66767b0f4c7efd5d5b75596d5224077",
+  "runtimeSourceSHA256": {
+    "src/core/exporters/markdown-exporter.ts": "a7f71cb9002b5f1764520872eaad2392dc70c328418d805d26e2d2124fccbd9d",
+    "src/core/importers/markdown-importer.ts": "af95c0daeb9d4794ee99255521020a51cce8db1f62bb642c14700ad3436515b1",
+    "src/core/markdown-source-boundary.ts": "002b39e34c1695a0ed869493d7606397ea14b151f09f8e9c8a156156a130c452"
+  },
+  "builtSourceMapMatchesCurrentRuntimeSources": true,
+  "unitTests": 3787,
+  "unitFiles": 263,
+  "newCases": 68,
+  "recordedDesktopJourneys": 3,
+  "downloadedMarkdownFiles": 12,
+  "inputMarkdownFiles": 3,
+  "visualReview": {
+    "editorReaderCaptures": 12,
+    "sampledFramesPerRecording": 6,
+    "fullFrameByFramePlayback": false,
+    "negativeImage": "artifacts/markdown-html-source-negative-20261104/markdown-html-source-negat-4f667-nload-in-the-current-viewer-chromium/actual-old-download-current-viewer.png",
+    "negativeImageMeaning": "Actual pre-repair download reopened in current viewer"
+  },
+  "browserFiles": [
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/original.md",
+      "kind": "input",
+      "bytes": 76,
+      "sha256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/reader.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/redone.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/undone.md",
+      "kind": "download",
+      "bytes": 116,
+      "sha256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/edited.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/original.md",
+      "kind": "input",
+      "bytes": 76,
+      "sha256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/reader.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/redone.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-firefox/issue-html-source-journey/undone.md",
+      "kind": "download",
+      "bytes": 116,
+      "sha256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/edited.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/original.md",
+      "kind": "input",
+      "bytes": 76,
+      "sha256": "df527a0cbc732a5c5662bda4df06c4b3565bebf29d734f2851d2dd33fb892857"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/reader.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/redone.md",
+      "kind": "download",
+      "bytes": 106,
+      "sha256": "862f92953ba0c9cd5294b341b969b0bbb5f6fc793b9ffa1c2a081ae285201501"
+    },
+    {
+      "path": "artifacts/markdown-html-source-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-webkit/issue-html-source-journey/undone.md",
+      "kind": "download",
+      "bytes": 116,
+      "sha256": "fc0a0fe5a06617ee2224336391fde648a72debee104a620e27c6e574520d3897"
+    }
+  ],
+  "oldActualDownload": {
+    "path": "artifacts/markdown-html-source-before-browser-20261104/issue-html-source-real-an--279f4-hrough-real-draft-downloads-chromium/issue-html-source-journey/edited.md",
+    "sha256": "43993962734e8d3ef66fc36e6e9af3654a05019cc3608fe9b757677e580e661c"
+  },
+  "beforeBuildSourceProof": {
+    "builtSourceCommit": "588be248e66767b0f4c7efd5d5b75596d5224077",
+    "sourceMapSHA256": {
+      "src/core/markdown-source-boundary.ts": "356a190deac87d1e33aa5b67e0b95dfc0f2e991e8e42e1ed47f80db1822f3ea2",
+      "src/core/importers/markdown-importer.ts": "666537ac720083ed509d763258956e947def8bf40fa4189aa00b7fd5e3aa74ed",
+      "src/core/exporters/markdown-exporter.ts": "5aca756471e1b76634c4c79a128d7b569809fc727f31b0c67abd12022b97fd87"
+    }
+  },
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 200,
+    "noFakeDOM": true,
+    "results": [
+      50,
+      50,
+      50,
+      50
+    ]
+  },
+  "tarballSHA256": "14d81117fcb590ba0fd2cd7edfa7dcc4ebb65efd04f05a687b337498002ab7c5",
+  "realWorkerdContracts": 50,
+  "publicDeclarationFiles": 419,
+  "headlessSourceModules": 122,
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "localPerformance": {
+    "firstRun": [
+      "100-block server HTML p95 35.86 ms exceeds 35 ms"
+    ],
+    "separateRepeat": [],
+    "limitsChanged": false
+  },
+  "sizeAcceptance": {
+    "changedLimits": false,
+    "failures": [
+      "all ESM runtime code exceeds its budget by 13.3 KiB",
+      "all CommonJS runtime code exceeds its budget by 9.9 KiB"
+    ],
+    "individualEntriesAndCSS": "passed"
+  },
+  "sourceExportPerformance": {
+    "baseline": "actual PR #11 tarball",
+    "samples": 5,
+    "hardLimitsChanged": false,
+    "scope": "Synchronous source export with and without a registered HTML block policy; not editor keystroke latency",
+    "records": [
+      {
+        "count": 100,
+        "referenceCount": 100,
+        "inputCodeUnits": 6560,
+        "parentNative": {
+          "firstMoveMs": 12.278099999999995,
+          "capture": {
+            "medianMs": 24.60730000000001,
+            "samplesMs": [
+              26.071900000000028,
+              23.394499999999994,
+              23.253600000000006,
+              24.60730000000001,
+              26.723000000000013
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 1.0363000000000397,
+            "samplesMs": [
+              1.0363000000000397,
+              0.9458000000000197,
+              1.1508999999999787,
+              1.3748999999999683,
+              0.9096999999999866
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 0.8500000000000227,
+            "samplesMs": [
+              3.1019000000000005,
+              0.7891999999999939,
+              0.7901999999999703,
+              0.8803000000000338,
+              0.8500000000000227
+            ]
+          }
+        },
+        "currentNative": {
+          "firstMoveMs": 8.355799999999988,
+          "capture": {
+            "medianMs": 25.431299999999965,
+            "samplesMs": [
+              25.670799999999986,
+              29.445699999999988,
+              25.026000000000067,
+              24.579000000000065,
+              25.431299999999965
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 0.9649000000000569,
+            "samplesMs": [
+              0.9708000000000538,
+              0.9649000000000569,
+              1.0153999999999996,
+              0.9426999999999452,
+              0.963799999999992
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 0.8509000000000242,
+            "samplesMs": [
+              0.8509000000000242,
+              0.7613999999999805,
+              3.072300000000041,
+              0.9144999999999754,
+              0.7783000000000584
+            ]
+          }
+        },
+        "currentHTMLPolicy": {
+          "firstMoveMs": 15.934100000000058,
+          "capture": {
+            "medianMs": 22.217300000000023,
+            "samplesMs": [
+              22.217300000000023,
+              23.354100000000017,
+              22.15919999999994,
+              22.72199999999998,
+              21.900900000000092
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 10.06490000000008,
+            "samplesMs": [
+              10.264699999999948,
+              9.54480000000001,
+              10.261700000000019,
+              10.06490000000008,
+              6.734900000000039
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 7.136000000000081,
+            "samplesMs": [
+              5.64549999999997,
+              5.904299999999921,
+              9.240099999999984,
+              13.795399999999972,
+              7.136000000000081
+            ]
+          }
+        }
+      },
+      {
+        "count": 1000,
+        "referenceCount": 1000,
+        "inputCodeUnits": 69560,
+        "parentNative": {
+          "firstMoveMs": 36.43489999999997,
+          "capture": {
+            "medianMs": 161.30870000000027,
+            "samplesMs": [
+              197.92129999999997,
+              213.81500000000005,
+              161.30870000000027,
+              149.4414999999999,
+              151.1606999999999
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 4.30829999999969,
+            "samplesMs": [
+              5.685899999999947,
+              4.100699999999961,
+              4.30829999999969,
+              4.870199999999841,
+              3.5354999999999563
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 3.2899999999999636,
+            "samplesMs": [
+              4.00839999999971,
+              4.301199999999881,
+              3.2899999999999636,
+              3.285599999999704,
+              3.2685999999998785
+            ]
+          }
+        },
+        "currentNative": {
+          "firstMoveMs": 35.922399999999925,
+          "capture": {
+            "medianMs": 145.1001000000001,
+            "samplesMs": [
+              148.06590000000006,
+              145.1001000000001,
+              165.07270000000017,
+              141.1878999999999,
+              138.2170000000001
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 4.216099999999642,
+            "samplesMs": [
+              3.7510999999999513,
+              4.893799999999828,
+              4.860400000000027,
+              4.048999999999978,
+              4.216099999999642
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 3.4062000000003536,
+            "samplesMs": [
+              3.4062000000003536,
+              3.6248999999997977,
+              6.208100000000286,
+              3.37519999999995,
+              3.357299999999668
+            ]
+          }
+        },
+        "currentHTMLPolicy": {
+          "firstMoveMs": 118.0889000000002,
+          "capture": {
+            "medianMs": 155.98379999999997,
+            "samplesMs": [
+              138.15599999999995,
+              141.08519999999953,
+              173.3822,
+              260.2033000000001,
+              155.98379999999997
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 64.16310000000067,
+            "samplesMs": [
+              75.36160000000018,
+              64.16310000000067,
+              60.21599999999944,
+              69.77199999999993,
+              63.3715000000002
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 65.32180000000062,
+            "samplesMs": [
+              65.32180000000062,
+              77.57930000000033,
+              64.23739999999998,
+              72.0607,
+              59.75450000000001
+            ]
+          }
+        }
+      },
+      {
+        "count": 5000,
+        "referenceCount": 5000,
+        "inputCodeUnits": 365560,
+        "parentNative": {
+          "firstMoveMs": 188.89040000000023,
+          "capture": {
+            "medianMs": 732.9105999999992,
+            "samplesMs": [
+              743.3176999999996,
+              725.4279999999999,
+              763.4794999999995,
+              732.9105999999992,
+              731.0578000000005
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 22.72309999999925,
+            "samplesMs": [
+              21.09059999999954,
+              18.33430000000044,
+              27.444100000000617,
+              29.001900000001115,
+              22.72309999999925
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 19.021600000000035,
+            "samplesMs": [
+              17.865199999998367,
+              19.105999999999767,
+              18.81670000000122,
+              19.021600000000035,
+              21.463200000000143
+            ]
+          }
+        },
+        "currentNative": {
+          "firstMoveMs": 205.16309999999976,
+          "capture": {
+            "medianMs": 714.190700000001,
+            "samplesMs": [
+              775.5749999999989,
+              714.190700000001,
+              710.5221999999976,
+              720.393,
+              712.8320000000022
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 19.499100000000908,
+            "samplesMs": [
+              17.5766999999978,
+              21.042300000000978,
+              19.830000000001746,
+              19.499100000000908,
+              18.48400000000038
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 18.241699999998673,
+            "samplesMs": [
+              19.100099999999657,
+              18.241699999998673,
+              21.784999999999854,
+              17.595900000000256,
+              17.650699999998324
+            ]
+          }
+        },
+        "currentHTMLPolicy": {
+          "firstMoveMs": 515.4466999999968,
+          "capture": {
+            "medianMs": 740.9938000000002,
+            "samplesMs": [
+              750.3064000000013,
+              770.581000000002,
+              738.0813999999991,
+              704.2752999999975,
+              740.9938000000002
+            ]
+          },
+          "unrelatedEdit": {
+            "medianMs": 311.22339999999895,
+            "samplesMs": [
+              305.5697,
+              308.5916999999972,
+              311.22339999999895,
+              334.963499999998,
+              322.0066000000006
+            ]
+          },
+          "structuralMove": {
+            "medianMs": 311.4370999999992,
+            "samplesMs": [
+              312.0854999999974,
+              311.4370999999992,
+              307.15559999999823,
+              385.1353999999992,
+              299.9444000000003
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "remainingScope": [
+    "nested ownership with HTML/reference/footnote scopes",
+    "inline source ownership",
+    "full CommonMark",
+    "fresh full CI",
+    "aggregate size review"
+  ],
+  "fullParityOrPublicationCertified": false
+}

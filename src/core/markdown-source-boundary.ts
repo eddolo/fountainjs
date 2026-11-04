@@ -1,11 +1,12 @@
 import type { Node } from './schema';
-import type { MarkdownSourceBlockSnapshot } from './importers/markdown-importer';
+import type { MarkdownSourceBlockSnapshot, MarkdownSourceSnapshot } from './importers/markdown-importer';
 
 type ParseSource = (source: string) => readonly Node[];
 
-// Only parser-owned, reference-free captures register here. Weak ownership
+// Only parser-owned captures register here. Weak ownership
 // releases the schema/options when the source snapshot is no longer used.
 const parsers = new WeakMap<MarkdownSourceBlockSnapshot, ParseSource>();
+const projections = new WeakMap<MarkdownSourceSnapshot, (source: string) => Node>();
 const footerChecks = new WeakMap<MarkdownSourceBlockSnapshot, {
   readonly parse: ParseSource;
   readonly entries: { readonly before: string; readonly after: string; readonly separator: string; readonly valid: boolean }[];
@@ -13,6 +14,19 @@ const footerChecks = new WeakMap<MarkdownSourceBlockSnapshot, {
 
 export function registerMarkdownSourceBoundary(block: MarkdownSourceBlockSnapshot, parse: ParseSource): void {
   parsers.set(block, parse);
+}
+
+export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot, parse: (value: string) => Node): void {
+  projections.set(source, parse);
+}
+
+/** Host HTML adapters can depend on the complete container, not just a pair.
+ * Native-only snapshots keep their existing local proof path. */
+export function markdownSourceProjectionMatches(source: MarkdownSourceSnapshot, value: string, document: Node): boolean {
+  const parse = projections.get(source);
+  if (!parse) return true;
+  try { return parse(value).eq(document); }
+  catch { return false; }
 }
 
 /** A reference footer can be large and is immutable for this source snapshot.
