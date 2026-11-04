@@ -2457,11 +2457,13 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', `<Override PartName="/word/${template.name}" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.${template.kind}+xml"/></Types>`));
     parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="${template.id}" Type="${OFFICE_REL_NS}/${template.kind}" Target="${template.name}"/></Relationships>`));
   }
-  if (evenPages) {
-    parts['word/settings.xml'] = strToU8(`<w:settings xmlns:w="${WORD_NS}"><w:evenAndOddHeaders/></w:settings>`);
-    parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', '<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>'));
-    parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdSettings" Type="${OFFICE_REL_NS}/settings" Target="settings.xml"/></Relationships>`));
-  }
+  // Emit settings even without page variants: native consumers initialize
+  // Word defaults while reading this part. In particular, LibreOffice otherwise
+  // retains its additive paragraph-spacing default instead of Word's maximum.
+  // Do not compensate by rewriting the author's before/after declarations.
+  parts['word/settings.xml'] = strToU8(`<w:settings xmlns:w="${WORD_NS}">${evenPages ? '<w:evenAndOddHeaders/>' : ''}</w:settings>`);
+  parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', '<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>'));
+  parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdSettings" Type="${OFFICE_REL_NS}/settings" Target="settings.xml"/></Relationships>`));
   for (const item of context.media) parts[`word/media/${item.fileName}`] = item.bytes;
   const bytes = zipSync(parts, { level: 6 });
   return Object.freeze({ bytes, report: report(issues) });

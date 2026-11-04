@@ -123,7 +123,7 @@ describe('DOCX interchange', () => {
     const archive = unzipSync(exported.bytes);
     expect(Object.keys(archive).sort()).toEqual([
       '[Content_Types].xml', '_rels/.rels', 'docProps/app.xml', 'docProps/core.xml',
-      'word/_rels/document.xml.rels', 'word/document.xml', 'word/numbering.xml', 'word/styles.xml',
+      'word/_rels/document.xml.rels', 'word/document.xml', 'word/numbering.xml', 'word/settings.xml', 'word/styles.xml',
     ]);
     const xml = strFromU8(archive['word/document.xml']!);
     expect(xml).toContain('<w:pStyle w:val="Heading2"/>');
