@@ -16,6 +16,7 @@ import { checkHTMLEmptyHeading } from './html-empty-heading-check.mjs';
 import { checkHTMLPreformattedBreaks } from './html-preformatted-breaks-check.mjs';
 import { checkHTMLPreformattedFormatting } from './html-preformatted-formatting-check.mjs';
 import { checkMarkdownSourceBoundaries } from './markdown-source-boundary-check.mjs';
+import { checkMarkdownNestedSource } from './markdown-nested-source-check.mjs';
 
 const schema = new Schema(CoreSchemaSpec);
 
@@ -40,6 +41,7 @@ export default {
     if (preformatted.child(1).textContent !== 'one\ntwo') return new Response('Lost preformatted line breaks', { status: 500 });
     return new Response(JSON.stringify({
       markdownSourceBoundariesChecked: checkMarkdownSourceBoundaries(blockAtomCore),
+      markdownNestedSourceChecked: checkMarkdownNestedSource(blockAtomCore),
       blocks: result.document.childCount,
       text: result.document.textContent,
       html: HTMLExporter.export(result.document, { document: false }),

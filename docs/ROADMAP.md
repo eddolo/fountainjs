@@ -1,5 +1,15 @@
 # FountainJS opportunity roadmap
 
+Nested Markdown source follow-up (2026-11-04, unreleased): edits within existing
+lists and quotes can preserve unrelated source slices; checkbox updates preserve
+the rest of the task source. Complete-node reparse validates every proposed
+patch, and structural/unsupported changes retain canonical fallback. Real desktop
+typing/download/undo/checkbox journeys pass in all three engines. All 3,678 units,
+framework types, API/headless, actual packed consumers, real workerd, unchanged
+conformance and local latency/retention gates pass. Two aggregate size ceilings
+and full CI remain open; inline ownership, reference scopes and CommonMark remain open.
+[Contract and limits](MARKDOWN_SOURCE.md#nested-source-edits-2026-11-04-unreleased-follow-up).
+
 Markdown source-boundary follow-up (2026-11-04, separate unreleased branch):
 parser spans now preserve adjacent headings and blank-containing fences or
 containers around unrelated edits. Partial exports prevent moved open fences,
@@ -7,8 +17,9 @@ separate lists and indented code from swallowing/merging neighbours. Three
 actual pre-repair packed-build cases independently reproduce content loss.
 Full units pass 3,656 / 259 files; recorded desktop journeys, 18 exact downloads,
 actual packed ESM/CJS, workerd, types/API/headless and unchanged conformance
-profiles pass. Full CI, latency acceptance and the small aggregate capacity
-increment remain pending. Nested source ownership remains open. This is not full
+profiles pass. Cloud performance, Lean and native document audit jobs pass on
+that parent; its verification job fails at the aggregate capacity gate. Full
+acceptance and the newer nested follow-up remain separate. This is not full
 CommonMark completion or a parity-percentage increase.
 [Contracts, evidence and remaining scope](MARKDOWN_SOURCE.md#parser-owned-source-boundaries-2026-11-04-unreleased-follow-up).
 

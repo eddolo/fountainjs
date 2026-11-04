@@ -215,7 +215,9 @@ jobs:
         if: always()
         with:
           name: markdown-source-boundary-evidence
-          path: test-results/**/source-boundary-journey/**
+          path: |
+            test-results/**/source-boundary-journey/**
+            test-results/**/nested-source-journey/**
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

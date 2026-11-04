@@ -1,0 +1,18 @@
+[WebServer] (node:16504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:26540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\markdown-nested-source-real.spec.ts:4:1 › a writer edits list and quote source through native typing downloads and undo (5.9s)
+(node:27608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\markdown-nested-source-real.spec.ts:4:1 › a writer edits list and quote source through native typing downloads and undo (10.6s)
+(node:14464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\markdown-nested-source-real.spec.ts:4:1 › a writer edits list and quote source through native typing downloads and undo (13.1s)
+
+  3 passed (37.2s)

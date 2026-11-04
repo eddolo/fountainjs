@@ -1,0 +1,42 @@
+[
+  {
+    "name": "units",
+    "log": "artifacts/markdown-nested-source-units-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "types",
+    "log": "artifacts/markdown-nested-source-types-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "api",
+    "log": "artifacts/markdown-nested-source-api-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "headless",
+    "log": "artifacts/markdown-nested-source-headless-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "conformance",
+    "log": "artifacts/markdown-nested-source-conformance-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "package",
+    "log": "artifacts/markdown-nested-source-package-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "worker",
+    "log": "artifacts/markdown-nested-source-worker-20261104.log",
+    "exitCode": 0
+  },
+  {
+    "name": "size",
+    "log": "artifacts/markdown-nested-source-size-20261104.log",
+    "exitCode": 1
+  }
+]

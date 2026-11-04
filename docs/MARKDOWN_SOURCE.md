@@ -1,5 +1,43 @@
 # Markdown semantics and source fidelity
 
+## Nested source edits (2026-11-04, unreleased follow-up)
+
+For reference-free imports using Fountain's own Markdown parser, edits inside
+existing lists and quotes can retain the untouched items, paragraphs, fences,
+marker spelling, quote prefixes and physical line endings. Task checkbox changes
+can update the checkbox character alone. This uses private, lazy source ownership
+over Fountain nodes; it does not adopt a foreign AST or change the public API.
+
+Only proven scalar source ranges are patched. Every composed container must parse
+back to the complete intended Fountain node, including its attributes and marks.
+Changing a quoted heading to a paragraph adds a quoted blank separator when
+needed. Unsupported owner attributes, item insertion/deletion, ambiguous tab
+projection, reference/footnote scopes and external HTML projections retain
+canonical fallback. Individual inline delimiter spans are not independently owned.
+Source ownership is bounded by the existing 10,000-region budget and 32 ownership
+layers; reaching those bounds falls back without limiting document parsing.
+
+The actual StarterKit editor adds an automatic caret paragraph after a terminal
+list. Edited exports keep that paragraph explicitly while preserving the source
+of the preceding list. Authored/copied empty paragraphs are also retained. The
+existing exact-source exemption applies only to the unchanged document with its
+original, still-empty automatic caret repair. No generic empty-block removal is
+introduced. Loss callbacks are dispatched once for the accepted export, without
+leaking diagnostics from discarded speculative rendering.
+
+All 3,678 unit tests / 260 files pass, including the focused 50-case source suite.
+Recorded Chromium/Firefox/WebKit conversion-lab journeys use native typing inside
+an item and a quote, checkbox clicks, undo/redo, actual downloaded Markdown and
+complete edited-model reopening. Editor captures and six sampled recording
+frames per engine were inspected. Framework types, 419 public declaration files,
+122 headless modules, package contracts, 48 actual-tarball ESM/CommonJS root/core
+checks without fake DOM, and 12 real-workerd nested contracts pass. CommonMark
+profiles are unchanged. Local latency and retained-memory gates pass without
+changed limits; earlier parent failures remain historical evidence. The two
+aggregate code-size ceilings still fail, while individual entries and CSS pass.
+[Measured costs and budget approach](BUILD_SIZE.md). Full CI and remaining scope
+are still required; this is not a release or full CommonMark claim.
+
 ## Parser-owned source boundaries (2026-11-04, unreleased follow-up)
 
 Source capture can now use Fountain's actual parser spans when blank-line
@@ -21,8 +59,8 @@ remains explicit. Source preservation still does not sanitize authored content.
 
 This extends the existing top-level capture contract. Reference/footnote scopes
 and externally projected HTML keep their earlier conservative ownership rules.
-Editing inside a container still canonicalizes that container; individual nested
-items and inline spans do not yet have independent source ownership. No CommonMark
+The nested follow-up above adds bounded list/quote ownership; individual inline
+spans still do not have independent source ownership. No CommonMark
 semantic score, public API or native AST representation is changed.
 
 Verification: 3,656 unit tests / 259 files, including 28 new source-boundary cases
@@ -41,7 +79,10 @@ this is not a general performance advantage claim. The separate existing latency
 gate still has local failures under the throttled Windows run. A paired previous
 packed-build control also fails, at different HTML sizes; this does not establish
 the cause. Direction/mapping retention gates pass. The unchanged latency limits
-and fresh full CI remain required. This follow-up adds about 3.6 KiB ESM / 2.6 KiB
+remain unchanged. On the parent source-boundary commit, the cloud performance,
+Lean integration and native document audit jobs pass; its verification job fails
+only at the aggregate size gate. This parent evidence does not certify the newer
+nested implementation. The parent adds about 3.6 KiB ESM / 2.6 KiB
 CJS beyond the currently approved aggregate allowances; no further limits have
 been changed. There is no release or capability-percentage promotion.
 

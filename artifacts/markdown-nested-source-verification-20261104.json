@@ -1,0 +1,226 @@
+{
+  "branch": "feat/markdown-nested-source-20261104",
+  "parentSourceCommit": "ec07be0f8cc6d9f787db633aa743e9d5d34fbc15",
+  "runtimeSourceSHA256": {
+    "src/core/editing-provenance.ts": "85e1a4e86c720999ba19f5db055148cb99cc55a45a5da4525446c41914aa81d9",
+    "src/core/exporters/markdown-exporter.ts": "0ffd1c8e82a8fbe4c611466838ec61e167852e408c30f7f2184cc4cd6d981a7b",
+    "src/core/importers/markdown-importer.ts": "544f98869a20df0ba243c59df902d19f67c566a0f5da2693d7c3f0e2665ac280",
+    "src/core/markdown-nested-source.ts": "4d8a324aaaf943e5e1a5377bd6e0e0e6f6d9a6341414099ba9b2c40a794ca18a",
+    "src/core/markdown-source-boundary.ts": "9e0102275be42022a5010582079dd2612f11a578392e89d139f8b473ac15990d"
+  },
+  "unitTests": 3678,
+  "unitFiles": 260,
+  "newNestedCases": 22,
+  "recordedDesktopJourneys": 3,
+  "downloadedMarkdownFiles": 18,
+  "inputMarkdownFiles": 6,
+  "visualReview": {
+    "editorCaptures": 12,
+    "sampledFramesPerRecording": 6,
+    "fullFrameByFramePlayback": false
+  },
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 48,
+    "noFakeDOM": true,
+    "results": [
+      12,
+      12,
+      12,
+      12
+    ]
+  },
+  "tarballSHA256": "eb2904a6660557401e15577f1cb8db29e9b5c146a21ef4071827ae3ab587e05b",
+  "realWorkerdNestedContracts": 12,
+  "publicDeclarationFiles": 419,
+  "headlessSourceModules": 122,
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "localLatencyAndRetentionAcceptance": "passed without changed limits; prior parent failures retained separately",
+  "sizeAcceptance": {
+    "changedLimits": false,
+    "failures": [
+      "all ESM runtime code exceeds its budget by 11.3 KiB",
+      "all CommonJS runtime code exceeds its budget by 8.3 KiB"
+    ],
+    "individualEntriesAndCSS": "passed"
+  },
+  "sourceExportPerformance": {
+    "baseline": "actual parent source-boundary packed consumer",
+    "samples": 5,
+    "hardLimitsChanged": false,
+    "records": [
+      {
+        "count": 100,
+        "inputCodeUnits": 2390,
+        "before": {
+          "firstExportMs": 9.944099999999992,
+          "untouchedSourceRetained": false,
+          "capture": {
+            "medianMs": 9.182399999999973,
+            "samplesMs": [
+              28.705300000000022,
+              13.755000000000052,
+              9.182399999999973,
+              8.8827,
+              7.894200000000012
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 2.0389000000000124,
+            "samplesMs": [
+              3.5131000000000085,
+              2.525699999999972,
+              2.0389000000000124,
+              1.9981000000000222,
+              2.010500000000036
+            ]
+          }
+        },
+        "after": {
+          "firstExportMs": 16.1678,
+          "untouchedSourceRetained": true,
+          "capture": {
+            "medianMs": 11.027899999999988,
+            "samplesMs": [
+              11.027899999999988,
+              21.770899999999983,
+              9.163499999999999,
+              7.618999999999971,
+              14.195600000000013
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 5.455699999999979,
+            "samplesMs": [
+              5.520399999999995,
+              6.20920000000001,
+              4.353999999999985,
+              5.20169999999996,
+              5.455699999999979
+            ]
+          }
+        }
+      },
+      {
+        "count": 1000,
+        "inputCodeUnits": 24890,
+        "before": {
+          "firstExportMs": 39.274799999999914,
+          "untouchedSourceRetained": false,
+          "capture": {
+            "medianMs": 63.73630000000003,
+            "samplesMs": [
+              107.1690000000001,
+              86.73809999999992,
+              63.73630000000003,
+              54.337999999999965,
+              46.57600000000002
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 14.350799999999936,
+            "samplesMs": [
+              14.350799999999936,
+              11.548099999999977,
+              24.283300000000054,
+              14.319899999999961,
+              19.226100000000088
+            ]
+          }
+        },
+        "after": {
+          "firstExportMs": 67.13239999999996,
+          "untouchedSourceRetained": true,
+          "capture": {
+            "medianMs": 50.21809999999982,
+            "samplesMs": [
+              84.39560000000006,
+              65.23680000000013,
+              48.138099999999895,
+              50.21809999999982,
+              47.60159999999996
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 26.44080000000008,
+            "samplesMs": [
+              26.77579999999989,
+              25.5945999999999,
+              48.63940000000002,
+              22.941100000000006,
+              26.44080000000008
+            ]
+          }
+        }
+      },
+      {
+        "count": 5000,
+        "inputCodeUnits": 128890,
+        "before": {
+          "firstExportMs": 71.38419999999996,
+          "untouchedSourceRetained": false,
+          "capture": {
+            "medianMs": 234.33690000000024,
+            "samplesMs": [
+              223.05009999999993,
+              234.33690000000024,
+              239.20429999999988,
+              221.83269999999993,
+              250.51740000000018
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 66.24579999999969,
+            "samplesMs": [
+              66.01470000000018,
+              109.5927000000006,
+              83.9369999999999,
+              66.24579999999969,
+              53.117199999999684
+            ]
+          }
+        },
+        "after": {
+          "firstExportMs": 168.15490000000045,
+          "untouchedSourceRetained": true,
+          "capture": {
+            "medianMs": 277.3213000000005,
+            "samplesMs": [
+              244.03899999999976,
+              230.92329999999947,
+              277.3213000000005,
+              278.3629000000001,
+              399.90720000000056
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 142.51000000000022,
+            "samplesMs": [
+              142.51000000000022,
+              183.33650000000034,
+              161.59509999999955,
+              123.50170000000071,
+              129.9976999999999
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "remainingScope": [
+    "inline ownership",
+    "nested structural retention",
+    "reference/footnote scope ownership",
+    "external HTML projection ownership",
+    "full CommonMark",
+    "fresh full CI",
+    "aggregate size review"
+  ],
+  "fullParityOrPublicationCertified": false
+}
