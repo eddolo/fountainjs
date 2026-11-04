@@ -1,0 +1,96 @@
+{
+  "engine": "chromium",
+  "observations": [
+    {
+      "name": "quote",
+      "backward": false,
+      "nativeShiftClick": true,
+      "exactNativeEndpoints": {
+        "anchor": "0.0.0",
+        "anchorOffset": 2,
+        "focus": "0.2.0",
+        "focusOffset": 3
+      },
+      "selectedImageRemoved": true,
+      "completeExpectedReopenedModel": true,
+      "undoSourceExact": true,
+      "redoSourceExact": true
+    },
+    {
+      "name": "quote-backward",
+      "backward": true,
+      "nativeShiftClick": true,
+      "exactNativeEndpoints": {
+        "anchor": "0.2.0",
+        "anchorOffset": 3,
+        "focus": "0.0.0",
+        "focusOffset": 2
+      },
+      "selectedImageRemoved": true,
+      "completeExpectedReopenedModel": true,
+      "undoSourceExact": true,
+      "redoSourceExact": true
+    },
+    {
+      "name": "list",
+      "backward": false,
+      "nativeShiftClick": true,
+      "exactNativeEndpoints": {
+        "anchor": "0.0.0.0",
+        "anchorOffset": 2,
+        "focus": "0.0.2.0",
+        "focusOffset": 3
+      },
+      "selectedImageRemoved": true,
+      "completeExpectedReopenedModel": true,
+      "undoSourceExact": true,
+      "redoSourceExact": true
+    },
+    {
+      "name": "list-backward",
+      "backward": true,
+      "nativeShiftClick": true,
+      "exactNativeEndpoints": {
+        "anchor": "0.0.2.0",
+        "anchorOffset": 3,
+        "focus": "0.0.0.0",
+        "focusOffset": 2
+      },
+      "selectedImageRemoved": true,
+      "completeExpectedReopenedModel": true,
+      "undoSourceExact": true,
+      "redoSourceExact": true
+    },
+    {
+      "name": "cell",
+      "backward": false,
+      "nativeShiftClick": true,
+      "exactNativeEndpoints": {
+        "anchor": "0.0.0.0.0",
+        "anchorOffset": 2,
+        "focus": "0.0.0.2.0",
+        "focusOffset": 3
+      },
+      "selectedImageRemoved": true,
+      "completeExpectedReopenedModel": true,
+      "undoSourceExact": true,
+      "redoSourceExact": true
+    },
+    {
+      "name": "cell-backward",
+      "backward": true,
+      "nativeShiftClick": true,
+      "exactNativeEndpoints": {
+        "anchor": "0.0.0.2.0",
+        "anchorOffset": 3,
+        "focus": "0.0.0.0.0",
+        "focusOffset": 2
+      },
+      "selectedImageRemoved": true,
+      "completeExpectedReopenedModel": true,
+      "undoSourceExact": true,
+      "redoSourceExact": true
+    }
+  ],
+  "errors": []
+}

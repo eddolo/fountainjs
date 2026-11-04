@@ -193,3 +193,13 @@ Implementation: `examples/react-app/src/IssueEditor.tsx`,
 Shared browser journey: `tests/browser/issue-editor-journey.ts`; recorded entry:
 `tests/manual/issue-editor-audit.spec.ts`. Desktop browser tests run the same
 journey; a narrow viewport check is emulation, not physical-device certification.
+
+`tests/browser/nested-sibling-range-journey.ts` uses real pointer placement and
+forward/backward Shift-click to replace text and an intervening image inside
+quotes, list items and table cells. It checks actual Markdown downloads, exact
+source on undo, redo, reopening and reader preview. Within one cell, Shift-click
+extends text; across cells it selects a rectangular cell range. This is bounded
+coverage: ranges crossing ancestor containers and structural document endpoints
+remain open. The offscreen text selection journey also retains an intermittent
+Chromium download-event timeout for investigation; passing retries alone do not
+establish its reliability.

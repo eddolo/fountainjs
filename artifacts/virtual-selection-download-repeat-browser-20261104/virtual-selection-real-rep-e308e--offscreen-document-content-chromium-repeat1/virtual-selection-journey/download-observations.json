@@ -1,0 +1,152 @@
+[
+  {
+    "request": "replacement.md"
+  },
+  {
+    "event": "pointerdown",
+    "trusted": true,
+    "at": 2159.300000011921
+  },
+  {
+    "event": "pointerup",
+    "trusted": true,
+    "at": 2159.800000011921
+  },
+  {
+    "event": "click",
+    "trusted": true,
+    "at": 2160
+  },
+  {
+    "event": "download",
+    "filename": "issue-description.md"
+  },
+  {
+    "saved": "replacement.md"
+  },
+  {
+    "request": "undone.md"
+  },
+  {
+    "event": "pointerdown",
+    "trusted": true,
+    "at": 2593.600000023842
+  },
+  {
+    "event": "pointerup",
+    "trusted": true,
+    "at": 2594.399999976158
+  },
+  {
+    "event": "click",
+    "trusted": true,
+    "at": 2594.5
+  },
+  {
+    "event": "download",
+    "filename": "issue-description.md"
+  },
+  {
+    "saved": "undone.md"
+  },
+  {
+    "request": "redone.md"
+  },
+  {
+    "event": "pointerdown",
+    "trusted": true,
+    "at": 2891.600000023842
+  },
+  {
+    "event": "pointerup",
+    "trusted": true,
+    "at": 2892
+  },
+  {
+    "event": "click",
+    "trusted": true,
+    "at": 2892.199999988079
+  },
+  {
+    "event": "download",
+    "filename": "issue-description.md"
+  },
+  {
+    "saved": "redone.md"
+  },
+  {
+    "request": "whole-replacement.md"
+  },
+  {
+    "event": "pointerdown",
+    "trusted": true,
+    "at": 3757.199999988079
+  },
+  {
+    "event": "pointerup",
+    "trusted": true,
+    "at": 3757.600000023842
+  },
+  {
+    "event": "click",
+    "trusted": true,
+    "at": 3757.699999988079
+  },
+  {
+    "event": "download",
+    "filename": "issue-description.md"
+  },
+  {
+    "saved": "whole-replacement.md"
+  },
+  {
+    "request": "whole-undone.md"
+  },
+  {
+    "event": "pointerdown",
+    "trusted": true,
+    "at": 4047.800000011921
+  },
+  {
+    "event": "pointerup",
+    "trusted": true,
+    "at": 4048.600000023842
+  },
+  {
+    "event": "click",
+    "trusted": true,
+    "at": 4048.899999976158
+  },
+  {
+    "event": "download",
+    "filename": "issue-description.md"
+  },
+  {
+    "saved": "whole-undone.md"
+  },
+  {
+    "request": "reader.md"
+  },
+  {
+    "event": "pointerdown",
+    "trusted": true,
+    "at": 4777
+  },
+  {
+    "event": "pointerup",
+    "trusted": true,
+    "at": 4777.600000023842
+  },
+  {
+    "event": "click",
+    "trusted": true,
+    "at": 4777.600000023842
+  },
+  {
+    "event": "download",
+    "filename": "issue-description.md"
+  },
+  {
+    "saved": "reader.md"
+  }
+]

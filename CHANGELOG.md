@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Replace selected sibling paragraphs inside quotes, list items and table cells
+  without leaving fully selected media behind. Preserve the first block's
+  attributes, unselected marked text, outside content and undo/redo. Keep
+  Shift-click within one table cell available for native text selection;
+  cross-cell gestures still select rectangular cell ranges. Mixed structural
+  endpoints and selection across different ancestor containers remain open.
+
 - Load optional demo-site fonts without delaying editor startup. Keep the original
   typography and system fallbacks; prove native typing while the font response
   is pending in Chromium, Firefox and WebKit production journeys. Library

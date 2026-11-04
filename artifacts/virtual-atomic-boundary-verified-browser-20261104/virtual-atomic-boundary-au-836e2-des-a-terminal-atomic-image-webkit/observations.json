@@ -1,0 +1,45 @@
+{
+  "engine": "webkit",
+  "native": {
+    "anchor": "0.0",
+    "anchorOffset": 0,
+    "focus": "300.0",
+    "focusOffset": 14
+  },
+  "actualTopLevelBlocks": 2,
+  "terminalImagesRemaining": 1,
+  "actualDocument": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Entire replacement."
+          }
+        ]
+      },
+      {
+        "type": "image_super",
+        "attrs": {
+          "src": "https://example.test/terminal-figure.png",
+          "alt": "Terminal figure",
+          "title": "",
+          "width": "100%",
+          "height": "auto",
+          "align": "center",
+          "srcset": "",
+          "sizes": "",
+          "loading": "lazy",
+          "decoding": "async",
+          "caption": ""
+        }
+      }
+    ]
+  },
+  "requiredBehavior": "Ctrl+Home then Ctrl+Shift+End must include the terminal image in replacement."
+}

@@ -240,3 +240,21 @@ font response is still pending. Source/file/reader journeys still pass.
 See `artifacts/site-font-verification-20261104.json` for samples and retained
 failure/diagnostic controls. Full current-head CI and prior capacity review stay
 open; this website fix does not make the library's aggregate size gate pass.
+
+## Nested selection repair, 2026-11-04
+
+Generalizing sibling text-block replacement into nested parents adds 286 raw /
+98 gzip bytes to the platform-neutral core's static ESM closure. Together with
+the same-cell Shift-click repair, root and React closures add 389 raw / 124 gzip
+bytes. DOCX's closure is unchanged. These are sums of independently compressed
+emitted chunks, excluding dynamic imports, peers, CSS and application code;
+they are not startup or typing timings and do not apply consumer tree shaking.
+
+The current aggregate gates remain red by 19.3 KiB ESM / 14.8 KiB CommonJS;
+individual limits and CSS pass. No ceiling or performance expectation changes.
+The full local latency, heap and retention checks pass. Native nested editing
+passes in all three desktop engines, while separate download, Firefox label
+input and structural selection failures remain explicit release work.
+See `artifacts/nested-sibling-verification-20261104.json` for the archive and
+loaded-size evidence, including the failed browser attempts. This is a bounded
+repair with measured growth, not a general production certification.

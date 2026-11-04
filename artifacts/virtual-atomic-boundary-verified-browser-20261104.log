@@ -1,0 +1,130 @@
+[WebServer] (node:26524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:10460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image (2.1s)
+(node:19780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image (6.7s)
+(node:10488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image (5.1s)
+
+
+  1) [chromium] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image 
+
+    Error: A full document-boundary selection must include the terminal atomic block.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      37 |     actualTopLevelBlocks: doc.childCount, terminalImagesRemaining: images, actualDocument: doc.toJSON(),
+      38 |     requiredBehavior: 'Ctrl+Home then Ctrl+Shift+End must include the terminal image in replacement.' }, null, 2));
+    > 39 |   expect(images, 'A full document-boundary selection must include the terminal atomic block.').toBe(0);
+         |                                                                                                ^
+      40 |   expect(doc.childCount).toBe(1);
+      41 | });
+      42 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:39:96
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image 
+
+    Error: A full document-boundary selection must include the terminal atomic block.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      37 |     actualTopLevelBlocks: doc.childCount, terminalImagesRemaining: images, actualDocument: doc.toJSON(),
+      38 |     requiredBehavior: 'Ctrl+Home then Ctrl+Shift+End must include the terminal image in replacement.' }, null, 2));
+    > 39 |   expect(images, 'A full document-boundary selection must include the terminal atomic block.').toBe(0);
+         |                                                                                                ^
+      40 |   expect(doc.childCount).toBe(1);
+      41 | });
+      42 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:39:96
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image 
+
+    Error: A full document-boundary selection must include the terminal atomic block.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      37 |     actualTopLevelBlocks: doc.childCount, terminalImagesRemaining: images, actualDocument: doc.toJSON(),
+      38 |     requiredBehavior: 'Ctrl+Home then Ctrl+Shift+End must include the terminal image in replacement.' }, null, 2));
+    > 39 |   expect(images, 'A full document-boundary selection must include the terminal atomic block.').toBe(0);
+         |                                                                                                ^
+      40 |   expect(doc.childCount).toBe(1);
+      41 | });
+      42 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:39:96
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\virtual-atomic-boundary-verified-browser-20261104\virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image 
+    [firefox] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image 
+    [webkit] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image 

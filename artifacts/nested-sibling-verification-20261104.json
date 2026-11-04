@@ -1,0 +1,1041 @@
+{
+  "baseCommit": "00fe0e41c3c20d15dfdfec073359cc7f3851839b",
+  "releaseCertified": false,
+  "publicApiChanged": false,
+  "acceptanceLimitsChanged": false,
+  "unit": {
+    "passed": 3907,
+    "files": 267
+  },
+  "declarations": 419,
+  "headlessModules": 122,
+  "checks": [
+    {
+      "name": "download-repeat",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-download-repeat-20261104.log"
+    },
+    {
+      "name": "ci-follow-up",
+      "exitCode": 1,
+      "log": "artifacts/nested-sibling-ci-follow-up-20261104.log"
+    },
+    {
+      "name": "pack",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-pack-20261104.log"
+    },
+    {
+      "name": "extract",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-extract-20261104.log"
+    },
+    {
+      "name": "packed-node",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-packed-node-20261104.log"
+    },
+    {
+      "name": "types",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-types-20261104.log"
+    },
+    {
+      "name": "conformance",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-conformance-20261104.log"
+    },
+    {
+      "name": "package",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-package-20261104.log"
+    },
+    {
+      "name": "worker",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-worker-20261104.log"
+    },
+    {
+      "name": "size",
+      "exitCode": 1,
+      "log": "artifacts/nested-sibling-size-20261104.log"
+    },
+    {
+      "name": "loaded-size",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-loaded-size-20261104.log"
+    },
+    {
+      "name": "latency",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-latency-20261104.log"
+    },
+    {
+      "name": "direction-retention",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-direction-retention-20261104.log"
+    },
+    {
+      "name": "mapping-retention",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-mapping-retention-20261104.log"
+    },
+    {
+      "name": "visual-contacts",
+      "exitCode": 0,
+      "log": "artifacts/nested-sibling-visual-contacts-20261104.log"
+    }
+  ],
+  "archive": {
+    "path": "artifacts/nested-sibling-tarball-20261104/fountainjs-editor-0.4.0-beta.2.tgz",
+    "sha256": "6ef91d1402657dcee71e99e90df2e321162de9548ee7a0bc313261b75150a2c5",
+    "distFilesMatch": 865
+  },
+  "nestedNativeCases": {
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "casesPerEngine": 6,
+    "directions": [
+      "forward",
+      "backward"
+    ],
+    "containers": [
+      "quote",
+      "list item",
+      "table cell"
+    ]
+  },
+  "browserHistory": {
+    "initialPointerMatrix": "3 failed / 6 passed; same-cell Shift-click intercepted",
+    "afterPointerRepair": "9 passed",
+    "expandedMatrix": "1 failed / 8 passed; Chromium whole-undone download event missing",
+    "isolatedDownloadRepeats": "3 passed; original timeout remains unexplained",
+    "ciFollowUp": "5 passed / 1 failed; code-label click edits heading in Firefox"
+  },
+  "previousHeadCI": {
+    "run": "https://github.com/eddolo/fountainjs/actions/runs/41929671760",
+    "browser": "4 failed, 1 flaky, 16 skipped, 872 passed",
+    "verify": "aggregate budget failure",
+    "performance": "success",
+    "lean": "success"
+  },
+  "sizeDeltaBytes": {
+    ".": {
+      "closureRawBytes": 389,
+      "closureGzipBytes": 124,
+      "closureBrotliBytes": 122
+    },
+    "./core": {
+      "closureRawBytes": 286,
+      "closureGzipBytes": 98,
+      "closureBrotliBytes": 76
+    },
+    "./docx": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./react": {
+      "closureRawBytes": 389,
+      "closureGzipBytes": 124,
+      "closureBrotliBytes": 143
+    }
+  },
+  "visualReview": {
+    "nestedCapturesInspected": 54,
+    "nestedVideosSampled": 3,
+    "framesPerVideo": 6,
+    "scope": "Selection, replacement and reopened reader in each engine/container/direction; sampled recordings do not prove every video frame.",
+    "otherInspection": "Raw Chromium cell images and the Firefox code-label failure screenshot also inspected; remaining generated contacts are available, not claimed reviewed."
+  },
+  "open": [
+    "Mixed text/atomic structural ranges and cross-ancestor replacement",
+    "Document-boundary selection omits terminal image in all three engines",
+    "Intermittent Chromium download-event timeout",
+    "Firefox code-label click places typing in heading",
+    "Mobile suggestion-menu overflow retry in previous-head CI",
+    "Aggregate capacity and full fresh CI",
+    "Remaining CommonMark, import/export and production parity"
+  ],
+  "retainedFiles": [
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/.last-run.json",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/.last-run.json",
+      "sourceBytes": 96,
+      "sourceSha256": "aa26e951558dafe448cdc351d04a6659bf92f1b556f57d9f19ad9723ed98d3e4"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/issue-description.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/issue-description.md",
+      "sourceBytes": 494,
+      "sourceSha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/issue-description.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/issue-description.md",
+      "sourceBytes": 494,
+      "sourceSha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/issue-description.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/issue-description.md",
+      "sourceBytes": 494,
+      "sourceSha256": "d567f166aed507852687ddf707753f764098db6f384b89a79844dbf12c2005f8"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-edited.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-original.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-redone.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-backward-undone.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-edited.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-original.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-redone.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/cell-undone.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-original.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-backward-undone.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-original.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/list-undone.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/observations.json",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/observations.json",
+      "sourceBytes": 2396,
+      "sourceSha256": "6dfae56c9c01f66df7bbe733b970c53ff714250671403afa9df2b5264d516a35"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-original.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-backward-undone.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-original.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium/nested-sibling-range-journey/quote-undone.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-edited.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-original.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-redone.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-backward-undone.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-edited.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-original.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-redone.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/cell-undone.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-original.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-backward-undone.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-original.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/list-undone.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/observations.json",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/observations.json",
+      "sourceBytes": 2395,
+      "sourceSha256": "85f224c3a941f7cfe90af1f16a07d303d5b58ed660c0ae3249a422a3c7120bce"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-original.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-backward-undone.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-original.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox/nested-sibling-range-journey/quote-undone.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-edited.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-original.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-redone.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-backward-undone.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-edited.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-original.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-redone.md",
+      "sourceBytes": 92,
+      "sourceSha256": "59257fb38de666199c42488ec8940a8485a4864b2b2a16812188466151c88428"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/cell-undone.md",
+      "sourceBytes": 121,
+      "sourceSha256": "0ed3b4d355ab40ae752f0d19d21443670c09f07d633df5ffeda3a5141b80e579"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-original.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-backward-undone.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-original.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "ebed59e0d1a24bc84b4233a8d02acb88bb53cb6defc78283b65aa26e956bf846"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/list-undone.md",
+      "sourceBytes": 70,
+      "sourceSha256": "db2291ced8a5502bdb4875307d833a782e03b2e58bf72da5421a45f510fe18bf"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/observations.json",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/observations.json",
+      "sourceBytes": 2394,
+      "sourceSha256": "a660d83ce07bde74454e3c44482c37db5d77a056d2282763b78b28cc708f56f9"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-original.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-backward-undone.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-edited.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-edited.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-original.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-original.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-redone.md",
+      "sourceBytes": 15,
+      "sourceSha256": "51a21d9c0111d397fe6987cdeb2988a1be5206080edafb44f9369039c7c1df93"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-undone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit/nested-sibling-range-journey/quote-undone.md",
+      "sourceBytes": 72,
+      "sourceSha256": "7410a2f0fcc237d9e4b8a0f7cdd08cc797b3a68c60847c9c7250db919a3a50b0"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/error-context.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/error-context.md",
+      "sourceBytes": 18070,
+      "sourceSha256": "5c6b4a2f5d1b49e0ef5868a8e029385dc86c06685c19aac07343a696c561df55"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/original.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/original.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/redone.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/replacement.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/replacement.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/undone.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/whole-replacement.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/whole-replacement.md",
+      "sourceBytes": 21,
+      "sourceSha256": "0ccf662a2e8950cd7d6c1d0c9bb6ee6eec09f2062d41cb6b05577c3ca6d4a1fe"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/observations.json",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/observations.json",
+      "sourceBytes": 808,
+      "sourceSha256": "c621fcd4b4e010cdca0ede6410ece7e48d11f1e54df24d07f800411c418e9ec6"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/original.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/original.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/reader.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/reader.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/redone.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/replacement.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/replacement.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/undone.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/whole-replacement.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/whole-replacement.md",
+      "sourceBytes": 21,
+      "sourceSha256": "0ccf662a2e8950cd7d6c1d0c9bb6ee6eec09f2062d41cb6b05577c3ca6d4a1fe"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/whole-undone.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-firefox/virtual-selection-journey/whole-undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/observations.json",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/observations.json",
+      "sourceBytes": 807,
+      "sourceSha256": "fa4d79efcf1a12354fabf2a7d41f1fb4cb9b4e5f7b9e35f9d905eb97adcb2167"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/original.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/original.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/reader.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/reader.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/redone.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/redone.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/replacement.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/replacement.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/undone.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/whole-replacement.md",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/whole-replacement.md",
+      "sourceBytes": 21,
+      "sourceSha256": "0ccf662a2e8950cd7d6c1d0c9bb6ee6eec09f2062d41cb6b05577c3ca6d4a1fe"
+    },
+    {
+      "path": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/whole-undone.md.gz",
+      "sourcePath": "artifacts/nested-sibling-range-final-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-webkit/virtual-selection-journey/whole-undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/.last-run.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/.last-run.json",
+      "sourceBytes": 45,
+      "sourceSha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/download-observations.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/download-observations.json",
+      "sourceBytes": 2369,
+      "sourceSha256": "8d73b9c6f176a8aabdd39561761a5423bd8d9e7eadf940674597901545bd1103"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/observations.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/observations.json",
+      "sourceBytes": 809,
+      "sourceSha256": "315d8e861693f8cc7afa966a8f5b6a37e4f06f0d5f5b41f82f4643d17bbae85e"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/original.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/original.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/reader.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/reader.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/redone.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/redone.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/replacement.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/replacement.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/undone.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/whole-replacement.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/whole-replacement.md",
+      "sourceBytes": 21,
+      "sourceSha256": "0ccf662a2e8950cd7d6c1d0c9bb6ee6eec09f2062d41cb6b05577c3ca6d4a1fe"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/whole-undone.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium/virtual-selection-journey/whole-undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/download-observations.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/download-observations.json",
+      "sourceBytes": 2354,
+      "sourceSha256": "412fa75a03c2aa4f6f7eb2bc3f770e23359ebe5eb0821fc8f538e2f1eace9137"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/observations.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/observations.json",
+      "sourceBytes": 809,
+      "sourceSha256": "315d8e861693f8cc7afa966a8f5b6a37e4f06f0d5f5b41f82f4643d17bbae85e"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/original.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/original.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/reader.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/reader.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/redone.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/redone.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/replacement.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/replacement.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/undone.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/whole-replacement.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/whole-replacement.md",
+      "sourceBytes": 21,
+      "sourceSha256": "0ccf662a2e8950cd7d6c1d0c9bb6ee6eec09f2062d41cb6b05577c3ca6d4a1fe"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/whole-undone.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat1/virtual-selection-journey/whole-undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/download-observations.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/download-observations.json",
+      "sourceBytes": 2358,
+      "sourceSha256": "d5205aa4ad98e7724bd11a65f9f2f49933261568197709da9f0c0c0e163abbda"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/observations.json",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/observations.json",
+      "sourceBytes": 809,
+      "sourceSha256": "315d8e861693f8cc7afa966a8f5b6a37e4f06f0d5f5b41f82f4643d17bbae85e"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/original.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/original.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/reader.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/reader.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/redone.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/redone.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/replacement.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/replacement.md",
+      "sourceBytes": 50,
+      "sourceSha256": "68329f4970d824dde0182c3d04fe13214e7fbe03bf8b6405a83ba5015e89eaf1"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/undone.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/whole-replacement.md",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/whole-replacement.md",
+      "sourceBytes": 21,
+      "sourceSha256": "0ccf662a2e8950cd7d6c1d0c9bb6ee6eec09f2062d41cb6b05577c3ca6d4a1fe"
+    },
+    {
+      "path": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/whole-undone.md.gz",
+      "sourcePath": "artifacts/virtual-selection-download-repeat-browser-20261104/virtual-selection-real-rep-e308e--offscreen-document-content-chromium-repeat2/virtual-selection-journey/whole-undone.md",
+      "sourceBytes": 83915,
+      "sourceSha256": "e20469008b9c3389ba0922979ae056b0fcb5e244d840b3c4d52c4981dbc948ff"
+    },
+    {
+      "path": "artifacts/selection-ci-follow-up-browser-20261104/.last-run.json",
+      "sourcePath": "artifacts/selection-ci-follow-up-browser-20261104/.last-run.json",
+      "sourceBytes": 96,
+      "sourceSha256": "5d88f9b70ac3a4cace8065de6137290c1b1b3fbccf17ed64fb6757f160a29bc0"
+    },
+    {
+      "path": "artifacts/selection-ci-follow-up-browser-20261104/editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-chromium/code-labels.md",
+      "sourcePath": "artifacts/selection-ci-follow-up-browser-20261104/editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-chromium/code-labels.md",
+      "sourceBytes": 305,
+      "sourceSha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+    },
+    {
+      "path": "artifacts/selection-ci-follow-up-browser-20261104/editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox/error-context.md.gz",
+      "sourcePath": "artifacts/selection-ci-follow-up-browser-20261104/editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox/error-context.md",
+      "sourceBytes": 15230,
+      "sourceSha256": "1d6e529e71f5b7071c6487f1fa758a3bd86da2ba0ee9a03c1f7ebe381b5d179a"
+    },
+    {
+      "path": "artifacts/selection-ci-follow-up-browser-20261104/editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-webkit/code-labels.md",
+      "sourcePath": "artifacts/selection-ci-follow-up-browser-20261104/editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-webkit/code-labels.md",
+      "sourceBytes": 305,
+      "sourceSha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/.last-run.json",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/.last-run.json",
+      "sourceBytes": 194,
+      "sourceSha256": "2130259ae42eae71902acafa2c1801b98728c4d43b65f67604558126d176f4e5"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/actual-replacement.md",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/actual-replacement.md",
+      "sourceBytes": 81,
+      "sourceSha256": "9832f5b68365cd6c63d0b79ba5c4f7f4a09b5e893b4752cc725a3c86efe48c13"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/error-context.md.gz",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/error-context.md",
+      "sourceBytes": 13146,
+      "sourceSha256": "dac0ee7b171e6abea85d41a947b2e34d8a3760b309cc79fc9f1e04fe2158c681"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/observations.json",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/observations.json",
+      "sourceBytes": 1004,
+      "sourceSha256": "8de050a94430cbab2bda2cd6fcae0fd3edd35b2c2862d94c7a071ebb906a9ab5"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/original.md",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-chromium/original.md",
+      "sourceBytes": 4766,
+      "sourceSha256": "61c44a384cf8c5aef807904e2a3df2274eeb7fb0ddb953c587a0e525313e2bb6"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/actual-replacement.md",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/actual-replacement.md",
+      "sourceBytes": 81,
+      "sourceSha256": "9832f5b68365cd6c63d0b79ba5c4f7f4a09b5e893b4752cc725a3c86efe48c13"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/error-context.md.gz",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/error-context.md",
+      "sourceBytes": 13146,
+      "sourceSha256": "dac0ee7b171e6abea85d41a947b2e34d8a3760b309cc79fc9f1e04fe2158c681"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/observations.json",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/observations.json",
+      "sourceBytes": 1003,
+      "sourceSha256": "6fd19f4e1738405a0f8f367b7caa494386d4747fd4e691208cd039eff926d57f"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/original.md",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-firefox/original.md",
+      "sourceBytes": 4766,
+      "sourceSha256": "61c44a384cf8c5aef807904e2a3df2274eeb7fb0ddb953c587a0e525313e2bb6"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/actual-replacement.md",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/actual-replacement.md",
+      "sourceBytes": 81,
+      "sourceSha256": "9832f5b68365cd6c63d0b79ba5c4f7f4a09b5e893b4752cc725a3c86efe48c13"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/error-context.md.gz",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/error-context.md",
+      "sourceBytes": 12933,
+      "sourceSha256": "b908090986667e485405de11a58b412c716e669f946bd2dd88daac1fac4d3ea8"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/observations.json",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/observations.json",
+      "sourceBytes": 1002,
+      "sourceSha256": "4b476aa9124e3fe96d629d4f367230446b960f5951a5558bd0796ff4371e6889"
+    },
+    {
+      "path": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/original.md",
+      "sourcePath": "artifacts/virtual-atomic-boundary-verified-browser-20261104/virtual-atomic-boundary-au-836e2-des-a-terminal-atomic-image-webkit/original.md",
+      "sourceBytes": 4766,
+      "sourceSha256": "61c44a384cf8c5aef807904e2a3df2274eeb7fb0ddb953c587a0e525313e2bb6"
+    }
+  ]
+}

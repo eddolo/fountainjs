@@ -1,0 +1,24 @@
+[WebServer] (node:8684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:20908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (4.4s)
+  ok 2 [chromium] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (5.8s)
+  ok 3 [chromium] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (5.2s)
+(node:2084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (7.8s)
+  ok 5 [firefox] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (6.3s)
+  ok 6 [firefox] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (6.9s)
+(node:23056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (9.4s)
+  ok 8 [webkit] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (14.6s)
+  ok 9 [webkit] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (13.2s)
+
+  9 passed (1.4m)

@@ -1,0 +1,188 @@
+[WebServer] (node:180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:10664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (4.5s)
+  x  2 [chromium] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (9.8s)
+(node:25320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [chromium] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (6.4s)
+(node:4184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (7.1s)
+  x  5 [firefox] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (10.3s)
+(node:4444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 6 [firefox] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (9.2s)
+(node:2636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (11.4s)
+  x  8 [webkit] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (16.5s)
+(node:5592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 9 [webkit] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (13.8s)
+
+
+  1) [chromium] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Object {
+    -   "anchor": "0.0.0.0.0",
+    -   "anchorOffset": 2,
+    -   "focus": "0.0.0.2.0",
+    -   "focusOffset": 3,
+    +   "anchor": null,
+    +   "anchorOffset": 0,
+    +   "focus": null,
+    +   "focusOffset": 1,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\nested-sibling-range-journey.ts:63
+
+      61 |       return { anchor: path(selection?.anchorNode), anchorOffset: selection?.anchorOffset,
+      62 |         focus: path(selection?.focusNode), focusOffset: selection?.focusOffset };
+    > 63 |     })).toEqual(expectedPaths);
+         |         ^
+      64 |     await page.keyboard.type('X');
+      65 |     await expect(parentView.locator('p')).toHaveText(['LeXht']);
+      66 |     await expect(parentView.locator('img')).toHaveCount(0);
+        at runNestedSiblingRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\nested-sibling-range-journey.ts:63:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-sibling-range-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Object {
+    -   "anchor": "0.0.0.0.0",
+    -   "anchorOffset": 2,
+    -   "focus": "0.0.0.2.0",
+    -   "focusOffset": 3,
+    +   "anchor": null,
+    +   "anchorOffset": 0,
+    +   "focus": null,
+    +   "focusOffset": 1,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\nested-sibling-range-journey.ts:63
+
+      61 |       return { anchor: path(selection?.anchorNode), anchorOffset: selection?.anchorOffset,
+      62 |         focus: path(selection?.focusNode), focusOffset: selection?.focusOffset };
+    > 63 |     })).toEqual(expectedPaths);
+         |         ^
+      64 |     await page.keyboard.type('X');
+      65 |     await expect(parentView.locator('p')).toHaveText(['LeXht']);
+      66 |     await expect(parentView.locator('img')).toHaveCount(0);
+        at runNestedSiblingRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\nested-sibling-range-journey.ts:63:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-sibling-range-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Object {
+    -   "anchor": "0.0.0.0.0",
+    -   "anchorOffset": 2,
+    -   "focus": "0.0.0.2.0",
+    -   "focusOffset": 3,
+    +   "anchor": null,
+    +   "anchorOffset": 0,
+    +   "focus": null,
+    +   "focusOffset": 1,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\nested-sibling-range-journey.ts:63
+
+      61 |       return { anchor: path(selection?.anchorNode), anchorOffset: selection?.anchorOffset,
+      62 |         focus: path(selection?.focusNode), focusOffset: selection?.focusOffset };
+    > 63 |     })).toEqual(expectedPaths);
+         |         ^
+      64 |     await page.keyboard.type('X');
+      65 |     await expect(parentView.locator('p')).toHaveText(['LeXht']);
+      66 |     await expect(parentView.locator('img')).toHaveCount(0);
+        at runNestedSiblingRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\nested-sibling-range-journey.ts:63:9)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\nested-sibling-range-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-sibling-range-browser-20261104\nested-sibling-range-real--8981a-hrough-native-pointer-input-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input 
+    [firefox] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input 
+    [webkit] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input 
+  6 passed (1.7m)
