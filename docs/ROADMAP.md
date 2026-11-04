@@ -1,5 +1,38 @@
 # FountainJS opportunity roadmap
 
+Nested selection follow-up (2026-11-04, unreleased): replace a text range across
+sibling paragraphs inside a quote, list item or table cell by one joined block,
+including removal of fully selected media between its endpoints. Previously the
+nested fallback edited text leaves but retained the selected image and paragraph
+boundaries, while its step map claimed their removal. Preserve first-block
+attributes, unselected marked text, outside node identity and history. A separate
+pointer bug converted Shift-click inside one cell into whole-cell selection;
+reserve that gesture for crossing cells or extending an existing cell selection.
+Native forward/backward edits, downloads, exact undo source, redo and reopened
+readers pass for all three containers in Chromium, Firefox and WebKit. The
+broader nine-journey follow-up retains one Chromium download-event timeout after
+undo (eight passes); its cause and reliability impact remain under investigation.
+No release or parity certification is inferred from the passing nested cases.
+
+All 3,907 units / 267 files, types/API/headless, package/workerd, unchanged
+CommonMark profiles, latency and retention checks pass locally. Actual packed
+root/core ESM and CommonJS consumers verify source/reference contracts and all
+three nested replacements without a fake DOM; 865 archive build files match
+the tested build. The root static closure adds 389 raw / 124 gzip bytes; existing
+aggregate ceilings still fail and were not changed. Three isolated Chromium
+download repeats pass but do not explain the retained failure. Previous-head CI
+also exposed stale automatic-export-report expectations (now checked explicitly
+in all three engines) and a reproducible Firefox code-label click that types in
+the heading. The mobile suggestion-menu overflow retry remains open.
+[Evidence and limits](../artifacts/nested-sibling-verification-20261104.json).
+
+The next selection foundation is a general structural range contract: partial
+text endpoints and gaps/atoms, native direction, step mapping, deletion, clipboard
+and history must agree, including ranges crossing ancestor containers. A separate
+three-engine audit confirms that Ctrl+Shift+End currently misses a trailing
+atomic image. Do not hide this with a text-only test or a whole-document-only
+special case. [Current scope](VIRTUALIZATION.md#scope-and-limits).
+
 Optional-site-font startup follow-up (2026-11-04, unreleased): the production
 blank-start observation traced to render-blocking Google Fonts CSS. A held-font
 control uses the unchanged editor bundle; move site typography to an explicit,

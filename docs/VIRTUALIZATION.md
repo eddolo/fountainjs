@@ -68,6 +68,20 @@ the optimization never forces an inaccessible product policy.
 
 ## Scope and limits
 
+Document-boundary keyboard selection is verified for text endpoints in a
+5,001-block issue draft: native Ctrl+Shift+Home/End retains its anchor across
+offscreen blocks, replacement removes selected offscreen content, and undo/redo
+restores the complete source. The read-only preview retains the same selection
+anchor without changing the document. The permanent regression is
+`tests/browser/virtual-selection-journey.ts`.
+
+This does not yet cover structural endpoints. A separate recorded audit finds
+that Ctrl+Shift+End stops at the last text leaf when an image follows it. Typing
+over that range leaves the terminal image in the document in Chromium, Firefox
+and WebKit. Whole-document and mixed text/atomic boundary behavior remains an
+open editor foundation issue; the text-only regression is not proof that it is
+solved.
+
 The current window is top-level-block based. A single enormous table, code
 block, custom NodeView, or other top-level node is mounted as one unit; the host
 or node implementation must virtualize its own internal rows/items if needed.

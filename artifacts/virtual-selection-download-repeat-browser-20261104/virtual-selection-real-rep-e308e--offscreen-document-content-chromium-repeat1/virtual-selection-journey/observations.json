@@ -1,0 +1,40 @@
+{
+  "engine": "chromium",
+  "ranges": [
+    {
+      "key": "End",
+      "selection": {
+        "anchor": "1.0",
+        "anchorOffset": 17,
+        "focus": "5000.0",
+        "focusOffset": 15,
+        "collapsed": false
+      }
+    },
+    {
+      "key": "Home",
+      "selection": {
+        "anchor": "1.0",
+        "anchorOffset": 17,
+        "focus": "0.0",
+        "focusOffset": 0,
+        "collapsed": false
+      }
+    },
+    {
+      "key": "End",
+      "selection": {
+        "anchor": "1.0",
+        "anchorOffset": 17,
+        "focus": "5000.0",
+        "focusOffset": 15,
+        "collapsed": false
+      }
+    }
+  ],
+  "forwardReplacementIncludesOffscreenContent": true,
+  "wholeBackwardReplacement": true,
+  "undoRedoRestoresCompleteSource": true,
+  "readerAnchorRetained": true,
+  "errors": []
+}

@@ -8,7 +8,7 @@ function samePath(left: readonly number[], right: readonly number[]): boolean {
   return left.length === right.length && left.every((part, index) => part === right[index]);
 }
 
-function replaceAcrossTopLevelTextBlocks(
+function replaceAcrossSiblingTextBlocks(
   doc: Node,
   startPath: readonly number[],
   from: number,
@@ -16,14 +16,21 @@ function replaceAcrossTopLevelTextBlocks(
   to: number,
   text: string,
 ): Node | null {
-  if (startPath.length !== 2 || endPath.length !== 2 || startPath[0] === endPath[0]) return null;
-  const startBlockIndex = startPath[0] as number;
-  const endBlockIndex = endPath[0] as number;
+  if (startPath.length < 2 || endPath.length !== startPath.length) return null;
+  const parentPath = startPath.slice(0, -2);
+  if (!samePath(parentPath, endPath.slice(0, -2))) return null;
+  const startBlockIndex = startPath.at(-2) as number;
+  const endBlockIndex = endPath.at(-2) as number;
+  if (startBlockIndex === endBlockIndex) return null;
   if (startBlockIndex > endBlockIndex) throw new Error('Text ranges must be ordered from start to end.');
-  const startBlock = doc.child(startBlockIndex);
-  const endBlock = doc.child(endBlockIndex);
-  const startIndex = startPath[1] as number;
-  const endIndex = endPath[1] as number;
+  const parent = getNodeAtPath(doc, parentPath);
+  const startBlock = parent.child(startBlockIndex);
+  const endBlock = parent.child(endBlockIndex);
+  if (!startBlock.type.isBlock || !endBlock.type.isBlock
+    || startBlock.content.some(child => !child.type.isInline)
+    || endBlock.content.some(child => !child.type.isInline)) return null;
+  const startIndex = startPath.at(-1) as number;
+  const endIndex = endPath.at(-1) as number;
   const start = startBlock.child(startIndex);
   const end = endBlock.child(endIndex);
   assertTextRange(start, from, start.text?.length ?? 0);
@@ -38,11 +45,12 @@ function replaceAcrossTopLevelTextBlocks(
     ...endBlock.content.slice(endIndex + 1),
   ];
   const merged = startBlock.copy(content);
-  return doc.copy([
-    ...doc.content.slice(0, startBlockIndex),
+  const replacement = parent.copy([
+    ...parent.content.slice(0, startBlockIndex),
     merged,
-    ...doc.content.slice(endBlockIndex + 1),
+    ...parent.content.slice(endBlockIndex + 1),
   ]);
+  return parentPath.length ? replaceNodeAtPath(doc, parentPath, replacement) : replacement;
 }
 
 function replaceAcrossNestedStructures(
@@ -91,7 +99,7 @@ export class ReplaceTextRangeStep extends Step {
     const startParentPath = this.startPath.slice(0, -1);
     const endParentPath = this.endPath.slice(0, -1);
     if (!samePath(startParentPath, endParentPath)) {
-      return replaceAcrossTopLevelTextBlocks(doc, this.startPath, this.from, this.endPath, this.to, this.text)
+      return replaceAcrossSiblingTextBlocks(doc, this.startPath, this.from, this.endPath, this.to, this.text)
         ?? replaceAcrossNestedStructures(doc, this.startPath, this.from, this.endPath, this.to, this.text);
     }
 

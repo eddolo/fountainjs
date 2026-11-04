@@ -1,0 +1,108 @@
+{
+  "noFakeDOM": true,
+  "source": "> Left\n>\n> ![Figure](/figure.png)\n>\n> Right\n\nAfter.\n",
+  "before": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "blockquote",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Left"
+              }
+            ]
+          },
+          {
+            "type": "image_super",
+            "attrs": {
+              "src": "/figure.png",
+              "alt": "Figure",
+              "title": "",
+              "width": "100%",
+              "height": "auto",
+              "align": "center",
+              "srcset": "",
+              "sizes": "",
+              "loading": "lazy",
+              "decoding": "async",
+              "caption": ""
+            }
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Right"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "After."
+          }
+        ]
+      }
+    ]
+  },
+  "applied": true,
+  "after": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "blockquote",
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "LeX"
+              },
+              {
+                "type": "text",
+                "text": "ht"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "attrs": {
+          "align": "left"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "After."
+          }
+        ]
+      }
+    ]
+  },
+  "quoteChildCount": 1,
+  "remainingSelectedImages": 0,
+  "requiredBehavior": "Replace the selected range with one quote paragraph LeXht, remove the fully selected image, and preserve After."
+}

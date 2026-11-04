@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: A fully selected nested image must be removed by text replacement.
+
+1 !== 0
+
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/nested-structural-range-audit-20261104.mjs:23:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

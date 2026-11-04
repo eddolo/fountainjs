@@ -1,0 +1,67 @@
+[WebServer] (node:10876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:21932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader (6.2s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:440:1 › issue workflow preserves root references and validates local image files (3.8s)
+(node:12932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [firefox] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader (12.4s)
+(node:10492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:440:1 › issue workflow preserves root references and validates local image files (7.9s)
+(node:18264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader (9.6s)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:440:1 › issue workflow preserves root references and validates local image files (6.1s)
+
+
+  1) [firefox] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "example 1 edited"
+    Received: "example 1"
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at markdown-code-labels-journey.ts:24
+
+      22 |     for (const [index, label] of labels.entries()) {
+      23 |       await expect(surface.locator('pre').nth(index)).toHaveAttribute('data-language', label);
+    > 24 |       await expect.poll(() => surface.locator('pre').nth(index).textContent()).toBe(`example ${index + 1}${index === 0 && edited ? ' edited' : ''}`);
+         |                                                                                ^
+      25 |     }
+      26 |     await expect(surface.locator('img,script,iframe')).toHaveCount(0);
+      27 |     expect(errors).toEqual([]);
+        at verify (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:24:80)
+        at markdownCodeLabelsJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:36:3)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:382:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\selection-ci-follow-up-browser-20261104\editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\selection-ci-follow-up-browser-20261104\editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\selection-ci-follow-up-browser-20261104\editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\selection-ci-follow-up-browser-20261104\editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\selection-ci-follow-up-browser-20261104\editor-edits-opaque-code-l-8dc3b-ens-them-safely-in-a-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader 
+  5 passed (1.1m)

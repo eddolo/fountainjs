@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/nested-sibling-range.test.ts (6 tests | 1 failed) 22ms
+   × retains the first paragraph attributes and the unselected marked suffix 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/nested-sibling-range.test.ts > retains the first paragraph attributes and the unselected marked suffix
+Error: Unknown mark type: bold
+ ❯ Schema.mark src/core/schema/schema.ts:115:54
+    113|   mark(type: string | MarkType, attrs: Attributes = {}): Mark {
+    114|     const markType = typeof type === 'string' ? this.marks[type] : typ…
+    115|     if (!markType || markType.schema !== this) throw new Error(`Unknow…
+       |                                                      ^
+    116|     return markType.create(attrs);
+    117|   }
+ ❯ Mark.fromJSON src/core/schema/mark.ts:27:19
+ ❯ src/core/schema/node.ts:124:57
+ ❯ Node.fromJSON src/core/schema/node.ts:124:38
+ ❯ src/core/schema/node.ts:130:94
+ ❯ Node.fromJSON src/core/schema/node.ts:130:74
+ ❯ src/core/schema/node.ts:130:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 16 passed (17)
+   Start at  23:09:08
+   Duration  4.65s (import 53%, transform 46%, tests 1%)
+
+    Isolate  3 workers spawned · ~184ms startup each (spawn + environment, per file)
+             at least ~367ms faster with isolate: false — reuses workers across files instead of one per file
+

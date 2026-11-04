@@ -1,4 +1,6 @@
 import { runSiteFontJourney } from './site-font-journey';
+import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
+import { runVirtualSelectionJourney } from './virtual-selection-journey';
 import { expect, test, type Locator } from '@playwright/test';
 import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';
 
@@ -444,12 +446,18 @@ test('issue workflow preserves root references and validates local image files',
   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
   await expect(source).toHaveValue(reference);
   await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
-  await expect(page.getByLabel('Fountain diagnostics')).toContainText('exact');
+  const diagnostics = page.getByLabel('Fountain diagnostics');
+  const preservation = diagnostics.locator('dt:has-text("Source preservation") + dd');
+  await expect(preservation).toHaveText('Not checked for this draft');
+  await diagnostics.getByRole('button', { name: 'Check Markdown export', exact: true }).click();
+  await expect(preservation).toHaveText('exact');
   const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
   await editor.getByText('Editable paragraph.', { exact: true }).click();
   await page.keyboard.press('End');
   await page.keyboard.type(' Changed.');
-  await expect(page.getByLabel('Fountain diagnostics')).toContainText('blocks');
+  await expect(preservation).toHaveText('Not checked for this draft');
+  await diagnostics.getByRole('button', { name: 'Check Markdown export', exact: true }).click();
+  await expect(preservation).toHaveText('blocks');
   await page.getByRole('button', { name: 'Markdown source', exact: true }).click();
   await expect(source).toHaveValue(reference.replace('Editable paragraph.', 'Editable paragraph. Changed.'));
   await page.getByRole('button', { name: 'Visual editor', exact: true }).click();
@@ -7657,4 +7665,12 @@ test('keeps full Markdown export out of real large-issue typing', async ({ page 
 
 test('optional site fonts do not block issue editing', async ({ page }, info) => {
   await runSiteFontJourney(page, info);
+});
+
+test('replaces selected nested sibling blocks and media through native pointer input', async ({ page }, info) => {
+  await runNestedSiblingRangeJourney(page, info);
+});
+
+test('replaces and restores selections across offscreen document content', async ({ page }, info) => {
+  await runVirtualSelectionJourney(page, info);
 });

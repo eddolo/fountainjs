@@ -1,0 +1,67 @@
+[WebServer] (node:12764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21300) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:6736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (5.3s)
+  ok 2 [chromium] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (12.1s)
+  x  3 [chromium] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (1.5m)
+(node:26900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (7.2s)
+  ok 5 [firefox] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (11.1s)
+  ok 6 [firefox] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (6.8s)
+(node:26792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [webkit] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (9.3s)
+  ok 8 [webkit] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (33.7s)
+  ok 9 [webkit] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (15.1s)
+
+
+  1) [chromium] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: page.waitForEvent: Test timeout of 90000ms exceeded.
+    =========================== logs ===========================
+    waiting for event "download"
+    ============================================================
+
+       at ..\browser\virtual-selection-journey.ts:53
+
+      51 |   const expectedDoc = original.copy([original.child(0), schema.node('paragraph', {}, [schema.text(firstText + ' Replacement.')])]);
+      52 |   const download = async (name: string) => {
+    > 53 |     const event = page.waitForEvent('download');
+         |                        ^
+      54 |     await page.getByRole('button', { name: 'Download Markdown draft', exact: true }).click();
+      55 |     const path = resolve(root, name);
+      56 |     await (await event).saveAs(path);
+        at download (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\virtual-selection-journey.ts:53:24)
+        at runVirtualSelectionJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\virtual-selection-journey.ts:84:16)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\virtual-selection-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-final-browser-20261104\virtual-selection-real-rep-e308e--offscreen-document-content-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-final-browser-20261104\virtual-selection-real-rep-e308e--offscreen-document-content-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\nested-sibling-range-final-browser-20261104\virtual-selection-real-rep-e308e--offscreen-document-content-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\nested-sibling-range-final-browser-20261104\virtual-selection-real-rep-e308e--offscreen-document-content-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\nested-sibling-range-final-browser-20261104\virtual-selection-real-rep-e308e--offscreen-document-content-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content 
+  8 passed (3.4m)

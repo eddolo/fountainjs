@@ -23,3 +23,11 @@
 /artifacts/issue-input-final-regression-browser-20261104/**/*.md -text
 /artifacts/issue-input-production-browser-20261104/**/*.md -text
 /artifacts/site-font-verified-production-browser-20261104/**/*.md -text
+# Recorded source and diagnostic output are raw data, including whitespace.
+/artifacts/nested-sibling-range-final-browser-20261104/**/*.md -text -whitespace
+/artifacts/virtual-selection-download-repeat-browser-20261104/**/*.md -text -whitespace
+/artifacts/selection-ci-follow-up-browser-20261104/**/*.md -text -whitespace
+/artifacts/virtual-atomic-boundary-verified-browser-20261104/**/*.md -text -whitespace
+/artifacts/nested-sibling-*.log -text -whitespace
+/artifacts/nested-structural-range-*.log -text -whitespace
+/artifacts/virtual-atomic-boundary-verified-browser-20261104.log -text -whitespace

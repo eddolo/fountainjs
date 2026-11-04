@@ -23,6 +23,48 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each([false, true])('leaves Shift-click text selection inside one cell to the browser (backward: %s)', async backward => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [{ type: 'table', content: [
+      { type: 'table_row', content: [{ type: 'table_cell', content: [paragraph('Left'), paragraph('Right')] }] },
+    ] }] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      const left = view.dom.querySelector('[data-fountain-text-path="0.0.0.0.0"]')!;
+      const right = view.dom.querySelector('[data-fountain-text-path="0.0.0.1.0"]')!;
+      const anchor = backward ? right : left, focus = backward ? left : right;
+      editor.dispatch(editor.createTransaction().setSelection(new Selection(backward ? [0, 0, 0, 1, 0] : [0, 0, 0, 0, 0], backward ? 3 : 2)));
+      await settleSelection();
+      const event = new MouseEvent('pointerdown', { bubbles: true, cancelable: true, shiftKey: true });
+      focus.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+      expect(editor.state.selection).toBeInstanceOf(Selection);
+      // jsdom has no native pointer placement; simulate only that browser
+      // default, then verify the bridge captures the resulting text range.
+      native.setBaseAndExtent(anchor.firstChild!, backward ? 3 : 2, focus.firstChild!, backward ? 2 : 3);
+      focus.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
+      await settleSelection();
+      expect(editor.state.selection).toEqual(Selection.range([0, 0, 0, 0, 0], 2, [0, 0, 0, 1, 0], 3));
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
+  it('retains explicit whole-cell selection when Shift-click returns to its anchor cell', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [{ type: 'table', content: [
+      { type: 'table_row', content: [{ type: 'table_cell', content: [paragraph('Left')] }, { type: 'table_cell', content: [paragraph('Right')] }] },
+    ] }] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    try {
+      editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, [0, 0, 0], [0, 0, 1])));
+      await settleSelection();
+      const event = new MouseEvent('pointerdown', { bubbles: true, cancelable: true, shiftKey: true });
+      view.dom.querySelector('[data-fountain-path="0.0.0"]')!.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      expect((editor.state.selection as CellSelection).cellPaths).toEqual([[0, 0, 0]]);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it.each([false, true])('preserves a native inline-node range but allows returning to text (delete: %s)', async remove => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins,
       content: { type: 'doc', content: [{ type: 'paragraph', content: [

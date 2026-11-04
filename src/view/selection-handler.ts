@@ -365,7 +365,11 @@ export class SelectionHandler {
       const anchor = this.editor.state.selection instanceof CellSelection
         ? this.editor.state.selection.anchorCellPath
         : this.cellPathForSelection(this.editor.state.selection);
-      if (anchor) {
+      // Within one cell, Shift-click extends the native text range. Only
+      // crossing cells (or extending an existing cell selection) owns the
+      // rectangular selection gesture.
+      if (anchor && (this.editor.state.selection instanceof CellSelection
+        || anchor.length !== head.length || anchor.some((part, index) => part !== head[index]))) {
         try {
           const selection = new CellSelection(this.editor.state.doc, anchor, head);
           event.preventDefault();
