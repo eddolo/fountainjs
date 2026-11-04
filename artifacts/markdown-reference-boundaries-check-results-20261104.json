@@ -1,0 +1,67 @@
+[
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-final-unit-20261104.log",
+    "name": "final-unit"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-types-20261104.log",
+    "name": "types"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-api-20261104.log",
+    "name": "api"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-headless-20261104.log",
+    "name": "headless"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-conformance-20261104.log",
+    "name": "conformance"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-package-20261104.log",
+    "name": "package"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-worker-20261104.log",
+    "name": "worker"
+  },
+  {
+    "exitCode": 1,
+    "log": "artifacts/markdown-reference-boundaries-size-20261104.log",
+    "name": "size"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-counterfactual-20261104.log",
+    "name": "counterfactual"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-loaded-size-20261104.log",
+    "name": "loaded-size"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-latency-20261104.log",
+    "name": "latency"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-direction-retention-20261104.log",
+    "name": "direction-retention"
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/markdown-reference-boundaries-mapping-retention-20261104.log",
+    "name": "mapping-retention"
+  }
+]

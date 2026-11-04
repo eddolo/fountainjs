@@ -41,6 +41,8 @@ try {
   });
   if (!response.ok) throw new Error(`Worker returned ${response.status}: ${await response.text()}`);
   const body = await response.json();
+  if (body.markdownReferenceBoundariesChecked !== 12) throw new Error('Worker reference-scoped Markdown boundary repair failed.');
+  console.log('Cloudflare workerd (Miniflare): 12 reference-scoped Markdown boundary contracts passed.');
   if (body.markdownNestedSourceChecked !== 12) throw new Error('Worker nested Markdown source retention failed.');
   console.log('Cloudflare workerd (Miniflare): 12 nested Markdown source contracts passed.');
   if (body.markdownSourceBoundariesChecked !== 12) throw new Error('Worker parser-owned Markdown source boundaries failed.');

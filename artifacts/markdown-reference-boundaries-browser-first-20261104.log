@@ -1,0 +1,193 @@
+[WebServer] (node:5944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:24504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports (2.4s)
+(node:10416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports (5.0s)
+(node:9580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports (4.0s)
+
+
+  1) [chromium] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,8 +1,8 @@
+      # Keep [link][ref] ###
+    
+      
+    
+    - Added in browser.
+    
+    + [Added in browser.](/target "Original title")
+    
+      
+    
+      ```js
+    
+      first
+    
+      ```
+    
+      
+    
+
+       at ..\browser\markdown-reference-boundaries-journey.ts:38
+
+      36 |   };
+      37 |   const expected = '# Keep [link][ref] ###\r\n\r\nAdded in browser.\r\n\r\n```js\r\nfirst\r\n```\r\n\r\n[ref]: /target "Original title"';
+    > 38 |   expect(await download('edited.md')).toBe(expected);
+         |                                       ^
+      39 |   await editor.screenshot({ path: resolve(root, 'edited.png'), caret: 'initial' });
+      40 |   await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      41 |   expect(await download('undone.md')).not.toContain('Added in browser.');
+        at runMarkdownReferenceBoundariesJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-reference-boundaries-journey.ts:38:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-reference-boundaries-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,8 +1,8 @@
+      # Keep [link][ref] ###
+    
+      
+    
+    - Added in browser.
+    
+    + [Added in browser.](/target "Original title")
+    
+      
+    
+      ```js
+    
+      first
+    
+      ```
+    
+      
+    
+
+       at ..\browser\markdown-reference-boundaries-journey.ts:38
+
+      36 |   };
+      37 |   const expected = '# Keep [link][ref] ###\r\n\r\nAdded in browser.\r\n\r\n```js\r\nfirst\r\n```\r\n\r\n[ref]: /target "Original title"';
+    > 38 |   expect(await download('edited.md')).toBe(expected);
+         |                                       ^
+      39 |   await editor.screenshot({ path: resolve(root, 'edited.png'), caret: 'initial' });
+      40 |   await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      41 |   expect(await download('undone.md')).not.toContain('Added in browser.');
+        at runMarkdownReferenceBoundariesJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-reference-boundaries-journey.ts:38:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-reference-boundaries-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,8 +1,8 @@
+      # Keep [link][ref] ###
+    
+      
+    
+    - Added in browser.
+    
+    + [Added in browser.](/target "Original title")
+    
+      
+    
+      ```js
+    
+      first
+    
+      ```
+    
+      
+    
+
+       at ..\browser\markdown-reference-boundaries-journey.ts:38
+
+      36 |   };
+      37 |   const expected = '# Keep [link][ref] ###\r\n\r\nAdded in browser.\r\n\r\n```js\r\nfirst\r\n```\r\n\r\n[ref]: /target "Original title"';
+    > 38 |   expect(await download('edited.md')).toBe(expected);
+         |                                       ^
+      39 |   await editor.screenshot({ path: resolve(root, 'edited.png'), caret: 'initial' });
+      40 |   await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      41 |   expect(await download('undone.md')).not.toContain('Added in browser.');
+        at runMarkdownReferenceBoundariesJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-reference-boundaries-journey.ts:38:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-reference-boundaries-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\markdown-reference-boundaries-browser-20261104\markdown-reference-boundar-da46c--and-reopens-actual-exports-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports 
+    [firefox] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports 
+    [webkit] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports 

@@ -1,0 +1,18 @@
+[WebServer] (node:6512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:19768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports (3.7s)
+(node:23360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports (6.3s)
+(node:2232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports (7.9s)
+
+  3 passed (25.3s)

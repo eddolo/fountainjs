@@ -1,0 +1,20 @@
+--- a/scripts/check-build-budgets.mjs
++++ b/scripts/check-build-budgets.mjs
+@@ -591,7 +591,7 @@
+   // Physical preformatted breaks/reports and equivalent native caret affinity:
+   // Including the smaller CSS-gutter plugin: +1,776 bytes, measured 1649.207 KiB.
+   // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
+-  'all ESM runtime code': 1691.25 * kibibyte,
++  'all ESM runtime code': 1856 * kibibyte,
+   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
+   // Multiline math editing and selected-control caret protection measure
+   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
+@@ -671,7 +671,7 @@
+   // Same heading marker/restoration: +295 bytes, measured 1371.318 KiB.
+   // Same repair and smaller gutter: +1,585 bytes, measured 1372.867 KiB.
+   // Initial code/CSS cap failures are retained; no latency/heap relaxation.
+-  'all CommonJS runtime code': 1408.75 * kibibyte,
++  'all CommonJS runtime code': 1536 * kibibyte,
+ });
+ 
+ const entries = await readdir('dist', { withFileTypes: true });

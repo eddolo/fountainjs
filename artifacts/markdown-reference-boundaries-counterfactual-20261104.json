@@ -1,0 +1,2111 @@
+{
+  "baseline": "actual PR #10 tarball consumer, source commit 86a4633c6fcca01f8e7a7a2055c3e280e3057277",
+  "cases": 12,
+  "baselineFailures": 12,
+  "repaired": 12,
+  "records": [
+    {
+      "ending": "\n",
+      "action": "move",
+      "source": "[ref]: /target \"Original\"\n\n# Keep [link][ref] ###\n\n~~~~js\nfirst\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "~~~~js\nfirst\n\n# Keep [link][ref] ###\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n# Keep [link][ref] ###\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "```js\nfirst\n```\n\n# Keep [link][ref] ###\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\n",
+      "action": "append",
+      "source": "[ref]: /target \"Original\"\n\n# Keep [link][ref] ###\n\n~~~~js\nfirst\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\n\n~~~~js\nfirst\n\nKeep appended text.\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep [link][ref]"
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\nKeep appended text.\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\n\n```js\nfirst\n```\n\nKeep appended text.\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\n",
+      "action": "delete-heading",
+      "source": "[ref]: /target \"Original\"\n\n# Keep [link][ref] ###\n\n~~~~js\nfirst\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "~~~~js\nfirst\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "canonical",
+        "markdown": "```js\nfirst\n```",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\n",
+      "action": "insert-before-fence",
+      "source": "[ref]: /target \"Original\"\n\n# Keep [link][ref] ###\n\n~~~~js\nfirst\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\n\nKeep appended text.\n\n~~~~js\nfirst\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep [link][ref]"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\n\nKeep appended text.\n\n```js\nfirst\n```\n\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r\n",
+      "action": "move",
+      "source": "[ref]: /target \"Original\"\r\n\r\n# Keep [link][ref] ###\r\n\r\n~~~~js\r\nfirst\r\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "~~~~js\r\nfirst\r\n\r\n# Keep [link][ref] ###\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n# Keep [link][ref] ###\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "```js\r\nfirst\r\n```\r\n\r\n# Keep [link][ref] ###\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r\n",
+      "action": "append",
+      "source": "[ref]: /target \"Original\"\r\n\r\n# Keep [link][ref] ###\r\n\r\n~~~~js\r\nfirst\r\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\n\r\n~~~~js\r\nfirst\r\n\r\nKeep appended text.\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep [link][ref]"
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\nKeep appended text.\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\n\r\n```js\r\nfirst\r\n```\r\n\r\nKeep appended text.\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r\n",
+      "action": "delete-heading",
+      "source": "[ref]: /target \"Original\"\r\n\r\n# Keep [link][ref] ###\r\n\r\n~~~~js\r\nfirst\r\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "~~~~js\r\nfirst\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "canonical",
+        "markdown": "```js\r\nfirst\r\n```",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r\n",
+      "action": "insert-before-fence",
+      "source": "[ref]: /target \"Original\"\r\n\r\n# Keep [link][ref] ###\r\n\r\n~~~~js\r\nfirst\r\n",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\n\r\nKeep appended text.\r\n\r\n~~~~js\r\nfirst\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep [link][ref]"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\n\r\nKeep appended text.\r\n\r\n```js\r\nfirst\r\n```\r\n\r\n[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r",
+      "action": "move",
+      "source": "[ref]: /target \"Original\"\r\r# Keep [link][ref] ###\r\r~~~~js\rfirst\r",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "~~~~js\rfirst\r\r# Keep [link][ref] ###\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n# Keep [link][ref] ###\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "```js\rfirst\r```\r\r# Keep [link][ref] ###\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r",
+      "action": "append",
+      "source": "[ref]: /target \"Original\"\r\r# Keep [link][ref] ###\r\r~~~~js\rfirst\r",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\r~~~~js\rfirst\r\rKeep appended text.\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep [link][ref]"
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\nKeep appended text.\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\r```js\rfirst\r```\r\rKeep appended text.\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r",
+      "action": "delete-heading",
+      "source": "[ref]: /target \"Original\"\r\r# Keep [link][ref] ###\r\r~~~~js\rfirst\r",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "~~~~js\rfirst\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "canonical",
+        "markdown": "```js\rfirst\r```",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "ending": "\r",
+      "action": "insert-before-fence",
+      "source": "[ref]: /target \"Original\"\r\r# Keep [link][ref] ###\r\r~~~~js\rfirst\r",
+      "before": {
+        "fullModelEqual": false,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\rKeep appended text.\r\r~~~~js\rfirst\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep [link][ref]"
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first\n\n[ref]: /target \"Original\""
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "fullModelEqual": true,
+        "preservation": "mapped-blocks",
+        "markdown": "# Keep [link][ref] ###\r\rKeep appended text.\r\r```js\rfirst\r```\r\r[ref]: /target \"Original\"",
+        "expected": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        },
+        "reopened": {
+          "type": "doc",
+          "content": [
+            {
+              "type": "heading",
+              "attrs": {
+                "level": 1,
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep "
+                },
+                {
+                  "type": "text",
+                  "text": "link",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "/target",
+                        "title": "Original",
+                        "target": "_blank"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Keep appended text."
+                }
+              ]
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "js",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "first"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/link-split-boundaries.test.ts (7 tests | 6 failed) 19ms
+   ❯ Enter at the end of a link (7)
+     × starts unlinked text after a terminal link in a paragraph, retaining emphasis and history 9ms
+     × starts unlinked text after a terminal link in a heading, retaining emphasis and history 2ms
+     × starts unlinked text after a terminal link in a quote, retaining emphasis and history 1ms
+     × starts unlinked text after a terminal link in a list, retaining emphasis and history 1ms
+     × starts unlinked text after a terminal link in a task, retaining emphasis and history 1ms
+     × starts unlinked text after a terminal link in a table, retaining emphasis and history 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/link-split-boundaries.test.ts > Enter at the end of a link > starts unlinked text after a terminal link in a paragraph, retaining emphasis and history
+ FAIL  tests/link-split-boundaries.test.ts > Enter at the end of a link > starts unlinked text after a terminal link in a heading, retaining emphasis and history
+ FAIL  tests/link-split-boundaries.test.ts > Enter at the end of a link > starts unlinked text after a terminal link in a quote, retaining emphasis and history
+ FAIL  tests/link-split-boundaries.test.ts > Enter at the end of a link > starts unlinked text after a terminal link in a list, retaining emphasis and history
+ FAIL  tests/link-split-boundaries.test.ts > Enter at the end of a link > starts unlinked text after a terminal link in a task, retaining emphasis and history
+ FAIL  tests/link-split-boundaries.test.ts > Enter at the end of a link > starts unlinked text after a terminal link in a table, retaining emphasis and history
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/link-split-boundaries.test.ts:33:71
+     31|         const current = leaf(editor.state.doc, editor.state.selection.…
+     32|         expect(current.text).toBe('New text');
+     33|         expect(current.marks.some(mark => mark.type.name === 'link')).…
+       |                                                                       ^
+     34|         expect(current.marks.some(mark => mark.type.name === 'strong')…
+     35|         expect(leaf(editor.state.doc, path).marks.find(mark => mark.ty…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  18:16:11
+   Duration  2.54s (transform 54%, import 45%, tests 1%)
+
