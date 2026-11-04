@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve fractional table-column widths through Word and safe HTML instead of
+  rounding at import. Retain partial unknown-column metadata, report actual native
+  quantization, and preserve fractions through editing and pointer resizing.
+  Stationary resize handles no longer change widths or consume undo. Native table
+  placement and broader fidelity remain separate work; full verification is in progress.
+
 - Retain equation-only Word paragraph geometry and font context on display math;
   preserve it through live source edits, history, safe HTML and native semantic
   DOCX export. Report missing receiving-schema ownership and mixed-paragraph

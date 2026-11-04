@@ -1,4 +1,5 @@
 import { listLayoutDOMAttributes, listItemDOMAttributes, LIST_LAYOUT_STYLES } from '../list-layout';
+import { isTableColumnWidth } from '../table-column-width';
 import { paragraphSpacingDOMAttributes, PARAGRAPH_SPACING_STYLES } from '../paragraph-spacing';
 import type { EditorState } from '../state';
 import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
@@ -170,10 +171,11 @@ function playbackAttributes(node: Node): string {
 function tableCellSizeAttributes(node: Node, context: NodeDOMContext): string {
   const colspan = Number(node.attrs.colspan) || 1;
   const widths = Array.isArray(node.attrs.colwidth) ? node.attrs.colwidth.map(Number) : [];
-  const valid = widths.length === colspan && widths.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000);
+  const valid = widths.length === colspan && widths.every(isTableColumnWidth);
+  const complete = valid && widths.every(width => width > 0);
   const background = tableBackground(node.attrs.background);
   const appearance = cellAppearanceDOMAttributes(node, context);
-  const styles = [appearance.style, valid ? `width:${widths.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
+  const styles = [appearance.style, complete ? `width:${widths.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
   return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}"` : ''}${renderDOMAttributes({ ...appearance, ...textDirectionDOMAttributes(node.attrs), ...(styles ? { style: styles } : {}) })}`;
 }
 

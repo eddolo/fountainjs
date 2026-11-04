@@ -74,6 +74,47 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   expect(JSON.parse(await firstEquation.getAttribute('data-fountain-paragraph-layout') ?? 'null')).toEqual(mathParagraphLayouts[0]);
   await firstEquation.screenshot({ path: resolve(root, 'equation-restored.png'), caret: 'initial' });
 
+  const measurementTable = editor.locator('table');
+  await expect(measurementTable).toHaveCount(1);
+  const tableColumnWidths = await measurementTable.locator('[data-colwidth]').evaluateAll(cells =>
+    cells.map(cell => cell.getAttribute('data-colwidth')!.split(',').map(Number)));
+  expect(tableColumnWidths.length).toBeGreaterThan(20);
+  expect(tableColumnWidths.every(widths => widths.every(width => width === 220.8))).toBe(true);
+  const timeCellBox = measurementTable.locator('tr').nth(2).locator('td, th').first();
+  const timeCell = timeCellBox.locator('p').first();
+  const originalTime = await timeCell.innerText();
+  await timeCell.click(); await page.keyboard.press('End'); await page.keyboard.press('Shift+Home');
+  await page.keyboard.type('2.5');
+  await expect(timeCell).toHaveText('2.5');
+  await measurementTable.screenshot({ path: resolve(root, 'table-edited.png'), caret: 'initial' });
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(timeCell).toHaveText(originalTime);
+  expect(await measurementTable.locator('[data-colwidth]').evaluateAll(cells =>
+    cells.map(cell => cell.getAttribute('data-colwidth')!.split(',').map(Number)))).toEqual(tableColumnWidths);
+  await measurementTable.screenshot({ path: resolve(root, 'table-restored.png'), caret: 'initial' });
+  const resizeHandle = timeCellBox.getByRole('separator');
+  await resizeHandle.scrollIntoViewIfNeeded();
+  const handleBox = await resizeHandle.boundingBox();
+  if (!handleBox) throw new Error('Expected the actual table resize handle.');
+  const handleX = handleBox.x + handleBox.width / 2, handleY = handleBox.y + handleBox.height / 2;
+  await page.mouse.move(handleX, handleY); await page.mouse.down();
+  await page.mouse.move(handleX, handleY); await page.mouse.up();
+  expect(await measurementTable.locator('[data-colwidth]').evaluateAll(cells =>
+    cells.map(cell => cell.getAttribute('data-colwidth')!.split(',').map(Number)))).toEqual(tableColumnWidths);
+  await page.mouse.move(handleX, handleY); await page.mouse.down();
+  await page.mouse.move(handleX + 12, handleY, { steps: 4 }); await page.mouse.up();
+  const resizedTableRows = await measurementTable.locator('tr').evaluateAll(rows => rows.map(row =>
+    Array.from(row.querySelectorAll('td, th')).map(cell => cell.getAttribute('data-colwidth')!.split(',').map(Number))));
+  for (const row of resizedTableRows) {
+    expect(row[0][0]).toBe(232.8);
+    expect(row.flat().slice(1).every(width => width === 220.8)).toBe(true);
+  }
+  await measurementTable.screenshot({ path: resolve(root, 'table-resized.png'), caret: 'initial' });
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  expect(await measurementTable.locator('[data-colwidth]').evaluateAll(cells =>
+    cells.map(cell => cell.getAttribute('data-colwidth')!.split(',').map(Number)))).toEqual(tableColumnWidths);
+  await measurementTable.screenshot({ path: resolve(root, 'table-resize-undone.png'), caret: 'initial' });
+
   await paragraphs.first().click(); await page.keyboard.press('End'); await page.keyboard.press('Enter');
   await expect(items).toHaveCount(4);
   const empty = paragraphs.filter({ hasText: /^$/ });
@@ -148,11 +189,15 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   const reopenedMathLayouts = await reopened.locator('[data-fountain-math="block"]').evaluateAll(elements => elements.map(element =>
     JSON.parse(element.getAttribute('data-fountain-paragraph-layout') ?? 'null')));
   expect(reopenedMathLayouts).toEqual(mathParagraphLayouts);
+  const reopenedTableWidths = await reopened.locator('table [data-colwidth]').evaluateAll(cells =>
+    cells.map(cell => cell.getAttribute('data-colwidth')!.split(',').map(Number)));
+  expect(reopenedTableWidths).toEqual(tableColumnWidths);
   await reopened.screenshot({ path: resolve(root, 'native-export-reopened.png') });
   expect(errors).toEqual([]);
   await writeFile(resolve(root, 'observations.json'), JSON.stringify({ initialGaps, enteredHeight, emptyMarkerDiagnostic, readerGap, readerImages, nativeReopenGap,
     sourceImageLayouts, reopenedImageLayouts, sourceImageCaptionGaps, captionTypedAndUndone: true,
     mathParagraphLayouts, reopenedMathLayouts, mathEditedAndUndone: true,
+    tableColumnWidths, reopenedTableWidths, resizedTableRows, tableCellEditedAndUndone: true, tableResizedAndUndone: true, stationaryResizePreserved: true,
     actualWordSource: true, enterUndoRedoBackspace: true, originalDeclaredAfterPt: 7,
     actualJSONAndHTMLDownloads: true, actualDOCXDownloadReopened: true,
     nativeExportRuleRetained: true, nativeWordSpacingCertified: false, errors }, null, 2) + '\n');

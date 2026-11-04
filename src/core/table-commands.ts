@@ -48,7 +48,7 @@ function normalizedWidths(cell: Node, colspan = Number(cell.attrs.colspan) || 1)
   const source = Array.isArray(cell.attrs.colwidth) ? cell.attrs.colwidth : [];
   const widths = Array.from({ length: colspan }, (_, index) => {
     const width = Number(source[index]);
-    return Number.isFinite(width) && width >= MIN_COLUMN_WIDTH && width <= MAX_COLUMN_WIDTH ? Math.round(width) : 0;
+    return Number.isFinite(width) && width >= MIN_COLUMN_WIDTH && width <= MAX_COLUMN_WIDTH ? width : 0;
   });
   return widths.some(Boolean) ? widths : null;
 }
@@ -289,7 +289,7 @@ export function resizeTableColumn(
   const map = TableMap.create(table, tablePath);
   const column = requestedColumn ?? context?.cell.column;
   if (column === undefined || column < 0 || column >= map.width) return false;
-  const nextWidth = Math.max(MIN_COLUMN_WIDTH, Math.min(MAX_COLUMN_WIDTH, Math.round(width)));
+  const nextWidth = Math.max(MIN_COLUMN_WIDTH, Math.min(MAX_COLUMN_WIDTH, width));
   const rows = table.content.map((row, rowIndex) => row.copy(row.content.map((cell, cellIndex) => {
     const info = map.cellInfo(pathForCell(tablePath, rowIndex, cellIndex));
     if (!info || column < info.column || column >= info.column + info.colspan) return cell;

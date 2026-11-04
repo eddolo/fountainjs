@@ -1,4 +1,5 @@
 import { readListLayout } from '../core/list-layout';
+import { readTableCellWidths as tableCellWidths } from '../core/table-column-width';
 import { compile as compileSelector, selectAll } from 'css-select';
 import { readImageCaptionAttributes, readImageParagraphAttributes } from '../core/image-caption';
 import { readTableLayout, readTableRow } from '../core/table-layout';
@@ -1151,19 +1152,6 @@ function hasProjectedPreformattedMarkup(element: SourceElement): boolean {
     && child.getAttributeNames?.().every(name => name === 'class')
     && (child.getAttribute('class') ?? '').split(/\s+/u).every(name => !name || /^language-\S+$/u.test(name))
     && child.childNodes.every(node => node.kind === 'text')));
-}
-
-function tableCellWidths(cell: SourceElement, colspan: number): number[] | null {
-  const declared = (cell.getAttribute('data-colwidth') ?? '')
-    .split(',')
-    .filter(Boolean)
-    .map(Number);
-  if (declared.length === colspan && declared.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000)) {
-    return declared;
-  }
-  const styleWidth = Math.round(Number.parseFloat(cell.style.width ?? ''));
-  if (colspan === 1 && Number.isInteger(styleWidth) && styleWidth >= 40 && styleWidth <= 2_000) return [styleWidth];
-  return null;
 }
 
 const BLOCK_TAGS = new Set([

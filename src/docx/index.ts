@@ -996,7 +996,7 @@ function wordColumnWidth(
     });
     return 0;
   }
-  const pixels = Math.round(twips / DOCX_TWIPS_PER_PIXEL);
+  const pixels = twips / DOCX_TWIPS_PER_PIXEL;
   if (pixels < DOCX_MIN_COLUMN_WIDTH || pixels > DOCX_MAX_COLUMN_WIDTH) {
     issues.push({
       code: 'unsupported-table-column-width',
@@ -1005,14 +1005,6 @@ function wordColumnWidth(
       path,
     });
     return 0;
-  }
-  if (pixels * DOCX_TWIPS_PER_PIXEL !== twips) {
-    issues.push({
-      code: 'table-column-width-rounded',
-      severity: 'info',
-      message: `A Word table ${source} width was rounded to Fountain's whole-pixel resolution.`,
-      path,
-    });
   }
   return pixels;
 }
@@ -1048,9 +1040,9 @@ function readCellWidths(
   if (gridWidths.some(width => width > 0)) {
     if (preferred && preferredType === 'dxa') {
       const preferredTwips = Number(preferredValue);
-      const gridTwips = gridWidths.reduce((sum, width) => sum + width * DOCX_TWIPS_PER_PIXEL, 0);
+      const gridTwips = gridWidths.reduce((sum, width) => sum + Math.round(width * DOCX_TWIPS_PER_PIXEL), 0);
       if (Number.isInteger(preferredTwips) && preferredTwips > 0
-        && Math.abs(preferredTwips - gridTwips) > DOCX_TWIPS_PER_PIXEL * colspan) {
+        && preferredTwips !== gridTwips) {
         issues.push({
           code: 'table-cell-grid-width-conflict',
           severity: 'warning',
@@ -2132,7 +2124,7 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
     const widths = Array.isArray(cell.node.attrs.colwidth) ? cell.node.attrs.colwidth.map(Number) : [];
     for (let offset = 0; offset < cell.colspan; offset += 1) {
       const width = widths[offset];
-      if (Number.isInteger(width) && width >= DOCX_MIN_COLUMN_WIDTH && width <= DOCX_MAX_COLUMN_WIDTH) {
+      if (Number.isFinite(width) && width >= DOCX_MIN_COLUMN_WIDTH && width <= DOCX_MAX_COLUMN_WIDTH) {
         candidates[cell.column + offset]?.push({ width, path: cell.path });
       }
     }
@@ -2150,8 +2142,14 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
     }
     return selected;
   });
+  const columnTwips = columnWidths.map((width, column) => {
+    const twips = Math.round(width * DOCX_TWIPS_PER_PIXEL);
+    if (twips / DOCX_TWIPS_PER_PIXEL !== width) context.issues.push({ code: 'table-column-width-rounded', severity: 'info',
+      message: 'A column width was rounded to native Word twentieth-point resolution.', path: candidates[column]?.[0]?.path ?? path });
+    return twips;
+  });
   const cellWidthXML = (column: number, colspan: number) => {
-    const twips = columnWidths.slice(column, column + colspan).reduce((sum, width) => sum + width, 0) * DOCX_TWIPS_PER_PIXEL;
+    const twips = columnTwips.slice(column, column + colspan).reduce((sum, width) => sum + width, 0);
     return `<w:tcW w:w="${twips}" w:type="dxa"/>`;
   };
   const continuations = new Map<number, Array<{ column: number; colspan: number; appearance: string }>>();
@@ -2217,11 +2215,11 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
     const rowProperties = `<w:trPr><w:tblHeader${repeats ? '' : ' w:val="false"'}/></w:trPr>`;
     return `<w:tr>${rowProperties}${cells.join('')}</w:tr>`;
   }).join('');
-  const grid = `<w:tblGrid>${columnWidths.map(width => `<w:gridCol w:w="${width * DOCX_TWIPS_PER_PIXEL}"/>`).join('')}</w:tblGrid>`;
+  const grid = `<w:tblGrid>${columnTwips.map(width => `<w:gridCol w:w="${width}"/>`).join('')}</w:tblGrid>`;
   const fixed = node.attrs.layout === 'fixed';
   const completeGrid = map.width > 0 && Array.from({ length: map.width }, (_, column) => map.columnWidth(column)).every(width => width !== null);
   const tableWidth = wordTableWidthXML(node.attrs.preferredWidth, (code, message) => context.issues.push({ code, severity: 'warning', message, path }))
-    ?? (fixed && completeGrid ? `<w:tblW w:w="${columnWidths.reduce((sum, width) => sum + width, 0) * DOCX_TWIPS_PER_PIXEL}" w:type="dxa"/>` : '<w:tblW w:w="5000" w:type="pct"/>');
+    ?? (fixed && completeGrid ? `<w:tblW w:w="${columnTwips.reduce((sum, width) => sum + width, 0)}" w:type="dxa"/>` : '<w:tblW w:w="5000" w:type="pct"/>');
   if (node.attrs.preferredWidth === undefined) context.issues.push({ code: 'table-width-defaulted', severity: 'info', message: fixed && completeGrid
     ? 'The standard Fountain fixed-grid width became an explicit physical DOCX preference; it appears on reimport.'
     : 'The standard Fountain full host-width default became a 100% page-text-width DOCX preference; it appears on reimport. Host CSS overrides are not represented.', path });

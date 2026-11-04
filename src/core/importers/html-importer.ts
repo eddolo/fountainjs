@@ -1,4 +1,5 @@
 import { readListLayout } from '../list-layout';
+import { readTableCellWidths as tableCellWidths } from '../table-column-width';
 import {
   Mark,
   Node as FountainNode,
@@ -488,19 +489,6 @@ function preformattedChildren(element: Element, schema: Schema): FountainNode[] 
     text: node => node.textContent ?? '',
     marks: (node, marks) => node instanceof HTMLElement ? elementMarks(node, schema, marks) : marks,
   });
-}
-
-function tableCellWidths(cell: Element, colspan: number): number[] | null {
-  const declared = (cell.getAttribute('data-colwidth') ?? '')
-    .split(',')
-    .filter(Boolean)
-    .map(Number);
-  if (declared.length === colspan && declared.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000)) {
-    return declared;
-  }
-  const styleWidth = Math.round(Number.parseFloat((cell as HTMLElement).style.width));
-  if (colspan === 1 && Number.isInteger(styleWidth) && styleWidth >= 40 && styleWidth <= 2_000) return [styleWidth];
-  return null;
 }
 
 const BLOCK_TAGS = new Set([
