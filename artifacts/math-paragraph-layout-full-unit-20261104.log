@@ -1,0 +1,59 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-math-source.test.ts (24 tests | 1 failed) 412ms
+   ❯ opt-in bound DOCX math-source restoration (24)
+     × restores exact TeX, Unicode/line endings and accessibility labels without browser globals 62ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-math-source.test.ts > opt-in bound DOCX math-source restoration > restores exact TeX, Unicode/line endings and accessibility labels without browser globals
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -82,10 +82,23 @@
+      {
+        "attrs": {
+          "ariaLabel": "Original equation",
+          "latex": "\\frac{x}{y}
+  ​",
++         "layout": {
++           "fontFamily": "Arial",
++           "fontSize": 11,
++           "keepLinesTogether": false,
++           "keepWithNext": false,
++           "lineHeight": 1.15,
++           "lineHeightRule": "auto",
++           "lineHeightUnit": "multiple",
++           "pageBreakBefore": false,
++           "spacingAfter": 8,
++           "spacingBefore": 0,
++           "unit": "pt",
++         },
+        },
+        "type": "math_block",
+      },
+    ],
+    "type": "doc",
+
+ ❯ tests/docx-math-source.test.ts:47:60
+     45|     const reopened = read(bytes);
+     46|     expect(allMath(reopened.document)).toEqual(allMath(doc));
+     47|     expect(withoutExpressions(reopened.document.toJSON())).toEqual(wit…
+       |                                                            ^
+     48|     expect(reopened.document.child(0).child(1).attrs.expression).toEqu…
+     49|     expect(reopened.document.child(1).attrs.expression).toEqual(expect…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 255 passed (256)
+      Tests  1 failed | 3608 passed (3609)
+   Start at  03:56:46
+   Duration  292.86s (environment 49%, import 25%, tests 20%, transform 5%, worker 1%)
+
+     Import  638 modules were evaluated 1229 times · 62.68s total, 25% of tracked time
+             ~30.14s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

@@ -1,0 +1,23 @@
+
+fountainjs-editor v0.4.0-beta.2
+
+Build tools:
+- typescript@^7.0.2
+- vite@^8.2.2
+
+ (ignoring resolutions: 'node10', 'node16-cjs')
+
+(ignored per resolution) ⚠️ A require call resolved to an ESM JavaScript file, which is an error in Node and some bundlers. CommonJS consumers will need to use a dynamic import. https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/CJSResolvesToESM.md
+
+
+[90m┌───────────────────[39m[90m┬────────────────────────────────────────┐[39m
+[90m│[39m[31m                   [39m[90m│[39m[31m "fountainjs-editor/angular"            [39m[90m│[39m
+[90m├───────────────────[39m[90m┼────────────────────────────────────────┤[39m
+[90m│[39m node16 (from ESM) [90m│[39m 🟢 (ESM)                               [90m│[39m
+[90m├───────────────────[39m[90m┼────────────────────────────────────────┤[39m
+[90m│[39m bundler           [90m│[39m 🟢                                     [90m│[39m
+[90m├───────────────────[39m[90m┼────────────────────────────────────────┤[39m
+[90m│[39m node10            [90m│[39m (ignored) 🟢                           [90m│[39m
+[90m├───────────────────[39m[90m┼────────────────────────────────────────┤[39m
+[90m│[39m node16 (from CJS) [90m│[39m (ignored) ⚠️ ESM (dynamic import only) [90m│[39m
+[90m└───────────────────[39m[90m┴────────────────────────────────────────┘[39m

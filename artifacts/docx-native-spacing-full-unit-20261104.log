@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/explicit-text-alignment.test.ts (8 tests | 1 failed) 100ms
+   × retains explicit Word left alignment when rich code-styled content falls back to a paragraph 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed | 250 passed (251)
+      Tests  1 failed | 3563 passed (3564)
+   Start at  02:23:24
+   Duration  302.78s (environment 48%, import 26%, tests 20%, transform 5%, worker 1%)
+
+     Import  633 modules were evaluated 1226 times · 65.62s total, 26% of tracked time
+             ~31.74s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+ FAIL  tests/explicit-text-alignment.test.ts > retains explicit Word left alignment when rich code-styled content falls back to a paragraph
+AssertionError: expected [] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "code-style-not-applied",
+}
+
++ Received:
+[]
+
+ ❯ tests/explicit-text-alignment.test.ts:115:32
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

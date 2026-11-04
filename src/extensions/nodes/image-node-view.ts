@@ -6,7 +6,7 @@ import {
 } from '../../core';
 import { getNodeAtPath } from '../../core/transaction/path';
 import { imageText } from './image-attributes';
-import { imageCaptionDOMAttributes } from '../../core/image-caption';
+import { imageCaptionDOMAttributes, imageParagraphDOMAttributes } from '../../core/image-caption';
 
 const MIN_IMAGE_WIDTH = 50;
 const MAX_IMAGE_WIDTH = 2_000;
@@ -134,8 +134,11 @@ export class ImageNodeView implements NodeViewLike {
     this.image.decoding = ['auto', 'sync', 'async'].includes(String(attrs.decoding))
       ? String(attrs.decoding) as 'auto' | 'sync' | 'async'
       : 'async';
-    this.image.style.width = '100%';
-    this.image.style.height = String(attrs.height);
+    const imageAppearance = imageParagraphDOMAttributes(attrs);
+    this.image.style.cssText = `${imageAppearance.style ?? ''};width:100%;height:${String(attrs.height)}`;
+    const imageLayout = imageAppearance['data-fountain-paragraph-layout'];
+    if (imageLayout === undefined) this.image.removeAttribute('data-fountain-paragraph-layout');
+    else this.image.setAttribute('data-fountain-paragraph-layout', String(imageLayout));
     const srcset = String(attrs.srcset || '');
     const sizes = String(attrs.sizes || '');
     const sourceKey = `${String(attrs.src)}\u0000${srcset}\u0000${sizes}`;

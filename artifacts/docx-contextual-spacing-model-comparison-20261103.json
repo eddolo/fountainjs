@@ -1,0 +1,67 @@
+{
+  "baselineCommit": "d8e6f3d93082afa49b3905fdf09fb3c073cf97ac",
+  "baselineTarballSHA256": "cf41cee65c1b4372ae9289457577b589b8570f1974961974d10ff4f57d48870b",
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "clockInput": "2026-11-03T23:00:00.000Z",
+  "completeModelEquality": true,
+  "completeNativeArchiveEqual": true,
+  "allNativePartsEqual": true,
+  "profile": "StarterKit + Pages + Math, with the unchanged real lab MathJax adapter",
+  "nativeParts": 18,
+  "representedNodeCounts": {
+    "doc": 1,
+    "paragraph": 42,
+    "text": 51,
+    "heading": 4,
+    "ordered_list": 1,
+    "list_item": 3,
+    "image_super": 2,
+    "page_break": 1,
+    "math_block": 2,
+    "table": 1,
+    "table_row": 9,
+    "table_cell": 25,
+    "footnote_reference": 1,
+    "page_header": 1,
+    "inline_image": 1,
+    "page_footer": 1,
+    "page_field": 1,
+    "footnote_definition": 1
+  },
+  "unchangedHostMathAdapterSHA256": "4382401bd0721a7f0bf22be1b090a2fe73e5563c5f61372bad7f0e944a1cbafe",
+  "findings": [
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "severity": "warning",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "severity": "warning",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "severity": "warning",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "severity": "warning",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        7
+      ]
+    }
+  ],
+  "contextualLayoutFixed": false
+}

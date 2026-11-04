@@ -1,3 +1,4 @@
+import { readWordNumberingReference } from './numbering';
 import { expandedXMLName as expanded } from './xml-names';
 import { createWordRunStyleCascade, WORD_PARAGRAPH_BORDER_SIDES, type WordFontDeclaration, type WordFontSlot, type WordParagraphBorder, type WordParagraphBorderSide, type WordParagraphFormatting, type WordRunFormatting, type WordStyleDefinition, type WordToggle } from './style-cascade';
 import type { XMLElement } from './xml-types';
@@ -12,7 +13,8 @@ export interface WordStyleReadIssue {
   readonly property: string;
 }
 
-/** Decode the paragraph declarations Fountain can faithfully preserve. Values
+/** Decode declarations understood by the Word cascade. The projection boundary
+ * reports behavior that the portable model/view cannot yet preserve. Values
  * stay in Word units until the format-projection boundary. Attributes cascade
  * independently, matching Word's spacing and indentation inheritance model.
  */
@@ -41,6 +43,10 @@ export function readWordParagraphFormatting(properties: XMLElement | undefined, 
       const value = take('val');
       if (!value || value.length > 64) issue('invalid-paragraph-property', local);
       else result.align = value;
+    } else if (local === 'outlineLvl') {
+      const value = integer(take('val'), local);
+      if (value !== undefined && value <= 9) result.outlineLevel = value;
+      else if (value !== undefined) issue('invalid-paragraph-property', local);
     } else if (local === 'spacing') {
       const before = take('before'); const after = take('after'); const line = take('line'); const rule = take('lineRule');
       if (before !== undefined) result.spacingBefore = integer(before, 'spacing/before');
@@ -57,7 +63,7 @@ export function readWordParagraphFormatting(properties: XMLElement | undefined, 
       if (firstLine !== undefined && hanging !== undefined) issue('invalid-paragraph-property', 'ind/firstLine+hanging');
       else if (firstLine !== undefined) { result.firstLine = integer(firstLine, 'ind/firstLine'); result.hanging = null; }
       else if (hanging !== undefined) { result.hanging = integer(hanging, 'ind/hanging'); result.firstLine = null; }
-    } else if (['keepNext', 'keepLines', 'pageBreakBefore'].includes(local)) {
+    } else if (['keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing'].includes(local)) {
       const raw = take('val'); const value = onOff(raw);
       if (value === undefined) issue('invalid-paragraph-property', local);
       else Object.assign(result, { [local]: value });
@@ -193,6 +199,7 @@ export function readWordStyleSheet(document: XMLElement, limits: { readonly maxS
   const defaults = readWordRunFormatting(single(single(defaultsRoot, 'rPrDefault'), 'rPr'), issues);
   const paragraphDefaults = readWordParagraphFormatting(single(single(defaultsRoot, 'pPrDefault'), 'pPr'), issues);
   const styles: WordStyleDefinition[] = [];
+  const numbering = new Map<string, string>();
   const ids = new Set<string>();
   for (const element of styleElements) {
     const id = attribute(element, 'styleId');
@@ -211,10 +218,18 @@ export function readWordStyleSheet(document: XMLElement, limits: { readonly maxS
     const basedOn = attribute(basedOnElement, 'val');
     if (basedOnElement && (!basedOn || basedOn.length > 253)) throw new Error('Invalid Word parent-style identity.');
     const run = readWordRunFormatting(single(element, 'rPr'), issues, id);
-    const paragraph = readWordParagraphFormatting(single(element, 'pPr'), issues, id);
+    const properties = single(element, 'pPr');
+    const reference = kind === 'paragraph' ? readWordNumberingReference(properties, false) : undefined;
+    if (reference && single(single(properties, 'numPr'), 'ilvl')) issues.push(Object.freeze({
+      code: 'unresolved-paragraph-properties', property: 'numPr/ilvl (ISO association used; native Word behavior is unpredictable)', styleId: id,
+    }));
+    if (reference?.id !== undefined) numbering.set(id, reference.id);
+    const paragraph = readWordParagraphFormatting(reference && properties ? { ...properties,
+      children: properties.children.filter(item => typeof item === 'string' || expanded(item) !== `${W}|numPr`),
+    } : properties, issues, id);
     styles.push(Object.freeze({ id, kind, isDefault, ...(basedOn === undefined ? {} : { basedOn }), run, paragraph }));
   }
   const cascade = createWordRunStyleCascade({ styles, defaults, paragraphDefaults, ...limits });
-  return Object.freeze({ defaults, paragraphDefaults, styles: Object.freeze(styles), issues: Object.freeze(issues), resolve: cascade.resolve, resolveParagraph: cascade.resolveParagraph,
+  return Object.freeze({ numbering: numbering as ReadonlyMap<string, string>, defaults, paragraphDefaults, styles: Object.freeze(styles), issues: Object.freeze(issues), resolve: cascade.resolve, resolveParagraph: cascade.resolveParagraph,
     resolveTable: createWordTableStyleCascade(styleElements, limits.maxDepth) });
 }

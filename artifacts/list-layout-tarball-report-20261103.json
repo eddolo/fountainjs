@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "d8e6f3d93082afa49b3905fdf09fb3c073cf97ac",
+  "actualTarballSHA256": "cf41cee65c1b4372ae9289457577b589b8570f1974961974d10ff4f57d48870b",
+  "published": false,
+  "consumerExit": 0,
+  "checks": [
+    "ESM root/core",
+    "CommonJS root/core",
+    "pure Node without DOM",
+    "HTML exact document round trip",
+    "native DOCX start and explicit list geometry"
+  ],
+  "note": "Local consumer resolves the actual extracted tarball. This does not certify optional framework peers or every package export."
+}

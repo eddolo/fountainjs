@@ -1,0 +1,118 @@
+{
+  "baselineCommit": "ec2f4a2b6a52907e2af56fead11a7574cfc46617",
+  "baselineTarballSHA256": "d31ab924ed2e1f3dd6a7b3a81eb62347311eabde6940ebf9d6b1a088bcf56dbc",
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "completeExpectedModelEqual": true,
+  "explicitModelAdditions": [
+    {
+      "path": [
+        0
+      ],
+      "spacingGroup": "word:style:Title",
+      "contextualSpacing": true
+    },
+    {
+      "path": [
+        5,
+        0,
+        0
+      ],
+      "spacingGroup": "word:style:ListNumber",
+      "contextualSpacing": true
+    },
+    {
+      "path": [
+        5,
+        1,
+        0
+      ],
+      "spacingGroup": "word:style:ListNumber",
+      "contextualSpacing": true
+    },
+    {
+      "path": [
+        5,
+        2,
+        0
+      ],
+      "spacingGroup": "word:style:ListNumber",
+      "contextualSpacing": true
+    }
+  ],
+  "originalListSpacingAfterPt": 7,
+  "derivedListGapsPt": [
+    0,
+    0
+  ],
+  "profile": "StarterKit + Pages + Math, unchanged real lab MathJax adapter",
+  "representedNodeCounts": {
+    "doc": 1,
+    "paragraph": 42,
+    "text": 51,
+    "heading": 4,
+    "ordered_list": 1,
+    "list_item": 3,
+    "image_super": 2,
+    "page_break": 1,
+    "math_block": 2,
+    "table": 1,
+    "table_row": 9,
+    "table_cell": 25,
+    "footnote_reference": 1,
+    "page_header": 1,
+    "inline_image": 1,
+    "page_footer": 1,
+    "page_field": 1,
+    "footnote_definition": 1
+  },
+  "unchangedMathHostSourceSHA256": "4382401bd0721a7f0bf22be1b090a2fe73e5563c5f61372bad7f0e944a1cbafe",
+  "unchangedMathAdapterSHA256": "0ad93d77d3fbf07dea3df244a5e846dac00ea7b497a30a4b317a31c01151c857",
+  "clockInput": "2026-11-04T01:00:00.000Z",
+  "nativeExport": {
+    "completeArchiveEqualToBaseline": true,
+    "allPartsEqual": true,
+    "parts": 18,
+    "sha256": "c15473482b9fb60518caba5037da75d406f4b0da049fc350bedefef8e100338a",
+    "remainingRuleLoss": [
+      {
+        "code": "paragraph-contextual-spacing-not-exported",
+        "severity": "warning",
+        "path": [
+          0
+        ],
+        "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule."
+      },
+      {
+        "code": "paragraph-contextual-spacing-not-exported",
+        "severity": "warning",
+        "path": [
+          5,
+          0,
+          0
+        ],
+        "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule."
+      },
+      {
+        "code": "paragraph-contextual-spacing-not-exported",
+        "severity": "warning",
+        "path": [
+          5,
+          1,
+          0
+        ],
+        "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule."
+      },
+      {
+        "code": "paragraph-contextual-spacing-not-exported",
+        "severity": "warning",
+        "path": [
+          5,
+          2,
+          0
+        ],
+        "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule."
+      }
+    ],
+    "nativeSpacingFixed": false
+  }
+}

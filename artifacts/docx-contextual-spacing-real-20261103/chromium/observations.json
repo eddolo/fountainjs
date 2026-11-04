@@ -1,0 +1,37 @@
+{
+  "locatedIssues": [
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        7
+      ]
+    }
+  ],
+  "typingUndo": true,
+  "actualDiagnosticDownload": true,
+  "actualDOCXDownloadReopen": true,
+  "contextualLayoutFixed": false,
+  "errors": []
+}

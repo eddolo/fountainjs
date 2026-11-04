@@ -1,0 +1,17 @@
+{
+  "actualTypingUndoRedoDownloadReopen": true,
+  "errors": [],
+  "importedPosition": {
+    "firstWordX": 136.1875,
+    "paragraphX": 136.1875,
+    "marginLeft": "0px",
+    "textIndent": "0px"
+  },
+  "reopenedPosition": {
+    "firstWordX": 160.1875,
+    "paragraphX": 184.1875,
+    "marginLeft": "48px",
+    "textIndent": "-24px"
+  },
+  "scope": "Numbering linkage/removal passed; positions record the still-open list geometry defect rather than accepting it as parity."
+}

@@ -7,6 +7,90 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Resolve the published document schema in TypeScript's legacy module-resolution
+  mode. CI and release validation now discover public entry points automatically,
+  including newer integrity, table-of-contents and HTML modules; Angular remains
+  separately checked under its ESM-only contract. That metadata repair changes
+  no runtime/declaration bytes. The separately reviewed seven-limit layout
+  capacity allowance is now approved and applied; other limits remain unchanged.
+
+- Preserve fractional table-column widths through Word and safe HTML instead of
+  rounding at import. Retain partial unknown-column metadata, report actual native
+  quantization, and preserve fractions through editing and pointer resizing.
+  Stationary resize handles no longer change widths or consume undo. Native table
+  placement and broader fidelity remain separate work. Full units pass 3,628;
+  recorded desktop journeys, packed ESM/CJS, workerd and independent native column
+  geometry pass. The approved size gate passes; refreshed full cloud CI and broader
+  fidelity remain open.
+
+- Retain equation-only Word paragraph geometry and font context on display math;
+  preserve it through live source edits, history, safe HTML and native semantic
+  DOCX export. Report missing receiving-schema ownership and mixed-paragraph
+  geometry loss. Inline math and unsupported contextual-flow boundaries remain
+  separate. Independent native PDFs now match all 11 profiled paragraph/caption
+  positions, repairing the cumulative +1/+2 pt equation drift. Full units pass
+  3,609; recorded desktop, packed ESM/CJS and real workerd checks pass. Broader
+  fidelity and size acceptance remain unfinished.
+
+- Retain an image body's portable paragraph layout separately from its caption
+  through JSON, safe HTML and native DOCX. Validate and expose the optional body,
+  caption-layout and caption-alignment fields in the block-image factory; remove
+  stale live image styles when formatting is cleared. Keep fractional image sizes
+  until conversion to Word integer units, and report paragraph layout omitted by
+  ordinary Markdown. Four native page images were reviewed; the retained paper's
+  two caption offsets are now zero (previously -3.2/-6.4 pt). The complete 3,597-test
+  suite, three recorded browser journeys, actual packed ESM/CJS and workerd pass.
+  Image/caption contextual-flow projection remains explicitly unsupported; broader
+  layout and release acceptance are unfinished.
+
+- Emit native document settings for every DOCX export so receiving engines
+  initialize Word paragraph-spacing defaults. Repair the retained paper's
+  initial 7 pt offset without rewriting its spacing declarations. Independent
+  PDF coordinates now gate the setup heading and instruction positions, with
+  an actual pre-fix PDF as the negative control. Full units pass 3,582; broader
+  figure/caption/header layout and release acceptance remain unfinished.
+
+- Write native DOCX paragraph-group identities and contextual spacing rules;
+  retain declared geometry through export/reopen. Use native heading outlines
+  and bounded part/paragraph bindings for code/caption roles, while treating
+  native formatting as authoritative. Record unsupported flows and code line-ending
+  normalization. Full units (3,577) and recorded browser round trips pass.
+  Independent native rendering confirms repaired instruction steps, with a common
+  7 pt vertical offset and broader layout/release acceptance still unfinished.
+
+- Verify numbered-marker paint and complete document retention through
+  Enter/Backspace in three recorded real-paper browser journeys, with independent
+  positive/negative paint controls. Correct the earlier missing-marker report;
+  the number already rendered and no production repair was needed.
+
+- Bind imported Word contextual-spacing rules to actual paragraph identities,
+  including default styles and omitted/off neighbours, without rewriting declared
+  spacing. The retained paper's imported and standalone-HTML list gaps now resolve
+  to zero. Diagnose unsupported flow conversions and unresolved identities.
+  The later native bridge above repairs supported export/reopen flows; no full
+  Word-fidelity or release-readiness claim.
+
+- Add optional opaque `spacingGroup` and `contextualSpacing` paragraph-layout
+  data, DOM-free gap resolution, and schema-defined paragraph flows. Keep the
+  declarations through JSON/HTML, history, reordering and collaboration; derive
+  current margins for mounted/virtualized editor views and HTML readers.
+  Native markers use the paragraph's declared font context to avoid Chromium
+  adding an unintended list-item gap. Native Word mapping is covered by the later
+  bridge above; isolated/custom flows remain explicitly unfinished. No full DOCX
+  spacing claim.
+
+- Resolve Word contextual-spacing on/off declarations through the bounded
+  paragraph cascade, including explicit false overrides. Locate the remaining
+  adjacency-rule loss on each affected paragraph; this does not yet implement
+  contextual spacing in the portable model or browser/native projection.
+
+- Add optional portable list geometry and marker-format attributes on ordered
+  lists, bullet lists and items. Keep paragraph indentation local to that origin
+  through Word import/export, safe HTML, editing/history and collaboration.
+  Preserve native marker fallbacks in HTML fragments without the stylesheet.
+  This branch work remains partial: contextual spacing, multi-paragraph list
+  ownership, broader marker behavior and final release gates are unfinished.
+
 - Add task deletion with one-step recovery of edited descriptions, metadata and
   undo histories to the task workflow demo. Handle an empty workspace and
   restore focus after deletion. Add clickable breadcrumbs and parent arrows

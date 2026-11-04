@@ -22,6 +22,11 @@ export interface ParagraphLayout {
   readonly fontSize?: number;
   readonly spacingBefore?: number;
   readonly spacingAfter?: number;
+  /** Opaque spacing identity, independent of appearance or style ancestry.
+   * Participating paragraphs own before/after spacing (omission means zero).
+   */
+  readonly spacingGroup?: string;
+  readonly contextualSpacing?: boolean;
   readonly lineHeight?: number;
   readonly lineHeightUnit?: 'multiple' | 'pt';
   readonly lineHeightRule?: 'auto' | 'exact' | 'atLeast';
@@ -37,8 +42,8 @@ export interface ParagraphLayout {
 }
 
 const LENGTH_KEYS = ['spacingBefore', 'spacingAfter', 'indentStart', 'indentEnd', 'firstLineIndent', 'hangingIndent'] as const;
-const BOOLEAN_KEYS = ['keepWithNext', 'keepLinesTogether', 'pageBreakBefore'] as const;
-const KEYS = new Set(['unit', ...LENGTH_KEYS, ...BOOLEAN_KEYS, 'fontFamily', 'fontSize', 'lineHeight', 'lineHeightUnit', 'lineHeightRule', 'background', 'borders']);
+const BOOLEAN_KEYS = ['keepWithNext', 'keepLinesTogether', 'pageBreakBefore', 'contextualSpacing'] as const;
+const KEYS = new Set(['unit', ...LENGTH_KEYS, ...BOOLEAN_KEYS, 'spacingGroup', 'fontFamily', 'fontSize', 'lineHeight', 'lineHeightUnit', 'lineHeightRule', 'background', 'borders']);
 
 function finiteLength(value: unknown, signed = false): value is number {
   return typeof value === 'number' && Number.isFinite(value) && Math.abs(value) <= 100_000 && (signed || value >= 0);
@@ -61,6 +66,8 @@ export function isParagraphLayout(value: unknown): value is ParagraphLayout {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const layout = value as Record<string, unknown>;
   if (layout.unit !== 'pt' || Object.keys(layout).some(key => !KEYS.has(key))) return false;
+  if (layout.spacingGroup !== undefined && (typeof layout.spacingGroup !== 'string' || !layout.spacingGroup.length || layout.spacingGroup.length > 1024 || /[\u0000-\u001f\u007f-\u009f\uD800-\uDFFF\uFFFE\uFFFF]/u.test(layout.spacingGroup))) return false;
+  if (layout.contextualSpacing !== undefined && layout.spacingGroup === undefined) return false;
   if (layout.fontFamily !== undefined && (typeof layout.fontFamily !== 'string' || normalizeFontFamily(layout.fontFamily) !== layout.fontFamily)) return false;
   if (layout.fontSize !== undefined && (typeof layout.fontSize !== 'number' || !Number.isFinite(layout.fontSize) || layout.fontSize < 1 || layout.fontSize > 384)) return false;
   for (const key of LENGTH_KEYS) {
@@ -111,8 +118,8 @@ export function paragraphLayoutDOMAttributes(value: unknown): Attributes {
   if (value.lineHeight !== undefined) styles.push(`line-height:${value.lineHeightUnit === 'multiple' ? Number(value.lineHeight.toFixed(6)) : points(value.lineHeight)}`);
   if (value.indentStart !== undefined) styles.push(`margin-inline-start:${points(value.indentStart)}`);
   if (value.indentEnd !== undefined) styles.push(`margin-inline-end:${points(value.indentEnd)}`);
-  if (value.firstLineIndent !== undefined) styles.push(`text-indent:${points(value.firstLineIndent)}`);
-  if (value.hangingIndent !== undefined) styles.push(`text-indent:-${points(value.hangingIndent)}`);
+  if (value.firstLineIndent !== undefined) styles.push(`text-indent:${points(value.firstLineIndent)}`, `--fountain-paragraph-first-line:${points(value.firstLineIndent)}`);
+  if (value.hangingIndent !== undefined) styles.push(`text-indent:-${points(value.hangingIndent)}`, `--fountain-paragraph-first-line:-${points(value.hangingIndent)}`);
   if (value.background) styles.push(`background-color:${value.background}`);
   // Firefox drops `avoid-page` even though Chromium/WebKit accept it. The
   // generic `avoid` value expresses the same keep-with-next intent for this

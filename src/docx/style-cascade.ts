@@ -37,9 +37,13 @@ export interface WordParagraphBorder {
 }
 export interface WordParagraphFormatting {
   readonly align?: string;
+  /** Native outline level: 0–8 outline, 9 body text. */
+  readonly outlineLevel?: number;
   /** Twentieths of a point, except auto line spacing which is 240ths of a line. */
   readonly spacingBefore?: number;
   readonly spacingAfter?: number;
+  /** Absolute on/off declaration; the layout boundary resolves adjacency. */
+  readonly contextualSpacing?: boolean;
   readonly line?: number;
   readonly lineRule?: 'auto' | 'exact' | 'atLeast';
   /** Twentieths of a point. */
@@ -70,6 +74,8 @@ export interface WordTableTextFormatting {
 }
 export interface ResolvedWordParagraph {
   readonly formatting: WordParagraphFormatting;
+  /** Actual valid paragraph style, not its ancestor or display name. */
+  readonly paragraphStyle?: string;
   readonly paragraphChain: readonly string[];
   readonly issues: readonly WordStyleIssue[];
 }
@@ -137,7 +143,7 @@ function copyFormatting(input: WordRunFormatting = {}): WordRunFormatting {
 }
 
 const PARAGRAPH_VALUE_KEYS = [
-  'align', 'spacingBefore', 'spacingAfter', 'line', 'lineRule', 'indentLeft', 'indentRight',
+  'align', 'outlineLevel', 'spacingBefore', 'spacingAfter', 'contextualSpacing', 'line', 'lineRule', 'indentLeft', 'indentRight',
   'firstLine', 'hanging', 'keepNext', 'keepLines', 'pageBreakBefore', 'background',
 ] as const;
 
@@ -146,13 +152,15 @@ function copyParagraphFormatting(input: WordParagraphFormatting = {}): WordParag
   for (const key of PARAGRAPH_VALUE_KEYS) {
     const value = own(input, key);
     if (value === undefined) continue;
-    if (['spacingBefore', 'spacingAfter', 'line'].includes(key)) {
+    if (key === 'outlineLevel') {
+      if (typeof value !== 'number' || !Number.isInteger(value) || value < 0 || value > 9) throw new Error('Invalid Word paragraph outline level.');
+    } else if (['spacingBefore', 'spacingAfter', 'line'].includes(key)) {
       if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0 || value > 20_000_000) throw new Error(`Invalid Word paragraph ${key}.`);
     } else if (['indentLeft', 'indentRight'].includes(key)) {
       if (typeof value !== 'number' || !Number.isSafeInteger(value) || Math.abs(value) > 20_000_000) throw new Error(`Invalid Word paragraph ${key}.`);
     } else if (key === 'firstLine' || key === 'hanging') {
       if (value !== null && (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0 || value > 20_000_000)) throw new Error(`Invalid Word paragraph ${key}.`);
-    } else if (['keepNext', 'keepLines', 'pageBreakBefore'].includes(key)) {
+    } else if (['keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing'].includes(key)) {
       if (typeof value !== 'boolean') throw new Error(`Invalid Word paragraph ${key}.`);
     } else if (key === 'lineRule') {
       if (!['auto', 'exact', 'atLeast'].includes(String(value))) throw new Error('Invalid Word paragraph lineRule.');
@@ -300,9 +308,12 @@ export function createWordRunStyleCascade(input: {
         issues: Object.freeze(issues.map(issue => Object.freeze(issue))),
       });
     },
-    resolveParagraph(input: { readonly paragraphStyle?: string; readonly direct?: WordParagraphFormatting; readonly table?: WordTableTextFormatting } = {}): ResolvedWordParagraph {
-      const paragraph = chain(input.paragraphStyle ?? defaultParagraph, 'paragraph');
-      const layers = [paragraphDefaults, ...input.table?.paragraphs.map(copyParagraphFormatting) ?? [], ...paragraph.styles.map(style => style.paragraph!), copyParagraphFormatting(input.direct)];
+    resolveParagraph(input: { readonly paragraphStyle?: string; readonly direct?: WordParagraphFormatting; readonly table?: WordTableTextFormatting; readonly numbering?: WordParagraphFormatting } = {}): ResolvedWordParagraph {
+      const identity = input.paragraphStyle ?? defaultParagraph;
+      const paragraph = chain(identity, 'paragraph');
+      // Word's implementation applies numbering after paragraph styles, unlike
+      // the generic ISO ordering. Direct paragraph declarations remain nearest.
+      const layers = [paragraphDefaults, ...input.table?.paragraphs.map(copyParagraphFormatting) ?? [], ...paragraph.styles.map(style => style.paragraph!), copyParagraphFormatting(input.numbering), copyParagraphFormatting(input.direct)];
       const output: { -readonly [K in keyof WordParagraphFormatting]: WordParagraphFormatting[K] } = {};
       const borders: Partial<Record<WordParagraphBorderSide, WordParagraphBorder | null>> = {};
       for (const layer of layers) {
@@ -318,6 +329,7 @@ export function createWordRunStyleCascade(input: {
       if (Object.keys(borders).length) output.borders = Object.freeze(borders);
       return Object.freeze({
         formatting: Object.freeze(output),
+        ...(identity !== undefined && styles.get(identity)?.kind === 'paragraph' ? { paragraphStyle: identity } : {}),
         paragraphChain: Object.freeze(paragraph.styles.map(style => style.id)),
         issues: paragraph.issues,
       });

@@ -1,0 +1,264 @@
+{
+  "implementationCommit": "0255f600ff3704f610e80ad3ee62acc38e96ceb0",
+  "nativeAuditCommit": "9e15472c9cdde46cd8b0bcb9a031df0dedd1e807",
+  "nativeRun": 41763890327,
+  "nativeJob": 126357628439,
+  "archiveSHA256": "8770a0c7f0d656779692212ee01d750eddf656751a7aa8648104a700a9d0c4df",
+  "paragraphPositionCheck": {
+    "scope": [
+      "Experimental setup",
+      "Record the initial temperature before starting the timer.",
+      "Keep both probes at the same depth.",
+      "Read the measurements without moving either vessel."
+    ],
+    "tolerancePt": 0.01,
+    "deltasPt": {
+      "Experimental setup": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Keep both probes at the same depth.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Read the measurements without moving either vessel.": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    "negativeControl": {
+      "retainedPreRepairPDF": "artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native",
+      "deltasPt": {
+        "Experimental setup": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Keep both probes at the same depth.": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 0.0,
+          "y": 7.0
+        }
+      },
+      "correctlyRejected": true
+    }
+  },
+  "independentlyReviewedPages": 4,
+  "completePixelFidelityCertified": false,
+  "microsoftWordCertified": false,
+  "source": {
+    "pages": 2,
+    "pageDimensionsPt": [
+      [
+        612,
+        792
+      ],
+      [
+        612,
+        792
+      ]
+    ],
+    "targets": {
+      "Experimental setup": {
+        "x0": 57.7,
+        "top": 187.938,
+        "bottom": 203.938
+      },
+      "Record the initial temperature": {
+        "x0": 75.7,
+        "top": 244.471,
+        "bottom": 255.471
+      },
+      "Keep both probes": {
+        "x0": 75.7,
+        "top": 258.971,
+        "bottom": 269.971
+      },
+      "Read the measurements": {
+        "x0": 75.7,
+        "top": 273.471,
+        "bottom": 284.471
+      },
+      "Figure 1": {
+        "x0": 57.7,
+        "top": 439.66,
+        "bottom": 449.66
+      },
+      "Figure 2": {
+        "x0": 57.7,
+        "top": 671.96,
+        "bottom": 681.96
+      },
+      "Recorded temperatures": {
+        "x0": 57.7,
+        "top": 242.08799999999997,
+        "bottom": 258.08799999999997
+      }
+    },
+    "pageImages": [
+      {
+        "path": "artifacts\\docx-settings-gate-evidence-20261104\\unpacked\\native\\source\\page-1.png",
+        "sha256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+        "equalsInspectedEarlierRun": true
+      },
+      {
+        "path": "artifacts\\docx-settings-gate-evidence-20261104\\unpacked\\native\\source\\page-2.png",
+        "sha256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+        "equalsInspectedEarlierRun": true
+      }
+    ],
+    "imageBoxes": [
+      [
+        {
+          "x0": 66.65,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        },
+        {
+          "x0": 93.6,
+          "top": 293.3,
+          "width": 424.79999999999995,
+          "height": 135.95
+        },
+        {
+          "x0": 86.4,
+          "top": 456.6,
+          "width": 439.20000000000005,
+          "height": 204.95
+        }
+      ],
+      [
+        {
+          "x0": 66.65,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        }
+      ]
+    ]
+  },
+  "exported": {
+    "pages": 2,
+    "pageDimensionsPt": [
+      [
+        612,
+        792
+      ],
+      [
+        612,
+        792
+      ]
+    ],
+    "targets": {
+      "Experimental setup": {
+        "x0": 57.7,
+        "top": 187.938,
+        "bottom": 203.938
+      },
+      "Record the initial temperature": {
+        "x0": 75.7,
+        "top": 244.471,
+        "bottom": 255.471
+      },
+      "Keep both probes": {
+        "x0": 75.7,
+        "top": 258.971,
+        "bottom": 269.971
+      },
+      "Read the measurements": {
+        "x0": 75.7,
+        "top": 273.471,
+        "bottom": 284.471
+      },
+      "Figure 1": {
+        "x0": 57.7,
+        "top": 436.46000000000004,
+        "bottom": 446.46000000000004
+      },
+      "Figure 2": {
+        "x0": 57.7,
+        "top": 665.56,
+        "bottom": 675.56
+      },
+      "Recorded temperatures": {
+        "x0": 57.7,
+        "top": 244.08799999999997,
+        "bottom": 260.08799999999997
+      }
+    },
+    "pageImages": [
+      {
+        "path": "artifacts\\docx-settings-gate-evidence-20261104\\unpacked\\native\\exported\\page-1.png",
+        "sha256": "dfd1ed17f53835e7fb11954c293966bf27896c5455cbe48987747c8338096e36",
+        "equalsInspectedEarlierRun": true
+      },
+      {
+        "path": "artifacts\\docx-settings-gate-evidence-20261104\\unpacked\\native\\exported\\page-2.png",
+        "sha256": "b39c36493e643557072c7af126f39751b6a804cd4a7ccbe41d2276a2435838e2",
+        "equalsInspectedEarlierRun": true
+      }
+    ],
+    "imageBoxes": [
+      [
+        {
+          "x0": 57.6,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        },
+        {
+          "x0": 93.75,
+          "top": 293.3,
+          "width": 424.5,
+          "height": 135.75
+        },
+        {
+          "x0": 86.25,
+          "top": 453.4,
+          "width": 439.5,
+          "height": 204.75000000000003
+        }
+      ],
+      [
+        {
+          "x0": 57.6,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        }
+      ]
+    ]
+  },
+  "sourcePageImagesEqualPreviousAudit": [
+    true,
+    true
+  ],
+  "nativeYDeltaPt": {
+    "Experimental setup": 0.0,
+    "Record the initial temperature": 0.0,
+    "Keep both probes": 0.0,
+    "Read the measurements": 0.0,
+    "Figure 1": -3.1999999999999886,
+    "Figure 2": -6.400000000000091,
+    "Recorded temperatures": 2.0
+  },
+  "remainingDifferences": [
+    "Figure/caption positioning remains different.",
+    "Header image and text horizontal placement differs.",
+    "Page-two equation/table positioning still needs work.",
+    "The source-footnote text is absent in this LibreOffice render, while the export displays the retained definition.",
+    "Standalone HTML still uses raw equation and linear page-template/page-field fallbacks."
+  ],
+  "completeEditedModelsEqualPreviousAudit": true
+}

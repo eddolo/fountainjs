@@ -171,6 +171,9 @@ function reportNodeAttributes(
   if (['paragraph', 'heading'].includes(name) && node.attrs.emphasis === 'explicit') {
     report(context, 'attribute', name, path, 'Explicit normal-weight/non-italic block emphasis is not represented by ordinary Markdown; renderer defaults may differ.');
   }
+  if (['ordered_list', 'bullet_list', 'list_item'].includes(name) && node.attrs.layout != null) {
+    report(context, 'attribute', name, path, 'List marker formatting and geometry are not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
+  }
   if (['paragraph', 'heading'].includes(name) && node.attrs.layout != null) {
     report(context, 'attribute', name, path, 'Paragraph spacing, font context, indentation, borders and pagination controls are not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
   }
@@ -188,6 +191,9 @@ function reportNodeAttributes(
   if (name === 'code_block' && node.attrs.layout != null) {
     report(context, 'attribute', name, path, 'Code-block layout and font context are not represented by Markdown fences; retain Fountain JSON or safe HTML.');
   }
+  if (name === 'math_block' && node.attrs.layout != null) {
+    report(context, 'attribute', name, path, 'Display-equation paragraph layout and font context are not represented by TeX delimiters; retain Fountain JSON or safe HTML.');
+  }
   if (['inline_math', 'math_block'].includes(name) && node.attrs.ariaLabel) {
     report(context, 'attribute', name, path, 'The accessible math label is not represented by TeX delimiters.');
   }
@@ -195,6 +201,8 @@ function reportNodeAttributes(
     report(context, 'attribute', name, path, 'The typed semantic math tree is projected to TeX source in Markdown; retain Fountain JSON or HTML for the lossless representation.');
   }
   if (['image_super', 'inline_image'].includes(name)) {
+    if (name === 'image_super' && node.attrs.imageLayout !== undefined) report(context, 'attribute', name, path,
+      'Image paragraph layout is not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
     const nonDefaultLayout = node.attrs.width !== '100%'
       || node.attrs.height !== 'auto'
       || node.attrs.align !== 'center'

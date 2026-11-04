@@ -1,0 +1,95 @@
+{
+  "engines": [
+    {
+      "engine": "chromium",
+      "images": {
+        "imported.png": {
+          "sha256": "47e611a007547ffdf0b2488b461132886a42eeb801510d579200144d17f19aad",
+          "priorSHA256": "47e611a007547ffdf0b2488b461132886a42eeb801510d579200144d17f19aad",
+          "priorByteEquality": true
+        },
+        "reader.png": {
+          "sha256": "f15e14de5e4053d20b97a8838e3ccd3844445b43e51084ab56a41ce4b5ef2cb6",
+          "priorSHA256": "f15e14de5e4053d20b97a8838e3ccd3844445b43e51084ab56a41ce4b5ef2cb6",
+          "priorByteEquality": true
+        },
+        "native-export-reopened.png": {
+          "sha256": "47e611a007547ffdf0b2488b461132886a42eeb801510d579200144d17f19aad"
+        }
+      },
+      "nativeReopenGap": 0,
+      "changedPartsFromPrevious": [
+        "customXml/fountainParagraphs.xml",
+        "docProps/core.xml",
+        "word/_rels/document.xml.rels",
+        "word/document.xml",
+        "word/styles.xml"
+      ]
+    },
+    {
+      "engine": "firefox",
+      "images": {
+        "imported.png": {
+          "sha256": "e791f3d9662554fea24a93df533e1096350162861df3ceb343eb1dd9ddd1cf6a",
+          "priorSHA256": "e791f3d9662554fea24a93df533e1096350162861df3ceb343eb1dd9ddd1cf6a",
+          "priorByteEquality": true
+        },
+        "reader.png": {
+          "sha256": "90ee650da9358a243831b2e132951adbad51c83e9b1851523883b1c1c1ac6abb",
+          "priorSHA256": "e994a70fff19507a1f62ea0de89a444c2fb08bb05bf1a9270ad71e127aceed56",
+          "priorByteEquality": false
+        },
+        "native-export-reopened.png": {
+          "sha256": "e791f3d9662554fea24a93df533e1096350162861df3ceb343eb1dd9ddd1cf6a"
+        }
+      },
+      "nativeReopenGap": 0,
+      "changedPartsFromPrevious": [
+        "customXml/fountainParagraphs.xml",
+        "docProps/core.xml",
+        "word/_rels/document.xml.rels",
+        "word/document.xml",
+        "word/styles.xml"
+      ]
+    },
+    {
+      "engine": "webkit",
+      "images": {
+        "imported.png": {
+          "sha256": "cf325ecedf02f391da4e30f24b00e1e35f214fed6da8dd6acd082d5299d283cd",
+          "priorSHA256": "cf325ecedf02f391da4e30f24b00e1e35f214fed6da8dd6acd082d5299d283cd",
+          "priorByteEquality": true
+        },
+        "reader.png": {
+          "sha256": "85eb7fc3fa114a59afe92f94d9ccc91668b0c31d107240c7f8bc9d852b969fa4",
+          "priorSHA256": "6be9e89d83956c18edbc5386276131d1da190d3261fce4cf494221f9ee478152",
+          "priorByteEquality": false
+        },
+        "native-export-reopened.png": {
+          "sha256": "cf325ecedf02f391da4e30f24b00e1e35f214fed6da8dd6acd082d5299d283cd"
+        }
+      },
+      "nativeReopenGap": 0,
+      "changedPartsFromPrevious": [
+        "customXml/fountainParagraphs.xml",
+        "docProps/core.xml",
+        "word/_rels/document.xml.rels",
+        "word/document.xml",
+        "word/styles.xml"
+      ]
+    }
+  ],
+  "runtimeFiles": 169,
+  "changedRuntimeFiles": [
+    {
+      "path": "docx.cjs",
+      "bytes": 173214,
+      "previousBytes": 163895
+    },
+    {
+      "path": "docx.js",
+      "bytes": 213868,
+      "previousBytes": 202599
+    }
+  ]
+}

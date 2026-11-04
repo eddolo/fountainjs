@@ -1,0 +1,18 @@
+{
+  "baselineCommit": "ec2f4a2b6a52907e2af56fead11a7574cfc46617",
+  "compared": 169,
+  "changed": [
+    {
+      "path": "docx.cjs",
+      "before": "204f74f691d1acfbfb1a1e03f30a343d28da03d93fcb2928ea2da1a3071219ae",
+      "after": "0a5c80374c1b3e083604acec6823d5657f8d714eb982a04aecdfbdbac06d4dbe"
+    },
+    {
+      "path": "docx.js",
+      "before": "6cd96ca43317527bbbd64df12a71fe817ee92de2abe52c0208b898502e0b9580",
+      "after": "3cd25957d9b56d4bd812e6430bfdf752d557a0f4adfdcaa65eb1743b3ad71f7e"
+    }
+  ],
+  "otherRuntimeAndCSSByteIdentical": true,
+  "publicAPISnapshotUnchanged": true
+}

@@ -1,5 +1,44 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Capacity follow-up (2026-11-04, unmerged): the user approved the reviewed
+seven-limit layout allowance. The exact patch is applied and the authoritative
+build-size gate passes. Other limits and semantic/reference/performance checks
+are unchanged. This supersedes the size-blocker status in the earlier checkpoints
+below; refreshed full CI and the remaining capability/fidelity work are still
+required. No capability row or completion percentage is promoted.
+
+Table/release checkpoint (2026-11-04, unmerged): fractional column geometry and
+stationary-resize history are repaired, with 3,628 unit cases, three recorded
+desktop workflows, packed ESM/CJS, workerd and independent native width evidence.
+Native table placement remains 0.3 pt off; no full-page certification is claimed.
+Schema package resolution is repaired and automatic validation covers all 40
+applicable public entries, plus Angular separately. Package/type-resolution,
+publint and website checks pass. Refreshed broad browser CI and seven existing
+size failures remain open. No capability-row or percentage promotion.
+[Detailed scope](DOCX_COLUMN_PRECISION.md).
+
+Marker-audit correction (2026-11-04): focused paint checks and byte-identical
+original marker patches show that the empty item's `2.` was already visible.
+The earlier defect report was a review error. Three recorded journeys also
+compare the entire JSON document before/after Enter/Backspace exactly. No
+production fix or parity promotion is claimed. [Evidence](DOCX_LIST_LAYOUT.md).
+
+Word-import follow-up (2026-11-04, unmerged): default/exact style identities and
+explicit off overrides now feed portable contextual spacing. Real-paper editor
+and standalone-HTML list gaps resolve to zero in three desktop engines. Actual
+DOCX export/reopen still exposes the reported 7 pt rule loss. The initial
+missing-marker finding is superseded by the correction above. Native fidelity,
+size and timing acceptance remain open; no parity row/percentage is promoted.
+[Scope and evidence](DOCX_LIST_LAYOUT.md).
+
+Portable paragraph-flow work (2026-11-04, unmerged): opaque spacing groups now
+drive DOM-free gap resolution and live editor/full-HTML projections without
+rewriting source declarations. Three recorded desktop journeys verify 2/0/12 pt
+gaps through structural editing, JSON download and HTML reader/reopen. A real
+Chromium marker-font discrepancy was reproduced and repaired. Native Word group
+mapping, size acceptance and server-HTML timing acceptance remain unfinished; FB-04/FORMAT-05 and parity
+percentages are not promoted. [Contracts and evidence](DOCX_LIST_LAYOUT.md).
+
 Workflow usability follow-up (2026-11-03): task deletion now has recovery that
 retains edits, metadata and independent editor history. Empty state, focus and
 20-task limits are exercised. Workflow pages expose clickable breadcrumbs and

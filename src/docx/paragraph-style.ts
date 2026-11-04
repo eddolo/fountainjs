@@ -1,11 +1,48 @@
-import type { ParagraphBorder, ParagraphLayout } from '../core/paragraph-layout';
+import { isParagraphLayout, type ParagraphBorder, type ParagraphLayout } from '../core/paragraph-layout';
 import { readWordParagraphFormatting, type readWordStyleSheet, type WordStyleReadIssue } from './style-reader';
-import { WORD_PARAGRAPH_BORDER_SIDES, type WordTableTextFormatting } from './style-cascade';
+import { createWordRunStyleCascade, WORD_PARAGRAPH_BORDER_SIDES, type WordTableTextFormatting } from './style-cascade';
 import type { XMLElement } from './xml-types';
+import type { Node } from '../core/schema';
 import { wordStyleChild, wordStyleReference } from './style-projection';
 
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-const SUPPORTED = new Set(['jc', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'shd', 'pBdr']);
+const SUPPORTED = new Set(['jc', 'outlineLvl', 'spacing', 'ind', 'keepNext', 'keepLines', 'pageBreakBefore', 'contextualSpacing', 'shd', 'pBdr']);
+const EMPTY_STYLES = createWordRunStyleCascade({ styles: [] });
+
+/** Spacing groups are a rule dependency, not a general Word-style binding.
+ * Retain every member (including omitted/off neighbours) of a group with a
+ * declaration somewhere in the imported document. Unused style identities do
+ * not add foreign-format metadata to otherwise ordinary Fountain paragraphs.
+ */
+export function retainWordSpacingGroups(blocks: readonly Node[], warn?: (path: readonly number[], key: 'layout' | 'imageLayout' | 'captionLayout') => void, owned: Iterable<string> = []): readonly Node[] {
+  const used = new Set<string>(owned);
+  const keys = ['layout', 'imageLayout', 'captionLayout'] as const;
+  for (const block of blocks) block.descendants(node => {
+    for (const key of keys) {
+      const layout = node.attrs[key];
+      if (isParagraphLayout(layout) && layout.spacingGroup !== undefined && layout.contextualSpacing !== undefined) used.add(layout.spacingGroup);
+    }
+  });
+  const visit = (node: Node, path: readonly number[]): Node => {
+    let result = node;
+    if (node.childCount) {
+      const content = node.content.map((child, index) => visit(child, [...path, index]));
+      if (content.some((child, index) => child !== node.content[index])) result = node.copy(content);
+    }
+    for (const key of keys) {
+      const layout = result.attrs[key];
+      if (!isParagraphLayout(layout) || layout.spacingGroup === undefined) continue;
+      if (used.has(layout.spacingGroup)) {
+        if (key !== 'layout' || node.type.spec.paragraphFlow !== 'text') warn?.(path, key);
+        continue;
+      }
+      const { spacingGroup, ...declarations } = layout;
+      result = result.withAttrs({ ...result.attrs, [key]: declarations });
+    }
+    return result;
+  };
+  return blocks.map((block, index) => visit(block, [index]));
+}
 
 function isWord(element: XMLElement, local: string) {
   const colon = element.name.indexOf(':');
@@ -17,12 +54,13 @@ function paragraphIssue(issue: WordStyleReadIssue) {
 }
 
 /** Materialize the supported effective Word paragraph appearance into Fountain's
- * generic layout attribute. Word style identity remains source metadata only.
+ * generic layout attribute. The spacing identity is opaque application data;
+ * it does not retain or bind the original Word style definition.
  */
 export function projectWordParagraphStyle(properties: XMLElement | undefined,
   sheet: ReturnType<typeof readWordStyleSheet> | undefined,
-  warn: (code: string, message: string) => void, table?: WordTableTextFormatting): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly layout?: ParagraphLayout } {
-  const paragraphStyle = sheet ? wordStyleReference(properties, 'pStyle') : undefined;
+  warn: (code: string, message: string) => void, table?: WordTableTextFormatting, numberingProperties?: XMLElement): { readonly align: 'left' | 'center' | 'right' | 'justify'; readonly alignExplicit?: true; readonly outlineLevel?: number; readonly styleId?: string; readonly layout?: ParagraphLayout } {
+  const paragraphStyle = wordStyleReference(properties, 'pStyle');
   const filtered = properties && {
     ...properties,
     children: properties.children.filter(item => typeof item === 'string'
@@ -30,7 +68,13 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
   };
   const directIssues: WordStyleReadIssue[] = [];
   const direct = readWordParagraphFormatting(filtered, directIssues);
-  const resolved = sheet?.resolveParagraph({ paragraphStyle, direct, table }) ?? { formatting: direct, paragraphChain: [], issues: [] };
+  const numberingIssues: WordStyleReadIssue[] = [];
+  // The list boundary resolves numbering tabs separately from paragraph styles.
+  const numbering = readWordParagraphFormatting(numberingProperties && { ...numberingProperties,
+    children: numberingProperties.children.filter(item => typeof item === 'string' || !isWord(item, 'tabs')),
+  }, numberingIssues);
+  for (const issue of numberingIssues) warn(issue.code, `Word numbering paragraph formatting: ${issue.property} is not fully represented.`);
+  const resolved = (sheet ?? EMPTY_STYLES).resolveParagraph({ paragraphStyle, direct, table, numbering });
   if (table?.paragraphs.length && resolved.paragraphChain.includes('Normal')) warn('table-normal-style-precedence-unverified',
     'Word Normal/document-default equivalence can alter table paragraph precedence. The explicit cascade is retained, but this combination still requires native Word verification.');
   const used = new Set(resolved.paragraphChain);
@@ -55,6 +99,17 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
     lineHeight: 1, lineHeightUnit: 'multiple', lineHeightRule: 'auto',
     keepWithNext: false, keepLinesTogether: false, pageBreakBefore: false,
   };
+  // All paragraphs with a known identity participate, including a neighbour
+  // with an omitted/off rule. Appearance and ancestry never define equality.
+  // The unnamed default is separate from every explicitly defined style.
+  const spacingGroup = resolved.paragraphStyle === undefined
+    ? paragraphStyle === undefined ? 'word:implicit' : undefined
+    : `word:style:${resolved.paragraphStyle}`;
+  if (spacingGroup !== undefined && isParagraphLayout({ unit: 'pt', spacingGroup })) {
+    layout.spacingGroup = spacingGroup;
+    if (source.contextualSpacing !== undefined) layout.contextualSpacing = source.contextualSpacing;
+  } else if (source.contextualSpacing !== undefined) warn('paragraph-contextual-spacing-not-imported',
+    'The effective Word contextual rule has no representable, resolved paragraph style identity. Declared spacing remains; no same-style relationship was invented.');
   if (source.spacingBefore !== undefined) layout.spacingBefore = source.spacingBefore / 20;
   if (source.spacingAfter !== undefined) layout.spacingAfter = source.spacingAfter / 20;
   if (source.line !== undefined) {
@@ -95,5 +150,6 @@ export function projectWordParagraphStyle(properties: XMLElement | undefined,
       ...(border.space === undefined ? {} : { space: border.space }) });
   }
   if (Object.keys(borders).length) layout.borders = Object.freeze(borders);
-  return Object.freeze({ align, ...(source.align === 'left' ? { alignExplicit: true as const } : {}), ...(Object.keys(layout).length > 1 ? { layout: Object.freeze(layout) as ParagraphLayout } : {}) });
+  return Object.freeze({ align, outlineLevel: source.outlineLevel, styleId: resolved.paragraphStyle,
+    ...(source.align === 'left' ? { alignExplicit: true as const } : {}), ...(Object.keys(layout).length > 1 ? { layout: Object.freeze(layout) as ParagraphLayout } : {}) });
 }

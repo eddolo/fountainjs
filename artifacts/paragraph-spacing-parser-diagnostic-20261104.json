@@ -1,0 +1,164 @@
+{
+  "baseline": "retained d8e6f3d package",
+  "input": "unchanged 100-paragraph performance fixture",
+  "purpose": "Alternating-order causal diagnostic only; not a replacement for the original standalone performance gate.",
+  "productionGateChanged": false,
+  "warmupIterations": 0,
+  "completeDocumentEquality": true,
+  "samples": [
+    {
+      "pair": 0,
+      "name": "baseline",
+      "wallMs": 44.1696,
+      "cpuMs": 62
+    },
+    {
+      "pair": 0,
+      "name": "current",
+      "wallMs": 40.8159,
+      "cpuMs": 63
+    },
+    {
+      "pair": 1,
+      "name": "current",
+      "wallMs": 41.69789999999995,
+      "cpuMs": 94
+    },
+    {
+      "pair": 1,
+      "name": "baseline",
+      "wallMs": 23.491300000000024,
+      "cpuMs": 62
+    },
+    {
+      "pair": 2,
+      "name": "baseline",
+      "wallMs": 26.31080000000003,
+      "cpuMs": 31
+    },
+    {
+      "pair": 2,
+      "name": "current",
+      "wallMs": 23.688800000000015,
+      "cpuMs": 47
+    },
+    {
+      "pair": 3,
+      "name": "current",
+      "wallMs": 17.971299999999985,
+      "cpuMs": 16
+    },
+    {
+      "pair": 3,
+      "name": "baseline",
+      "wallMs": 12.85770000000008,
+      "cpuMs": 0
+    },
+    {
+      "pair": 4,
+      "name": "baseline",
+      "wallMs": 33.8918000000001,
+      "cpuMs": 31
+    },
+    {
+      "pair": 4,
+      "name": "current",
+      "wallMs": 25.705400000000054,
+      "cpuMs": 31
+    },
+    {
+      "pair": 5,
+      "name": "current",
+      "wallMs": 18.204400000000078,
+      "cpuMs": 32
+    },
+    {
+      "pair": 5,
+      "name": "baseline",
+      "wallMs": 16.814800000000105,
+      "cpuMs": 16
+    },
+    {
+      "pair": 6,
+      "name": "baseline",
+      "wallMs": 24.6866,
+      "cpuMs": 30
+    },
+    {
+      "pair": 6,
+      "name": "current",
+      "wallMs": 22.88829999999996,
+      "cpuMs": 32
+    },
+    {
+      "pair": 7,
+      "name": "current",
+      "wallMs": 8.952599999999961,
+      "cpuMs": 31
+    },
+    {
+      "pair": 7,
+      "name": "baseline",
+      "wallMs": 9.437099999999987,
+      "cpuMs": 0
+    },
+    {
+      "pair": 8,
+      "name": "baseline",
+      "wallMs": 16.824999999999932,
+      "cpuMs": 31
+    },
+    {
+      "pair": 8,
+      "name": "current",
+      "wallMs": 15.513100000000009,
+      "cpuMs": 32
+    },
+    {
+      "pair": 9,
+      "name": "current",
+      "wallMs": 16.116800000000012,
+      "cpuMs": 31
+    },
+    {
+      "pair": 9,
+      "name": "baseline",
+      "wallMs": 9.161899999999946,
+      "cpuMs": 0
+    },
+    {
+      "pair": 10,
+      "name": "baseline",
+      "wallMs": 7.924199999999928,
+      "cpuMs": 31
+    },
+    {
+      "pair": 10,
+      "name": "current",
+      "wallMs": 23.59050000000002,
+      "cpuMs": 31
+    },
+    {
+      "pair": 11,
+      "name": "current",
+      "wallMs": 6.79849999999999,
+      "cpuMs": 16
+    },
+    {
+      "pair": 11,
+      "name": "baseline",
+      "wallMs": 18.368000000000052,
+      "cpuMs": 0
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "medianMs": 17.596499999999992,
+      "maximumMs": 44.1696
+    },
+    "current": {
+      "medianMs": 20.546350000000018,
+      "maximumMs": 41.69789999999995
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "actual": {
+    "box": {
+      "x": 120.1875,
+      "y": 387.640625,
+      "width": 1063.625,
+      "height": 16.84375
+    },
+    "clip": {
+      "x": 80.1875,
+      "y": 388,
+      "width": 180,
+      "height": 16
+    },
+    "pixels": {
+      "dark": 111,
+      "left": 34,
+      "right": 53,
+      "top": 5,
+      "bottom": 25,
+      "width": 360,
+      "height": 32
+    }
+  },
+  "positive": {
+    "box": {
+      "x": 64,
+      "y": 56.84375,
+      "width": 1176,
+      "height": 16.84375
+    },
+    "clip": {
+      "x": 24,
+      "y": 57,
+      "width": 180,
+      "height": 16
+    },
+    "pixels": {
+      "dark": 114,
+      "left": 33,
+      "right": 53,
+      "top": 6,
+      "bottom": 26,
+      "width": 360,
+      "height": 32
+    }
+  },
+  "negative": {
+    "box": {
+      "x": 64,
+      "y": 56.84375,
+      "width": 1176,
+      "height": 16.84375
+    },
+    "clip": {
+      "x": 24,
+      "y": 57,
+      "width": 180,
+      "height": 16
+    },
+    "pixels": {
+      "dark": 0,
+      "left": 360,
+      "right": -1,
+      "top": 32,
+      "bottom": -1,
+      "width": 360,
+      "height": 32
+    }
+  },
+  "completeJSONAfterEnterBackspaceEqual": true,
+  "emptyNumberAlreadyPaints": true,
+  "productionFixApplied": false
+}

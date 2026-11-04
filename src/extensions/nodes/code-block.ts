@@ -3,6 +3,7 @@ import { paragraphLayoutAttribute, paragraphLayoutDOMAttributes } from '../../co
 import { textDirectionAttribute, sharedDirectionGroupAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
 
 export const codeBlock: NodeSpec = {
+  paragraphFlow: 'text',
   group: 'block', content: 'text*', code: true,
   attrs: {
     // A label is metadata, not markup or a registered tokenizer name. HTML

@@ -1,0 +1,169 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (16 tests | 14 failed) 197ms
+   ❯ native Word paragraph identity joins the portable spacing model (16)
+     × retains declarations and resolves actual same-style gap (<w:contextualSpacing/> / <w:contextualSpacing w:val="0"/>) 25ms
+     × retains declarations and resolves actual same-style gap (<w:contextualSpacing/> / ) 4ms
+     × retains declarations and resolves actual same-style gap (<w:contextualSpacing/> / <w:contextualSpacing/>) 3ms
+     × retains declarations and resolves actual same-style gap (<w:contextualSpacing w:val="0"/> / <w:contextualSpacing w:val="0"/>) 3ms
+     × does not conflate identical appearance or ancestry with identity: Alias 3ms
+     × does not conflate identical appearance or ancestry with identity: body 3ms
+     × joins an omitted pStyle with the actual declared default, not its parent 3ms
+     × keeps the unnamed default flow distinct from a real style when no default is declared 10ms
+     × resolves direct rules even without a styles part 3ms
+     × retains a valid opaque identity 研究 🧪 2ms
+     × retains a valid opaque identity __proto__ 1ms
+     × retains a valid opaque identity constructor 1ms
+     × preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished 2ms
+     × represents the retained paper list rule without rewriting its 7 pt declarations 129ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains declarations and resolves actual same-style gap (<w:contextualSpacing/> / <w:contextualSpacing w:val="0"/>)
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains declarations and resolves actual same-style gap (<w:contextualSpacing/> / )
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains declarations and resolves actual same-style gap (<w:contextualSpacing/> / <w:contextualSpacing/>)
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains declarations and resolves actual same-style gap (<w:contextualSpacing w:val="0"/> / <w:contextualSpacing w:val="0"/>)
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/docx-spacing-identity.test.ts:35:32
+     33|     const result = importDOCX(source(paragraph('One', 'Body', a) + par…
+     34|     const first = result.document.child(0).attrs.layout, second = resu…
+     35|     expect(first.spacingGroup).toBeTruthy();
+       |                                ^
+     36|     expect(second.spacingGroup).toBe(first.spacingGroup);
+     37|     expect(second.spacingBefore).toBe(12);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > does not conflate identical appearance or ancestry with identity: Alias
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > does not conflate identical appearance or ancestry with identity: body
+AssertionError: expected undefined not to be undefined // Object.is equality
+ ❯ tests/docx-spacing-identity.test.ts:47:68
+     45|     const definitions = style('Body', shared) + `<w:style w:type="para…
+     46|     const result = importDOCX(source(paragraph('One', 'Body') + paragr…
+     47|     expect(result.document.child(0).attrs.layout.spacingGroup).not.toB…
+       |                                                                    ^
+     48|     expect(paragraphSpacingAt(result.document, [1])?.spacingBefore).to…
+     49|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > joins an omitted pStyle with the actual declared default, not its parent
+AssertionError: expected undefined not to be undefined // Object.is equality
+ ❯ tests/docx-spacing-identity.test.ts:55:68
+     53|     const result = importDOCX(source(paragraph('One') + paragraph('Two…
+     54|     expect(result.document.child(0).attrs.layout.spacingGroup).toBe(re…
+     55|     expect(result.document.child(1).attrs.layout.spacingGroup).not.toB…
+       |                                                                    ^
+     56|     expect(paragraphSpacingAt(result.document, [1])?.spacingBefore).to…
+     57|     expect(paragraphSpacingAt(result.document, [2])?.spacingBefore).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > keeps the unnamed default flow distinct from a real style when no default is declared
+AssertionError: expected undefined to be 2 // Object.is equality
+
+- Expected:
+2
+
++ Received:
+undefined
+
+ ❯ tests/docx-spacing-identity.test.ts:63:69
+     61|     const body = paragraph('One', undefined, spacing + '<w:contextualS…
+     62|     const result = importDOCX(source(body, style('Body', spacing)), sc…
+     63|     expect(paragraphSpacingAt(result.document, [1])?.spacingBefore).to…
+       |                                                                     ^
+     64|     expect(paragraphSpacingAt(result.document, [2])?.spacingBefore).to…
+     65|     expect(result.document.child(0).attrs.layout.spacingGroup).not.toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > resolves direct rules even without a styles part
+AssertionError: expected undefined to be 2 // Object.is equality
+
+- Expected:
+2
+
++ Received:
+undefined
+
+ ❯ tests/docx-spacing-identity.test.ts:70:69
+     68|   it('resolves direct rules even without a styles part', () => {
+     69|     const result = importDOCX(source(paragraph('One', undefined, spaci…
+     70|     expect(paragraphSpacingAt(result.document, [1])?.spacingBefore).to…
+       |                                                                     ^
+     71|     expect(contextualLoss(result)).toEqual([]);
+     72|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains a valid opaque identity 研究 🧪
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains a valid opaque identity __proto__
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > retains a valid opaque identity constructor
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/docx-spacing-identity.test.ts:76:64
+     74|   it.each(['研究 🧪', '__proto__', 'constructor'])('retains a valid opaq…
+     75|     const result = importDOCX(source(paragraph('One', id) + paragraph(…
+     76|     expect(result.document.child(0).attrs.layout.spacingGroup).toBeTru…
+       |                                                                ^
+     77|     expect(paragraphSpacingAt(result.document, [1])?.spacingBefore).to…
+     78|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished
+Error: Foreign node at root.
+ ❯ visit src/core/schema/schema.ts:135:47
+    133|       // invalid, so transactions only need to revisit their newly-cre…
+    134|       if (this.validatedNodes.has(current)) return true;
+    135|       if (current.type.schema !== this) throw new Error(`Foreign node …
+       |                                               ^
+    136|       computeAttrs(current.type.spec.attrs, current.attrs);
+    137|       if (current.type.spec.validate && !current.type.spec.validate(cu…
+ ❯ Schema.validate src/core/schema/schema.ts:184:5
+ ❯ new EditorState src/core/state.ts:75:17
+ ❯ EditorState.create src/core/state.ts:95:12
+ ❯ createEditor src/core/editor.ts:159:29
+ ❯ tests/docx-spacing-identity.test.ts:88:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > represents the retained paper list rule without rewriting its 7 pt declarations
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/docx-spacing-identity.test.ts:108:19
+    106|     expect(list.childCount).toBe(3);
+    107|     const group = list.child(0).child(0).attrs.layout.spacingGroup;
+    108|     expect(group).toBeTruthy();
+       |                   ^
+    109|     for (let item = 0; item < 3; item++) {
+    110|       expect(list.child(item).child(0).attrs.layout).toMatchObject({ s…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 2 passed (16)
+   Start at  00:53:37
+   Duration  3.58s (transform 49%, import 45%, tests 6%)

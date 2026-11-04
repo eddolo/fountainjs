@@ -1,0 +1,46 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/paragraph-spacing-node-view.test.ts (2 tests | 2 failed) 150ms
+   × does not restore stale projected margins after a reused custom view writes its new plain layout 138ms
+   × projects current spacing after context-dependent custom view callbacks refresh their base styles 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/paragraph-spacing-node-view.test.ts > does not restore stale projected margins after a reused custom view writes its new plain layout
+AssertionError: expected '12pt' to be '0pt' // Object.is equality
+
+Expected: "0pt"
+Received: "12pt"
+
+ ❯ tests/paragraph-spacing-node-view.test.ts:30:43
+     28|       layout: { unit: 'pt', spacingBefore: 0, spacingAfter: 0 } }));
+     29|     expect(view.dom.querySelectorAll('p')[1]).toBe(target);
+     30|     expect(target.style.marginBlockStart).toBe('0pt');
+       |                                           ^
+     31|     expect(view.dom.querySelectorAll('p')[0]!.style.marginBlockEnd).to…
+     32|   } finally { view.destroy(); editor.destroy(); mount.remove(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/paragraph-spacing-node-view.test.ts > projects current spacing after context-dependent custom view callbacks refresh their base styles
+AssertionError: expected '12pt' to be '0pt' // Object.is equality
+
+Expected: "0pt"
+Received: "12pt"
+
+ ❯ tests/paragraph-spacing-node-view.test.ts:57:43
+     55|   try {
+     56|     const target = view.dom.querySelectorAll('p')[1]!;
+     57|     expect(target.style.marginBlockStart).toBe('0pt');
+       |                                           ^
+     58|     editor.dispatch(editor.createTransaction().setNodeAttrs([0], { ...…
+     59|       layout: { ...layout, spacingGroup: 'other' } }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  00:32:33
+   Duration  4.65s (transform 38%, import 29%, environment 29%, tests 3%)

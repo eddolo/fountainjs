@@ -133,6 +133,11 @@ export type NodeViewConstructor<
 ) => NodeViewLike<RenderNode, ViewEvent, ViewMutation>;
 
 export interface NodeSpec {
+  /** Paragraph-spacing flow. Unknown/custom blocks are isolated by default.
+   * Text carriers use a typed ParagraphLayout; transparent containers contribute
+   * no independent block gap at edges owned by those carriers.
+   */
+  paragraphFlow?: 'text' | 'transparent' | 'isolated';
   content?: string;
   attrs?: Record<string, AttributeSpec>;
   group?: string;

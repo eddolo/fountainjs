@@ -1,0 +1,215 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-style-numbering.test.ts (15 tests | 13 failed) 64ms
+   ❯ Word paragraph-style numbering references (15)
+     × imports a custom-named numbered style and keeps its start through native export/reopen 18ms
+     × uses the associated abstract level, ignoring ilvl in the paragraph style 4ms
+     × inherits numbering from basedOn and resolves its associated base style 3ms
+     × does not infer ordered numbering from a misleading style name 5ms
+     × honours direct numId=0 as removal instead of reviving a name-based list 2ms
+     × honours style numId=0 as removal instead of reviving a name-based list 2ms
+     × inherits the style numId when a direct declaration supplies only the level 2ms
+     × keeps per-instance overrides and adjacent instances separate 4ms
+     × ignores foreign numbering lookalikes and accepts real namespace aliases 1ms
+     × does not guess from a familiar name when a real stylesheet declares an ordinary paragraph 1ms
+     × rejects duplicate instance ambiguity instead of choosing the last declaration 8ms
+     × rejects duplicate abstract ambiguity instead of choosing the last declaration 3ms
+     × rejects duplicate level ambiguity instead of choosing the last declaration 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > imports a custom-named numbered style and keeps its start through native export/reopen
+AssertionError: expected 'paragraph' to be 'ordered_list' // Object.is equality
+
+Expected: "ordered_list"
+Received: "paragraph"
+
+ ❯ tests/docx-style-numbering.test.ts:36:48
+     34|   it('imports a custom-named numbered style and keeps its start throug…
+     35|     const result = imported();
+     36|     expect(result.document.child(0).type.name).toBe('ordered_list');
+       |                                                ^
+     37|     expect(result.document.child(0).attrs.start).toBe(4);
+     38|     expect(result.document.textContent).toBe('Check the inlet');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > uses the associated abstract level, ignoring ilvl in the paragraph style
+AssertionError: expected 'paragraph' to be 'ordered_list' // Object.is equality
+
+Expected: "ordered_list"
+Received: "paragraph"
+
+ ❯ tests/docx-style-numbering.test.ts:45:48
+     43|     const result = imported({ styles: style('Procedure', reference('7'…
+     44|       numbering: definitions(level(0, 'Other', 'bullet') + level(2, 'P…
+     45|     expect(result.document.child(0).type.name).toBe('ordered_list');
+       |                                                ^
+     46|     expect(result.document.child(0).attrs.start).toBe(4);
+     47|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > inherits numbering from basedOn and resolves its associated base style
+AssertionError: expected 'paragraph' to be 'ordered_list' // Object.is equality
+
+Expected: "ordered_list"
+Received: "paragraph"
+
+ ❯ tests/docx-style-numbering.test.ts:51:48
+     49|     const result = imported({ styles: style('Base', reference('7')) + …
+     50|       numbering: definitions(level(1, 'Base', 'decimal', 6)) });
+     51|     expect(result.document.child(0).type.name).toBe('ordered_list');
+       |                                                ^
+     52|     expect(result.document.child(0).attrs.start).toBe(6);
+     53|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > does not infer ordered numbering from a misleading style name
+AssertionError: expected 'ordered_list' to be 'bullet_list' // Object.is equality
+
+Expected: "bullet_list"
+Received: "ordered_list"
+
+ ❯ tests/docx-style-numbering.test.ts:57:48
+     55|     const result = imported({ styles: style('ListNumber', reference('7…
+     56|       numbering: definitions(level(0, 'ListNumber', 'bullet')) });
+     57|     expect(result.document.child(0).type.name).toBe('bullet_list');
+       |                                                ^
+     58|   });
+     59|   it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > honours direct numId=0 as removal instead of reviving a name-based list
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > honours style numId=0 as removal instead of reviving a name-based list
+AssertionError: expected 'ordered_list' to be 'paragraph' // Object.is equality
+
+Expected: "paragraph"
+Received: "ordered_list"
+
+ ❯ tests/docx-style-numbering.test.ts:64:48
+     62|   ])('honours %s numId=0 as removal instead of reviving a name-based l…
+     63|     const result = imported({ styles, body: paragraph('ListNumber', pr…
+     64|     expect(result.document.child(0).type.name).toBe('paragraph');
+       |                                                ^
+     65|   });
+     66|   it('inherits the style numId when a direct declaration supplies only…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > inherits the style numId when a direct declaration supplies only the level
+AssertionError: expected 'paragraph' to be 'bullet_list' // Object.is equality
+
+Expected: "bullet_list"
+Received: "paragraph"
+
+ ❯ tests/docx-style-numbering.test.ts:69:48
+     67|     const result = imported({ body: paragraph('Procedure', reference(u…
+     68|       numbering: definitions(level(0, 'Procedure') + level(1, 'Other',…
+     69|     expect(result.document.child(0).type.name).toBe('bullet_list');
+       |                                                ^
+     70|   });
+     71|   it('lets a direct numId/ilvl override the style reference', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > keeps per-instance overrides and adjacent instances separate
+AssertionError: expected [ [ 'paragraph', undefined, 1 ], …(2) ] to deeply equal [ [ 'ordered_list', 9, 2 ], …(1) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "ordered_list",
+-     9,
+-     2,
++     "paragraph",
++     undefined,
++     1,
++   ],
++   [
++     "paragraph",
++     undefined,
++     1,
+    ],
+    [
+-     "ordered_list",
+-     4,
++     "paragraph",
++     undefined,
+      1,
+    ],
+  ]
+
+ ❯ tests/docx-style-numbering.test.ts:81:102
+     79|       numbering: definitions(level(0, 'Procedure'), '<w:lvlOverride w:…
+     80|         + '<w:num w:numId="8"><w:abstractNumId w:val="9"/></w:num>' });
+     81|     expect(result.document.content.map(node => [node.type.name, node.a…
+       |                                                                                                      ^
+     82|       ['ordered_list', 9, 2], ['ordered_list', 4, 1],
+     83|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > ignores foreign numbering lookalikes and accepts real namespace aliases
+AssertionError: expected 'paragraph' to be 'ordered_list' // Object.is equality
+
+Expected: "ordered_list"
+Received: "paragraph"
+
+ ❯ tests/docx-style-numbering.test.ts:86:67
+     84|   });
+     85|   it('ignores foreign numbering lookalikes and accepts real namespace …
+     86|     expect(imported({ alias: true }).document.child(0).type.name).toBe…
+       |                                                                   ^
+     87|     const result = imported({ styles: style('Procedure', '<x:numPr xml…
+     88|     expect(result.document.child(0).type.name).toBe('paragraph');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > does not guess from a familiar name when a real stylesheet declares an ordinary paragraph
+AssertionError: expected 'ordered_list' to be 'paragraph' // Object.is equality
+
+Expected: "paragraph"
+Received: "ordered_list"
+
+ ❯ tests/docx-style-numbering.test.ts:91:114
+     89|   });
+     90|   it('does not guess from a familiar name when a real stylesheet decla…
+     91|     expect(imported({ styles: style('ListNumber'), body: paragraph('Li…
+       |                                                                                                                  ^
+     92|   });
+     93|   it('does not select arbitrary numbering from a cyclic style chain', …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > rejects duplicate instance ambiguity instead of choosing the last declaration
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > rejects duplicate abstract ambiguity instead of choosing the last declaration
+ FAIL  tests/docx-style-numbering.test.ts > Word paragraph-style numbering references > rejects duplicate level ambiguity instead of choosing the last declaration
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/docx-style-numbering.test.ts:103:43
+    101|     ['duplicate level', definitions(level(0, 'Procedure') + level(0, '…
+    102|   ])('rejects %s ambiguity instead of choosing the last declaration', …
+    103|     expect(() => imported({ numbering })).toThrow(/Ambiguous Word numb…
+       |                                           ^
+    104|   });
+    105| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 2 passed (15)
+   Start at  22:04:02
+   Duration  2.51s (transform 56%, import 41%, tests 3%)

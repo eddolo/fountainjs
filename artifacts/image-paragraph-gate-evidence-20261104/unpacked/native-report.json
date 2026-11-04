@@ -1,0 +1,167 @@
+{
+  "toolchain": {
+    "office": "LibreOffice 24.2.7.2 420(Build:2)",
+    "python": "3.13.17 (main, Oct 22 2026, 02:40:32) [GCC 13.3.0]",
+    "platform": "linux",
+    "dpi": 120,
+    "fonts": {
+      "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+      "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+      "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+      "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+    }
+  },
+  "rendered": {
+    "source": {
+      "pages": 2,
+      "drawnImageObjects": 4,
+      "paragraphPositions": {
+        "Experimental setup": {
+          "x": 57.7,
+          "y": 184.418
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 75.7,
+          "y": 243.195
+        },
+        "Keep both probes at the same depth.": {
+          "x": 75.7,
+          "y": 257.695
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 75.7,
+          "y": 272.195
+        },
+        "Figure 1 Probe positions in the two vessels": {
+          "x": 57.7,
+          "y": 438.5
+        },
+        "Figure 2 Cooling curves over thirty minutes": {
+          "x": 57.7,
+          "y": 670.8
+        }
+      },
+      "pdfSHA256": "6dcca8c3d3b2185165c5fbeed61711135220ecde90b169b3209541de4850acca",
+      "pageImages": [
+        "native/source/page-1.png",
+        "native/source/page-2.png"
+      ]
+    },
+    "exported": {
+      "pages": 2,
+      "drawnImageObjects": 4,
+      "paragraphPositions": {
+        "Experimental setup": {
+          "x": 57.7,
+          "y": 184.418
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 75.7,
+          "y": 243.195
+        },
+        "Keep both probes at the same depth.": {
+          "x": 75.7,
+          "y": 257.695
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 75.7,
+          "y": 272.195
+        },
+        "Figure 1 Probe positions in the two vessels": {
+          "x": 57.7,
+          "y": 438.5
+        },
+        "Figure 2 Cooling curves over thirty minutes": {
+          "x": 57.7,
+          "y": 670.8
+        }
+      },
+      "pdfSHA256": "53a8f3b2cfcdd5ae73c90315e9008d1f592ab546358195009b1db707e31b1e7d",
+      "pageImages": [
+        "native/exported/page-1.png",
+        "native/exported/page-2.png"
+      ]
+    }
+  },
+  "paragraphPositionCheck": {
+    "scope": [
+      "Experimental setup",
+      "Record the initial temperature before starting the timer.",
+      "Keep both probes at the same depth.",
+      "Read the measurements without moving either vessel.",
+      "Figure 1 Probe positions in the two vessels",
+      "Figure 2 Cooling curves over thirty minutes"
+    ],
+    "tolerancePt": 0.01,
+    "deltasPt": {
+      "Experimental setup": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Keep both probes at the same depth.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Read the measurements without moving either vessel.": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Figure 1 Probe positions in the two vessels": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "Figure 2 Cooling curves over thirty minutes": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    "negativeControl": {
+      "retainedPreRepairPDF": "artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native",
+      "deltasPt": {
+        "Experimental setup": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Record the initial temperature before starting the timer.": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Keep both probes at the same depth.": {
+          "x": 0.0,
+          "y": 7.0
+        },
+        "Read the measurements without moving either vessel.": {
+          "x": 0.0,
+          "y": 7.0
+        }
+      },
+      "correctlyRejected": true
+    },
+    "captionNegativeControl": {
+      "retainedPreRepairPDF": "artifacts/docx-settings-gate-evidence-20261104/unpacked/native",
+      "deltasPt": {
+        "Figure 1 Probe positions in the two vessels": {
+          "x": 0.0,
+          "y": -3.1999999999999886
+        },
+        "Figure 2 Cooling curves over thirty minutes": {
+          "x": 0.0,
+          "y": -6.399999999999977
+        }
+      },
+      "correctlyRejected": true
+    }
+  },
+  "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "exportedSHA256": "202f03b9072ba22a74808d2979966675a89f726b47a1a51c8a5126f8c9a0b7c3",
+  "status": "native render and required-content checks passed; visual comparison still requires inspection",
+  "pixelFidelityCertified": false,
+  "microsoftWordCertified": false,
+  "sourceImportReport": "source-report.json",
+  "actualBrowserConversionReport": "conversion-report.json",
+  "interchangeReport": "interchange-report.json"
+}

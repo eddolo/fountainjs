@@ -1,0 +1,195 @@
+{
+  "nativeRun": 41761593707,
+  "sourceCommit": "b2d04c6f9e1f625b38baf90d83f7a21dd6dbc7ef",
+  "archiveSHA256": "cd9a9b69fbf1e71edbda227fac637fdaff6be0e09184de8616bf60c262b9cf70",
+  "visualReview": {
+    "nativePageImagesInspected": 4,
+    "browserImportedAndReopenedImagesInspected": 6,
+    "standaloneHTMLReaderImagesInspected": 3,
+    "completePixelFidelityCertified": false
+  },
+  "source": {
+    "pages": 2,
+    "pageDimensionsPt": [
+      [
+        612,
+        792
+      ],
+      [
+        612,
+        792
+      ]
+    ],
+    "targets": {
+      "Cooling experiment report": {
+        "x0": 57.7,
+        "top": 62.60000000000002,
+        "bottom": 87.60000000000002,
+        "fonts": [
+          "CAAAAA+Carlito-Regular"
+        ],
+        "sizes": [
+          25.0
+        ]
+      },
+      "Experimental setup": {
+        "x0": 57.7,
+        "top": 187.938,
+        "bottom": 203.938,
+        "fonts": [
+          "FAAAAA+Carlito-Bold"
+        ],
+        "sizes": [
+          16.0
+        ]
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x0": 75.7,
+        "top": 244.471,
+        "bottom": 255.471,
+        "fonts": [
+          "BAAAAA+LiberationSans"
+        ],
+        "sizes": [
+          11.0
+        ]
+      },
+      "Keep both probes at the same depth.": {
+        "x0": 75.7,
+        "top": 258.971,
+        "bottom": 269.971,
+        "fonts": [
+          "BAAAAA+LiberationSans"
+        ],
+        "sizes": [
+          11.0
+        ]
+      },
+      "Read the measurements without moving either vessel.": {
+        "x0": 75.7,
+        "top": 273.471,
+        "bottom": 284.471,
+        "fonts": [
+          "BAAAAA+LiberationSans"
+        ],
+        "sizes": [
+          11.0
+        ]
+      }
+    },
+    "pageImageSHA256": [
+      "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+      "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223"
+    ]
+  },
+  "exported": {
+    "pages": 2,
+    "pageDimensionsPt": [
+      [
+        612,
+        792
+      ],
+      [
+        612,
+        792
+      ]
+    ],
+    "targets": {
+      "Cooling experiment report": {
+        "x0": 57.7,
+        "top": 62.60000000000002,
+        "bottom": 87.60000000000002,
+        "fonts": [
+          "CAAAAA+Carlito-Regular"
+        ],
+        "sizes": [
+          25.0
+        ]
+      },
+      "Experimental setup": {
+        "x0": 57.7,
+        "top": 194.938,
+        "bottom": 210.938,
+        "fonts": [
+          "FAAAAA+Carlito-Bold"
+        ],
+        "sizes": [
+          16.0
+        ]
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x0": 75.7,
+        "top": 251.471,
+        "bottom": 262.471,
+        "fonts": [
+          "BAAAAA+LiberationSans"
+        ],
+        "sizes": [
+          11.0
+        ]
+      },
+      "Keep both probes at the same depth.": {
+        "x0": 75.7,
+        "top": 265.971,
+        "bottom": 276.971,
+        "fonts": [
+          "BAAAAA+LiberationSans"
+        ],
+        "sizes": [
+          11.0
+        ]
+      },
+      "Read the measurements without moving either vessel.": {
+        "x0": 75.7,
+        "top": 280.471,
+        "bottom": 291.471,
+        "fonts": [
+          "BAAAAA+LiberationSans"
+        ],
+        "sizes": [
+          11.0
+        ]
+      }
+    },
+    "pageImageSHA256": [
+      "0b59fb967ef720a326782631a66a4d259231531f4775a8a78945434dcb8bd74f",
+      "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862"
+    ]
+  },
+  "sourcePageImagesEqualPreviousAudit": [
+    true,
+    true
+  ],
+  "instructionXDeltaPt": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "instructionYDeltaPt": [
+    7.0,
+    7.0,
+    7.0
+  ],
+  "instructionStepPt": {
+    "source": [
+      14.5,
+      14.5
+    ],
+    "exported": [
+      14.5,
+      14.5
+    ]
+  },
+  "remainingDifferences": [
+    "Instruction list and setup heading retain a common vertical offset; the cumulative extra per-item gap is repaired.",
+    "Header horizontal placement differs.",
+    "Figure/table/other paragraph positioning still differs; this fixture is not a whole-document layout match.",
+    "Source footnote text is absent in this LibreOffice rendering, while the export displays its retained definition.",
+    "Standalone HTML still displays raw equation source and linear template/page-field fallbacks."
+  ],
+  "completeEditedModelsEqualPreviousAudit": {
+    "chromium": true,
+    "firefox": true,
+    "webkit": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "purpose": "Correct the earlier overview-image misreading; no marker rendering fix was applied.",
+  "records": [
+    {
+      "engine": "chromium",
+      "original": "artifacts/docx-spacing-identity-verified-real-20261104/chromium/entered.png",
+      "repeated": "artifacts/list-marker-visibility-verified-real-20261104/chromium/entered.png",
+      "region": [
+        28,
+        264,
+        68,
+        282
+      ],
+      "originalPNG_SHA256": "9f3469b8ac9a3d66d97ed1bcadabe81346db5647693503bcfb570772fdbb42d0",
+      "originalDarkPixels": 15,
+      "repeatedDarkPixels": 15,
+      "markerPatchRGBAEqual": true,
+      "originalPatchSHA256": "864a8d19205691279d5669a82e5d569b78f4429119c93bd06db644880a812c41",
+      "repeatedPatchSHA256": "864a8d19205691279d5669a82e5d569b78f4429119c93bd06db644880a812c41"
+    },
+    {
+      "engine": "firefox",
+      "original": "artifacts/docx-spacing-identity-verified-real-20261104/firefox/entered.png",
+      "repeated": "artifacts/list-marker-visibility-verified-real-20261104/firefox/entered.png",
+      "region": [
+        28,
+        264,
+        68,
+        282
+      ],
+      "originalPNG_SHA256": "af805a8ae0082dca4a3e9a3d08b95f876424bafa00279b48cf173c4c21f0e1b5",
+      "originalDarkPixels": 31,
+      "repeatedDarkPixels": 31,
+      "markerPatchRGBAEqual": true,
+      "originalPatchSHA256": "39f20012ea59c122063c117165ecfa02ec0dbf33db9807a147807b77cad46d07",
+      "repeatedPatchSHA256": "39f20012ea59c122063c117165ecfa02ec0dbf33db9807a147807b77cad46d07"
+    },
+    {
+      "engine": "webkit",
+      "original": "artifacts/docx-spacing-identity-verified-real-20261104/webkit/entered.png",
+      "repeated": "artifacts/list-marker-visibility-verified-real-20261104/webkit/entered.png",
+      "region": [
+        56,
+        528,
+        136,
+        564
+      ],
+      "originalPNG_SHA256": "5b48f95b1f963c1c9c02e5d1ea0753ced98ff357b956a2fe4680dbe64ea37668",
+      "originalDarkPixels": 111,
+      "repeatedDarkPixels": 111,
+      "markerPatchRGBAEqual": true,
+      "originalPatchSHA256": "3f0d84e9ab1da7e4d42379ea53f5b853978756c84ad87292b4e16efd22d4879c",
+      "repeatedPatchSHA256": "3f0d84e9ab1da7e4d42379ea53f5b853978756c84ad87292b4e16efd22d4879c"
+    }
+  ]
+}

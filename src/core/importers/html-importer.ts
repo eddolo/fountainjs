@@ -1,3 +1,5 @@
+import { readListLayout } from '../list-layout';
+import { readTableCellWidths as tableCellWidths } from '../table-column-width';
 import {
   Mark,
   Node as FountainNode,
@@ -20,7 +22,7 @@ import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-e
 import { readParagraphLayout } from '../paragraph-layout';
 import { preformattedContent } from './html-preformatted';
 import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../text-direction';
-import { readImageCaptionAttributes } from '../image-caption';
+import { readImageCaptionAttributes, readImageParagraphAttributes } from '../image-caption';
 import { readTableLayout, readTableRow } from '../table-layout';
 import { readTableAppearance } from '../table-appearance';
 import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
@@ -372,7 +374,7 @@ function imageNode(
       sizes: image.getAttribute('sizes') ?? '',
       loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '') ? image.getAttribute('decoding') : 'async',
-      ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement) } : {}),
+      ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
     }, caption, undefined, marks);
   } catch { return null; }
 }
@@ -487,19 +489,6 @@ function preformattedChildren(element: Element, schema: Schema): FountainNode[] 
     text: node => node.textContent ?? '',
     marks: (node, marks) => node instanceof HTMLElement ? elementMarks(node, schema, marks) : marks,
   });
-}
-
-function tableCellWidths(cell: Element, colspan: number): number[] | null {
-  const declared = (cell.getAttribute('data-colwidth') ?? '')
-    .split(',')
-    .filter(Boolean)
-    .map(Number);
-  if (declared.length === colspan && declared.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000)) {
-    return declared;
-  }
-  const styleWidth = Math.round(Number.parseFloat((cell as HTMLElement).style.width));
-  if (colspan === 1 && Number.isInteger(styleWidth) && styleWidth >= 40 && styleWidth <= 2_000) return [styleWidth];
-  return null;
 }
 
 const BLOCK_TAGS = new Set([
@@ -622,7 +611,7 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
     const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
-    try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
+    try { return [schema.node('math_block', { latex, ariaLabel, expression, ...readParagraphLayout(element) })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {
@@ -651,13 +640,13 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     const items = Array.from(element.children).filter((child) => child.tagName.toLowerCase() === 'li').map((item) => {
       return schema.node(
         itemType,
-        { ...readContainerDirection(item, schema), ...(isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
+        { ...readContainerDirection(item, schema), ...(!isTask && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(isTask ? { checked: item.getAttribute('data-checked') === 'true' || item.querySelector('input')?.checked === true } : {}) },
         listItemContent(item, schema),
       );
     });
     const listType = isTask ? 'task_list' : tag === 'ol' ? 'ordered_list' : 'bullet_list';
     const start = htmlOrderedListStart(element.getAttribute('start'));
-    return [schema.node(listType, { ...readContainerDirection(element, schema), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
+    return [schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

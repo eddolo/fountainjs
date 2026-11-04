@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (16 tests | 1 failed) 192ms
+   ❯ native Word paragraph identity joins the portable spacing model (16)
+     × preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished
+Error: Foreign node at root.
+ ❯ visit src/core/schema/schema.ts:135:47
+    133|       // invalid, so transactions only need to revisit their newly-cre…
+    134|       if (this.validatedNodes.has(current)) return true;
+    135|       if (current.type.schema !== this) throw new Error(`Foreign node …
+       |                                               ^
+    136|       computeAttrs(current.type.spec.attrs, current.attrs);
+    137|       if (current.type.spec.validate && !current.type.spec.validate(cu…
+ ❯ Schema.validate src/core/schema/schema.ts:184:5
+ ❯ new EditorState src/core/state.ts:75:17
+ ❯ EditorState.create src/core/state.ts:95:12
+ ❯ createEditor src/core/editor.ts:159:29
+ ❯ tests/docx-spacing-identity.test.ts:88:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  00:54:02
+   Duration  3.25s (transform 52%, import 41%, tests 6%)

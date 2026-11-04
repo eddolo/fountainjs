@@ -1,0 +1,414 @@
+{
+  "initialGaps": [
+    0,
+    -0.000244140625
+  ],
+  "enteredHeight": 16.866668701171875,
+  "emptyMarkerDiagnostic": {
+    "paragraph": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+    "item": "<li data-fountain-node=\"list_item\" data-fountain-path=\"5.1\" style=\"margin-block: 0px; --fountain-paragraph-marker-family: Arial; --fountain-paragraph-marker-size: 11pt; --fountain-paragraph-marker-line: 1.15;\" data-fountain-paragraph-marker-font=\"\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p></li>",
+    "beforeContent": "\"\" counter(list-item) \".\"",
+    "beforeDisplay": "inline-block",
+    "markerVariable": "\"\" counter(list-item,decimal) \".\""
+  },
+  "readerGap": 0,
+  "readerImages": [
+    {
+      "width": 1000,
+      "height": 320
+    },
+    {
+      "width": 1200,
+      "height": 560
+    },
+    {
+      "width": 480,
+      "height": 100
+    }
+  ],
+  "nativeReopenGap": 0,
+  "sourceImageLayouts": [
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    },
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    }
+  ],
+  "reopenedImageLayouts": [
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    },
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    }
+  ],
+  "sourceImageCaptionGaps": [
+    9.33331298828125,
+    9.33331298828125
+  ],
+  "captionTypedAndUndone": true,
+  "mathParagraphLayouts": [
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    },
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    }
+  ],
+  "reopenedMathLayouts": [
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    },
+    {
+      "unit": "pt",
+      "spacingBefore": 0,
+      "spacingAfter": 7,
+      "lineHeight": 1.15,
+      "lineHeightUnit": "multiple",
+      "lineHeightRule": "auto",
+      "keepWithNext": false,
+      "keepLinesTogether": false,
+      "pageBreakBefore": false,
+      "fontFamily": "Arial",
+      "fontSize": 11
+    }
+  ],
+  "mathEditedAndUndone": true,
+  "tableColumnWidths": [
+    [
+      220.8,
+      220.8,
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ]
+  ],
+  "reopenedTableWidths": [
+    [
+      220.8,
+      220.8,
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ],
+    [
+      220.8
+    ]
+  ],
+  "resizedTableRows": [
+    [
+      [
+        232.8,
+        220.8,
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ],
+    [
+      [
+        232.8
+      ],
+      [
+        220.8
+      ],
+      [
+        220.8
+      ]
+    ]
+  ],
+  "tableCellEditedAndUndone": true,
+  "tableResizedAndUndone": true,
+  "stationaryResizePreserved": true,
+  "actualWordSource": true,
+  "enterUndoRedoBackspace": true,
+  "originalDeclaredAfterPt": 7,
+  "actualJSONAndHTMLDownloads": true,
+  "actualDOCXDownloadReopened": true,
+  "nativeExportRuleRetained": true,
+  "nativeWordSpacingCertified": false,
+  "errors": []
+}

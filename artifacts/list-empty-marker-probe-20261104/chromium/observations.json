@@ -1,0 +1,283 @@
+{
+  "actual": {
+    "box": {
+      "x": 120.1875,
+      "y": 412.625,
+      "width": 1063.625,
+      "height": 16.859375
+    },
+    "clip": {
+      "x": 80.1875,
+      "y": 412,
+      "width": 180,
+      "height": 17
+    },
+    "pixels": {
+      "dark": 15,
+      "left": 17,
+      "right": 26,
+      "top": 3,
+      "bottom": 13,
+      "width": 180,
+      "height": 17
+    },
+    "styles": {
+      "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+      "content": "\"\" counter(list-item) \".\"",
+      "display": "inline-block",
+      "color": "rgb(23, 25, 35)",
+      "font": "14.6667px / 16.8667px Arial",
+      "markerWidth": "0px",
+      "markerHeight": "16.8594px",
+      "markerIndent": "0px",
+      "align": "left",
+      "marginEnd": "24px",
+      "paragraphIndent": "-24px",
+      "paragraphFont": "14.6667px / 16.8667px Arial",
+      "overflow": "visible",
+      "itemDisplay": "list-item"
+    }
+  },
+  "cases": [
+    {
+      "name": "native",
+      "box": {
+        "x": 64,
+        "y": 56.859375,
+        "width": 1176,
+        "height": 16.859375
+      },
+      "clip": {
+        "x": 24,
+        "y": 56,
+        "width": 180,
+        "height": 17
+      },
+      "pixels": {
+        "dark": 22,
+        "left": 17,
+        "right": 26,
+        "top": 3,
+        "bottom": 13,
+        "width": 180,
+        "height": 17
+      },
+      "styles": {
+        "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "content": "\"\" counter(list-item) \".\"",
+        "display": "inline-block",
+        "color": "rgb(0, 0, 0)",
+        "font": "14.6667px / 16.8667px Arial",
+        "markerWidth": "0px",
+        "markerHeight": "16.8594px",
+        "markerIndent": "0px",
+        "align": "left",
+        "marginEnd": "24px",
+        "paragraphIndent": "-24px",
+        "paragraphFont": "14.6667px / 16.8667px Arial",
+        "overflow": "visible",
+        "itemDisplay": "list-item"
+      }
+    },
+    {
+      "name": "editable",
+      "box": {
+        "x": 64,
+        "y": 56.859375,
+        "width": 1176,
+        "height": 16.859375
+      },
+      "clip": {
+        "x": 24,
+        "y": 56,
+        "width": 180,
+        "height": 17
+      },
+      "pixels": {
+        "dark": 22,
+        "left": 17,
+        "right": 26,
+        "top": 3,
+        "bottom": 13,
+        "width": 180,
+        "height": 17
+      },
+      "styles": {
+        "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "content": "\"\" counter(list-item) \".\"",
+        "display": "inline-block",
+        "color": "rgb(0, 0, 0)",
+        "font": "14.6667px / 16.8667px Arial",
+        "markerWidth": "0px",
+        "markerHeight": "16.8594px",
+        "markerIndent": "0px",
+        "align": "left",
+        "marginEnd": "24px",
+        "paragraphIndent": "-24px",
+        "paragraphFont": "14.6667px / 16.8667px Arial",
+        "overflow": "visible",
+        "itemDisplay": "list-item"
+      }
+    },
+    {
+      "name": "plain-br",
+      "box": {
+        "x": 64,
+        "y": 56.859375,
+        "width": 1176,
+        "height": 16.859375
+      },
+      "clip": {
+        "x": 24,
+        "y": 56,
+        "width": 180,
+        "height": 17
+      },
+      "pixels": {
+        "dark": 22,
+        "left": 17,
+        "right": 26,
+        "top": 3,
+        "bottom": 13,
+        "width": 180,
+        "height": 17
+      },
+      "styles": {
+        "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><br></p>",
+        "content": "\"\" counter(list-item) \".\"",
+        "display": "inline-block",
+        "color": "rgb(0, 0, 0)",
+        "font": "14.6667px / 16.8667px Arial",
+        "markerWidth": "0px",
+        "markerHeight": "16.8594px",
+        "markerIndent": "0px",
+        "align": "left",
+        "marginEnd": "24px",
+        "paragraphIndent": "-24px",
+        "paragraphFont": "14.6667px / 16.8667px Arial",
+        "overflow": "visible",
+        "itemDisplay": "list-item"
+      }
+    },
+    {
+      "name": "width-one",
+      "box": {
+        "x": 64,
+        "y": 56.859375,
+        "width": 1176,
+        "height": 16.859375
+      },
+      "clip": {
+        "x": 24,
+        "y": 56,
+        "width": 180,
+        "height": 17
+      },
+      "pixels": {
+        "dark": 22,
+        "left": 17,
+        "right": 26,
+        "top": 3,
+        "bottom": 13,
+        "width": 180,
+        "height": 17
+      },
+      "styles": {
+        "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "content": "\"\" counter(list-item) \".\"",
+        "display": "inline-block",
+        "color": "rgb(0, 0, 0)",
+        "font": "14.6667px / 16.8667px Arial",
+        "markerWidth": "1px",
+        "markerHeight": "16.8594px",
+        "markerIndent": "0px",
+        "align": "left",
+        "marginEnd": "24px",
+        "paragraphIndent": "-24px",
+        "paragraphFont": "14.6667px / 16.8667px Arial",
+        "overflow": "visible",
+        "itemDisplay": "list-item"
+      }
+    },
+    {
+      "name": "inline-pseudo",
+      "box": {
+        "x": 64,
+        "y": 56.859375,
+        "width": 1176,
+        "height": 16.859375
+      },
+      "clip": {
+        "x": 24,
+        "y": 56,
+        "width": 180,
+        "height": 17
+      },
+      "pixels": {
+        "dark": 22,
+        "left": 17,
+        "right": 26,
+        "top": 3,
+        "bottom": 13,
+        "width": 180,
+        "height": 17
+      },
+      "styles": {
+        "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\"><span data-fountain-text-path=\"5.1.0.0\"><span style=\"color:#000000\"><span style=\"font-size:11pt\"><span style=\"font-family:Arial\"></span></span></span><br data-fountain-caret-placeholder=\"\" aria-hidden=\"true\"></span></p>",
+        "content": "\"\" counter(list-item) \".\"",
+        "display": "inline",
+        "color": "rgb(0, 0, 0)",
+        "font": "14.6667px / 16.8667px Arial",
+        "markerWidth": "auto",
+        "markerHeight": "auto",
+        "markerIndent": "0px",
+        "align": "left",
+        "marginEnd": "24px",
+        "paragraphIndent": "-24px",
+        "paragraphFont": "14.6667px / 16.8667px Arial",
+        "overflow": "visible",
+        "itemDisplay": "list-item"
+      }
+    },
+    {
+      "name": "positive-text",
+      "box": {
+        "x": 64,
+        "y": 56.859375,
+        "width": 1176,
+        "height": 16.859375
+      },
+      "clip": {
+        "x": 24,
+        "y": 56,
+        "width": 180,
+        "height": 17
+      },
+      "pixels": {
+        "dark": 111,
+        "left": 17,
+        "right": 85,
+        "top": 3,
+        "bottom": 13,
+        "width": 180,
+        "height": 17
+      },
+      "styles": {
+        "html": "<p data-fountain-paragraph-layout=\"{&quot;unit&quot;:&quot;pt&quot;,&quot;spacingBefore&quot;:0,&quot;spacingAfter&quot;:7,&quot;lineHeight&quot;:1.15,&quot;lineHeightUnit&quot;:&quot;multiple&quot;,&quot;lineHeightRule&quot;:&quot;auto&quot;,&quot;keepWithNext&quot;:false,&quot;keepLinesTogether&quot;:false,&quot;pageBreakBefore&quot;:false,&quot;spacingGroup&quot;:&quot;word:style:ListNumber&quot;,&quot;contextualSpacing&quot;:true,&quot;fontFamily&quot;:&quot;Arial&quot;,&quot;fontSize&quot;:11}\" style=\"font-family: Arial; font-size: 11pt; margin-block: 0pt; line-height: 1.15; font-weight: normal; font-style: normal;\" data-fountain-emphasis=\"explicit\" data-fountain-node=\"paragraph\" data-fountain-path=\"5.1.0\" data-fountain-paragraph-spacing=\"\" data-fountain-content-dom=\"\">Control</p>",
+        "content": "\"\" counter(list-item) \".\"",
+        "display": "inline-block",
+        "color": "rgb(0, 0, 0)",
+        "font": "14.6667px / 16.8667px Arial",
+        "markerWidth": "0px",
+        "markerHeight": "16.8594px",
+        "markerIndent": "0px",
+        "align": "left",
+        "marginEnd": "24px",
+        "paragraphIndent": "-24px",
+        "paragraphFont": "14.6667px / 16.8667px Arial",
+        "overflow": "visible",
+        "itemDisplay": "list-item"
+      }
+    }
+  ]
+}

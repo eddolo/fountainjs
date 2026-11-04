@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-contextual-spacing.test.ts (21 tests | 1 failed) 165ms
+   ❯ Word contextual-spacing declaration ownership (21)
+     × identifies the retained scientific source rule without changing its fixture or claiming layout is fixed 130ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > identifies the retained scientific source rule without changing its fixture or claiming layout is fixed
+AssertionError: expected [ { …(4) }, { …(4) }, { …(4) }, …(1) ] to have a length of 3 but got 4
+
+- Expected
++ Received
+
+- 3
++ 4
+
+ ❯ tests/docx-contextual-spacing.test.ts:87:110
+     85|   it('identifies the retained scientific source rule without changing …
+     86|     const result = importDOCX(readFileSync('tests/fixtures/native-docx…
+     87|     expect(result.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                              ^
+     88|     const list = result.document.content.find(node => node.type.name =…
+     89|     expect(list.child(0).child(0).attrs.layout).toMatchObject({ spacin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  23:41:34
+   Duration  3.67s (transform 54%, import 41%, tests 5%)

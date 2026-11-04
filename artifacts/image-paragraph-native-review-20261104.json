@@ -1,0 +1,247 @@
+{
+  "implementationCommit": "e5fb6c5",
+  "nativeRun": 41768523557,
+  "nativeJob": 126372505737,
+  "archiveSHA256": "bcb3b3215fdff08497667ef6562304d7f5bec7b0e4a2646ff09eedb2f6b8dc86",
+  "independentlyReviewedPages": 4,
+  "completePixelFidelityCertified": false,
+  "microsoftWordCertified": false,
+  "source": {
+    "pages": 2,
+    "targets": {
+      "Experimental setup": {
+        "x0": 57.7,
+        "top": 187.938,
+        "bottom": 203.938
+      },
+      "Record the initial temperature": {
+        "x0": 75.7,
+        "top": 244.471,
+        "bottom": 255.471
+      },
+      "Keep both probes": {
+        "x0": 75.7,
+        "top": 258.971,
+        "bottom": 269.971
+      },
+      "Read the measurements": {
+        "x0": 75.7,
+        "top": 273.471,
+        "bottom": 284.471
+      },
+      "Figure 1": {
+        "x0": 57.7,
+        "top": 439.66,
+        "bottom": 449.66
+      },
+      "Figure 2": {
+        "x0": 57.7,
+        "top": 671.96,
+        "bottom": 681.96
+      },
+      "Recorded temperatures": {
+        "x0": 57.7,
+        "top": 242.08799999999997,
+        "bottom": 258.08799999999997
+      }
+    },
+    "imageBoxes": [
+      [
+        {
+          "x0": 66.65,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        },
+        {
+          "x0": 93.6,
+          "top": 293.3,
+          "width": 424.79999999999995,
+          "height": 135.95
+        },
+        {
+          "x0": 86.4,
+          "top": 456.6,
+          "width": 439.20000000000005,
+          "height": 204.95
+        }
+      ],
+      [
+        {
+          "x0": 66.65,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        }
+      ]
+    ],
+    "pageImages": [
+      {
+        "path": "artifacts\\image-paragraph-native-evidence-20261104\\unpacked\\native\\source\\page-1.png",
+        "sha256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d"
+      },
+      {
+        "path": "artifacts\\image-paragraph-native-evidence-20261104\\unpacked\\native\\source\\page-2.png",
+        "sha256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223"
+      }
+    ]
+  },
+  "exported": {
+    "pages": 2,
+    "targets": {
+      "Experimental setup": {
+        "x0": 57.7,
+        "top": 187.938,
+        "bottom": 203.938
+      },
+      "Record the initial temperature": {
+        "x0": 75.7,
+        "top": 244.471,
+        "bottom": 255.471
+      },
+      "Keep both probes": {
+        "x0": 75.7,
+        "top": 258.971,
+        "bottom": 269.971
+      },
+      "Read the measurements": {
+        "x0": 75.7,
+        "top": 273.471,
+        "bottom": 284.471
+      },
+      "Figure 1": {
+        "x0": 57.7,
+        "top": 439.66,
+        "bottom": 449.66
+      },
+      "Figure 2": {
+        "x0": 57.7,
+        "top": 671.96,
+        "bottom": 681.96
+      },
+      "Recorded temperatures": {
+        "x0": 57.7,
+        "top": 244.08799999999997,
+        "bottom": 260.08799999999997
+      }
+    },
+    "imageBoxes": [
+      [
+        {
+          "x0": 57.6,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        },
+        {
+          "x0": 93.6,
+          "top": 293.3,
+          "width": 424.79999999999995,
+          "height": 135.95
+        },
+        {
+          "x0": 86.4,
+          "top": 456.6,
+          "width": 439.20000000000005,
+          "height": 204.95
+        }
+      ],
+      [
+        {
+          "x0": 57.6,
+          "top": 35.950000000000045,
+          "width": 90.0,
+          "height": 18.75
+        }
+      ]
+    ],
+    "pageImages": [
+      {
+        "path": "artifacts\\image-paragraph-native-evidence-20261104\\unpacked\\native\\exported\\page-1.png",
+        "sha256": "1428b7c0638b5cfc9fba2e8f934f71b7bf081d4a849ad5e8122c99b68d6f540f"
+      },
+      {
+        "path": "artifacts\\image-paragraph-native-evidence-20261104\\unpacked\\native\\exported\\page-2.png",
+        "sha256": "b39c36493e643557072c7af126f39751b6a804cd4a7ccbe41d2276a2435838e2"
+      }
+    ]
+  },
+  "deltasPt": {
+    "Experimental setup": {
+      "x0": 0.0,
+      "top": 0.0
+    },
+    "Record the initial temperature": {
+      "x0": 0.0,
+      "top": 0.0
+    },
+    "Keep both probes": {
+      "x0": 0.0,
+      "top": 0.0
+    },
+    "Read the measurements": {
+      "x0": 0.0,
+      "top": 0.0
+    },
+    "Figure 1": {
+      "x0": 0.0,
+      "top": 0.0
+    },
+    "Figure 2": {
+      "x0": 0.0,
+      "top": 0.0
+    },
+    "Recorded temperatures": {
+      "x0": 0.0,
+      "top": 2.0
+    }
+  },
+  "actualPreviousCaptionErrorsPt": {
+    "Figure 1": -3.1999999999999886,
+    "Figure 2": -6.400000000000091
+  },
+  "sourcePageImagesUnchanged": true,
+  "rasterDifferences": [
+    {
+      "page": 1,
+      "sizePixels": [
+        1020,
+        1320
+      ],
+      "differenceBounds": [
+        96,
+        60,
+        553,
+        141
+      ],
+      "bodyRegionPixels": [
+        0,
+        100,
+        1020,
+        1220
+      ],
+      "bodyExactlyEqual": false
+    },
+    {
+      "page": 2,
+      "sizePixels": [
+        1020,
+        1320
+      ],
+      "differenceBounds": [
+        95,
+        60,
+        926,
+        1233
+      ]
+    }
+  ],
+  "remainingScope": [
+    "Header placement and title raster differences",
+    "Page-two table/equation positioning",
+    "Footnote rendering differences",
+    "HTML math/page-template fallbacks",
+    "Unsupported composite contextual image flow",
+    "Size/timing/release acceptance"
+  ]
+}

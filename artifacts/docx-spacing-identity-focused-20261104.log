@@ -1,0 +1,115 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (16 tests | 1 failed) 188ms
+   ❯ native Word paragraph identity joins the portable spacing model (16)
+     × preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished 5ms
+ ❯ tests/docx-contextual-spacing.test.ts (21 tests | 3 failed) 159ms
+   ❯ Word contextual-spacing declaration ownership (21)
+     × reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it 23ms
+     × does not issue an adjacency-loss warning for an unused style or an effective false override 17ms
+     × identifies the retained scientific source rule without changing its fixture or claiming layout is fixed 102ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:73:45
+     71|     expect(result.document.textContent).toBe('FirstSecond');
+     72|     const issues = result.report.issues.filter(issue => issue.code ===…
+     73|     expect(issues.map(issue => issue.path)).toEqual([[0], [1]]);
+       |                                             ^
+     74|     expect(result.document.child(0).attrs.layout).toMatchObject({ spac…
+     75|     expect(result.report.issues.some(issue => issue.code === 'unresolv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > does not issue an adjacency-loss warning for an unused style or an effective false override
+AssertionError: expected [] to deeply equal [ [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:82:135
+     80|     expect(result.report.issues.some(issue => issue.code === 'paragrap…
+     81|     const direct = importDOCX(source('<w:contextualSpacing/>', '<w:con…
+     82|     expect(direct.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                                                       ^
+     83|   });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > identifies the retained scientific source rule without changing its fixture or claiming layout is fixed
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 5 ], [ 6 ], [ 7 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     5,
+-   ],
+-   [
+-     6,
+-   ],
+-   [
+-     7,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:89:135
+     87|     // The retained source enables the rule on its title as well as th…
+     88|     // numbered paragraphs; unused list styles must not add more diagn…
+     89|     expect(result.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                                                       ^
+     90|     const list = result.document.content.find(node => node.type.name =…
+     91|     expect(list.child(0).child(0).attrs.layout).toMatchObject({ spacin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished
+TypeError: HTMLExporter is not a constructor
+ ❯ tests/docx-spacing-identity.test.ts:97:14
+     95|       expect(before.content?.[1]?.attrs?.layout).toEqual(editor.state.…
+     96|       expect(editor.state.schema.nodeFromJSON(editor.state.doc.toJSON(…
+     97|       expect(new HTMLExporter().export(editor.state.doc)).toContain('m…
+       |              ^
+     98|       expect(exportDOCX(editor.state.doc).report.issues.filter(issue =…
+     99|     } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  4 failed | 59 passed (63)
+   Start at  00:56:54
+   Duration  5.50s (import 48%, transform 38%, tests 12%, worker 1%)
+
+    Isolate  4 workers spawned · ~180ms startup each (spawn + environment, per file)
+             at least ~539ms faster with isolate: false — reuses workers across files instead of one per file

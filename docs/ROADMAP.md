@@ -1,5 +1,105 @@
 # FountainJS opportunity roadmap
 
+Approved release-capacity checkpoint (2026-11-04, unmerged): the user approved
+the exact seven-limit layout proposal after reviewing its measurements and
+unapplied patch. Those seven raw-size ceilings are now applied; the authoritative
+size gate passes. All other limits, runtime/retention and semantic/reference
+checks remain unchanged. The earlier failing logs and original proposal remain
+as historical evidence. Full CI on this checkpoint is still required before
+release; broader format and CommonMark gaps remain open. No parity promotion.
+
+Release-validation checkpoint (2026-11-04, unmerged): document-schema resolution
+now works in TypeScript's legacy mode. Validation discovers all 40 applicable
+public entries rather than an incomplete fixed list, with Angular's ESM-only
+contract checked separately. Actual tarball resolution, package loading, publint
+and website build pass; runtime/declaration bytes are unchanged. CI retains the
+mandatory size gate after the remaining functional checks so its failure cannot
+hide their results. No release or parity promotion follows.
+
+Fractional table-column checkpoint (2026-11-04, unmerged): Word's 3312-unit grid
+now stays 220.8 px throughout HTML, editing, pointer resizing and history instead
+of becoming 221 px / 3315 units. Stationary handle use changes no data/history.
+Full units pass 3,628 / 258 files, three recorded desktop workflows pass, and
+actual packed ESM/CJS plus workerd pass. Independent native output retains the
+exact grid and painted column widths. The separate 0.3 pt horizontal placement
+gap remains. The broad run's three stale DOCX expectations now have explicit
+native-default assertions and pass locally; refreshed cloud coverage is pending.
+Seven unchanged size limits still fail. [Evidence and scope](DOCX_COLUMN_PRECISION.md).
+
+Display-equation paragraph checkpoint (2026-11-04, unmerged): inherited/native
+paragraph geometry and font context now survive equation-only Word import,
+source editing/undo, safe HTML and native DOCX reopening. Mixed paragraphs and
+receiving-schema omissions are reported; list/quote structure remains intact.
+The real paper's cumulative +1/+2 pt equation drift is repaired to zero, including
+the page-two table heading. Eleven independently extracted PDF positions and
+three actual pre-repair PDF controls now gate regressions. Three recorded browser
+journeys, 3,609 units / 256 files, build/types/package/headless/API/interoperability,
+actual packed ESM/CJS and workerd pass. Latest unchanged performance/retention
+checks pass; earlier timing failures remain in the evidence, without claiming a
+parser optimization. Seven size failures and broader fidelity/release work remain.
+No percentage promotion or release.
+[Contract, native evidence and remaining scope](MATH_PARAGRAPH_LAYOUT.md).
+
+Image paragraph-layout checkpoint (2026-11-04, unmerged): native import retains
+the image body's paragraph geometry separately from its caption. Fractional
+dimensions now return to exact native units. Three recorded browser journeys
+verify caption editing/undo, image gaps and actual DOCX export/reopen; complete
+saved JSON equals the initial live model. Full units pass 3,597 / 254 files;
+actual packed ESM/CJS and workerd pass without DOM globals. Independent native
+rendering repairs the retained paper's -3.2/-6.4 pt caption drift to zero, while
+the setup heading and instructions remain aligned. Four page images were
+inspected. Header/title raster differences, page-two layout, footnotes, HTML
+fallbacks, unsupported image contextual flow and size/timing acceptance remain
+open. The four explicitly approved theme-language code limits were applied;
+the seven larger size failures remain. No parity-percentage promotion or release.
+[Contract, evidence and remaining scope](IMAGE_PARAGRAPH_LAYOUT.md).
+
+Native Word defaults follow-up (2026-11-04, unmerged): emitting settings for every
+export repairs the retained paper's common 7 pt offset. Independent native PDF
+coordinates now match the source for the setup heading and all three instructions;
+the standard native gate rejects the actual pre-fix PDF as a negative control.
+Full units pass 3,582 / 252 files; recorded Chromium/Firefox/WebKit journeys,
+package/framework/headless/workerd checks pass. Only the optional DOCX bundles
+change (+7/+5 bytes). Figure/caption/header and other layout differences,
+unsupported flows, size/timing acceptance and release work remain open.
+[Implementation, native evidence and remaining scope](DOCX_NATIVE_SPACING.md).
+
+Native Word spacing bridge (2026-11-04, unmerged): shared native paragraph-style
+identities now retain contextual rules through actual DOCX download/reopen in
+Chromium, Firefox and WebKit. Original 7 pt declarations remain; internal list
+gaps now stay zero. Native outline levels retain headings; bounded part/paragraph
+bindings retain code/caption roles without restoring stale formatting. Forty-five
+new Node contracts and the full 3,577-test suite pass. Independent native rendering
+now confirms matching 14.5 pt instruction steps; cumulative 7/14/21 pt drift is
+repaired to a remaining common 7 pt offset. All four native pages were inspected.
+Existing size/timing failures and unsupported flow cases remain open. No parity
+promotion or release.
+[Contract and verification scope](DOCX_NATIVE_SPACING.md).
+
+Marker-audit correction (2026-11-04): the empty numbered item already paints
+`2.`. Its original/repeated image patches are identical in all three engines;
+the earlier missing-marker finding was a review error. New recorded paint
+controls and complete JSON equality before/after Enter/Backspace pass. No engine
+fix or parity percentage is claimed. Native DOCX export, size and timing gates
+remain open. [Evidence and correction](DOCX_LIST_LAYOUT.md).
+
+Word-import follow-up (2026-11-04, unmerged): actual paragraph-style identities
+now drive contextual spacing, including omitted/off neighbours. Three recorded
+real-paper journeys verify imported/HTML zero list gaps and explicitly expose
+the remaining 7 pt DOCX-export loss. Its initial missing-marker review finding
+is superseded by the correction above. Native output, size acceptance
+and the prior HTML timing failure remain open. No percentage promotion.
+[Evidence scope and remaining work](DOCX_LIST_LAYOUT.md).
+
+Paragraph-flow checkpoint (2026-11-04, unmerged): retain opaque spacing-group
+identity and contextual intent in portable JSON/HTML, then derive gaps from the
+current model, including offscreen neighbours and Yjs edits. Recorded desktop
+editing and actual HTML-reader/reopen journeys pass the 2/0/12 pt profile.
+Native Word style/group mapping, the existing size failures and a failed
+100-block server-HTML timing gate remain next work;
+no format-fidelity or parity-percentage completion is claimed.
+[Implementation and remaining bridge work](DOCX_LIST_LAYOUT.md).
+
 Workflow usability follow-up (2026-11-03): task deletion/recovery, empty state,
 neighbour focus and clickable breadcrumb/parent navigation now work in the
 product demos. Five new desktop/touch journeys and three existing workflow

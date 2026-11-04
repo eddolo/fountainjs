@@ -1,0 +1,116 @@
+{
+  "scope": [
+    "Experimental setup",
+    "Record the initial temperature before starting the timer.",
+    "Keep both probes at the same depth.",
+    "Read the measurements without moving either vessel.",
+    "Figure 1 Probe positions in the two vessels",
+    "Figure 2 Cooling curves over thirty minutes",
+    "Model and measurements",
+    "Newton cooling model",
+    "Half cooling time",
+    "The rate constants are 0.08 and 0.04 per minute.",
+    "Recorded temperatures"
+  ],
+  "tolerancePt": 0.01,
+  "deltasPt": {
+    "Experimental setup": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Record the initial temperature before starting the timer.": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Keep both probes at the same depth.": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Read the measurements without moving either vessel.": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Figure 1 Probe positions in the two vessels": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Figure 2 Cooling curves over thirty minutes": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Model and measurements": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Newton cooling model": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Half cooling time": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "The rate constants are 0.08 and 0.04 per minute.": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Recorded temperatures": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "negativeControl": {
+    "retainedPreRepairPDF": "artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native",
+    "deltasPt": {
+      "Experimental setup": {
+        "x": 0.0,
+        "y": 7.0
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x": 0.0,
+        "y": 7.0
+      },
+      "Keep both probes at the same depth.": {
+        "x": 0.0,
+        "y": 7.0
+      },
+      "Read the measurements without moving either vessel.": {
+        "x": 0.0,
+        "y": 7.0
+      }
+    },
+    "correctlyRejected": true
+  },
+  "captionNegativeControl": {
+    "retainedPreRepairPDF": "artifacts/docx-settings-gate-evidence-20261104/unpacked/native",
+    "deltasPt": {
+      "Figure 1 Probe positions in the two vessels": {
+        "x": 0.0,
+        "y": -3.1999999999999886
+      },
+      "Figure 2 Cooling curves over thirty minutes": {
+        "x": 0.0,
+        "y": -6.399999999999977
+      }
+    },
+    "correctlyRejected": true
+  },
+  "mathNegativeControl": {
+    "retainedPreRepairPDF": "artifacts/image-paragraph-native-evidence-20261104/unpacked/native",
+    "deltasPt": {
+      "Half cooling time": {
+        "x": 0.0,
+        "y": 1.0
+      },
+      "The rate constants are 0.08 and 0.04 per minute.": {
+        "x": 0.0,
+        "y": 2.0
+      },
+      "Recorded temperatures": {
+        "x": 0.0,
+        "y": 2.0
+      }
+    },
+    "correctlyRejected": true
+  }
+}

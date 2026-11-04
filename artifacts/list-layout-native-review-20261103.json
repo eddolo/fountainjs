@@ -1,0 +1,358 @@
+{
+  "sourceCommit": "d8e6f3d93082afa49b3905fdf09fb3c073cf97ac",
+  "run": 41740050920,
+  "job": 126279013309,
+  "artifact": 13280033832,
+  "conclusion": "success",
+  "archiveSHA256": "2e2bb05b6a2010e4a0f2ef809c12b6b395628ae4360739505699fdbdb3b97dcc",
+  "expectedArchiveSHA256": "2e2bb05b6a2010e4a0f2ef809c12b6b395628ae4360739505699fdbdb3b97dcc",
+  "archiveDigestVerified": true,
+  "nativeReport": {
+    "toolchain": {
+      "office": "LibreOffice 24.2.7.2 420(Build:2)",
+      "python": "3.13.17 (main, Oct 22 2026, 02:40:32) [GCC 13.3.0]",
+      "platform": "linux",
+      "dpi": 120,
+      "fonts": {
+        "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+        "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+        "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+        "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+      }
+    },
+    "rendered": {
+      "source": {
+        "pages": 2,
+        "drawnImageObjects": 4,
+        "pdfSHA256": "13f8d0f0349181801ba235fb7175a8d424ad5d525905d96ebad53cccbe51aeb1",
+        "pageImages": [
+          "native/source/page-1.png",
+          "native/source/page-2.png"
+        ]
+      },
+      "exported": {
+        "pages": 2,
+        "drawnImageObjects": 4,
+        "pdfSHA256": "7d7e1e686cecaa605947ab9a17c30597d83e16dfab5b5332aa69533fdd81b930",
+        "pageImages": [
+          "native/exported/page-1.png",
+          "native/exported/page-2.png"
+        ]
+      }
+    },
+    "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+    "exportedSHA256": "27ae4dabd1bb5ff62b5a3afd03e6ebf9962a65c8b2b177510e0ec0c9be9f9e35",
+    "status": "native render and required-content checks passed; visual comparison still requires inspection",
+    "pixelFidelityCertified": false,
+    "microsoftWordCertified": false,
+    "sourceImportReport": "source-report.json",
+    "actualBrowserConversionReport": "conversion-report.json",
+    "interchangeReport": "interchange-report.json"
+  },
+  "measurements": {
+    "source": {
+      "pages": [
+        {
+          "width": 612,
+          "height": 792,
+          "selected": [
+            {
+              "text": "Cooling",
+              "x0": 174.941,
+              "top": 46.071000000000026
+            },
+            {
+              "text": "Cooling",
+              "x0": 57.7,
+              "top": 62.60000000000002
+            },
+            {
+              "text": "Experimental",
+              "x0": 57.7,
+              "top": 187.938
+            },
+            {
+              "text": "Keep",
+              "x0": 522.0540000000003,
+              "top": 208.471
+            },
+            {
+              "text": "Record",
+              "x0": 75.7,
+              "top": 244.471
+            },
+            {
+              "text": "Keep",
+              "x0": 75.7,
+              "top": 258.971
+            },
+            {
+              "text": "Read",
+              "x0": 75.7,
+              "top": 273.471
+            },
+            {
+              "text": "Cooling",
+              "x0": 102.09000000000002,
+              "top": 671.96
+            }
+          ],
+          "imageObjects": 3,
+          "fonts": [
+            [
+              "BAAAAA+LiberationSans",
+              11.0
+            ],
+            [
+              "CAAAAA+Carlito-Regular",
+              25.0
+            ],
+            [
+              "DAAAAA+Carlito-Italic",
+              12.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              10.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              11.0
+            ],
+            [
+              "FAAAAA+Carlito-Bold",
+              16.0
+            ]
+          ]
+        },
+        {
+          "width": 612,
+          "height": 792,
+          "selected": [
+            {
+              "text": "Cooling",
+              "x0": 174.941,
+              "top": 46.071000000000026
+            }
+          ],
+          "imageObjects": 1,
+          "fonts": [
+            [
+              "BAAAAA+LiberationSans",
+              11.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              10.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              11.0
+            ],
+            [
+              "FAAAAA+Carlito-Bold",
+              16.0
+            ],
+            [
+              "GAAAAA+LiberationSerif-Italic",
+              7.21
+            ],
+            [
+              "GAAAAA+LiberationSerif-Italic",
+              11.88
+            ],
+            [
+              "GAAAAA+LiberationSerif-Italic",
+              12.01
+            ],
+            [
+              "IAAAAA+LiberationSerif",
+              12.01
+            ],
+            [
+              "JAAAAA+LiberationSans-Italic",
+              11.0
+            ]
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\source\\page-1.png",
+          "sha256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+          "identicalToMaster": true
+        },
+        {
+          "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\source\\page-2.png",
+          "sha256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+          "identicalToMaster": true
+        }
+      ]
+    },
+    "exported": {
+      "pages": [
+        {
+          "width": 612,
+          "height": 792,
+          "selected": [
+            {
+              "text": "Cooling",
+              "x0": 156.84099999999998,
+              "top": 46.071000000000026
+            },
+            {
+              "text": "Cooling",
+              "x0": 57.7,
+              "top": 62.60000000000002
+            },
+            {
+              "text": "Experimental",
+              "x0": 57.7,
+              "top": 194.938
+            },
+            {
+              "text": "Keep",
+              "x0": 522.0540000000003,
+              "top": 215.471
+            },
+            {
+              "text": "Record",
+              "x0": 75.7,
+              "top": 251.471
+            },
+            {
+              "text": "Keep",
+              "x0": 75.7,
+              "top": 272.971
+            },
+            {
+              "text": "Read",
+              "x0": 75.7,
+              "top": 294.471
+            },
+            {
+              "text": "Cooling",
+              "x0": 102.09000000000002,
+              "top": 698.56
+            }
+          ],
+          "imageObjects": 3,
+          "fonts": [
+            [
+              "BAAAAA+LiberationSans",
+              11.0
+            ],
+            [
+              "CAAAAA+Carlito-Regular",
+              25.0
+            ],
+            [
+              "DAAAAA+Carlito-Italic",
+              12.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              10.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              11.0
+            ],
+            [
+              "FAAAAA+Carlito-Bold",
+              16.0
+            ]
+          ]
+        },
+        {
+          "width": 612,
+          "height": 792,
+          "selected": [
+            {
+              "text": "Cooling",
+              "x0": 156.84099999999998,
+              "top": 46.071000000000026
+            }
+          ],
+          "imageObjects": 1,
+          "fonts": [
+            [
+              "BAAAAA+LiberationSans",
+              11.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              10.0
+            ],
+            [
+              "EAAAAA+LiberationSans-Bold",
+              11.0
+            ],
+            [
+              "FAAAAA+Carlito-Bold",
+              16.0
+            ],
+            [
+              "GAAAAA+LiberationSerif-Italic",
+              7.21
+            ],
+            [
+              "GAAAAA+LiberationSerif-Italic",
+              11.88
+            ],
+            [
+              "GAAAAA+LiberationSerif-Italic",
+              12.01
+            ],
+            [
+              "IAAAAA+LiberationSerif",
+              12.01
+            ],
+            [
+              "JAAAAA+LiberationSans-Italic",
+              11.0
+            ]
+          ]
+        }
+      ],
+      "captures": [
+        {
+          "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\exported\\page-1.png",
+          "sha256": "ff339eff052a03723c0a884d1854513b8741a813ce15f3c68dbba2171ac6fc1f",
+          "identicalToMaster": false
+        },
+        {
+          "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\exported\\page-2.png",
+          "sha256": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862",
+          "identicalToMaster": true
+        }
+      ]
+    }
+  },
+  "manuallyReviewed": [
+    "artifacts\\list-layout-native-evidence-20261103\\native\\source\\page-1.png",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\source\\page-2.png",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\exported\\page-1.png",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\exported\\page-2.png"
+  ],
+  "findings": [
+    "All three source and exported instruction text starts are 75.7 pt; previous exported position was 93.7 pt.",
+    "Vertical instruction top positions still differ by 7/14/21 pt.",
+    "Both source page PNGs and exported page two are byte-identical to the prior master native audit.",
+    "Figures, native equations, table, title fonts and actual authored ending remain visible.",
+    "Header horizontal placement and source footnote/renderer discrepancy remain.",
+    "The feature remains unmerged/unpublished and fails seven existing size caps."
+  ],
+  "retainedSHA256": {
+    "artifacts\\list-layout-native-evidence-20261103\\exported.docx": "27ae4dabd1bb5ff62b5a3afd03e6ebf9962a65c8b2b177510e0ec0c9be9f9e35",
+    "artifacts\\list-layout-native-evidence-20261103\\native-report.json": "7e8f037767dc02ae0e2becb1d33df792b50401030a90eff3fe118b133c590218",
+    "artifacts\\list-layout-native-evidence-20261103\\browser-observations.json": "e6de6e9d8bb1c57098e3e2b16bbdc965a23bc68dff6b7783e68f10abb9369ceb",
+    "artifacts\\list-layout-native-evidence-20261103\\interchange-report.json": "b5e45dc6b3ff6a13c7a660ab2c5ede92d571125e904cb49ae4a4e43fa18e9ea9",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\source\\source.pdf": "13f8d0f0349181801ba235fb7175a8d424ad5d525905d96ebad53cccbe51aeb1",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\source\\page-1.png": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\source\\page-2.png": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\exported\\exported.pdf": "7d7e1e686cecaa605947ab9a17c30597d83e16dfab5b5332aa69533fdd81b930",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\exported\\page-1.png": "ff339eff052a03723c0a884d1854513b8741a813ce15f3c68dbba2171ac6fc1f",
+    "artifacts\\list-layout-native-evidence-20261103\\native\\exported\\page-2.png": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862"
+  }
+}

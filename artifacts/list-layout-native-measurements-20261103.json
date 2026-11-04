@@ -1,0 +1,280 @@
+{
+  "source": {
+    "pages": [
+      {
+        "width": 612,
+        "height": 792,
+        "selected": [
+          {
+            "text": "Cooling",
+            "x0": 174.941,
+            "top": 46.071000000000026
+          },
+          {
+            "text": "Cooling",
+            "x0": 57.7,
+            "top": 62.60000000000002
+          },
+          {
+            "text": "Experimental",
+            "x0": 57.7,
+            "top": 187.938
+          },
+          {
+            "text": "Keep",
+            "x0": 522.0540000000003,
+            "top": 208.471
+          },
+          {
+            "text": "Record",
+            "x0": 75.7,
+            "top": 244.471
+          },
+          {
+            "text": "Keep",
+            "x0": 75.7,
+            "top": 258.971
+          },
+          {
+            "text": "Read",
+            "x0": 75.7,
+            "top": 273.471
+          },
+          {
+            "text": "Cooling",
+            "x0": 102.09000000000002,
+            "top": 671.96
+          }
+        ],
+        "imageObjects": 3,
+        "fonts": [
+          [
+            "BAAAAA+LiberationSans",
+            11.0
+          ],
+          [
+            "CAAAAA+Carlito-Regular",
+            25.0
+          ],
+          [
+            "DAAAAA+Carlito-Italic",
+            12.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            10.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            11.0
+          ],
+          [
+            "FAAAAA+Carlito-Bold",
+            16.0
+          ]
+        ]
+      },
+      {
+        "width": 612,
+        "height": 792,
+        "selected": [
+          {
+            "text": "Cooling",
+            "x0": 174.941,
+            "top": 46.071000000000026
+          }
+        ],
+        "imageObjects": 1,
+        "fonts": [
+          [
+            "BAAAAA+LiberationSans",
+            11.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            10.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            11.0
+          ],
+          [
+            "FAAAAA+Carlito-Bold",
+            16.0
+          ],
+          [
+            "GAAAAA+LiberationSerif-Italic",
+            7.21
+          ],
+          [
+            "GAAAAA+LiberationSerif-Italic",
+            11.88
+          ],
+          [
+            "GAAAAA+LiberationSerif-Italic",
+            12.01
+          ],
+          [
+            "IAAAAA+LiberationSerif",
+            12.01
+          ],
+          [
+            "JAAAAA+LiberationSans-Italic",
+            11.0
+          ]
+        ]
+      }
+    ],
+    "captures": [
+      {
+        "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\source\\page-1.png",
+        "sha256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+        "identicalToMaster": true
+      },
+      {
+        "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\source\\page-2.png",
+        "sha256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+        "identicalToMaster": true
+      }
+    ]
+  },
+  "exported": {
+    "pages": [
+      {
+        "width": 612,
+        "height": 792,
+        "selected": [
+          {
+            "text": "Cooling",
+            "x0": 156.84099999999998,
+            "top": 46.071000000000026
+          },
+          {
+            "text": "Cooling",
+            "x0": 57.7,
+            "top": 62.60000000000002
+          },
+          {
+            "text": "Experimental",
+            "x0": 57.7,
+            "top": 194.938
+          },
+          {
+            "text": "Keep",
+            "x0": 522.0540000000003,
+            "top": 215.471
+          },
+          {
+            "text": "Record",
+            "x0": 75.7,
+            "top": 251.471
+          },
+          {
+            "text": "Keep",
+            "x0": 75.7,
+            "top": 272.971
+          },
+          {
+            "text": "Read",
+            "x0": 75.7,
+            "top": 294.471
+          },
+          {
+            "text": "Cooling",
+            "x0": 102.09000000000002,
+            "top": 698.56
+          }
+        ],
+        "imageObjects": 3,
+        "fonts": [
+          [
+            "BAAAAA+LiberationSans",
+            11.0
+          ],
+          [
+            "CAAAAA+Carlito-Regular",
+            25.0
+          ],
+          [
+            "DAAAAA+Carlito-Italic",
+            12.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            10.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            11.0
+          ],
+          [
+            "FAAAAA+Carlito-Bold",
+            16.0
+          ]
+        ]
+      },
+      {
+        "width": 612,
+        "height": 792,
+        "selected": [
+          {
+            "text": "Cooling",
+            "x0": 156.84099999999998,
+            "top": 46.071000000000026
+          }
+        ],
+        "imageObjects": 1,
+        "fonts": [
+          [
+            "BAAAAA+LiberationSans",
+            11.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            10.0
+          ],
+          [
+            "EAAAAA+LiberationSans-Bold",
+            11.0
+          ],
+          [
+            "FAAAAA+Carlito-Bold",
+            16.0
+          ],
+          [
+            "GAAAAA+LiberationSerif-Italic",
+            7.21
+          ],
+          [
+            "GAAAAA+LiberationSerif-Italic",
+            11.88
+          ],
+          [
+            "GAAAAA+LiberationSerif-Italic",
+            12.01
+          ],
+          [
+            "IAAAAA+LiberationSerif",
+            12.01
+          ],
+          [
+            "JAAAAA+LiberationSans-Italic",
+            11.0
+          ]
+        ]
+      }
+    ],
+    "captures": [
+      {
+        "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\exported\\page-1.png",
+        "sha256": "ff339eff052a03723c0a884d1854513b8741a813ce15f3c68dbba2171ac6fc1f",
+        "identicalToMaster": false
+      },
+      {
+        "path": "artifacts\\list-layout-native-d8e6f3d-20261103\\native\\exported\\page-2.png",
+        "sha256": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862",
+        "identicalToMaster": true
+      }
+    ]
+  }
+}

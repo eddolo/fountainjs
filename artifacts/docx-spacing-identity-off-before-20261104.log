@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (23 tests | 1 failed) 428ms
+   ❯ native Word paragraph identity joins the portable spacing model (23)
+     × also reports an explicit off declaration when its unresolved style identity cannot be retained 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > also reports an explicit off declaration when its unresolved style identity cannot be retained
+AssertionError: expected [] to deeply equal [ [ +0 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-spacing-identity.test.ts:146:61
+    144|     const result = importDOCX(source(paragraph('One', 'Missing', spaci…
+    145|     expect(layoutOf(result.document.child(0)).spacingGroup).toBeUndefi…
+    146|     expect(contextualLoss(result).map(issue => issue.path)).toEqual([[…
+       |                                                             ^
+    147|   });
+    148|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 passed (23)
+   Start at  01:07:22
+   Duration  4.10s (transform 47%, import 42%, tests 11%)

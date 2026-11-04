@@ -1,0 +1,374 @@
+{
+  "baseMaster": "b1dce0e4c3a20f3e341de6edd3e45ab091467b06",
+  "status": "in progress; not a release candidate and not merged into master",
+  "scope": "Resolve Word numbering instances, style inheritance, associated levels, overrides and explicit removal before repairing list geometry.",
+  "verified": {
+    "newContracts": 20,
+    "initialBeforeCases": 15,
+    "initialBeforeFailures": 13,
+    "focusedTests": 458,
+    "focusedFiles": 30,
+    "fullUnitTests": 3433,
+    "files": 242,
+    "checks": {
+      "headless": 0,
+      "browser": 0,
+      "package": 0,
+      "types": 0,
+      "api": 0
+    },
+    "measuredChecks": {
+      "types": 0,
+      "browser": 0
+    },
+    "browserJourneys": 3,
+    "reviewed": {
+      "reviewed": [
+        {
+          "path": "artifacts/docx-style-numbering-final-real-20261103/chromium/imported.png",
+          "SHA256": "750538135f4e441dd356f1f21cc55997266f668376e3e12900fbade4201a0821",
+          "manuallyReviewed": true,
+          "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/chromium/imported.png",
+          "measuredCaptureIdentical": true
+        },
+        {
+          "path": "artifacts/docx-style-numbering-final-real-20261103/chromium/reopened.png",
+          "SHA256": "15c851917a3793c6bcf494c23495c097feff7c83df0895bc2d93a7a4ffec560c",
+          "manuallyReviewed": true,
+          "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/chromium/reopened.png",
+          "measuredCaptureIdentical": true
+        },
+        {
+          "path": "artifacts/docx-style-numbering-final-real-20261103/firefox/imported.png",
+          "SHA256": "8e29bbb8cdb2de6ec192458c188c9870bb6799053a6da8815bf9b788c7270e35",
+          "manuallyReviewed": true,
+          "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/firefox/imported.png",
+          "measuredCaptureIdentical": true
+        },
+        {
+          "path": "artifacts/docx-style-numbering-final-real-20261103/firefox/reopened.png",
+          "SHA256": "92baf842827bd01e05c2cf6692b34e5e8dd289b8becd48069c1d45e0aaa5823e",
+          "manuallyReviewed": true,
+          "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/firefox/reopened.png",
+          "measuredCaptureIdentical": true
+        },
+        {
+          "path": "artifacts/docx-style-numbering-final-real-20261103/webkit/imported.png",
+          "SHA256": "eb021a8e6a1a6831712d505a051779b70654778f471f225fb370b2c844fefe5c",
+          "manuallyReviewed": true,
+          "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/webkit/imported.png",
+          "measuredCaptureIdentical": true
+        },
+        {
+          "path": "artifacts/docx-style-numbering-final-real-20261103/webkit/reopened.png",
+          "SHA256": "c815e1c0b046f706b4bdcc7d5c7dab560ccf4ca953c24fd83db769e856e6f13e",
+          "manuallyReviewed": true,
+          "measuredPath": "artifacts/docx-style-numbering-measured-real-20261103/webkit/reopened.png",
+          "measuredCaptureIdentical": true
+        }
+      ],
+      "findings": [
+        "Starts 3 and 4 and the two bullet items are correct in all three engines.",
+        "Both explicitly unnumbered and deceptively named ordinary paragraphs stay outside lists.",
+        "The authored ending survives native download/reopen.",
+        "Text indents still move right on reopen; this review does not certify list-layout fidelity."
+      ]
+    },
+    "independentInterop": [
+      {
+        "engine": "chromium",
+        "pythonDocxParagraphs": 9,
+        "nativeNumbering": [
+          [
+            "Verify the inlet pressure.",
+            "decimal",
+            3
+          ],
+          [
+            "Record the outlet temperature.",
+            "decimal",
+            3
+          ],
+          [
+            "Wear eye protection.",
+            "bullet",
+            1
+          ],
+          [
+            "Keep the bypass closed.",
+            "bullet",
+            1
+          ]
+        ]
+      },
+      {
+        "engine": "firefox",
+        "pythonDocxParagraphs": 9,
+        "nativeNumbering": [
+          [
+            "Verify the inlet pressure.",
+            "decimal",
+            3
+          ],
+          [
+            "Record the outlet temperature.",
+            "decimal",
+            3
+          ],
+          [
+            "Wear eye protection.",
+            "bullet",
+            1
+          ],
+          [
+            "Keep the bypass closed.",
+            "bullet",
+            1
+          ]
+        ]
+      },
+      {
+        "engine": "webkit",
+        "pythonDocxParagraphs": 9,
+        "nativeNumbering": [
+          [
+            "Verify the inlet pressure.",
+            "decimal",
+            3
+          ],
+          [
+            "Record the outlet temperature.",
+            "decimal",
+            3
+          ],
+          [
+            "Wear eye protection.",
+            "bullet",
+            1
+          ],
+          [
+            "Keep the bypass closed.",
+            "bullet",
+            1
+          ]
+        ]
+      }
+    ],
+    "initialJourneyFailure": "Exact ending-text locator stopped matching after successful typing; corrected locator retains exact content/history assertions. Initial failure log and recordings retained.",
+    "publishedFontRepairNativeAudit": {
+      "sourceCommit": "b1dce0e4c3a20f3e341de6edd3e45ab091467b06",
+      "run": 41726623850,
+      "job": 126232972795,
+      "conclusion": "success",
+      "artifact": 13274166960,
+      "archiveSHA256": "24b2d6fc8c535f6cd2ff15d2b9a42aa32cbfcbf5187f4aa5bee0162a9ed6e086",
+      "archiveRehashed": true,
+      "nativeReport": {
+        "toolchain": {
+          "office": "LibreOffice 24.2.7.2 420(Build:2)",
+          "python": "3.13.17 (main, Oct 22 2026, 02:40:32) [GCC 13.3.0]",
+          "platform": "linux",
+          "dpi": 120,
+          "fonts": {
+            "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+            "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+            "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+            "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+          }
+        },
+        "rendered": {
+          "source": {
+            "pages": 2,
+            "drawnImageObjects": 4,
+            "pdfSHA256": "b0b4bae6fce91ad10afbe13884333fada3bab4720e3268f8e8ca5a1ed6bb083f",
+            "pageImages": [
+              "native/source/page-1.png",
+              "native/source/page-2.png"
+            ]
+          },
+          "exported": {
+            "pages": 2,
+            "drawnImageObjects": 4,
+            "pdfSHA256": "840ce45fe6cf8c25611347c592facaae8de547d7b0cd5271e7947646225c83f7",
+            "pageImages": [
+              "native/exported/page-1.png",
+              "native/exported/page-2.png"
+            ]
+          }
+        },
+        "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+        "exportedSHA256": "a5e79f4b9349e4f284a9c4ebb9000f3b32a6189c860585f0d8671b5a597f8e29",
+        "status": "native render and required-content checks passed; visual comparison still requires inspection",
+        "pixelFidelityCertified": false,
+        "microsoftWordCertified": false,
+        "sourceImportReport": "source-report.json",
+        "actualBrowserConversionReport": "conversion-report.json",
+        "interchangeReport": "interchange-report.json"
+      },
+      "reviewed": [
+        {
+          "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\source\\page-1.png",
+          "SHA256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+          "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\source\\page-1.png",
+          "identicalToPrevious": true,
+          "manuallyReviewed": true
+        },
+        {
+          "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\source\\page-2.png",
+          "SHA256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+          "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\source\\page-2.png",
+          "identicalToPrevious": true,
+          "manuallyReviewed": true
+        },
+        {
+          "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\exported\\page-1.png",
+          "SHA256": "b5cd62a31349d3ea6c2bfb8c020b8ef0122223dc9dc52f9a76759299d62c8555",
+          "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\exported\\page-1.png",
+          "identicalToPrevious": true,
+          "manuallyReviewed": true
+        },
+        {
+          "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\exported\\page-2.png",
+          "SHA256": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862",
+          "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\exported\\page-2.png",
+          "identicalToPrevious": true,
+          "manuallyReviewed": true
+        }
+      ],
+      "findings": [
+        "The font repair renders correctly on the actual master commit.",
+        "Both files retain two Letter pages, figures, equations, merged table and repeated headers.",
+        "Source page 2 header separately rechecked.",
+        "List indentation/spacing and header placement drift remain. The source-footnote rendering discrepancy remains."
+      ],
+      "scope": "Native audit of published font repair; does not certify the later unmerged numbering work or complete layout parity."
+    }
+  },
+  "remainingGeometryObservations": [
+    {
+      "engine": "chromium",
+      "actualTypingUndoRedoDownloadReopen": true,
+      "errors": [],
+      "importedPosition": {
+        "firstWordX": 136.1875,
+        "paragraphX": 136.1875,
+        "marginLeft": "0px",
+        "textIndent": "0px"
+      },
+      "reopenedPosition": {
+        "firstWordX": 160.1875,
+        "paragraphX": 184.1875,
+        "marginLeft": "48px",
+        "textIndent": "-24px"
+      },
+      "scope": "Numbering linkage/removal passed; positions record the still-open list geometry defect rather than accepting it as parity."
+    },
+    {
+      "engine": "firefox",
+      "actualTypingUndoRedoDownloadReopen": true,
+      "errors": [],
+      "importedPosition": {
+        "firstWordX": 136.1999969482422,
+        "paragraphX": 136.1999969482422,
+        "marginLeft": "0px",
+        "textIndent": "0px"
+      },
+      "reopenedPosition": {
+        "firstWordX": 160.1999969482422,
+        "paragraphX": 184.1999969482422,
+        "marginLeft": "48px",
+        "textIndent": "-24px"
+      },
+      "scope": "Numbering linkage/removal passed; positions record the still-open list geometry defect rather than accepting it as parity."
+    },
+    {
+      "engine": "webkit",
+      "actualTypingUndoRedoDownloadReopen": true,
+      "errors": [],
+      "importedPosition": {
+        "firstWordX": 136.1875,
+        "paragraphX": 136.1875,
+        "marginLeft": "0px",
+        "textIndent": "0px"
+      },
+      "reopenedPosition": {
+        "firstWordX": 160.1875,
+        "paragraphX": 184.1875,
+        "marginLeft": "48px",
+        "textIndent": "-24px"
+      },
+      "scope": "Numbering linkage/removal passed; positions record the still-open list geometry defect rather than accepting it as parity."
+    }
+  ],
+  "capacity": {
+    "measurements": {
+      "js": 1693813,
+      "cjs": 1409790,
+      "docxESM": 191171,
+      "docxCJS": 154476,
+      "css": 89593
+    },
+    "currentGate": "fails four existing code-size ceilings",
+    "limitsChanged": false,
+    "nextDecision": "Complete and review the geometry boundary before considering a measured capacity proposal."
+  },
+  "limitations": [
+    "Correct numbering does not repair layout",
+    "No independent native rendering of the new runbook",
+    "Desktop emulation only",
+    "Marker formats/templates and contextual spacing remain acceptance work",
+    "No npm, website or parity-percentage promotion for this branch"
+  ],
+  "remainingContract": "docs/DOCX_LIST_LAYOUT.md",
+  "stagedSourceAndEvidenceSHA256": {
+    "artifacts/check-docx-style-numbering-independent-20261103.py": "0fcc4bde1231b715279030ee38029d15599bc839c521d064816fcb889cf1cc62",
+    "artifacts/create-docx-style-numbering-source-20261103.mjs": "69aa6e53906ddea0a0f1571ffd7a1376f024ff8c77895908d6a0d48c7c992f18",
+    "artifacts/docx-native-b1dce0e-evidence-20261103/exported.docx": "a5e79f4b9349e4f284a9c4ebb9000f3b32a6189c860585f0d8671b5a597f8e29",
+    "artifacts/docx-native-b1dce0e-evidence-20261103/native-report.json": "9eb8cb6719416fec54cd998977334f88e769f7c6367bd7df41152e29babf20e8",
+    "artifacts/docx-native-b1dce0e-review-20261103.json": "7c1603adafe7cabf5bb2b22508631fb3edef20f660b4ec5c04a4e8ab1767f30b",
+    "artifacts/docx-style-numbering-api-20261103.log": "78eb712068d96ffa331e22d56e3cc9cae1d19fc1b799b41217e3bc0b3edea6e9",
+    "artifacts/docx-style-numbering-before-20261103.log": "94032b3d72b966bef49978843ae31d168dca863a1d8c3a2ebd44fa69af9b0245",
+    "artifacts/docx-style-numbering-browser-20261103.log": "81acfc7fa265a4eb36b7e8ecf7361444c91eab67bd7b5a99260b16a0442edc16",
+    "artifacts/docx-style-numbering-browser-final-20261103.log": "1b3f5b70bc43cccac25f006d0e9f7798b2f951f57fa93edffab2a4b9262eba94",
+    "artifacts/docx-style-numbering-browser-measured-20261103.log": "29101f62bd5b2955f665a32022c1dd4d2a31e54cb02c0f7c7d69a8463b1ce512",
+    "artifacts/docx-style-numbering-browser.config.ts": "83c3b4f2d72cfa9c8f1fb57428bb58c38d3395c61e8ecc5d21fef5ccf8714c6d",
+    "artifacts/docx-style-numbering-build-20261103.log": "b644a79b5ce80e978aa6cbb021efe4f7929e7a7555d8a3a3413867cfc311f91a",
+    "artifacts/docx-style-numbering-checks-20261103.json": "9a7b01b494f1203a766a0ccefa50025b7368a0531ce28f209ab2bed9b95f494f",
+    "artifacts/docx-style-numbering-checks-final-20261103.json": "101524fc0c8f228cdcb70366b62874bbf128c48cec3a85422fa7eea995c7e2b0",
+    "artifacts/docx-style-numbering-checks-measured-20261103.json": "9b80fe9c03950c0702fa21ba2dac1e0aad142319bc5bda53972c1159cca34873",
+    "artifacts/docx-style-numbering-focused-20261103.log": "985eadcee22346dff664c4313e98de47945a44bd56403f93cacbac194e150097",
+    "artifacts/docx-style-numbering-full-unit-20261103.log": "44ccedf9e1530836e3dfc081d67b694674bd155671b539cef4e3da07d7daeec9",
+    "artifacts/docx-style-numbering-headless-20261103.log": "71ace270b835c370f288b24fac28a9280464096562717f67dece23099eab4a7b",
+    "artifacts/docx-style-numbering-independent-20261103.json": "d438eeb19917f7ad0aa6bccbe79ee25be798990e25608b01805cecca15bb9e6a",
+    "artifacts/docx-style-numbering-independent-20261103.log": "36453d859263b6f7302642903726904ce50e65084d107716c20da01396bede20",
+    "artifacts/docx-style-numbering-measured-real-20261103/chromium/browser-observations.json": "f1208e8350576c95672bf12ff370262229566fc5c796c7fd1b2b0720b8bbda5c",
+    "artifacts/docx-style-numbering-measured-real-20261103/chromium/imported.png": "750538135f4e441dd356f1f21cc55997266f668376e3e12900fbade4201a0821",
+    "artifacts/docx-style-numbering-measured-real-20261103/chromium/reopened.png": "15c851917a3793c6bcf494c23495c097feff7c83df0895bc2d93a7a4ffec560c",
+    "artifacts/docx-style-numbering-measured-real-20261103/chromium/runbook-export.docx": "69d51a9f8688e3b3312cd7e392af59c1562a23f98b502f410847bcb5db75f655",
+    "artifacts/docx-style-numbering-measured-real-20261103/firefox/browser-observations.json": "f6b531eee953df7065b6614f5b61c47a379d0253bb00564db3650a0e4c9fa579",
+    "artifacts/docx-style-numbering-measured-real-20261103/firefox/imported.png": "8e29bbb8cdb2de6ec192458c188c9870bb6799053a6da8815bf9b788c7270e35",
+    "artifacts/docx-style-numbering-measured-real-20261103/firefox/reopened.png": "92baf842827bd01e05c2cf6692b34e5e8dd289b8becd48069c1d45e0aaa5823e",
+    "artifacts/docx-style-numbering-measured-real-20261103/firefox/runbook-export.docx": "db4fdd4c8684e02f3943801d3a479b380f3117a0cc653e4b824bef771b045b81",
+    "artifacts/docx-style-numbering-measured-real-20261103/webkit/browser-observations.json": "f1208e8350576c95672bf12ff370262229566fc5c796c7fd1b2b0720b8bbda5c",
+    "artifacts/docx-style-numbering-measured-real-20261103/webkit/imported.png": "eb021a8e6a1a6831712d505a051779b70654778f471f225fb370b2c844fefe5c",
+    "artifacts/docx-style-numbering-measured-real-20261103/webkit/reopened.png": "c815e1c0b046f706b4bdcc7d5c7dab560ccf4ca953c24fd83db769e856e6f13e",
+    "artifacts/docx-style-numbering-measured-real-20261103/webkit/runbook-export.docx": "18d3c747dfbf6e0aa69b677a9b906e4daa0fd3109453a3aee78917204ab1c405",
+    "artifacts/docx-style-numbering-package-20261103.log": "2d830157e3a610825f4a83155061bf1a73bdc2db2fe05dc01284cb1c2f8c022f",
+    "artifacts/docx-style-numbering-regression-20261103.log": "eca8eb1fd26b582753a02cea5fd740c8c35cde71418e9c8915b5de0083c58ab5",
+    "artifacts/docx-style-numbering-size-20261103.log": "bda4c743ecaa4598373a2627e67c7705f335852d74bf12d155b85a3c10efda2c",
+    "artifacts/docx-style-numbering-sizes-20261103.json": "612e1db38e06829f1db29276c34f96f94078b06ba9503350388aa751890cdab1",
+    "artifacts/docx-style-numbering-source-20261103/provenance.json": "59057835f6ed6a5768fa22cf0613825d7772f6645de3870133afd7e1bd888708",
+    "artifacts/docx-style-numbering-source-20261103/runbook.docx": "38244b73b2cff085cd71aeb126be99a34397ddb73ccbe19388c907a1e0a793e3",
+    "artifacts/docx-style-numbering-types-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/docx-style-numbering-types-final-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/docx-style-numbering-types-measured-20261103.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/docx-style-numbering-visual-review-20261103.json": "7eefce5f6b3952dc44572fac4a6d354b4a83027ff5049e4123034614ea228d7d",
+    "artifacts/write-docx-style-numbering-verification-20261103.mjs": "85e0dd65112b403ddce74e1af5864e5a93824b589c1422f49644cc6970e34498",
+    "docs/DOCX_LIST_LAYOUT.md": "09f3ffb792311580afeedde28e4a0ff424c420502a852a1ae42b8746e9ef8f46",
+    "src/docx/index.ts": "7312c6238eef7d79758525074d751b441c99ac2c5e658dfd2b0e9bec6bfda5c1",
+    "src/docx/numbering.ts": "fd110187e21d423a73618fe11d06f3f8418c8d3433efbbcb69c0e83785da240b",
+    "src/docx/style-reader.ts": "fd30085fc35ceaea91734c1016c825ab57983a8383b2434f66b5ab2285ff8b02",
+    "tests/docx-style-numbering.test.ts": "5150af727c22d3811ccd4f3019d17e5276b4e03ea5d14f6eff72ade80e56b7ff",
+    "tests/manual/docx-style-numbering-audit.spec.ts": "d1ca12f78776840898d955bd947a53057d25eb014f22a14b7e829b14b5d1afec"
+  }
+}

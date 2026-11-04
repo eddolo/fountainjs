@@ -51,6 +51,11 @@ if (process.argv[2] === 'prepare') {
 } else if (process.argv[2] === 'inspect') {
   const observation = JSON.parse(await readFile(resolve(output, 'browser-observations.json'), 'utf8'));
   assert.equal(observation.actualDownload, true); assert.equal(observation.typingUndoRedo, true);
+  assert.equal(observation.listGeometryMaintained, true);
+  assert.equal(observation.listEnterUndoRedoBackspace, true);
+  assert.equal(observation.backwardKeyboardSelection, true);
+  assert.equal(observation.actualHTMLReader, true);
+  assert.equal(observation.nativeFragmentFallback, true);
   const exported = new Uint8Array(await readFile(resolve(output, 'exported.docx')));
   const reopened = importDOCX(exported, schema);
   const result = inspectDocument(reopened.document);

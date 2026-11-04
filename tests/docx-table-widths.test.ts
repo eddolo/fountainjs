@@ -78,17 +78,15 @@ describe('DOCX table column geometry', () => {
     expect(imported.report.issues).toEqual([expect.objectContaining({ code: 'table-style-appearance-unresolved', path: [0] })]);
   });
 
-  it('reports harmless whole-pixel normalization without turning it into semantic loss', () => {
+  it('retains native column precision without whole-pixel normalization', () => {
     const cells = ['A', 'B', 'C'].map(text => `<w:tc><w:tcPr><w:tcW w:w="3312" w:type="dxa"/></w:tcPr><w:p><w:r><w:t>${text}</w:t></w:r></w:p></w:tc>`).join('');
     const table = '<w:tbl><w:tblGrid><w:gridCol w:w="3312"/><w:gridCol w:w="3312"/><w:gridCol w:w="3312"/></w:tblGrid>'
       + `<w:tr>${cells}</w:tr></w:tbl>`;
     const imported = importDOCX(packageWithTable(table), schema);
 
-    expect(imported.document.child(0).child(0).content.map(item => item.attrs.colwidth)).toEqual([[221], [221], [221]]);
+    expect(imported.document.child(0).child(0).content.map(item => item.attrs.colwidth)).toEqual([[220.8], [220.8], [220.8]]);
     expect(imported.report.fidelity).toBe('bounded');
-    expect(imported.report.issues.map(issue => issue.code)).toEqual([
-      'table-column-width-rounded', 'table-column-width-rounded', 'table-column-width-rounded',
-    ]);
+    expect(imported.report.issues).toEqual([]);
   });
 
   it('retains independent fixed table layout through native export and reopen', () => {

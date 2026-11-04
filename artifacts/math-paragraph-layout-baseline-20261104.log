@@ -1,0 +1,251 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/math-paragraph-layout.test.ts (7 tests | 7 failed) 272ms
+   ❯ display-equation paragraph context (7)
+     × retains the real scientific source Normal-style spacing on both equation-only paragraphs 239ms
+     × retains direct equation paragraph declarations through JSON, safe HTML and native Word 6ms
+     × reports layout loss for a receiving math schema without the owning attribute 3ms
+     × does not duplicate one mixed paragraph layout onto every equation fragment 11ms
+     × keeps equation layout through source edits and restores the entire document on undo 7ms
+     × reports ordinary Markdown layout loss while retaining equation source 3ms
+     × rejects invalid layout while preserving the legacy shape when omitted 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > retains the real scientific source Normal-style spacing on both equation-only paragraphs
+AssertionError: expected undefined to match object { unit: 'pt', spacingBefore: +0, …(4) }
+
+- Expected:
+{
+  "fontFamily": "Arial",
+  "fontSize": 11,
+  "lineHeight": 1.15,
+  "spacingAfter": 7,
+  "spacingBefore": 0,
+  "unit": "pt",
+}
+
++ Received:
+undefined
+
+ ❯ tests/math-paragraph-layout.test.ts:24:56
+     22|     const math = result.document.content.filter(node => node.type.name…
+     23|     expect(math).toHaveLength(2);
+     24|     for (const node of math) expect(node.attrs.layout).toMatchObject({…
+       |                                                        ^
+     25|       fontFamily: 'Arial', fontSize: 11, lineHeight: 1.15 });
+     26|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > retains direct equation paragraph declarations through JSON, safe HTML and native Word
+AssertionError: expected undefined to match object { unit: 'pt', spacingBefore: 3, …(7) }
+
+- Expected:
+{
+  "fontFamily": "Georgia",
+  "fontSize": 13,
+  "keepWithNext": true,
+  "lineHeight": 1.2,
+  "lineHeightRule": "auto",
+  "lineHeightUnit": "multiple",
+  "spacingAfter": 17,
+  "spacingBefore": 3,
+  "unit": "pt",
+}
+
++ Received:
+undefined
+
+ ❯ tests/math-paragraph-layout.test.ts:31:44
+     29|     const imported = importDOCX(source(), schema).document;
+     30|     const before = imported.toJSON();
+     31|     expect(imported.child(0).attrs.layout).toMatchObject(layout);
+       |                                            ^
+     32|     expect(ServerHTMLImporter.parse(HTMLExporter.export(imported), sch…
+     33|     const exported = exportDOCX(imported);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > reports layout loss for a receiving math schema without the owning attribute
+AssertionError: expected [ { …(4) } ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "display-math-paragraph-layout-not-imported",
+  "path": [
+    0,
+  ],
+}
+
++ Received:
+[
+  {
+    "code": "office-math-imported-experimental",
+    "message": "Supported Word equation semantics were converted to editable TeX. The original OMML source/style is not retained, and native application fidelity is not yet certified.",
+    "path": [
+      0,
+    ],
+    "severity": "warning",
+  },
+]
+
+ ❯ tests/math-paragraph-layout.test.ts:46:34
+     44|     const result = importDOCX(source(), receiving);
+     45|     expect(result.document.child(0).type.name).toBe('math_block');
+     46|     expect(result.report.issues).toContainEqual(expect.objectContainin…
+       |                                  ^
+     47|   });
+     48|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > does not duplicate one mixed paragraph layout onto every equation fragment
+AssertionError: expected [ { …(4) }, { …(4) }, { …(4) }, …(1) ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "code": "display-math-paragraph-layout-not-imported",
+  "path": [
+    0,
+  ],
+}
+
++ Received:
+[
+  {
+    "code": "office-math-imported-experimental",
+    "message": "Supported Word equation semantics were converted to editable TeX. The original OMML source/style is not retained, and native application fidelity is not yet certified.",
+    "path": [
+      0,
+    ],
+    "severity": "warning",
+  },
+  {
+    "code": "paragraph-font-context-not-imported",
+    "message": "Word paragraph fontFamily was not projected: unresolved text-run fonts would inherit paragraph-mark-only formatting. The source mark font is not retained.",
+    "path": [
+      0,
+    ],
+    "severity": "warning",
+  },
+  {
+    "code": "paragraph-font-context-not-imported",
+    "message": "Word paragraph fontSize was not projected: unresolved text-run fonts would inherit paragraph-mark-only formatting. The source mark font is not retained.",
+    "path": [
+      0,
+    ],
+    "severity": "warning",
+  },
+  {
+    "code": "display-math-paragraph-split",
+    "message": "A mixed Word paragraph was split into prose and display-equation blocks without changing their order.",
+    "path": [
+      0,
+    ],
+    "severity": "info",
+  },
+]
+
+ ❯ tests/math-paragraph-layout.test.ts:53:34
+     51|     expect(result.document.content.map(node => node.type.name)).toEqua…
+     52|     expect(result.document.child(1).attrs.layout).toBeUndefined();
+     53|     expect(result.report.issues).toContainEqual(expect.objectContainin…
+       |                                  ^
+     54|   });
+     55|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > keeps equation layout through source edits and restores the entire document on undo
+AssertionError: expected undefined to match object { unit: 'pt', spacingBefore: 3, …(7) }
+
+- Expected:
+{
+  "fontFamily": "Georgia",
+  "fontSize": 13,
+  "keepWithNext": true,
+  "lineHeight": 1.2,
+  "lineHeightRule": "auto",
+  "lineHeightUnit": "multiple",
+  "spacingAfter": 17,
+  "spacingBefore": 3,
+  "unit": "pt",
+}
+
++ Received:
+undefined
+
+ ❯ tests/math-paragraph-layout.test.ts:62:54
+     60|       const before = editor.state.doc.toJSON();
+     61|       expect(setMathSource(editor, 'y^2', undefined, [0])).toBe(true);
+     62|       expect(editor.state.doc.child(0).attrs.layout).toMatchObject(lay…
+       |                                                      ^
+     63|       expect(undo(editor)).toBe(true);
+     64|       expect(editor.state.doc.toJSON()).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > reports ordinary Markdown layout loss while retaining equation source
+AssertionError: expected [ { kind: 'attribute', …(3) }, …(1) ] to deep equally contain ObjectContaining{…}
+
+- Expected:
+ObjectContaining {
+  "detail": StringMatching /math.*paragraph|equation.*paragraph/i,
+  "path": [
+    0,
+  ],
+}
+
++ Received:
+[
+  {
+    "detail": "The accessible math label is not represented by TeX delimiters.",
+    "kind": "attribute",
+    "path": [
+      0,
+    ],
+    "type": "math_block",
+  },
+  {
+    "detail": "The typed semantic math tree is projected to TeX source in Markdown; retain Fountain JSON or HTML for the lossless representation.",
+    "kind": "attribute",
+    "path": [
+      0,
+    ],
+    "type": "math_block",
+  },
+]
+
+ ❯ tests/math-paragraph-layout.test.ts:72:29
+     70|     const exported = MarkdownExporter.exportWithReport(doc);
+     71|     expect(exported.markdown).toContain('x');
+     72|     expect(exported.losses).toContainEqual(expect.objectContaining({ p…
+       |                             ^
+     73|   });
+     74|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/math-paragraph-layout.test.ts > display-equation paragraph context > rejects invalid layout while preserving the legacy shape when omitted
+AssertionError: expected [Function] to throw an error
+ ❯ tests/math-paragraph-layout.test.ts:76:103
+     74|
+     75|   it('rejects invalid layout while preserving the legacy shape when om…
+     76|     expect(() => schema.node('math_block', { latex: 'x', layout: { uni…
+       |                                                                                                       ^
+     77|     expect(schema.node('math_block', { latex: 'x' }).attrs.layout).toB…
+     78|     expect(schema.nodes.inline_math!.spec.attrs?.layout).toBeUndefined…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  03:50:34
+   Duration  4.35s (transform 49%, import 44%, tests 7%)
+
+  Transform  transforming modules took 2.01s · 49% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

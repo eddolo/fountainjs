@@ -1,10 +1,13 @@
+import { listLayoutDOMAttributes, listItemDOMAttributes, LIST_LAYOUT_STYLES } from '../list-layout';
+import { isTableColumnWidth } from '../table-column-width';
+import { paragraphSpacingDOMAttributes, PARAGRAPH_SPACING_STYLES } from '../paragraph-spacing';
 import type { EditorState } from '../state';
 import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
 import { isSafeURL } from '../url';
 import { tableBackground } from '../table-background';
 import { quoteDOMAttributes, textBlockDOMAttributes } from '../explicit-emphasis';
 import { isMathExpression } from '../math-expression';
-import { imageCaptionDOMAttributes } from '../image-caption';
+import { imageCaptionDOMAttributes, imageParagraphDOMAttributes } from '../image-caption';
 import { tableDOMSpec, tableRowDOMSpec } from '../table-layout';
 import { cellAppearanceDOMAttributes } from '../table-appearance';
 import type { NodeDOMContext } from '../schema';
@@ -80,6 +83,14 @@ function renderDOMAttributes(attrs: Attributes): string {
       : escapeHTML(value);
     return value === true ? ` ${name}` : ` ${name}="${escaped}"`;
   }).join('');
+}
+
+function listAttributes(node: Node, item = false): string {
+  // Only this validated, generated projection can carry quoted marker content.
+  // Arbitrary/custom DOM styles still pass through the stricter safeStyle gate.
+  const { style, ...attrs } = item ? listItemDOMAttributes(node) : listLayoutDOMAttributes(node.attrs.layout);
+  return renderDOMAttributes({ ...textDirectionDOMAttributes(node.attrs), ...attrs })
+    + (style ? ` style="${escapeHTML(style)}"` : '');
 }
 
 function renderDOMOutputSpec(spec: DOMOutputSpec, content = ''): string {
@@ -160,10 +171,11 @@ function playbackAttributes(node: Node): string {
 function tableCellSizeAttributes(node: Node, context: NodeDOMContext): string {
   const colspan = Number(node.attrs.colspan) || 1;
   const widths = Array.isArray(node.attrs.colwidth) ? node.attrs.colwidth.map(Number) : [];
-  const valid = widths.length === colspan && widths.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000);
+  const valid = widths.length === colspan && widths.every(isTableColumnWidth);
+  const complete = valid && widths.every(width => width > 0);
   const background = tableBackground(node.attrs.background);
   const appearance = cellAppearanceDOMAttributes(node, context);
-  const styles = [appearance.style, valid ? `width:${widths.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
+  const styles = [appearance.style, complete ? `width:${widths.reduce((sum, width) => sum + width, 0)}px` : '', background ? `background-color:${background}` : ''].filter(Boolean).join(';');
   return ` colspan="${colspan}" rowspan="${Number(node.attrs.rowspan) || 1}"${valid ? ` data-colwidth="${widths.join(',')}"` : ''}${renderDOMAttributes({ ...appearance, ...textDirectionDOMAttributes(node.attrs), ...(styles ? { style: styles } : {}) })}`;
 }
 
@@ -233,12 +245,17 @@ export function renderHTMLSourceFragment(node: Node, projection: HTMLSourceProje
 function renderNode(node: Node, document: Node = node, path: readonly number[] = [], projection?: HTMLSourceProjection): string {
   const rendered = renderNodeContent(node, document, path, projection);
   const shared = sharedDirectionDOMAttributes(node, document);
-  if (!Object.keys(shared).length) return rendered;
+  const { style, ...spacing } = paragraphSpacingDOMAttributes(node, { document, path });
+  if (!Object.keys(shared).length && !style) return rendered;
   // The normal safe serializer owns tags/attributes/escaping. Its first root
   // opening tag gets a derived direction plus the bounded reopen contract;
   // child fragments are projected separately against the same whole model.
-  return rendered.replace(/^<[a-z][a-z0-9-]*(?:\s[^>]*)?>/i, opening =>
-    opening.replace(/\sdir="[^"]*"/gi, '').slice(0, -1) + renderDOMAttributes(shared) + '>');
+  return rendered.replace(/^<[a-z][a-z0-9-]*(?:\s[^>]*)?>/i, opening => {
+    let projected = shared.dir ? opening.replace(/\sdir="[^"]*"/gi, '') : opening;
+    const hasStyle = /\sstyle="[^"]*"/i.test(projected);
+    if (style && hasStyle) projected = projected.replace(/\sstyle="([^"]*)"/i, (_, original) => ` style="${original};${escapeHTML(style)}"`);
+    return projected.slice(0, -1) + renderDOMAttributes({ ...shared, ...spacing, ...(style && !hasStyle ? { style } : {}) }) + '>';
+  });
 }
 
 function renderNodeContent(node: Node, document: Node, path: readonly number[], projection?: HTMLSourceProjection): string {
@@ -274,9 +291,9 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     case 'paragraph': return `<p${node.childCount === 0 ? ' data-fountain-empty="block"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</p>`;
     case 'heading': return `<h${Number(node.attrs.level) || 1}${node.childCount === 1 && node.child(0).isText && node.child(0).text === '' ? ' data-fountain-empty="text"' : ''}${renderDOMAttributes(textBlockDOMAttributes(node.attrs))}>${children()}</h${Number(node.attrs.level) || 1}>`;
     case 'blockquote': return `<blockquote${renderDOMAttributes(quoteDOMAttributes(node.attrs))}>${children()}</blockquote>`;
-    case 'bullet_list': return `<ul${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
-    case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ol>`;
-    case 'list_item': return `<li${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</li>`;
+    case 'bullet_list': return `<ul${listAttributes(node)}>${children()}</ul>`;
+    case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}${listAttributes(node)}>${children()}</ol>`;
+    case 'list_item': return `<li${listAttributes(node, true)}>${children()}</li>`;
     case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
     case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${node.attrs.lineNumbers === false ? ' data-line-numbers="false"' : ''}${codeTheme(node) === 'light' ? ' data-fountain-code-theme="light"' : ''}${renderDOMAttributes({ ...paragraphLayoutDOMAttributes(node.attrs.layout), ...textDirectionDOMAttributes(node.attrs) })}><code class="language-${escapeHTML(node.attrs.language)}">${children()}</code></pre>`;
@@ -286,7 +303,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     case 'mention': case 'emoji': return node.type.spec.toDOM
       ? renderDOMOutputSpec(node.type.spec.toDOM(node, context), children())
       : escapeHTML(node.textContent);
-    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block" data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
+    case 'math_block': return `<div class="fountain-math fountain-math--display" data-fountain-math="block"${renderDOMAttributes(paragraphLayoutDOMAttributes(node.attrs.layout))} data-latex="${escapeHTML(node.attrs.latex)}" data-math-aria-label="${escapeHTML(node.attrs.ariaLabel)}"${mathExpressionAttribute(node)} role="math" aria-label="${escapeHTML(node.attrs.ariaLabel || `Math expression: ${String(node.attrs.latex)}`)}"><code>${escapeHTML(node.attrs.latex)}</code></div>`;
     case 'inline_image': {
       const attributes = imageAttributes(node);
       if (!attributes) return '';
@@ -302,7 +319,9 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
       const height = imageSize(node.attrs.height, 'auto');
       const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
       const captionAttributes = Object.entries(imageCaptionDOMAttributes(node.attrs)).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
-      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="width:${escapeHTML(width)};max-width:100%"><img ${attributes} style="width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
+      const { style: imageStyle, ...imageLayout } = imageParagraphDOMAttributes(node.attrs);
+      const imageLayoutAttributes = Object.entries(imageLayout).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
+      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="width:${escapeHTML(width)};max-width:100%"><img ${attributes}${imageLayoutAttributes} style="${imageStyle ? `${escapeHTML(imageStyle)};` : ''}width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
     }
     case 'audio': {
       const attributes = playbackAttributes(node);
@@ -349,7 +368,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
   }
 }
 
-const DEFAULT_STYLES = `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}pre[data-fountain-paragraph-layout]>code{font:inherit}pre[data-fountain-code-theme="light"]{color:#272437;background:#f4f1eb}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
+const DEFAULT_STYLES = LIST_LAYOUT_STYLES + PARAGRAPH_SPACING_STYLES + `body{max-width:760px;margin:40px auto;padding:0 20px;color:#171923;font:16px/1.7 system-ui,sans-serif}img,video,audio,iframe{max-width:100%}img{height:auto}figure{margin:1.5em 0}figcaption{color:#697386;text-align:center}.fountain-file{display:block;padding:14px;color:inherit;text-decoration:none;background:#f3f1ff;border:1px solid #ded9ff;border-radius:10px}.fountain-file__preview{display:block;max-height:240px;margin:0 auto 10px;object-fit:contain}.fountain-embed{border:0;border-radius:10px}pre{overflow:auto;padding:16px;color:#eee;background:#151823;border-radius:10px}pre[data-fountain-paragraph-layout]>code{font:inherit}pre[data-fountain-code-theme="light"]{color:#272437;background:#f4f1eb}table{width:100%;border-collapse:collapse}td,th{padding:8px 10px;border:1px solid #ddd;text-align:start}blockquote{padding-inline-start:16px;color:#5f6673;border-inline-start:3px solid #6d5dfc}.fountain-math{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.fountain-math--inline{display:inline-block;padding:0 .2em}.fountain-math--display{overflow:auto;margin:1em 0;padding:.25em 0;text-align:center}.fountain-footnote-definition[data-fountain-footnote-number]{position:relative;padding-inline-start:1.65em}.fountain-footnote-definition[data-fountain-footnote-number]::before{position:absolute;inset-block-start:0;inset-inline-start:0;content:attr(data-fountain-footnote-number) ".";font-weight:700}`;
 
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {

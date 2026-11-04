@@ -1,5 +1,7 @@
+import { readListLayout } from '../core/list-layout';
+import { readTableCellWidths as tableCellWidths } from '../core/table-column-width';
 import { compile as compileSelector, selectAll } from 'css-select';
-import { readImageCaptionAttributes } from '../core/image-caption';
+import { readImageCaptionAttributes, readImageParagraphAttributes } from '../core/image-caption';
 import { readTableLayout, readTableRow } from '../core/table-layout';
 import { readTableAppearance } from '../core/table-appearance';
 import { parse as parseDocument, parseFragment, type ParserError } from 'parse5';
@@ -1022,7 +1024,7 @@ function imageNode(
       decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '')
         ? image.getAttribute('decoding')
         : 'async',
-      ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement) } : {}),
+      ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
     }, caption, undefined, marks);
   } catch { return null; }
 }
@@ -1150,19 +1152,6 @@ function hasProjectedPreformattedMarkup(element: SourceElement): boolean {
     && child.getAttributeNames?.().every(name => name === 'class')
     && (child.getAttribute('class') ?? '').split(/\s+/u).every(name => !name || /^language-\S+$/u.test(name))
     && child.childNodes.every(node => node.kind === 'text')));
-}
-
-function tableCellWidths(cell: SourceElement, colspan: number): number[] | null {
-  const declared = (cell.getAttribute('data-colwidth') ?? '')
-    .split(',')
-    .filter(Boolean)
-    .map(Number);
-  if (declared.length === colspan && declared.every((width) => Number.isInteger(width) && width >= 40 && width <= 2_000)) {
-    return declared;
-  }
-  const styleWidth = Math.round(Number.parseFloat(cell.style.width ?? ''));
-  if (colspan === 1 && Number.isInteger(styleWidth) && styleWidth >= 40 && styleWidth <= 2_000) return [styleWidth];
-  return null;
 }
 
 const BLOCK_TAGS = new Set([
@@ -1323,7 +1312,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const latex = element.getAttribute('data-latex') ?? element.textContent;
     const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
     const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
-    try { return [schema.node('math_block', { latex, ariaLabel, expression })]; }
+    try { return [schema.node('math_block', { latex, ariaLabel, expression, ...readParagraphLayout(element) })]; }
     catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
   }
   if (/^h[1-6]$/.test(tag)) {
@@ -1412,7 +1401,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     const itemType = isTask ? 'task_item' : 'list_item';
     const items = element.children.filter((child) => child.tagName === 'li').map((item) => schema.node(
       itemType,
-      { ...readContainerDirection(item, schema), ...(isTask ? {
+      { ...readContainerDirection(item, schema), ...(!isTask && schema.nodes[itemType]?.spec.attrs?.layout ? readListLayout(item) : {}), ...(isTask ? {
         checked: item.getAttribute('data-checked') === 'true'
           || item.querySelector('input')?.hasAttribute('checked') === true,
       } : {}) },
@@ -1428,7 +1417,7 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
         message: 'Ordered-list numbering was normalized. Negative starts, reversed numbering, non-decimal marker types and per-item value overrides are not retained by the supplied list schema.',
       });
     }
-    return [reportStructuralDirection(element, schema.node(listType, { ...readContainerDirection(element, schema), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items), context, schema)];
+    return [reportStructuralDirection(element, schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items), context, schema)];
   }
   if (tag === 'figure') {
     const mediaType = element.getAttribute('data-fountain-media');

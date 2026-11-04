@@ -1,0 +1,2 @@
+Real workerd actual Word fixture: fractional columns, partial HTML grids, native integer geometry, resizing and exact undo passed without DOM globals.
+{"noDOM":true,"sourceColumns":[220.8,220.8,220.8],"nativeColumns":[3312,3312,3312],"htmlExact":true,"partialExact":true,"resizedOnlyIntendedColumn":true,"undoExact":true,"originalUnchanged":true}

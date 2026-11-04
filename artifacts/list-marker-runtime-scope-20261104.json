@@ -1,0 +1,25 @@
+{
+  "baselineCommit": "d0c8d75f37bf064d316ee40cc6a256fc4afc6e41",
+  "runtimeAndCSSFiles": 169,
+  "allRuntimeAndCSSByteIdentical": true,
+  "observations": {
+    "chromium": {
+      "actual": 15,
+      "positive": 22,
+      "negative": 0,
+      "completeJSONEqual": true
+    },
+    "firefox": {
+      "actual": 31,
+      "positive": 32,
+      "negative": 0,
+      "completeJSONEqual": true
+    },
+    "webkit": {
+      "actual": 111,
+      "positive": 114,
+      "negative": 0,
+      "completeJSONEqual": true
+    }
+  }
+}

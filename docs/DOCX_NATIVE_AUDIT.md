@@ -200,3 +200,20 @@ adjudication; the retained source must not be patched to manufacture agreement.
 The missing independent-rendering environment is now resolved through CI.
 FB-04 and FORMAT-05 remain partial. No pixel-parity, complete native Word,
 physical-device, assistive-technology or parity-percentage claim follows.
+
+## Unmerged list-position repair 2026 11 03
+
+[Run 41740050920](https://github.com/eddolo/fountainjs/actions/runs/41740050920)
+verifies feature commit `d8e6f3d`. The source bytes and both source page images
+match the prior reference. The three exported instructions now start at the same
+75.7 pt as the source, rather than 93.7 pt. Both documents still render to two
+Letter pages; figures, native equations, table and the actual authored change
+remain visible. Source and export title/heading font faces now agree after the
+separate theme-language repair on master.
+
+Vertical instruction tops still differ (source 244.471/258.971/273.471 pt;
+export 251.471/272.971/294.471 pt). Header placement and footnote/renderer
+discrepancies remain. The exported second page is byte-identical to the earlier
+master result. This is a verified horizontal-position repair for the retained
+fixture, not a complete list-layout or format-fidelity verdict. The branch is
+unmerged and exceeds existing size caps; see [the list-layout work](DOCX_LIST_LAYOUT.md).

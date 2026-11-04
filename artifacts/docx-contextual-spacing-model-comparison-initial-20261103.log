@@ -1,0 +1,71 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: docProps/core.xml
++ actual - expected
+... Skipped lines
+
+  Uint8Array(578) [
+    60,
+    63,
+    120,
+    109,
+...
+    49,
++   53,
++   50,
+-   48,
+-   55,
+    90,
+    60,
+    47,
+    100,
+    99,
+...
+    49,
++   53,
++   50,
+-   48,
+-   55,
+    90,
+    60,
+    47,
+    100,
+    99,
+
+    at file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/compare-docx-contextual-spacing-model-20261103.mjs:17:50
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: Uint8Array(578) [
+     60,  63, 120, 109, 108,  32, 118, 101, 114, 115, 105, 111,
+    110,  61,  34,  49,  46,  48,  34,  32, 101, 110,  99, 111,
+    100, 105, 110, 103,  61,  34,  85,  84,  70,  45,  56,  34,
+     32, 115, 116,  97, 110, 100,  97, 108, 111, 110, 101,  61,
+     34, 121, 101, 115,  34,  63,  62,  60,  99, 112,  58,  99,
+    111, 114, 101,  80, 114, 111, 112, 101, 114, 116, 105, 101,
+    115,  32, 120, 109, 108, 110, 115,  58,  99, 112,  61,  34,
+    104, 116, 116, 112,  58,  47,  47, 115,  99, 104, 101, 109,
+     97, 115,  46, 111,
+    ... 478 more items
+  ],
+  expected: Uint8Array(578) [
+     60,  63, 120, 109, 108,  32, 118, 101, 114, 115, 105, 111,
+    110,  61,  34,  49,  46,  48,  34,  32, 101, 110,  99, 111,
+    100, 105, 110, 103,  61,  34,  85,  84,  70,  45,  56,  34,
+     32, 115, 116,  97, 110, 100,  97, 108, 111, 110, 101,  61,
+     34, 121, 101, 115,  34,  63,  62,  60,  99, 112,  58,  99,
+    111, 114, 101,  80, 114, 111, 112, 101, 114, 116, 105, 101,
+    115,  32, 120, 109, 108, 110, 115,  58,  99, 112,  61,  34,
+    104, 116, 116, 112,  58,  47,  47, 115,  99, 104, 101, 109,
+     97, 115,  46, 111,
+    ... 478 more items
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

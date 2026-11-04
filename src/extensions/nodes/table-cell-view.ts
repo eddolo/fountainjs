@@ -11,6 +11,7 @@ import {
 } from '../../core';
 import { getNodeAtPath } from '../../core/transaction/path';
 import { tableBackground } from '../../core/table-background';
+import { isTableColumnWidth } from '../../core/table-column-width';
 import { cellAppearanceAttribute, cellAppearanceDOMAttributes } from '../../core/table-appearance';
 import { textDirectionAttribute, sharedDirectionGroupAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
 
@@ -41,7 +42,7 @@ function resizeMap(table: Node): { map: TableMap; widths: readonly (number | nul
 function validColwidth(value: unknown): boolean {
   return value === null || (Array.isArray(value)
     && value.length <= 100
-    && value.every((width) => Number.isInteger(width) && (width === 0 || (width >= MIN_WIDTH && width <= MAX_WIDTH))));
+    && value.every(isTableColumnWidth));
 }
 
 export const tableCellAttributes = {
@@ -224,7 +225,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
     private onPointerMove = (event: PointerEvent): void => {
       if (!this.dragging) return;
       const delta = (event.clientX - this.startX) * this.dragDirection;
-      this.previewWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, Math.round(this.startWidth + delta)));
+      this.previewWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, this.startWidth + Math.round(delta)));
       this.dom.style.width = `${Math.max(MIN_WIDTH, this.startDOMWidth + delta)}px`;
       this.updateResizeValue();
     };
@@ -252,7 +253,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       window.removeEventListener('pointerup', this.onPointerUp);
       window.removeEventListener('pointercancel', this.onPointerCancel);
       delete this.dom.dataset.fountainResizing;
-      if (commit && this.columnDirection === this.dragDirection) this.commit(this.previewWidth);
+      if (commit && this.previewWidth !== this.startWidth && this.columnDirection === this.dragDirection) this.commit(this.previewWidth);
       this.renderAttributes();
     }
 

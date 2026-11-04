@@ -3,6 +3,7 @@ import { getNodeAtPath } from '../core/transaction/path';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
 import { applySharedDirectionProjection } from './shared-direction';
+import { applyParagraphSpacingProjection, clearParagraphSpacingProjection } from './paragraph-spacing';
 
 export interface DOMRenderContext {
   /** Root model document used by context-sensitive node serializers. */
@@ -249,6 +250,7 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
     const reusable = context.reusableNodeViews?.get(pathKey(path));
     if (reusable && reusable.node.type === node.type) {
       clearDecorationAttributes(reusable.nodeView.dom);
+      clearParagraphSpacingProjection(reusable.nodeView.dom);
       let accepted = reusable.node.eq(node);
       if (!accepted && reusable.nodeView.update) {
         try { accepted = reusable.nodeView.update(node); }
@@ -278,6 +280,7 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   dom.dataset.fountainNode = node.type.name;
   dom.dataset.fountainPath = path.join('.');
   applySharedDirectionProjection(dom, node, context.document ?? node);
+  if (context.document) applyParagraphSpacingProjection(dom, node, context.document, path);
   if (node.type.spec.atom) dom.contentEditable = 'false';
   context.decorations?.find(position, position + node.nodeSize, (decoration) => (
     decoration.type === 'node' && decoration.from === position && decoration.to === position + node.nodeSize

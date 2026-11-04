@@ -1,0 +1,145 @@
+[WebServer] (node:20792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:18340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download (7.2s)
+(node:2956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download (9.9s)
+(node:26412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download (8.5s)
+
+
+  1) [chromium] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: runbook.docx', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('p').filter({ hasText: /^Audit complete\.$/ })
+    Expected: "Audit complete. Verified in Fountain."
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: runbook.docx', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('p').filter({ hasText: /^Audit complete\.$/ })
+
+
+      26 |   const ending = editor.locator('p').filter({ hasText: /^Audit complete\.$/ });
+      27 |   await ending.click(); await page.keyboard.press('End'); await page.keyboard.type(' Verified in Fountain.');
+    > 28 |   await expect(ending).toHaveText('Audit complete. Verified in Fountain.');
+         |                        ^
+      29 |   await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      30 |   await expect(ending).toHaveText('Audit complete.');
+      31 |   await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\docx-style-numbering-audit.spec.ts:28:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: runbook.docx', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('p').filter({ hasText: /^Audit complete\.$/ })
+    Expected: "Audit complete. Verified in Fountain."
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: runbook.docx', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('p').filter({ hasText: /^Audit complete\.$/ })
+
+
+      26 |   const ending = editor.locator('p').filter({ hasText: /^Audit complete\.$/ });
+      27 |   await ending.click(); await page.keyboard.press('End'); await page.keyboard.type(' Verified in Fountain.');
+    > 28 |   await expect(ending).toHaveText('Audit complete. Verified in Fountain.');
+         |                        ^
+      29 |   await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      30 |   await expect(ending).toHaveText('Audit complete.');
+      31 |   await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\docx-style-numbering-audit.spec.ts:28:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: runbook.docx', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('p').filter({ hasText: /^Audit complete\.$/ })
+    Expected: "Audit complete. Verified in Fountain."
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: runbook.docx', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('p').filter({ hasText: /^Audit complete\.$/ })
+
+
+      26 |   const ending = editor.locator('p').filter({ hasText: /^Audit complete\.$/ });
+      27 |   await ending.click(); await page.keyboard.press('End'); await page.keyboard.type(' Verified in Fountain.');
+    > 28 |   await expect(ending).toHaveText('Audit complete. Verified in Fountain.');
+         |                        ^
+      29 |   await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+      30 |   await expect(ending).toHaveText('Audit complete.');
+      31 |   await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\docx-style-numbering-audit.spec.ts:28:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\docx-style-numbering-browser-20261103\docx-style-numbering-audit-db9b8-thoring-and-native-download-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download
+    [firefox] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download
+    [webkit] › tests\manual\docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download

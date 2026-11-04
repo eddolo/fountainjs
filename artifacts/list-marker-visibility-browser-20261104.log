@@ -1,0 +1,59 @@
+[WebServer] (node:9720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:11060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\list-marker-visibility-real.spec.ts:8:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint (3.9s)
+(node:17872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\list-marker-visibility-real.spec.ts:8:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint (8.2s)
+(node:2760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\list-marker-visibility-real.spec.ts:8:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint (7.7s)
+
+
+  1) [webkit] › tests\manual\list-marker-visibility-real.spec.ts:8:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      35 |     await oracle.addStyleTag({ content: '#oracle p::before{content:none!important}' });
+      36 |     negative = await inspectLinePaint(oracle, candidate, resolve(root, 'negative-marker.png'));
+    > 37 |     expect(negative.pixels.dark).toBe(0);
+         |                                  ^
+      38 |   } finally { await oracle.close(); }
+      39 |   await empty.click(); await page.keyboard.press('Home'); await page.keyboard.press('Backspace');
+      40 |   await expect(paragraphs).toHaveCount(3);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\list-marker-visibility-real.spec.ts:37:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\list-marker-visibility-browser-20261104\list-marker-visibility-rea-b37de-ntrols-detect-missing-paint-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-marker-visibility-browser-20261104\list-marker-visibility-rea-b37de-ntrols-detect-missing-paint-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\list-marker-visibility-browser-20261104\list-marker-visibility-rea-b37de-ntrols-detect-missing-paint-webkit\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\list-marker-visibility-browser-20261104\list-marker-visibility-rea-b37de-ntrols-detect-missing-paint-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\list-marker-visibility-browser-20261104\list-marker-visibility-rea-b37de-ntrols-detect-missing-paint-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\list-marker-visibility-browser-20261104\list-marker-visibility-rea-b37de-ntrols-detect-missing-paint-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit] › tests\manual\list-marker-visibility-real.spec.ts:8:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint
+  2 passed (27.9s)

@@ -1,0 +1,17 @@
+{
+  "nativeYDeltaPt": {
+    "Experimental setup": 0.0,
+    "Record the initial temperature": 0.0,
+    "Keep both probes": 0.0,
+    "Read the measurements": 0.0,
+    "Figure 1": -3.1999999999999886,
+    "Figure 2": -6.400000000000091,
+    "Recorded temperatures": 2.0
+  },
+  "sourcePageImagesEqualPreviousAudit": [
+    true,
+    true
+  ],
+  "allFinalPagesEqualInspectedRun": true,
+  "old7PtOffsetCorrectlyRejected": true
+}

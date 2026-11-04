@@ -1,0 +1,32 @@
+{
+  "purpose": "Independent literal HTML input for a recorded editing/reader journey; no Fountain serializer creates this source.",
+  "first": {
+    "unit": "pt",
+    "fontFamily": "Arial",
+    "fontSize": 11,
+    "lineHeight": 14,
+    "lineHeightUnit": "pt",
+    "lineHeightRule": "exact",
+    "spacingGroup": "body",
+    "spacingBefore": 0,
+    "spacingAfter": 10,
+    "contextualSpacing": true
+  },
+  "second": {
+    "unit": "pt",
+    "fontFamily": "Arial",
+    "fontSize": 11,
+    "lineHeight": 14,
+    "lineHeightUnit": "pt",
+    "lineHeightRule": "exact",
+    "spacingGroup": "body",
+    "spacingBefore": 12,
+    "spacingAfter": 0,
+    "contextualSpacing": false
+  },
+  "expectedInitialGapPt": 2,
+  "expectedSameStyleListGapPt": 0,
+  "expectedFollowingListGapPt": 2,
+  "expectedGapAfterRemovingFirstObservationPt": 12,
+  "nativeWordBehaviorVerified": false
+}

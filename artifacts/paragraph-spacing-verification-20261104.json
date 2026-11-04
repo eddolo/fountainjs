@@ -1,0 +1,388 @@
+{
+  "previousCheckpoint": "1a4481ae15d112dc4a1d68c3d51af877bb556176",
+  "status": "portable paragraph-flow checkpoint; unmerged and unpublished; native Word bridge unfinished; acceptance gates fail",
+  "scope": "Opaque spacing-group intent, DOM-free gap resolution, explicit schema flow boundaries and live DOM/full-HTML projection without rewriting declarations.",
+  "unchangedNativeSourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "checks": {
+    "fullUnit": 0,
+    "api": 0,
+    "headless": 0,
+    "size": 1,
+    "package": 0,
+    "mappingRetention": 0,
+    "types": 0,
+    "worker": 0,
+    "directionRetention": 0,
+    "parserDiagnostic": 0,
+    "unit": {
+      "tests": 3509,
+      "files": 249,
+      "newContracts": 28,
+      "exit": 0
+    },
+    "apiDeclarations": 419,
+    "headlessModules": 118,
+    "recordedBrowsers": {
+      "journeys": 3,
+      "workers": 1,
+      "headless": true,
+      "exit": 0
+    },
+    "workerd": {
+      "noDOM": true,
+      "initialGapPt": 2,
+      "editedGapPt": 12,
+      "declaredBeforePt": 12,
+      "htmlEqual": true,
+      "exit": 0
+    },
+    "packedConsumer": {
+      "variants": [
+        "ESM root",
+        "ESM core",
+        "CommonJS root",
+        "CommonJS core"
+      ],
+      "noDOM": true,
+      "exit": 0
+    },
+    "sizeAcceptance": {
+      "exit": 1,
+      "failedCeilings": 7,
+      "limitsChanged": false,
+      "failures": [
+        "core ESM",
+        "core CommonJS",
+        "DOCX ESM",
+        "DOCX CommonJS",
+        "CSS",
+        "aggregate ESM",
+        "aggregate CommonJS"
+      ]
+    },
+    "performanceAcceptance": {
+      "exit": 1,
+      "thresholdChanged": false,
+      "max100BlockServerHTMLP95Ms": 35,
+      "standaloneP95Ms": [
+        48.13,
+        35.38
+      ],
+      "retainedBaselineStandaloneExit": 0,
+      "alternatingDiagnostic": "Both implementations have slow samples; diagnostic does not replace either failed gate or establish a cause."
+    }
+  },
+  "observations": {
+    "chromium": {
+      "initialGap": 2.65625,
+      "listGap": 0,
+      "followingListGap": 2.65625,
+      "enteredLineHeight": 18.671875,
+      "afterDeletionGap": 16,
+      "readerGap": 16,
+      "reopenGap": 16,
+      "originalDeclaredSecond": {
+        "unit": "pt",
+        "fontFamily": "Arial",
+        "fontSize": 11,
+        "lineHeight": 14,
+        "lineHeightUnit": "pt",
+        "lineHeightRule": "exact",
+        "spacingGroup": "body",
+        "spacingBefore": 12,
+        "spacingAfter": 0,
+        "contextualSpacing": false
+      },
+      "enterUndoRedoBackspace": true,
+      "backwardSelectionAndDeletion": true,
+      "actualJSONDownload": true,
+      "actualHTMLDownloadReaderReopen": true,
+      "nativeWordUnsupportedRuleReported": true,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    },
+    "firefox": {
+      "initialGap": 2.66650390625,
+      "listGap": -0.000244140625,
+      "followingListGap": 2.666748046875,
+      "enteredLineHeight": 18.666656494140625,
+      "afterDeletionGap": 16,
+      "readerGap": 16.00000762939453,
+      "reopenGap": 16,
+      "originalDeclaredSecond": {
+        "unit": "pt",
+        "fontFamily": "Arial",
+        "fontSize": 11,
+        "lineHeight": 14,
+        "lineHeightUnit": "pt",
+        "lineHeightRule": "exact",
+        "spacingGroup": "body",
+        "spacingBefore": 12,
+        "spacingAfter": 0,
+        "contextualSpacing": false
+      },
+      "enterUndoRedoBackspace": true,
+      "backwardSelectionAndDeletion": true,
+      "actualJSONDownload": true,
+      "actualHTMLDownloadReaderReopen": true,
+      "nativeWordUnsupportedRuleReported": true,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    },
+    "webkit": {
+      "initialGap": 2.65625,
+      "listGap": 0,
+      "followingListGap": 2.65625,
+      "enteredLineHeight": 18.65625,
+      "afterDeletionGap": 16,
+      "readerGap": 16,
+      "reopenGap": 16,
+      "originalDeclaredSecond": {
+        "unit": "pt",
+        "fontFamily": "Arial",
+        "fontSize": 11,
+        "lineHeight": 14,
+        "lineHeightUnit": "pt",
+        "lineHeightRule": "exact",
+        "spacingGroup": "body",
+        "spacingBefore": 12,
+        "spacingAfter": 0,
+        "contextualSpacing": false
+      },
+      "enterUndoRedoBackspace": true,
+      "backwardSelectionAndDeletion": true,
+      "actualJSONDownload": true,
+      "actualHTMLDownloadReaderReopen": true,
+      "nativeWordUnsupportedRuleReported": true,
+      "nativeWordSpacingCertified": false,
+      "errors": []
+    }
+  },
+  "visualReview": [
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/chromium/initial.png",
+      "sha256": "101da3825fe74d23e1cf0390ebfafb8bf0f9a8dee01bf6325f814da2a080eba9",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/chromium/entered.png",
+      "sha256": "3f4cb665288e29e1d43344c9ae9836acd48364bdf99a9f313fc5bbd3b1a3a9c4",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/chromium/deleted.png",
+      "sha256": "5918e43f91db794f05154cec3d08ae724806cd46fca73d478669a125c11364e1",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/chromium/reader.png",
+      "sha256": "40188f4525e26dbdab698a432ee2a9594b47a3698c43e132c6a0acb9eb01ceb3",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/chromium/reopened.png",
+      "sha256": "cb5258c87eab4509bebe03975e8c0f0e3c37822836acfbf42b62c84b8ad45df0",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/firefox/initial.png",
+      "sha256": "0112b12c9d2ef4a3c7cfea135bda42e5982eca3c4021e54195a3db8d0275836a",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/firefox/entered.png",
+      "sha256": "ac1a70e2f1493a535ab179fb0d6e0a225cbb34e4fa21f40f48186786f856d536",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/firefox/deleted.png",
+      "sha256": "5bd7c69591284a6280a3bfab3731612d556e77b784481575f983f5b9e2c46622",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/firefox/reader.png",
+      "sha256": "e81f59c21c56e387c01a4b20b30280b91709b7c06ab7d4b2ee5356b2358bdb16",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/firefox/reopened.png",
+      "sha256": "86c359a71e59d97037f5aac5b166952f5277dfa0308f2cb5c5651db0af62a7ed",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/webkit/initial.png",
+      "sha256": "ef5164bbd921039586db2addd0fd0357d4e4622cfcc4002bf25285a590690deb",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/webkit/entered.png",
+      "sha256": "faaace6883e1344f292e2b6778c0016950ea2c95e90bee718e37692156d31e47",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/webkit/deleted.png",
+      "sha256": "a03199586457b50cdad07ecf38c338593aa86786b31fdf0feccab9f2e661608c",
+      "review": "freshly visually inspected final capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/webkit/reader.png",
+      "sha256": "ed86078f5b3f7444582c210566e38bdee8a420101e0e5e34e94ad336ccd401fe",
+      "review": "byte-identical to previously visually inspected capture"
+    },
+    {
+      "path": "artifacts/paragraph-spacing-verified-real-20261104/webkit/reopened.png",
+      "sha256": "25987e4638cf0a8759a3d506146e8f52ffb577ad612cf1b77126203fc03cc1f2",
+      "review": "byte-identical to previously visually inspected capture"
+    }
+  ],
+  "actualTarball": {
+    "path": "artifacts/paragraph-spacing-tarball-consumer-20261104/fountainjs-editor-0.4.0-beta.2.tgz",
+    "sha256": "d31ab924ed2e1f3dd6a7b3a81eb62347311eabde6940ebf9d6b1a088bcf56dbc"
+  },
+  "fixtureProvenance": {
+    "purpose": "Independent literal HTML input for a recorded editing/reader journey; no Fountain serializer creates this source.",
+    "first": {
+      "unit": "pt",
+      "fontFamily": "Arial",
+      "fontSize": 11,
+      "lineHeight": 14,
+      "lineHeightUnit": "pt",
+      "lineHeightRule": "exact",
+      "spacingGroup": "body",
+      "spacingBefore": 0,
+      "spacingAfter": 10,
+      "contextualSpacing": true
+    },
+    "second": {
+      "unit": "pt",
+      "fontFamily": "Arial",
+      "fontSize": 11,
+      "lineHeight": 14,
+      "lineHeightUnit": "pt",
+      "lineHeightRule": "exact",
+      "spacingGroup": "body",
+      "spacingBefore": 12,
+      "spacingAfter": 0,
+      "contextualSpacing": false
+    },
+    "expectedInitialGapPt": 2,
+    "expectedSameStyleListGapPt": 0,
+    "expectedFollowingListGapPt": 2,
+    "expectedGapAfterRemovingFirstObservationPt": 12,
+    "nativeWordBehaviorVerified": false
+  },
+  "reproducedAndRepaired": [
+    "Chromium native marker typography introduced 5 px between zero-gap list paragraphs. Independent native-HTML experiments isolate marker font context; matching longhand marker typography removes the gap without changing descendant typography or semantic markers.",
+    "A reused custom NodeView restored stale margins when its new base value equalled the old derived value. Clear only the owned projection before update().",
+    "A host updateDocument() callback could overwrite the current derived margin. Refresh after all mounted callbacks. Both new custom-view regression cases failed before repair and pass afterward."
+  ],
+  "auditCorrections": [
+    "The first Firefox/WebKit run tried to inspect an old workspace after selecting another file. Move the same DOCX loss assertion before navigation; numerical expectations and timeouts remain unchanged.",
+    "The final browser journey additionally measures the entered empty paragraph height as 14 pt; a model-only newline is insufficient.",
+    "One Chromium entered screenshot differs from its earlier capture; the final image was visually inspected rather than treated as byte-identical."
+  ],
+  "remaining": [
+    "Bind native Word paragraph-style identity to portable spacing groups without collapsing distinct styles or rewriting declared spacing.",
+    "Export native Word styles/contextual intent and independently render actual edited/reopened DOCX before claiming native spacing repair.",
+    "Resolve all seven unchanged size failures and the failed server-HTML timing gate before merge/release.",
+    "Style-free HTML fragments preserve declarations but do not certify typography/layout in an external application.",
+    "No full Word/pixel fidelity or roadmap percentage promotion is established by this checkpoint."
+  ],
+  "stagedSHA256": {
+    "CHANGELOG.md": "456052f806db18be2bafed9a15b6cbf1252eec9ffc34f04130a0708ee29a9025",
+    "api-surface.json": "bae86761591b5ee98e43f91015ab709d1ce5600cc5259ea77acb604e0b43bbd4",
+    "artifacts/check-paragraph-spacing-worker-20261104.mjs": "6c56d00c0038329de4bdd7a2cecc110942e4006a46a76929ef12439281e67f35",
+    "artifacts/create-paragraph-spacing-source-20261104.mjs": "672d494281030dc734c930fc8c1107d2c228b79f72e52736ed3939adf74cc90c",
+    "artifacts/paragraph-spacing-api-before-20261104.log": "7ddc7727f1c453b3ec3dc7fbe9f7ac7169c0df9aa5fdaf6afa91a2ab38c98f47",
+    "artifacts/paragraph-spacing-baseline-performance-20261104.log": "a0993dbda232ef99c8ae846a1e4cc28e29cb8ae735b409e945c5c0187b46cc27",
+    "artifacts/paragraph-spacing-browser-20261104.log": "20ffc0b901c53ae3a74a90f17011e32d881b17ef159ae3fafe342e29f0814236",
+    "artifacts/paragraph-spacing-browser.config.ts": "b8dee66e4b6d9b4f7f58261e1a9b16f90b103fb7f733034fdb9fcaaaaea6350b",
+    "artifacts/paragraph-spacing-capture-comparison-20261104.json": "df997c2d2974534236955ccf2a411404f98330c032bcc13abe7a1035cfd6ccdb",
+    "artifacts/paragraph-spacing-commonmark-20261104.log": "ffad58c2314a9dc85082003f6a53d2882279f1bacac6a519b9b04c60df946941",
+    "artifacts/paragraph-spacing-direction-retention-20261104.log": "205b9c716dc4887d45175505e16a1167d298be889148adc3d6b2d7bfbd900c27",
+    "artifacts/paragraph-spacing-interop-20261104.log": "23fe034426b06916a288a8ef86763b3975b4d08a78875166624eb3b6a3f63137",
+    "artifacts/paragraph-spacing-mapping-retention-20261104.log": "501e393c5aa8e81e041ebe2e1777b3f40b839864b5299357d2731d67d548fb88",
+    "artifacts/paragraph-spacing-marker-probe-20261104.json": "12b25df558c79c07bc4d1ce1fb9b964fa3581ec8749e44bf2b057a3087b2d481",
+    "artifacts/paragraph-spacing-marker-probe-longhand-20261104.log": "c335ea96112c657a38236d636d4b46d0aaab91c1d15b2241e3ae67a72dc52ce5",
+    "artifacts/paragraph-spacing-marker-probe.config.ts": "088917728fae37d00364e63e8cac2a3c97e87fabdba2295ed6bb7c45759d3f92",
+    "artifacts/paragraph-spacing-node-view-before-both-20261104.log": "d95e06fdce86f95443e071daca51ede3ad4fc23e1cce368209c58f05b1fc3dc9",
+    "artifacts/paragraph-spacing-node-view-build-20261104.log": "82d7aa044b7d27e52006baba7a9006cb80cf2df377accd50b96a3fe517b73369",
+    "artifacts/paragraph-spacing-node-view-fixed-20261104.log": "4e336d94a8689a584743ab548e8b593bb8636b4b65119d4bd8dd78c7c7453cab",
+    "artifacts/paragraph-spacing-paired-performance-20261104.json": "4a4037afd5a90ff04f978e7184792e66349e5a018715a612620984faaf1ca24f",
+    "artifacts/paragraph-spacing-paired-performance-20261104.log": "fb578ce62dba9d2d66ec10e5d1e4e2ba2dec4a758ad2e3338d5b3f305c1ca55f",
+    "artifacts/paragraph-spacing-parser-diagnostic-20261104.json": "69c44f383761c27ab9feeecfea6513f1bc8bc1a7e8869832f2c9aeb9d2349e1f",
+    "artifacts/paragraph-spacing-parser-diagnostic-20261104.log": "770b5fa3b72af7da6586de9d82b35653e27890965fa51648daa1866a5de1b839",
+    "artifacts/paragraph-spacing-parser-diagnostic-20261104.mjs": "af715e401c8a52562e62222a96713ed7e42d7c21d172e46cc4aae4272b83b40b",
+    "artifacts/paragraph-spacing-performance-20261104.log": "5a90bc110eb3ed4c5d4d5c3f86c2920052a583b9f9eecfea11710ec88b2d79ab",
+    "artifacts/paragraph-spacing-server-runtimes-20261104.log": "b1785093dfb6458c361a9f3f049325ed3b26c28fdc087a514cfdf6a79f9c9ace",
+    "artifacts/paragraph-spacing-source-20261104/provenance.json": "66824c8ce5fe92a1a08964b18e38c1fe5e5ea6328004b5cff9184301183177b0",
+    "artifacts/paragraph-spacing-source-20261104/spacing-review.html": "5822d25eef749af84512bfd724368364090f01be60b5f6f3e7ccc88bae39e042",
+    "artifacts/paragraph-spacing-tarball-consumer-20261104.log": "869e71757a4807e25c5eabf0ec576d71010559ad9e9730352f0dee540e2e1098",
+    "artifacts/paragraph-spacing-tarball-consumer-template-20261104.mjs": "4e669af428d31959f2acd5a2ae14297d3c67b9b6a2e31e7aa5d0f15086f64720",
+    "artifacts/paragraph-spacing-verified-api-20261104.log": "c784e73b47b95ebdca4750e19cca9f690b7e265ab95b957c691ff673a1f3f6cd",
+    "artifacts/paragraph-spacing-verified-browser-20261104.log": "acec19da583dee9fe2d666a72c562d582e40bfb89a7b8743b59654481d71c5e2",
+    "artifacts/paragraph-spacing-verified-checks-20261104.json": "09cbba6a08de6593a7e003b2b862d5264871e75aaed64d983aedda6b2a9f6716",
+    "artifacts/paragraph-spacing-verified-full-unit-20261104.log": "b599f727fafd874eddd0cf4b509c2867933caeafd46234aed39e9a1527d1e510",
+    "artifacts/paragraph-spacing-verified-headless-20261104.log": "558a6ac38bfb820c747ef5a33f5c8239dfcbd09be43f186ecd547b3a849873eb",
+    "artifacts/paragraph-spacing-verified-package-20261104.log": "c4a3e08549d834157914a884aaf65855e2165c88c4b2c26c5a01d689ac500dd1",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/deleted.png": "5918e43f91db794f05154cec3d08ae724806cd46fca73d478669a125c11364e1",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/edited-reader.html": "98fbbb987b69faaedd5e74d5c51184cbfe23ff2400704170f0d128b757486497",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/entered.png": "3f4cb665288e29e1d43344c9ae9836acd48364bdf99a9f313fc5bbd3b1a3a9c4",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/initial.png": "101da3825fe74d23e1cf0390ebfafb8bf0f9a8dee01bf6325f814da2a080eba9",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/observations.json": "59468080a0bab21619373bfa2a0599fa44c31e87c88de00215ee0f462724ea24",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/original.json": "a9ea5e7a43674e3493381507064e93e19596accc1a90e7cb429333ca54e4f067",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/reader.png": "40188f4525e26dbdab698a432ee2a9594b47a3698c43e132c6a0acb9eb01ceb3",
+    "artifacts/paragraph-spacing-verified-real-20261104/chromium/reopened.png": "cb5258c87eab4509bebe03975e8c0f0e3c37822836acfbf42b62c84b8ad45df0",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/deleted.png": "5bd7c69591284a6280a3bfab3731612d556e77b784481575f983f5b9e2c46622",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/edited-reader.html": "98fbbb987b69faaedd5e74d5c51184cbfe23ff2400704170f0d128b757486497",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/entered.png": "ac1a70e2f1493a535ab179fb0d6e0a225cbb34e4fa21f40f48186786f856d536",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/initial.png": "0112b12c9d2ef4a3c7cfea135bda42e5982eca3c4021e54195a3db8d0275836a",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/observations.json": "2702fcc5971247b6d7c9a93b91caea53940d9d77ed83804c1d4a507d60b19e25",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/original.json": "a9ea5e7a43674e3493381507064e93e19596accc1a90e7cb429333ca54e4f067",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/reader.png": "e81f59c21c56e387c01a4b20b30280b91709b7c06ab7d4b2ee5356b2358bdb16",
+    "artifacts/paragraph-spacing-verified-real-20261104/firefox/reopened.png": "86c359a71e59d97037f5aac5b166952f5277dfa0308f2cb5c5651db0af62a7ed",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/deleted.png": "a03199586457b50cdad07ecf38c338593aa86786b31fdf0feccab9f2e661608c",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/edited-reader.html": "98fbbb987b69faaedd5e74d5c51184cbfe23ff2400704170f0d128b757486497",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/entered.png": "faaace6883e1344f292e2b6778c0016950ea2c95e90bee718e37692156d31e47",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/initial.png": "ef5164bbd921039586db2addd0fd0357d4e4622cfcc4002bf25285a590690deb",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/observations.json": "567f6a75fa56dcc9bffb346765749d2ade82fd3670255ec997f8f5d7ce877380",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/original.json": "a9ea5e7a43674e3493381507064e93e19596accc1a90e7cb429333ca54e4f067",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/reader.png": "ed86078f5b3f7444582c210566e38bdee8a420101e0e5e34e94ad336ccd401fe",
+    "artifacts/paragraph-spacing-verified-real-20261104/webkit/reopened.png": "25987e4638cf0a8759a3d506146e8f52ffb577ad612cf1b77126203fc03cc1f2",
+    "artifacts/paragraph-spacing-verified-size-20261104.log": "5c34c1934ff2a34c3c9d60398005a4ddcb95e47b1e8fef8b20218112914ab9f7",
+    "artifacts/paragraph-spacing-verified-types-20261104.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/paragraph-spacing-worker-20261104.log": "c8d21dffbb7040042656819d627245e1253988c89126958f543ddf790939b5a2",
+    "artifacts/paragraph-spacing-worker-20261104.mjs": "5c3527434f65fc0bc9c1edbe9883218cb69c8d935ea485888d788defad8e1b5b",
+    "artifacts/run-paragraph-spacing-tarball-consumer-20261104.ps1": "ca0048de454e1de3546953e7537705419935856502f8b31438e088401f6556bf",
+    "artifacts/write-paragraph-spacing-verification-20261104.mjs": "13b58502be58b84685049665a06c74afc2407dc9a88078fc932d5ddfadde2107",
+    "docs/DOCX_LIST_LAYOUT.md": "30a978f788493950f9a5904b22f5b2c543da83f4715f7ecdd9b93832d764e9c9",
+    "docs/ROADMAP.md": "6b2c1d5241bfef851e6b355f7eb855b254c74bb8281a22a8065f0384d4948c07",
+    "docs/TIPTAP_PARITY.md": "dc838bfcb2c1a50f3c9a49795b094ae3dba2c2879ffd19b16cbbaf03efed063d",
+    "scripts/fixtures/paragraph-spacing-check.mjs": "f1b85eb5a1ca7801f2f96ea81adf8e6e5888e508fe25d3aa0fe876cb1026ea84",
+    "scripts/smoke-package.mjs": "73db66ece03f8b111057a27d4048c0fbee862ed5c4d625ab55166b63a602ae22",
+    "src/core/exporters/html-exporter.ts": "c5e9af5dc7162995bf3a8f3dda320ed22182fa8910c43c95c03d0af546257c40",
+    "src/core/index.ts": "7be7306e67ee2e947a956ac19a7548a9f2d59a1289d7f6c9fd26e2965dd2781d",
+    "src/core/paragraph-layout.ts": "f58b7cc846c113c34cfb5cbe2120b68fe2f47a500dd610accce1f329de2c1040",
+    "src/core/paragraph-spacing.ts": "99896b9bd16b272fa995bbb161248fbb961c6c8411016bd9ac077f30cced76bf",
+    "src/core/schema/node-spec.ts": "be7f84769141f9c96bcfa5730cea94254c5e3f9fc098111fb8615323059a5dd6",
+    "src/docx/index.ts": "d85a5c6aae7dd8fe3f50f0159b2ad925e8a36054745a12c286a73ff90d60b5a7",
+    "src/extensions/nodes/bullet-list.ts": "aea2f101812ae8ba57ed09662675cc023f1cb1c186dffc334bf0b815dcf40f53",
+    "src/extensions/nodes/code-block.ts": "c5c872b4df5be7e960e1af86d91412608e6d762c9fa7c8b6400a1fde58669a90",
+    "src/extensions/nodes/definition-list.ts": "26f37e5f22e48cc3620efab82579abcaf6c6df30bd0f707a6b1a91010192e244",
+    "src/extensions/nodes/heading.ts": "2fe90141d567f32c2194d4c49fc8b181a05c857f23da8b8da8f65ac836067b03",
+    "src/extensions/nodes/list-item.ts": "a7aed1301f6eb9962a0b1d8ea94eba534c629c528507be06ab43c8d662682449",
+    "src/extensions/nodes/ordered-list.ts": "32c753ebf0d7112d85ab7d831acd2504c9b88d576ae1bdfc8f57a94e07b96102",
+    "src/extensions/nodes/paragraph.ts": "65750ca8f67a596618f8e9474f99c25289784be4099b8a1621d2f499a58f196f",
+    "src/extensions/nodes/task-item.ts": "d2f1c7c397669b545a04d39c3790da62a400e890dbe30a270cdcfc92d46eb6b2",
+    "src/extensions/nodes/task-list.ts": "831e110fc61b9bfbc0d8599e94cb500412d5e4e66af65a73c49be69418edded2",
+    "src/styles.css": "5aa497a38a99ea0b9a59e8c3ec952db597acbfccbd29075cfa7d62029351ad38",
+    "src/view/dom-renderer.ts": "390b6107861c81ade7bd13ddc7b110a18a54617e334e98d4777a8b35081f3914",
+    "src/view/paragraph-spacing.ts": "58b1a5c50bc3d194f1ec9433c6eaeb53a585f3950c1c7448eb8d3d4b81fdb789",
+    "src/view/view.ts": "814efbf9d0ab2f60d04bddc91ef11283db79e10659cc37afd6cd8a4e680a9155",
+    "tests/manual/paragraph-spacing-marker-probe.spec.ts": "3b4cc225c0d6500ae8c2fc95853703747155a49185b9e3b031f737c95c8086ef",
+    "tests/manual/paragraph-spacing-real.spec.ts": "1f6658d636ede44dd09085903ed809d0b2ff333a8d103f34ba5aceade282e2b4",
+    "tests/paragraph-spacing-node-view.test.ts": "c17ec6beb5a0c7e8f416a5ddae35e22dc94c6c15b298f05acd46c9f7ad508f2e",
+    "tests/paragraph-spacing-view.test.ts": "c6532251a8f582c80837e7330e16b1cd42e938fa6fc46cd7e173e16017fd96d1",
+    "tests/paragraph-spacing.test.ts": "5680c1aa4a98a8f735976244fdd631921b213ce868b47d588ba96078fe0abd94"
+  }
+}

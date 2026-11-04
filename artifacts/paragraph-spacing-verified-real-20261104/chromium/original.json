@@ -1,0 +1,345 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1,
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 20,
+          "lineHeight": 24,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "title",
+          "spacingBefore": 0,
+          "spacingAfter": 18,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Field study review"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "intro",
+          "spacingBefore": 0,
+          "spacingAfter": 8,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Review draft. Preserve the authored spacing settings."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "body",
+          "spacingBefore": 0,
+          "spacingAfter": 10,
+          "contextualSpacing": true
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "First research observation."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "body",
+          "spacingBefore": 12,
+          "spacingAfter": 0,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Second research observation."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "other",
+          "spacingBefore": 12,
+          "spacingAfter": 0,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Third observation starts another category."
+        }
+      ]
+    },
+    {
+      "type": "ordered_list",
+      "attrs": {
+        "start": 1
+      },
+      "content": [
+        {
+          "type": "list_item",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "layout": {
+                  "unit": "pt",
+                  "fontFamily": "Arial",
+                  "fontSize": 11,
+                  "lineHeight": 14,
+                  "lineHeightUnit": "pt",
+                  "lineHeightRule": "exact",
+                  "spacingGroup": "steps",
+                  "spacingBefore": 12,
+                  "spacingAfter": 10,
+                  "contextualSpacing": true
+                }
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Step one: record the measurement."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "list_item",
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "layout": {
+                  "unit": "pt",
+                  "fontFamily": "Arial",
+                  "fontSize": 11,
+                  "lineHeight": 14,
+                  "lineHeightUnit": "pt",
+                  "lineHeightRule": "exact",
+                  "spacingGroup": "steps",
+                  "spacingBefore": 12,
+                  "spacingAfter": 10,
+                  "contextualSpacing": true
+                }
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Step two: confirm the reading."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "steps",
+          "spacingBefore": 12,
+          "spacingAfter": 0,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Following note stays in the same step group."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": [
+        {
+          "type": "table_row",
+          "content": [
+            {
+              "type": "table_cell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "background": ""
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "layout": {
+                      "unit": "pt",
+                      "fontFamily": "Arial",
+                      "fontSize": 11,
+                      "lineHeight": 14,
+                      "lineHeightUnit": "pt",
+                      "lineHeightRule": "exact",
+                      "spacingGroup": "body",
+                      "spacingBefore": 12,
+                      "spacingAfter": 10,
+                      "contextualSpacing": true
+                    }
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Control sample"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1,
+                "colwidth": null,
+                "background": ""
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "layout": {
+                      "unit": "pt",
+                      "fontFamily": "Arial",
+                      "fontSize": 11,
+                      "lineHeight": 14,
+                      "lineHeightUnit": "pt",
+                      "lineHeightRule": "exact",
+                      "spacingGroup": "body",
+                      "spacingBefore": 12,
+                      "spacingAfter": 0,
+                      "contextualSpacing": false
+                    }
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Independent sample"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "attrs": {
+        "language": "python",
+        "lineNumbers": true,
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "code",
+          "spacingBefore": 12,
+          "spacingAfter": 0,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "temperature = 21"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left",
+        "layout": {
+          "unit": "pt",
+          "fontFamily": "Arial",
+          "fontSize": 11,
+          "lineHeight": 14,
+          "lineHeightUnit": "pt",
+          "lineHeightRule": "exact",
+          "spacingGroup": "body",
+          "spacingBefore": 12,
+          "spacingAfter": 0,
+          "contextualSpacing": false
+        }
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Conclusion awaiting approval."
+        }
+      ]
+    }
+  ]
+}

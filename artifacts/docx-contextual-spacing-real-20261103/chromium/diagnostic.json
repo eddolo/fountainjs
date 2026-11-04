@@ -1,0 +1,2820 @@
+{
+  "reportVersion": 2,
+  "fountainVersion": "0.4.0-beta.2",
+  "policy": "starter-kit-pages-v2; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000",
+  "importOptions": {
+    "preserveHTMLStructure": false
+  },
+  "createdAt": "2026-11-03T23:47:11.977Z",
+  "input": {
+    "format": "docx",
+    "bytes": 88038
+  },
+  "output": "docx",
+  "importedImages": {
+    "represented": 3,
+    "embeddedRaster": 3
+  },
+  "sourcePackage": {
+    "entries": 24,
+    "unrepresentedMedia": 0,
+    "parts": [
+      {
+        "declaredBytes": 2228,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 734,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 761,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 1132,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 20422,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 1884,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 349622,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 438131,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 2535,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 438,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 2811,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 10939,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 262,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 295,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 354,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 5513,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 2130,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 288,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 3448,
+        "handling": "imported-image"
+      },
+      {
+        "declaredBytes": 1449,
+        "handling": "adapter-input"
+      },
+      {
+        "declaredBytes": 26140,
+        "handling": "imported-image"
+      },
+      {
+        "declaredBytes": 31603,
+        "handling": "imported-image"
+      },
+      {
+        "declaredBytes": 8324,
+        "handling": "not-interpreted"
+      },
+      {
+        "declaredBytes": 593,
+        "handling": "adapter-input"
+      }
+    ]
+  },
+  "importIssues": [
+    {
+      "code": "footnote-separator-type-inferred",
+      "message": "A reserved separator entry omitted its note type. Its native separator marker was recognized; export writes an explicit type."
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Title: pBdr/bottom/http://schemas.openxmlformats.org/wordprocessingml/2006/main|themeColor is not fully represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word style Title: kern is not fully represented.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        0
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Subtitle: numPr/ilvl (ISO association used; native Word behavior is unpredictable) is not fully represented.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word italicCS is not represented by editable Fountain marks.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        2
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Heading1: outlineLvl is not fully represented.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        3
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        4
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        4
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        4
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        4
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        4
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        5
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        6
+      ]
+    },
+    {
+      "code": "paragraph-contextual-spacing-not-imported",
+      "message": "Effective Word contextual spacing needs adjacent paragraph style identity and gap subtraction. Declared paragraph spacing is retained; the contextual rule is not yet represented.",
+      "path": [
+        7
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        7
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        7
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        7
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        7
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        7
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        8
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        8
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        8
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        8
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        8
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        9
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        10
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        10
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        10
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        10
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        10
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        11
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        12
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        12
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        12
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        12
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        12
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Heading1: outlineLvl is not fully represented.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        13
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        14
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        14
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        14
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        14
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        14
+      ]
+    },
+    {
+      "code": "office-math-imported-experimental",
+      "message": "Supported Word equation semantics were converted to editable TeX. The original OMML source/style is not retained, and native application fidelity is not yet certified.",
+      "path": [
+        15
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        15
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        15
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        15
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        15
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        16
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        16
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        16
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        16
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        16
+      ]
+    },
+    {
+      "code": "office-math-imported-experimental",
+      "message": "Supported Word equation semantics were converted to editable TeX. The original OMML source/style is not retained, and native application fidelity is not yet certified.",
+      "path": [
+        17
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        17
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        17
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        17
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        17
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        18
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        18
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        18
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        18
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        18
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Heading1: outlineLvl is not fully represented.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        19
+      ]
+    },
+    {
+      "code": "table-style-materialized",
+      "message": "Supported appearance from Word table styles TableNormal was materialized as editable table/cell declarations. Live style bindings and original style XML are not retained by native export.",
+      "path": [
+        20
+      ]
+    },
+    {
+      "code": "table-column-width-rounded",
+      "message": "A Word table grid width was rounded to Fountain's whole-pixel resolution.",
+      "path": [
+        20,
+        0
+      ]
+    },
+    {
+      "code": "table-column-width-rounded",
+      "message": "A Word table grid width was rounded to Fountain's whole-pixel resolution.",
+      "path": [
+        20,
+        1
+      ]
+    },
+    {
+      "code": "table-column-width-rounded",
+      "message": "A Word table grid width was rounded to Fountain's whole-pixel resolution.",
+      "path": [
+        20,
+        2
+      ]
+    },
+    {
+      "code": "duplicate-table-appearance-declaration",
+      "message": "Identical repeated Word tcBorders declarations were coalesced; export writes one declaration.",
+      "path": [
+        20,
+        0,
+        0
+      ]
+    },
+    {
+      "code": "duplicate-table-appearance-declaration",
+      "message": "Identical repeated Word shd declarations were coalesced; export writes one declaration.",
+      "path": [
+        20,
+        0,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        2,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        2,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        2,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        2,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        2,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        3,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        3,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        3,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        3,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        3,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        4,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        4,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        4,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        4,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        4,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        4,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        5,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        5,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        5,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        5,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        5,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        5,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        5,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        5,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        5,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        5,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        6,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        6,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        6,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        6,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        6,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        6,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        6,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        6,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        6,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        6,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        6,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        6,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        6,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        6,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        6,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        7,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        7,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        7,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        7,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        7,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        7,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        7,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        7,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        7,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        7,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        7,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        7,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        7,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        7,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        7,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        8,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        8,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        8,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        8,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        8,
+        0,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        8,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        8,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        8,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        8,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        8,
+        1,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        20,
+        8,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        20,
+        8,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        20,
+        8,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        8,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        20,
+        8,
+        2,
+        1
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        21
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Heading1: outlineLvl is not fully represented.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "unrepresented-style-toggle",
+      "message": "Word boldCS is not represented by editable Fountain marks.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "theme-font-materialized",
+      "message": "Theme font majorHAnsi resolved to Calibri. Live Word theme bindings are not retained; fonts are not embedded or fetched.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "script-font-size-not-imported",
+      "message": "A separate complex-script font size cannot be represented by the single font-size mark.",
+      "path": [
+        22
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        23
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        24
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        24
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        24
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        24
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        24
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        24
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        25
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        25
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        25
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        25
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        25
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Header: tabs is not fully represented.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        22,
+        0
+      ]
+    },
+    {
+      "code": "unresolved-paragraph-properties",
+      "message": "Word style Footer: tabs is not fully represented.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        23,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|eastAsia is not fully represented.",
+      "path": [
+        24,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-attribute",
+      "message": "Word defaults/direct formatting: lang/http://schemas.openxmlformats.org/wordprocessingml/2006/main|bidi is not fully represented.",
+      "path": [
+        24,
+        0
+      ]
+    },
+    {
+      "code": "unsupported-run-property",
+      "message": "Word defaults/direct formatting: lang is not fully represented.",
+      "path": [
+        24,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        24,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        24,
+        0
+      ]
+    },
+    {
+      "code": "font-theme-not-resolved",
+      "message": "Script-specific Word theme font selection is not represented by one font-family mark.",
+      "path": [
+        24,
+        0
+      ]
+    }
+  ],
+  "draftChanged": true,
+  "roundTrip": null,
+  "fidelity": "Original-format visual fidelity and exhaustive loss detection are unverified."
+}

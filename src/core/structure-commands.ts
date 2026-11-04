@@ -6,6 +6,7 @@ import { getActiveTableCell } from './table-commands';
 import { TableMap } from './table-map';
 import { getNodeAtPath, getTextLeaves, replaceNodeAtPath, replaceNodeWithNodes } from './transaction/path';
 import { applySharedDirectionOwners, prepareSharedDirection, retainSharedDirection, sharedDirectionIdentity } from './shared-direction';
+import { isListLayout, type ListLayout } from './list-layout';
 
 function ancestorPath(editor: Editor, names: readonly string[]): number[] | null {
   const path = editor.state.selection.path;
@@ -51,6 +52,13 @@ function kindForList(node: Node): ListKind | null {
   if (node.type.name === 'ordered_list') return 'ordered';
   if (node.type.name === 'task_list') return 'task';
   return node.type.name === 'bullet_list' ? 'bullet' : null;
+}
+
+function layoutForListKind(value: unknown, kind: ListKind, sameKind: boolean, nested = false): ListLayout | undefined {
+  if (kind === 'task' || !isListLayout(value)) return undefined;
+  return { ...value, ...(nested ? { indentStart: 36, indentEnd: 0, firstLineIndent: 0 } : {}),
+    ...(!sameKind ? { markerStyle: kind === 'ordered' ? 'decimal' as const : 'literal' as const,
+      markerPrefix: kind === 'ordered' ? '' : '•', markerSuffix: kind === 'ordered' ? '.' : '' } : {}) };
 }
 
 function ancestorPathFrom(editor: Editor, path: readonly number[], names: readonly string[]): number[] | null {
@@ -419,7 +427,10 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
   const sourceList = getNodeAtPath(prepared.document, range.listPath);
   const moved = sourceList.content.slice(range.from, range.to + 1)
     .map((item, index) => {
-      const converted = convertListItem(editor, item, target.item);
+      const original = convertListItem(editor, item, target.item);
+      const geometry = original?.type.spec.attrs?.layout
+        && layoutForListKind(original.attrs.layout, nestedKind ?? sourceKind, target.list === sourceList.type.name);
+      const converted = original && geometry ? original.type.create({ ...original.attrs, layout: geometry }, original.content) : original;
       const fixed = converted && retainListDirection(converted,
         listDirectionAt(editor.state.doc, [...range.listPath, range.from + index]), destination);
       return fixed && retainSharedDirection(fixed, prepared.memberships.get([...range.listPath, range.from + index].join('.')));
@@ -429,7 +440,8 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
   const nestedIndex = existingNested?.childCount ?? 0;
   const nested = existingNested
     ? existingNested.copy([...existingNested.content, ...items])
-    : nestedType.create(target.attrs, items);
+    : nestedType.create({ ...target.attrs, ...(nestedType.spec.attrs?.layout && isListLayout(sourceList.attrs.layout)
+      ? { layout: layoutForListKind(sourceList.attrs.layout, nestedKind ?? sourceKind, target.list === sourceList.type.name, true) } : {}) }, items);
   const previousContent = existingNested
     ? [...previous.content.slice(0, -1), nested]
     : [...previous.content, nested];
@@ -595,7 +607,11 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
   if (range) {
     if (range.list.type.name === target.list) return outdentListItem(editor);
     const selected = range.list.content.slice(range.from, range.to + 1)
-      .map((item) => convertListItem(editor, item, target.item));
+      .map((item) => {
+        const converted = convertListItem(editor, item, target.item);
+        const layout = converted?.type.spec.attrs?.layout && layoutForListKind(converted.attrs.layout, kind, false);
+        return converted && layout ? converted.type.create({ ...converted.attrs, layout }, converted.content) : converted;
+      });
     if (selected.some((item) => !item)) return false;
     const before = range.list.content.slice(0, range.from);
     const after = range.list.content.slice(range.to + 1);
@@ -604,6 +620,8 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
     let replacements: Node[];
     try {
       const converted = targetListType.create({ ...target.attrs,
+        ...(targetListType.spec.attrs?.layout && isListLayout(range.list.attrs.layout)
+          ? { layout: layoutForListKind(range.list.attrs.layout, kind, false) } : {}),
         ...(!sharedAuto && targetListType.spec.attrs?.dir && range.list.attrs.dir !== undefined ? { dir: range.list.attrs.dir } : {}),
         ...(!sharedAuto && targetListType.spec.attrs?.directionGroup && range.list.attrs.directionGroup !== undefined ? { directionGroup: range.list.attrs.directionGroup } : {}),
       }, selected as Node[]);

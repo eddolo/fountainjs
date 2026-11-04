@@ -1,0 +1,88 @@
+{
+  "sourceCommit": "b1dce0e4c3a20f3e341de6edd3e45ab091467b06",
+  "run": 41726623850,
+  "job": 126232972795,
+  "conclusion": "success",
+  "artifact": 13274166960,
+  "archiveSHA256": "24b2d6fc8c535f6cd2ff15d2b9a42aa32cbfcbf5187f4aa5bee0162a9ed6e086",
+  "archiveRehashed": true,
+  "nativeReport": {
+    "toolchain": {
+      "office": "LibreOffice 24.2.7.2 420(Build:2)",
+      "python": "3.13.17 (main, Oct 22 2026, 02:40:32) [GCC 13.3.0]",
+      "platform": "linux",
+      "dpi": 120,
+      "fonts": {
+        "Arial": "LiberationSans-Regular.ttf: \"Liberation Sans\" \"Regular\"",
+        "Calibri": "Carlito-Regular.ttf: \"Carlito\" \"Regular\"",
+        "Cambria": "Caladea-Regular.ttf: \"Caladea\" \"Regular\"",
+        "Consolas": "DejaVuSansMono.ttf: \"DejaVu Sans Mono\" \"Book\""
+      }
+    },
+    "rendered": {
+      "source": {
+        "pages": 2,
+        "drawnImageObjects": 4,
+        "pdfSHA256": "b0b4bae6fce91ad10afbe13884333fada3bab4720e3268f8e8ca5a1ed6bb083f",
+        "pageImages": [
+          "native/source/page-1.png",
+          "native/source/page-2.png"
+        ]
+      },
+      "exported": {
+        "pages": 2,
+        "drawnImageObjects": 4,
+        "pdfSHA256": "840ce45fe6cf8c25611347c592facaae8de547d7b0cd5271e7947646225c83f7",
+        "pageImages": [
+          "native/exported/page-1.png",
+          "native/exported/page-2.png"
+        ]
+      }
+    },
+    "sourceSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+    "exportedSHA256": "a5e79f4b9349e4f284a9c4ebb9000f3b32a6189c860585f0d8671b5a597f8e29",
+    "status": "native render and required-content checks passed; visual comparison still requires inspection",
+    "pixelFidelityCertified": false,
+    "microsoftWordCertified": false,
+    "sourceImportReport": "source-report.json",
+    "actualBrowserConversionReport": "conversion-report.json",
+    "interchangeReport": "interchange-report.json"
+  },
+  "reviewed": [
+    {
+      "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\source\\page-1.png",
+      "SHA256": "d95198220d6f688245230cacf3494a23416837dfaaca069af189b44717dbe86d",
+      "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\source\\page-1.png",
+      "identicalToPrevious": true,
+      "manuallyReviewed": true
+    },
+    {
+      "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\source\\page-2.png",
+      "SHA256": "d099ffd9f0f6b06abe9dcfc64e087bea4647797235d86d5f7a5357b39966c223",
+      "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\source\\page-2.png",
+      "identicalToPrevious": true,
+      "manuallyReviewed": true
+    },
+    {
+      "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\exported\\page-1.png",
+      "SHA256": "b5cd62a31349d3ea6c2bfb8c020b8ef0122223dc9dc52f9a76759299d62c8555",
+      "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\exported\\page-1.png",
+      "identicalToPrevious": true,
+      "manuallyReviewed": true
+    },
+    {
+      "path": "artifacts\\docx-native-b1dce0e-20261103\\native\\exported\\page-2.png",
+      "SHA256": "fa2b1d2ca7867c3fe8924c1ddfce4cc9a565ec1533e166fdb1a3f4274f6c1862",
+      "referencePath": "artifacts\\docx-theme-native-evidence-20261103\\native\\exported\\page-2.png",
+      "identicalToPrevious": true,
+      "manuallyReviewed": true
+    }
+  ],
+  "findings": [
+    "The font repair renders correctly on the actual master commit.",
+    "Both files retain two Letter pages, figures, equations, merged table and repeated headers.",
+    "Source page 2 header separately rechecked.",
+    "List indentation/spacing and header placement drift remain. The source-footnote rendering discrepancy remains."
+  ],
+  "scope": "Native audit of published font repair; does not certify the later unmerged numbering work or complete layout parity."
+}

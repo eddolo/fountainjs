@@ -1,0 +1,2 @@
+Real workerd actual Word fixture: independent image/caption layout, exact fractional EMUs, asset bytes and full HTML JSON round trip passed without a DOM.
+{"noDOM":true,"dimensions":[["566.4px","181.247979px"],["585.6px","273.28px"]],"imageGaps":[7,7],"htmlEqual":true,"nativeLayoutEqual":true,"assetsEqual":true,"nativeExtent":true}

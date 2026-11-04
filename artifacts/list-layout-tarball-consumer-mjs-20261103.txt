@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import * as root from 'fountainjs-editor';
+import * as core from 'fountainjs-editor/core';
+import * as docx from 'fountainjs-editor/docx';
+import * as html from 'fountainjs-editor/html/server';
+assert.equal(typeof globalThis.document, 'undefined');
+assert.ok(import.meta.resolve('fountainjs-editor').includes('/list-layout-tarball-consumer-20261103/node_modules/fountainjs-editor/'));
+const layout={unit:'pt',indentStart:18,indentEnd:0,markerOffset:-18,markerStyle:'decimal',markerAlign:'left',markerPrefix:'',markerSuffix:'.',firstLineIndent:0};
+function check(api, schemaSpec, word, server) {
+ const schema=new api.Schema(schemaSpec);
+ const document=schema.node('doc',{},[schema.node('ordered_list',{start:3,layout},[schema.node('list_item',{},[schema.node('paragraph',{},[schema.text('Actual packed document')])])])]);
+ assert.equal(server.ServerHTMLImporter.parse(api.HTMLExporter.export(document,{document:false}),schema).eq(document),true);
+ const reopened=word.importDOCX(word.exportDOCX(document).bytes,schema).document.child(0);
+ assert.deepEqual(reopened.attrs.layout,layout); assert.equal(reopened.attrs.start,3);
+}
+check(root,root.CoreSchemaSpec,docx,html); check(core,root.CoreSchemaSpec,docx,html);
+const require=createRequire(import.meta.url);
+const cjs=require('fountainjs-editor'), cjsCore=require('fountainjs-editor/core');
+check(cjs,cjs.CoreSchemaSpec,require('fountainjs-editor/docx'),require('fountainjs-editor/html/server'));
+check(cjsCore,cjs.CoreSchemaSpec,require('fountainjs-editor/docx'),require('fountainjs-editor/html/server'));
+console.log('Actual packed tarball: ESM and CommonJS root/core retain HTML and native DOCX list geometry in pure Node; no install or publication.');

@@ -1,0 +1,237 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-contextual-spacing.test.ts (21 tests | 20 failed) 149ms
+   ❯ Word contextual-spacing declaration ownership (21)
+     × reads namespaced on/off  without a DOM 8ms
+     × reads namespaced on/off  a:val="1" without a DOM 1ms
+     × reads namespaced on/off  a:val="true" without a DOM 1ms
+     × reads namespaced on/off  a:val="on" without a DOM 1ms
+     × reads namespaced on/off  a:val="0" without a DOM 1ms
+     × reads namespaced on/off  a:val="false" without a DOM 0ms
+     × reads namespaced on/off  a:val="off" without a DOM 0ms
+     × reports invalid on/off value "yes" without inventing a declaration 1ms
+     × reports invalid on/off value "True" without inventing a declaration 1ms
+     × reports invalid on/off value "2" without inventing a declaration 1ms
+     × reports invalid on/off value "" without inventing a declaration 1ms
+     × reports foreign attributes/content instead of accepting them as Word values 0ms
+     × inherits absolute on/off values through defaults, tables, styles, numbering and direct declarations 1ms
+     × rejects invalid programmatic contextual-spacing declaration 0 1ms
+     × rejects invalid programmatic contextual-spacing declaration 1 0ms
+     × rejects invalid programmatic contextual-spacing declaration "true" 0ms
+     × rejects invalid programmatic contextual-spacing declaration null 0ms
+     × reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it 17ms
+     × does not issue an adjacency-loss warning for an unused style or an effective false override 8ms
+     × identifies the retained scientific source rule without changing its fixture or claiming layout is fixed 103ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  without a DOM
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  a:val="1" without a DOM
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  a:val="true" without a DOM
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  a:val="on" without a DOM
+AssertionError: expected {} to deeply equal { contextualSpacing: true }
+
+- Expected
++ Received
+
+- {
+-   "contextualSpacing": true,
+- }
++ {}
+
+ ❯ tests/docx-contextual-spacing.test.ts:31:99
+     29|     expect(typeof document).toBe('undefined');
+     30|     const issues: Parameters<typeof readWordParagraphFormatting>[1] = …
+     31|     expect(readWordParagraphFormatting(properties(`<a:contextualSpacin…
+       |                                                                                                   ^
+     32|     expect(issues).toEqual([]);
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  a:val="0" without a DOM
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  a:val="false" without a DOM
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reads namespaced on/off  a:val="off" without a DOM
+AssertionError: expected {} to deeply equal { contextualSpacing: false }
+
+- Expected
++ Received
+
+- {
+-   "contextualSpacing": false,
+- }
++ {}
+
+ ❯ tests/docx-contextual-spacing.test.ts:31:99
+     29|     expect(typeof document).toBe('undefined');
+     30|     const issues: Parameters<typeof readWordParagraphFormatting>[1] = …
+     31|     expect(readWordParagraphFormatting(properties(`<a:contextualSpacin…
+       |                                                                                                   ^
+     32|     expect(issues).toEqual([]);
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports invalid on/off value "yes" without inventing a declaration
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports invalid on/off value "True" without inventing a declaration
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports invalid on/off value "2" without inventing a declaration
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports invalid on/off value "" without inventing a declaration
+AssertionError: expected [ { …(2) } ] to deeply equal [ { …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "code": "invalid-paragraph-property",
++     "code": "unresolved-paragraph-properties",
+      "property": "contextualSpacing",
+    },
+  ]
+
+ ❯ tests/docx-contextual-spacing.test.ts:38:20
+     36|     const issues: Parameters<typeof readWordParagraphFormatting>[1] = …
+     37|     expect(readWordParagraphFormatting(properties(`<a:contextualSpacin…
+     38|     expect(issues).toEqual([{ code: 'invalid-paragraph-property', prop…
+       |                    ^
+     39|   });
+     40|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports foreign attributes/content instead of accepting them as Word values
+AssertionError: expected {} to deeply equal { contextualSpacing: true }
+
+- Expected
++ Received
+
+- {
+-   "contextualSpacing": true,
+- }
++ {}
+
+ ❯ tests/docx-contextual-spacing.test.ts:48:154
+     46|   it('reports foreign attributes/content instead of accepting them as …
+     47|     const issues: Parameters<typeof readWordParagraphFormatting>[1] = …
+     48|     expect(readWordParagraphFormatting(properties('<a:contextualSpacin…
+       |                                                                                                                                                          ^
+     49|     expect(issues.map(issue => issue.property)).toEqual(['contextualSp…
+     50|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > inherits absolute on/off values through defaults, tables, styles, numbering and direct declarations
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ tests/docx-contextual-spacing.test.ts:57:69
+     55|       { id: 'Child', kind: 'paragraph', basedOn: 'Base', paragraph: { …
+     56|     ] });
+     57|     expect(cascade.resolveParagraph().formatting.contextualSpacing).to…
+       |                                                                     ^
+     58|     expect(cascade.resolveParagraph({ table: { runs: [], paragraphs: […
+     59|     expect(cascade.resolveParagraph({ paragraphStyle: 'Base' }).format…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > rejects invalid programmatic contextual-spacing declaration 0
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > rejects invalid programmatic contextual-spacing declaration 1
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > rejects invalid programmatic contextual-spacing declaration "true"
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > rejects invalid programmatic contextual-spacing declaration null
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/docx-contextual-spacing.test.ts:66:121
+     64|
+     65|   it.each([0, 1, 'true', null])('rejects invalid programmatic contextu…
+     66|     expect(() => createWordRunStyleCascade({ styles: [], paragraphDefa…
+       |                                                                                                                         ^
+     67|   });
+     68|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:73:45
+     71|     expect(result.document.textContent).toBe('FirstSecond');
+     72|     const issues = result.report.issues.filter(issue => issue.code ===…
+     73|     expect(issues.map(issue => issue.path)).toEqual([[0], [1]]);
+       |                                             ^
+     74|     expect(result.document.child(0).attrs.layout).toMatchObject({ spac…
+     75|     expect(result.report.issues.some(issue => issue.code === 'unresolv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > does not issue an adjacency-loss warning for an unused style or an effective false override
+AssertionError: expected [] to deeply equal [ [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:82:135
+     80|     expect(result.report.issues.some(issue => issue.code === 'paragrap…
+     81|     const direct = importDOCX(source('<w:contextualSpacing/>', '<w:con…
+     82|     expect(direct.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                                                       ^
+     83|   });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > identifies the retained scientific source rule without changing its fixture or claiming layout is fixed
+AssertionError: expected [] to have a length of 3 but got +0
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ tests/docx-contextual-spacing.test.ts:87:110
+     85|   it('identifies the retained scientific source rule without changing …
+     86|     const result = importDOCX(readFileSync('tests/fixtures/native-docx…
+     87|     expect(result.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                              ^
+     88|     const list = result.document.content.find(node => node.type.name =…
+     89|     expect(list.child(0).child(0).attrs.layout).toMatchObject({ spacin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  20 failed | 1 passed (21)
+   Start at  23:41:09
+   Duration  3.18s (transform 52%, import 43%, tests 5%)

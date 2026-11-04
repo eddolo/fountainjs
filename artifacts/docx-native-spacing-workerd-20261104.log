@@ -1,0 +1,2 @@
+Real workerd: actual DOCX bytes, retained Word identity/off declarations, core transaction, HTML reopening and native spacing export/reopen passed without DOM globals.
+{"before":2,"after":12,"retainedDeclaredBefore":12,"retainedOff":false,"importLoss":0,"exportLoss":0,"nativeReopenGap":2,"nativeBytes":true,"htmlEqual":true,"noDOM":true}

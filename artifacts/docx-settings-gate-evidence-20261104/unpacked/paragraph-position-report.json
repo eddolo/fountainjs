@@ -1,0 +1,49 @@
+{
+  "scope": [
+    "Experimental setup",
+    "Record the initial temperature before starting the timer.",
+    "Keep both probes at the same depth.",
+    "Read the measurements without moving either vessel."
+  ],
+  "tolerancePt": 0.01,
+  "deltasPt": {
+    "Experimental setup": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Record the initial temperature before starting the timer.": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Keep both probes at the same depth.": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Read the measurements without moving either vessel.": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "negativeControl": {
+    "retainedPreRepairPDF": "artifacts/docx-native-spacing-native-evidence-20261104/unpacked/native",
+    "deltasPt": {
+      "Experimental setup": {
+        "x": 0.0,
+        "y": 7.0
+      },
+      "Record the initial temperature before starting the timer.": {
+        "x": 0.0,
+        "y": 7.0
+      },
+      "Keep both probes at the same depth.": {
+        "x": 0.0,
+        "y": 7.0
+      },
+      "Read the measurements without moving either vessel.": {
+        "x": 0.0,
+        "y": 7.0
+      }
+    },
+    "correctlyRejected": true
+  }
+}

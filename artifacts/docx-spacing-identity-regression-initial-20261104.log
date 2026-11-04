@@ -1,0 +1,2176 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/docx-spacing-identity.test.ts (16 tests | 1 failed) 208ms
+   ❯ native Word paragraph identity joins the portable spacing model (16)
+     × preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished 34ms
+ ❯ tests/docx-math-source.test.ts (24 tests | 1 failed) 384ms
+   ❯ opt-in bound DOCX math-source restoration (24)
+     × restores exact TeX, Unicode/line endings and accessibility labels without browser globals 56ms
+ ❯ tests/docx-list-layout.test.ts (10 tests | 7 failed) 346ms
+   ❯ Word list geometry ownership (10)
+     × owns the source 18pt text/marker geometry on the list and keeps paragraph layout local 46ms
+     × keeps per-item indentation relative to the shared list origin without duplicating it on the paragraph 12ms
+     × converts absolute Word nesting to parent-relative geometry and reverses it on native export 14ms
+     × keeps supported lowerLetter marker declarations through native reopening 20ms
+     × keeps supported upperRoman marker declarations through native reopening 13ms
+     × keeps supported bullet marker declarations through native reopening 8ms
+     × keeps supported none marker declarations through native reopening 6ms
+ ❯ tests/docx-definition-lists.test.ts (16 tests | 6 failed) 332ms
+   ❯ versioned Word glossary controls (16)
+     × retains roles, repeated entries, paragraphs, rich marks, list starts and nested definitions 79ms
+     × uses visible edits and duplicate control IDs without restoring hidden source 34ms
+     × keeps definition lists inside table cells and tables inside descriptions 33ms
+     × retains incomplete authoring structure: <dl><dd>Unpaired definition</dd><dd>Second definition</dd></dl> 9ms
+     × keeps explicit empty entries and their native run marks editable 5ms
+     × accepts equivalent namespace prefixes but not foreign structural controls 21ms
+ ❯ tests/docx-cell-shading.test.ts (17 tests | 1 failed) 229ms
+   ❯ independent DOCX cell shading (9)
+     × keeps the dark fill with white text through import and export 18ms
+ ❯ tests/docx-contextual-spacing.test.ts (21 tests | 3 failed) 166ms
+   ❯ Word contextual-spacing declaration ownership (21)
+     × reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it 25ms
+     × does not issue an adjacency-loss warning for an unused style or an effective false override 14ms
+     × identifies the retained scientific source rule without changing its fixture or claiming layout is fixed 104ms
+ ❯ tests/docx-paragraph-fonts.test.ts (12 tests | 4 failed) 156ms
+   ❯ DOCX paragraph font context (12)
+     × retains line-break run fonts and emphasis through DOM-free HTML and native DOCX 77ms
+     × retains document/style font context for empty and mixed-size paragraphs, not the first run font 19ms
+     × keeps paragraph-mark-only font formatting separate from actual text-run fonts 13ms
+     × exports explicit paragraph defaults on unmarked text but preserves inline overrides 5ms
+ ❯ tests/docx.test.ts (17 tests | 3 failed) 174ms
+   ❯ DOCX interchange (17)
+     × allocates independent numbering inside separate table cells 39ms
+     × retains independent list starts, adjacent lists and nested restarts 37ms
+     × materializes a legacy caption into a complete editable Word-styled image without losing its source or pixels 8ms
+ ❯ tests/docx-page-settings.test.ts (19 tests | 4 failed) 117ms
+   ❯ portable document page settings (19)
+     × imports independent Letter dimensions and exact fractional-point margins in Node without Pages nodes 31ms
+     × reports explicit export overrides while retaining margins and source state 6ms
+     × exposes and reports output defaults instead of hiding added root settings 3ms
+     × retains partial settings and explicitly reports the remaining export defaults 4ms
+ ❯ tests/docx-table-text.test.ts (16 tests | 1 failed) 114ms
+   ❯ Word table-owned text formatting (16)
+     × materializes supported text through native DOCX export and reopen 34ms
+ ❯ tests/docx-page-breaks.test.ts (11 tests | 5 failed) 239ms
+   ❯ DOCX explicit page breaks (11)
+     × retains a standalone native break without manufacturing an empty paragraph 66ms
+     × retains order and repeated breaks for <w:br w:type="page"/><w:t>After</w:t> 65ms
+     × retains order and repeated breaks for <w:t>Before</w:t><w:br w:type="page"/> 15ms
+     × retains order and repeated breaks for <w:t>Before</w:t><w:br w:type="page"/><w:br w:type="page"/><w:t>After</w:t> 47ms
+     × retains page-break-before as paragraph layout rather than an inline break 2ms
+ ❯ tests/docx-page-templates.test.ts (8 tests | 2 failed) 133ms
+   ❯ native DOCX page templates (8)
+     × writes native parts, reference relationships and fields and reimports linked content 45ms
+     × extracts a header image and hyperlink via local relationships and retains the bytes 16ms
+ ❯ tests/docx-table-headers.test.ts (11 tests | 5 failed) 118ms
+   ❯ Word row repetition is independent of semantic cell roles (11)
+     × keeps unstyled repeated Word rows as ordinary cells without inventing fill or emphasis 45ms
+     × retains Fountain col cell scope independently of an explicit no-repeat choice 18ms
+     × retains Fountain row cell scope independently of an explicit no-repeat choice 11ms
+     × retains Fountain colgroup cell scope independently of an explicit no-repeat choice 9ms
+     × retains Fountain rowgroup cell scope independently of an explicit no-repeat choice 16ms
+ ❯ tests/docx-footnotes.test.ts (11 tests | 2 failed) 113ms
+   ❯ native DOCX footnote bridge (11)
+     × exports native notes, separators, relationship and content type then reimports the same structured content 50ms
+     × resolves encoded custom part names with part-local image and hyperlink relationships 14ms
+ ❯ tests/docx-paragraph-layout.test.ts (9 tests | 5 failed) 103ms
+   ❯ DOCX paragraph layout (9)
+     × materializes native omitted spacing without inheriting host or export defaults (styles=false) 21ms
+     × materializes native omitted spacing without inheriting host or export defaults (styles=true) 7ms
+     × fills only omitted spacing after resolving partial defaults, styles and direct declarations 5ms
+     × exports native paragraph properties and reimports the same Fountain layout 33ms
+     × reports unsupported border styles without pretending they survived 2ms
+ ❯ tests/docx-content-controls.test.ts (12 tests | 1 failed) 78ms
+   ❯ DOCX visible content-control projection (12)
+     × retains nested block controls and rich runs while reporting lost control semantics 58ms
+ ❯ tests/docx-explicit-emphasis.test.ts (5 tests | 1 failed) 68ms
+   ❯ native DOCX explicit emphasis (5)
+     × exports absolute normal/bold/italic run declarations and reopens editable emphasis in pure Node 42ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 52 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docx-cell-shading.test.ts > independent DOCX cell shading > keeps the dark fill with white text through import and export
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -54,11 +54,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 0,
+                        "spacingBefore": 0,
+-                       "spacingGroup": "word:implicit",
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+
+ ❯ tests/docx-cell-shading.test.ts:100:40
+     98|     expect(cell.child(0).child(0).marks[0]?.attrs.color).toBe('#ffffff…
+     99|     const reopened = importDOCX(exportDOCX(imported.document).bytes, s…
+    100|     expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(…
+       |                                        ^
+    101|   });
+    102| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/52]⎯
+
+ FAIL  tests/docx-content-controls.test.ts > DOCX visible content-control projection > retains nested block controls and rich runs while reporting lost control semantics
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -68,11 +68,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -109,11 +109,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -153,11 +153,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+
+ ❯ tests/docx-content-controls.test.ts:25:85
+     23|     expect(result.report.issues.map(issue => issue.code)).toEqual(['co…
+     24|     expect(JSON.stringify(result.report)).not.toContain('private metad…
+     25|     expect(importDOCX(exportDOCX(result.document).bytes, schema).docum…
+       |                                                                                     ^
+     26|   });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/52]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > reports the effective unsupported adjacency rule at each used paragraph instead of silently materializing it
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:73:45
+     71|     expect(result.document.textContent).toBe('FirstSecond');
+     72|     const issues = result.report.issues.filter(issue => issue.code ===…
+     73|     expect(issues.map(issue => issue.path)).toEqual([[0], [1]]);
+       |                                             ^
+     74|     expect(result.document.child(0).attrs.layout).toMatchObject({ spac…
+     75|     expect(result.report.issues.some(issue => issue.code === 'unresolv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/52]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > does not issue an adjacency-loss warning for an unused style or an effective false override
+AssertionError: expected [] to deeply equal [ [ 1 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     1,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:82:135
+     80|     expect(result.report.issues.some(issue => issue.code === 'paragrap…
+     81|     const direct = importDOCX(source('<w:contextualSpacing/>', '<w:con…
+     82|     expect(direct.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                                                       ^
+     83|   });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/52]⎯
+
+ FAIL  tests/docx-contextual-spacing.test.ts > Word contextual-spacing declaration ownership > identifies the retained scientific source rule without changing its fixture or claiming layout is fixed
+AssertionError: expected [] to deeply equal [ [ +0 ], [ 5 ], [ 6 ], [ 7 ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     0,
+-   ],
+-   [
+-     5,
+-   ],
+-   [
+-     6,
+-   ],
+-   [
+-     7,
+-   ],
+- ]
++ []
+
+ ❯ tests/docx-contextual-spacing.test.ts:89:135
+     87|     // The retained source enables the rule on its title as well as th…
+     88|     // numbered paragraphs; unused list styles must not add more diagn…
+     89|     expect(result.report.issues.filter(issue => issue.code === 'paragr…
+       |                                                                                                                                       ^
+     90|     const list = result.document.content.find(node => node.type.name =…
+     91|     expect(list.child(0).child(0).attrs.layout).toMatchObject({ spacin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/52]⎯
+
+ FAIL  tests/docx-definition-lists.test.ts > versioned Word glossary controls > retains roles, repeated entries, paragraphs, rich marks, list starts and nested definitions
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -31,10 +31,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:FountainDefinitionTerm",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -79,10 +80,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:FountainDefinitionTerm",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -131,10 +133,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -172,10 +175,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -230,10 +234,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -275,10 +280,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -327,10 +333,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -372,10 +379,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:FountainDefinitionTerm",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -421,10 +429,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+
+ ❯ tests/docx-definition-lists.test.ts:25:40
+     23|     const reopened = importDOCX(result.bytes, schema);
+     24|     expect(reopened.report.issues).toEqual([]);
+     25|     expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(…
+       |                                        ^
+     26|   });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/52]⎯
+
+ FAIL  tests/docx-definition-lists.test.ts > versioned Word glossary controls > uses visible edits and duplicate control IDs without restoring hidden source
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -31,10 +31,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:FountainDefinitionTerm",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -79,10 +80,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:FountainDefinitionTerm",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -131,10 +133,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -172,10 +175,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -230,10 +234,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -275,10 +280,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -327,10 +333,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -372,10 +379,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:FountainDefinitionTerm",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -421,10 +429,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+
+ ❯ tests/docx-definition-lists.test.ts:31:40
+     29|     const bytes = change(xml => xml.replace('Time to respond.', 'Edite…
+     30|     const reopened = importDOCX(bytes, schema);
+     31|     expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(…
+       |                                        ^
+     32|     expect(reopened.report.issues).toEqual([]);
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/52]⎯
+
+ FAIL  tests/docx-definition-lists.test.ts > versioned Word glossary controls > keeps definition lists inside table cells and tables inside descriptions
+AssertionError: expected { type: 'definition_list', …(1) } to deeply equal { type: 'definition_list', …(1) }
+
+- Expected
++ Received
+
+@@ -15,10 +15,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:FountainDefinitionTerm",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -63,10 +64,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:FountainDefinitionTerm",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -115,10 +117,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -156,10 +159,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -214,10 +218,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 8,
+                        "spacingBefore": 0,
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+@@ -259,10 +264,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 8,
+                        "spacingBefore": 0,
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+@@ -311,10 +317,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -356,10 +363,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 8,
+                        "spacingBefore": 0,
++                       "spacingGroup": "word:style:FountainDefinitionTerm",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+@@ -405,10 +413,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 8,
+                        "spacingBefore": 0,
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+
+ ❯ tests/docx-definition-lists.test.ts:38:65
+     36|     const doc = document('<table><tr><td>' + source + '</td></tr></tab…
+     37|     const actual = importDOCX(exportDOCX(doc).bytes, schema).document;
+     38|     expect(actual.child(0).child(0).child(0).child(0).toJSON()).toEqua…
+       |                                                                 ^
+     39|     const table = actual.child(1).child(1).child(0);
+     40|     expect(table.type.name).toBe('table');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/52]⎯
+
+ FAIL  tests/docx-definition-lists.test.ts > versioned Word glossary controls > retains incomplete authoring structure: <dl><dd>Unpaired definition</dd><dd>Second definition</dd></dl>
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -32,10 +32,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -78,10 +79,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+
+ ❯ tests/docx-definition-lists.test.ts:48:29
+     46|     const doc = document(html);
+     47|     const actual = importDOCX(exportDOCX(doc).bytes, schema).document;
+     48|     expect(actual.toJSON()).toEqual(withDOCXExportDefaults(doc.toJSON(…
+       |                             ^
+     49|   });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/52]⎯
+
+ FAIL  tests/docx-definition-lists.test.ts > versioned Word glossary controls > keeps explicit empty entries and their native run marks editable
+AssertionError: expected { type: 'definition_list', …(1) } to deeply equal { type: 'definition_list', …(1) }
+
+- Expected
++ Received
+
+@@ -15,10 +15,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:FountainDefinitionTerm",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -64,10 +65,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 8,
+                "spacingBefore": 0,
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+
+ ❯ tests/docx-definition-lists.test.ts:54:29
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/52]⎯
+
+ FAIL  tests/docx-definition-lists.test.ts > versioned Word glossary controls > accepts equivalent namespace prefixes but not foreign structural controls
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -31,10 +31,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:FountainDefinitionTerm",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -79,10 +80,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:FountainDefinitionTerm",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -131,10 +133,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -172,10 +175,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -230,10 +234,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -275,10 +280,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -327,10 +333,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -372,10 +379,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:FountainDefinitionTerm",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -421,10 +429,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+
+ ❯ tests/docx-definition-lists.test.ts:89:125
+     87|
+     88|   it('accepts equivalent namespace prefixes but not foreign structural…
+     89|     expect(importDOCX(change(xml => xml.replaceAll('w:', 'x:').replace…
+       |                                                                                                                             ^
+     90|     const foreign = importDOCX(change(xml => xml.replace('<w:sdt>', '<…
+     91|     expect(foreign.report.issues.some(issue => issue.code === 'unsuppo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/52]⎯
+
+ FAIL  tests/docx-explicit-emphasis.test.ts > native DOCX explicit emphasis > exports absolute normal/bold/italic run declarations and reopens editable emphasis in pure Node
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,10 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 8,
+            "spacingBefore": 18,
++           "spacingGroup": "word:style:Heading1",
+            "unit": "pt",
+          },
+          "level": 1,
+        },
+        "content": [
+@@ -144,10 +145,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 10,
+                "spacingBefore": 8,
++               "spacingGroup": "word:style:Quote",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+
+ ❯ tests/docx-explicit-emphasis.test.ts:31:31
+     29|     expect(reopened.child(0).attrs).not.toHaveProperty('alignExplicit'…
+     30|     expect(reopened.child(1).child(0).attrs.alignExplicit).toBe(true);
+     31|     expect(reopened.toJSON()).toEqual(withDOCXExportDefaults(source.to…
+       |                               ^
+     32|   });
+     33|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/52]⎯
+
+ FAIL  tests/docx-footnotes.test.ts > native DOCX footnote bridge > exports native notes, separators, relationship and content type then reimports the same structured content
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -93,11 +93,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 0,
+                "spacingBefore": 0,
+-               "spacingGroup": "word:implicit",
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+
+ ❯ tests/docx-footnotes.test.ts:55:52
+     53|     expect(strFromU8(parts['[Content_Types].xml']!)).toContain('wordpr…
+     54|     expect(strFromU8(parts['word/_rels/document.xml.rels']!)).toContai…
+     55|     expect(read(exported.bytes).document.toJSON()).toEqual(withDOCXExp…
+       |                                                    ^
+     56|   });
+     57|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/52]⎯
+
+ FAIL  tests/docx-footnotes.test.ts > native DOCX footnote bridge > resolves encoded custom part names with part-local image and hyperlink relationships
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -93,11 +93,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 0,
+                "spacingBefore": 0,
+-               "spacingGroup": "word:implicit",
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+
+ ❯ tests/docx-footnotes.test.ts:76:71
+     74|     expect(content.child(1).type.name).toBe('inline_image');
+     75|     expect(result.packageParts.find(part => part.path === 'word/media/…
+     76|     expect(read(exportDOCX(result.document).bytes).document.toJSON()).…
+       |                                                                       ^
+     77|   });
+     78|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/52]⎯
+
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > owns the source 18pt text/marker geometry on the list and keeps paragraph layout local
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', attrs: { …(1) }, …(1) }
+
+- Expected
++ Received
+
+@@ -45,11 +45,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+
+ ❯ tests/docx-list-layout.test.ts:35:40
+     33|     expect(list.child(0).child(0).attrs.layout).not.toHaveProperty('in…
+     34|     expect(list.child(0).child(0).attrs.layout).not.toHaveProperty('ha…
+     35|     expect(reopened.document.toJSON()).toEqual(imported.document.toJSO…
+       |                                        ^
+     36|     const parts = unzipSync(exported.bytes);
+     37|     expect(strFromU8(parts['word/numbering.xml']!)).toContain('<w:ind …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/52]⎯
+
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > keeps per-item indentation relative to the shared list origin without duplicating it on the paragraph
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', attrs: { …(1) }, …(1) }
+
+- Expected
++ Received
+
+@@ -45,11 +45,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -104,11 +104,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+
+ ❯ tests/docx-list-layout.test.ts:49:40
+     47|     expect(imported.document.child(0).child(1).attrs.layout).toMatchOb…
+     48|     expect(imported.document.child(0).child(1).child(0).attrs.layout).…
+     49|     expect(reopened.document.toJSON()).toEqual(imported.document.toJSO…
+       |                                        ^
+     50|   });
+     51|   it('converts absolute Word nesting to parent-relative geometry and r…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/52]⎯
+
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > converts absolute Word nesting to parent-relative geometry and reverses it on native export
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', attrs: { …(1) }, …(1) }
+
+- Expected
++ Received
+
+@@ -45,11 +45,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -104,11 +104,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 0,
+                            "spacingBefore": 0,
+-                           "spacingGroup": "word:style:Steps",
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -156,11 +156,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+
+ ❯ tests/docx-list-layout.test.ts:55:40
+     53|     expect(imported.document.child(0).child(0).child(1).attrs.layout).…
+     54|     expect(strFromU8(unzipSync(exported.bytes)['word/numbering.xml']!)…
+     55|     expect(reopened.document.toJSON()).toEqual(imported.document.toJSO…
+       |                                        ^
+     56|   });
+     57|   it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/52]⎯
+
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > keeps supported lowerLetter marker declarations through native reopening
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > keeps supported upperRoman marker declarations through native reopening
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', attrs: { …(1) }, …(1) }
+
+- Expected
++ Received
+
+@@ -45,11 +45,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+
+ ❯ tests/docx-list-layout.test.ts:64:40
+     62|     expect(imported.document.child(0).attrs.layout).toMatchObject({ ma…
+     63|     expect(strFromU8(unzipSync(exported.bytes)['word/numbering.xml']!)…
+     64|     expect(reopened.document.toJSON()).toEqual(imported.document.toJSO…
+       |                                        ^
+     65|   });
+     66|   it('reports unsupported templates and suffix behavior instead of cla…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/52]⎯
+
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > keeps supported bullet marker declarations through native reopening
+ FAIL  tests/docx-list-layout.test.ts > Word list geometry ownership > keeps supported none marker declarations through native reopening
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', attrs: { …(1) }, …(1) }
+
+- Expected
++ Received
+
+@@ -44,11 +44,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 0,
+                    "spacingBefore": 0,
+-                   "spacingGroup": "word:style:Steps",
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+
+ ❯ tests/docx-list-layout.test.ts:64:40
+     62|     expect(imported.document.child(0).attrs.layout).toMatchObject({ ma…
+     63|     expect(strFromU8(unzipSync(exported.bytes)['word/numbering.xml']!)…
+     64|     expect(reopened.document.toJSON()).toEqual(imported.document.toJSO…
+       |                                        ^
+     65|   });
+     66|   it('reports unsupported templates and suffix behavior instead of cla…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/52]⎯
+
+ FAIL  tests/docx-math-source.test.ts > opt-in bound DOCX math-source restoration > restores exact TeX, Unicode/line endings and accessibility labels without browser globals
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,10 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 8,
+            "spacingBefore": 0,
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+
+ ❯ tests/docx-math-source.test.ts:47:60
+     45|     const reopened = read(bytes);
+     46|     expect(allMath(reopened.document)).toEqual(allMath(doc));
+     47|     expect(withoutExpressions(reopened.document.toJSON())).toEqual(wit…
+       |                                                            ^
+     48|     expect(reopened.document.child(0).child(1).attrs.expression).toEqu…
+     49|     expect(reopened.document.child(1).attrs.expression).toEqual(expect…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/52]⎯
+
+ FAIL  tests/docx-page-breaks.test.ts > DOCX explicit page breaks > retains a standalone native break without manufacturing an empty paragraph
+AssertionError: expected [ { …(4) }, { …(4) }, { …(4) }, …(2) ] to deeply equal [ ObjectContaining{…}, …(2) ]
+
+- Expected
++ Received
+
+  [
+    {
++     "code": "paragraph-contextual-spacing-not-exported",
++     "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule.",
++     "path": [
++       0,
++     ],
++     "severity": "warning",
++   },
++   {
+      "code": "paragraph-font-defaulted",
++     "message": "Unresolved paragraph fonts use generated Word style defaults. Inline fonts remain; line geometry may change.",
+      "path": [
+        0,
+      ],
+      "severity": "warning",
+    },
+    {
++     "code": "paragraph-contextual-spacing-not-exported",
++     "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule.",
++     "path": [
++       2,
++     ],
++     "severity": "warning",
++   },
++   {
+      "code": "paragraph-font-defaulted",
++     "message": "Unresolved paragraph fonts use generated Word style defaults. Inline fonts remain; line geometry may change.",
+      "path": [
+        2,
+      ],
+      "severity": "warning",
+    },
+    {
+      "code": "page-settings-defaulted",
++     "message": "Unspecified page settings use export defaults: width, height, marginTop, marginRight, marginBottom, marginLeft, headerDistance, footerDistance, gutter. These explicit values appear on reimport.",
+      "severity": "info",
+    },
+  ]
+
+ ❯ tests/docx-page-breaks.test.ts:25:36
+     23|     const exported = exportDOCX(result.document);
+     24|     expect(strFromU8(unzipSync(exported.bytes)['word/document.xml']!))…
+     25|     expect(exported.report.issues).toEqual([
+       |                                    ^
+     26|       expect.objectContaining({ code: 'paragraph-font-defaulted', seve…
+     27|       expect.objectContaining({ code: 'paragraph-font-defaulted', seve…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/52]⎯
+
+ FAIL  tests/docx-page-breaks.test.ts > DOCX explicit page breaks > retains order and repeated breaks for <w:br w:type="page"/><w:t>After</w:t>
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { Object (type, content, ...) }
+
+- Expected
++ Received
+
+@@ -30,11 +30,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+
+ ❯ tests/docx-page-breaks.test.ts:41:85
+     39|     expect(result.document.content.map(node => node.type.name)).toEqua…
+     40|     expect(result.report.issues.map(issue => issue.code)).toContain('p…
+     41|     expect(importDOCX(exportDOCX(result.document).bytes, schema).docum…
+       |                                                                                     ^
+     42|   });
+     43|   it('keeps marks and headings on either side and distinguishes a norm…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/52]⎯
+
+ FAIL  tests/docx-page-breaks.test.ts > DOCX explicit page breaks > retains order and repeated breaks for <w:t>Before</w:t><w:br w:type="page"/>
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+
+ ❯ tests/docx-page-breaks.test.ts:41:85
+     39|     expect(result.document.content.map(node => node.type.name)).toEqua…
+     40|     expect(result.report.issues.map(issue => issue.code)).toContain('p…
+     41|     expect(importDOCX(exportDOCX(result.document).bytes, schema).docum…
+       |                                                                                     ^
+     42|   });
+     43|   it('keeps marks and headings on either side and distinguishes a norm…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/52]⎯
+
+ FAIL  tests/docx-page-breaks.test.ts > DOCX explicit page breaks > retains order and repeated breaks for <w:t>Before</w:t><w:br w:type="page"/><w:br w:type="page"/><w:t>After</w:t>
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -74,11 +74,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+
+ ❯ tests/docx-page-breaks.test.ts:41:85
+     39|     expect(result.document.content.map(node => node.type.name)).toEqua…
+     40|     expect(result.report.issues.map(issue => issue.code)).toContain('p…
+     41|     expect(importDOCX(exportDOCX(result.document).bytes, schema).docum…
+       |                                                                                     ^
+     42|   });
+     43|   it('keeps marks and headings on either side and distinguishes a norm…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/52]⎯
+
+ FAIL  tests/docx-page-breaks.test.ts > DOCX explicit page breaks > retains page-break-before as paragraph layout rather than an inline break
+AssertionError: expected { unit: 'pt', spacingBefore: +0, …(8) } to deeply equal { unit: 'pt', spacingBefore: +0, …(7) }
+
+- Expected
++ Received
+
+@@ -5,7 +5,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": true,
+    "spacingAfter": 0,
+    "spacingBefore": 0,
++   "spacingGroup": "word:implicit",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-page-breaks.test.ts:83:52
+     81|     const spacing = { unit: 'pt', spacingBefore: 0, spacingAfter: 0,
+     82|       lineHeight: 1, lineHeightUnit: 'multiple', lineHeightRule: 'auto…
+     83|     expect(enabled.document.child(0).attrs.layout).toEqual({ ...spacin…
+       |                                                    ^
+     84|     const disabled = read(paragraph('<w:t>Chapter</w:t>', '<w:pageBrea…
+     85|     expect(disabled.report.issues).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/52]⎯
+
+ FAIL  tests/docx-page-settings.test.ts > portable document page settings > imports independent Letter dimensions and exact fractional-point margins in Node without Pages nodes
+AssertionError: expected [ { …(4) }, { …(4) } ] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+@@ -1,8 +1,17 @@
+  [
+    {
++     "code": "paragraph-contextual-spacing-not-exported",
++     "message": "Portable paragraph spacing-group identity and contextual gap behavior are not yet mapped to native Word styles. Declared spacing is exported; keep Fountain JSON for the rule.",
++     "path": [
++       0,
++     ],
++     "severity": "warning",
++   },
++   {
+      "code": "paragraph-font-defaulted",
++     "message": "Unresolved paragraph fonts use generated Word style defaults. Inline fonts remain; line geometry may change.",
+      "path": [
+        0,
+      ],
+      "severity": "warning",
+    },
+
+ ❯ tests/docx-page-settings.test.ts:31:36
+     29|     const exported = exportDOCX(result.document);
+     30|     expect(xml(exported.bytes)).toContain(section);
+     31|     expect(exported.report.issues).toEqual([expect.objectContaining({ …
+       |                                    ^
+     32|     expect(read(exported.bytes).document.toJSON()).toEqual(withDOCXExp…
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/52]⎯
+
+ FAIL  tests/docx-page-settings.test.ts > portable document page settings > reports explicit export overrides while retaining margins and source state
+AssertionError: expected [ …(3) ] to deeply equal [ 'paragraph-font-defaulted', …(1) ]
+
+- Expected
++ Received
+
+  [
++   "paragraph-contextual-spacing-not-exported",
+    "paragraph-font-defaulted",
+    "page-size-overridden",
+  ]
+
+ ❯ tests/docx-page-settings.test.ts:52:56
+     50|     expect(xml(out.bytes)).toContain('w:top="1037"');
+     51|     expect(readDocumentPageSettings(result.document)).toEqual(sourceSe…
+     52|     expect(out.report.issues.map(issue => issue.code)).toEqual(['parag…
+       |                                                        ^
+     53|   });
+     54|   it('exposes and reports output defaults instead of hiding added root…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/52]⎯
+
+ FAIL  tests/docx-page-settings.test.ts > portable document page settings > exposes and reports output defaults instead of hiding added root settings
+AssertionError: expected [ …(3) ] to deeply equal [ 'paragraph-font-defaulted', …(1) ]
+
+- Expected
++ Received
+
+  [
++   "paragraph-contextual-spacing-not-exported",
+    "paragraph-font-defaulted",
+    "page-settings-defaulted",
+  ]
+
+ ❯ tests/docx-page-settings.test.ts:58:59
+     56|     expect(readDocumentPageSettings(original)).toBeUndefined();
+     57|     const output = exportDOCX(original);
+     58|     expect(output.report.issues.map(issue => issue.code)).toEqual(['pa…
+       |                                                           ^
+     59|     expect(readDocumentPageSettings(read(output.bytes).document)).toEq…
+     60|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/52]⎯
+
+ FAIL  tests/docx-page-settings.test.ts > portable document page settings > retains partial settings and explicitly reports the remaining export defaults
+AssertionError: expected [ …(3) ] to deeply equal [ 'paragraph-font-defaulted', …(1) ]
+
+- Expected
++ Received
+
+  [
++   "paragraph-contextual-spacing-not-exported",
+    "paragraph-font-defaulted",
+    "page-settings-defaulted",
+  ]
+
+ ❯ tests/docx-page-settings.test.ts:64:80
+     62|     const result = read(fixture('<w:pgSz w:w="12000"/><w:pgMar w:top="…
+     63|     expect(readDocumentPageSettings(result.document)).toEqual({ unit: …
+     64|     expect(exportDOCX(result.document).report.issues.map(issue => issu…
+       |                                                                                ^
+     65|   });
+     66|   it('reports multi-section settings rather than flattening different …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/52]⎯
+
+ FAIL  tests/docx-page-templates.test.ts > native DOCX page templates > writes native parts, reference relationships and fields and reimports linked content
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -73,11 +73,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 0,
+                "spacingBefore": 0,
+-               "spacingGroup": "word:implicit",
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -122,11 +122,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 0,
+                "spacingBefore": 0,
+-               "spacingGroup": "word:implicit",
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+
+ ❯ tests/docx-page-templates.test.ts:51:50
+     49|     expect(strFromU8(parts['word/footer2.xml']!)).toContain('w:instr="…
+     50|     expect(strFromU8(parts['[Content_Types].xml']!)).toContain('wordpr…
+     51|     expect(read(result.bytes).document.toJSON()).toEqual(withDOCXExpor…
+       |                                                  ^
+     52|     expect(result.report.issues.some(issue => issue.code === 'page-fie…
+     53|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/52]⎯
+
+ FAIL  tests/docx-page-templates.test.ts > native DOCX page templates > extracts a header image and hyperlink via local relationships and retains the bytes
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -27,11 +27,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 0,
+            "spacingBefore": 0,
+-           "spacingGroup": "word:implicit",
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -73,11 +73,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 0,
+                "spacingBefore": 0,
+-               "spacingGroup": "word:implicit",
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+@@ -145,11 +145,11 @@
+                "lineHeightRule": "auto",
+                "lineHeightUnit": "multiple",
+                "pageBreakBefore": false,
+                "spacingAfter": 0,
+                "spacingBefore": 0,
+-               "spacingGroup": "word:implicit",
++               "spacingGroup": "word:style:Normal",
+                "unit": "pt",
+              },
+            },
+            "content": [
+              {
+
+ ❯ tests/docx-page-templates.test.ts:64:71
+     62|     expect(paragraph.child(1).attrs.src).toBe(`data:image/png;base64,$…
+     63|     expect(result.packageParts.find(part => part.path === 'word/media/…
+     64|     expect(read(exportDOCX(result.document).bytes).document.toJSON()).…
+       |                                                                       ^
+     65|   });
+     66|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/52]⎯
+
+ FAIL  tests/docx-paragraph-fonts.test.ts > DOCX paragraph font context > retains line-break run fonts and emphasis through DOM-free HTML and native DOCX
+AssertionError: expected { type: 'paragraph', …(2) } to deeply equal { type: 'paragraph', …(2) }
+
+- Expected
++ Received
+
+@@ -11,11 +11,11 @@
+        "lineHeightRule": "auto",
+        "lineHeightUnit": "multiple",
+        "pageBreakBefore": false,
+        "spacingAfter": 0,
+        "spacingBefore": 0,
+-       "spacingGroup": "word:implicit",
++       "spacingGroup": "word:style:Normal",
+        "unit": "pt",
+      },
+    },
+    "content": [
+      {
+
+ ❯ tests/docx-paragraph-fonts.test.ts:39:40
+     37|     expect(xml.match(/<w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="…
+     38|     const reopened = importDOCX(output.bytes, schema).document;
+     39|     expect(reopened.child(0).toJSON()).toEqual(paragraph.toJSON());
+       |                                        ^
+     40|     // This fixture has no native section; export supplies the documen…
+     41|     // A4/one-inch-margin default independently of run retention.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/52]⎯
+
+ FAIL  tests/docx-paragraph-fonts.test.ts > DOCX paragraph font context > retains document/style font context for empty and mixed-size paragraphs, not the first run font
+AssertionError: expected { Object (unit, spacingBefore, ...) } to deeply equal { Object (unit, spacingBefore, ...) }
+
+- Expected
++ Received
+
+@@ -7,8 +7,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": false,
+    "spacingAfter": 0,
+    "spacingBefore": 0,
+-   "spacingGroup": "word:style:Child",
++   "spacingGroup": "word:style:Normal",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-fonts.test.ts:92:67
+     90|     expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(do…
+     91|     const reopened = importDOCX(exportDOCX(doc).bytes, schema).documen…
+     92|     for (const index of [0, 1]) expect(paraFont(reopened, index)).toEq…
+       |                                                                   ^
+     93|     expect(reopened.child(1).content.map(run => run.marks.find(mark =>…
+     94|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/52]⎯
+
+ FAIL  tests/docx-paragraph-fonts.test.ts > DOCX paragraph font context > keeps paragraph-mark-only font formatting separate from actual text-run fonts
+AssertionError: expected { Object (unit, spacingBefore, ...) } to deeply equal { Object (unit, spacingBefore, ...) }
+
+- Expected
++ Received
+
+@@ -7,8 +7,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": false,
+    "spacingAfter": 0,
+    "spacingBefore": 0,
+-   "spacingGroup": "word:implicit",
++   "spacingGroup": "word:style:Normal",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-fonts.test.ts:105:32
+    103|     expect(xml).toContain(`<w:rPr><w:b w:val="0"/><w:i w:val="0"/>${fo…
+    104|     const reopened = importDOCX(exported.bytes, schema).document;
+    105|     expect(paraFont(reopened)).toEqual(paraFont(doc));
+       |                                ^
+    106|     expect(paraFont(reopened, 1)).toEqual(paraFont(doc, 1));
+    107|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/52]⎯
+
+ FAIL  tests/docx-paragraph-fonts.test.ts > DOCX paragraph font context > exports explicit paragraph defaults on unmarked text but preserves inline overrides
+AssertionError: expected { Object (unit, spacingBefore, ...) } to deeply equal { unit: 'pt', …(10) }
+
+- Expected
++ Received
+
+@@ -7,7 +7,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": false,
+    "spacingAfter": 0,
+    "spacingBefore": 0,
++   "spacingGroup": "word:style:Normal",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-fonts.test.ts:162:32
+    160|     expect(xml).toContain(`<w:rPr>${fonts('Courier New', 9)}</w:rPr><w…
+    161|     const reopened = importDOCX(exported.bytes, schema).document;
+    162|     expect(paraFont(reopened)).toEqual(layout);
+       |                                ^
+    163|     expect(paraFont(reopened, 1)).toEqual(layout);
+    164|     expect(reopened.child(0).child(0).marks.find(mark => mark.type.nam…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/52]⎯
+
+ FAIL  tests/docx-paragraph-layout.test.ts > DOCX paragraph layout > materializes native omitted spacing without inheriting host or export defaults (styles=false)
+ FAIL  tests/docx-paragraph-layout.test.ts > DOCX paragraph layout > materializes native omitted spacing without inheriting host or export defaults (styles=true)
+AssertionError: expected { unit: 'pt', spacingBefore: +0, …(8) } to deeply equal { unit: 'pt', spacingBefore: +0, …(7) }
+
+- Expected
++ Received
+
+@@ -5,7 +5,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": false,
+    "spacingAfter": 0,
+    "spacingBefore": 0,
++   "spacingGroup": "word:implicit",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-layout.test.ts:33:44
+     31|     });
+     32|     const imported = importDOCX(source, schema).document;
+     33|     expect(imported.child(0).attrs.layout).toEqual(singleSpaced);
+       |                                            ^
+     34|     const exported = exportDOCX(imported);
+     35|     const xml = strFromU8(unzipSync(exported.bytes)['word/document.xml…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/52]⎯
+
+ FAIL  tests/docx-paragraph-layout.test.ts > DOCX paragraph layout > fills only omitted spacing after resolving partial defaults, styles and direct declarations
+AssertionError: expected { unit: 'pt', spacingBefore: 6, …(8) } to deeply equal { unit: 'pt', spacingBefore: 6, …(7) }
+
+- Expected
++ Received
+
+@@ -5,7 +5,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": false,
+    "spacingAfter": 0,
+    "spacingBefore": 6,
++   "spacingGroup": "word:style:Base",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-layout.test.ts:44:44
+     42|       paragraph('Base', '<w:spacing w:after="0"/>'), '<w:spacing w:aft…
+     43|     const layout = { ...singleSpaced, spacingBefore: 6, lineHeight: 1.…
+     44|     expect(imported.child(0).attrs.layout).toEqual(layout);
+       |                                            ^
+     45|     expect(importDOCX(exportDOCX(imported).bytes, schema).document.chi…
+     46|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/52]⎯
+
+ FAIL  tests/docx-paragraph-layout.test.ts > DOCX paragraph layout > exports native paragraph properties and reimports the same Fountain layout
+AssertionError: expected { Object (unit, spacingBefore, ...) } to deeply equal { Object (unit, spacingBefore, ...) }
+
+- Expected
++ Received
+
+@@ -19,7 +19,8 @@
+    "lineHeightRule": "atLeast",
+    "lineHeightUnit": "pt",
+    "pageBreakBefore": true,
+    "spacingAfter": 8,
+    "spacingBefore": 18,
++   "spacingGroup": "word:style:Normal",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-layout.test.ts:104:35
+    102|     const reopened = reopenedDocument.child(0);
+    103|     expect(reopened.attrs.align).toBe('right');
+    104|     expect(reopened.attrs.layout).toEqual({ ...layout, fontFamily: 'Ar…
+       |                                   ^
+    105|   });
+    106|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/52]⎯
+
+ FAIL  tests/docx-paragraph-layout.test.ts > DOCX paragraph layout > reports unsupported border styles without pretending they survived
+AssertionError: expected { unit: 'pt', spacingBefore: +0, …(8) } to deeply equal { unit: 'pt', spacingBefore: +0, …(7) }
+
+- Expected
++ Received
+
+@@ -5,7 +5,8 @@
+    "lineHeightRule": "auto",
+    "lineHeightUnit": "multiple",
+    "pageBreakBefore": false,
+    "spacingAfter": 0,
+    "spacingBefore": 0,
++   "spacingGroup": "word:style:Fancy",
+    "unit": "pt",
+  }
+
+ ❯ tests/docx-paragraph-layout.test.ts:109:51
+    107|   it('reports unsupported border styles without pretending they surviv…
+    108|     const result = importDOCX(fixture(style('Fancy', '<w:pBdr><w:botto…
+    109|     expect(result.document.child(0).attrs.layout).toEqual(singleSpaced…
+       |                                                   ^
+    110|     expect(result.report.issues.some(item => item.code === 'paragraph-…
+    111|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/52]⎯
+
+ FAIL  tests/docx-spacing-identity.test.ts > native Word paragraph identity joins the portable spacing model > preserves a native same-style relationship through editing, JSON and HTML, with export still explicitly unfinished
+TypeError: HTMLExporter is not a constructor
+ ❯ tests/docx-spacing-identity.test.ts:97:14
+     95|       expect(before.content?.[1]?.attrs?.layout).toEqual(editor.state.…
+     96|       expect(editor.state.schema.nodeFromJSON(editor.state.doc.toJSON(…
+     97|       expect(new HTMLExporter().export(editor.state.doc)).toContain('m…
+       |              ^
+     98|       expect(exportDOCX(editor.state.doc).report.issues.filter(issue =…
+     99|     } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/52]⎯
+
+ FAIL  tests/docx-table-headers.test.ts > Word row repetition is independent of semantic cell roles > keeps unstyled repeated Word rows as ordinary cells without inventing fill or emphasis
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -52,11 +52,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 0,
+                        "spacingBefore": 0,
+-                       "spacingGroup": "word:implicit",
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+@@ -114,11 +114,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 0,
+                        "spacingBefore": 0,
+-                       "spacingGroup": "word:implicit",
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+
+ ❯ tests/docx-table-headers.test.ts:25:64
+     23|     expect(xml(output.bytes)).not.toContain('EDE9FE');
+     24|     expect(xml(output.bytes).match(/<w:tblHeader\/>/g)).toHaveLength(1…
+     25|     expect(importDOCX(output.bytes, schema).document.toJSON()).toEqual…
+       |                                                                ^
+     26|   });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/52]⎯
+
+ FAIL  tests/docx-table-headers.test.ts > Word row repetition is independent of semantic cell roles > retains Fountain col cell scope independently of an explicit no-repeat choice
+ FAIL  tests/docx-table-headers.test.ts > Word row repetition is independent of semantic cell roles > retains Fountain row cell scope independently of an explicit no-repeat choice
+ FAIL  tests/docx-table-headers.test.ts > Word row repetition is independent of semantic cell roles > retains Fountain colgroup cell scope independently of an explicit no-repeat choice
+ FAIL  tests/docx-table-headers.test.ts > Word row repetition is independent of semantic cell roles > retains Fountain rowgroup cell scope independently of an explicit no-repeat choice
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -92,10 +92,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 8,
+                        "spacingBefore": 0,
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+@@ -145,10 +146,11 @@
+                        "lineHeightRule": "auto",
+                        "lineHeightUnit": "multiple",
+                        "pageBreakBefore": false,
+                        "spacingAfter": 8,
+                        "spacingBefore": 0,
++                       "spacingGroup": "word:style:Normal",
+                        "unit": "pt",
+                      },
+                    },
+                    "content": [
+                      {
+
+ ❯ tests/docx-table-headers.test.ts:47:40
+     45|     expect(output.report.issues).toContainEqual(expect.objectContainin…
+     46|     const reopened = importDOCX(output.bytes, schema);
+     47|     expect(reopened.document.toJSON()).toEqual(withDOCXExportDefaults(…
+       |                                        ^
+     48|     expect(reopened.report.issues.some(issue => issue.code === 'conten…
+     49|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/52]⎯
+
+ FAIL  tests/docx-table-text.test.ts > Word table-owned text formatting > materializes supported text through native DOCX export and reopen
+AssertionError: expected { align: 'left', …(2) } to deeply equal { align: 'left', …(2) }
+
+- Expected
++ Received
+
+@@ -10,9 +10,9 @@
+      "lineHeightRule": "auto",
+      "lineHeightUnit": "multiple",
+      "pageBreakBefore": false,
+      "spacingAfter": 3,
+      "spacingBefore": 0,
+-     "spacingGroup": "word:implicit",
++     "spacingGroup": "word:style:Normal",
+      "unit": "pt",
+    },
+  }
+
+ ❯ tests/docx-table-text.test.ts:73:34
+     71|     const reopened = importDOCX(exportDOCX(first.document).bytes, sche…
+     72|     expect(marks(reopened)).toEqual(marks(first));
+     73|     expect(cell(reopened).attrs).toEqual(cell(first).attrs);
+       |                                  ^
+     74|   });
+     75|   it('keeps unsupported used text properties located and leaves unused…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/52]⎯
+
+ FAIL  tests/docx.test.ts > DOCX interchange > allocates independent numbering inside separate table cells
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -109,10 +109,11 @@
+                                "lineHeightRule": "auto",
+                                "lineHeightUnit": "multiple",
+                                "pageBreakBefore": false,
+                                "spacingAfter": 8,
+                                "spacingBefore": 0,
++                               "spacingGroup": "word:style:Normal",
+                                "unit": "pt",
+                              },
+                            },
+                            "content": [
+                              {
+@@ -186,10 +187,11 @@
+                                "lineHeightRule": "auto",
+                                "lineHeightUnit": "multiple",
+                                "pageBreakBefore": false,
+                                "spacingAfter": 8,
+                                "spacingBefore": 0,
++                               "spacingGroup": "word:style:Normal",
+                                "unit": "pt",
+                              },
+                            },
+                            "content": [
+                              {
+
+ ❯ tests/docx.test.ts:66:78
+     64|       schema.node('table_cell', { background: '' }, [schema.node('orde…
+     65|     ))])]);
+     66|     expect(importDOCX(exportDOCX(original).bytes, schema).document.toJ…
+       |                                                                              ^
+     67|   });
+     68|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/52]⎯
+
+ FAIL  tests/docx.test.ts > DOCX interchange > retains independent list starts, adjacent lists and nested restarts
+AssertionError: expected { type: 'doc', attrs: { …(1) }, …(1) } to deeply equal { type: 'doc', …(2) }
+
+- Expected
++ Received
+
+@@ -45,10 +45,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -90,10 +91,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -154,10 +156,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -199,10 +202,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -245,10 +249,11 @@
+            "lineHeightRule": "auto",
+            "lineHeightUnit": "multiple",
+            "pageBreakBefore": false,
+            "spacingAfter": 8,
+            "spacingBefore": 0,
++           "spacingGroup": "word:style:Normal",
+            "unit": "pt",
+          },
+        },
+        "content": [
+          {
+@@ -303,10 +308,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -348,10 +354,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -411,10 +418,11 @@
+                    "lineHeightRule": "auto",
+                    "lineHeightUnit": "multiple",
+                    "pageBreakBefore": false,
+                    "spacingAfter": 8,
+                    "spacingBefore": 0,
++                   "spacingGroup": "word:style:Normal",
+                    "unit": "pt",
+                  },
+                },
+                "content": [
+                  {
+@@ -469,10 +477,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -514,10 +523,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -578,10 +588,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+@@ -623,10 +634,11 @@
+                            "lineHeightRule": "auto",
+                            "lineHeightUnit": "multiple",
+                            "pageBreakBefore": false,
+                            "spacingAfter": 8,
+                            "spacingBefore": 0,
++                           "spacingGroup": "word:style:Normal",
+                            "unit": "pt",
+                          },
+                        },
+                        "content": [
+                          {
+
+ ❯ tests/docx.test.ts:78:66
+     76|     const exported = exportDOCX(original);
+     77|     expect(exported.report.issues.some(issue => issue.code === 'ordere…
+     78|     expect(importDOCX(exported.bytes, schema).document.toJSON()).toEqu…
+       |                                                                  ^
+     79|     const parts = unzipSync(exported.bytes);
+     80|     const body = strFromU8(parts['word/document.xml']);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/52]⎯
+
+ FAIL  tests/docx.test.ts > DOCX interchange > materializes a legacy caption into a complete editable Word-styled image without losing its source or pixels
+AssertionError: expected { type: 'image_super', …(2) } to deeply equal { type: 'image_super', …(2) }
+
+- Expected
++ Received
+
+@@ -13,10 +13,11 @@
+        "lineHeightRule": "auto",
+        "lineHeightUnit": "multiple",
+        "pageBreakBefore": false,
+        "spacingAfter": 8,
+        "spacingBefore": 0,
++       "spacingGroup": "word:style:Caption",
+        "unit": "pt",
+      },
+      "decoding": "async",
+      "height": "180px",
+      "loading": "lazy",
+
+ ❯ tests/docx.test.ts:272:31
+    270|     expect(archive['word/media/image1.png']).toEqual(Uint8Array.from(B…
+    271|     const reopened = importDOCX(exported.bytes, schema).document.child…
+    272|     expect(reopened.toJSON()).toEqual({ ...original, attrs: { ...origi…
+       |                               ^
+    273|       caption: '', captionAlign: 'center', captionLayout: {
+    274|         unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/52]⎯
+
+
+ Test Files  17 failed | 16 passed (33)
+      Tests  52 failed | 453 passed (505)
+   Start at  00:55:17
+   Duration  27.37s (import 51%, tests 26%, transform 22%, worker 1%)
+
+     Import  302 modules were evaluated 444 times · 10.18s total, 51% of tracked time
+             ~3.26s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
