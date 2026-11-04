@@ -1,0 +1,11 @@
+{
+  "engine": "firefox",
+  "nativeTyping": true,
+  "terminalListCaretRetained": true,
+  "untouchedItemAndQuoteSourceRetained": true,
+  "undoOriginalExact": true,
+  "redoExact": true,
+  "nativeTaskCheckboxRetained": true,
+  "editedFullModelReopened": true,
+  "errors": []
+}

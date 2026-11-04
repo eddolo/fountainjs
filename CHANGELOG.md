@@ -7,6 +7,17 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve untouched source inside existing reference-free Markdown lists and
+  quotes after supported nested edits, including task-checkbox characters and
+  quoted paragraph-boundary repair. Validate patches against complete Fountain
+  nodes and preserve the editor's trailing caret paragraph in edited exports.
+  Report accepted export losses once. Structural edits and unsupported/shared
+  scopes retain canonical fallback; inline source ownership remains open.
+  All 3,678 units, recorded three-engine workflows, actual packed consumers,
+  real workerd, API/types/headless, unchanged conformance and local performance
+  checks pass. Aggregate size review and full CI remain pending; no semantic-
+  score or release promotion. Document actual import-closure and export costs.
+
 - Use parser-owned spans to retain Markdown source regions that contain blank
   lines or have adjacent block boundaries. Prevent moved open fences, separate
   lists and indented code buffers from consuming or merging neighbouring blocks

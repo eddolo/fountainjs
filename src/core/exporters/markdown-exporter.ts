@@ -6,6 +6,8 @@ import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
 import { markdownSourceSeparator } from '../markdown-source-boundary';
+import { hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
+import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -720,19 +722,23 @@ export class MarkdownExporter {
       });
     }
 
-    const mappedBlocks = node.type.name === 'doc' ? source.mapBlocks(node) : null;
+    const automaticTail = node.type.name === 'doc' && source.blocks.some(hasMarkdownNestedSource)
+      && node.childCount === source.blocks.length + 1
+      && isAutomaticTrailingParagraph(node.content.at(-1));
+    const owned = automaticTail ? node.copy(node.content.slice(0, -1)) : node;
+    const mappedBlocks = node.type.name === 'doc' ? source.mapBlocks(owned) : null;
     const originalIndexes = new Map(source.blocks.map((block, index) => [block, index]));
     const structureChanged = Boolean(mappedBlocks && (
-      node.content.length !== source.blocks.length
+      owned.content.length !== source.blocks.length
       || mappedBlocks.some((block, index) => block !== null && originalIndexes.get(block) !== index)
     ));
 
     if (!structureChanged && node.type.name === 'doc'
-      && source.blocks.length === node.content.length && source.blocks.length > 0) {
-      const context: RenderContext = { options, losses: [], references: new Map() };
+      && source.blocks.length === owned.content.length && source.blocks.length > 0) {
+      const context: RenderContext = { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
       reportNodeAttributes(node, context, []);
       let preservedBlocks = 0;
-      const renderedBlocks = node.content.map((block, index) => {
+      const renderedBlocks = owned.content.map((block, index) => {
         const captured = source.blocks[index];
         const unchanged = captured.matches(block);
         let rendered: string;
@@ -740,12 +746,21 @@ export class MarkdownExporter {
           preservedBlocks += 1;
           rendered = captured.source;
         } else {
-          rendered = withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
+          let staged: RenderContext | undefined;
+          const nested = context.references.size ? null : renderMarkdownNestedSource(captured, block, (child, path) => {
+            staged ??= { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
+            return withLineEnding(render(child, staged, [index, ...path]).trimEnd(), source.lineEnding);
+          });
+          if (nested !== null && !staged?.references.size) {
+            preservedBlocks++;
+            rendered = nested;
+            context.losses.push(...staged?.losses ?? []);
+          } else rendered = withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
         }
         return { rendered, unchanged };
       });
       let boundariesValid = true;
-      const body = source.leading + renderedBlocks.map((block, index) => {
+      let body = source.leading + renderedBlocks.map((block, index) => {
         const captured = source.blocks[index];
         const next = renderedBlocks[index + 1];
         const separator = next && (!block.unchanged || !next.unchanged)
@@ -754,9 +769,27 @@ export class MarkdownExporter {
         if (separator === null) boundariesValid = false;
         return block.rendered + (separator ?? captured.separatorAfter);
       }).join('');
+      if (automaticTail) {
+        const tail = withLineEnding(render(node.content.at(-1)!, context, [owned.childCount]).trimEnd(), source.lineEnding);
+        const captured = source.blocks.at(-1)!;
+        const originalSeparator = captured.separatorAfter;
+        let cursor = originalSeparator.length, endings = 0;
+        while (cursor > 0) {
+          const character = originalSeparator[--cursor];
+          if (character === ' ' || character === '\t') continue;
+          if (character === '\n') { if (originalSeparator[cursor - 1] === '\r') cursor--; endings++; }
+          else if (character === '\r') endings++;
+          else break;
+        }
+        const proposed = originalSeparator + source.lineEnding.repeat(Math.max(0, 2 - endings));
+        const separator = markdownSourceSeparator(captured, null, renderedBlocks.at(-1)!.rendered, tail, proposed);
+        if (separator === null) boundariesValid = false;
+        else body = body.slice(0, body.length - originalSeparator.length) + separator + tail;
+      }
       // Reference-style output needs a new document-level definition section;
       // fall back rather than risk colliding with source-owned definitions.
       if (boundariesValid && preservedBlocks > 0 && context.references.size === 0) {
+        context.losses.forEach(loss => options.onLoss?.(loss));
         return Object.freeze({
           markdown: withSourceFrontmatter(source, body),
           losses: Object.freeze([...context.losses]),
@@ -766,7 +799,7 @@ export class MarkdownExporter {
     }
 
     if (structureChanged && mappedBlocks) {
-      const context: RenderContext = { options, losses: [], references: new Map() };
+      const context: RenderContext = { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
       reportNodeAttributes(node, context, []);
       let preservedBlocks = 0;
       const renderedBlocks = node.content.map((block, index) => {
@@ -818,6 +851,7 @@ export class MarkdownExporter {
         // Definitions have document-wide scope. Moves/deletions must not strand
         // an unchanged reference, or reorder duplicate-definition precedence.
         if (source.referenceDefinitions) body += `${source.lineEnding}${source.lineEnding}${source.referenceDefinitions}`;
+        context.losses.forEach(loss => options.onLoss?.(loss));
         return Object.freeze({
           markdown: withSourceFrontmatter(source, body),
           losses: Object.freeze([...context.losses]),

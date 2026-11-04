@@ -1,0 +1,42 @@
+[
+  {
+    "name": "loaded-size",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-loaded-size-20261104.log"
+  },
+  {
+    "name": "parent-loaded-size",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-parent-loaded-size-20261104.log"
+  },
+  {
+    "name": "source-profile",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-source-profile-20261104.log"
+  },
+  {
+    "name": "video-review",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-video-review-20261104.log"
+  },
+  {
+    "name": "latency",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-latency-20261104.log"
+  },
+  {
+    "name": "direction-retention",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-direction-retention-20261104.log"
+  },
+  {
+    "name": "mapping-retention",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-mapping-retention-20261104.log"
+  },
+  {
+    "name": "pack",
+    "exitCode": 0,
+    "log": "artifacts/markdown-nested-source-pack-20261104.log"
+  }
+]

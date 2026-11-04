@@ -1,0 +1,293 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-nested-source.test.ts (10 tests | 10 failed) 36ms
+   ❯ nested Markdown source ownership (10)
+     × keeps untouched loose list items literal after editing another item ("\n") 17ms
+     × keeps untouched loose list items literal after editing another item ("\r\n") 3ms
+     × keeps untouched loose list items literal after editing another item ("\r") 3ms
+     × keeps quote prefixes and unrelated paragraphs literal ("\n") 2ms
+     × keeps quote prefixes and unrelated paragraphs literal ("\r\n") 1ms
+     × keeps quote prefixes and unrelated paragraphs literal ("\r") 1ms
+     × retains nonsequential ordered markers when only text changes 1ms
+     × changes a task checkbox without rewriting item source or the other checkbox spelling 1ms
+     × retains a list inside a quote and untouched quoted paragraphs 2ms
+     × retains a blank-containing fence and another paragraph inside the same list item 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > keeps untouched loose list items literal after editing another item ("\n")
+AssertionError: expected '- First **source** item\n- Changed.\n…' to be '*   First __source__ item\n\n*   Chan…' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__ item
++ - First **source** item
+-
+- *   Changed.
++ - Changed.
+-
+- *   Last _source_ item
++ - Last *source* item
+-
+
+ ❯ tests/markdown-nested-source.test.ts:16:29
+     14|     const changed = replace(imported.document, [0, 1, 0], schema.node(…
+     15|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     16|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     17|     expect(result.preservation).toBe('blocks');
+     18|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > keeps untouched loose list items literal after editing another item ("\r\n")
+AssertionError: expected '- First **source** item\r\n- Changed.…' to be '*   First __source__ item\r\n\r\n*   …' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__ item
++ - First **source** item
+- 
+- *   Changed.
++ - Changed.
+- 
+- *   Last _source_ item
+-
++ - Last *source* item
+
+ ❯ tests/markdown-nested-source.test.ts:16:29
+     14|     const changed = replace(imported.document, [0, 1, 0], schema.node(…
+     15|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     16|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     17|     expect(result.preservation).toBe('blocks');
+     18|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > keeps untouched loose list items literal after editing another item ("\r")
+AssertionError: expected '- First **source** item\r- Changed.\r…' to be '*   First __source__ item\r\r*   Chan…' // Object.is equality
+
+Expected: "*   First __source__ item·
+*   Changed.·
+*   Last _source_ item
+"
+Received: "- First **source** item
+- Changed.
+- Last *source* item"
+
+ ❯ tests/markdown-nested-source.test.ts:16:29
+     14|     const changed = replace(imported.document, [0, 1, 0], schema.node(…
+     15|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     16|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     17|     expect(result.preservation).toBe('blocks');
+     18|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > keeps quote prefixes and unrelated paragraphs literal ("\n")
+AssertionError: expected '> First **source**.\n> \n> Changed.\n…' to be '> First __source__.\n>\n  > Changed.\…' // Object.is equality
+
+- Expected
++ Received
+
+- > First __source__.
++ > First **source**.
+- >
+-   > Changed.
++ > 
++ > Changed.
+- >
+-  > Last _source_.
+-
++ > 
++ > Last *source*.
+
+ ❯ tests/markdown-nested-source.test.ts:28:29
+     26|     const changed = replace(imported.document, [0, 1], schema.node('pa…
+     27|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     28|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     29|     expect(result.preservation).toBe('blocks');
+     30|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > keeps quote prefixes and unrelated paragraphs literal ("\r\n")
+AssertionError: expected '> First **source**.\r\n> \r\n> Change…' to be '> First __source__.\r\n>\r\n  > Chang…' // Object.is equality
+
+- Expected
++ Received
+
+- > First __source__.
++ > First **source**.
+- >
++ > 
+-   > Changed.
++ > Changed.
+- >
++ > 
+-  > Last _source_.
+-
++ > Last *source*.
+
+ ❯ tests/markdown-nested-source.test.ts:28:29
+     26|     const changed = replace(imported.document, [0, 1], schema.node('pa…
+     27|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     28|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     29|     expect(result.preservation).toBe('blocks');
+     30|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > keeps quote prefixes and unrelated paragraphs literal ("\r")
+AssertionError: expected '> First **source**.\r> \r> Changed.\r…' to be '> First __source__.\r>\r  > Changed.\…' // Object.is equality
+
+Expected: "> First __source__.
+>
+  > Changed.
+>
+ > Last _source_.
+"
+Received: "> First **source**.
+>·
+> Changed.
+>·
+> Last *source*."
+
+ ❯ tests/markdown-nested-source.test.ts:28:29
+     26|     const changed = replace(imported.document, [0, 1], schema.node('pa…
+     27|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     28|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     29|     expect(result.preservation).toBe('blocks');
+     30|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > retains nonsequential ordered markers when only text changes
+AssertionError: expected '7. First **source**.\n8. Changed.\n9.…' to be '7) First __source__.\n9) Changed.\n11…' // Object.is equality
+
+- Expected
++ Received
+
+- 7) First __source__.
+- 9) Changed.
++ 7. First **source**.
++ 8. Changed.
+- 11) Last _source_.
+-
++ 9. Last *source*.
+
+ ❯ tests/markdown-nested-source.test.ts:39:29
+     37|     const changed = replace(imported.document, [0, 1, 0], schema.node(…
+     38|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     39|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     40|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     41|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > changes a task checkbox without rewriting item source or the other checkbox spelling
+AssertionError: expected '- [x] First **source**.\n- [x] Last *…' to be '- [x] First __source__.\n- [X] Last _…' // Object.is equality
+
+- Expected
++ Received
+
+- - [x] First __source__.
++ - [x] First **source**.
+- - [X] Last _source_.
+-
++ - [x] Last *source*.
+
+ ❯ tests/markdown-nested-source.test.ts:50:29
+     48|     const changed = replace(imported.document, [0, 0], item.withAttrs(…
+     49|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     50|     expect(result.markdown).toBe(source.replace('- [ ]', '- [x]'));
+       |                             ^
+     51|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     52|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > retains a list inside a quote and untouched quoted paragraphs
+AssertionError: expected '> - First **source**.\n> - Changed.\n…' to be '> *   First __source__.\n> *   Change…' // Object.is equality
+
+- Expected
++ Received
+
+- > *   First __source__.
++ > - First **source**.
+- > *   Changed.
++ > - Changed.
+- >
++ > 
+- > Tail _source_.
+-
++ > Tail *source*.
+
+ ❯ tests/markdown-nested-source.test.ts:60:29
+     58|     const changed = replace(imported.document, [0, 0, 1, 0], schema.no…
+     59|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     60|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     61|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     62|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  tests/markdown-nested-source.test.ts > nested Markdown source ownership > retains a blank-containing fence and another paragraph inside the same list item
+AssertionError: expected '- First **source**.\n  \n  Changed.\n…' to be '*   First __source__.\n\n    Changed.…' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__.
++ - First **source**.
+-
+-     Changed.
++   
++   Changed.
+-
+-     ~~~~js
++   
++   ```js
+-     first
++   first
+-
+-     last
++   
++   last
+-     ~~~~
+-
+- *   Last _source_.
+-
++   ```
++ - Last *source*.
+
+ ❯ tests/markdown-nested-source.test.ts:70:29
+     68|     const changed = replace(imported.document, [0, 0, 1], schema.node(…
+     69|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     70|     expect(result.markdown).toBe(source.replace('Edit.', 'Changed.'));
+       |                             ^
+     71|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     72|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed (10)
+   Start at  17:14:16
+   Duration  4.58s (transform 67%, import 32%, tests 1%, worker 1%)
+
+  Transform  transforming modules took 2.70s · 67% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

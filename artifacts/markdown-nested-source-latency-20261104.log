@@ -1,0 +1,18 @@
+100 blocks: local p50 0.03 ms, p95 0.06 ms; incremental remote p50 0.02 ms, p95 0.09 ms; JSON boundary p50 0.88 ms, p95 1.20 ms
+  first edit / initial p95 / initial peak: local 0.99 ms / 0.13 ms / 0.99 ms; incremental remote 0.28 ms / 0.08 ms / 0.28 ms
+1,000 blocks: local p50 0.03 ms, p95 0.07 ms; incremental remote p50 0.03 ms, p95 0.06 ms; JSON boundary p50 13.33 ms, p95 23.98 ms
+  first edit / initial p95 / initial peak: local 1.06 ms / 0.25 ms / 4.22 ms; incremental remote 0.17 ms / 0.10 ms / 5.98 ms
+5,000 blocks: local p50 0.10 ms, p95 0.13 ms; incremental remote p50 0.07 ms, p95 0.08 ms; JSON boundary p50 37.26 ms, p95 53.33 ms
+  first edit / initial p95 / initial peak: local 7.45 ms / 0.18 ms / 18.23 ms; incremental remote 0.29 ms / 0.12 ms / 1.87 ms
+10,000 blocks: local p50 0.16 ms, p95 0.34 ms; incremental remote p50 0.12 ms, p95 0.13 ms; JSON boundary p50 66.39 ms, p95 115.80 ms
+  first edit / initial p95 / initial peak: local 6.74 ms / 0.23 ms / 6.74 ms; incremental remote 0.90 ms / 0.28 ms / 5.66 ms
+100 HTML blocks: server parse p50 12.48 ms, p95 23.21 ms
+1,000 HTML blocks: server parse p50 63.83 ms, p95 107.32 ms
+5,000 HTML blocks: server parse p50 290.35 ms, p95 319.98 ms
+10,000 HTML blocks: server parse p50 512.67 ms, p95 578.83 ms
+server HTML 1,000→10,000 median growth: 8.03x / 15x
+local 1,000→10,000 median growth: 4.67x / 15x
+incremental remote 1,000→10,000 median growth: 3.55x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.09 MiB / 16 MiB
+retained 10,000-block server HTML document: 15.21 MiB / 48 MiB

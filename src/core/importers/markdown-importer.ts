@@ -1,6 +1,7 @@
 import { Mark, Node, type Schema, type Attributes } from '../schema';
 import { matchesWithoutAutomaticTrailingParagraph } from '../editing-provenance';
 import { registerMarkdownSourceBoundary } from '../markdown-source-boundary';
+import { registerMarkdownNestedSource, type MarkdownNestedCapture, type MarkdownNestedRecord, type MarkdownSourceLineView } from '../markdown-nested-source';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { needsHTMLLinkSource, restoredHTMLLinkSource, restoredLinkDestination } from '../link-destination';
@@ -407,8 +408,9 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
  */
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   if (!document.childCount || document.childCount > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
-  const separated = captureSeparatedMarkdownBlocks(source, schema, document, options);
-  if (!separated) return captureParserMarkdownBlocks(source, schema, document, options);
+  const separated = captureSeparatedMarkdownBlocks(source, schema, document, options)
+    ?? captureParserMarkdownBlocks(source, schema, document, options);
+  if (!separated) return undefined;
   // Blank separators alone cannot keep adjacent lists/indented code distinct,
   // or terminate an EOF-open fence after a move. Validate those captures too.
   if (!separated.referenceDefinitions && !options.parseHTMLDocument && !options.parseHTMLFlow
@@ -418,10 +420,127 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
       || extractFootnoteDefinitions(source, schema, quietOptions).definitions.length);
     if (!scopedReferences) {
       const parse = (value: string): readonly Node[] => new MarkdownImporter().parse(value, schema, quietOptions).content;
-      separated.blocks.forEach(block => registerMarkdownSourceBoundary(block, parse));
+      const budget = { remaining: MAX_MARKDOWN_SOURCE_BLOCKS - separated.blocks.length };
+      separated.blocks.forEach((block, index) => {
+        registerMarkdownSourceBoundary(block, parse);
+        const capture = nestedContainerCapture(block.source, document.child(index), schema, quietOptions, budget, 0);
+        if (capture) registerMarkdownNestedSource(block, capture, parse);
+      });
     }
   }
   return separated;
+}
+
+interface NestedSourceBudget { remaining: number }
+const NESTED_SOURCE_CONTAINERS = new Set(['blockquote', 'bullet_list', 'ordered_list', 'task_list']);
+
+function nestedContainerCapture(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
+  budget: NestedSourceBudget, depth: number): MarkdownNestedCapture | undefined {
+  if (!NESTED_SOURCE_CONTAINERS.has(node.type.name) || depth > 32) return undefined;
+  return { build: () => captureNestedContainer(source, node, schema, options, budget, depth) };
+}
+
+function nestedSequenceCapture(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
+  budget: NestedSourceBudget, depth: number): MarkdownNestedCapture {
+  return { build: () => captureNestedSequence(source, node, schema, options, budget, depth) };
+}
+
+function nestedFragmentParser(schema: Schema, options: MarkdownImportOptions): (source: string) => readonly Node[] {
+  return source => {
+    const context = references(source, schema, options);
+    if (context.definitions.size || extractFootnoteDefinitions(source, schema, options).definitions.length) return [];
+    return parseBlocks(context.lines, schema, context.definitions, options);
+  };
+}
+
+function captureNestedSequence(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
+  budget: NestedSourceBudget, depth: number): MarkdownNestedRecord | null {
+  if (depth > 32 || node.childCount + 1 > budget.remaining) return null;
+  budget.remaining -= node.childCount + 1;
+  const physical = sourceLines(source);
+  const context = references(source, schema, options);
+  if (context.definitions.size || physical.length !== context.lines.length) return null;
+  const spans: MarkdownBlockSpan[] = [];
+  let valid = true;
+  const parsed = parseBlocks(context.lines, schema, context.definitions, options, undefined, undefined, span => {
+    if (span.blocks.length !== 1) valid = false;
+    else spans.push(span);
+  });
+  if (!valid || spans.length !== node.childCount || parsed.length !== node.childCount
+    || parsed.some((child, index) => !child.eq(node.child(index)) || !child.eq(spans[index].blocks[0]))) return null;
+  if (spans.some((span, index) => span.end < span.start || span.end >= physical.length
+    || (index > 0 && span.start <= spans[index - 1].end))) return null;
+  return { kind: 'sequence', node, source, parse: nestedFragmentParser(schema, options), children: spans.map((span, index) => {
+    const from = physical[span.start].start, to = physical[span.end].end;
+    const child = node.child(index);
+    return { from, to, node: child, canonical: true,
+      capture: nestedContainerCapture(source.slice(from, to), child, schema, options, budget, depth + 1) };
+  }) };
+}
+
+function nestedLineView(source: string, node: Node, values: readonly string[], continuations: readonly string[],
+  schema: Schema, options: MarkdownImportOptions, budget: NestedSourceBudget, depth: number, checkbox?: number): MarkdownNestedRecord | null {
+  const physical = sourceLines(source);
+  if (physical.length !== values.length || !physical.every((line, index) => line.value.endsWith(values[index]))) return null;
+  const lines: MarkdownSourceLineView[] = [];
+  let body = '';
+  physical.forEach((line, index) => {
+    const value = values[index];
+    lines.push({ start: body.length, end: body.length + value.length,
+      outer: line.start + line.value.length - value.length, continuation: continuations[index] });
+    body += value + line.ending;
+  });
+  return { kind: 'view', node, source, lines, checkbox,
+    body: nestedSequenceCapture(body, node, schema, options, budget, depth + 1) };
+}
+
+function nestedItemCapture(source: string, node: Node, indent: number, schema: Schema, options: MarkdownImportOptions,
+  budget: NestedSourceBudget, depth: number): MarkdownNestedCapture {
+  return { build: () => {
+    if (depth > 32 || budget.remaining-- <= 0) return null;
+    const physical = sourceLines(source);
+    const marker = listMarker(physical[0].value);
+    if (!marker) return null;
+    const values = physical.map((line, index) => index === 0 ? marker.value : !line.value.trim() ? ''
+      : indentationColumns(line.value) >= indent ? stripIndentation(line.value, indent) : line.value);
+    const firstPrefix = physical[0].value.slice(0, physical[0].value.length - values[0].length);
+    const checkbox = marker.kind === 'task' ? firstPrefix.lastIndexOf('[') + 1 : undefined;
+    if (checkbox !== undefined && (checkbox <= 0 || !/[ xX]/u.test(firstPrefix[checkbox] ?? '') || firstPrefix[checkbox + 1] !== ']')) return null;
+    return nestedLineView(source, node, values, values.map(() => ' '.repeat(indent)), schema, options, budget, depth, checkbox);
+  } };
+}
+
+function captureNestedContainer(source: string, node: Node, schema: Schema, options: MarkdownImportOptions,
+  budget: NestedSourceBudget, depth: number): MarkdownNestedRecord | null {
+  if (depth > 32 || budget.remaining-- <= 0) return null;
+  const physical = sourceLines(source);
+  if (node.type.name === 'blockquote') {
+    const prefixes = physical.map(line => BLOCKQUOTE.exec(line.value)?.[0] ?? '');
+    const fallback = prefixes.find(Boolean) ?? '> ';
+    return nestedLineView(source, node, physical.map((line, index) => line.value.slice(prefixes[index].length)),
+      prefixes.map(prefix => prefix || fallback), schema, options, budget, depth);
+  }
+  if (node.childCount > budget.remaining) return null;
+  budget.remaining -= node.childCount;
+  const context = references(source, schema, options);
+  if (context.definitions.size || context.lines.length !== physical.length) return null;
+  const first = listMarker(context.lines[0]);
+  if (!first) return null;
+  const children: Extract<MarkdownNestedRecord, { kind: 'sequence' }>['children'][number][] = [];
+  let index = 0;
+  while (index < context.lines.length && context.lines[index].trim()) {
+    const marker = listMarker(context.lines[index]);
+    if (!marker || marker.kind !== first.kind || marker.m !== first.m || children.length >= node.childCount) return null;
+    const start = index;
+    const item = collectListItem(context.lines, index, schema, context.definitions, options);
+    index = item.nextIndex;
+    const from = physical[start].start, to = physical[index - 1].end;
+    const child = node.child(children.length);
+    children.push({ from, to, node: child, canonical: false,
+      capture: nestedItemCapture(source.slice(from, to), child, marker.contentIndent, schema, options, budget, depth + 1) });
+    while (index < context.lines.length && !context.lines[index].trim()) index++;
+  }
+  return children.length === node.childCount ? { kind: 'sequence', node, source, children } : null;
 }
 
 function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {

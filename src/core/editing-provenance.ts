@@ -10,13 +10,18 @@ export function markAutomaticTrailingParagraph(node: Node): void {
   automaticTrailingParagraphs.add(node);
 }
 
+/** Read the existing default repair identity without granting it to copies. */
+export function isAutomaticTrailingParagraph(tail: Node | undefined): tail is Node {
+  return Boolean(tail && automaticTrailingParagraphs.has(tail) && tail.type.name === 'paragraph'
+    && !tail.marks.length && tail.childCount === 1 && tail.child(0).isText
+    && tail.child(0).text === '' && !tail.child(0).marks.length);
+}
+
 /** Exact authored document equality with one known, still-empty root repair. */
 export function matchesWithoutAutomaticTrailingParagraph(original: Node, current: Node): boolean {
   if (current.childCount !== original.childCount + 1) return false;
   const tail = current.content.at(-1)!;
-  if (!automaticTrailingParagraphs.has(tail) || tail.type.name !== 'paragraph'
-    || tail.marks.length || tail.childCount !== 1 || !tail.child(0).isText
-    || tail.child(0).text !== '' || tail.child(0).marks.length) return false;
+  if (!isAutomaticTrailingParagraph(tail)) return false;
   // Keep all root attributes and preceding content in the comparison.
   // No generic empty-block normalization or copied/JSON-node recognition.
   return original.eq(current.copy(current.content.slice(0, -1)));

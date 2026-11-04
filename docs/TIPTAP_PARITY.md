@@ -1,12 +1,22 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Nested-source follow-up (2026-11-04, unreleased): list/quote edits and task-checkbox
+changes can retain untouched nested source, with complete Fountain-node reparse
+before accepting a patch. All 3,678 units, recorded three-engine editor journeys,
+actual tarball/workerd, API/types/headless, unchanged conformance and local
+latency/retention checks pass. Aggregate size acceptance and full CI remain open.
+Structural edits, inline ownership and shared reference
+scopes retain documented limits. No capability-percentage increase.
+[Contract](MARKDOWN_SOURCE.md#nested-source-edits-2026-11-04-unreleased-follow-up).
+
 Markdown source retention (2026-11-04, unreleased follow-up): parser-owned regions
 extend partial export beyond blank-line segmentation. Real pre-repair controls
 show moved-fence and adjacent-list/code content loss; the repair preserves full
 reopened models and avoids rewriting other proven regions. Unit contracts,
 recorded desktop downloads, actual packed consumers and real workerd pass.
-Nested ownership, full CI, local latency acceptance and aggregate capacity remain
-open. The 563 default / 635 explicit-body CommonMark profiles are unchanged.
+Cloud performance, Lean and native document audit pass on the source-boundary
+parent; its verification job fails at the aggregate size gate. The newer nested
+follow-up has its own evidence. The 563 default / 635 explicit-body profiles are unchanged.
 No row or percentage promotion. [Evidence and limits](MARKDOWN_SOURCE.md#parser-owned-source-boundaries-2026-11-04-unreleased-follow-up).
 
 Capacity follow-up (2026-11-04, unmerged): the user approved the reviewed

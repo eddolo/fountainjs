@@ -31,6 +31,7 @@ for (const format of ['html', 'markdown'] as const) test(`keeps per-file HTML co
 import { strFromU8, unzipSync } from 'fflate';
 import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries-journey';
+import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
@@ -6082,6 +6083,10 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
 
 test('preserves parser-owned Markdown source through native editing, type changes and downloads', async ({ page }, info) => {
   await runMarkdownSourceBoundariesJourney(page, info);
+});
+
+test('preserves nested Markdown source through real list and quote editing', async ({ page }, info) => {
+  await runMarkdownNestedSourceJourney(page, info);
 });
 
 test('records native DOCX viewer disagreements without certifying math fidelity', async ({ page }, info) => {
