@@ -5,6 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
+import { markdownSourceSeparator } from '../markdown-source-boundary';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
 export type MarkdownLossKind = 'node' | 'mark' | 'attribute';
@@ -731,20 +732,31 @@ export class MarkdownExporter {
       const context: RenderContext = { options, losses: [], references: new Map() };
       reportNodeAttributes(node, context, []);
       let preservedBlocks = 0;
-      const body = source.leading + node.content.map((block, index) => {
+      const renderedBlocks = node.content.map((block, index) => {
         const captured = source.blocks[index];
+        const unchanged = captured.matches(block);
         let rendered: string;
-        if (captured.matches(block)) {
+        if (unchanged) {
           preservedBlocks += 1;
           rendered = captured.source;
         } else {
           rendered = withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
         }
-        return `${rendered}${captured.separatorAfter}`;
+        return { rendered, unchanged };
+      });
+      let boundariesValid = true;
+      const body = source.leading + renderedBlocks.map((block, index) => {
+        const captured = source.blocks[index];
+        const next = renderedBlocks[index + 1];
+        const separator = next && (!block.unchanged || !next.unchanged)
+          ? markdownSourceSeparator(captured, source.blocks[index + 1], block.rendered, next.rendered, captured.separatorAfter)
+          : captured.separatorAfter;
+        if (separator === null) boundariesValid = false;
+        return block.rendered + (separator ?? captured.separatorAfter);
       }).join('');
       // Reference-style output needs a new document-level definition section;
       // fall back rather than risk colliding with source-owned definitions.
-      if (preservedBlocks > 0 && context.references.size === 0) {
+      if (boundariesValid && preservedBlocks > 0 && context.references.size === 0) {
         return Object.freeze({
           markdown: withSourceFrontmatter(source, body),
           losses: Object.freeze([...context.losses]),
@@ -765,10 +777,44 @@ export class MarkdownExporter {
         }
         return withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
       });
+      const separator = `${source.lineEnding}${source.lineEnding}`;
+      // A moved EOF-open fence can consume its new neighbour even across a
+      // blank line. Canonicalize that source region, then recheck every pair;
+      // never claim preservation if the resulting boundaries remain ambiguous.
+      const canonicalized = new Set<number>();
+      const originalBoundary = (index: number): boolean => {
+        const left = mappedBlocks[index], right = mappedBlocks[index + 1];
+        return Boolean(left && right && originalIndexes.get(right) === originalIndexes.get(left)! + 1
+          && left.separatorAfter === separator && renderedBlocks[index] === left.source
+          && renderedBlocks[index + 1] === right.source);
+      };
+      for (let index = 0; index < renderedBlocks.length - 1; index++) {
+        // Exact source, separator and original adjacency already have parser
+        // proof. A move should not reparse thousands of untouched neighbours.
+        if (originalBoundary(index)) continue;
+        if (markdownSourceSeparator(mappedBlocks[index], mappedBlocks[index + 1], renderedBlocks[index], renderedBlocks[index + 1], separator) !== null) continue;
+        const repair = mappedBlocks[index] && !canonicalized.has(index) ? index
+          : mappedBlocks[index + 1] && !canonicalized.has(index + 1) ? index + 1 : null;
+        if (repair !== null) {
+          renderedBlocks[repair] = withLineEnding(render(node.content[repair], context, [repair]).trimEnd(), source.lineEnding);
+          if (LIST_TYPES.has(node.content[repair].type.name)
+            && markdownSourceSeparator(mappedBlocks[index], mappedBlocks[index + 1], renderedBlocks[index], renderedBlocks[index + 1], separator) === null) {
+            // Reuse the canonical serializer's existing alternate marker. Both
+            // spellings represent this same node; the parser proves separation.
+            // Formatting-loss callbacks already ran for this node above.
+            const alternate: RenderContext = { ...context, options: { ...context.options, onLoss: undefined }, losses: [] };
+            renderedBlocks[repair] = withLineEnding(render(node.content[repair], alternate, [repair], 0, false, true).trimEnd(), source.lineEnding);
+          }
+          canonicalized.add(repair);
+          preservedBlocks--;
+        }
+      }
+      const boundariesValid = canonicalized.size === 0 || renderedBlocks.every((block, index) => index === renderedBlocks.length - 1
+        || originalBoundary(index) || markdownSourceSeparator(mappedBlocks[index], mappedBlocks[index + 1], block, renderedBlocks[index + 1], separator) !== null);
       // Structural output uses canonical separators. This avoids assigning
       // source-owned whitespace to a different neighbor after a move/delete.
-      if (preservedBlocks > 0 && context.references.size === 0) {
-        let body = renderedBlocks.join(`${source.lineEnding}${source.lineEnding}`);
+      if (boundariesValid && preservedBlocks > 0 && context.references.size === 0) {
+        let body = renderedBlocks.join(separator);
         // Definitions have document-wide scope. Moves/deletions must not strand
         // an unchanged reference, or reorder duplicate-definition precedence.
         if (source.referenceDefinitions) body += `${source.lineEnding}${source.lineEnding}${source.referenceDefinitions}`;

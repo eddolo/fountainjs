@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Use parser-owned spans to retain Markdown source regions that contain blank
+  lines or have adjacent block boundaries. Prevent moved open fences, separate
+  lists and indented code buffers from consuming or merging neighbouring blocks
+  during partial export. Preserve original separators when valid, and repair
+  boundaries when needed. Nested edits and external projection ownership retain
+  their documented limitations. Full units (3,656), three recorded desktop
+  workflows, actual packed ESM/CJS and workerd pass. Full CI, latency acceptance
+  and aggregate-size review remain pending; conformance scores are unchanged.
+
 - Resolve the published document schema in TypeScript's legacy module-resolution
   mode. CI and release validation now discover public entry points automatically,
   including newer integrity, table-of-contents and HTML modules; Angular remains

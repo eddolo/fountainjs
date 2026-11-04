@@ -1,5 +1,6 @@
 import { checkListLayout } from './fixtures/list-layout-check.mjs';
 import { checkParagraphSpacing } from './fixtures/paragraph-spacing-check.mjs';
+import { checkMarkdownSourceBoundaries } from './fixtures/markdown-source-boundary-check.mjs';
 import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
@@ -298,6 +299,7 @@ console.log(`Built ESM root/core: ${checkListLayout(esmCore, esmServerHTML, esmD
 checkParagraphSpacing(esmCore, esmServerHTML, esmDOCX, esmCore.CoreSchemaSpec);
 checkParagraphSpacing(esmHeadlessCore, esmServerHTML, esmDOCX, esmCore.CoreSchemaSpec);
 console.log('Built ESM root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.');
+console.log(`Built ESM root/core: ${checkMarkdownSourceBoundaries(esmCore)}/${checkMarkdownSourceBoundaries(esmHeadlessCore, esmCore.CoreSchemaSpec)} parser-owned Markdown source-boundary contracts passed.`);
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
 const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
 if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
@@ -452,6 +454,7 @@ console.log(`Built CommonJS root/core: ${checkListLayout(cjsCore, cjsServerHTML,
 checkParagraphSpacing(cjsCore, cjsServerHTML, cjsDOCX, cjsCore.CoreSchemaSpec);
 checkParagraphSpacing(cjsHeadlessCore, cjsServerHTML, cjsDOCX, cjsCore.CoreSchemaSpec);
 console.log('Built CommonJS root/core: contextual spacing model, HTML, transactions and native spacing export/reopen contracts passed.');
+console.log(`Built CommonJS root/core: ${checkMarkdownSourceBoundaries(cjsCore)}/${checkMarkdownSourceBoundaries(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} parser-owned Markdown source-boundary contracts passed.`);
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
 const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
 if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');

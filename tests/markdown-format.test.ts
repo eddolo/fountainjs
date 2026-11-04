@@ -1111,7 +1111,7 @@ describe('Markdown interchange', () => {
     });
   });
 
-  it('fails closed to canonical output when source blocks cannot align safely', () => {
+  it('uses parser-owned boundaries for a heading immediately followed by a paragraph', () => {
     const schema = new Schema(CoreSchemaSpec);
     const imported = MarkdownImporter.parseWithSource('# Heading ###\r\nParagraph without a blank line', schema);
     const changed = schema.node('doc', {}, [
@@ -1120,11 +1120,11 @@ describe('Markdown interchange', () => {
     ]);
     const result = MarkdownExporter.exportWithSource(changed, imported.source);
 
-    expect(imported.source.blocks).toEqual([]);
+    expect(imported.source.blocks.map(block => block.source)).toEqual(['# Heading ###', 'Paragraph without a blank line']);
     expect(result).toEqual({
-      markdown: '# Heading\r\n\r\nChanged',
+      markdown: '# Heading ###\r\nChanged',
       losses: [],
-      preservation: 'canonical',
+      preservation: 'blocks',
     });
   });
 

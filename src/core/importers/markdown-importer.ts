@@ -1,5 +1,6 @@
 import { Mark, Node, type Schema, type Attributes } from '../schema';
 import { matchesWithoutAutomaticTrailingParagraph } from '../editing-provenance';
+import { registerMarkdownSourceBoundary } from '../markdown-source-boundary';
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { needsHTMLLinkSource, restoredHTMLLinkSource, restoredLinkDestination } from '../link-destination';
@@ -405,6 +406,25 @@ function markdownBlockSegments(source: string): { leading: string; blocks: Array
  * definitions and ambiguous block boundaries still fail closed.
  */
 function captureMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
+  if (!document.childCount || document.childCount > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
+  const separated = captureSeparatedMarkdownBlocks(source, schema, document, options);
+  if (!separated) return captureParserMarkdownBlocks(source, schema, document, options);
+  // Blank separators alone cannot keep adjacent lists/indented code distinct,
+  // or terminate an EOF-open fence after a move. Validate those captures too.
+  if (!separated.referenceDefinitions && !options.parseHTMLDocument && !options.parseHTMLFlow
+    && !options.parseHTMLBlock && !options.parseHTMLInline && !options.parseHTMLParagraph) {
+    const quietOptions = { ...options, onTeXTableIssue: undefined };
+    const scopedReferences = source.includes('[') && (references(source, schema, quietOptions).definitions.size
+      || extractFootnoteDefinitions(source, schema, quietOptions).definitions.length);
+    if (!scopedReferences) {
+      const parse = (value: string): readonly Node[] => new MarkdownImporter().parse(value, schema, quietOptions).content;
+      separated.blocks.forEach(block => registerMarkdownSourceBoundary(block, parse));
+    }
+  }
+  return separated;
+}
+
+function captureSeparatedMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
   const segments = markdownBlockSegments(source);
   if (!segments.blocks.length || segments.blocks.length > MAX_MARKDOWN_SOURCE_BLOCKS) return undefined;
   const quietOptions = { ...options, onHTMLBlockFallback: undefined, onHTMLInlineFallback: undefined,
@@ -467,6 +487,51 @@ function captureMarkdownBlocks(source: string, schema: Schema, document: Node, o
     blocks: Object.freeze(blocks),
     referenceDefinitions,
   });
+}
+
+interface MarkdownBlockSpan {
+  readonly start: number;
+  readonly end: number;
+  readonly blocks: readonly Node[];
+}
+
+/** Capture physical regions from the parser itself when blank-line splitting
+ * cannot own a fence/container or adjacent blocks. Reference extraction and
+ * external projections keep their existing conservative capture contract.
+ */
+function captureParserMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
+  if (options.parseHTMLDocument || options.parseHTMLFlow || options.parseHTMLBlock
+    || options.parseHTMLInline || options.parseHTMLParagraph) return undefined;
+  const quietOptions = { ...options, onTeXTableIssue: undefined };
+  const input = source.replace(/\r\n$|[\r\n]$/u, '');
+  const context = references(input, schema, quietOptions);
+  if (context.definitions.size || extractFootnoteDefinitions(source, schema, quietOptions).definitions.length) return undefined;
+  const physical = sourceLines(input);
+  if (physical.length !== context.lines.length) return undefined;
+  const spans: MarkdownBlockSpan[] = [];
+  let valid = true;
+  const parsed = parseBlocks(context.lines, schema, context.definitions, quietOptions, undefined, undefined, span => {
+    if (span.blocks.length !== 1 || spans.length >= MAX_MARKDOWN_SOURCE_BLOCKS) valid = false;
+    else spans.push(span);
+  });
+  if (!valid || spans.length !== document.childCount || parsed.length !== document.childCount
+    || parsed.some((node, index) => !node.eq(document.child(index)) || !node.eq(spans[index].blocks[0]))) return undefined;
+  if (spans.some((span, index) => span.start < 0 || span.end < span.start || span.end >= physical.length
+    || (index > 0 && span.start <= spans[index - 1].end))) return undefined;
+  const parse = (value: string): readonly Node[] => new MarkdownImporter().parse(value, schema, quietOptions).content;
+  const blocks = spans.map((span, index): MarkdownSourceBlockSnapshot => {
+    const end = physical[span.end].end;
+    const next = spans[index + 1];
+    const original = document.child(index);
+    const block = Object.freeze({
+      source: source.slice(physical[span.start].start, end),
+      separatorAfter: source.slice(end, next ? physical[next.start].start : source.length),
+      matches: (current: Node) => original.eq(current),
+    });
+    registerMarkdownSourceBoundary(block, parse);
+    return block;
+  });
+  return Object.freeze({ leading: source.slice(0, physical[spans[0].start].start), blocks: Object.freeze(blocks) });
 }
 
 function isOpeningDelimiter(value: string): boolean {
@@ -1950,7 +2015,7 @@ function htmlFlowContext(sources: readonly PendingHTMLBlockSource[], schema: Sch
   readBlockSources: () => allBlocks ??= Object.freeze(sources.map(inspectBlock)) });
 }
 
-function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, layout?: ListItemLayout, capture?: (sources: readonly PendingHTMLBlockSource[]) => void): Node[] {
+function parseBlocks(lines: readonly string[], schema: Schema, references: References, options: MarkdownImportOptions, layout?: ListItemLayout, capture?: (sources: readonly PendingHTMLBlockSource[]) => void, captureSpan?: (span: MarkdownBlockSpan) => void): Node[] {
   const blocks: Node[] = [];
   const htmlBlocks = new Map<Node, string>();
   const paragraphs = new Map<Node, string>();
@@ -2284,6 +2349,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     } else blocks.push(...projectParagraph(value));
     } finally {
       if (blocks.length > previousLength || syntaxBlock) layout?.spans.push({ start, end: sourceEnd ?? index - 1 });
+      if (captureSpan && lines[start].trim()) captureSpan({ start, end: sourceEnd ?? index - 1, blocks: blocks.slice(previousLength) });
     }
   }
   if (layout) {
