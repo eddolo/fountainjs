@@ -4,6 +4,9 @@ import { checkMarkdownSourceBoundaries } from './fixtures/markdown-source-bounda
 import { checkMarkdownNestedSource } from './fixtures/markdown-nested-source-check.mjs';
 import { checkMarkdownReferenceBoundaries } from './fixtures/markdown-reference-boundary-check.mjs';
 import { checkMarkdownHTMLSourceBoundaries } from './fixtures/markdown-html-source-boundary-check.mjs';
+import { checkMarkdownNestedReferences } from './fixtures/markdown-nested-reference-check.mjs';
+import { checkMarkdownContainerReferences } from './fixtures/markdown-container-reference-check.mjs';
+import { checkMarkdownSourceProof } from './fixtures/markdown-source-proof-check.mjs';
 import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
@@ -306,6 +309,9 @@ console.log(`Built ESM root/core: ${checkMarkdownSourceBoundaries(esmCore)}/${ch
 console.log(`Built ESM root/core: ${checkMarkdownNestedSource(esmCore)}/${checkMarkdownNestedSource(esmHeadlessCore, esmCore.CoreSchemaSpec)} nested Markdown source contracts passed.`);
 console.log(`Built ESM root/core: ${checkMarkdownReferenceBoundaries(esmCore)}/${checkMarkdownReferenceBoundaries(esmHeadlessCore, esmCore.CoreSchemaSpec)} reference-scoped Markdown boundary contracts passed.`);
 console.log(`Built ESM root/core: ${checkMarkdownHTMLSourceBoundaries(esmCore)}/${checkMarkdownHTMLSourceBoundaries(esmHeadlessCore, esmCore.CoreSchemaSpec)} HTML-adapted Markdown source contracts passed.`);
+console.log(`Built ESM root/core: ${checkMarkdownNestedReferences(esmCore)}/${checkMarkdownNestedReferences(esmHeadlessCore, esmCore.CoreSchemaSpec)} nested reference source contracts passed.`);
+console.log(`Built ESM root/core: ${checkMarkdownContainerReferences(esmCore)}/${checkMarkdownContainerReferences(esmHeadlessCore, esmCore.CoreSchemaSpec)} container reference source contracts passed.`);
+console.log(`Built ESM root/core: ${checkMarkdownSourceProof(esmCore)}/${checkMarkdownSourceProof(esmHeadlessCore, esmCore.CoreSchemaSpec)} complete source proof contracts passed.`);
 assertExports(esmServerHTML, serverHTMLNames, 'ESM server HTML entry');
 const esmServerDocument = esmServerHTML.ServerHTMLImporter.parse('<h2>Pure Node</h2><p><strong>without jsdom</strong></p>', new esmCore.Schema(esmCore.CoreSchemaSpec));
 if (esmServerDocument.textContent !== 'Pure Nodewithout jsdom') throw new Error('ESM server HTML import failed.');
@@ -464,6 +470,9 @@ console.log(`Built CommonJS root/core: ${checkMarkdownSourceBoundaries(cjsCore)}
 console.log(`Built CommonJS root/core: ${checkMarkdownNestedSource(cjsCore)}/${checkMarkdownNestedSource(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} nested Markdown source contracts passed.`);
 console.log(`Built CommonJS root/core: ${checkMarkdownReferenceBoundaries(cjsCore)}/${checkMarkdownReferenceBoundaries(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} reference-scoped Markdown boundary contracts passed.`);
 console.log(`Built CommonJS root/core: ${checkMarkdownHTMLSourceBoundaries(cjsCore)}/${checkMarkdownHTMLSourceBoundaries(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} HTML-adapted Markdown source contracts passed.`);
+console.log(`Built CommonJS root/core: ${checkMarkdownNestedReferences(cjsCore)}/${checkMarkdownNestedReferences(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} nested reference source contracts passed.`);
+console.log(`Built CommonJS root/core: ${checkMarkdownContainerReferences(cjsCore)}/${checkMarkdownContainerReferences(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} container reference source contracts passed.`);
+console.log(`Built CommonJS root/core: ${checkMarkdownSourceProof(cjsCore)}/${checkMarkdownSourceProof(cjsHeadlessCore, cjsCore.CoreSchemaSpec)} complete source proof contracts passed.`);
 assertExports(cjsServerHTML, serverHTMLNames, 'CommonJS server HTML entry');
 const cjsServerDocument = cjsServerHTML.ServerHTMLImporter.parse('<p>CommonJS Node</p>', new cjsCore.Schema(cjsCore.CoreSchemaSpec));
 if (cjsServerDocument.textContent !== 'CommonJS Node') throw new Error('CommonJS server HTML import failed.');

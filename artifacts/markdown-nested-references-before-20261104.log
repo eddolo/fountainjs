@@ -1,0 +1,1112 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-nested-references.test.ts (41 tests | 40 failed) 105ms
+   ❯ nested source with shared reference definitions (41)
+     × retains tight bullet list source with before definitions ("\n") 23ms
+     × retains loose bullet list source with before definitions ("\n") 2ms
+     × retains nonsequential ordered list source with before definitions ("\n") 3ms
+     × retains quote source with before definitions ("\n") 4ms
+     × retains list in quote source with before definitions ("\n") 2ms
+     × retains quote in list source with before definitions ("\n") 2ms
+     × retains tight bullet list source with after definitions ("\n") 1ms
+     × retains loose bullet list source with after definitions ("\n") 1ms
+     × retains nonsequential ordered list source with after definitions ("\n") 1ms
+     × retains quote source with after definitions ("\n") 2ms
+     × retains list in quote source with after definitions ("\n") 1ms
+     × retains quote in list source with after definitions ("\n") 1ms
+     × retains tight bullet list source with before definitions ("\r\n") 6ms
+     × retains loose bullet list source with before definitions ("\r\n") 2ms
+     × retains nonsequential ordered list source with before definitions ("\r\n") 1ms
+     × retains quote source with before definitions ("\r\n") 1ms
+     × retains list in quote source with before definitions ("\r\n") 3ms
+     × retains quote in list source with before definitions ("\r\n") 3ms
+     × retains tight bullet list source with after definitions ("\r\n") 3ms
+     × retains loose bullet list source with after definitions ("\r\n") 1ms
+     × retains nonsequential ordered list source with after definitions ("\r\n") 1ms
+     × retains quote source with after definitions ("\r\n") 2ms
+     × retains list in quote source with after definitions ("\r\n") 1ms
+     × retains quote in list source with after definitions ("\r\n") 2ms
+     × retains tight bullet list source with before definitions ("\r") 3ms
+     × retains loose bullet list source with before definitions ("\r") 1ms
+     × retains nonsequential ordered list source with before definitions ("\r") 3ms
+     × retains quote source with before definitions ("\r") 3ms
+     × retains list in quote source with before definitions ("\r") 3ms
+     × retains quote in list source with before definitions ("\r") 2ms
+     × retains tight bullet list source with after definitions ("\r") 2ms
+     × retains loose bullet list source with after definitions ("\r") 1ms
+     × retains nonsequential ordered list source with after definitions ("\r") 1ms
+     × retains quote source with after definitions ("\r") 1ms
+     × retains list in quote source with after definitions ("\r") 2ms
+     × retains quote in list source with after definitions ("\r") 1ms
+     × retains checkboxes and duplicate definition precedence ("\n") 2ms
+     × retains checkboxes and duplicate definition precedence ("\r\n") 3ms
+     × retains checkboxes and duplicate definition precedence ("\r") 2ms
+     × does not let edited definition-like text change other reference destinations 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 40 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains tight bullet list source with before definitions ("\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\n\n* …' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+-
+- *   First __source__ [link][ref].
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+- *   Last _source_ [ref].
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains loose bullet list source with before definitions ("\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\n\n* …' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+-
+- *   First __source__ [link][ref].
+-
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+-
+- *   Last _source_ [ref].
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains nonsequential ordered list source with before definitions ("\n")
+AssertionError: expected '7. First **source** [link](/target "O…' to be '[ref]: /target "Original title"\n\n7)…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+-
+- 7) First __source__ [link][ref].
+-
+- 9) Changed.
++ 7. First **source** [link](/target "Original title").
++ 8. Changed.
+-
+- 11) Last _source_ [ref].
+-
++ 9. Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote source with before definitions ("\n")
+AssertionError: expected '> First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\n\n> …' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+-
+- > First __source__ [link][ref].
+- >
+-   > Changed.
++ > First **source** [link](/target "Original title").
++ > 
++ > Changed.
+- >
+-  > Last _source_ [ref].
+-
++ > 
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains list in quote source with before definitions ("\n")
+AssertionError: expected '> - First **source** [link](/target "…' to be '[ref]: /target "Original title"\n\n> …' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+-
+- > *   First __source__ [link][ref].
+- > *   Changed.
++ > - First **source** [link](/target "Original title").
++ > - Changed.
+- >
+-  > Last _source_ [ref].
+-
++ > 
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote in list source with before definitions ("\n")
+AssertionError: expected '- > First **source** [link](/target "…' to be '[ref]: /target "Original title"\n\n* …' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+-
+- *   > First __source__ [link][ref].
+-     >
+-     > Changed.
++ - > First **source** [link](/target "Original title").
++   > 
++   > Changed.
+-     >
+-     > Last _source_ [ref].
+-
++   > 
++   > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains tight bullet list source with after definitions ("\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '*   First __source__ [link][ref].\n* …' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__ [link][ref].
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+- *   Last _source_ [ref].
+-
+- [ref]: /target "Original title"
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains loose bullet list source with after definitions ("\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '*   First __source__ [link][ref].\n\n…' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__ [link][ref].
+-
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+-
+- *   Last _source_ [ref].
+-
+- [ref]: /target "Original title"
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains nonsequential ordered list source with after definitions ("\n")
+AssertionError: expected '7. First **source** [link](/target "O…' to be '7) First __source__ [link][ref].\n\n9…' // Object.is equality
+
+- Expected
++ Received
+
+- 7) First __source__ [link][ref].
+-
+- 9) Changed.
++ 7. First **source** [link](/target "Original title").
++ 8. Changed.
+-
+- 11) Last _source_ [ref].
+-
+- [ref]: /target "Original title"
+-
++ 9. Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote source with after definitions ("\n")
+AssertionError: expected '> First **source** [link](/target "Or…' to be '> First __source__ [link][ref].\n>\n …' // Object.is equality
+
+- Expected
++ Received
+
+- > First __source__ [link][ref].
+- >
+-   > Changed.
++ > First **source** [link](/target "Original title").
++ > 
++ > Changed.
+- >
+-  > Last _source_ [ref].
+-
+- [ref]: /target "Original title"
+-
++ > 
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains list in quote source with after definitions ("\n")
+AssertionError: expected '> - First **source** [link](/target "…' to be '> *   First __source__ [link][ref].\n…' // Object.is equality
+
+- Expected
++ Received
+
+- > *   First __source__ [link][ref].
++ > - First **source** [link](/target "Original title").
+- > *   Changed.
++ > - Changed.
+- >
+-  > Last _source_ [ref].
+-
+- [ref]: /target "Original title"
+-
++ > 
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote in list source with after definitions ("\n")
+AssertionError: expected '- > First **source** [link](/target "…' to be '*   > First __source__ [link][ref].\n…' // Object.is equality
+
+- Expected
++ Received
+
+- *   > First __source__ [link][ref].
+-     >
+-     > Changed.
++ - > First **source** [link](/target "Original title").
++   > 
++   > Changed.
+-     >
+-     > Last _source_ [ref].
+-
+- [ref]: /target "Original title"
+-
++   > 
++   > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains tight bullet list source with before definitions ("\r\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\r\n\r…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+- 
+- *   First __source__ [link][ref].
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+- *   Last _source_ [ref].
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains loose bullet list source with before definitions ("\r\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\r\n\r…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+- 
+- *   First __source__ [link][ref].
+- 
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+- 
+- *   Last _source_ [ref].
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains nonsequential ordered list source with before definitions ("\r\n")
+AssertionError: expected '7. First **source** [link](/target "O…' to be '[ref]: /target "Original title"\r\n\r…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+- 
+- 7) First __source__ [link][ref].
+- 
+- 9) Changed.
++ 7. First **source** [link](/target "Original title").
++ 8. Changed.
+- 
+- 11) Last _source_ [ref].
+-
++ 9. Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote source with before definitions ("\r\n")
+AssertionError: expected '> First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\r\n\r…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+- 
++ > First **source** [link](/target "Original title").
+- > First __source__ [link][ref].
+- >
+-   > Changed.
++ > 
++ > Changed.
+- >
++ > 
+-  > Last _source_ [ref].
+-
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains list in quote source with before definitions ("\r\n")
+AssertionError: expected '> - First **source** [link](/target "…' to be '[ref]: /target "Original title"\r\n\r…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+- 
+- > *   First __source__ [link][ref].
++ > - First **source** [link](/target "Original title").
+- > *   Changed.
++ > - Changed.
+- >
++ > 
+-  > Last _source_ [ref].
+-
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote in list source with before definitions ("\r\n")
+AssertionError: expected '- > First **source** [link](/target "…' to be '[ref]: /target "Original title"\r\n\r…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /target "Original title"
+- 
+- *   > First __source__ [link][ref].
++ - > First **source** [link](/target "Original title").
+-     >
+-     > Changed.
++   > 
++   > Changed.
+-     >
++   > 
+-     > Last _source_ [ref].
+-
++   > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains tight bullet list source with after definitions ("\r\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '*   First __source__ [link][ref].\r\n…' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__ [link][ref].
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+- *   Last _source_ [ref].
+- 
+- [ref]: /target "Original title"
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains loose bullet list source with after definitions ("\r\n")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '*   First __source__ [link][ref].\r\n…' // Object.is equality
+
+- Expected
++ Received
+
+- *   First __source__ [link][ref].
+- 
+- *   Changed.
++ - First **source** [link](/target "Original title").
++ - Changed.
+- 
+- *   Last _source_ [ref].
+- 
+- [ref]: /target "Original title"
+-
++ - Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains nonsequential ordered list source with after definitions ("\r\n")
+AssertionError: expected '7. First **source** [link](/target "O…' to be '7) First __source__ [link][ref].\r\n\…' // Object.is equality
+
+- Expected
++ Received
+
+- 7) First __source__ [link][ref].
+- 
+- 9) Changed.
++ 7. First **source** [link](/target "Original title").
++ 8. Changed.
+- 
+- 11) Last _source_ [ref].
+- 
+- [ref]: /target "Original title"
+-
++ 9. Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote source with after definitions ("\r\n")
+AssertionError: expected '> First **source** [link](/target "Or…' to be '> First __source__ [link][ref].\r\n>\…' // Object.is equality
+
+- Expected
++ Received
+
+- > First __source__ [link][ref].
++ > First **source** [link](/target "Original title").
+- >
++ > 
+-   > Changed.
++ > Changed.
+- >
++ > 
+-  > Last _source_ [ref].
+- 
+- [ref]: /target "Original title"
+-
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains list in quote source with after definitions ("\r\n")
+AssertionError: expected '> - First **source** [link](/target "…' to be '> *   First __source__ [link][ref].\r…' // Object.is equality
+
+- Expected
++ Received
+
+- > *   First __source__ [link][ref].
+- > *   Changed.
++ > - First **source** [link](/target "Original title").
++ > - Changed.
+- >
++ > 
+-  > Last _source_ [ref].
+- 
+- [ref]: /target "Original title"
+-
++ > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote in list source with after definitions ("\r\n")
+AssertionError: expected '- > First **source** [link](/target "…' to be '*   > First __source__ [link][ref].\r…' // Object.is equality
+
+- Expected
++ Received
+
+- *   > First __source__ [link][ref].
+-     >
+-     > Changed.
++ - > First **source** [link](/target "Original title").
++   > 
++   > Changed.
+-     >
+-     > Last _source_ [ref].
+- 
+- [ref]: /target "Original title"
+-
++   > 
++   > Last *source* [ref](/target "Original title").
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains tight bullet list source with before definitions ("\r")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\r\r* …' // Object.is equality
+
+Expected: "[ref]: /target "Original title"·
+*   First __source__ [link][ref].
+*   Changed.
+*   Last _source_ [ref].
+"
+Received: "- First **source** [link](/target "Original title").
+- Changed.
+- Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains loose bullet list source with before definitions ("\r")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\r\r* …' // Object.is equality
+
+Expected: "[ref]: /target "Original title"·
+*   First __source__ [link][ref].·
+*   Changed.·
+*   Last _source_ [ref].
+"
+Received: "- First **source** [link](/target "Original title").
+- Changed.
+- Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains nonsequential ordered list source with before definitions ("\r")
+AssertionError: expected '7. First **source** [link](/target "O…' to be '[ref]: /target "Original title"\r\r7)…' // Object.is equality
+
+Expected: "[ref]: /target "Original title"·
+7) First __source__ [link][ref].·
+9) Changed.·
+11) Last _source_ [ref].
+"
+Received: "7. First **source** [link](/target "Original title").
+8. Changed.
+9. Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote source with before definitions ("\r")
+AssertionError: expected '> First **source** [link](/target "Or…' to be '[ref]: /target "Original title"\r\r> …' // Object.is equality
+
+Expected: "[ref]: /target "Original title"·
+> First __source__ [link][ref].
+>
+  > Changed.
+>
+ > Last _source_ [ref].
+"
+Received: "> First **source** [link](/target "Original title").
+>·
+> Changed.
+>·
+> Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains list in quote source with before definitions ("\r")
+AssertionError: expected '> - First **source** [link](/target "…' to be '[ref]: /target "Original title"\r\r> …' // Object.is equality
+
+Expected: "[ref]: /target "Original title"·
+> *   First __source__ [link][ref].
+> *   Changed.
+>
+ > Last _source_ [ref].
+"
+Received: "> - First **source** [link](/target "Original title").
+> - Changed.
+>·
+> Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote in list source with before definitions ("\r")
+AssertionError: expected '- > First **source** [link](/target "…' to be '[ref]: /target "Original title"\r\r* …' // Object.is equality
+
+Expected: "[ref]: /target "Original title"·
+*   > First __source__ [link][ref].
+    >
+    > Changed.
+    >
+    > Last _source_ [ref].
+"
+Received: "- > First **source** [link](/target "Original title").
+  >·
+  > Changed.
+  >·
+  > Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains tight bullet list source with after definitions ("\r")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '*   First __source__ [link][ref].\r* …' // Object.is equality
+
+Expected: "*   First __source__ [link][ref].
+*   Changed.
+*   Last _source_ [ref].·
+[ref]: /target "Original title"
+"
+Received: "- First **source** [link](/target "Original title").
+- Changed.
+- Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains loose bullet list source with after definitions ("\r")
+AssertionError: expected '- First **source** [link](/target "Or…' to be '*   First __source__ [link][ref].\r\r…' // Object.is equality
+
+Expected: "*   First __source__ [link][ref].·
+*   Changed.·
+*   Last _source_ [ref].·
+[ref]: /target "Original title"
+"
+Received: "- First **source** [link](/target "Original title").
+- Changed.
+- Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains nonsequential ordered list source with after definitions ("\r")
+AssertionError: expected '7. First **source** [link](/target "O…' to be '7) First __source__ [link][ref].\r\r9…' // Object.is equality
+
+Expected: "7) First __source__ [link][ref].·
+9) Changed.·
+11) Last _source_ [ref].·
+[ref]: /target "Original title"
+"
+Received: "7. First **source** [link](/target "Original title").
+8. Changed.
+9. Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote source with after definitions ("\r")
+AssertionError: expected '> First **source** [link](/target "Or…' to be '> First __source__ [link][ref].\r>\r …' // Object.is equality
+
+Expected: "> First __source__ [link][ref].
+>
+  > Changed.
+>
+ > Last _source_ [ref].·
+[ref]: /target "Original title"
+"
+Received: "> First **source** [link](/target "Original title").
+>·
+> Changed.
+>·
+> Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains list in quote source with after definitions ("\r")
+AssertionError: expected '> - First **source** [link](/target "…' to be '> *   First __source__ [link][ref].\r…' // Object.is equality
+
+Expected: "> *   First __source__ [link][ref].
+> *   Changed.
+>
+ > Last _source_ [ref].·
+[ref]: /target "Original title"
+"
+Received: "> - First **source** [link](/target "Original title").
+> - Changed.
+>·
+> Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains quote in list source with after definitions ("\r")
+AssertionError: expected '- > First **source** [link](/target "…' to be '*   > First __source__ [link][ref].\r…' // Object.is equality
+
+Expected: "*   > First __source__ [link][ref].
+    >
+    > Changed.
+    >
+    > Last _source_ [ref].·
+[ref]: /target "Original title"
+"
+Received: "- > First **source** [link](/target "Original title").
+  >·
+  > Changed.
+  >·
+  > Last *source* [ref](/target "Original title")."
+
+ ❯ tests/markdown-nested-references.test.ts:26:31
+     24|       const changed = replace(imported.document, path, schema.node('pa…
+     25|       const result = MarkdownExporter.exportWithSource(changed, import…
+     26|       expect(result.markdown).toBe(source.replace('Edit.', 'Changed.')…
+       |                               ^
+     27|       expect(MarkdownImporter.parse(result.markdown, schema).toJSON())…
+     28|       expect(MarkdownExporter.exportWithSource(imported.document, impo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains checkboxes and duplicate definition precedence ("\n")
+AssertionError: expected '- [x] First **source** [link](/first …' to be '[ref]: /first "First"\n\n- [x] First …' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /first "First"
+-
+- - [x] First __source__ [link][ref].
++ - [x] First **source** [link](/first "First").
+- - [X] Last _source_ [ref].
+-
+- [ref]: /ignored "Ignored"
+-
++ - [x] Last *source* [ref](/first "First").
+
+ ❯ tests/markdown-nested-references.test.ts:38:29
+     36|     const checked = replace(imported.document, [0, 0], item.withAttrs(…
+     37|     const result = MarkdownExporter.exportWithSource(checked, imported…
+     38|     expect(result.markdown).toBe(source.replace('[ ]', '[x]'));
+       |                             ^
+     39|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     40|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains checkboxes and duplicate definition precedence ("\r\n")
+AssertionError: expected '- [x] First **source** [link](/first …' to be '[ref]: /first "First"\r\n\r\n- [x] Fi…' // Object.is equality
+
+- Expected
++ Received
+
+- [ref]: /first "First"
+- 
+- - [x] First __source__ [link][ref].
++ - [x] First **source** [link](/first "First").
+- - [X] Last _source_ [ref].
+- 
+- [ref]: /ignored "Ignored"
+-
++ - [x] Last *source* [ref](/first "First").
+
+ ❯ tests/markdown-nested-references.test.ts:38:29
+     36|     const checked = replace(imported.document, [0, 0], item.withAttrs(…
+     37|     const result = MarkdownExporter.exportWithSource(checked, imported…
+     38|     expect(result.markdown).toBe(source.replace('[ ]', '[x]'));
+       |                             ^
+     39|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     40|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > retains checkboxes and duplicate definition precedence ("\r")
+AssertionError: expected '- [x] First **source** [link](/first …' to be '[ref]: /first "First"\r\r- [x] First …' // Object.is equality
+
+Expected: "[ref]: /first "First"·
+- [x] First __source__ [link][ref].
+- [X] Last _source_ [ref].·
+[ref]: /ignored "Ignored"
+"
+Received: "- [x] First **source** [link](/first "First").
+- [x] Last *source* [ref](/first "First")."
+
+ ❯ tests/markdown-nested-references.test.ts:38:29
+     36|     const checked = replace(imported.document, [0, 0], item.withAttrs(…
+     37|     const result = MarkdownExporter.exportWithSource(checked, imported…
+     38|     expect(result.markdown).toBe(source.replace('[ ]', '[x]'));
+       |                             ^
+     39|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     40|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/40]⎯
+
+ FAIL  tests/markdown-nested-references.test.ts > nested source with shared reference definitions > does not let edited definition-like text change other reference destinations
+AssertionError: expected '> First [link](/original "Keep").\n> …' to contain '[ref]: /original "Keep"'
+
+- Expected
++ Received
+
+- [ref]: /original "Keep"
++ > First [link](/original "Keep").
++ > 
++ > \[ref\]: /evil "Changed"
+
+ ❯ tests/markdown-nested-references.test.ts:49:29
+     47|     const result = MarkdownExporter.exportWithSource(changed, imported…
+     48|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+     49|     expect(result.markdown).toContain('[ref]: /original "Keep"');
+       |                             ^
+     50|   });
+     51|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/40]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  40 failed | 1 passed (41)
+   Start at  19:39:54
+   Duration  3.78s (transform 51%, import 46%, tests 3%)
+

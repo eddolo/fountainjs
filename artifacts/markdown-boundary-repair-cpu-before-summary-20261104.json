@@ -1,0 +1,10 @@
+{
+  "method": "V8 sampled CPU time attributed through shipped source maps to nearest validation/capture ancestor; includes four exports and initial capture",
+  "milliseconds": {
+    "complete-document validation": 851.24,
+    "nested patch construction and validation": 847.93,
+    "other": 549.99,
+    "adjacent-block validation": 471.66,
+    "initial source capture": 178.46
+  }
+}

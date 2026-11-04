@@ -1,5 +1,186 @@
 # Markdown semantics and source fidelity
 
+## Block-kind boundary repair (2026-11-04, unreleased follow-up)
+
+Changing a captured child block's kind can remove the syntax that separated it
+from its neighbour: a heading followed immediately by text becomes two paragraphs
+that need a blank line. The affected sequence now runs its existing local
+boundary proof/repair before proposing the complete source candidate. Other
+sequences keep their original compact spelling. Complete-document equality with
+the captured parser policy is still mandatory; failed proposals retain the
+existing fallback. Native captures without a complete parser retain their local
+validation path. This adds no acceptance cache or parser dependency.
+
+All 3,888 units / 266 files pass. Three new parameterized tests cover nine quote,
+nested-quote and code-block kind/line-ending combinations. Public package and
+Worker checks also cover six ordered/bulleted list combinations. Types/API/
+headless, package/workerd, unchanged conformance and local latency/retention gates
+pass. Three recorded desktop journeys use the real Paragraph toolbar in Chromium,
+Firefox and WebKit, with nested demotion, undo/redo, native typing, complete-model
+checks and actual downloaded-file reopening. Eighteen CRLF exports reopen
+correctly; twelve captures and six sampled frames per recording were reviewed.
+
+The 1,000-paragraph kind-change repair probe improves from about 522 to 186 ms
+against the actual 979c670 archive, preserving the same source and model. The
+ordinary 5,000-paragraph text-edit probe measures about 366 / 364 ms; capture and
+small-sample timings vary, with no claimed improvement. These are five-sample
+throttled Windows serialization measurements, not keystroke or competitive
+benchmarks. This supersedes the earlier heading-to-paragraph repair regression;
+it does not remove every possible failed-draft cost.
+
+Root/core import closures add 47 raw bytes and 22/23 gzip bytes; React/DOCX stay
+unchanged. Existing individual entry/CSS caps pass; aggregate capacity acceptance
+and full current-head CI remain open. The next direct UI audit includes eager
+host serialization, such as `IssueEditor.tsx`'s `exportWithSource` memo on document
+changes. Export timing alone does not prove input responsiveness. Footnote,
+nested HTML-adapter and independent inline source ownership, broader CommonMark
+and release certification remain open. Evidence:
+`artifacts/markdown-boundary-repair-verification-20261104.json`.
+
+## Complete-result source proof (2026-11-04, unreleased follow-up)
+
+Snapshots with a private complete-document parser first propose source patches
+without repeating every fragment and adjacent-block parse. The complete candidate
+must still reparse to the exact intended Fountain node using the captured parser
+policy. Every different edit is checked; there is no cache accepting an unproven
+changed document. Captures without a complete parser keep their existing local
+validation path.
+
+If the draft fails, the existing nested-source and separator repair pipeline
+still runs. Generated reference definitions and speculative loss reports remain
+isolated until a result is accepted. A valid fallback definition footer is still
+required when a defining container is replaced. The real editor's automatic
+trailing caret paragraph remains part of complete-document equality.
+
+Loss observers are observational: an exception in `onLoss` cannot prevent an
+otherwise valid export. This now also holds when deferred reports are delivered
+from aligned or structurally mapped source exports. Returned loss reports remain
+available, and rejected drafts do not deliver duplicate callbacks.
+
+This changes verification cost rather than supported Markdown syntax. Footnote,
+nested HTML-adapter and independent inline source ownership, full CommonMark,
+aggregate capacity acceptance and release certification remain separate work.
+No public signature, parser dependency, conformance expectation or numerical
+acceptance limit changes.
+
+All 3,885 units / 266 files pass, including nine targeted proof/reporting tests.
+Types/API/headless, package/workerd, unchanged conformance, local latency and
+retained-memory checks pass. Six recorded desktop journeys cover the issue editor
+and conversion lab in Chromium, Firefox and WebKit. Thirty-six downloaded CRLF
+exports reopen correctly. Twenty-four captures and six sampled frames from each
+recording were reviewed. An initial WebKit actionability timeout before clicking
+the download button is retained; the separate repeat and all six final journeys
+pass without forced clicks or longer timeouts. Its root cause is not established.
+
+Against the actual preceding tarball, repeated preserving export of one edited
+paragraph in a 5,000-paragraph quote with 5,000 definitions falls from about
+1,568 to 348 ms; distinct edited inputs take 1,573 / 347 ms, and cold export
+1,922 / 666 ms. Both builds retain exact unrelated source and reopen completely.
+The fallback case remains important: changing a heading into a paragraph in a
+1,000-paragraph quote needs blank-line repair and takes about 359 / 492 ms.
+Failed drafts add work. These five-sample throttled Windows measurements are
+serialization costs, not keystroke or competitive benchmarks.
+
+Root/core static closures grow by about 1.04 KiB raw / 0.24 KiB gzip; React and
+DOCX are unchanged. Individual entry/CSS caps pass; the existing aggregate caps
+and full current-head CI remain open. Evidence:
+`artifacts/markdown-source-export-proof-verification-20261104.json`.
+
+## Container-carried shared definitions (2026-11-04, unreleased follow-up)
+
+Native list/quote source capture can now retain definitions physically written
+inside a container, while keeping their document-wide link meaning. The parser's
+own definition discovery supplies an unprefixed fallback footer in original
+discovery order. This is source data, not a foreign AST or an executable extension.
+Unrelated nested text edits and checkbox changes retain their literal source,
+including the original embedded definitions.
+
+These snapshots also validate the complete proposed document with the original
+parser policy. Checking each fragment against a frozen reference map alone cannot
+prove what a real reader sees after containers are reordered. Conflicting first
+definitions therefore cannot silently rebind distant links. Removing a defining
+container retains the captured definitions when needed for unchanged references;
+replacing it with another block can require the same repair even if root block
+count stays unchanged. A candidate with an appended footer is accepted only after
+complete Fountain-node equality. Otherwise canonical fallback and loss reports
+remain. Structural exports may remove container prefixes in the fallback footer;
+they do not promise identical spelling of the complete changed file.
+
+Materialized footnotes, nested HTML-adapter ownership, independent inline source
+ownership and broader CommonMark remain open. Existing source depth/ownership
+bounds remain. Native imports without these nonlocal scopes keep their local
+verification path. No schema, public API, runtime parser dependency or acceptance
+limit is added.
+
+All 3,876 units / 265 files pass, including 36 new cases and the focused 213-test
+set. One older fallback expectation was updated to require exact source retention
+while preserving its complete-model equality assertion; the initial failing run
+and final full pass are retained. The API review confirms only documentation
+changed in two declaration files; signatures are identical and all 419 declaration
+hashes are checked. Types/headless, package/workerd, unchanged conformance and
+latency/memory checks pass.
+
+Recorded Chromium/Firefox/WebKit journeys edit quote/list text, remove a quote
+using the toolbar, undo it, export and upload the actual unwrapped draft, and
+operate task checkboxes. Twenty-four actual CRLF exports reopen completely.
+Twelve captures and six video samples per engine were inspected. The first browser
+attempt exposed an incorrectly indented task sample; its failed records are
+retained, and the corrected sample asserts a linked paragraph before interacting.
+
+The complete-result proof costs about 1,425 ms for repeated export of a throttled
+5,000-paragraph quote with 5,000 embedded definitions, versus 31 ms for the parent's
+canonical rewrite. Capture is about 953 / 803 ms. Root/core closures grow about
+1.11 KiB raw / 0.28 KiB gzip; React/DOCX stay unchanged. This additional fidelity
+work is not a speed advantage. Schedule expensive serialization deliberately.
+The two aggregate size ceilings and full current-head CI remain open; individual
+entry/CSS caps pass. No acceptance limits or conformance scores changed. Evidence:
+`artifacts/markdown-container-references-verification-20261104.json`.
+
+## Nested root-reference source (2026-11-04, unreleased follow-up)
+
+Native Markdown source capture now carries the original root reference map into
+lazy list/quote ownership. Editing one item, quoted paragraph or task checkbox
+can retain unrelated reference labels, emphasis delimiters, nonsequential list
+markers, quote prefixes and LF/CRLF/CR spelling. Definitions before or after
+the container retain their original first-definition precedence and titles.
+The original immutable source snapshot remains reusable after repeated edits.
+
+Parser-derived root spans also capture loose lists and adjacent blocks in these
+scopes. Root definitions are owned only as trivia outside the captured content
+regions. If a loose list consumes blank placeholders left by reference extraction,
+the trailing region is released only after reparsing proves the complete same
+Fountain node. Boundary/footer checks still validate structural edits and moved
+open fences against the original shared scope. A generated definition cannot
+claim original separator ownership merely by using a familiar label.
+
+Every proposed nested replacement must reparse to the complete intended node,
+including attributes and marks. New reference-style generation, ambiguous source
+mapping, unsupported layout or changes to container structure retain canonical
+fallback and loss reporting. Containers that themselves carry shared definitions,
+footnote materialization, independent inline ownership and nested HTML-adapter
+ownership remain open. Source capture retains its existing depth/ownership bounds;
+reaching them does not limit ordinary parsing. No foreign AST, new runtime parser
+dependency, schema change or public API is introduced.
+
+All 3,840 units / 264 files pass, including the focused 177-test set and 53 new
+cases. Recorded Chromium/Firefox/WebKit conversion-lab journeys use native typing,
+undo/redo and task checkboxes. Eighteen actual exports retain exact CRLF source
+and reopen to the complete intended model; an actual downloaded draft is uploaded
+again in each engine. Twelve editor captures and six video samples per engine
+were inspected. Types/API/headless, package, real workerd, unchanged conformance,
+latency and retained-memory checks pass. The initial bundle-diagnostic invocation
+used the wrong directory; its corrected invocation and failed log are retained.
+
+The throttled 5,000-item/reference probe retains the untouched loose-list source
+at a repeated-export median of about 181 ms versus 34 ms for the parent's canonical
+rewrite. Capture costs about 1,363 versus 993 ms. Root/core static closures grow
+about 1.44 KiB raw / 0.37 KiB gzip; React/DOCX closures remain unchanged. These
+are serialization/capture measurements, not typing-speed claims. Full current-head
+CI and the two aggregate size ceilings remain open; individual entry/CSS ceilings
+pass. No acceptance limits or conformance scores changed. See [measured costs](BUILD_SIZE.md).
+Verification details: `artifacts/markdown-nested-references-verification-20261104.json`.
+This is not full CommonMark conformance or a release claim.
+
 ## HTML-adapted source boundaries (2026-11-04, unreleased follow-up)
 
 Registering `parseHTMLBlock`, `parseHTMLInline`, `parseHTMLParagraph` or

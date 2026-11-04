@@ -1,0 +1,445 @@
+{
+  "branch": "feat/markdown-nested-reference-source-20261104",
+  "parentRuntimeCommit": "126e4463dfb22b597ab6468fc0754457854da8ef",
+  "runtimeSourceSHA256": {
+    "src/core/importers/markdown-importer.ts": "8e5d00ae7a6ae412d1f432f4f5795f94dcb00f88ed4850b3eff643983607a359",
+    "src/core/markdown-nested-source.ts": "4d8a324aaaf943e5e1a5377bd6e0e0e6f6d9a6341414099ba9b2c40a794ca18a",
+    "src/core/markdown-source-boundary.ts": "58cf9af1e3287860e88d65f7211b5f67d27da78cb06faeb687ab0e9b053dcfbd",
+    "src/core/exporters/markdown-exporter.ts": "b56f696ce92a7f94b2d634a54a0709c40bbaf0584382a8e3bcf76ca6751a334c"
+  },
+  "builtSourceMapMatchesCurrentRuntimeSources": true,
+  "unitTests": 3876,
+  "unitFiles": 265,
+  "newCases": 36,
+  "initialUnitFailure": "One old canonical-only expectation; updated to require exact source while keeping complete model equality, then full suite rerun.",
+  "apiDocumentationReview": {
+    "publicSignaturesChanged": false,
+    "commentsOnly": true,
+    "comparison": "Exact equality after removing block comments only",
+    "files": [
+      {
+        "path": "dist/core/importers/markdown-importer.d.ts",
+        "beforeSHA256": "95028d6bc6192a7e80077691c3c386a907ddcd663748bcf60cdaa103a6670942",
+        "afterSHA256": "4acccea89becf02438439780d9f1142d7ecb5940b43c71f6e0081dcb402dcca1",
+        "nonCommentDeclarationEqual": true
+      },
+      {
+        "path": "dist/core/importers/markdown-importer.d.cts",
+        "beforeSHA256": "7daa08500fe4b805aa28b910c98931dacc135de2b8444bce5ebf4a67253ea989",
+        "afterSHA256": "26400e5ca0ea01c0a5d53626cc835a4459731112d65165ef961b026560be95eb",
+        "nonCommentDeclarationEqual": true
+      }
+    ]
+  },
+  "initialBrowserFailure": {
+    "reason": "Wrongly indented task sample became code; corrected to a linked paragraph and asserted before interaction.",
+    "input": "artifacts/markdown-container-references-wrong-fixture-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/tasks-original.md",
+    "sha256": "0131d74423697dd55b474804c1674052499b7039008190f92cf7b35a04a9f2f4"
+  },
+  "recordedDesktopJourneys": 3,
+  "downloadedMarkdownFiles": 24,
+  "inputMarkdownFiles": 6,
+  "visualReview": {
+    "editorCaptures": 12,
+    "sampledFramesPerRecording": 6,
+    "fullFrameByFramePlayback": false
+  },
+  "browserFiles": [
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/item-edited.md",
+      "kind": "download",
+      "bytes": 326,
+      "sha256": "9a13a27d5819050ee3541c697af96fdcbc56ce2d4f3b4f05edb95cd50355789a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/original.md",
+      "kind": "input",
+      "bytes": 322,
+      "sha256": "834459e2325b7aa44ed22bddc136d6ee28e7d08efbfd7638765c4a9a27d69710"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/quote-edited.md",
+      "kind": "download",
+      "bytes": 330,
+      "sha256": "719d9b74b7dc7e34d6b0ca45da7aeb2e2076ae1b544159a4db87b4dff6b6f50a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/quote-restored.md",
+      "kind": "download",
+      "bytes": 330,
+      "sha256": "719d9b74b7dc7e34d6b0ca45da7aeb2e2076ae1b544159a4db87b4dff6b6f50a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/quote-unwrapped.md",
+      "kind": "download",
+      "bytes": 360,
+      "sha256": "032fda12c53d22a5f54598ac9f0ce84448fbbf259e778f83d777cf902d8ff7fb"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/redone.md",
+      "kind": "download",
+      "bytes": 326,
+      "sha256": "9a13a27d5819050ee3541c697af96fdcbc56ce2d4f3b4f05edb95cd50355789a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/task-checked.md",
+      "kind": "download",
+      "bytes": 172,
+      "sha256": "c85abd3a9e9071c6413ee3ddc93e17128487cd94dc18b490b3002d2999d58b6b"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/task-cleared.md",
+      "kind": "download",
+      "bytes": 172,
+      "sha256": "28b4c4fabe3be8c88dceca01f309650a10fd4ddfd37699252adf9a21cd2ae5ae"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/tasks-original.md",
+      "kind": "input",
+      "bytes": 172,
+      "sha256": "28b4c4fabe3be8c88dceca01f309650a10fd4ddfd37699252adf9a21cd2ae5ae"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-chromium/container-reference-journey/undone.md",
+      "kind": "download",
+      "bytes": 322,
+      "sha256": "834459e2325b7aa44ed22bddc136d6ee28e7d08efbfd7638765c4a9a27d69710"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/item-edited.md",
+      "kind": "download",
+      "bytes": 326,
+      "sha256": "9a13a27d5819050ee3541c697af96fdcbc56ce2d4f3b4f05edb95cd50355789a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/original.md",
+      "kind": "input",
+      "bytes": 322,
+      "sha256": "834459e2325b7aa44ed22bddc136d6ee28e7d08efbfd7638765c4a9a27d69710"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/quote-edited.md",
+      "kind": "download",
+      "bytes": 330,
+      "sha256": "719d9b74b7dc7e34d6b0ca45da7aeb2e2076ae1b544159a4db87b4dff6b6f50a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/quote-restored.md",
+      "kind": "download",
+      "bytes": 330,
+      "sha256": "719d9b74b7dc7e34d6b0ca45da7aeb2e2076ae1b544159a4db87b4dff6b6f50a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/quote-unwrapped.md",
+      "kind": "download",
+      "bytes": 360,
+      "sha256": "032fda12c53d22a5f54598ac9f0ce84448fbbf259e778f83d777cf902d8ff7fb"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/redone.md",
+      "kind": "download",
+      "bytes": 326,
+      "sha256": "9a13a27d5819050ee3541c697af96fdcbc56ce2d4f3b4f05edb95cd50355789a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/task-checked.md",
+      "kind": "download",
+      "bytes": 172,
+      "sha256": "c85abd3a9e9071c6413ee3ddc93e17128487cd94dc18b490b3002d2999d58b6b"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/task-cleared.md",
+      "kind": "download",
+      "bytes": 172,
+      "sha256": "28b4c4fabe3be8c88dceca01f309650a10fd4ddfd37699252adf9a21cd2ae5ae"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/tasks-original.md",
+      "kind": "input",
+      "bytes": 172,
+      "sha256": "28b4c4fabe3be8c88dceca01f309650a10fd4ddfd37699252adf9a21cd2ae5ae"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-firefox/container-reference-journey/undone.md",
+      "kind": "download",
+      "bytes": 322,
+      "sha256": "834459e2325b7aa44ed22bddc136d6ee28e7d08efbfd7638765c4a9a27d69710"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/item-edited.md",
+      "kind": "download",
+      "bytes": 326,
+      "sha256": "9a13a27d5819050ee3541c697af96fdcbc56ce2d4f3b4f05edb95cd50355789a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/original.md",
+      "kind": "input",
+      "bytes": 322,
+      "sha256": "834459e2325b7aa44ed22bddc136d6ee28e7d08efbfd7638765c4a9a27d69710"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/quote-edited.md",
+      "kind": "download",
+      "bytes": 330,
+      "sha256": "719d9b74b7dc7e34d6b0ca45da7aeb2e2076ae1b544159a4db87b4dff6b6f50a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/quote-restored.md",
+      "kind": "download",
+      "bytes": 330,
+      "sha256": "719d9b74b7dc7e34d6b0ca45da7aeb2e2076ae1b544159a4db87b4dff6b6f50a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/quote-unwrapped.md",
+      "kind": "download",
+      "bytes": 360,
+      "sha256": "032fda12c53d22a5f54598ac9f0ce84448fbbf259e778f83d777cf902d8ff7fb"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/redone.md",
+      "kind": "download",
+      "bytes": 326,
+      "sha256": "9a13a27d5819050ee3541c697af96fdcbc56ce2d4f3b4f05edb95cd50355789a"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/task-checked.md",
+      "kind": "download",
+      "bytes": 172,
+      "sha256": "c85abd3a9e9071c6413ee3ddc93e17128487cd94dc18b490b3002d2999d58b6b"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/task-cleared.md",
+      "kind": "download",
+      "bytes": 172,
+      "sha256": "28b4c4fabe3be8c88dceca01f309650a10fd4ddfd37699252adf9a21cd2ae5ae"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/tasks-original.md",
+      "kind": "input",
+      "bytes": 172,
+      "sha256": "28b4c4fabe3be8c88dceca01f309650a10fd4ddfd37699252adf9a21cd2ae5ae"
+    },
+    {
+      "path": "artifacts/markdown-container-references-browser-20261104/markdown-container-referen-52ff9--removal-undo-and-downloads-webkit/container-reference-journey/undone.md",
+      "kind": "download",
+      "bytes": 322,
+      "sha256": "834459e2325b7aa44ed22bddc136d6ee28e7d08efbfd7638765c4a9a27d69710"
+    }
+  ],
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 144,
+    "noFakeDOM": true,
+    "results": [
+      36,
+      36,
+      36,
+      36
+    ]
+  },
+  "tarballSHA256": "6e0e2e1e30b0b6141163827a2a426faba6d68b0adb21e9bafb71c742efd2be24",
+  "actualParentSourceRetentionCounterfactual": {
+    "baseline": "actual PR #13 tarball",
+    "baselineTarballSHA256": "e684488c040777acae594d62af33b8ec012cc13aa847b7f4475edbbc57b1c09b",
+    "baselineFirstFailure": "Container-carried definitions caused unrelated source rewriting.",
+    "baselineStopsAtFirstFailure": true,
+    "currentChecks": 36,
+    "scope": "Source spelling retention; not a claim that the baseline lost visible document content"
+  },
+  "realWorkerdContracts": 36,
+  "publicDeclarationFiles": 419,
+  "headlessSourceModules": 122,
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "localLatencyAndRetentionAcceptance": "passed without changed limits",
+  "sizeAcceptance": {
+    "changedLimits": false,
+    "failures": [
+      "all ESM runtime code exceeds its budget by 15.9 KiB",
+      "all CommonJS runtime code exceeds its budget by 12.0 KiB"
+    ],
+    "individualEntriesAndCSS": "passed"
+  },
+  "sourceExportPerformance": {
+    "baseline": "actual PR #13 tarball",
+    "samples": 5,
+    "hardLimitsChanged": false,
+    "scope": "Source-preserving serialization of one edited quoted paragraph with container-carried global definitions; not keystroke latency",
+    "records": [
+      {
+        "count": 100,
+        "referenceCount": 100,
+        "inputCodeUnits": 7083,
+        "before": {
+          "firstEditExportMs": 4.919199999999989,
+          "retainedUnrelatedSource": false,
+          "capture": {
+            "medianMs": 25.667700000000025,
+            "samplesMs": [
+              32.37039999999996,
+              26.132100000000037,
+              25.667700000000025,
+              23.867800000000045,
+              20.485400000000027
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 1.1435999999999922,
+            "samplesMs": [
+              2.0067999999999984,
+              1.1435999999999922,
+              0.6677999999999997,
+              1.5400999999999954,
+              0.6313999999999851
+            ]
+          }
+        },
+        "after": {
+          "firstEditExportMs": 64.59200000000004,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 19.342499999999973,
+            "samplesMs": [
+              18.301600000000008,
+              18.757900000000063,
+              19.342499999999973,
+              20.320699999999988,
+              23.18360000000007
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 33.85379999999998,
+            "samplesMs": [
+              33.85379999999998,
+              28.03869999999995,
+              27.740099999999984,
+              34.94290000000001,
+              34.02620000000002
+            ]
+          }
+        }
+      },
+      {
+        "count": 1000,
+        "referenceCount": 1000,
+        "inputCodeUnits": 74583,
+        "before": {
+          "firstEditExportMs": 9.189000000000078,
+          "retainedUnrelatedSource": false,
+          "capture": {
+            "medianMs": 159.7641000000001,
+            "samplesMs": [
+              161.62419999999997,
+              162.32729999999992,
+              159.7641000000001,
+              148.92669999999998,
+              151.73350000000005
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 6.44360000000006,
+            "samplesMs": [
+              6.811400000000049,
+              5.921599999999671,
+              6.837500000000091,
+              6.44360000000006,
+              5.9232999999999265
+            ]
+          }
+        },
+        "after": {
+          "firstEditExportMs": 356.90300000000025,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 188.0577999999996,
+            "samplesMs": [
+              197.04899999999998,
+              188.0577999999996,
+              188.55429999999978,
+              184.41190000000006,
+              187.3397
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 277.3855000000003,
+            "samplesMs": [
+              274.1953999999996,
+              277.3855000000003,
+              275.4907000000003,
+              303.40940000000046,
+              283.5646999999999
+            ]
+          }
+        }
+      },
+      {
+        "count": 5000,
+        "referenceCount": 5000,
+        "inputCodeUnits": 390583,
+        "before": {
+          "firstEditExportMs": 30.565999999999804,
+          "retainedUnrelatedSource": false,
+          "capture": {
+            "medianMs": 802.5519000000004,
+            "samplesMs": [
+              777.6239999999998,
+              832.5108000000009,
+              817.5370000000003,
+              802.5519000000004,
+              761.0403999999999
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 31.473500000000058,
+            "samplesMs": [
+              30.462800000001153,
+              28.191500000000815,
+              31.473500000000058,
+              42.45789999999943,
+              35.723799999999756
+            ]
+          }
+        },
+        "after": {
+          "firstEditExportMs": 1756.1809000000012,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 952.7415000000019,
+            "samplesMs": [
+              952.7415000000019,
+              935.416500000003,
+              1013.3123999999989,
+              966.9734000000026,
+              930.0509999999995
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 1425.4350999999988,
+            "samplesMs": [
+              1425.4350999999988,
+              1470.5057000000015,
+              1470.135299999998,
+              1409.071,
+              1410.5115000000005
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "remainingScope": [
+    "footnote source ownership",
+    "nested HTML-adapter ownership",
+    "inline source ownership",
+    "large source-export optimization",
+    "full CommonMark",
+    "fresh full CI",
+    "aggregate size review"
+  ],
+  "fullParityOrPublicationCertified": false
+}

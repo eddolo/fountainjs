@@ -7,6 +7,32 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Repair Markdown boundaries in affected sequences before proposing complete
+  source after a child block changes kind. Avoid the repeated rejected-draft
+  path for supported heading/code-to-paragraph conversions; retain unaffected
+  compact source, complete-document proof and existing fallback. Add permanent
+  three-engine toolbar/history/download coverage and ordered/bulleted package/
+  Worker cases. Public signatures, syntax scores and numerical limits stay the
+  same; broader failed-draft and host input responsiveness work remains open.
+
+- Reduce redundant parsing during source-preserving Markdown export when a
+  captured complete-document parser can prove the proposed result. Retain exact
+  Fountain-node equality, original-policy validation and the existing repair
+  fallback; do not cache acceptance of different edited documents. Contain loss
+  observer errors consistently on aligned and structurally mapped source paths,
+  and deliver only accepted conversion reports. Syntax coverage and release
+  certification are unchanged.
+
+- Preserve supported Markdown source with local HTML adapters and shared link
+  definitions, including nested list/quote/task edits. Validate nonlocal source
+  projections against the complete Fountain document. Retain external links
+  when a defining container is moved, removed, replaced or unwrapped by keeping
+  a proven fallback definition footer. Clarify that the existing
+  `MarkdownSourceSnapshot.referenceDefinitions` property can include definitions
+  recovered from containers; its TypeScript signature is unchanged. Materialized
+  footnote, nested HTML-adapter and independent inline source ownership remain
+  open. No CommonMark-score or release-certification promotion.
+
 - Validate source-preserving Markdown boundaries with the original link-reference
   context, including the appended definition footer. Close unsafe moved/terminal
   fences instead of allowing them to consume document content. Retain original

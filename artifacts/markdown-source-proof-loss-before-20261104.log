@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-source-export-proof.test.ts (7 tests | 1 failed) 62ms
+   ❯ complete-document proof before accepting source drafts (7)
+     × contains observational loss-callback errors after accepting a fully proven HTML projection 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-source-export-proof.test.ts > complete-document proof before accepting source drafts > contains observational loss-callback errors after accepting a fully proven HTML projection
+Error: Observer failed
+ ❯ Object.onLoss tests/markdown-source-export-proof.test.ts:91:105
+     89|     const captured = MarkdownImporter.parseWithSource('<section><p>Edi…
+     90|     const document = replace(captured.document, [0, 0], schema.node('p…
+     91|     const result = MarkdownExporter.exportWithSource(document, capture…
+       |                                                                                                         ^
+     92|     expect(result.preservation).toBe('blocks');
+     93|     expect(result.losses.length).toBeGreaterThan(0);
+ ❯ src/core/exporters/markdown-exporter.ts:791:56
+ ❯ MarkdownExporter.exportWithSource src/core/exporters/markdown-exporter.ts:791:32
+ ❯ MarkdownExporter.exportWithSource src/core/exporters/markdown-exporter.ts:924:35
+ ❯ tests/markdown-source-export-proof.test.ts:91:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  20:54:03
+   Duration  3.25s (transform 50%, import 48%, tests 2%)
+

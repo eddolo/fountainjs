@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/markdown-reference-source.test.ts (18 tests | 1 failed) 341ms
+   ❯ reference-definition source provenance (18)
+     × uses canonical only for proven definition boundaries: Edit.
+
+> [ref]: ./nested.md
+
+An [example][ref]. 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/markdown-reference-source.test.ts > reference-definition source provenance > uses canonical only for proven definition boundaries: Edit.
+
+> [ref]: ./nested.md
+
+An [example][ref].
+AssertionError: expected 'blocks' to be 'canonical' // Object.is equality
+
+Expected: "canonical"
+Received: "blocks"
+
+ ❯ tests/markdown-reference-source.test.ts:166:33
+    164|     const changed = schema.node('doc', {}, [schema.node('paragraph', {…
+    165|     const result = MarkdownExporter.exportWithSource(changed, imported…
+    166|     expect(result.preservation).toBe(preservation);
+       |                                 ^
+    167|     if (preservation === 'blocks') expect(result.markdown).toBe(source…
+    168|     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 264 passed (265)
+      Tests  1 failed | 3875 passed (3876)
+   Start at  20:15:27
+   Duration  228.73s (environment 48%, import 27%, tests 20%, transform 5%, worker 1%)
+
+     Import  650 modules were evaluated 1248 times · 51.10s total, 27% of tracked time
+             ~24.49s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

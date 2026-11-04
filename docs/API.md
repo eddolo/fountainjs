@@ -2083,9 +2083,11 @@ source, options?)` then returns `{ markdown, losses, preservation }`:
 identity-first mapping. Equal originals can retain distinct source spellings
 when their immutable node references survive deletion or movement; duplicated
 references and reconstructed ambiguous equals return `null`, so source is never
-assigned by guesswork. Block capture deliberately fails closed for ambiguous
-blank-line ownership and cross-block references; changed reference-style links
-also require canonical document-level definitions. Capture is bounded to
+assigned by guesswork. Native nested list/quote capture can share captured root
+reference definitions and preserve unrelated item/paragraph source. Container-carried
+definitions require complete-result parsing and may produce an unprefixed definition
+footer after structural edits. Materialized footnotes and ambiguous ownership fail closed; new
+reference-style generation requires canonical document-level definitions. Capture is bounded to
 10,000 top-level source regions. Unknown syntax inside a changed or unmatched
 block is not claimed to survive. Reparse raw edits to create a new source
 snapshot. See

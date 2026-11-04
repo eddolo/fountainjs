@@ -34,6 +34,9 @@ import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries
 import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
 import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boundaries-journey';
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
+import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
+import { runMarkdownContainerReferenceJourney } from './markdown-container-reference-journey';
+import { runMarkdownBoundaryRepairJourney } from './markdown-boundary-repair-journey';
 import { mathReferenceSamples } from '../../examples/react-app/src/math-reference-samples';
 import { academicTableValues } from '../../examples/react-app/src/academic-table-sample';
 import { mathReorderJourney } from './math-reorder-journey';
@@ -6099,6 +6102,14 @@ test('reopens source-preserved issue drafts with the real HTML table adapter ena
   await runIssueHTMLSourceJourney(page, info);
 });
 
+test('preserves nested reference Markdown through real list quote and task editing', async ({ page }, info) => {
+  await runMarkdownNestedReferenceJourney(page, info);
+});
+
+test('preserves container definitions while editing and unwrapping a referenced quote', async ({ page }, info) => {
+  await runMarkdownContainerReferenceJourney(page, info);
+});
+
 test('records native DOCX viewer disagreements without certifying math fidelity', async ({ page }, info) => {
   const { docxMathJourney } = await import('./docx-math-journey');
   await docxMathJourney(page, info);
@@ -7632,4 +7643,8 @@ test('shows specific discarded HTML and rejected URL losses in both conversion s
   await expect(htmlNotes).toContainText('Images with missing or unsafe');
   await expect(htmlNotes).not.toContainText('private');
   await expect(output.locator('pre')).toHaveText('<p>Notice label end</p>');
+});
+
+test('repairs source after native nested heading-to-paragraph changes', async ({ page }, info) => {
+  await runMarkdownBoundaryRepairJourney(page, info);
 });

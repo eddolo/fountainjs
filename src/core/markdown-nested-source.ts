@@ -71,7 +71,7 @@ function lineAt(lines: readonly MarkdownSourceLineView[], offset: number): Markd
 }
 
 function edits(capture: MarkdownNestedCapture, current: Node, canonical: Canonical,
-  path: readonly number[], checkbox = false): MarkdownSourceEdit[] | null {
+  path: readonly number[], checkbox = false, validate = true): MarkdownSourceEdit[] | null {
   const record = resolve(capture);
   if (!record) return null;
   const ownsCheckbox = record.kind === 'view' && record.checkbox !== undefined;
@@ -80,15 +80,21 @@ function edits(capture: MarkdownNestedCapture, current: Node, canonical: Canonic
   if (record.kind === 'sequence') {
     if (current.childCount !== record.children.length) return null;
     const result: MarkdownSourceEdit[] = [];
+    let checkBoundary = validate;
     for (const [index, child] of record.children.entries()) {
       const value = current.child(index);
       if (child.node.eq(value)) continue;
-      const nested = child.capture ? edits(child.capture, value, canonical, [...path, index]) : null;
+      const nested = child.capture ? edits(child.capture, value, canonical, [...path, index], false, validate) : null;
       if (nested !== null) result.push(...nested.map(edit => ({ ...edit, from: child.from + edit.from, to: child.from + edit.to })));
-      else if (child.canonical) result.push({ from: child.from, to: child.to, text: canonical(value, [...path, index]) });
+      else if (child.canonical) {
+        // A different block kind can remove a delimiter separating neighbours.
+        // Repair only this affected sequence before proposing a complete draft.
+        checkBoundary ||= child.node.type.name !== value.type.name;
+        result.push({ from: child.from, to: child.to, text: canonical(value, [...path, index]) });
+      }
       else return null;
     }
-    if (record.parse) {
+    if (checkBoundary && record.parse) {
       const matches = (changes: readonly MarkdownSourceEdit[]): boolean => {
         const candidate = apply(record.source, changes);
         if (candidate === null) return false;
@@ -109,7 +115,7 @@ function edits(capture: MarkdownNestedCapture, current: Node, canonical: Canonic
     }
     return result;
   }
-  const inner = edits(record.body, current, canonical, path, checkbox || ownsCheckbox);
+  const inner = edits(record.body, current, canonical, path, checkbox || ownsCheckbox, validate);
   if (!inner) return null;
   const result: MarkdownSourceEdit[] = [];
   for (const edit of inner) {
@@ -136,15 +142,26 @@ function apply(source: string, changes: readonly MarkdownSourceEdit[]): string |
   return result.join('');
 }
 
-export function renderMarkdownNestedSource(block: MarkdownSourceBlockSnapshot, current: Node, canonical: Canonical): string | null {
+function renderNestedSource(block: MarkdownSourceBlockSnapshot, current: Node, canonical: Canonical, validate: boolean): string | null {
   const captured = captures.get(block);
   if (!captured) return null;
   try {
-    const changes = edits(captured.capture, current, canonical, []);
+    const changes = edits(captured.capture, current, canonical, [], false, validate);
     if (!changes?.length) return null;
     const source = apply(block.source, changes);
     if (source === null) return null;
+    if (!validate) return source;
     const parsed = captured.parse(source);
     return parsed.length === 1 && parsed[0].eq(current) ? source : null;
   } catch { return null; }
+}
+
+export function renderMarkdownNestedSource(block: MarkdownSourceBlockSnapshot, current: Node, canonical: Canonical): string | null {
+  return renderNestedSource(block, current, canonical, true);
+}
+
+/** Unproven source for a complete-document parser check. This must never be
+ * accepted through the local-boundary path without that complete proof. */
+export function draftMarkdownNestedSource(block: MarkdownSourceBlockSnapshot, current: Node, canonical: Canonical): string | null {
+  return renderNestedSource(block, current, canonical, false);
 }

@@ -1,0 +1,18 @@
+[WebServer] (node:7104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:16676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (7.0s)
+(node:17836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (8.7s)
+(node:24688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads (12.9s)
+
+  3 passed (38.0s)

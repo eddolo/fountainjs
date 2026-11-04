@@ -1,0 +1,167 @@
+{
+  "baseline": "actual PR #13 tarball",
+  "samples": 5,
+  "hardLimitsChanged": false,
+  "scope": "Source-preserving serialization of one edited quoted paragraph with container-carried global definitions; not keystroke latency",
+  "records": [
+    {
+      "count": 100,
+      "referenceCount": 100,
+      "inputCodeUnits": 7083,
+      "before": {
+        "firstEditExportMs": 4.919199999999989,
+        "retainedUnrelatedSource": false,
+        "capture": {
+          "medianMs": 25.667700000000025,
+          "samplesMs": [
+            32.37039999999996,
+            26.132100000000037,
+            25.667700000000025,
+            23.867800000000045,
+            20.485400000000027
+          ]
+        },
+        "repeatedExport": {
+          "medianMs": 1.1435999999999922,
+          "samplesMs": [
+            2.0067999999999984,
+            1.1435999999999922,
+            0.6677999999999997,
+            1.5400999999999954,
+            0.6313999999999851
+          ]
+        }
+      },
+      "after": {
+        "firstEditExportMs": 64.59200000000004,
+        "retainedUnrelatedSource": true,
+        "capture": {
+          "medianMs": 19.342499999999973,
+          "samplesMs": [
+            18.301600000000008,
+            18.757900000000063,
+            19.342499999999973,
+            20.320699999999988,
+            23.18360000000007
+          ]
+        },
+        "repeatedExport": {
+          "medianMs": 33.85379999999998,
+          "samplesMs": [
+            33.85379999999998,
+            28.03869999999995,
+            27.740099999999984,
+            34.94290000000001,
+            34.02620000000002
+          ]
+        }
+      }
+    },
+    {
+      "count": 1000,
+      "referenceCount": 1000,
+      "inputCodeUnits": 74583,
+      "before": {
+        "firstEditExportMs": 9.189000000000078,
+        "retainedUnrelatedSource": false,
+        "capture": {
+          "medianMs": 159.7641000000001,
+          "samplesMs": [
+            161.62419999999997,
+            162.32729999999992,
+            159.7641000000001,
+            148.92669999999998,
+            151.73350000000005
+          ]
+        },
+        "repeatedExport": {
+          "medianMs": 6.44360000000006,
+          "samplesMs": [
+            6.811400000000049,
+            5.921599999999671,
+            6.837500000000091,
+            6.44360000000006,
+            5.9232999999999265
+          ]
+        }
+      },
+      "after": {
+        "firstEditExportMs": 356.90300000000025,
+        "retainedUnrelatedSource": true,
+        "capture": {
+          "medianMs": 188.0577999999996,
+          "samplesMs": [
+            197.04899999999998,
+            188.0577999999996,
+            188.55429999999978,
+            184.41190000000006,
+            187.3397
+          ]
+        },
+        "repeatedExport": {
+          "medianMs": 277.3855000000003,
+          "samplesMs": [
+            274.1953999999996,
+            277.3855000000003,
+            275.4907000000003,
+            303.40940000000046,
+            283.5646999999999
+          ]
+        }
+      }
+    },
+    {
+      "count": 5000,
+      "referenceCount": 5000,
+      "inputCodeUnits": 390583,
+      "before": {
+        "firstEditExportMs": 30.565999999999804,
+        "retainedUnrelatedSource": false,
+        "capture": {
+          "medianMs": 802.5519000000004,
+          "samplesMs": [
+            777.6239999999998,
+            832.5108000000009,
+            817.5370000000003,
+            802.5519000000004,
+            761.0403999999999
+          ]
+        },
+        "repeatedExport": {
+          "medianMs": 31.473500000000058,
+          "samplesMs": [
+            30.462800000001153,
+            28.191500000000815,
+            31.473500000000058,
+            42.45789999999943,
+            35.723799999999756
+          ]
+        }
+      },
+      "after": {
+        "firstEditExportMs": 1756.1809000000012,
+        "retainedUnrelatedSource": true,
+        "capture": {
+          "medianMs": 952.7415000000019,
+          "samplesMs": [
+            952.7415000000019,
+            935.416500000003,
+            1013.3123999999989,
+            966.9734000000026,
+            930.0509999999995
+          ]
+        },
+        "repeatedExport": {
+          "medianMs": 1425.4350999999988,
+          "samplesMs": [
+            1425.4350999999988,
+            1470.5057000000015,
+            1470.135299999998,
+            1409.071,
+            1410.5115000000005
+          ]
+        }
+      }
+    }
+  ]
+}

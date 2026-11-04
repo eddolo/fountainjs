@@ -1,0 +1,51 @@
+{
+  "runtimeSourceCommit": "a9db185340912ed8ad6cc8527a7c90b47faa10d9",
+  "fullReportSHA256": "17d337837ff72760b55e74bf37eca319e8d2f45a0807f2bd3f472e71149b380b",
+  "command": "node scripts/check-markdown-conformance.mjs --complete-source-report=artifacts/commonmark-complete-model-gaps-20261104.json",
+  "bodyMatches": 635,
+  "bodyTotal": 652,
+  "safeExactModelMatches": 1298,
+  "safeExactModelTotal": 1304,
+  "sourceModelStatuses": {
+    "equal-except-source-tokens": 1292,
+    "different": 12
+  },
+  "safeDifferentExamples": [
+    148,
+    187,
+    494
+  ],
+  "sourceDifferentExamples": [
+    148,
+    156,
+    157,
+    158,
+    187,
+    494
+  ],
+  "diagnosticRecords": 12,
+  "acceptanceLimitsOrScoresChanged": false,
+  "runtimeChanged": false,
+  "findings": [
+    {
+      "examples": [
+        148,
+        187,
+        494
+      ],
+      "category": "Adjacent text leaves combine; characters, marks and attributes agree under the explicitly weaker diagnostic projection.",
+      "exactNativeModelRetention": false,
+      "nextAction": "Decide whether native text-leaf boundaries need a separate carrier; do not report this as lost visible content or relax node/JSON equality."
+    },
+    {
+      "examples": [
+        156,
+        157,
+        158
+      ],
+      "category": "Source export generates the default HTML5 declaration; the EOF-aware document importer records it as root htmlSourceEnvelope metadata.",
+      "exactNativeModelRetention": false,
+      "nextAction": "Review an explicit origin/provenance contract before changing generated or authored declaration handling; preserve exact authored spelling and quirks mode."
+    }
+  ]
+}

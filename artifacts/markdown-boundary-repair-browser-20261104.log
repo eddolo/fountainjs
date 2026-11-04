@@ -1,0 +1,18 @@
+[WebServer] (node:13596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:17732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\markdown-boundary-repair-real.spec.ts:4:1 › repairs source after native nested heading-to-paragraph changes (5.4s)
+(node:9332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\markdown-boundary-repair-real.spec.ts:4:1 › repairs source after native nested heading-to-paragraph changes (8.4s)
+(node:10668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\markdown-boundary-repair-real.spec.ts:4:1 › repairs source after native nested heading-to-paragraph changes (11.0s)
+
+  3 passed (33.3s)

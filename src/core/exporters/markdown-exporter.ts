@@ -5,8 +5,8 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceSeparator } from '../markdown-source-boundary';
-import { hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
+import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator } from '../markdown-source-boundary';
+import { draftMarkdownNestedSource, hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
 export type MarkdownLinkStyle = 'inline' | 'reference';
@@ -115,7 +115,11 @@ function report(
 ): void {
   const loss = Object.freeze({ kind, type, path: Object.freeze([...path]), detail });
   context.losses.push(loss);
-  try { context.options.onLoss?.(loss); }
+  notifyLoss(context.options, loss);
+}
+
+function notifyLoss(options: MarkdownExportOptions, loss: MarkdownExportLoss): void {
+  try { options.onLoss?.(loss); }
   catch { /* Reporting cannot make otherwise valid serialization fail. */ }
 }
 
@@ -515,6 +519,18 @@ function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): st
   return `${frontmatter}${separator}${body}`;
 }
 
+function tailSourceSeparator(separator: string, lineEnding: MarkdownLineEnding): string {
+  let cursor = separator.length, endings = 0;
+  while (cursor > 0) {
+    const character = separator[--cursor];
+    if (character === ' ' || character === '\t') continue;
+    if (character === '\n') { if (separator[cursor - 1] === '\r') cursor--; endings++; }
+    else if (character === '\r') endings++;
+    else break;
+  }
+  return separator + lineEnding.repeat(Math.max(0, 2 - endings));
+}
+
 function renderBlockSequence(nodes: readonly Node[], context: RenderContext, path: readonly number[], depth = 0): string {
   let alternate = false;
   return nodes.map((node, index) => {
@@ -735,30 +751,52 @@ export class MarkdownExporter {
 
     if (!structureChanged && node.type.name === 'doc'
       && source.blocks.length === owned.content.length && source.blocks.length > 0) {
-      const context: RenderContext = { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
-      reportNodeAttributes(node, context, []);
-      let preservedBlocks = 0;
-      const renderedBlocks = owned.content.map((block, index) => {
-        const captured = source.blocks[index];
-        const unchanged = captured.matches(block);
-        let rendered: string;
-        if (unchanged) {
-          preservedBlocks += 1;
-          rendered = captured.source;
-        } else {
-          let staged: RenderContext | undefined;
-          const nested = context.references.size ? null : renderMarkdownNestedSource(captured, block, (child, path) => {
-            staged ??= { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
-            return withLineEnding(render(child, staged, [index, ...path]).trimEnd(), source.lineEnding);
-          });
-          if (nested !== null && !staged?.references.size) {
-            preservedBlocks++;
-            rendered = nested;
-            context.losses.push(...staged?.losses ?? []);
-          } else rendered = withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
+      const renderAligned = (draft: boolean) => {
+        const context: RenderContext = { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
+        reportNodeAttributes(node, context, []);
+        let preservedBlocks = 0;
+        const renderedBlocks = owned.content.map((block, index) => {
+          const captured = source.blocks[index];
+          const unchanged = captured.matches(block);
+          let rendered: string;
+          if (unchanged) {
+            preservedBlocks += 1;
+            rendered = captured.source;
+          } else {
+            let staged: RenderContext | undefined;
+            const nested = context.references.size ? null : (draft ? draftMarkdownNestedSource : renderMarkdownNestedSource)(captured, block, (child, path) => {
+              staged ??= { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
+              return withLineEnding(render(child, staged, [index, ...path]).trimEnd(), source.lineEnding);
+            });
+            if (nested !== null && !staged?.references.size) {
+              preservedBlocks++;
+              rendered = nested;
+              context.losses.push(...staged?.losses ?? []);
+            } else rendered = withLineEnding(render(block, context, [index]).trimEnd(), source.lineEnding);
+          }
+          return { rendered, unchanged };
+        });
+        return { context, preservedBlocks, renderedBlocks };
+      };
+      // A complete-parser proof subsumes the repeated fragment/pair checks for
+      // a valid draft. Failed proposals still run the existing repair pipeline.
+      // Captures without a complete parser must never use this acceptance path.
+      if (hasMarkdownSourceProjection(source)) {
+        const draft = renderAligned(true);
+        let body = source.leading + draft.renderedBlocks.map((block, index) => block.rendered + source.blocks[index].separatorAfter).join('');
+        if (automaticTail) {
+          const tail = withLineEnding(render(node.content.at(-1)!, draft.context, [owned.childCount]).trimEnd(), source.lineEnding);
+          const originalSeparator = source.blocks.at(-1)!.separatorAfter;
+          body += tailSourceSeparator(originalSeparator, source.lineEnding).slice(originalSeparator.length) + tail;
         }
-        return { rendered, unchanged };
-      });
+        const markdown = draft.preservedBlocks > 0 && draft.context.references.size === 0
+          ? markdownSourceProjectionWithReferences(source, withSourceFrontmatter(source, body), node) : null;
+        if (markdown !== null) {
+          draft.context.losses.forEach(loss => notifyLoss(options, loss));
+          return Object.freeze({ markdown, losses: Object.freeze([...draft.context.losses]), preservation: 'blocks' as const });
+        }
+      }
+      const { context, preservedBlocks, renderedBlocks } = renderAligned(false);
       let boundariesValid = true;
       let body = source.leading + renderedBlocks.map((block, index) => {
         const captured = source.blocks[index];
@@ -773,25 +811,17 @@ export class MarkdownExporter {
         const tail = withLineEnding(render(node.content.at(-1)!, context, [owned.childCount]).trimEnd(), source.lineEnding);
         const captured = source.blocks.at(-1)!;
         const originalSeparator = captured.separatorAfter;
-        let cursor = originalSeparator.length, endings = 0;
-        while (cursor > 0) {
-          const character = originalSeparator[--cursor];
-          if (character === ' ' || character === '\t') continue;
-          if (character === '\n') { if (originalSeparator[cursor - 1] === '\r') cursor--; endings++; }
-          else if (character === '\r') endings++;
-          else break;
-        }
-        const proposed = originalSeparator + source.lineEnding.repeat(Math.max(0, 2 - endings));
+        const proposed = tailSourceSeparator(originalSeparator, source.lineEnding);
         const separator = markdownSourceSeparator(captured, null, renderedBlocks.at(-1)!.rendered, tail, proposed);
         if (separator === null) boundariesValid = false;
         else body = body.slice(0, body.length - originalSeparator.length) + separator + tail;
       }
       // Reference-style output needs a new document-level definition section;
       // fall back rather than risk colliding with source-owned definitions.
-      const markdown = withSourceFrontmatter(source, body);
-      if (boundariesValid && preservedBlocks > 0 && context.references.size === 0
-        && markdownSourceProjectionMatches(source, markdown, node)) {
-        context.losses.forEach(loss => options.onLoss?.(loss));
+      const markdown = boundariesValid && preservedBlocks > 0 && context.references.size === 0
+        ? markdownSourceProjectionWithReferences(source, withSourceFrontmatter(source, body), node) : null;
+      if (markdown !== null) {
+        context.losses.forEach(loss => notifyLoss(options, loss));
         return Object.freeze({
           markdown,
           losses: Object.freeze([...context.losses]),
@@ -865,7 +895,7 @@ export class MarkdownExporter {
         if (source.referenceDefinitions) body += `${source.lineEnding}${source.lineEnding}${source.referenceDefinitions}`;
         const markdown = withSourceFrontmatter(source, body);
         if (markdownSourceProjectionMatches(source, markdown, node)) {
-          context.losses.forEach(loss => options.onLoss?.(loss));
+          context.losses.forEach(loss => notifyLoss(options, loss));
           return Object.freeze({ markdown, losses: Object.freeze([...context.losses]), preservation: 'mapped-blocks' as const });
         }
       }

@@ -99,3 +99,99 @@ proposal remains separate and unapplied. See
 `artifacts/html-source-loaded-build-size-review-20261104.json`,
 `artifacts/markdown-html-source-performance-review-20261104.json` and both
 `artifacts/markdown-html-source-latency*-20261104.json` reports.
+
+## Nested root-reference source checkpoint, 2026-11-04
+
+Sharing captured root reference scope and owning parser spans for loose lists
+adds about 1.44 KiB raw / 0.37 KiB gzip to root/core closures. Root is now
+736.1 KiB raw / 227.5 KiB gzip; core is 395.5 / 132.7 KiB. React and DOCX closures
+are unchanged. Existing individual entry/CSS caps pass; aggregate raw inventory
+exceeds its unchanged ESM / CommonJS ceilings by about 14.8 / 11.1 KiB.
+
+In a throttled Windows five-sample probe, repeated export after one item edit in
+a 100 / 1,000 / 5,000-item loose list with the same number of root references
+takes about 5.8 / 32 / 181 ms. The actual preceding tarball takes about
+1.1 / 7.0 / 34 ms while rewriting the unrelated source. Source capture takes
+about 28 / 260 / 1,363 ms versus 18 / 200 / 993 ms. Complete model reopening is
+checked for both; exact untouched spelling is gained only by the new path.
+This is additional fidelity work, not a speed advantage. Normal editor latency,
+growth and retained-memory checks pass without changed limits.
+
+The first closure diagnostic incorrectly used `dist` as its package root and
+failed before producing a measurement. The corrected invocation uses `.`; both
+logs remain. See `artifacts/nested-reference-loaded-build-size-review-20261104.json`
+and `artifacts/markdown-nested-references-performance-review-20261104.json`.
+
+## Container-reference source checkpoint, 2026-11-04
+
+Keeping container-carried definitions and proving complete-result semantics adds
+about 1.11 KiB raw / 0.28 KiB gzip to root/core closures. Root is now 737.2 KiB
+raw / 227.8 KiB gzip; core is 396.6 / 133.0 KiB. React/DOCX closures stay unchanged.
+Existing individual entry/CSS ceilings pass. The two aggregate ceilings remain
+unchanged and fail by about 15.9 KiB ESM / 12.0 KiB CommonJS.
+
+For a quote containing 100 / 1,000 / 5,000 paragraphs and the same number of
+embedded reference definitions, repeated preserving export takes about
+34 / 277 / 1,425 ms versus 1.1 / 6.4 / 31 ms for the actual parent's canonical
+rewrite. Capture takes 19 / 188 / 953 ms versus 26 / 160 / 803 ms. These are
+five-sample medians on a throttled Windows machine; both paths reopen to the
+complete intended model, while only the new path retains untouched source.
+Full-result verification is synchronous serialization work and should be kept
+off a large document's per-keystroke path. Existing general editor latency and
+retained-memory limits pass without changes. No competitive speed claim follows.
+
+See `artifacts/container-reference-loaded-build-size-review-20261104.json` and
+`artifacts/markdown-container-references-performance-review-20261104.json`.
+
+## Complete-result proof checkpoint, 2026-11-04
+
+Avoiding redundant fragment checks when complete-result validation succeeds adds
+about 1.04 KiB raw / 0.24 KiB gzip to root/core closures. Root is 738.2 / 228.1 KiB
+raw/gzip; core is 397.6 / 133.3 KiB. React and DOCX closures stay unchanged. These
+static closures exclude external peers/dynamic imports and do not apply consumer
+tree shaking. All individual entries and CSS pass. Aggregate ESM is 1,708.2 KiB
+and CommonJS 1,421.5 KiB; their unchanged ceilings fail by 16.9 / 12.8 KiB.
+The separate capacity proposal remains unapplied.
+
+The actual a658e30 archive already retains the same source. In a throttled
+Windows five-sample probe, repeated preserving export of a quote with 100 /
+1,000 / 5,000 paragraphs and matching embedded definitions falls from about
+31 / 303 / 1,568 ms to 11 / 70 / 348 ms. Distinct edited 5,000-paragraph inputs
+fall from 1,573 to 347 ms, and cold export from 1,922 to 666 ms. Complete-result
+parsing still runs on every proposed edit. Capture is about 1,052 / 1,021 ms
+for 5,000 paragraphs; this optimization targets export, not capture.
+
+This is not a universal speedup: a 1,000-paragraph heading-to-paragraph edit
+requiring boundary repair rises from about 359 to 492 ms because the rejected
+draft adds verification before the original repair path. Both versions retain
+the required blank-line repair and complete model. Keep large synchronous
+serialization off the per-keystroke path. General editor latency/growth and
+retained-memory gates pass without changed limits. Sampled CPU profiles show
+the repeated nested and pair-validation work removed from the successful path;
+profile samples include initial capture and are not ordinary wall-clock timings.
+
+See `artifacts/markdown-source-export-proof-performance-review-20261104.json`,
+`artifacts/source-proof-loaded-build-size-review-20261104.json`, and the before/
+after CPU summaries. Earlier pre-observer-fix timings and the failing observer
+regression are retained. This measurement does not certify a release or parity.
+
+## Block-kind repair checkpoint, 2026-11-04
+
+Check/repair a changed child block's sequence before the complete draft proof.
+This adds 47 raw bytes to root/core static closures, and 22/23 gzip bytes. Root
+is 738.3 KiB raw / 228.1 KiB gzip; core is 397.7 / 133.3 KiB. React/DOCX remain
+unchanged. Individual entries and CSS pass; aggregate ceilings are unchanged and
+fail by about 17.0 KiB ESM / 12.8 KiB CommonJS. No capacity proposal was applied.
+
+Against the actual 979c670 archive, the 1,000-paragraph heading-to-paragraph repair
+probe improves from 521.7 to 186.2 ms, keeping exact source outside the necessary
+separator repair and complete model equality. A 5,000-paragraph ordinary text edit
+measures 366.2 / 364.1 ms; no general capture or small-sample improvement is
+claimed. These are five-sample throttled Windows serialization timings. Existing
+editor latency/growth and retained-memory gates pass unchanged; no full input-
+responsiveness claim follows. Host scheduling of complete export remains a
+separate audit, beginning with the issue workflow's eager export memo.
+
+See `artifacts/markdown-boundary-repair-performance-review-20261104.json`,
+`artifacts/boundary-repair-loaded-build-size-review-20261104.json` and the sampled
+CPU profiles/summaries. Before/after archives retain the same supported source.

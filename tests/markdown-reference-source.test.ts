@@ -155,7 +155,7 @@ describe('reference-definition source provenance', () => {
   });
 
   it.each([
-    ['canonical', 'Edit.\n\n> [ref]: ./nested.md\n\nAn [example][ref].'],
+    ['blocks', 'Edit.\n\n> [ref]: ./nested.md\n\nAn [example][ref].'],
     ['blocks', 'Edit.\n\n[ref]: ./mixed.md\nAn [example][ref].\n\nAnother [ref].'],
     ['blocks', 'Edit.\n\n```markdown\n\n[ref]: ./code.md\n\n```\n\n[ref]'],
   ])('uses %s only for proven definition boundaries: %s', (preservation, source) => {

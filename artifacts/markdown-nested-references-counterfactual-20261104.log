@@ -1,0 +1,1 @@
+{"baseline":"actual PR #12 tarball","baselineTarballSHA256":"14d81117fcb590ba0fd2cd7edfa7dcc4ebb65efd04f05a687b337498002ab7c5","baselineFirstFailure":"Reference-scoped nested edit rewrote unrelated source.","baselineStopsAtFirstFailure":true,"currentChecks":42,"scope":"Source spelling retention; not a claim that the baseline lost visible document content"}

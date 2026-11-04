@@ -1,0 +1,390 @@
+{
+  "branch": "feat/markdown-nested-reference-source-20261104",
+  "parentAuditCommit": "c78121b",
+  "parentRuntimeCommit": "a9db185340912ed8ad6cc8527a7c90b47faa10d9",
+  "runtimeSourceSHA256": {
+    "src/core/importers/markdown-importer.ts": "0539b0dc7f9f5768fc5b5c056c04bd969c69ed341535a47ab849dc1250509936",
+    "src/core/markdown-nested-source.ts": "4d8a324aaaf943e5e1a5377bd6e0e0e6f6d9a6341414099ba9b2c40a794ca18a",
+    "src/core/markdown-source-boundary.ts": "002b39e34c1695a0ed869493d7606397ea14b151f09f8e9c8a156156a130c452",
+    "src/core/exporters/markdown-exporter.ts": "a7f71cb9002b5f1764520872eaad2392dc70c328418d805d26e2d2124fccbd9d"
+  },
+  "builtSourceMapMatchesCurrentRuntimeSources": true,
+  "unitTests": 3840,
+  "unitFiles": 264,
+  "newCases": 53,
+  "recordedDesktopJourneys": 3,
+  "downloadedMarkdownFiles": 18,
+  "inputMarkdownFiles": 6,
+  "visualReview": {
+    "editorCaptures": 12,
+    "sampledFramesPerRecording": 6,
+    "fullFrameByFramePlayback": false
+  },
+  "browserFiles": [
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/item-edited.md",
+      "kind": "download",
+      "bytes": 256,
+      "sha256": "468033b0fb9f4b446d0e00d6fd41cbbfaf97e3d8bd91822dbfbe93e578c67cc0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/original.md",
+      "kind": "input",
+      "bytes": 252,
+      "sha256": "6c900c1d9ba2700580f3fbad9c13eeba6c1a68e2fba5b9f0b65bfc875a9d5c96"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/quote-edited.md",
+      "kind": "download",
+      "bytes": 260,
+      "sha256": "5d07ec0069c560a3cda7d89a7511140f7e600cabd6bc84428ff8200747600226"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/redone.md",
+      "kind": "download",
+      "bytes": 256,
+      "sha256": "468033b0fb9f4b446d0e00d6fd41cbbfaf97e3d8bd91822dbfbe93e578c67cc0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/task-checked.md",
+      "kind": "download",
+      "bytes": 137,
+      "sha256": "5a33c91ed8e79c39f9c2021e97e9d480e52a68d3f27c8e789d207cf2a73a024d"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/task-cleared.md",
+      "kind": "download",
+      "bytes": 137,
+      "sha256": "ca97e289f32c93aeda10a276568b79e59c22b66ce6394a43b858ded3660e71c0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/tasks-original.md",
+      "kind": "input",
+      "bytes": 137,
+      "sha256": "ca97e289f32c93aeda10a276568b79e59c22b66ce6394a43b858ded3660e71c0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-chromium/nested-reference-journey/undone.md",
+      "kind": "download",
+      "bytes": 252,
+      "sha256": "6c900c1d9ba2700580f3fbad9c13eeba6c1a68e2fba5b9f0b65bfc875a9d5c96"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/item-edited.md",
+      "kind": "download",
+      "bytes": 256,
+      "sha256": "468033b0fb9f4b446d0e00d6fd41cbbfaf97e3d8bd91822dbfbe93e578c67cc0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/original.md",
+      "kind": "input",
+      "bytes": 252,
+      "sha256": "6c900c1d9ba2700580f3fbad9c13eeba6c1a68e2fba5b9f0b65bfc875a9d5c96"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/quote-edited.md",
+      "kind": "download",
+      "bytes": 260,
+      "sha256": "5d07ec0069c560a3cda7d89a7511140f7e600cabd6bc84428ff8200747600226"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/redone.md",
+      "kind": "download",
+      "bytes": 256,
+      "sha256": "468033b0fb9f4b446d0e00d6fd41cbbfaf97e3d8bd91822dbfbe93e578c67cc0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/task-checked.md",
+      "kind": "download",
+      "bytes": 137,
+      "sha256": "5a33c91ed8e79c39f9c2021e97e9d480e52a68d3f27c8e789d207cf2a73a024d"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/task-cleared.md",
+      "kind": "download",
+      "bytes": 137,
+      "sha256": "ca97e289f32c93aeda10a276568b79e59c22b66ce6394a43b858ded3660e71c0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/tasks-original.md",
+      "kind": "input",
+      "bytes": 137,
+      "sha256": "ca97e289f32c93aeda10a276568b79e59c22b66ce6394a43b858ded3660e71c0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-firefox/nested-reference-journey/undone.md",
+      "kind": "download",
+      "bytes": 252,
+      "sha256": "6c900c1d9ba2700580f3fbad9c13eeba6c1a68e2fba5b9f0b65bfc875a9d5c96"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/item-edited.md",
+      "kind": "download",
+      "bytes": 256,
+      "sha256": "468033b0fb9f4b446d0e00d6fd41cbbfaf97e3d8bd91822dbfbe93e578c67cc0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/original.md",
+      "kind": "input",
+      "bytes": 252,
+      "sha256": "6c900c1d9ba2700580f3fbad9c13eeba6c1a68e2fba5b9f0b65bfc875a9d5c96"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/quote-edited.md",
+      "kind": "download",
+      "bytes": 260,
+      "sha256": "5d07ec0069c560a3cda7d89a7511140f7e600cabd6bc84428ff8200747600226"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/redone.md",
+      "kind": "download",
+      "bytes": 256,
+      "sha256": "468033b0fb9f4b446d0e00d6fd41cbbfaf97e3d8bd91822dbfbe93e578c67cc0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/task-checked.md",
+      "kind": "download",
+      "bytes": 137,
+      "sha256": "5a33c91ed8e79c39f9c2021e97e9d480e52a68d3f27c8e789d207cf2a73a024d"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/task-cleared.md",
+      "kind": "download",
+      "bytes": 137,
+      "sha256": "ca97e289f32c93aeda10a276568b79e59c22b66ce6394a43b858ded3660e71c0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/tasks-original.md",
+      "kind": "input",
+      "bytes": 137,
+      "sha256": "ca97e289f32c93aeda10a276568b79e59c22b66ce6394a43b858ded3660e71c0"
+    },
+    {
+      "path": "artifacts/markdown-nested-references-browser-20261104/markdown-nested-reference--7caba-ctual-editing-and-downloads-webkit/nested-reference-journey/undone.md",
+      "kind": "download",
+      "bytes": 252,
+      "sha256": "6c900c1d9ba2700580f3fbad9c13eeba6c1a68e2fba5b9f0b65bfc875a9d5c96"
+    }
+  ],
+  "packedConsumer": {
+    "actualTarball": true,
+    "entries": 4,
+    "checks": 168,
+    "noFakeDOM": true,
+    "results": [
+      42,
+      42,
+      42,
+      42
+    ]
+  },
+  "tarballSHA256": "e684488c040777acae594d62af33b8ec012cc13aa847b7f4475edbbc57b1c09b",
+  "actualParentSourceRetentionCounterfactual": {
+    "baseline": "actual PR #12 tarball",
+    "baselineTarballSHA256": "14d81117fcb590ba0fd2cd7edfa7dcc4ebb65efd04f05a687b337498002ab7c5",
+    "baselineFirstFailure": "Reference-scoped nested edit rewrote unrelated source.",
+    "baselineStopsAtFirstFailure": true,
+    "currentChecks": 42,
+    "scope": "Source spelling retention; not a claim that the baseline lost visible document content"
+  },
+  "realWorkerdContracts": 42,
+  "publicDeclarationFiles": 419,
+  "headlessSourceModules": 122,
+  "conformance": {
+    "default": 563,
+    "explicitCompleteBody": 635,
+    "denominator": 652,
+    "scoresChanged": false
+  },
+  "localLatencyAndRetentionAcceptance": "passed without changed limits",
+  "diagnosticInvocationCorrection": {
+    "initialError": "dist passed as package root",
+    "correctedPackageRoot": ".",
+    "correctedLog": "artifacts/markdown-nested-references-loaded-size-corrected-20261104.log"
+  },
+  "sizeAcceptance": {
+    "changedLimits": false,
+    "failures": [
+      "all ESM runtime code exceeds its budget by 14.8 KiB",
+      "all CommonJS runtime code exceeds its budget by 11.1 KiB"
+    ],
+    "individualEntriesAndCSS": "passed"
+  },
+  "sourceExportPerformance": {
+    "baseline": "actual PR #12 tarball",
+    "samples": 5,
+    "hardLimitsChanged": false,
+    "scope": "Source-preserving serialization of one edited item in a loose list with shared references; not keystroke latency",
+    "records": [
+      {
+        "count": 100,
+        "referenceCount": 100,
+        "inputCodeUnits": 6960,
+        "before": {
+          "firstEditExportMs": 5.680099999999982,
+          "retainedUnrelatedSource": false,
+          "capture": {
+            "medianMs": 17.948200000000043,
+            "samplesMs": [
+              34.24380000000002,
+              16.3476,
+              29.134500000000003,
+              17.948200000000043,
+              16.52120000000002
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 1.108000000000004,
+            "samplesMs": [
+              1.946799999999996,
+              1.108000000000004,
+              0.7461999999999875,
+              1.495299999999986,
+              0.9214999999999804
+            ]
+          }
+        },
+        "after": {
+          "firstEditExportMs": 17.45040000000006,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 27.531399999999962,
+            "samplesMs": [
+              29.223700000000008,
+              21.670200000000023,
+              27.531399999999962,
+              29.29359999999997,
+              23.31630000000007
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 5.8315000000000055,
+            "samplesMs": [
+              8.988699999999994,
+              5.8315000000000055,
+              5.687900000000013,
+              5.967300000000023,
+              5.234699999999975
+            ]
+          }
+        }
+      },
+      {
+        "count": 1000,
+        "referenceCount": 1000,
+        "inputCodeUnits": 73560,
+        "before": {
+          "firstEditExportMs": 20.03769999999986,
+          "retainedUnrelatedSource": false,
+          "capture": {
+            "medianMs": 200.20730000000003,
+            "samplesMs": [
+              209.2745,
+              200.20730000000003,
+              181.1703,
+              204.14009999999985,
+              198.25689999999986
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 6.954499999999825,
+            "samplesMs": [
+              6.954499999999825,
+              6.744199999999637,
+              11.468900000000303,
+              7.3805999999999585,
+              5.9505999999996675
+            ]
+          }
+        },
+        "after": {
+          "firstEditExportMs": 47.44970000000012,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 259.66730000000007,
+            "samplesMs": [
+              240.52660000000014,
+              259.66730000000007,
+              252.94650000000001,
+              285.0118000000002,
+              310.1742999999997
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 32.13330000000042,
+            "samplesMs": [
+              32.13330000000042,
+              56.10439999999926,
+              40.58459999999923,
+              29.991800000000694,
+              29.100499999999556
+            ]
+          }
+        }
+      },
+      {
+        "count": 5000,
+        "referenceCount": 5000,
+        "inputCodeUnits": 385560,
+        "before": {
+          "firstEditExportMs": 34.04539999999997,
+          "retainedUnrelatedSource": false,
+          "capture": {
+            "medianMs": 993.0332000000008,
+            "samplesMs": [
+              1027.1693999999998,
+              993.0332000000008,
+              991.8079999999991,
+              981.4667000000009,
+              1016.2087999999985
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 33.94969999999921,
+            "samplesMs": [
+              38.87039999999979,
+              35.30090000000018,
+              33.94969999999921,
+              33.209899999999834,
+              29.317299999998795
+            ]
+          }
+        },
+        "after": {
+          "firstEditExportMs": 219.8713000000007,
+          "retainedUnrelatedSource": true,
+          "capture": {
+            "medianMs": 1363.3454999999994,
+            "samplesMs": [
+              1363.3454999999994,
+              1561.6441999999988,
+              1345.6653000000006,
+              1372.1614000000009,
+              1350.4163999999982
+            ]
+          },
+          "repeatedExport": {
+            "medianMs": 180.938900000001,
+            "samplesMs": [
+              193.5076999999983,
+              180.938900000001,
+              175.1237000000001,
+              178.83190000000104,
+              182.02629999999772
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "remainingScope": [
+    "container-owned shared definitions",
+    "footnote source ownership",
+    "nested HTML-adapter ownership",
+    "inline source ownership",
+    "full CommonMark",
+    "fresh full CI",
+    "aggregate size review"
+  ],
+  "fullParityOrPublicationCertified": false
+}

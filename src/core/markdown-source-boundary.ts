@@ -20,13 +20,27 @@ export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot,
   projections.set(source, parse);
 }
 
-/** Host HTML adapters can depend on the complete container, not just a pair.
- * Native-only snapshots keep their existing local proof path. */
+export function hasMarkdownSourceProjection(source: MarkdownSourceSnapshot): boolean {
+  return projections.has(source);
+}
+
+/** HTML adapters and container definitions can affect distant blocks. Captures
+ * without nonlocal scope keep their existing local proof path. */
 export function markdownSourceProjectionMatches(source: MarkdownSourceSnapshot, value: string, document: Node): boolean {
   const parse = projections.get(source);
   if (!parse) return true;
   try { return parse(value).eq(document); }
   catch { return false; }
+}
+
+/** Replacing a defining container may strand unchanged references even when
+ * the root block count stays aligned. Reuse its captured definitions only if
+ * the original full-document parser proves the complete proposed result. */
+export function markdownSourceProjectionWithReferences(source: MarkdownSourceSnapshot, value: string, document: Node): string | null {
+  if (markdownSourceProjectionMatches(source, value, document)) return value;
+  if (!source.referenceDefinitions) return null;
+  const candidate = value + source.lineEnding.repeat(2) + source.referenceDefinitions;
+  return markdownSourceProjectionMatches(source, candidate, document) ? candidate : null;
 }
 
 /** A reference footer can be large and is immutable for this source snapshot.
