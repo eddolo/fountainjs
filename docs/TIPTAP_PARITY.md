@@ -1,10 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Marker-audit correction (2026-11-04): focused paint checks and byte-identical
+original marker patches show that the empty item's `2.` was already visible.
+The earlier defect report was a review error. Three recorded journeys also
+compare the entire JSON document before/after Enter/Backspace exactly. No
+production fix or parity promotion is claimed. [Evidence](DOCX_LIST_LAYOUT.md).
+
 Word-import follow-up (2026-11-04, unmerged): default/exact style identities and
 explicit off overrides now feed portable contextual spacing. Real-paper editor
 and standalone-HTML list gaps resolve to zero in three desktop engines. Actual
-DOCX export/reopen still exposes the reported 7 pt rule loss; the entered empty
-item's missing number is another visual defect. Native fidelity, marker repair,
+DOCX export/reopen still exposes the reported 7 pt rule loss. The initial
+missing-marker finding is superseded by the correction above. Native fidelity,
 size and timing acceptance remain open; no parity row/percentage is promoted.
 [Scope and evidence](DOCX_LIST_LAYOUT.md).
 

@@ -1,10 +1,17 @@
 # FountainJS opportunity roadmap
 
+Marker-audit correction (2026-11-04): the empty numbered item already paints
+`2.`. Its original/repeated image patches are identical in all three engines;
+the earlier missing-marker finding was a review error. New recorded paint
+controls and complete JSON equality before/after Enter/Backspace pass. No engine
+fix or parity percentage is claimed. Native DOCX export, size and timing gates
+remain open. [Evidence and correction](DOCX_LIST_LAYOUT.md).
+
 Word-import follow-up (2026-11-04, unmerged): actual paragraph-style identities
 now drive contextual spacing, including omitted/off neighbours. Three recorded
 real-paper journeys verify imported/HTML zero list gaps and explicitly expose
-the remaining 7 pt DOCX-export loss. Visual review also identifies an invisible
-empty-item number after Enter. Native output, that marker defect, size acceptance
+the remaining 7 pt DOCX-export loss. Its initial missing-marker review finding
+is superseded by the correction above. Native output, size acceptance
 and the prior HTML timing failure remain open. No percentage promotion.
 [Evidence scope and remaining work](DOCX_LIST_LAYOUT.md).
 

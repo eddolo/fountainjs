@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Verify numbered-marker paint and complete document retention through
+  Enter/Backspace in three recorded real-paper browser journeys, with independent
+  positive/negative paint controls. Correct the earlier missing-marker report;
+  the number already rendered and no production repair was needed.
+
 - Bind imported Word contextual-spacing rules to actual paragraph identities,
   including default styles and omitted/off neighbours, without rewriting declared
   spacing. The retained paper's imported and standalone-HTML list gaps now resolve

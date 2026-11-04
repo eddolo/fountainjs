@@ -1,0 +1,74 @@
+{
+  "actual": {
+    "box": {
+      "x": 120.19999694824219,
+      "y": 388.8500061035156,
+      "width": 1063.5999298095703,
+      "height": 16.866668701171875
+    },
+    "clip": {
+      "x": 80.19999694824219,
+      "y": 389,
+      "width": 180,
+      "height": 16
+    },
+    "pixels": {
+      "dark": 31,
+      "left": 17,
+      "right": 26,
+      "top": 2,
+      "bottom": 12,
+      "width": 180,
+      "height": 16
+    }
+  },
+  "positive": {
+    "box": {
+      "x": 64,
+      "y": 56.86666488647461,
+      "width": 1176,
+      "height": 16.86666488647461
+    },
+    "clip": {
+      "x": 24,
+      "y": 57,
+      "width": 180,
+      "height": 16
+    },
+    "pixels": {
+      "dark": 32,
+      "left": 16,
+      "right": 26,
+      "top": 2,
+      "bottom": 12,
+      "width": 180,
+      "height": 16
+    }
+  },
+  "negative": {
+    "box": {
+      "x": 64,
+      "y": 56.86666488647461,
+      "width": 1176,
+      "height": 16.86666488647461
+    },
+    "clip": {
+      "x": 24,
+      "y": 57,
+      "width": 180,
+      "height": 16
+    },
+    "pixels": {
+      "dark": 0,
+      "left": 180,
+      "right": -1,
+      "top": 16,
+      "bottom": -1,
+      "width": 180,
+      "height": 16
+    }
+  },
+  "completeJSONAfterEnterBackspaceEqual": true,
+  "emptyNumberAlreadyPaints": true,
+  "productionFixApplied": false
+}

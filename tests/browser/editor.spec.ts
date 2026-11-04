@@ -1,4 +1,9 @@
 import { expect, test, type Locator } from '@playwright/test';
+import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';
+
+test('an empty numbered item visibly paints its marker; independent controls detect missing paint', async ({ page }, info) => {
+  await listMarkerVisibilityJourney(page, info);
+});
 // Reuse the unchanged public import/toolbar/history/export/native-input audit
 // now that all twelve desktop cases pass. No copied or softened assertions.
 import '../manual/nested-direction-real.spec';

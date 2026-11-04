@@ -138,11 +138,29 @@ block, captions without paragraph-flow projection, and custom carriers lacking
 the flow contract retain explicit import diagnostics. This is not complete
 contextual spacing for every Word structure.
 
-Visual review also found an empty-item marker problem: the entered blank
-numbered item has no visible number while the following items advance to 3/4.
-The line and spacing checks pass; that does not certify marker visibility. This
-defect remains work before release. Standalone HTML currently displays math
-source and separate header/footer stories, not native paginated Word output.
+The initial overview review misidentified the empty item's number as missing.
+Focused paint inspection confirms that it already displays `2.` in all three
+engines. The original marker patches are byte-identical to the repeated captures
+(15/31/111 dark pixels in Chromium/Firefox/WebKit). No renderer repair was needed.
+The earlier remaining-marker finding is superseded by
+[the original-capture inspection](../artifacts/list-marker-original-inspection-20261104.json).
+
+New recorded journeys verify actual marker pixels against independent literal
+`2.` and suppressed-marker controls. The negative control requires zero dark
+pixels. A first WebKit attempt included two pixels from the preceding line at
+the crop boundary; cropping inside the line fixes that oracle error without
+changing its zero-pixel expectation. Actual JSON downloads before and after
+Enter/Backspace compare the complete document, including all attributes/assets,
+with exact equality. All three journeys and framework types pass. Standalone
+HTML still displays math source and separate header/footer stories, not native
+paginated Word output.
+
+This journey is now registered in the standard desktop browser suite through
+`tests/browser/editor.spec.ts`, with per-test output directories so CI can rerun
+it. The selected Chromium/Firefox/WebKit cases pass through that entry point;
+this does not claim a fresh run of the entire browser suite. The marker review
+changes no production code: all 169 runtime/CSS files match `d0c8d75` exactly.
+[Bound corrective audit](../artifacts/list-marker-visibility-verification-20261104.json).
 
 The final image audit scrolls each embedded image into view and waits for a
 successful decode before taking the full-reader capture. All three images load
@@ -150,19 +168,39 @@ in every engine. An earlier Firefox full-page capture showed the header image's
 alt text because that offscreen image was still lazy-loaded; this was an audit
 timing issue, not evidence that the packaged image was missing.
 
-Verification: 3,532 unit tests in 250 files, including 23 new import contracts;
+The Word-import checkpoint passed 3,532 unit tests in 250 files, including 23 new import contracts;
 framework types; package-entry checks; the 118-module headless boundary; DOCX
 interoperability; and the unchanged 419-file public API surface pass. Actual
 packed ESM/CommonJS root/core consumers and real Cloudflare workerd also exercise
 native Word bytes, the 10/12-to-2 pt case, retained off intent, transactions and
 HTML reopening without browser globals. Twelve final captures were reviewed:
 nine by byte identity with inspected captures and three by fresh inspection.
-Of 169 built runtime/CSS artifacts, only DOCX ESM/CommonJS changed.
+Of 169 built runtime/CSS artifacts, only DOCX ESM/CommonJS changed from `ec2f4a2`.
 [Bound source, checks and visual observations](../artifacts/docx-spacing-identity-verification-20261104.json).
 
 The larger feature branch still fails size acceptance and has an unresolved
 server-HTML timing gate. This checkpoint does not change budgets, dependencies,
 CSS or public API declarations, and does not promote a parity percentage.
+
+## Next native-export requirements
+
+1. Native paragraph-style identity must express portable group equality,
+   including a group shared by different block roles. Do not split a group by
+   heading/code/caption role just to simplify presentation, or merge groups
+   because they share formatting or ancestry.
+2. Write the original before/after declarations and each paragraph's native
+   contextual on/off intent. Participating omitted spacing means zero; generated
+   styles must not introduce an inherited Normal after-space. Never freeze the
+   current computed gap into declarations that become stale after editing.
+3. Generated style IDs must be bounded, XML-safe and collision-free. Preserve
+   portable identities and block roles on reopen through validated bindings;
+   metadata must not override authoritative native edits with stale formatting.
+   Keep this Word-specific bridge outside the platform-neutral core.
+4. Verify the 10/12-to-2 pt, both-enabled zero-gap, disabled and different-group
+   cases, plus list/cell/story boundaries. Download, edit and reopen actual DOCX,
+   then independently render the real output. Keep the whole scientific source,
+   figures, equations and horizontal list geometry in the comparison. Native
+   spacing is unfinished until this evidence shows the actual repair.
 
 ## Earlier portable contextual-spacing checkpoint (ec2f4a2)
 

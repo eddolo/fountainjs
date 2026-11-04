@@ -1,0 +1,434 @@
+{
+  "previousCheckpoint": "d0c8d75f37bf064d316ee40cc6a256fc4afc6e41",
+  "sourceDOCXSHA256": "52c8f9038c22f7ab1294690901362ea1f4dc8a2b6691091be5e4096ab6806495",
+  "status": "Corrected a visual-review false finding; added real paint/model-retention regression to the standard desktop suite. No production repair or release.",
+  "correction": "The original empty item already painted 2. Overview inspection misread it; all original/repeated marker RGBA patches are identical. The earlier missing-marker remaining item is superseded.",
+  "originalInspection": {
+    "purpose": "Correct the earlier overview-image misreading; no marker rendering fix was applied.",
+    "records": [
+      {
+        "engine": "chromium",
+        "original": "artifacts/docx-spacing-identity-verified-real-20261104/chromium/entered.png",
+        "repeated": "artifacts/list-marker-visibility-verified-real-20261104/chromium/entered.png",
+        "region": [
+          28,
+          264,
+          68,
+          282
+        ],
+        "originalPNG_SHA256": "9f3469b8ac9a3d66d97ed1bcadabe81346db5647693503bcfb570772fdbb42d0",
+        "originalDarkPixels": 15,
+        "repeatedDarkPixels": 15,
+        "markerPatchRGBAEqual": true,
+        "originalPatchSHA256": "864a8d19205691279d5669a82e5d569b78f4429119c93bd06db644880a812c41",
+        "repeatedPatchSHA256": "864a8d19205691279d5669a82e5d569b78f4429119c93bd06db644880a812c41"
+      },
+      {
+        "engine": "firefox",
+        "original": "artifacts/docx-spacing-identity-verified-real-20261104/firefox/entered.png",
+        "repeated": "artifacts/list-marker-visibility-verified-real-20261104/firefox/entered.png",
+        "region": [
+          28,
+          264,
+          68,
+          282
+        ],
+        "originalPNG_SHA256": "af805a8ae0082dca4a3e9a3d08b95f876424bafa00279b48cf173c4c21f0e1b5",
+        "originalDarkPixels": 31,
+        "repeatedDarkPixels": 31,
+        "markerPatchRGBAEqual": true,
+        "originalPatchSHA256": "39f20012ea59c122063c117165ecfa02ec0dbf33db9807a147807b77cad46d07",
+        "repeatedPatchSHA256": "39f20012ea59c122063c117165ecfa02ec0dbf33db9807a147807b77cad46d07"
+      },
+      {
+        "engine": "webkit",
+        "original": "artifacts/docx-spacing-identity-verified-real-20261104/webkit/entered.png",
+        "repeated": "artifacts/list-marker-visibility-verified-real-20261104/webkit/entered.png",
+        "region": [
+          56,
+          528,
+          136,
+          564
+        ],
+        "originalPNG_SHA256": "5b48f95b1f963c1c9c02e5d1ea0753ced98ff357b956a2fe4680dbe64ea37668",
+        "originalDarkPixels": 111,
+        "repeatedDarkPixels": 111,
+        "markerPatchRGBAEqual": true,
+        "originalPatchSHA256": "3f0d84e9ab1da7e4d42379ea53f5b853978756c84ad87292b4e16efd22d4879c",
+        "repeatedPatchSHA256": "3f0d84e9ab1da7e4d42379ea53f5b853978756c84ad87292b4e16efd22d4879c"
+      }
+    ]
+  },
+  "checks": {
+    "recordedManual": {
+      "exit": 0,
+      "engines": 3,
+      "workers": 1
+    },
+    "standardDesktopEntry": {
+      "exit": 0,
+      "engines": 3,
+      "workers": 1,
+      "file": "tests/browser/editor.spec.ts",
+      "filteredRun": true,
+      "cloudCIRun": false
+    },
+    "frameworkTypes": 0,
+    "completeJSONEnterBackspaceEqual": true,
+    "runtimeScope": {
+      "baselineCommit": "d0c8d75f37bf064d316ee40cc6a256fc4afc6e41",
+      "runtimeAndCSSFiles": 169,
+      "allRuntimeAndCSSByteIdentical": true,
+      "observations": {
+        "chromium": {
+          "actual": 15,
+          "positive": 22,
+          "negative": 0,
+          "completeJSONEqual": true
+        },
+        "firefox": {
+          "actual": 31,
+          "positive": 32,
+          "negative": 0,
+          "completeJSONEqual": true
+        },
+        "webkit": {
+          "actual": 111,
+          "positive": 114,
+          "negative": 0,
+          "completeJSONEqual": true
+        }
+      }
+    },
+    "fullUnit": {
+      "rerun": false,
+      "previousSourceResult": "3532 tests / 250 files at d0c8d75",
+      "reason": "No production source or runtime artifact changed."
+    },
+    "acceptanceThresholdChanges": false
+  },
+  "canonicalModelDownloads": {
+    "before": "artifacts/list-marker-visibility-verified-real-20261104/chromium/before.json",
+    "after": "artifacts/list-marker-visibility-verified-real-20261104/chromium/after.json",
+    "sha256": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932",
+    "deduplication": "All twelve model downloads across the manual and standard entry points have this exact hash. One canonical before/after pair is retained in Git."
+  },
+  "browsers": {
+    "chromium": {
+      "observations": {
+        "actual": {
+          "box": {
+            "x": 120.1875,
+            "y": 388.625,
+            "width": 1063.625,
+            "height": 16.859375
+          },
+          "clip": {
+            "x": 80.1875,
+            "y": 389,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 15,
+            "left": 17,
+            "right": 26,
+            "top": 2,
+            "bottom": 12,
+            "width": 180,
+            "height": 16
+          }
+        },
+        "positive": {
+          "box": {
+            "x": 64,
+            "y": 56.859375,
+            "width": 1176,
+            "height": 16.859375
+          },
+          "clip": {
+            "x": 24,
+            "y": 57,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 22,
+            "left": 17,
+            "right": 26,
+            "top": 2,
+            "bottom": 12,
+            "width": 180,
+            "height": 16
+          }
+        },
+        "negative": {
+          "box": {
+            "x": 64,
+            "y": 56.859375,
+            "width": 1176,
+            "height": 16.859375
+          },
+          "clip": {
+            "x": 24,
+            "y": 57,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 0,
+            "left": 180,
+            "right": -1,
+            "top": 16,
+            "bottom": -1,
+            "width": 180,
+            "height": 16
+          }
+        },
+        "completeJSONAfterEnterBackspaceEqual": true,
+        "emptyNumberAlreadyPaints": true,
+        "productionFixApplied": false
+      },
+      "exactModelDownloadSHA256": {
+        "before.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932",
+        "after.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932"
+      },
+      "standardSuiteObservation": "artifacts/list-marker-default-browser-20261104/editor-an-empty-numbered-i-39add-ntrols-detect-missing-paint-chromium/list-marker-visibility/observations.json",
+      "reviewedActualMarker": {
+        "path": "artifacts/list-marker-visibility-verified-real-20261104/chromium/actual-marker.png",
+        "sha256": "21ab36d19426fa6c5a01b43de4e1008bfbd605d73be0e90cfac38bfb222c1923"
+      }
+    },
+    "firefox": {
+      "observations": {
+        "actual": {
+          "box": {
+            "x": 120.19999694824219,
+            "y": 388.8500061035156,
+            "width": 1063.5999298095703,
+            "height": 16.866668701171875
+          },
+          "clip": {
+            "x": 80.19999694824219,
+            "y": 389,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 31,
+            "left": 17,
+            "right": 26,
+            "top": 2,
+            "bottom": 12,
+            "width": 180,
+            "height": 16
+          }
+        },
+        "positive": {
+          "box": {
+            "x": 64,
+            "y": 56.86666488647461,
+            "width": 1176,
+            "height": 16.86666488647461
+          },
+          "clip": {
+            "x": 24,
+            "y": 57,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 32,
+            "left": 16,
+            "right": 26,
+            "top": 2,
+            "bottom": 12,
+            "width": 180,
+            "height": 16
+          }
+        },
+        "negative": {
+          "box": {
+            "x": 64,
+            "y": 56.86666488647461,
+            "width": 1176,
+            "height": 16.86666488647461
+          },
+          "clip": {
+            "x": 24,
+            "y": 57,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 0,
+            "left": 180,
+            "right": -1,
+            "top": 16,
+            "bottom": -1,
+            "width": 180,
+            "height": 16
+          }
+        },
+        "completeJSONAfterEnterBackspaceEqual": true,
+        "emptyNumberAlreadyPaints": true,
+        "productionFixApplied": false
+      },
+      "exactModelDownloadSHA256": {
+        "before.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932",
+        "after.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932"
+      },
+      "standardSuiteObservation": "artifacts/list-marker-default-browser-20261104/editor-an-empty-numbered-i-39add-ntrols-detect-missing-paint-firefox/list-marker-visibility/observations.json",
+      "reviewedActualMarker": {
+        "path": "artifacts/list-marker-visibility-verified-real-20261104/firefox/actual-marker.png",
+        "sha256": "4b1c6e7009a7a49151856ebc95063d111ea5fe2b168bf0c5ccca87bdab790e41"
+      }
+    },
+    "webkit": {
+      "observations": {
+        "actual": {
+          "box": {
+            "x": 120.1875,
+            "y": 387.640625,
+            "width": 1063.625,
+            "height": 16.84375
+          },
+          "clip": {
+            "x": 80.1875,
+            "y": 388,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 111,
+            "left": 34,
+            "right": 53,
+            "top": 5,
+            "bottom": 25,
+            "width": 360,
+            "height": 32
+          }
+        },
+        "positive": {
+          "box": {
+            "x": 64,
+            "y": 56.84375,
+            "width": 1176,
+            "height": 16.84375
+          },
+          "clip": {
+            "x": 24,
+            "y": 57,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 114,
+            "left": 33,
+            "right": 53,
+            "top": 6,
+            "bottom": 26,
+            "width": 360,
+            "height": 32
+          }
+        },
+        "negative": {
+          "box": {
+            "x": 64,
+            "y": 56.84375,
+            "width": 1176,
+            "height": 16.84375
+          },
+          "clip": {
+            "x": 24,
+            "y": 57,
+            "width": 180,
+            "height": 16
+          },
+          "pixels": {
+            "dark": 0,
+            "left": 360,
+            "right": -1,
+            "top": 32,
+            "bottom": -1,
+            "width": 360,
+            "height": 32
+          }
+        },
+        "completeJSONAfterEnterBackspaceEqual": true,
+        "emptyNumberAlreadyPaints": true,
+        "productionFixApplied": false
+      },
+      "exactModelDownloadSHA256": {
+        "before.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932",
+        "after.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932"
+      },
+      "standardSuiteObservation": "artifacts/list-marker-default-browser-20261104/editor-an-empty-numbered-i-39add-ntrols-detect-missing-paint-webkit/list-marker-visibility/observations.json",
+      "reviewedActualMarker": {
+        "path": "artifacts/list-marker-visibility-verified-real-20261104/webkit/actual-marker.png",
+        "sha256": "487073414e236e08545b1fa9a9d3b0a87d1d2ecda0bb81b25f10f4b9f9cddaba"
+      }
+    }
+  },
+  "auditCorrection": "The initial WebKit negative control contained two preceding-line descender pixels at the top edge. The final crop stays inside the measured line. Zero-pixel negative and >4-pixel positive/actual requirements were not relaxed.",
+  "remaining": [
+    "Native DOCX contextual-spacing export, validated identities/roles and independent native rendering proof.",
+    "Seven size failures and the preceding server-HTML timing failure remain unresolved. No parity percentage promotion."
+  ],
+  "stagedSHA256": {
+    "CHANGELOG.md": "a79646b5cfc0e1f0c1c477f2e874de3155b7d6d814770f1d42076fe71dee3323",
+    "artifacts/compare-list-marker-runtime-20261104.mjs": "2e1343a32a5a94617677e1f794fe3fd6570edf6187b310be04b45d4da59fd148",
+    "artifacts/inspect-original-list-marker-20261104.py": "a17695c7f1d72a7fa28fb1f52348c533440d4718377226286aa55fdf97567738",
+    "artifacts/list-empty-marker-capture-probe-20261104.log": "2c04b15ff5973553ca04745829aabcf80fef7bdff4a8e41a5d53cd1cff90d151",
+    "artifacts/list-empty-marker-capture-probe-20261104/chromium/observations.json": "749621d96990d445bd3d2297a139f9de65b86bf2c1356980ae9a4cef667be6e2",
+    "artifacts/list-empty-marker-probe-20261104.log": "f94e6a6eb9d3f1049bb149dac6785dc9e41860b535d24e50379b6eab14cbd42f",
+    "artifacts/list-empty-marker-probe-20261104/chromium/observations.json": "c0054149a334e767c8aa0bf2440fa18dd4dc81efd3d6c8d55b904637acd2bd96",
+    "artifacts/list-empty-marker-probe.config.ts": "c7c7358f4937dbf2570f7622c5837a60235ec4f44888f369bf260d8100cd68b9",
+    "artifacts/list-empty-marker-sequence-probe-20261104.log": "d4ccc8a042ad061821982d30f4da08058bb9e4053fcd29fb71eafba3e7218d66",
+    "artifacts/list-empty-marker-sequence-probe-20261104/chromium/actual-editor-before.png": "51f5630f03ead556e671cd733aa8a6310180c471d3ca71293b1adad75500cba7",
+    "artifacts/list-empty-marker-sequence-probe-20261104/chromium/observations.json": "629f03d98a8cf7ee6dfcd179f813a00ee32c500d6e069ca37f101547c9f313b0",
+    "artifacts/list-marker-default-browser-20261104.log": "1d9ab877cc3df2d9627d81d96d9c30b4c719e421cb956d9134d123d4eb005558",
+    "artifacts/list-marker-default-browser-20261104/editor-an-empty-numbered-i-39add-ntrols-detect-missing-paint-chromium/list-marker-visibility/observations.json": "75f6eaf5aeb7592b035b478b16d3b422e73a4c4ec8453bcec94235a564fe1901",
+    "artifacts/list-marker-default-browser-20261104/editor-an-empty-numbered-i-39add-ntrols-detect-missing-paint-firefox/list-marker-visibility/observations.json": "b04aaf3bbe38c359d752633601d9fc0cb501b2e9078444fbbaa3600200d1fb34",
+    "artifacts/list-marker-default-browser-20261104/editor-an-empty-numbered-i-39add-ntrols-detect-missing-paint-webkit/list-marker-visibility/observations.json": "22b351fdc3690543547874900c8772cc8a316cf4506f6efb6fac5f431919d5df",
+    "artifacts/list-marker-default-browser.config.ts": "433abdcdefbf406f92858af77ced7c92bdd5f2b4d01cff962ead40d2be600389",
+    "artifacts/list-marker-default-checks-20261104.json": "9b80fe9c03950c0702fa21ba2dac1e0aad142319bc5bda53972c1159cca34873",
+    "artifacts/list-marker-default-types-20261104.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/list-marker-original-inspection-20261104.json": "ea366821a3b2547020dfe8884adb4bb444690ee78478a2951d57a08699dfe43b",
+    "artifacts/list-marker-original-inspection-20261104.log": "ea366821a3b2547020dfe8884adb4bb444690ee78478a2951d57a08699dfe43b",
+    "artifacts/list-marker-runtime-scope-20261104.json": "6cc3302e2eb961fd27649564df194599b985dc7aa61ee0230c5f3b2ca85ec150",
+    "artifacts/list-marker-visibility-browser-20261104.log": "d508c0e2690ec41692686b6ea4317ebbbebe053068ba6d75941e2c3b17561a87",
+    "artifacts/list-marker-visibility-browser.config.ts": "ba6939b020b78e4869fa5a8a11a2967fe0507999f6e0937c5a893b0b6f8a3623",
+    "artifacts/list-marker-visibility-checks-20261104.json": "ec28d0edf7bd6a243b61e0f3e8d282b9762643991a14e5e584b6bd97e99f87f9",
+    "artifacts/list-marker-visibility-real-20261104/webkit/negative-marker.png": "37177cdedf994c2e1af231886af433dbe46b17ba3a51b351ed50687027fe953b",
+    "artifacts/list-marker-visibility-verified-browser-20261104.log": "e01395cd6ed9eb8ef205b07987bcccef32bf5332de7caa2285a67e3c9897fb26",
+    "artifacts/list-marker-visibility-verified-checks-20261104.json": "9b80fe9c03950c0702fa21ba2dac1e0aad142319bc5bda53972c1159cca34873",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/actual-marker.png": "21ab36d19426fa6c5a01b43de4e1008bfbd605d73be0e90cfac38bfb222c1923",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/after.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/before.json": "3543ba60b920078bb3f9032cb94af3ea5763c58c927bb26ad68b284e8c48b932",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/entered.png": "9f3469b8ac9a3d66d97ed1bcadabe81346db5647693503bcfb570772fdbb42d0",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/negative-marker.png": "6ea985dadad7bb53cdff226ccab237cc1f7b508a05afdd71daf1dd16b859663a",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/observations.json": "75f6eaf5aeb7592b035b478b16d3b422e73a4c4ec8453bcec94235a564fe1901",
+    "artifacts/list-marker-visibility-verified-real-20261104/chromium/positive-marker.png": "c35ce0e32cd5dda364b6b77d78cfaf8f848ad3c3faeb8bcb90aa74a93be76712",
+    "artifacts/list-marker-visibility-verified-real-20261104/firefox/actual-marker.png": "4b1c6e7009a7a49151856ebc95063d111ea5fe2b168bf0c5ccca87bdab790e41",
+    "artifacts/list-marker-visibility-verified-real-20261104/firefox/entered.png": "af805a8ae0082dca4a3e9a3d08b95f876424bafa00279b48cf173c4c21f0e1b5",
+    "artifacts/list-marker-visibility-verified-real-20261104/firefox/negative-marker.png": "2a974258cc063a097adae62d3ee512d220df25bf675dc734309f334d37c3a1a3",
+    "artifacts/list-marker-visibility-verified-real-20261104/firefox/observations.json": "b04aaf3bbe38c359d752633601d9fc0cb501b2e9078444fbbaa3600200d1fb34",
+    "artifacts/list-marker-visibility-verified-real-20261104/firefox/positive-marker.png": "16eb6f11f8977701edad93a4719dea014674450c12d9a764f40933afa5455365",
+    "artifacts/list-marker-visibility-verified-real-20261104/webkit/actual-marker.png": "487073414e236e08545b1fa9a9d3b0a87d1d2ecda0bb81b25f10f4b9f9cddaba",
+    "artifacts/list-marker-visibility-verified-real-20261104/webkit/entered.png": "5b48f95b1f963c1c9c02e5d1ea0753ced98ff357b956a2fe4680dbe64ea37668",
+    "artifacts/list-marker-visibility-verified-real-20261104/webkit/negative-marker.png": "51f7e34db52988e4a8e7ecb37f8854b4e1b133045f0583e8402465f81aa596ec",
+    "artifacts/list-marker-visibility-verified-real-20261104/webkit/observations.json": "22b351fdc3690543547874900c8772cc8a316cf4506f6efb6fac5f431919d5df",
+    "artifacts/list-marker-visibility-verified-real-20261104/webkit/positive-marker.png": "150e3765e84482c653a56e3fd7bbe2de918198304e53eb0081e592b249639e6e",
+    "artifacts/list-marker-visibility-verified-types-20261104.log": "eb99a3f554e45012cf37f8224e70e39a02038b8fac1f082e4704d375aff7e976",
+    "artifacts/write-list-marker-visibility-verification-20261104.mjs": "780d4ded0579a19edf0f73044bd8322d60ba551d66143a1c280ef95447a2b265",
+    "docs/DOCX_LIST_LAYOUT.md": "5e026668d6ebaf12e9fd83db5ac66b01d7526ae715187dd2ec5f88a5b882d5e9",
+    "docs/ROADMAP.md": "45327f6b6d60cddd137f7c4cfbd4af21e0c62a5cf63fcd5bc09bd967832dcbb2",
+    "docs/TIPTAP_PARITY.md": "228dd844214565082035acadb685e6fbc2bf43f419e9b4d8617f3c347d6cefbc",
+    "tests/browser/editor.spec.ts": "d834925d96a88cacd60713a95eadc7274ffa3239a5ca4c10833f5017f6222392",
+    "tests/browser/helpers/line-paint.ts": "b7e9a02429df67855e8d560ad74217ccb1021d79890280f8b4465d83bb4b0ad1",
+    "tests/browser/list-marker-visibility-journey.ts": "fe593e765f5c20bb67a5332d3afad41fc44c926c109638636c32eba6820d854e",
+    "tests/manual/list-empty-marker-probe.spec.ts": "69ec96f0994d5d54e43fd2bd8b89ed48495f773a573dc8486758acc9f1176105",
+    "tests/manual/list-marker-visibility-real.spec.ts": "4b82eb54de6330afed57e069cc00321ddf167b71037f09abbe48de7e9b9376e2"
+  }
+}
