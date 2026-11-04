@@ -1,5 +1,22 @@
 # FountainJS opportunity roadmap
 
+Optional-site-font startup follow-up (2026-11-04, unreleased): the production
+blank-start observation traced to render-blocking Google Fonts CSS. A held-font
+control uses the unchanged editor bundle; move site typography to an explicit,
+nonblocking browser startup call across the eight shared site entry modules.
+The original fonts remain optional, with system fallbacks. Six production
+Chromium/Firefox/WebKit journeys prove native editing before a held font response
+and normal source/download/reopen/narrow-reader behavior. Three actual-font
+Chromium samples observe editor insertion at 283.3/250.9/275.1 ms, compared with
+10064.7/481.1/255.2 ms before; these small local samples are not general startup
+certification. The permanent pending-font test caught a loader removed by the
+production tree shaker; explicit invocation fixes it without changing package
+side-effect declarations. Screenshot capture moves after the deliberately held
+response is released because Firefox's screenshot API waits for fonts. No typing
+assertion or timeout was relaxed. Engine code/API/size ceilings are unchanged;
+fresh full CI, aggregate capacity and broader parity remain open.
+[Evidence](../artifacts/site-font-verification-20261104.json).
+
 Issue-workflow input follow-up (2026-11-04, unreleased): remove full Markdown
 export from React rendering/typing and check only on explicit request, source
 entry or download. Reports become pending after document/source/option changes;

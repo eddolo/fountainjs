@@ -1,0 +1,101 @@
+[
+  {
+    "folder": "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium",
+    "pictures": [
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/edited-source-fidelity.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/mobile-issue.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reader-preview.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/reopened-issue.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium.png",
+    "video": "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium/video.webm",
+    "durationSeconds": 6.56,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-chromium-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox",
+    "pictures": [
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/edited-source-fidelity.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/mobile-issue.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reader-preview.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/reopened-issue.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox.png",
+    "video": "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox/video.webm",
+    "durationSeconds": 6.44,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-firefox-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit",
+    "pictures": [
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/edited-source-fidelity.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/mobile-issue.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reader-preview.png",
+      "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/reopened-issue.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit.png",
+    "video": "artifacts/site-font-verified-production-browser-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit/video.webm",
+    "durationSeconds": 9.2,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/issue-editor-audit-writes--235b9-ewriting-untouched-Markdown-webkit-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium",
+    "pictures": [
+      "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium/site-font-journey/stylesheet-applied.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium.png",
+    "video": "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium/video.webm",
+    "durationSeconds": 1.92,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox",
+    "pictures": [
+      "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox/site-font-journey/stylesheet-applied.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox.png",
+    "video": "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox/video.webm",
+    "durationSeconds": 2.28,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit",
+    "pictures": [
+      "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit/site-font-journey/stylesheet-applied.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit.png",
+    "video": "artifacts/site-font-verified-production-browser-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit/video.webm",
+    "durationSeconds": 3.44,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-17248-bservation-fresh-document-1-chromium",
+    "pictures": [
+      "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-17248-bservation-fresh-document-1-chromium/ready-and-edited.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/issue-startup-audit-202611-17248-bservation-fresh-document-1-chromium.png",
+    "video": "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-17248-bservation-fresh-document-1-chromium/video.webm",
+    "durationSeconds": 1.8,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/issue-startup-audit-202611-17248-bservation-fresh-document-1-chromium-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-9bf8f-bservation-fresh-document-3-chromium",
+    "pictures": [
+      "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-9bf8f-bservation-fresh-document-3-chromium/ready-and-edited.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/issue-startup-audit-202611-9bf8f-bservation-fresh-document-3-chromium.png",
+    "video": "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-9bf8f-bservation-fresh-document-3-chromium/video.webm",
+    "durationSeconds": 1.6,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/issue-startup-audit-202611-9bf8f-bservation-fresh-document-3-chromium-recording.png"
+  },
+  {
+    "folder": "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-e53fa-bservation-fresh-document-2-chromium",
+    "pictures": [
+      "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-e53fa-bservation-fresh-document-2-chromium/ready-and-edited.png"
+    ],
+    "contact": "artifacts/site-font-visual-review-20261104/issue-startup-audit-202611-e53fa-bservation-fresh-document-2-chromium.png",
+    "video": "artifacts/site-font-verified-startup-browser-20261104/issue-startup-audit-202611-e53fa-bservation-fresh-document-2-chromium/video.webm",
+    "durationSeconds": 1.72,
+    "recordingContact": "artifacts/site-font-visual-review-20261104/issue-startup-audit-202611-e53fa-bservation-fresh-document-2-chromium-recording.png"
+  }
+]

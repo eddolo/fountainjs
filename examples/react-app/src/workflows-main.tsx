@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { SitePageLink } from './SitePageLink';
 import { WorkflowBreadcrumbs } from './WorkflowBreadcrumbs';
 import './index.css';
+import { loadSiteFonts } from './site-fonts';
 import './workflows.css';
 
 function Workflows() {
@@ -16,4 +17,6 @@ function Workflows() {
     <section className="workflow-more"><h2>Choose the kind of proof you need.</h2><p>Product workflows show complete editing journeys. The integration gallery shows framework and backend boundaries. Capability labs explore specialist work in more depth.</p><div><a href="./demos.html#gallery">10 integration demos →</a><a href="./math-renderer.html">Math and paper-table lab →</a><a href="./math-references.html">Equation references and print lab →</a><a href="./developers.html">Developer guide →</a></div><p>No speed or feature-superiority claims are implied by a familiar layout. The demos label what is active, and the guides explain the boundaries.</p></section>
   </main>;
 }
+loadSiteFonts();
+
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><Workflows /></React.StrictMode>);

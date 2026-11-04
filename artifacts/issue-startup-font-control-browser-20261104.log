@@ -1,0 +1,17 @@
+[WebServer] (node:7516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:18084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"attempt":1,"externalFontControl":true,"gotoMs":276.2731000000001,"readyAt":293.69999998807907,"navigation":[{"requestStart":12.100000023841858,"responseStart":16.899999976158142,"domInteractive":33.30000001192093,"loadEventEnd":190.69999998807907}],"paints":[{"name":"first-paint","startTime":108},{"name":"first-contentful-paint","startTime":300}],"longTasks":[]}
+  ok 1 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 1 (1.2s)
+{"attempt":2,"externalFontControl":true,"gotoMs":238.22579999999994,"readyAt":255.60000002384186,"navigation":[{"requestStart":3.700000047683716,"responseStart":5.5,"domInteractive":23,"loadEventEnd":159.80000001192093}],"paints":[{"name":"first-paint","startTime":132},{"name":"first-contentful-paint","startTime":260}],"longTasks":[]}
+  ok 2 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 2 (883ms)
+{"attempt":3,"externalFontControl":true,"gotoMs":282.9137999999998,"readyAt":300.69999998807907,"navigation":[{"requestStart":4.899999976158142,"responseStart":6.399999976158142,"domInteractive":19,"loadEventEnd":202.30000001192093}],"paints":[{"name":"first-paint","startTime":164},{"name":"first-contentful-paint","startTime":308}],"longTasks":[]}
+  ok 3 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 3 (965ms)
+
+  3 passed (8.5s)

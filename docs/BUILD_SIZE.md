@@ -225,3 +225,18 @@ proof the earlier failure cannot recur. Heap, growth and retention checks pass.
 See `artifacts/issue-input-verification-20261104.json`, the final/recheck logs and
 `artifacts/issue-input-final-loaded-build-size-review-20261104.json`. Full fresh
 CI and release/capacity review remain required.
+
+## Optional site-font loading, 2026-11-04
+
+Remove the blocking Google Fonts CSS import and explicitly call the browser-only
+site loader from the eight existing site entry modules. The library runtime is
+byte-identical to the issue-input checkpoint. No package side-effect declaration,
+API snapshot, individual/aggregate ceiling, CSS budget or performance gate changes.
+The earlier 10-second cold production render appears at about 0.25–0.28 seconds
+in three local Chromium follow-up samples with actual external fonts enabled;
+this is limited observational evidence, not a general latency guarantee. A
+three-engine production test proves native typing while a deliberately held
+font response is still pending. Source/file/reader journeys still pass.
+See `artifacts/site-font-verification-20261104.json` for samples and retained
+failure/diagnostic controls. Full current-head CI and prior capacity review stay
+open; this website fix does not make the library's aggregate size gate pass.

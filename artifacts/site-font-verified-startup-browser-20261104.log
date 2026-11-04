@@ -1,0 +1,17 @@
+[WebServer] (node:22812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:7596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"attempt":1,"externalFontControl":false,"gotoMs":345.48270000000014,"readyAt":283.30000001192093,"navigation":[{"requestStart":12.600000023841858,"responseStart":17.400000035762787,"domInteractive":31.69999998807907,"loadEventEnd":289.19999998807907}],"paints":[{"name":"first-paint","startTime":132},{"name":"first-contentful-paint","startTime":280}],"longTasks":[]}
+  ok 1 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 1 (1.2s)
+{"attempt":2,"externalFontControl":false,"gotoMs":303.9961000000003,"readyAt":250.89999997615814,"navigation":[{"requestStart":4.100000023841858,"responseStart":6.600000023841858,"domInteractive":29.5,"loadEventEnd":261}],"paints":[{"name":"first-paint","startTime":104},{"name":"first-contentful-paint","startTime":280}],"longTasks":[{"startTime":194.5,"duration":56}]}
+  ok 2 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 2 (1.2s)
+{"attempt":3,"externalFontControl":false,"gotoMs":327.8621000000003,"readyAt":275.10000002384186,"navigation":[{"requestStart":3.200000047683716,"responseStart":14.200000047683716,"domInteractive":49.10000002384186,"loadEventEnd":284.9000000357628}],"paints":[{"name":"first-paint","startTime":112},{"name":"first-contentful-paint","startTime":304}],"longTasks":[{"startTime":220.70000004768372,"duration":54}]}
+  ok 3 [chromium] › artifacts\issue-startup-audit-20261104.spec.ts:6:5 › production issue startup observation › fresh document 3 (1.0s)
+
+  3 passed (11.8s)

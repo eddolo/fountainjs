@@ -1,0 +1,112 @@
+{
+  "attempt": 2,
+  "externalFontControl": true,
+  "gotoMs": 238.22579999999994,
+  "observation": {
+    "readyAt": 255.60000002384186,
+    "paints": [
+      {
+        "name": "first-paint",
+        "startTime": 132
+      },
+      {
+        "name": "first-contentful-paint",
+        "startTime": 260
+      }
+    ],
+    "longTasks": [],
+    "navigation": [
+      {
+        "name": "http://127.0.0.1:4195/issue-editor.html",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 159.80000001192093,
+        "navigationId": 6225,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.10000002384185791,
+        "domainLookupStart": 2.600000023841858,
+        "domainLookupEnd": 2.900000035762787,
+        "connectStart": 2.900000035762787,
+        "secureConnectionStart": 0,
+        "connectEnd": 3.600000023841858,
+        "requestStart": 3.700000047683716,
+        "responseStart": 5.5,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 5.5,
+        "responseEnd": 7.100000023841858,
+        "transferSize": 805,
+        "encodedBodySize": 505,
+        "decodedBodySize": 1231,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 23,
+        "domContentLoadedEventStart": 159.70000004768372,
+        "domContentLoadedEventEnd": 159.70000004768372,
+        "domComplete": 159.80000001192093,
+        "loadEventStart": 159.80000001192093,
+        "loadEventEnd": 159.80000001192093,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      }
+    ],
+    "scripts": [
+      {
+        "name": "http://127.0.0.1:4195/assets/issueEditor-CLP8P7hx.js",
+        "entryType": "resource",
+        "startTime": 13.600000023841858,
+        "duration": 26.100000023841858,
+        "navigationId": 6225,
+        "initiatorType": "script",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/javascript",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 13.600000023841858,
+        "domainLookupStart": 13.600000023841858,
+        "domainLookupEnd": 13.600000023841858,
+        "connectStart": 13.600000023841858,
+        "secureConnectionStart": 0,
+        "connectEnd": 13.600000023841858,
+        "requestStart": 20.100000023841858,
+        "responseStart": 35.30000001192093,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 35.30000001192093,
+        "responseEnd": 39.700000047683716,
+        "transferSize": 5010,
+        "encodedBodySize": 4710,
+        "decodedBodySize": 12080,
+        "responseStatus": 200,
+        "serverTiming": []
+      }
+    ]
+  }
+}

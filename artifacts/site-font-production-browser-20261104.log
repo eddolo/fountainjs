@@ -1,0 +1,146 @@
+[WebServer] (node:1580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:27012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (3.2s)
+  x  2 [chromium] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending (5.5s)
+(node:23096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (7.2s)
+  x  4 [firefox] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending (5.5s)
+(node:17528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (8.0s)
+  x  6 [webkit] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending (5.9s)
+
+
+  1) [chromium] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\site-font-journey.ts:23
+
+      21 |     // only after real typing succeeds, so this cannot pass by waiting for fonts.
+      22 |     await page.goto('/issue-editor.html', { waitUntil: 'commit' });
+    > 23 |     await expect.poll(() => requests).toBe(1);
+         |                                       ^
+      24 |     const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+      25 |     await expect(editor).toBeVisible();
+      26 |     const paragraph = editor.locator('p').first();
+        at runSiteFontJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\site-font-journey.ts:23:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\site-font-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\site-font-journey.ts:23
+
+      21 |     // only after real typing succeeds, so this cannot pass by waiting for fonts.
+      22 |     await page.goto('/issue-editor.html', { waitUntil: 'commit' });
+    > 23 |     await expect.poll(() => requests).toBe(1);
+         |                                       ^
+      24 |     const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+      25 |     await expect(editor).toBeVisible();
+      26 |     const paragraph = editor.locator('p').first();
+        at runSiteFontJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\site-font-journey.ts:23:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\site-font-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\site-font-journey.ts:23
+
+      21 |     // only after real typing succeeds, so this cannot pass by waiting for fonts.
+      22 |     await page.goto('/issue-editor.html', { waitUntil: 'commit' });
+    > 23 |     await expect.poll(() => requests).toBe(1);
+         |                                       ^
+      24 |     const editor = page.getByRole('textbox', { name: 'Issue description editor', exact: true });
+      25 |     await expect(editor).toBeVisible();
+      26 |     const paragraph = editor.locator('p').first();
+        at runSiteFontJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\site-font-journey.ts:23:39)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\site-font-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\site-font-production-browser-20261104\site-font-real-can-write-a-accc8-onal-site-fonts-are-pending-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending 
+    [firefox] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending 
+    [webkit] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending 
+  3 passed (42.6s)

@@ -1,0 +1,14 @@
+[WebServer] (node:14304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:20184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (4.0s)
+  ok 2 [chromium] › tests\manual\site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending (1.3s)
+(node:18696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown (7.2s)

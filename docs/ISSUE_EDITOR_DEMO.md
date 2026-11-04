@@ -95,6 +95,22 @@ The production recording shows a long blank startup before the editor renders.
 Startup profiling remains open; successful writing/file handoff is not startup
 responsiveness certification.
 
+## Optional site fonts
+
+The demo site's eight shared startup modules call `loadSiteFonts()` explicitly.
+The font stylesheet uses inactive screen media until its load event, then applies
+the original Manrope/DM Mono typography. The system font stack renders while the
+request is pending or unavailable. This is website setup, not an editor/core
+import, and it adds no dependency to the published library.
+
+The production pending-font journey types before releasing an intercepted font
+stylesheet, then checks that the stylesheet applies and content survives. Video
+and trace record that pending phase; the screenshot is taken after release since
+Firefox's screenshot API itself waits for `document.fonts.ready`. Actual external
+fonts and startup timings are measured separately. The earlier blank-start
+finding is addressed within this scope; physical devices, all network conditions
+and general production startup certification remain unproven.
+
 ## Table handoff policy
 
 The **Table export** selector exposes the existing `tableFormat: 'pipe' | 'html'`
