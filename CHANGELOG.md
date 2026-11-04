@@ -11,8 +11,9 @@ policy on reopen. Native layout certification remains outstanding.
   retain declared geometry through export/reopen. Use native heading outlines
   and bounded part/paragraph bindings for code/caption roles, while treating
   native formatting as authoritative. Record unsupported flows and code line-ending
-  normalization. Browser round-trip verification passes; native layout and release
-  acceptance remain under review.
+  normalization. Full units (3,577) and recorded browser round trips pass.
+  Independent native rendering confirms repaired instruction steps, with a common
+  7 pt vertical offset and broader layout/release acceptance still unfinished.
 
 - Verify numbered-marker paint and complete document retention through
   Enter/Backspace in three recorded real-paper browser journeys, with independent

@@ -5,9 +5,11 @@ identities now retain contextual rules through actual DOCX download/reopen in
 Chromium, Firefox and WebKit. Original 7 pt declarations remain; internal list
 gaps now stay zero. Native outline levels retain headings; bounded part/paragraph
 bindings retain code/caption roles without restoring stale formatting. Forty-five
-new Node contracts and the existing explicit-alignment regression pass. Full-suite
-and independent native-render verification are in progress; existing size/timing
-failures and unsupported flow cases remain open. No parity promotion or release.
+new Node contracts and the full 3,577-test suite pass. Independent native rendering
+now confirms matching 14.5 pt instruction steps; cumulative 7/14/21 pt drift is
+repaired to a remaining common 7 pt offset. All four native pages were inspected.
+Existing size/timing failures and unsupported flow cases remain open. No parity
+promotion or release.
 [Contract and verification scope](DOCX_NATIVE_SPACING.md).
 
 Marker-audit correction (2026-11-04): the empty numbered item already paints

@@ -2,9 +2,10 @@
 
 Latest native-export work: [the paragraph spacing bridge](DOCX_NATIVE_SPACING.md)
 now retains the paper's zero internal list gaps through recorded browser
-download/reopen in all three desktop engines. Independent native rendering is
-being verified; the earlier native measurements below remain historical evidence,
-not a new layout certification.
+download/reopen in all three desktop engines. Independent native rendering confirms
+matching 14.5 pt instruction steps and a remaining common 7 pt vertical offset.
+The earlier cumulative drift measurements below remain historical evidence;
+broader layout/flow and release acceptance are unfinished.
 
 The initial retained scientific source audit exposed an 18 pt shift in
 the first numbered instruction: source text begins at 75.7 pt; the exported
