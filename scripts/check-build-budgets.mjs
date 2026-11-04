@@ -84,8 +84,10 @@ const limits = Object.freeze({
   // Report shared-direction scope omission and recurse into its child blocks:
   // measured 184.1 / 148.9 KiB. Retain the prior-cap failure; this is code
   // capacity only, not permission to relax conversion/runtime/heap contracts.
-  'dist/docx.js': 184.25 * kibibyte,
-  'dist/docx.cjs': 149 * kibibyte,
+  // Approved theme-language capacity: +739 / 599 measured bytes.
+  // Retain all independent semantic, CSS, runtime and heap gates.
+  'dist/docx.js': 185 * kibibyte,
+  'dist/docx.cjs': 149.5 * kibibyte,
   // Complete strict HTML5 character-reference decoding is shared by Markdown
   // and the already bundled server HTML parser. Track that transitive cost
   // explicitly so entry-file sizes cannot hide it.
@@ -589,7 +591,7 @@ const limits = Object.freeze({
   // Physical preformatted breaks/reports and equivalent native caret affinity:
   // Including the smaller CSS-gutter plugin: +1,776 bytes, measured 1649.207 KiB.
   // Entry/latency/heap caps stay unchanged; the reviewed CSS cost is above.
-  'all ESM runtime code': 1651.75 * kibibyte,
+  'all ESM runtime code': 1652.5 * kibibyte,
   // Empty styled-text runs add ~0.2 KiB CJS; ESM remains within its ceiling.
   // Multiline math editing and selected-control caret protection measure
   // 1320.8 KiB ESM / 1102.3 KiB CJS. Only the aggregate CJS cap rises 1 KiB;
@@ -669,7 +671,7 @@ const limits = Object.freeze({
   // Same heading marker/restoration: +295 bytes, measured 1371.318 KiB.
   // Same repair and smaller gutter: +1,585 bytes, measured 1372.867 KiB.
   // Initial code/CSS cap failures are retained; no latency/heap relaxation.
-  'all CommonJS runtime code': 1375 * kibibyte,
+  'all CommonJS runtime code': 1375.5 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
