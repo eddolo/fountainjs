@@ -1049,6 +1049,9 @@ for integrations that need readable content:
 - `GapSelection` (`'gap'`) is an exact insertion point between block nodes.
 - `AllSelection` (`'all'`) owns the complete document.
 - `CellSelection` (`'cell'`) owns a rectangular set of table cells in one table.
+- `RangeSelection` (`'range'`, unreleased) retains directed text or structural
+  endpoints as `anchor`/`head` document positions. Its `textSelection` projection
+  can be `null`; an image-only range must not format neighboring text.
 
 Text selections use document paths and character offsets:
 
@@ -1065,12 +1068,13 @@ const node = new NodeSelection(editor.state.doc, [2]);
 const gap = new GapSelection(editor.state.doc, topLevelPosition(editor.state.doc, 3));
 const everything = new AllSelection(editor.state.doc);
 const cells = new CellSelection(editor.state.doc, [4, 0, 1], [4, 2, 3]);
+const directed = new RangeSelection(editor.state.doc, editor.state.doc.nodeSize - 2, 0);
 
 editor.dispatch(editor.createTransaction().setSelection(cells));
 ```
 
 Constructors reject stale paths, inline gap positions, text-node targets, and
-cell rectangles that leave their table. Transactions map all five kinds after
+cell rectangles that leave their table. Transactions map all six kinds after
 every step. A deleted node or cell selection recovers to a valid structural gap;
 history restores the original semantic kind. Typing replaces node/all/cell
 selections and inserts a new paragraph at a gap. Mark commands apply to the
@@ -1095,7 +1099,14 @@ const transaction = editor.state.createTransaction()
 editor.dispatch(transaction);
 ```
 
-Transforms include `replace`, `replaceNode`, `insertText`, `replaceText`, `replaceTextRange`, `addMark`, `removeMark`, and `setNodeAttrs`.
+Transforms include `replace`, `replaceNode`, `insertText`, `replaceText`, `replaceTextRange`, `replaceRange`, `addMark`, `removeMark`, and `setNodeAttrs`.
+
+`replaceRange(from, to, text)` uses structural document positions, including
+boundaries beside media; it is not a pair of top-level child indexes. The new
+`RangeSelection` preserves backward direction through local history and Yjs
+relative selections. Downstream exhaustive `AnySelection.kind` switches need a
+`range` case. The original text-selection signatures remain available. See
+[range contracts and remaining slice limits](SELECTION_RANGES.md).
 
 Use `transaction.replaceDocument(documentNode)` (or `ReplaceDocumentStep`) when
 opening an entire saved document. Unlike replacing `doc.content`, it replaces

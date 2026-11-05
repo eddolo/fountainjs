@@ -1,0 +1,13 @@
+{
+  "anchor": {
+    "textPath": null,
+    "element": "DIV",
+    "offset": 2
+  },
+  "head": {
+    "textPath": "0.0",
+    "element": "#text",
+    "offset": 2
+  },
+  "collapsed": false
+}

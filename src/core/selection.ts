@@ -1,8 +1,9 @@
 import type { Node } from './schema';
 import { TableMap } from './table-map';
 import { comparePaths, getNodeAtPath, getTextLeaves } from './transaction/path';
+import { resolveDocumentPoint } from './transaction/document-point';
 
-export type SelectionKind = 'text' | 'node' | 'gap' | 'all' | 'cell';
+export type SelectionKind = 'text' | 'node' | 'gap' | 'all' | 'cell' | 'range';
 export type SelectionAssociation = -1 | 1;
 
 interface TextPoint {
@@ -175,6 +176,59 @@ export class Selection extends BaseSelection {
   }
 }
 
+/** A directed document range with text or structural endpoints.
+ * `path`/offset fields remain a legacy projection. `textSelection` is null when
+ * the range contains no editable text; it must not format neighboring text. */
+export class RangeSelection extends BaseSelection {
+  readonly kind = 'range' as const;
+  readonly structuralFrom: number;
+  readonly structuralTo: number;
+  readonly textSelection: Selection | null;
+
+  constructor(doc: Node, public readonly anchor: number, public readonly head: number) {
+    const anchorPoint = resolveDocumentPoint(doc, anchor);
+    resolveDocumentPoint(doc, head);
+    const from = Math.min(anchor, head), to = Math.max(anchor, head);
+    const edge = (node: Node, path: readonly number[], before: number, reverse: boolean, root = false): PositionedTextPoint | null => {
+      if (node.type.spec.atom) return null;
+      if (node.isText) {
+        const end = before + node.nodeSize;
+        return before < to && end > from ? { path, offset: 0, from: before, to: end } : null;
+      }
+      let position = reverse ? before + node.nodeSize - (root ? 2 : 1) : before + (root ? 0 : 1);
+      for (let index = reverse ? node.childCount - 1 : 0; reverse ? index >= 0 : index < node.childCount; index += reverse ? -1 : 1) {
+        const child = node.child(index), at = reverse ? position - child.nodeSize : position;
+        if (at < to && at + child.nodeSize > from) {
+          const found = edge(child, [...path, index], at, reverse);
+          if (found) return found;
+        }
+        position = reverse ? at : at + child.nodeSize;
+      }
+      return null;
+    };
+    const first = anchor === head ? null : edge(doc, [], 0, false, true);
+    const last = anchor === head ? null : edge(doc, [], 0, true, true);
+    const projection = anchor === head && anchorPoint.kind === 'text' ? Selection.cursor(anchorPoint.path, anchorPoint.offset)
+      : first && last ? Selection.range(first.path, Math.max(0, from - first.from),
+        last.path, Math.min(last.to, to) - last.from) : null;
+    const point = projection ? null : nearestTextPoint(doc, from);
+    super(projection?.path ?? point!.path, projection?.from ?? point!.offset,
+      projection?.to ?? point!.offset, projection?.endPath ?? point!.path);
+    this.structuralFrom = from;
+    this.structuralTo = to;
+    this.textSelection = projection;
+    if (projection) Object.freeze(projection);
+    Object.freeze(this);
+  }
+
+  get backward(): boolean { return this.anchor > this.head; }
+  override get isCollapsed(): boolean { return this.anchor === this.head; }
+
+  eq(other: BaseSelection): boolean {
+    return other instanceof RangeSelection && this.anchor === other.anchor && this.head === other.head;
+  }
+}
+
 /** Selects one complete non-root document node while retaining a text projection. */
 export class NodeSelection extends BaseSelection {
   readonly kind = 'node' as const;
@@ -321,7 +375,16 @@ export class CellSelection extends BaseSelection {
   }
 }
 
-export type AnySelection = Selection | NodeSelection | GapSelection | AllSelection | CellSelection;
+export type AnySelection = Selection | NodeSelection | GapSelection | AllSelection | CellSelection | RangeSelection;
+
+/** Prefer the established text/gap caret types; retain an exact structural
+ * caret when neither can represent an inline or empty-content boundary. */
+export function selectionAtPosition(doc: Node, position: number, association: SelectionAssociation = 1): AnySelection {
+  const point = resolveDocumentPoint(doc, position, association);
+  if (point.kind === 'text') return Selection.cursor(point.path, point.offset);
+  try { return new GapSelection(doc, position, association); }
+  catch { return new RangeSelection(doc, position, position); }
+}
 
 export function isTextSelection(selection: BaseSelection): selection is Selection {
   return selection.kind === 'text';

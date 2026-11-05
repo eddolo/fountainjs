@@ -4,7 +4,12 @@ import {
   Editor,
   GapSelection,
   NodeSelection,
+  RangeSelection,
   Selection,
+  nodeRangeAtPath,
+  resolveDocumentPoint,
+  selectionAtPosition,
+  textPointToPosition,
   type AnySelection,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
@@ -50,6 +55,8 @@ interface DirectionState {
 export class SelectionHandler {
   private syncing = false;
   private pointerSelectionHandled = false;
+  private pointerSelectionActive = false;
+  private pendingModelSync = false;
   #domSyncRequested = false;
 
   constructor(
@@ -61,6 +68,8 @@ export class SelectionHandler {
     dom.addEventListener('pointerdown', this.onPointerDown);
     dom.addEventListener('pointerup', this.onSelectionInteraction);
     dom.addEventListener('keyup', this.onSelectionInteraction);
+    document.addEventListener('pointerup', this.endPointerSelection);
+    document.addEventListener('pointercancel', this.endPointerSelection);
   }
 
   private readPoint(node: globalThis.Node, offset: number): { element: HTMLElement; offset: number } | null {
@@ -104,7 +113,88 @@ export class SelectionHandler {
     return null;
   }
 
-  read(): Selection | null {
+  private documentPosition(node: globalThis.Node, offset: number, association: -1 | 1, ranged = true): number | null {
+    try { return this.readDocumentPosition(node, offset, association, ranged); }
+    catch { return null; } // Detached/stale render paths cannot redirect an edit.
+  }
+
+  private readDocumentPosition(node: globalThis.Node, offset: number, association: -1 | 1, ranged: boolean): number | null {
+    const text = this.readPoint(node, offset);
+    if (text) return textPointToPosition(this.editor.state.doc, parsePath(text.element), text.offset);
+    if (!this.dom.contains(node)) return null;
+    const element = node.nodeType === 1 ? node as HTMLElement : node.parentElement;
+    if (!element || element.closest('[data-fountain-widget]')) return null;
+    const owner = element.closest<HTMLElement>('[data-fountain-path]');
+    if (owner) {
+      const path = parseNodePath(owner), model = getNodeAtPath(this.editor.state.doc, path);
+      if (model.type.spec.atom || !model.type.spec.content) {
+        if (!ranged) return null;
+        const range = nodeRangeAtPath(this.editor.state.doc, path);
+        return association > 0 ? range.from : range.to;
+      }
+    }
+    if (node.nodeType !== 1 || (element.closest('[contenteditable="false"]')
+      && element.closest('[contenteditable="false"]') !== this.dom)) return null;
+    const mapped = (child: globalThis.Node, reverse: boolean): HTMLElement | null => {
+      if (child.nodeType !== 1) return null;
+      const candidate = child as HTMLElement;
+      if (candidate.matches('[data-fountain-widget]')) return null;
+      if (candidate.matches('[data-fountain-path], [data-fountain-text-path]')) return candidate;
+      const descendants = Array.from(candidate.childNodes);
+      if (reverse) descendants.reverse();
+      for (const descendant of descendants) { const found = mapped(descendant, reverse); if (found) return found; }
+      return null;
+    };
+    const positionFor = (candidate: HTMLElement, after: boolean): number => {
+      if (candidate.dataset.fountainTextPath !== undefined) {
+        const path = parsePath(candidate), model = getNodeAtPath(this.editor.state.doc, path);
+        return textPointToPosition(this.editor.state.doc, path, after ? model.nodeSize : 0);
+      }
+      const range = nodeRangeAtPath(this.editor.state.doc, parseNodePath(candidate));
+      return after ? range.to : range.from;
+    };
+    const children = Array.from(node.childNodes);
+    for (let index = offset; index < children.length; index += 1) {
+      const next = mapped(children[index]!, false);
+      if (next) return positionFor(next, false);
+    }
+    for (let index = Math.min(offset, children.length) - 1; index >= 0; index -= 1) {
+      const previous = mapped(children[index]!, true);
+      if (previous) return positionFor(previous, true);
+    }
+    if (node === this.dom) return this.editor.state.doc.childCount ? null : 0;
+    if (owner && (element.matches('[data-fountain-content-dom]') || element === owner && !owner.querySelector('[data-fountain-content-dom]'))) {
+      return nodeRangeAtPath(this.editor.state.doc, parseNodePath(owner)).from + 1;
+    }
+    return null;
+  }
+
+  anchorPosition(): number | null {
+    const native = this.dom.ownerDocument.getSelection();
+    if (!native?.anchorNode || !native.rangeCount) return null;
+    const range = native.getRangeAt(0);
+    const backward = !native.isCollapsed && native.anchorNode === range.endContainer && native.anchorOffset === range.endOffset;
+    return this.documentPosition(native.anchorNode, native.anchorOffset, backward ? -1 : 1, !native.isCollapsed);
+  }
+
+  private documentDOMPoint(position: number, association: -1 | 1): { node: globalThis.Node; offset: number } | null {
+    const point = resolveDocumentPoint(this.editor.state.doc, position, association);
+    if (point.kind === 'text') {
+      const element = this.textElement(point.path);
+      return element ? locateOffset(element, point.offset) : null;
+    }
+    const next = this.nodeElement([...point.parentPath, point.index]);
+    const previous = point.index ? this.nodeElement([...point.parentPath, point.index - 1]) : null;
+    const child = next ?? previous;
+    if (child?.parentNode) return { node: child.parentNode,
+      offset: Array.prototype.indexOf.call(child.parentNode.childNodes, child) + (next ? 0 : 1) };
+    const parent = point.parentPath.length ? this.nodeElement(point.parentPath) : this.dom;
+    if (!parent) return null;
+    const content = parent.matches('[data-fountain-content-dom]') ? parent : parent.querySelector<HTMLElement>('[data-fountain-content-dom]') ?? parent;
+    return { node: content, offset: 0 };
+  }
+
+  read(allowGapMovement = false): AnySelection | null {
     const domSelection = document.getSelection();
     delete (this as SelectionHandler & DirectionState)._b;
     if (!domSelection?.anchorNode || !domSelection.focusNode || !this.dom.contains(domSelection.anchorNode)) return null;
@@ -113,6 +203,29 @@ export class SelectionHandler {
     // Preserve only the exact native range; a subsequent click in text must
     // still be allowed to replace the node selection.
     const semantic = this.editor.state.selection;
+    const allowNativeAnchor = allowGapMovement || this.pointerSelectionActive;
+    if (this.pendingModelSync && !allowNativeAnchor) return null;
+    if (semantic instanceof NodeSelection && this.pointerSelectionHandled && this.pendingModelSync) return null;
+    // A browser may normalize an element-boundary caret into nearby text
+    // during layout/focus (Chromium does so after terminal media). That is not
+    // user navigation. Keep the semantic gap until a pointer or navigation
+    // key actually places a different caret; typing still inserts at the gap.
+    if (semantic instanceof GapSelection && domSelection.isCollapsed && !allowNativeAnchor) return null;
+    const retainStructuralAnchor = semantic instanceof RangeSelection && !allowNativeAnchor
+      && resolveDocumentPoint(this.editor.state.doc, semantic.anchor).kind === 'boundary';
+    if (retainStructuralAnchor && !semantic.isCollapsed && domSelection.isCollapsed) return null;
+    if (semantic instanceof AllSelection && domSelection.rangeCount === 1) {
+      const range = domSelection.getRangeAt(0);
+      if (range.startContainer === this.dom && range.startOffset === 0 && range.endContainer === this.dom
+        && range.endOffset === this.dom.childNodes.length) return null;
+    }
+    if (semantic instanceof CellSelection && domSelection.rangeCount === 1) {
+      const first = this.nodeElement(semantic.cellPaths[0]!), last = this.nodeElement(semantic.cellPaths.at(-1)!);
+      const range = domSelection.getRangeAt(0);
+      if (first?.parentNode && last?.parentNode && range.startContainer === first.parentNode && range.endContainer === last.parentNode
+        && range.startOffset === Array.prototype.indexOf.call(first.parentNode.childNodes, first)
+        && range.endOffset === Array.prototype.indexOf.call(last.parentNode.childNodes, last) + 1) return null;
+    }
     if (semantic instanceof NodeSelection && domSelection.rangeCount === 1) {
       const selected = this.nodeElement(semantic.nodePath) ?? this.textElement(semantic.nodePath);
       const parent = selected?.parentNode;
@@ -125,11 +238,27 @@ export class SelectionHandler {
     }
     const anchorPoint = this.readPoint(domSelection.anchorNode, domSelection.anchorOffset);
     const focusPoint = this.readPoint(domSelection.focusNode, domSelection.focusOffset);
-    if (!anchorPoint || !focusPoint) return null;
+    if (!anchorPoint || !focusPoint) {
+      const range = domSelection.rangeCount ? domSelection.getRangeAt(0) : null;
+      const backward = range && !domSelection.isCollapsed && domSelection.anchorNode === range.endContainer && domSelection.anchorOffset === range.endOffset;
+      const anchor = retainStructuralAnchor ? semantic.anchor
+        : this.documentPosition(domSelection.anchorNode, domSelection.anchorOffset, backward ? -1 : 1, !domSelection.isCollapsed);
+      const head = this.documentPosition(domSelection.focusNode, domSelection.focusOffset, backward ? 1 : -1, !domSelection.isCollapsed);
+      if (anchor === null || head === null) return null;
+      return anchor === head ? selectionAtPosition(this.editor.state.doc, anchor) : new RangeSelection(this.editor.state.doc, anchor, head);
+    }
     const { element: anchorElement, offset: anchor } = anchorPoint;
     const { element: focusElement, offset: focus } = focusPoint;
     const anchorPath = parsePath(anchorElement);
     const focusPath = parsePath(focusElement);
+    if (semantic instanceof RangeSelection) {
+      const anchorPosition = retainStructuralAnchor ? semantic.anchor
+        : this.documentPosition(domSelection.anchorNode, domSelection.anchorOffset, 1);
+      const headPosition = this.documentPosition(domSelection.focusNode, domSelection.focusOffset, -1);
+      if (anchorPosition === null || headPosition === null) return null;
+      return anchorPosition === headPosition ? selectionAtPosition(this.editor.state.doc, anchorPosition)
+        : new RangeSelection(this.editor.state.doc, anchorPosition, headPosition);
+    }
     if (anchorElement === focusElement) {
       const result = new Selection(anchorPath, Math.min(anchor, focus), Math.max(anchor, focus));
       if (anchor > focus) (this as SelectionHandler & DirectionState)._b = result;
@@ -143,8 +272,8 @@ export class SelectionHandler {
     return result;
   }
 
-  capture(): Selection | null {
-    const selection = this.read();
+  capture(allowGapMovement = false): AnySelection | null {
+    const selection = this.read(allowGapMovement);
     if (!selection) {
       const native = document.getSelection();
       const anchor = native?.anchorNode;
@@ -186,6 +315,10 @@ export class SelectionHandler {
     queueMicrotask(() => { this.#domSyncRequested = false; });
   }
 
+  /** A committed selection must reach the DOM before incidental native
+   * endpoints from the preceding render can replace it. */
+  requestModelSync(): void { this.pendingModelSync = true; }
+
   consumeDOMSyncRequest(): boolean {
     const requested = this.#domSyncRequested;
     this.#domSyncRequested = false;
@@ -193,6 +326,7 @@ export class SelectionHandler {
   }
 
   sync(selection: AnySelection, applyDOM = true): void {
+    this.pendingModelSync = false;
     // A mapped model selection is not a request to leave a native field.
     // Explicit view.focus() focuses the editing host before calling sync.
     const active = this.dom.ownerDocument.activeElement;
@@ -273,6 +407,15 @@ export class SelectionHandler {
       return;
     }
 
+    if (selection instanceof RangeSelection) {
+      if (!applyDOM) return this.finishSync();
+      const anchor = this.documentDOMPoint(selection.anchor, selection.backward ? -1 : 1);
+      const head = this.documentDOMPoint(selection.head, selection.backward ? 1 : -1);
+      if (!anchor || !head) return this.finishSync();
+      domSelection.setBaseAndExtent(anchor.node, anchor.offset, head.node, head.offset);
+      return this.finishSync();
+    }
+
     if (!applyDOM) return this.finishSync();
     const path = selection.path.join('.');
     const wrappers = Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-text-path]'));
@@ -323,11 +466,34 @@ export class SelectionHandler {
     this.applyDOMSelection(domSelection, range);
   }
 
+  /** Let the browser choose visual/grapheme movement at the head, while the
+   * document model keeps an anchor that native selection cannot maintain. */
+  extendStructuralRange(direction: 'left' | 'right'): boolean {
+    const selection = this.editor.state.selection;
+    if (!(selection instanceof RangeSelection) || selection.isCollapsed
+      || resolveDocumentPoint(this.editor.state.doc, selection.anchor).kind !== 'boundary') return false;
+    const native = this.dom.ownerDocument.getSelection();
+    const point = this.documentDOMPoint(selection.head, direction === 'left' ? -1 : 1);
+    if (!native || !point || typeof native.modify !== 'function') return false;
+    native.collapse(point.node, point.offset);
+    native.modify('move', direction, 'character');
+    const head = native.focusNode ? this.documentPosition(native.focusNode, native.focusOffset, direction === 'left' ? -1 : 1) : null;
+    if (head !== null) {
+      this.requestDOMSync();
+      this.editor.dispatch(this.editor.createTransaction().setSelection(head === selection.anchor
+        ? selectionAtPosition(this.editor.state.doc, head) : new RangeSelection(this.editor.state.doc, selection.anchor, head)));
+    }
+    this.sync(this.editor.state.selection);
+    return true;
+  }
+
   destroy(): void {
     document.removeEventListener('selectionchange', this.onSelectionChange);
     this.dom.removeEventListener('pointerdown', this.onPointerDown);
     this.dom.removeEventListener('pointerup', this.onSelectionInteraction);
     this.dom.removeEventListener('keyup', this.onSelectionInteraction);
+    document.removeEventListener('pointerup', this.endPointerSelection);
+    document.removeEventListener('pointercancel', this.endPointerSelection);
   }
 
   private onSelectionChange = (): void => {
@@ -350,13 +516,20 @@ export class SelectionHandler {
       this.pointerSelectionHandled = false;
       return;
     }
-    if (!this.syncing) this.capture();
+    const nativeNavigation = event instanceof KeyboardEvent && !event.shiftKey
+      && ['Home', 'End', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key);
+    const documentNavigation = event instanceof KeyboardEvent && (event.ctrlKey || event.metaKey)
+      && ['Home', 'End', 'ArrowUp', 'ArrowDown'].includes(event.key);
+    if (!this.syncing) this.capture(event.type === 'pointerup' || nativeNavigation && !documentNavigation);
   };
+
+  private endPointerSelection = (): void => { this.pointerSelectionActive = false; };
 
   private onPointerDown = (event: PointerEvent): void => {
     if (this.shouldStopEvent?.(event)) return;
     const target = event.target instanceof Element ? event.target : null;
     if (!target || !this.dom.contains(target)) return;
+    this.pointerSelectionActive = true;
     this.requestDOMSync();
 
     const cell = target.closest<HTMLElement>('td[data-fountain-path], th[data-fountain-path]');
@@ -378,6 +551,33 @@ export class SelectionHandler {
           this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
           return;
         } catch { /* Let the browser place a regular text selection. */ }
+      }
+    }
+
+    const previous = this.editor.state.selection;
+    if (event.shiftKey && event.button === 0 && !event.defaultPrevented
+      && (previous instanceof GapSelection || previous instanceof RangeSelection)
+      && target.closest('input, textarea, select, button, [contenteditable]') === this.dom) {
+      // Chromium normalizes a native caret after a non-editable media shell
+      // back into preceding text when Shift-click extends it. Keep the exact
+      // model anchor and use the browser only to hit-test the new endpoint.
+      const owner = this.dom.ownerDocument;
+      const caret = owner.caretPositionFromPoint?.(event.clientX, event.clientY);
+      const hit = caret ? { node: caret.offsetNode, offset: caret.offset }
+        : (() => {
+          const range = owner.caretRangeFromPoint?.(event.clientX, event.clientY);
+          return range ? { node: range.startContainer, offset: range.startOffset } : null;
+        })();
+      const head = hit ? this.documentPosition(hit.node, hit.offset, 1, true) : null;
+      if (head !== null) {
+        const anchor = previous instanceof RangeSelection ? previous.anchor : previous.position;
+        const selection = anchor === head ? selectionAtPosition(this.editor.state.doc, head)
+          : new RangeSelection(this.editor.state.doc, anchor, head);
+        event.preventDefault();
+        this.pointerSelectionHandled = true;
+        this.dom.focus({ preventScroll: true });
+        this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
+        return;
       }
     }
 

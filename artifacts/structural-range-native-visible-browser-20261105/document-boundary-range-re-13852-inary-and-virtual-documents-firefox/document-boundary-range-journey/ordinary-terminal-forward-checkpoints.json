@@ -1,0 +1,16 @@
+[
+  {
+    "phase": "edge",
+    "anchor": "DIV",
+    "anchorText": "LeftImage could not be loaded.",
+    "anchorOffset": 2,
+    "head": "DIV",
+    "headOffset": 2,
+    "gaps": [
+      {
+        "path": "1",
+        "gap": "after"
+      }
+    ]
+  }
+]

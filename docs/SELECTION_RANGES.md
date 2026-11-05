@@ -1,4 +1,4 @@
-# Text ranges across document structure
+# Text and structural ranges across document structure
 
 `Selection.range(startPath, from, endPath, to)` uses ordered text-leaf paths
 and UTF-16 offsets. It can span paragraphs, quotes, lists and nested content.
@@ -33,6 +33,53 @@ Applications should use `CellSelection` and the table commands for rectangular
 cell operations. Schema validation does not by itself define every possible
 extension's editing or isolation policy.
 
+## Directed structural endpoints (unreleased)
+
+`new RangeSelection(doc, anchor, head)` retains directed document positions,
+including boundaries before/after figures and gaps between nodes. It does not
+pretend that an image endpoint is an offset in an adjacent text paragraph.
+Positions count UTF-16 text units plus opening/closing units for non-root nodes;
+the document itself contributes no opening/closing units.
+
+```ts
+import { RangeSelection, insertText } from 'fountainjs-editor/core';
+
+// For paragraph("Left") followed by an empty-caption image, content size is 8.
+editor.dispatch(editor.createTransaction().setSelection(
+  new RangeSelection(editor.state.doc, 8, 3),
+));
+insertText(editor, 'X'); // LeX; removes the selected image, keeps Le.
+```
+
+`anchor` and `head` retain direction; `structuralFrom`/`structuralTo` are ordered.
+An equal anchor/head represents an exact caret. State normalization prefers the
+existing text or `GapSelection` caret when either can represent that position.
+`resolveDocumentPoint` distinguishes text offsets from parent/child boundaries;
+it rejects positions inside opaque nodes. Empty non-atomic content can have a
+valid boundary inside it, even when no text leaf exists yet.
+
+`RangeSelection.textSelection` is the editable-text projection, or `null` when
+there is none. The legacy `path`/offset fields are compatibility projections,
+not the structural range. Use the structural fields when replacing or deleting;
+do not format neighboring text through an image-only projection.
+
+`ReplaceRangeStep` and `Transform.replaceRange` support text replacement with
+mixed endpoints. Required container shape and partial table grids remain schema
+validated. Typing, deletion, rich paste and history use the same model operation;
+unsupported fitting returns failure rather than publishing an invalid tree.
+
+The Yjs adapter encodes text endpoints against `Y.XmlText` and boundaries against
+their retained parent `Y.XmlElement`. Directed ranges, gap association and undo
+selections are relative to those shared objects, not absolute paths or numeric
+positions. Existing text-awareness payloads remain readable. Structural range
+awareness adds an optional kind; an older adapter cannot display its boundary
+endpoints. The document storage format is unchanged.
+
+Clipboard serialization currently creates a closed, schema-valid document from
+the selection, retaining whole selected nodes and clipped marked text. A custom
+open fragment that cannot form a valid document is reported and is not cut.
+General open-slice transport and insertion fitting remain unfinished.
+
 ## Position mapping
 
 `ReplaceTextRangeStep.getMap(before)` describes the actual resulting tree.
@@ -50,11 +97,14 @@ and selections rather than trying to reconstruct them from visible HTML.
 
 ## Scope still open
 
-This API requires text endpoints. A general range with an endpoint before/after
-an atomic block or in a structural gap is separate unfinished foundation work.
-In particular, the recorded virtual Ctrl+Shift+End audit still misses a trailing
-image; this repair does not certify that shortcut, arbitrary open-slice insertion,
-or complete mixed structural clipboard behavior. See
+The legacy `Selection.range` API requires text endpoints; `RangeSelection` adds
+exact structural endpoints. The recorded browser journey covers 24 ordinary/
+virtual, leading/trailing-media and directed replacement cases across Chromium,
+Firefox and WebKit. It checks visible edited text, complete exported models,
+exact-source undo/redo and reopened reader output. Trusted native copy/cut is
+checked in each engine; actual internal and independent external OS paste is
+checked in Chromium. This does not certify arbitrary open-slice insertion,
+every keyboard gesture or every custom NodeView's editing behavior. See
 [virtualization limits](VIRTUALIZATION.md#scope-and-limits).
 
 The regression suite checks complete models, unselected character positions,
@@ -65,5 +115,6 @@ is evidence for those cases, not physical mobile or universal input certificatio
 
 ```sh
 pnpm exec vitest run tests/cross-container-range.test.ts
+pnpm exec vitest run tests/document-range-selection.test.ts tests/replace-document-range.test.ts tests/document-range-commands.test.ts tests/document-range-clipboard.test.ts tests/yjs-document-range.test.ts
 pnpm exec playwright test --grep "native selections across quote and list"
 ```

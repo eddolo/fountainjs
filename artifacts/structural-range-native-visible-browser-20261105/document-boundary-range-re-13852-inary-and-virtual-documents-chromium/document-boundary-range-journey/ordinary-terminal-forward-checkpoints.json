@@ -1,0 +1,16 @@
+[
+  {
+    "phase": "edge",
+    "anchor": "#text",
+    "anchorText": "Left",
+    "anchorOffset": 0,
+    "head": "#text",
+    "headOffset": 0,
+    "gaps": [
+      {
+        "path": "1",
+        "gap": "after"
+      }
+    ]
+  }
+]

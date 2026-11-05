@@ -1,0 +1,16 @@
+[
+  {
+    "phase": "edge",
+    "anchor": "DIV",
+    "anchorText": "Paragraph 257.Paragraph 258.Pa",
+    "anchorOffset": 46,
+    "head": "DIV",
+    "headOffset": 46,
+    "gaps": [
+      {
+        "path": "301",
+        "gap": "after"
+      }
+    ]
+  }
+]

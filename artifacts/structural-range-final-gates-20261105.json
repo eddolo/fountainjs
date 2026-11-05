@@ -1,0 +1,62 @@
+[
+  {
+    "Name": "native-regressions",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-native-regressions-20261105.log"
+  },
+  {
+    "Name": "terminal-smoke",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-terminal-smoke-20261105.log"
+  },
+  {
+    "Name": "visual-contacts",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-visual-contacts-20261105.log"
+  },
+  {
+    "Name": "unit",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-unit-20261105.log"
+  },
+  {
+    "Name": "types",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-types-20261105.log"
+  },
+  {
+    "Name": "api",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-api-20261105.log"
+  },
+  {
+    "Name": "headless",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-headless-20261105.log"
+  },
+  {
+    "Name": "package",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-package-20261105.log"
+  },
+  {
+    "Name": "server-runtimes",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-server-runtimes-20261105.log"
+  },
+  {
+    "Name": "markdown",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-markdown-20261105.log"
+  },
+  {
+    "Name": "budget",
+    "ExitCode": 1,
+    "Log": "artifacts/structural-range-final-budget-20261105.log"
+  },
+  {
+    "Name": "performance",
+    "ExitCode": 0,
+    "Log": "artifacts/structural-range-final-performance-20261105.log"
+  }
+]

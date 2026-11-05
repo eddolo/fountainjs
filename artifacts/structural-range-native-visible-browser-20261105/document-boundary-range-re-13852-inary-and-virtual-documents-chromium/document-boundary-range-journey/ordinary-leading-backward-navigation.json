@@ -1,0 +1,1113 @@
+[
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "End",
+    "prevented": true,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "End",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Shift",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "End",
+    "prevented": true,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "End",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Shift",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "X",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "head": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "X",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "head": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "head": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "End",
+    "prevented": true,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "End",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Shift",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Shift",
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "X",
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "X",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "head": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "head": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "head": {
+      "path": "0.0",
+      "text": "LeX",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Home",
+    "prevented": true,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Shift",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Shift",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "X",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "X",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "X",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "X",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "X",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "X",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "X",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "X",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Home",
+    "prevented": true,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "head": {
+      "text": "Image could not be loaded. RetryRig",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 0
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 1
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 1
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 1
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 2
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 2
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 2
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "head": {
+      "path": "1.0",
+      "text": "Right",
+      "offset": 3
+    },
+    "active": "Issue description editor"
+  }
+]

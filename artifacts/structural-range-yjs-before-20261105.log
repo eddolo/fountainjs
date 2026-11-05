@@ -1,0 +1,163 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-document-range.test.ts (7 tests | 6 failed) 57ms
+   × preserves mixed range direction, presence and endpoints through remote edits (backward: false) 20ms
+   × preserves mixed range direction, presence and endpoints through remote edits (backward: true) 4ms
+   × keeps a text caret collapsed when a remote edit lands at exactly the same position 9ms
+   × preserves a gap caret and its association across a remote block insertion (-1) 6ms
+   × preserves a gap caret and its association across a remote block insertion (1) 5ms
+   × restores a backward text-to-image range on collaborative undo while retaining remote text 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-document-range.test.ts > preserves mixed range direction, presence and endpoints through remote edits (backward: false)
+AssertionError: expected undefined to deeply equal { anchor: 2, head: 9 }
+
+- Expected:
+{
+  "anchor": 2,
+  "head": 9,
+}
+
++ Received:
+undefined
+
+ ❯ tests/yjs-document-range.test.ts:51:67
+     49|     const { left, right } = pair;
+     50|     left.dispatch(left.createTransaction().setSelection(new RangeSelec…
+     51|     expect(getCollaborationState(right)?.presences[0]?.selection).toEq…
+       |                                                                   ^
+     52|     right.dispatch(right.createTransaction().setSelection(Selection.cu…
+     53|     expect(insertText(right, 'ZZ')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > preserves mixed range direction, presence and endpoints through remote edits (backward: true)
+AssertionError: expected undefined to deeply equal { anchor: 9, head: 2 }
+
+- Expected:
+{
+  "anchor": 9,
+  "head": 2,
+}
+
++ Received:
+undefined
+
+ ❯ tests/yjs-document-range.test.ts:51:67
+     49|     const { left, right } = pair;
+     50|     left.dispatch(left.createTransaction().setSelection(new RangeSelec…
+     51|     expect(getCollaborationState(right)?.presences[0]?.selection).toEq…
+       |                                                                   ^
+     52|     right.dispatch(right.createTransaction().setSelection(Selection.cu…
+     53|     expect(insertText(right, 'ZZ')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > keeps a text caret collapsed when a remote edit lands at exactly the same position
+AssertionError: expected Selection{ path: [ +0, +0 ], …(4) } to match object { Object (kind, path, ...) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,7 +1,7 @@
+- {
+-   "from": 3,
++ Selection {
++   "from": 2,
+    "kind": "text",
+    "path": [
+      0,
+      0,
+    ],
+
+ ❯ tests/yjs-document-range.test.ts:69:39
+     67|     pair.sync();
+     68|     expect(pair.left.state.doc.child(0).textContent).toBe('AlZpha');
+     69|     expect(pair.left.state.selection).toMatchObject({ kind: 'text', pa…
+       |                                       ^
+     70|     expect(getCollaborationState(pair.right)?.presences[0]?.selection)…
+     71|   } finally { pair.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > preserves a gap caret and its association across a remote block insertion (-1)
+AssertionError: expected GapSelection{ path: [ 2, +0 ], …(8) } to match object { kind: 'gap', position: 9, …(1) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
++ GapSelection {
+    "association": -1,
+    "kind": "gap",
+-   "position": 9,
++   "position": 15,
+  }
+
+ ❯ tests/yjs-document-range.test.ts:82:39
+     80|     pair.sync();
+     81|     const position = association < 0 ? 9 : 15;
+     82|     expect(pair.left.state.selection).toMatchObject({ kind: 'gap', pos…
+       |                                       ^
+     83|     expect(getCollaborationState(pair.right)?.presences[0]?.selection)…
+     84|   } finally { pair.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > preserves a gap caret and its association across a remote block insertion (1)
+AssertionError: expected undefined to deeply equal { anchor: 15, head: 15 }
+
+- Expected:
+{
+  "anchor": 15,
+  "head": 15,
+}
+
++ Received:
+undefined
+
+ ❯ tests/yjs-document-range.test.ts:83:72
+     81|     const position = association < 0 ? 9 : 15;
+     82|     expect(pair.left.state.selection).toMatchObject({ kind: 'gap', pos…
+     83|     expect(getCollaborationState(pair.right)?.presences[0]?.selection)…
+       |                                                                        ^
+     84|   } finally { pair.destroy(); }
+     85| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > restores a backward text-to-image range on collaborative undo while retaining remote text
+AssertionError: expected Selection{ path: [ +0, +0 ], …(4) } to match object { kind: 'range', anchor: 10, head: 3 }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "anchor": 10,
+-   "head": 3,
+-   "kind": "range",
++ Selection {
++   "kind": "text",
+  }
+
+ ❯ tests/yjs-document-range.test.ts:100:34
+     98|     expect(left.state.doc.child(0).textContent).toBe('RAlpha');
+     99|     expect(left.state.doc.child(1).type.name).toBe('image_super');
+    100|     expect(left.state.selection).toMatchObject({ kind: 'range', anchor…
+       |                                  ^
+    101|     expect(redoCollaboration(left)).toBe(true);
+    102|     expect(left.state.doc.childCount).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  02:56:52
+   Duration  3.37s (import 52%, transform 46%, tests 2%)
+

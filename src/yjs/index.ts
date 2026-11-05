@@ -1,8 +1,12 @@
 import * as Y from 'yjs';
 import {
   Selection,
+  RangeSelection,
   isSafeURL,
   isTextSelection,
+  nodeRangeAtPath,
+  resolveDocumentPoint,
+  selectionAtPosition,
   textPointToPosition,
   type AnySelection,
   type Node,
@@ -82,6 +86,8 @@ export interface YjsCollaborationExtensionOptions extends YjsCollaborationAdapte
 interface RelativeSelectionJSON {
   readonly anchor: unknown;
   readonly head: unknown;
+  readonly kind?: 'range';
+  readonly association?: -1 | 1;
 }
 
 interface PendingHistorySelection {
@@ -355,7 +361,7 @@ function readSharedDocument(fragment: Y.XmlFragment): NodeJSON {
   return parseSharedElement(children[0], 0, { nodes: 0, text: 0 });
 }
 
-function sharedTextAtPath(fragment: Y.XmlFragment, path: readonly number[]): Y.XmlText | undefined {
+function sharedElementAtPath(fragment: Y.XmlFragment, path: readonly number[]): SharedElement | undefined {
   const root = fragment.get(0);
   if (!isSharedElement(root)) return undefined;
   let current = root;
@@ -364,9 +370,30 @@ function sharedTextAtPath(fragment: Y.XmlFragment, path: readonly number[]): Y.X
     if (!isSharedElement(child)) return undefined;
     current = child;
   }
-  if (current.getAttribute(TYPE_ATTRIBUTE) !== 'text' || current.length !== 1) return undefined;
+  return current;
+}
+
+function sharedTextAtPath(fragment: Y.XmlFragment, path: readonly number[]): Y.XmlText | undefined {
+  const current = sharedElementAtPath(fragment, path);
+  if (!current || current.getAttribute(TYPE_ATTRIBUTE) !== 'text' || current.length !== 1) return undefined;
   const text = current.get(0);
   return text instanceof Y.XmlText ? text : undefined;
+}
+
+function findSharedElementPath(
+  element: SharedElement,
+  target: SharedElement,
+  path: readonly number[] = [],
+): readonly number[] | undefined {
+  if (element === target) return path;
+  const children = element.toArray();
+  for (let index = 0; index < children.length; index++) {
+    const child = children[index];
+    if (!isSharedElement(child)) continue;
+    const nested = findSharedElementPath(child, target, [...path, index]);
+    if (nested) return nested;
+  }
+  return undefined;
 }
 
 function findSharedTextPath(
@@ -667,7 +694,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.structuredAttributes?.validate(update.document);
     const root = this.fragment.get(0);
     const pending: PendingHistorySelection = {
-      before: this.relativeSelection(update.beforeSelection),
+      before: this.relativeSelection(update.beforeSelection, update.before),
     };
     this.pendingHistory = pending;
     try {
@@ -677,7 +704,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
           this.fragment.insert(0, [createSharedElement(update.document)]);
         } else synchronizeElement(root, update.before, update.document);
         this.structuredAttributes?.synchronize(update.document);
-        pending.after = this.relativeSelection(update.selection);
+        pending.after = this.relativeSelection(update.selection, update.document);
       }, this.localOrigin);
     } finally {
       this.pendingHistory = undefined;
@@ -731,19 +758,35 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.document.transact(() => synchronizeElement(root, before, after), this.repairOrigin);
   }
 
-  private relativeSelection(selection: AnySelection): RelativeSelectionJSON | undefined {
+  private relativeSelection(selection: AnySelection, document: Node): RelativeSelectionJSON | undefined {
+    if (selection.kind === 'range' || selection.kind === 'gap') {
+      const anchor = selection.kind === 'range' ? selection.anchor : selection.position;
+      const head = selection.kind === 'range' ? selection.head : selection.position;
+      const association = selection.kind === 'gap' ? selection.association : 1;
+      const relative = (position: number, bias: -1 | 1): unknown => {
+        const point = resolveDocumentPoint(document, position, bias);
+        const shared = point.kind === 'text' ? sharedTextAtPath(this.fragment, point.path)
+          : sharedElementAtPath(this.fragment, point.parentPath);
+        if (!shared) throw new Error('Selection is outside the shared document.');
+        return Y.relativePositionToJSON(Y.createRelativePositionFromTypeIndex(shared,
+          point.kind === 'text' ? point.offset : point.index, bias));
+      };
+      const start = relative(anchor, anchor === head ? association : anchor < head ? 1 : -1);
+      return Object.freeze({ kind: 'range', association, anchor: start,
+        head: anchor === head ? start : relative(head, head < anchor ? 1 : -1) });
+    }
     if (!isTextSelection(selection)) return undefined;
     const anchorText = sharedTextAtPath(this.fragment, selection.path);
     const headText = sharedTextAtPath(this.fragment, selection.endPath);
     if (!anchorText || !headText) return undefined;
-    return Object.freeze({
-      anchor: Y.relativePositionToJSON(Y.createRelativePositionFromTypeIndex(anchorText, selection.from, 1)),
-      head: Y.relativePositionToJSON(Y.createRelativePositionFromTypeIndex(headText, selection.to, -1)),
-    });
+    const anchor = Y.relativePositionToJSON(Y.createRelativePositionFromTypeIndex(anchorText, selection.from, 1));
+    return Object.freeze({ anchor, head: selection.isCollapsed ? anchor
+      : Y.relativePositionToJSON(Y.createRelativePositionFromTypeIndex(headText, selection.to, -1)) });
   }
 
-  private resolveRelativeSelection(selection: RelativeSelectionJSON, document: Node): Selection | undefined {
+  private resolveRelativeSelection(selection: RelativeSelectionJSON, document: Node): AnySelection | undefined {
     try {
+      if (selection.kind !== undefined && selection.kind !== 'range') return undefined;
       const anchor = Y.createAbsolutePositionFromRelativePosition(
         Y.createRelativePositionFromJSON(selection.anchor), this.document,
       );
@@ -751,8 +794,32 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         Y.createRelativePositionFromJSON(selection.head), this.document,
       );
       const root = this.fragment.get(0);
-      if (!anchor || !head || !(anchor.type instanceof Y.XmlText) || !(head.type instanceof Y.XmlText)
-        || !isSharedElement(root)) return undefined;
+      if (!anchor || !head || !isSharedElement(root)) return undefined;
+      if (selection.kind === 'range') {
+        const association = selection.association ?? 1;
+        if (association !== -1 && association !== 1) return undefined;
+        const position = (point: Y.AbsolutePosition): number => {
+          if (point.type instanceof Y.XmlText) {
+            const path = findSharedTextPath(root, point.type);
+            if (!path) throw new Error('Detached shared text.');
+            return textPointToPosition(document, path, point.index);
+          }
+          if (!isSharedElement(point.type) || point.type.getAttribute(TYPE_ATTRIBUTE) === 'text') {
+            throw new Error('Invalid shared boundary.');
+          }
+          const path = findSharedElementPath(root, point.type);
+          if (!path) throw new Error('Detached shared boundary.');
+          const parent = path.reduce((node, index) => node.child(index), document);
+          if (point.index < 0 || point.index > parent.childCount) throw new Error('Invalid shared child index.');
+          let result = path.length ? nodeRangeAtPath(document, path).from + 1 : 0;
+          for (let index = 0; index < point.index; index++) result += parent.child(index).nodeSize;
+          resolveDocumentPoint(document, result, association);
+          return result;
+        };
+        const from = position(anchor), to = position(head);
+        return from === to ? selectionAtPosition(document, from, association) : new RangeSelection(document, from, to);
+      }
+      if (!(anchor.type instanceof Y.XmlText) || !(head.type instanceof Y.XmlText)) return undefined;
       const anchorPath = findSharedTextPath(root, anchor.type);
       const headPath = findSharedTextPath(root, head.type);
       if (!anchorPath || !headPath) return undefined;
@@ -766,7 +833,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private publishLocalSelection(document: Node, selection: AnySelection): void {
-    const relative = this.relativeSelection(selection);
+    const relative = this.relativeSelection(selection, document);
     this.localSelection = relative;
     if (!this.awareness) return;
     const value = Object.freeze({
@@ -820,8 +887,10 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         user: candidate.user as CollaborationUser,
         ...(selection ? {
           selection: {
-            anchor: textPointToPosition(document, selection.path, selection.from),
-            head: textPointToPosition(document, selection.endPath, selection.to),
+            anchor: selection.kind === 'range' ? selection.anchor : selection.kind === 'gap' ? selection.position
+              : textPointToPosition(document, selection.path, selection.from),
+            head: selection.kind === 'range' ? selection.head : selection.kind === 'gap' ? selection.position
+              : textPointToPosition(document, selection.endPath, selection.to),
           },
         } : {}),
       });

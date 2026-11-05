@@ -1,0 +1,16 @@
+[
+  {
+    "phase": "edge",
+    "anchor": "DIV",
+    "anchorText": "Image could not be loaded. Ret",
+    "anchorOffset": 0,
+    "head": "DIV",
+    "headOffset": 0,
+    "gaps": [
+      {
+        "path": "0",
+        "gap": "before"
+      }
+    ]
+  }
+]

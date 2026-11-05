@@ -1,0 +1,43 @@
+[
+  {
+    "phase": "edge",
+    "anchor": "DIV",
+    "anchorText": "Image could not be loaded. Ret",
+    "anchorOffset": 0,
+    "head": "DIV",
+    "headOffset": 0,
+    "gaps": [
+      {
+        "path": "0",
+        "gap": "before"
+      }
+    ]
+  },
+  {
+    "phase": "document-extended",
+    "anchor": "DIV",
+    "anchorText": "Image could not be loaded. Ret",
+    "anchorOffset": 0,
+    "head": "#text",
+    "headOffset": 5,
+    "gaps": []
+  },
+  {
+    "phase": "character-extended-1",
+    "anchor": "DIV",
+    "anchorText": "Image could not be loaded. Ret",
+    "anchorOffset": 0,
+    "head": "#text",
+    "headOffset": 4,
+    "gaps": []
+  },
+  {
+    "phase": "character-extended-2",
+    "anchor": "DIV",
+    "anchorText": "Image could not be loaded. Ret",
+    "anchorOffset": 0,
+    "head": "#text",
+    "headOffset": 3,
+    "gaps": []
+  }
+]

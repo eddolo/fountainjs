@@ -5,6 +5,8 @@ import {
   CellSelection,
   GapSelection,
   NodeSelection,
+  RangeSelection,
+  selectionAtPosition,
   Selection,
   type AnySelection,
 } from './selection';
@@ -13,6 +15,8 @@ import { TableMap } from './table-map';
 import { createImageNode, getActiveImage, type ImageAttributes } from './image';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
+import { ReplaceRangeStep } from './transaction/replace-range-step';
+import { nodeRangeAtPath } from './transaction/mapping';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
 import { matchesContentExpression } from './schema/content-expression';
 import { textAlignmentAttribute, textDirectionAttribute } from './text-direction';
@@ -195,11 +199,32 @@ function insertTextAtGap(editor: Editor, selection: GapSelection, text: string):
 }
 
 function replaceSemanticSelection(editor: Editor, selection: AnySelection, text?: string): boolean {
+  if (selection instanceof RangeSelection) {
+    if (text === '' || text === undefined && selection.isCollapsed) return false;
+    return replaceDocumentRange(editor, selection, text ?? '');
+  }
   if (selection instanceof AllSelection) return replaceAllSelection(editor, text ?? '');
   if (selection instanceof NodeSelection) return replaceNodeSelection(editor, selection, text);
   if (selection instanceof CellSelection) return replaceCellSelection(editor, selection, text);
   if (selection instanceof GapSelection) return text === undefined ? false : insertTextAtGap(editor, selection, text);
   return false;
+}
+
+function replaceDocumentRange(editor: Editor, selection: RangeSelection, text: string): boolean {
+  const before = editor.state.doc;
+  try {
+    const step = new ReplaceRangeStep(selection.structuralFrom, selection.structuralTo, text, editor.state.storedMarks);
+    const transaction = editor.createTransaction().step(step);
+    transaction.setSelection(selectionAtPosition(transaction.doc, step.getInsertionPosition(before), -1));
+    if (selection.isCollapsed) transaction.setStoredMarks(editor.state.storedMarks);
+    return dispatchIfValid(editor, transaction);
+  } catch { return false; }
+}
+
+function prepareRangeCaret(editor: Editor): boolean {
+  const selection = editor.state.selection;
+  if (!(selection instanceof RangeSelection)) return true;
+  return replaceDocumentRange(editor, selection, '') && editor.state.selection.kind === 'text';
 }
 
 function setSelectionAfterInserted(
@@ -213,10 +238,13 @@ function setSelectionAfterInserted(
   const selectedNode = getNodeAtPath(transaction.doc, selectedPath);
   const leaf = getTextLeaves(selectedNode).at(-1);
   if (leaf) transaction.setSelection(Selection.cursor([...selectedPath, ...leaf.path], leaf.node.text?.length ?? 0));
-  else transaction.setSelection(new NodeSelection(transaction.doc, selectedPath));
+  else transaction.setSelection(selectionAtPosition(transaction.doc, nodeRangeAtPath(transaction.doc, selectedPath).to));
 }
 
 function replaceSemanticSelectionWithDocument(editor: Editor, selection: Exclude<AnySelection, Selection>, document: Node): boolean {
+  if (selection instanceof RangeSelection) return editor.runCommandBatch(() => (
+    (selection.isCollapsed || deleteSelection(editor)) && prepareRangeCaret(editor) && insertDocument(editor, document)
+  ));
   const content = [...document.content];
   if (!content.length) return false;
   const transaction = editor.state.createTransaction();
@@ -254,7 +282,7 @@ function replaceSemanticSelectionWithDocument(editor: Editor, selection: Exclude
         ])]);
       }
       setSelectionAfterInserted(transaction, parentPath, index, content);
-    } else {
+    } else if (selection instanceof CellSelection) {
       const paragraph = editor.state.schema.nodes.paragraph;
       if (!paragraph) return false;
       const firstPath = selection.cellPaths[0] as readonly number[];
@@ -269,7 +297,7 @@ function replaceSemanticSelectionWithDocument(editor: Editor, selection: Exclude
       const leaf = getTextLeaves(firstCell).at(-1);
       if (leaf) transaction.setSelection(Selection.cursor([...firstPath, ...leaf.path], leaf.node.text?.length ?? 0));
       else transaction.setSelection(new NodeSelection(transaction.doc, [...firstPath, firstCell.childCount - 1]));
-    }
+    } else return false;
   } catch {
     return false;
   }
@@ -290,6 +318,7 @@ function textRangeForNode(doc: Node, path: readonly number[]): Selection | null 
 }
 
 function selectedTextRanges(doc: Node, selection: AnySelection): readonly Selection[] {
+  if (selection instanceof RangeSelection) return selection.textSelection && !selection.isCollapsed ? [selection.textSelection] : [];
   if (selection instanceof GapSelection) return [];
   if (selection instanceof CellSelection) {
     return selection.cellPaths
@@ -401,6 +430,7 @@ export function deleteSelection(editor: Editor): boolean {
 export function deleteBackward(editor: Editor): boolean {
   if (!editor.editable) return false;
   if (!editor.state.selection.isCollapsed) return deleteSelection(editor);
+  if (editor.state.selection instanceof RangeSelection) return editor.runCommandBatch(() => prepareRangeCaret(editor) && deleteBackward(editor));
   if (editor.state.selection instanceof GapSelection) {
     const { parentPath, index } = editor.state.selection;
     if (index === 0) return false;
@@ -435,6 +465,7 @@ export function deleteBackward(editor: Editor): boolean {
 export function deleteForward(editor: Editor): boolean {
   if (!editor.editable) return false;
   if (!editor.state.selection.isCollapsed) return deleteSelection(editor);
+  if (editor.state.selection instanceof RangeSelection) return editor.runCommandBatch(() => prepareRangeCaret(editor) && deleteForward(editor));
   if (editor.state.selection instanceof GapSelection) {
     const { parentPath, index } = editor.state.selection;
     const parent = getNodeAtPath(editor.state.doc, parentPath);
@@ -520,6 +551,12 @@ export function insertDocument(editor: Editor, document: Node): boolean {
   const blockPath = path.slice(0, -1);
   const containerPath = blockPath.slice(0, -1);
   const blockIndex = blockPath.at(-1) as number;
+  if (blockPath.length && TEXT_BLOCKS.includes(parent.type.name)
+    && parent.content.every(child => child.isText && child.nodeSize === 0)) {
+    const transaction = state.createTransaction().replaceNode(blockPath, blocks);
+    setSelectionAfterInserted(transaction, containerPath, blockIndex, blocks);
+    return dispatchIfValid(editor, transaction);
+  }
   if (blockPath.length) {
     const textIndex = path.at(-1) as number;
     const block = getNodeAtPath(state.doc, blockPath);
@@ -764,7 +801,7 @@ export function toggleMark(editor: Editor, markName: string): boolean {
   const markType = state.schema.marks[markName];
   if (!markType) return false;
   if (state.selection.isCollapsed) {
-    if (state.selection.kind !== 'text') return false;
+    if (state.selection.kind !== 'text' && !(state.selection instanceof RangeSelection)) return false;
     const active = state.storedMarks.some((mark) => mark.type === markType);
     const marks = active
       ? state.storedMarks.filter((mark) => mark.type !== markType)
@@ -798,7 +835,7 @@ export function setMark(editor: Editor, markName: string, attrs: Attributes = {}
   try { mark = markType.create(attrs); }
   catch { return false; }
   if (state.selection.isCollapsed) {
-    if (state.selection.kind !== 'text') return false;
+    if (state.selection.kind !== 'text' && !(state.selection instanceof RangeSelection)) return false;
     editor.dispatch(state.createTransaction().setStoredMarks([
       ...state.storedMarks.filter((existing) => existing.type !== markType),
       mark,
@@ -822,7 +859,7 @@ export function unsetMark(editor: Editor, markName: string): boolean {
   const markType = state.schema.marks[markName];
   if (!markType) return false;
   if (state.selection.isCollapsed) {
-    if (state.selection.kind !== 'text') return false;
+    if (state.selection.kind !== 'text' && !(state.selection instanceof RangeSelection)) return false;
     editor.dispatch(state.createTransaction().setStoredMarks(state.storedMarks.filter((mark) => mark.type !== markType)));
     return true;
   }
@@ -911,7 +948,13 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
 /** Inserts a semantic hard-break node and leaves an editable text cursor after it. */
 export function insertHardBreak(editor: Editor): boolean {
   if (!editor.editable) return false;
-  if (editor.state.selection instanceof GapSelection) return false;
+  if (editor.state.selection instanceof RangeSelection) return editor.runCommandBatch(() => {
+    if (!editor.state.selection.isCollapsed && !deleteSelection(editor)) return false;
+    return prepareRangeCaret(editor) && insertHardBreak(editor);
+  });
+  if (editor.state.selection instanceof GapSelection) return editor.runCommandBatch(() => (
+    insertTextAtGap(editor, editor.state.selection as GapSelection, '') && insertHardBreak(editor)
+  ));
   if (!editor.state.selection.isCollapsed && !deleteSelection(editor)) return false;
   const { state } = editor;
   const { path, from } = state.selection;
@@ -1210,6 +1253,10 @@ export function insertTable(editor: Editor, options: TableOptions = {}): boolean
 
 export function splitBlock(editor: Editor): boolean {
   if (!editor.editable) return false;
+  if (editor.state.selection instanceof RangeSelection) return editor.runCommandBatch(() => {
+    if (!editor.state.selection.isCollapsed && !deleteSelection(editor)) return false;
+    return prepareRangeCaret(editor) && splitBlock(editor);
+  });
   const { state } = editor;
   if (state.selection instanceof GapSelection) return insertTextAtGap(editor, state.selection, '');
   if (state.selection instanceof AllSelection) return replaceAllSelection(editor, '');

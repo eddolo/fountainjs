@@ -3,6 +3,8 @@ import {
   CellSelection,
   GapSelection,
   NodeSelection,
+  RangeSelection,
+  selectionAtPosition,
   Selection,
   type AnySelection,
 } from '../selection';
@@ -376,6 +378,11 @@ export function mapSelection(selection: AnySelection, before: Node, after: Node,
   // Empty intermediate snapshots have neither a text caret nor a block gap.
   if (!after.childCount) return new AllSelection(after);
   if (selection instanceof AllSelection) return new AllSelection(after);
+  if (selection instanceof RangeSelection) {
+    const from = map.map(selection.structuralFrom, 1), to = map.map(selection.structuralTo, -1);
+    if (selection.isCollapsed || from >= to) return selectionAtPosition(after, from);
+    return new RangeSelection(after, selection.backward ? to : from, selection.backward ? from : to);
+  }
   if (selection instanceof GapSelection) {
     return new GapSelection(after, map.map(selection.position, selection.association), selection.association);
   }

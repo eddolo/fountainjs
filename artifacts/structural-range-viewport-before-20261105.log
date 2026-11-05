@@ -1,0 +1,45 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/virtual-view.test.ts (19 tests | 1 failed) 1409ms
+   ❯ virtual EditorView (19)
+     × captures native caret movement before a viewport render can restore an older model offset 150ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/virtual-view.test.ts > virtual EditorView > captures native caret movement before a viewport render can restore an older model offset
+AssertionError: expected Selection{ path: [ +0, +0 ], …(4) } to match object { Object (kind, path, ...) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "from": 3,
++ Selection {
++   "from": 2,
+    "kind": "text",
+    "path": [
+      0,
+      0,
+    ],
+-   "to": 3,
++   "to": 2,
+  }
+
+ ❯ tests/virtual-view.test.ts:67:38
+     65|       callbacks.splice(0).forEach(callback => callback(1));
+     66|       await Promise.resolve();
+     67|       expect(editor.state.selection).toMatchObject({ kind: 'text', pat…
+       |                                      ^
+     68|       expect(native.anchorOffset).toBe(3);
+     69|       expect(native.focusOffset).toBe(3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  03:29:24
+   Duration  5.81s (transform 27%, import 26%, tests 25%, environment 21%)
+

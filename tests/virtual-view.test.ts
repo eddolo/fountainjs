@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   CoreExtension,
@@ -44,6 +44,33 @@ function setup(count = 1_000) {
 }
 
 describe('virtual EditorView', () => {
+  it('captures native caret movement before a viewport render can restore an older model offset', async () => {
+    const callbacks: FrameRequestCallback[] = [];
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => { callbacks.push(callback); return callbacks.length; });
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
+    const { editor, view } = setup();
+    try {
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+      view.focus();
+      await Promise.resolve();
+      callbacks.splice(0).forEach(callback => callback(0));
+      await Promise.resolve();
+      const text = view.dom.querySelector('[data-fountain-text-path="0.0"]')!.firstChild!;
+      const native = document.getSelection()!;
+      // Browser default navigation has advanced the caret, but keyup and
+      // selectionchange have not yet published that position to the model.
+      native.setBaseAndExtent(text, 3, text, 3);
+      expect(editor.state.selection.from).toBe(2);
+      window.dispatchEvent(new Event('scroll'));
+      callbacks.splice(0).forEach(callback => callback(1));
+      await Promise.resolve();
+      expect(editor.state.selection).toMatchObject({ kind: 'text', path: [0, 0], from: 3, to: 3 });
+      expect(native.anchorOffset).toBe(3);
+      expect(native.focusOffset).toBe(3);
+      expect(editor.state.doc.child(0).textContent).toBe('Virtual block 0');
+    } finally { view.destroy(); editor.destroy(); vi.restoreAllMocks(); }
+  });
+
   it.each([
     { key: 'End', ctrlKey: true, metaKey: false, index: 999, offset: 'Virtual block 999'.length },
     { key: 'Home', ctrlKey: true, metaKey: false, index: 0, offset: 0 },

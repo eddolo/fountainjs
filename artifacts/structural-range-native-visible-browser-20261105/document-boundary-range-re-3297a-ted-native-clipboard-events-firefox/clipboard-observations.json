@@ -1,0 +1,22 @@
+{
+  "engine": "firefox",
+  "records": [
+    {
+      "type": "copy",
+      "trusted": true,
+      "prevented": true,
+      "plain": "ft\n[Image: Clipboard figure]",
+      "html": "<p>ft</p>\n<figure data-align=\"center\" style=\"width:100%;max-width:100%\"><img src=\"https://example.test/clipboard.png\" alt=\"Clipboard figure\" loading=\"lazy\" decoding=\"async\" style=\"width:100%;height:auto\"></figure>",
+      "fountain": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"ft\"}]},{\"type\":\"image_super\",\"attrs\":{\"src\":\"https://example.test/clipboard.png\",\"alt\":\"Clipboard figure\",\"title\":\"\",\"width\":\"100%\",\"height\":\"auto\",\"align\":\"center\",\"srcset\":\"\",\"sizes\":\"\",\"loading\":\"lazy\",\"decoding\":\"async\",\"caption\":\"\"}}]}}"
+    },
+    {
+      "type": "cut",
+      "trusted": true,
+      "prevented": true,
+      "plain": "ft\n[Image: Clipboard figure]",
+      "html": "<p>ft</p>\n<figure data-align=\"center\" style=\"width:100%;max-width:100%\"><img src=\"https://example.test/clipboard.png\" alt=\"Clipboard figure\" loading=\"lazy\" decoding=\"async\" style=\"width:100%;height:auto\"></figure>",
+      "fountain": "{\"version\":1,\"document\":{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"align\":\"left\"},\"content\":[{\"type\":\"text\",\"text\":\"ft\"}]},{\"type\":\"image_super\",\"attrs\":{\"src\":\"https://example.test/clipboard.png\",\"alt\":\"Clipboard figure\",\"title\":\"\",\"width\":\"100%\",\"height\":\"auto\",\"align\":\"center\",\"srcset\":\"\",\"sizes\":\"\",\"loading\":\"lazy\",\"decoding\":\"async\",\"caption\":\"\"}}]}}"
+    }
+  ],
+  "externalAndInternalOSPasteChecked": false
+}

@@ -5,6 +5,20 @@ Audited revision: `b11eb75` (`feat: add extension authoring conformance tooling`
 Original scope: architecture and dependency inspection only. Subsequent
 implementation results are recorded explicitly below.
 
+Implementation update (2026-11-05, Unreleased): directed structural selection,
+document-point resolution and range replacement live in `src/core/selection.ts`
+and `src/core/transaction/`; they use the Fountain model rather than DOM nodes,
+browser selection or layout. `src/yjs/index.ts` encodes structural endpoints
+against Yjs parent elements and text endpoints against Yjs text, preserving
+direction and insertion association without a browser. Native hit testing,
+selection synchronization and viewport/caret behavior stay in `src/view/`.
+An actual packed root/core ESM/CommonJS consumer and both Yjs module formats pass
+14 complete-model/mapping/history/paste/collaborative-undo cases with `window`,
+`document`, `DOMParser`, `HTMLElement` and `MutationObserver` absent. All 873
+archive build files match the tested build. This proves those Node.js cases;
+it is not a React Native, Flutter, SwiftUI or Compose renderer.
+[Packed evidence](../artifacts/structural-range-packed-node-20261105.json).
+
 Implementation update (2026-11-03, Unreleased): live syntax line numbers now
 use bounded node-decoration labels rendered by a CSS gutter. The old
 `lineNumberFactory`/`document.createElement` dependency in

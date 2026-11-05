@@ -8,6 +8,7 @@ import { ReplaceDocumentStep } from './replace-document-step';
 import { ReplaceNodeStep } from './replace-node-step';
 import { ReplaceTextStep } from './replace-text-step';
 import { ReplaceTextRangeStep } from './replace-text-range-step';
+import { ReplaceRangeStep } from './replace-range-step';
 import { SetNodeAttrsStep } from './set-node-attrs-step';
 import { Step } from './step';
 import { Mapping, type StepMap } from './mapping';
@@ -46,6 +47,10 @@ export class Transform {
 
   replaceDocument(document: Node): this {
     return this.step(new ReplaceDocumentStep(document));
+  }
+
+  replaceRange(from: number, to: number, text = '', boundaryMarks: readonly Mark[] = []): this {
+    return this.step(new ReplaceRangeStep(from, to, text, boundaryMarks));
   }
 
   replaceNode(path: readonly number[], content: readonly Node[] = []): this {
