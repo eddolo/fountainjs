@@ -1,0 +1,1201 @@
+[
+  {
+    "source": "",
+    "line": 0,
+    "name": "(garbage collector)",
+    "selfMs": 1098.36
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 783,
+    "name": "Bs",
+    "snippet": "function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark[], context: ImportContext, reportUnknown: boolean): Mark[] {",
+    "selfMs": 347.73
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 14,
+    "name": "O",
+    "snippet": "function computeAttrs(",
+    "selfMs": 324.25
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 377,
+    "name": "getAttribute",
+    "snippet": "getAttribute(name: string): string | null {",
+    "selfMs": 312.61
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 130,
+    "name": "a",
+    "snippet": "const visit = (current: Node, path: readonly number[]): boolean => {",
+    "selfMs": 312.34
+  },
+  {
+    "source": "../src/core/schema/node-spec.ts",
+    "line": 27,
+    "name": "t",
+    "snippet": "export function freezeAttributes(attrs: Attributes): Readonly<Attributes> {",
+    "selfMs": 234.09
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 492,
+    "name": "_callState",
+    "snippet": "_callState(cp) {",
+    "selfMs": 126.44
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 205,
+    "name": "_runParsingLoop",
+    "snippet": "_runParsingLoop() {",
+    "selfMs": 124.36
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 342,
+    "name": "xs",
+    "snippet": "function wrapChildren(parent: RawParent, source: SourceInput | undefined, selectors: SelectorCache): SourceNode[] {",
+    "selfMs": 113.97
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 676,
+    "name": "Ls",
+    "snippet": "function configuredNode(",
+    "selfMs": 109.02
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 207,
+    "name": "get attributes",
+    "snippet": "get attributes() {",
+    "selfMs": 107.43
+  },
+  {
+    "source": "../src/core/url.ts",
+    "line": 12,
+    "name": "r",
+    "snippet": "export function isSafeURL(value: unknown, options: SafeURLOptions = {}): value is string {",
+    "selfMs": 99.41
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 288,
+    "name": "_s",
+    "snippet": "function parseStyle(source: string): Readonly<Record<string, string>> {",
+    "selfMs": 97.18
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 880,
+    "name": "",
+    "snippet": "parent.childNodes.forEach((child) => {",
+    "selfMs": 91.89
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 35,
+    "name": "k",
+    "snippet": "function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {",
+    "selfMs": 83.05
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 594,
+    "name": "Ms",
+    "snippet": "function configuredRules(",
+    "selfMs": 81.44
+  },
+  {
+    "source": "../src/core/schema/node.ts",
+    "line": 26,
+    "name": "r",
+    "snippet": "constructor(",
+    "selfMs": 80.04
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 640,
+    "name": "Fs",
+    "snippet": "function configuredMarks(element: SourceElement, schema: Schema, context: ImportContext): Mark[] {",
+    "selfMs": 68.87
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 343,
+    "name": "",
+    "snippet": "return htmlparser2Adapter.getChildNodes(parent).flatMap((node) => {",
+    "selfMs": 68.06
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 441,
+    "name": "ws",
+    "snippet": "function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOptions>, context: ImportContext): void {",
+    "selfMs": 65.14
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 301,
+    "name": "vs",
+    "snippet": "function rawText(node: RawNode): string {",
+    "selfMs": 64.75
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1279,
+    "name": "sc",
+    "snippet": "function projectBlock(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {",
+    "selfMs": 60.18
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "parse",
+    "selfMs": 59.93
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 358,
+    "name": "e",
+    "snippet": "constructor(raw: RawElement, source: SourceInput | undefined, selectors: SelectorCache) {",
+    "selfMs": 59.6
+  },
+  {
+    "source": "../src/core/importers/html-link-url.ts",
+    "line": 4,
+    "name": "t",
+    "snippet": "export function importedHTMLLinkURL(value: string): string | null {",
+    "selfMs": 56.12
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 61,
+    "name": "appendChild",
+    "snippet": "appendChild(parentNode, newNode) {",
+    "selfMs": 52.56
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 307,
+    "name": "ys",
+    "snippet": "function wrapNode(node: RawNode, source: SourceInput | undefined, selectors: SelectorCache): SourceNode | null {",
+    "selfMs": 50.95
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 691,
+    "name": "",
+    "snippet": "Object.values(schema.nodes).forEach((type, order) => {",
+    "selfMs": 43.18
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 205,
+    "name": "updateNodeSourceCodeLocation",
+    "snippet": "updateNodeSourceCodeLocation(node, endLocation) {",
+    "selfMs": 42.45
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/formatting-element-list.js",
+    "line": 66,
+    "name": "pushElement",
+    "snippet": "pushElement(element, token) {",
+    "selfMs": 41.03
+  },
+  {
+    "source": "../src/core/link-destination.ts",
+    "line": 20,
+    "name": "k",
+    "snippet": "export function renderedLinkDestination(value: string, htmlSource?: unknown): string {",
+    "selfMs": 40.66
+  },
+  {
+    "source": "../src/core/text-direction.ts",
+    "line": 90,
+    "name": "u",
+    "snippet": "function alignmentDeclaration(element: DirectionElement, styleAlign: string | undefined): string | undefined {",
+    "selfMs": 38.48
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 665,
+    "name": "Is",
+    "snippet": "function colorValue(value: string): string | null {",
+    "selfMs": 34.18
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^[A-Za-z][A-Za-z\\d+.-]*:",
+    "selfMs": 34.14
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 365,
+    "name": "",
+    "snippet": "htmlparser2Adapter.getAttrList(raw).forEach(({ name, value }) => {",
+    "selfMs": 33.53
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 649,
+    "name": "",
+    "snippet": "configuredRules(type.spec).forEach(({ rule, portable }) => {",
+    "selfMs": 31.08
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1129,
+    "name": "Ys",
+    "snippet": "function paragraph(element: SourceElement, schema: Schema, context: ImportContext, childContext = false): FountainNode {",
+    "selfMs": 30.3
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 873,
+    "name": "Q",
+    "snippet": "function inlineChildren(",
+    "selfMs": 30.25
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 633,
+    "name": "Z",
+    "snippet": "function addSchemaMark(marks: Mark[], schema: Schema, name: string, attrs: Attributes = {}): void {",
+    "selfMs": 27.75
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1268,
+    "name": "oc",
+    "snippet": "function inheritElementMarks(element: SourceElement, nodes: FountainNode[], schema: Schema, context: ImportContext): FountainNode[] {",
+    "selfMs": 27.36
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 647,
+    "name": "",
+    "snippet": "Object.values(schema.marks).forEach((type, order) => {",
+    "selfMs": 25.22
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 340,
+    "name": "_insertCharacters",
+    "snippet": "_insertCharacters(token) {",
+    "selfMs": 25.09
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 72,
+    "name": "create",
+    "snippet": "create(attrs: Attributes = {}): Mark {",
+    "selfMs": 24.51
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 694,
+    "name": "",
+    "snippet": "configuredRules(type.spec).forEach(({ rule, portable }) => {",
+    "selfMs": 23.92
+  },
+  {
+    "source": "node:internal/modules/esm/utils",
+    "line": 317,
+    "name": "compileSourceTextModule",
+    "selfMs": 23.01
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 38,
+    "name": "createElement",
+    "snippet": "createElement(tagName, namespaceURI, attrs) {",
+    "selfMs": 22.69
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 58,
+    "name": "create",
+    "snippet": "create(attrs: Attributes = {}, content: readonly Node[] = [], text?: string, marks: readonly Mark[] = []): Node {",
+    "selfMs": 21.94
+  },
+  {
+    "source": "../src/extensions/marks/link.ts",
+    "line": 5,
+    "name": "validate",
+    "snippet": "href: { validate: (value) => typeof value === 'string' && value.length <= 2_048 && isSafeURL(value, { allowEmpty: true }) },",
+    "selfMs": 21.18
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1189,
+    "name": "c",
+    "snippet": "const flushInline = () => {",
+    "selfMs": 20.43
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/preprocessor.js",
+    "line": 132,
+    "name": "advance",
+    "snippet": "advance() {",
+    "selfMs": 18.49
+  },
+  {
+    "source": "../src/core/text-direction.ts",
+    "line": 70,
+    "name": "l",
+    "snippet": "export function readTextDirection(element: DirectionElement, schema?: Schema, childContext = false): Attributes {",
+    "selfMs": 17.17
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 405,
+    "name": "get parentElement",
+    "snippet": "get parentElement(): SourceElement | null {",
+    "selfMs": 16.93
+  },
+  {
+    "source": "../src/core/importers/html-marks.ts",
+    "line": 16,
+    "name": "i",
+    "snippet": "export function mergeHTMLMarks(local: readonly Mark[], inherited: readonly Mark[], tag: string): Mark[] {",
+    "selfMs": 15.77
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 396,
+    "name": "_emitCurrentCharacterToken",
+    "snippet": "_emitCurrentCharacterToken(nextLocation) {",
+    "selfMs": 15.76
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 302,
+    "name": "_insertElement",
+    "snippet": "_insertElement(token, namespaceURI) {",
+    "selfMs": 15.44
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^#([\\da-f]{3}|[\\da-f]{6})$",
+    "selfMs": 14.54
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/common/html.js",
+    "line": 416,
+    "name": "kr",
+    "snippet": "export function getTagID(tagName) {",
+    "selfMs": 14.24
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 124,
+    "name": "insertText",
+    "snippet": "insertText(parentNode, text) {",
+    "selfMs": 13.96
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1125,
+    "name": "Js",
+    "snippet": "function alignment(element: SourceElement, direction: Readonly<Attributes>): Attributes {",
+    "selfMs": 13.94
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 247,
+    "name": "hs",
+    "snippet": "function splitStyleDeclarations(source: string): string[] {",
+    "selfMs": 12.82
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 332,
+    "name": "_leaveAttrName",
+    "snippet": "_leaveAttrName() {",
+    "selfMs": 12.38
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 410,
+    "name": "matches",
+    "snippet": "matches(selector: string): boolean {",
+    "selfMs": 11.17
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 1480,
+    "name": "_stateAttributeName",
+    "snippet": "_stateAttributeName(cp) {",
+    "selfMs": 10.86
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 129,
+    "name": "validate",
+    "snippet": "validate(node: Node): void {",
+    "selfMs": 10.49
+  },
+  {
+    "source": "../src/core/text-direction.ts",
+    "line": 5,
+    "name": "validate",
+    "snippet": "validate: (value: unknown) => ['left', 'center', 'right', 'justify', 'start', 'end'].includes(String(value)),",
+    "selfMs": 10.42
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 140,
+    "name": "",
+    "snippet": "current.marks.forEach((mark) => {",
+    "selfMs": 9.85
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 1661,
+    "name": "pa",
+    "snippet": "function characterInBody(p, token) {",
+    "selfMs": 9.81
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "(program)",
+    "selfMs": 9.46
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 2130,
+    "name": "parseContent",
+    "snippet": "private parseContent(html: string, schema: Schema, documentMode: boolean): ServerHTMLFragmentImportResult & { readonly pageSettings?: DocumentPageSettings; readonly htmlSourceEnvelope?: HTMLDocumentEnvelope } {",
+    "selfMs": 9.26
+  },
+  {
+    "source": "node:internal/url",
+    "line": 879,
+    "name": "URL",
+    "selfMs": 9.26
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 1125,
+    "name": "onWhitespaceCharacter",
+    "snippet": "onWhitespaceCharacter(token) {",
+    "selfMs": 9
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 304,
+    "name": "",
+    "snippet": "return htmlparser2Adapter.getChildNodes(node as RawParent).map((child) => rawText(child)).join('');",
+    "selfMs": 8.97
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^rgba?\\(\\s*(\\d{1,3})\\s*[, ]\\s*(\\d{1,3})\\s*[, ]\\s*(\\d{1,3})(?:\\s*[,/]\\s*(?:1(?:\\.0+)?|100%))?\\s*\\)$",
+    "selfMs": 8.84
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 276,
+    "name": "_attachElementToTree",
+    "snippet": "_attachElementToTree(element, location) {",
+    "selfMs": 8.83
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/open-element-stack.js",
+    "line": 50,
+    "name": "_indexOf",
+    "snippet": "_indexOf(element) {",
+    "selfMs": 7.95
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 2241,
+    "name": "ro",
+    "snippet": "function endTagInBody(p, token) {",
+    "selfMs": 7.76
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 391,
+    "name": "hasAttribute",
+    "snippet": "hasAttribute(name: string): boolean { return this.getAttribute(name) !== null; }",
+    "selfMs": 7.74
+  },
+  {
+    "source": "../src/core/text-direction.ts",
+    "line": 109,
+    "name": "d",
+    "snippet": "export function readTextAlignmentAttributes(element: DirectionElement, styleAlign: string | undefined, direction: Readonly<Attributes>): Attributes {",
+    "selfMs": 7.74
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: [\\u0000-\\u001f\\u007f]",
+    "selfMs": 7.73
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1197,
+    "name": "",
+    "snippet": "element.childNodes.forEach((child) => {",
+    "selfMs": 7.69
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 243,
+    "name": "ms",
+    "snippet": "function camelCaseDataName(name: string): string {",
+    "selfMs": 7.31
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 367,
+    "name": "emitCurrentTagToken",
+    "snippet": "emitCurrentTagToken() {",
+    "selfMs": 7.02
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/formatting-element-list.js",
+    "line": 82,
+    "name": "removeEntry",
+    "snippet": "removeEntry(entry) {",
+    "selfMs": 6.56
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 317,
+    "name": "_createCharacterToken",
+    "snippet": "_createCharacterToken(type, chars) {",
+    "selfMs": 6.5
+  },
+  {
+    "source": "../src/core/text-direction.ts",
+    "line": 49,
+    "name": "s",
+    "snippet": "function retainedDirectionContainer(element: DirectionElement, schema: Schema): boolean {",
+    "selfMs": 6.4
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "internalModuleStat",
+    "selfMs": 6.31
+  },
+  {
+    "source": "node:internal/modules/package_json_reader",
+    "line": 80,
+    "name": "get",
+    "selfMs": 6.29
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 192,
+    "name": "getCurrentLocation",
+    "snippet": "getCurrentLocation(offset) {",
+    "selfMs": 6.2
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 1763,
+    "name": "wa",
+    "snippet": "function aStartTagInBody(p, token) {",
+    "selfMs": 6.17
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 947,
+    "name": "_stateEndTagOpen",
+    "snippet": "_stateEndTagOpen(cp) {",
+    "selfMs": 6.16
+  },
+  {
+    "source": "../src/core/schema/mark.ts",
+    "line": 12,
+    "name": "n",
+    "snippet": "constructor(public readonly type: MarkType, attrs: Attributes = {}) {",
+    "selfMs": 6.15
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "lstat",
+    "selfMs": 5.94
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 227,
+    "name": "O",
+    "snippet": "export function isTag(node) {",
+    "selfMs": 5.65
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/open-element-stack.js",
+    "line": 62,
+    "name": "push",
+    "snippet": "push(element, tagID) {",
+    "selfMs": 4.96
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "open",
+    "selfMs": 4.91
+  },
+  {
+    "source": "node:internal/bootstrap/realm",
+    "line": 383,
+    "name": "compileForInternalLoader",
+    "selfMs": 4.83
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 1198,
+    "name": "Ri",
+    "snippet": "function aaObtainFurthestBlock(p, formattingElementEntry) {",
+    "selfMs": 4.8
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 109,
+    "name": "text",
+    "snippet": "text(value: string, marks: readonly Mark[] = []): Node {",
+    "selfMs": 4.8
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 1924,
+    "name": "q",
+    "snippet": "function startTagInBody(p, token) {",
+    "selfMs": 4.74
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1183,
+    "name": "$",
+    "snippet": "function blockChildren(element: SourceParent, schema: Schema, context: ImportContext, inlineParagraphAttrs: Attributes = {}): FountainNode[] {",
+    "selfMs": 4.69
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 83,
+    "name": "qe",
+    "snippet": "export class Text extends DataNode {",
+    "selfMs": 4.68
+  },
+  {
+    "source": "../node_modules/.pnpm/domutils@4.0.2/node_modules/domutils/dist/traversal.js",
+    "line": 62,
+    "name": "pn",
+    "snippet": "export function hasAttrib(element, name) {",
+    "selfMs": 4.62
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/open-element-stack.js",
+    "line": 108,
+    "name": "shortenToLength",
+    "snippet": "shortenToLength(idx) {",
+    "selfMs": 4.61
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 976,
+    "name": "_stateTagName",
+    "snippet": "_stateTagName(cp) {",
+    "selfMs": 4.47
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 908,
+    "name": "_stateTagOpen",
+    "snippet": "_stateTagOpen(cp) {",
+    "selfMs": 4.23
+  },
+  {
+    "source": "../src/core/schema/content-expression.ts",
+    "line": 110,
+    "name": "a",
+    "snippet": "export function matchesContentExpression(content: readonly Node[], source: string): boolean {",
+    "selfMs": 4.11
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 65,
+    "name": "Ke",
+    "snippet": "constructor(data) {",
+    "selfMs": 3.58
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 824,
+    "name": "",
+    "snippet": "nextMarks.forEach(mark => {",
+    "selfMs": 3.57
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 2183,
+    "name": "",
+    "snippet": "blocks.forEach(node => schema.validate(node));",
+    "selfMs": 3.4
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 967,
+    "name": "_endTagOutsideForeignContent",
+    "snippet": "_endTagOutsideForeignContent(token) {",
+    "selfMs": 3.25
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: -([a-z])",
+    "selfMs": 3.25
+  },
+  {
+    "source": "../src/core/schema/copy-validation.ts",
+    "line": 61,
+    "name": "u",
+    "snippet": "export function copiedValidation(node: Node, schema: Schema): CopyValidation | undefined {",
+    "selfMs": 3.16
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "update",
+    "selfMs": 3.15
+  },
+  {
+    "source": "../node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/attributes.js",
+    "line": 133,
+    "name": "",
+    "snippet": "return (element) => adapter.hasAttrib(element, name) && next(element);",
+    "selfMs": 3.13
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^xmpp:",
+    "selfMs": 3.12
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^mailto:",
+    "selfMs": 3.11
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 1657,
+    "name": "fa",
+    "snippet": "function whitespaceCharacterInBody(p, token) {",
+    "selfMs": 3.09
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 100,
+    "name": "Nr",
+    "snippet": "function isAsciiUpper(cp) {",
+    "selfMs": 3.08
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 208,
+    "name": "",
+    "snippet": "return Object.keys(this.attribs).map((name) => ({",
+    "selfMs": 3.08
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 760,
+    "name": "zs",
+    "snippet": "function configuredRuby(",
+    "selfMs": 3.08
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1262,
+    "name": "ic",
+    "snippet": "function block(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {",
+    "selfMs": 3.07
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/extensions-CeBIvaRg.js",
+    "line": 1,
+    "name": "",
+    "selfMs": 2.9
+  },
+  {
+    "source": "../src/core/schema/copy-validation.ts",
+    "line": 57,
+    "name": "l",
+    "snippet": "export function markWideValidated(node: Node, schema: Schema, grammar?: CopyGrammar): void {",
+    "selfMs": 2.88
+  },
+  {
+    "source": "node:internal/worker/js_transferable",
+    "line": 91,
+    "name": "markTransferMode",
+    "selfMs": 2.59
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "(idle)",
+    "selfMs": 2.44
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 6,
+    "name": "Ge",
+    "snippet": "export class Node {",
+    "selfMs": 2.08
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/dist/server-EehO81bm.js",
+    "line": 1,
+    "name": "",
+    "selfMs": 1.92
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 473,
+    "name": "",
+    "snippet": "htmlparser2Adapter.getChildNodes(current.node).forEach((node) => {",
+    "selfMs": 1.86
+  },
+  {
+    "source": "node:internal/modules/esm/load",
+    "line": 136,
+    "name": "defaultLoadSync",
+    "selfMs": 1.76
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^h[1-6]$",
+    "selfMs": 1.72
+  },
+  {
+    "source": "node:vm",
+    "line": 225,
+    "name": "createContext",
+    "selfMs": 1.71
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 496,
+    "name": "_closePElement",
+    "snippet": "_closePElement() {",
+    "selfMs": 1.61
+  },
+  {
+    "source": "node:internal/url",
+    "line": 1107,
+    "name": "get hostname",
+    "selfMs": 1.6
+  },
+  {
+    "source": "node:internal/modules/esm/loader",
+    "line": 741,
+    "name": "resolveSync",
+    "selfMs": 1.6
+  },
+  {
+    "source": "node:path",
+    "line": 190,
+    "name": "resolve",
+    "selfMs": 1.59
+  },
+  {
+    "source": "node:internal/encoding",
+    "line": 482,
+    "name": "decode",
+    "selfMs": 1.59
+  },
+  {
+    "source": "node:internal/modules/esm/module_job",
+    "line": 260,
+    "name": "syncLink",
+    "selfMs": 1.59
+  },
+  {
+    "source": "../node_modules/.pnpm/css-select@7.0.0/node_modules/css-select/dist/helpers/selectors.js",
+    "line": 6,
+    "name": "Kn",
+    "snippet": "export function isTraversal(token) {",
+    "selfMs": 1.59
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 1685,
+    "name": "_stateAfterAttributeValueQuoted",
+    "snippet": "_stateAfterAttributeValueQuoted(cp) {",
+    "selfMs": 1.59
+  },
+  {
+    "source": "../src/core/importers/html-marks.ts",
+    "line": 18,
+    "name": "",
+    "snippet": "const effective = local.filter(own => {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "node:fs",
+    "line": 2781,
+    "name": "realpathSync",
+    "selfMs": 1.57
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "pathToFileURL",
+    "selfMs": 1.57
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "fstat",
+    "selfMs": 1.57
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "getPackageScopeConfig",
+    "selfMs": 1.56
+  },
+  {
+    "source": "node:internal/modules/esm/get_format",
+    "line": 171,
+    "name": "getFileProtocolModuleFormat",
+    "selfMs": 1.56
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "close",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 193,
+    "name": "_setContextModes",
+    "snippet": "_setContextModes(current, tid) {",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 97,
+    "name": "node",
+    "snippet": "node(",
+    "selfMs": 1.56
+  },
+  {
+    "source": "node:internal/modules/esm/module_map",
+    "line": 94,
+    "name": "get",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1566,
+    "name": "parse",
+    "snippet": "parse(html: string, schema: Schema): FountainNode {",
+    "selfMs": 1.55
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 861,
+    "name": "_startTagOutsideForeignContent",
+    "snippet": "_startTagOutsideForeignContent(token) {",
+    "selfMs": 1.55
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/server-html-profile-20261105.mjs",
+    "line": 1,
+    "name": "",
+    "selfMs": 1.55
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 162,
+    "name": "getAttrList",
+    "snippet": "getAttrList(element) {",
+    "selfMs": 1.54
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^https?:\\/\\/",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 2184,
+    "name": "Xa",
+    "snippet": "function pEndTagInBody(p) {",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../src/core/link-destination.ts",
+    "line": 42,
+    "name": "M",
+    "snippet": "export function needsHTMLLinkSource(source: string): boolean {",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../src/extensions/marks/link.ts",
+    "line": 6,
+    "name": "validate",
+    "snippet": "title: { default: '', validate: (value) => typeof value === 'string' && value.length <= 1_000 },",
+    "selfMs": 1.54
+  },
+  {
+    "source": "node:internal/encoding",
+    "line": 355,
+    "name": "encode",
+    "selfMs": 1.54
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "encodeUtf8String",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 183,
+    "name": "$e",
+    "snippet": "constructor(name, attribs, children = [], type = name === \"script\"",
+    "selfMs": 1.54
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^https?:\\/\\/[^/?#]*\\\\",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 126,
+    "name": "Xe",
+    "snippet": "constructor(children) {",
+    "selfMs": 1.54
+  },
+  {
+    "source": "node:internal/url",
+    "line": 840,
+    "name": "isURL",
+    "selfMs": 1.54
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: [\\t\\n\\r]",
+    "selfMs": 1.53
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^tel:",
+    "selfMs": 1.53
+  },
+  {
+    "source": "node:internal/url",
+    "line": 1160,
+    "name": "set search",
+    "selfMs": 1.1
+  },
+  {
+    "source": "node:internal/modules/package_json_reader",
+    "line": 222,
+    "name": "getPackageScopeConfig",
+    "selfMs": 1.07
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 1449,
+    "name": "_stateBeforeAttributeName",
+    "snippet": "_stateBeforeAttributeName(cp) {",
+    "selfMs": 1.06
+  },
+  {
+    "source": "../src/extensions/media.ts",
+    "line": 224,
+    "name": "",
+    "snippet": "return Object.freeze(providers.map((provider) => {",
+    "selfMs": 1.06
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 177,
+    "name": "",
+    "snippet": "&& current.marks.every((mark) => isDeeplyImmutable(mark.attrs));",
+    "selfMs": 1.05
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 251,
+    "name": "tt",
+    "snippet": "export function isComment(node) {",
+    "selfMs": 1.05
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 172,
+    "name": "getTextNodeContent",
+    "snippet": "getTextNodeContent(textNode) {",
+    "selfMs": 1.04
+  },
+  {
+    "source": "../node_modules/.pnpm/domelementtype@3.0.0/node_modules/domelementtype/dist/index.js",
+    "line": 28,
+    "name": "isTag",
+    "snippet": "export function isTag(element) {",
+    "selfMs": 0.65
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5-htmlparser2-tree-adapter@8.0.1/node_modules/parse5-htmlparser2-tree-adapter/dist/index.js",
+    "line": 156,
+    "name": "getChildNodes",
+    "snippet": "getChildNodes(node) {",
+    "selfMs": 0.44
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 243,
+    "name": "k",
+    "snippet": "export function isText(node) {",
+    "selfMs": 0.27
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 8,
+    "name": "",
+    "snippet": "parent = null;",
+    "selfMs": 0.17
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/parser/index.js",
+    "line": 475,
+    "name": "_reconstructActiveFormattingElements",
+    "snippet": "_reconstructActiveFormattingElements() {",
+    "selfMs": 0.06
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 794,
+    "name": "_stateData",
+    "snippet": "_stateData(cp) {",
+    "selfMs": 0.03
+  }
+]

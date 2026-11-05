@@ -11,6 +11,46 @@ type RawElement = Htmlparser2TreeAdapterMap['element'];
 vi.mock('css-select', { spy: true });
 
 describe('tree-owned server HTML selector compilation', () => {
+  it('observes initially empty rules added and removed by callbacks within an import and across imports', () => {
+    let schema: Schema, epoch = 0;
+    const calls: string[] = [];
+    const kit = composeExtensions([CoreExtension, defineExtension({ name: 'live-rule-fixture',
+      nodes: { late_block: { group: 'block', content: 'block+', attrs: { id: { default: '' } }, parseHTML: [] } },
+      marks: {
+        late_mark: { attrs: { id: { default: '' } }, parseHTML: [] },
+        toggle: { parseHTML: [{ tag: '[data-toggle]', getAttrs(element) {
+          const on = element.getAttribute('data-toggle') === 'on';
+          calls.push(on ? 'on' : 'off');
+          schema.marks.late_mark.spec.parseHTML = on ? [{ tag: 'span[data-future]', getAttrs(candidate) {
+            const id = candidate.getAttribute('data-future'); calls.push(`mark:${id}`); return { id: `${id}-${epoch}` };
+          } }] : [];
+          schema.nodes.late_block.spec.parseHTML = on ? [{ tag: 'aside[data-future]', getAttrs(candidate) {
+            const id = candidate.getAttribute('data-future'); calls.push(`block:${id}`); return { id: `${id}-${epoch}` };
+          } }] : [];
+          return false;
+        } }] },
+      },
+    })]);
+    schema = new Schema(kit.schema);
+    const importer = new ServerHTMLImporter();
+    const source = '<p><em data-toggle="on">On</em><span data-future="one">One</span></p>'
+      + '<aside data-future="first"><p>Inside first</p></aside>'
+      + '<p><i data-toggle="off">Off</i><span data-future="two">Two</span></p>'
+      + '<aside data-future="second"><p>Inside second</p></aside>';
+    for (epoch = 1; epoch <= 2; epoch++) {
+      calls.length = 0;
+      const result = importer.parseWithReport(source, schema);
+      expect(calls).toEqual(['on', 'mark:one', 'block:first', 'off']);
+      expect(result.document.child(0).child(1).marks.map(mark => mark.toJSON())).toEqual([{ type: 'late_mark', attrs: { id: `one-${epoch}` } }]);
+      expect(result.document.child(1).type.name).toBe('late_block');
+      expect(result.document.child(1).attrs.id).toBe(`first-${epoch}`);
+      expect(result.document.child(2).child(1).marks).toEqual([]);
+      expect(result.document.child(3).type.name).toBe('paragraph');
+      expect(result.document.child(3).textContent).toBe('Inside second');
+      expect(result.issues.filter(issue => issue.code === 'unmapped-block-wrapper')).toHaveLength(1);
+    }
+  });
+
   it('compiles repeated rules once per tree, not once per element or across imports', () => {
     const schema = new Schema(composeExtensions([CoreExtension]).schema);
     const importer = new ServerHTMLImporter();

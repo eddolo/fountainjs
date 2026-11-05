@@ -1,0 +1,90 @@
+{
+  "reportVersion": 2,
+  "fountainVersion": "0.4.0-beta.2",
+  "policy": "starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000",
+  "importOptions": {
+    "preserveHTMLStructure": true
+  },
+  "createdAt": "2026-11-05T00:27:58.912Z",
+  "input": {
+    "format": "markdown",
+    "bytes": 128
+  },
+  "output": "markdown",
+  "importedImages": {
+    "represented": 0,
+    "embeddedRaster": 0
+  },
+  "sourcePackage": null,
+  "importIssues": [
+    {
+      "code": "markdown-coverage",
+      "message": "HTML conversion is enabled for this file. Supported structure is retained; unsupported HTML can remain literal or lose structure with a report. Full CommonMark/dialect conformance and original layout are not certified."
+    },
+    {
+      "code": "inline-html-projection",
+      "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+    },
+    {
+      "code": "text-block-flow-projection",
+      "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+    }
+  ],
+  "draftChanged": true,
+  "roundTrip": {
+    "format": "markdown",
+    "stale": false,
+    "exactFountainJSONEquality": true,
+    "issues": [
+      {
+        "code": "attribute",
+        "type": "html_container",
+        "message": "Text direction is not represented by ordinary Markdown; retain Fountain JSON or HTML.",
+        "path": [
+          0
+        ]
+      },
+      {
+        "code": "node",
+        "type": "html_container",
+        "message": "HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed.",
+        "path": [
+          0
+        ]
+      },
+      {
+        "code": "node",
+        "type": "html_anchor",
+        "message": "HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed.",
+        "path": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "code": "node",
+        "type": "html_anchor",
+        "message": "HTML projection requires an HTML-enabled Markdown reader and matching parse rules. Arbitrary schema metadata and original source spelling are not guaranteed.",
+        "path": [
+          0,
+          0,
+          2
+        ]
+      },
+      {
+        "code": "markdown-coverage",
+        "message": "HTML conversion is enabled for this file. Supported structure is retained; unsupported HTML can remain literal or lose structure with a report. Full CommonMark/dialect conformance and original layout are not certified."
+      },
+      {
+        "code": "inline-html-projection",
+        "message": "Inline HTML was projected into schema content. Tag identity, unsupported attributes/styles, unsafe URLs, and comments without an accepted schema projection are not preserved; this is not lossless HTML conversion."
+      },
+      {
+        "code": "text-block-flow-projection",
+        "message": "Markdown source was reprojected across HTML boundaries using text-block, plain hard-break and available list/quote syntax. Inline nodes retain their data; conversions that would flatten them are refused. Block grouping/identity and HTML layout may change; custom block data, modified projections and unsupported blocks are refused. This is explicit source projection, not identity-preserving block flow or lossless HTML."
+      }
+    ]
+  },
+  "fidelity": "Original-format visual fidelity and exhaustive loss detection are unverified."
+}

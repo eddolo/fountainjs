@@ -962,3 +962,13 @@ The existing root `HTMLImporter` remains the browser implementation. Keeping the
 server parser isolated avoids adding its parser payload to web editors and avoids
 a synchronous breaking change. A product should choose the entry that matches
 where conversion actually runs.
+
+The importer skips building a rule list when a node or mark type currently has
+neither portable nor legacy DOM rules. It reevaluates that condition on every
+visit: callbacks, priority, decline/fallback, rule changes and loss reporting stay
+live. No schema, matching-result or parsed-element cache is introduced. The
+allocation follow-up's paired large-document medians improve about 8–9%, with
+all model/issue results equal; small samples vary and are not uniformly faster.
+The unchanged performance gate passes for this checkpoint, while broader timing
+variability and complete CI remain release work. See
+`artifacts/server-html-verification-20261105.json` for measurements and limits.

@@ -33,3 +33,6 @@
 /artifacts/virtual-atomic-boundary-verified-browser-20261104.log -text -whitespace
 /artifacts/code-label-*.log -text -whitespace
 /artifacts/code-label-verified-browser-20261104/**/*.md -text -whitespace
+/artifacts/server-html-*.log -text -whitespace
+/artifacts/server-html-conversion-browser-20261105/**/*.md -text -whitespace
+/artifacts/server-html-rejected-wrapper-cache-20261105.patch -text -whitespace

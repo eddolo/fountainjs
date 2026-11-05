@@ -645,6 +645,7 @@ function configuredMarks(element: SourceElement, schema: Schema, context: Import
     order: number;
   }> = [];
   Object.values(schema.marks).forEach((type, order) => {
+    if (!type.spec.parseHTML?.length && !type.spec.parseDOM?.length) return;
     configuredRules(type.spec).forEach(({ rule, portable }) => {
       if (matchingRule(element, rule, `mark:${type.name}`, context)) matches.push({ type, rule, portable, order });
     });
@@ -689,6 +690,7 @@ function configuredNode(
   }> = [];
   Object.values(schema.nodes).forEach((type, order) => {
     if (type.name === 'doc' || type.name === 'text' || type.isInline !== inline) return;
+    if (!type.spec.parseHTML?.length && !type.spec.parseDOM?.length) return;
     configuredRules(type.spec).forEach(({ rule, portable }) => {
       if (matchingRule(element, rule, `node:${type.name}`, context)) matches.push({ type, rule, portable, order });
     });

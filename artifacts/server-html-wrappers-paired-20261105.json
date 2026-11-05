@@ -1,0 +1,366 @@
+{
+  "acceptanceGate": false,
+  "method": "Same process, alternate order, seven runs; no discarded samples; two independently loaded implementations.",
+  "results": [
+    {
+      "size": 100,
+      "completeModelAndIssuesEqual": true,
+      "samples": [
+        {
+          "name": "parent",
+          "iteration": 0,
+          "wallMs": 20.07740000000001,
+          "cpuMs": 31
+        },
+        {
+          "name": "candidate",
+          "iteration": 0,
+          "wallMs": 45.25160000000005,
+          "cpuMs": 93
+        },
+        {
+          "name": "candidate",
+          "iteration": 1,
+          "wallMs": 56.04759999999999,
+          "cpuMs": 94
+        },
+        {
+          "name": "parent",
+          "iteration": 1,
+          "wallMs": 26.20690000000002,
+          "cpuMs": 32
+        },
+        {
+          "name": "parent",
+          "iteration": 2,
+          "wallMs": 24.707200000000057,
+          "cpuMs": 46
+        },
+        {
+          "name": "candidate",
+          "iteration": 2,
+          "wallMs": 13.897199999999998,
+          "cpuMs": 16
+        },
+        {
+          "name": "candidate",
+          "iteration": 3,
+          "wallMs": 11.456199999999967,
+          "cpuMs": 31
+        },
+        {
+          "name": "parent",
+          "iteration": 3,
+          "wallMs": 14.955299999999966,
+          "cpuMs": 32
+        },
+        {
+          "name": "parent",
+          "iteration": 4,
+          "wallMs": 15.44010000000003,
+          "cpuMs": 31
+        },
+        {
+          "name": "candidate",
+          "iteration": 4,
+          "wallMs": 24.400999999999954,
+          "cpuMs": 0
+        },
+        {
+          "name": "candidate",
+          "iteration": 5,
+          "wallMs": 12.569399999999973,
+          "cpuMs": 15
+        },
+        {
+          "name": "parent",
+          "iteration": 5,
+          "wallMs": 20.266700000000014,
+          "cpuMs": 32
+        },
+        {
+          "name": "parent",
+          "iteration": 6,
+          "wallMs": 18.267099999999914,
+          "cpuMs": 31
+        },
+        {
+          "name": "candidate",
+          "iteration": 6,
+          "wallMs": 13.333700000000022,
+          "cpuMs": 16
+        }
+      ]
+    },
+    {
+      "size": 1000,
+      "completeModelAndIssuesEqual": true,
+      "samples": [
+        {
+          "name": "parent",
+          "iteration": 0,
+          "wallMs": 117.95600000000013,
+          "cpuMs": 125
+        },
+        {
+          "name": "candidate",
+          "iteration": 0,
+          "wallMs": 130.71530000000007,
+          "cpuMs": 140
+        },
+        {
+          "name": "candidate",
+          "iteration": 1,
+          "wallMs": 164.5326,
+          "cpuMs": 142
+        },
+        {
+          "name": "parent",
+          "iteration": 1,
+          "wallMs": 136.79369999999994,
+          "cpuMs": 186
+        },
+        {
+          "name": "parent",
+          "iteration": 2,
+          "wallMs": 122.49829999999997,
+          "cpuMs": 110
+        },
+        {
+          "name": "candidate",
+          "iteration": 2,
+          "wallMs": 129.19730000000004,
+          "cpuMs": 63
+        },
+        {
+          "name": "candidate",
+          "iteration": 3,
+          "wallMs": 119.10419999999999,
+          "cpuMs": 124
+        },
+        {
+          "name": "parent",
+          "iteration": 3,
+          "wallMs": 88.32469999999967,
+          "cpuMs": 94
+        },
+        {
+          "name": "parent",
+          "iteration": 4,
+          "wallMs": 88.24310000000014,
+          "cpuMs": 63
+        },
+        {
+          "name": "candidate",
+          "iteration": 4,
+          "wallMs": 66.22400000000016,
+          "cpuMs": 62
+        },
+        {
+          "name": "candidate",
+          "iteration": 5,
+          "wallMs": 71.04989999999998,
+          "cpuMs": 78
+        },
+        {
+          "name": "parent",
+          "iteration": 5,
+          "wallMs": 84.40290000000005,
+          "cpuMs": 32
+        },
+        {
+          "name": "parent",
+          "iteration": 6,
+          "wallMs": 156.86339999999973,
+          "cpuMs": 187
+        },
+        {
+          "name": "candidate",
+          "iteration": 6,
+          "wallMs": 86.95900000000029,
+          "cpuMs": 63
+        }
+      ]
+    },
+    {
+      "size": 5000,
+      "completeModelAndIssuesEqual": true,
+      "samples": [
+        {
+          "name": "parent",
+          "iteration": 0,
+          "wallMs": 466.95109999999977,
+          "cpuMs": 328
+        },
+        {
+          "name": "candidate",
+          "iteration": 0,
+          "wallMs": 511.8633,
+          "cpuMs": 406
+        },
+        {
+          "name": "candidate",
+          "iteration": 1,
+          "wallMs": 430.2691999999997,
+          "cpuMs": 328
+        },
+        {
+          "name": "parent",
+          "iteration": 1,
+          "wallMs": 434.6113999999998,
+          "cpuMs": 391
+        },
+        {
+          "name": "parent",
+          "iteration": 2,
+          "wallMs": 534.2147999999997,
+          "cpuMs": 360
+        },
+        {
+          "name": "candidate",
+          "iteration": 2,
+          "wallMs": 413.8563000000004,
+          "cpuMs": 375
+        },
+        {
+          "name": "candidate",
+          "iteration": 3,
+          "wallMs": 357.58989999999994,
+          "cpuMs": 328
+        },
+        {
+          "name": "parent",
+          "iteration": 3,
+          "wallMs": 498.46749999999975,
+          "cpuMs": 469
+        },
+        {
+          "name": "parent",
+          "iteration": 4,
+          "wallMs": 355.71959999999945,
+          "cpuMs": 250
+        },
+        {
+          "name": "candidate",
+          "iteration": 4,
+          "wallMs": 427.0565999999999,
+          "cpuMs": 437
+        },
+        {
+          "name": "candidate",
+          "iteration": 5,
+          "wallMs": 349.4515000000001,
+          "cpuMs": 218
+        },
+        {
+          "name": "parent",
+          "iteration": 5,
+          "wallMs": 352.0661,
+          "cpuMs": 329
+        },
+        {
+          "name": "parent",
+          "iteration": 6,
+          "wallMs": 396.7394999999997,
+          "cpuMs": 234
+        },
+        {
+          "name": "candidate",
+          "iteration": 6,
+          "wallMs": 554.2447999999986,
+          "cpuMs": 406
+        }
+      ]
+    },
+    {
+      "size": 10000,
+      "completeModelAndIssuesEqual": true,
+      "samples": [
+        {
+          "name": "parent",
+          "iteration": 0,
+          "wallMs": 782.5720000000001,
+          "cpuMs": 609
+        },
+        {
+          "name": "candidate",
+          "iteration": 0,
+          "wallMs": 793.937899999999,
+          "cpuMs": 625
+        },
+        {
+          "name": "candidate",
+          "iteration": 1,
+          "wallMs": 933.257599999999,
+          "cpuMs": 954
+        },
+        {
+          "name": "parent",
+          "iteration": 1,
+          "wallMs": 773.3395,
+          "cpuMs": 812
+        },
+        {
+          "name": "parent",
+          "iteration": 2,
+          "wallMs": 725.5883000000013,
+          "cpuMs": 657
+        },
+        {
+          "name": "candidate",
+          "iteration": 2,
+          "wallMs": 698.2406999999985,
+          "cpuMs": 594
+        },
+        {
+          "name": "candidate",
+          "iteration": 3,
+          "wallMs": 901.9364999999998,
+          "cpuMs": 561
+        },
+        {
+          "name": "parent",
+          "iteration": 3,
+          "wallMs": 988.9046000000017,
+          "cpuMs": 892
+        },
+        {
+          "name": "parent",
+          "iteration": 4,
+          "wallMs": 949.6454000000012,
+          "cpuMs": 687
+        },
+        {
+          "name": "candidate",
+          "iteration": 4,
+          "wallMs": 1296.829099999999,
+          "cpuMs": 890
+        },
+        {
+          "name": "candidate",
+          "iteration": 5,
+          "wallMs": 742.0370000000003,
+          "cpuMs": 563
+        },
+        {
+          "name": "parent",
+          "iteration": 5,
+          "wallMs": 744.123599999999,
+          "cpuMs": 562
+        },
+        {
+          "name": "parent",
+          "iteration": 6,
+          "wallMs": 870.7332999999999,
+          "cpuMs": 829
+        },
+        {
+          "name": "candidate",
+          "iteration": 6,
+          "wallMs": 779.5352999999996,
+          "cpuMs": 750
+        }
+      ]
+    }
+  ]
+}

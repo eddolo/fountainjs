@@ -1,0 +1,281 @@
+[
+  {
+    "folder": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium",
+    "captures": 3,
+    "contact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium.png",
+    "recordingContact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium-recording.png",
+    "durationSeconds": 5.92,
+    "files": [
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/conversion-observations.json",
+        "bytes": 3212,
+        "sha256": "67da1ed97af22886d85f1517b252c169d973348b0b1ea4140d14335844bb141a"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/conversion-report.json",
+        "bytes": 2982,
+        "sha256": "3a448a575b5bc9c9d8f5c34d52cceed3301ffa48799a6a9b77ab17ff5a43fdb0"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/import-options.png",
+        "bytes": 12217,
+        "sha256": "8c68a9841b58be37ead653cac0d3afe16c7fb081beeb580893550559b2cae628"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/retained-html-editor.png",
+        "bytes": 3969,
+        "sha256": "ecebe5f5ad7461b742a8de978f1eafb8ab0cc54718e2d9def1b8087de119d74f"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/retained-html-reopened.png",
+        "bytes": 41360,
+        "sha256": "fdaa78ed8c01acd33b9c3581079d499d9c481515a109dcb889225163f79ecb94"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/trace.zip",
+        "bytes": 3524999,
+        "sha256": "72f1298354e141bf0f1c720469509be9a005bc407e0884dd3de14e879c6f035e"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/video.webm",
+        "bytes": 424654,
+        "sha256": "7ee8d5ea9147e65249a23a4c2bffefde6902704fda780f5fcb3da01009c6b860"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox",
+    "captures": 3,
+    "contact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox.png",
+    "recordingContact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox-recording.png",
+    "durationSeconds": 8.44,
+    "files": [
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/conversion-observations.json",
+        "bytes": 3212,
+        "sha256": "83511de091b550d0abaa13f078faa12ffafd7f74437cdc0878ec6b91db4e86cb"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/conversion-report.json",
+        "bytes": 2982,
+        "sha256": "2e88daff5b69b49b09bb75db554ab5c256e88721e9bf591a10f7a66d2e33db59"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/import-options.png",
+        "bytes": 12060,
+        "sha256": "55c7ffc318edc2efccfadb8481a9885065d4879ef23fae9a68fd68b1d2188b18"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/retained-html-editor.png",
+        "bytes": 3988,
+        "sha256": "cc5d27e27ded53b81027ab2e4e106a285ac02ccb23c212653f58c12ede52ac0f"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/retained-html-reopened.png",
+        "bytes": 44213,
+        "sha256": "359e49d2b51b9e21d3db62e144b2ef2734888a1b7cdcfa9fd1b9f32058cdea22"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/trace.zip",
+        "bytes": 3909608,
+        "sha256": "af56c48544286cd5322a180361e7614ff590c9078656bf60376666fe8267938a"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/video.webm",
+        "bytes": 448911,
+        "sha256": "66c75cb3a14c7dbb5ee08f5092a24fd07ec4e075c38a2ee43b03e8ad0ee6adf8"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit",
+    "captures": 3,
+    "contact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit.png",
+    "recordingContact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit-recording.png",
+    "durationSeconds": 8.76,
+    "files": [
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/conversion-observations.json",
+        "bytes": 3211,
+        "sha256": "b3fda6bc9d9cfc9acafcb905bf62eeed706d110a03e8177f0f4c746229607e34"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/conversion-report.json",
+        "bytes": 2982,
+        "sha256": "0d90e4f916e40840f1ed2a4da720b3b003c9ee7f3c3a444584e4f924e5cb9fc3"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/import-options.png",
+        "bytes": 32507,
+        "sha256": "5809d59b4270b9da809d5e28ae8e2fc59d18bd3ed956c6502461fcc155bf26a4"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/retained-html-editor.png",
+        "bytes": 12012,
+        "sha256": "805a9a12a84f0e6200bc5633bf426a7714325092dd065ddc5afbaae658c74be6"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/retained-html-reopened.png",
+        "bytes": 112528,
+        "sha256": "72eeabc034c377e02cc3fba301212eafebf5221731b7cbc1310b6992ecf31ae0"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/trace.zip",
+        "bytes": 2132213,
+        "sha256": "5563440d64e0c68b03e38d088993196de194fb5c53e195a56fa71bcb98c9c1f5"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/video.webm",
+        "bytes": 456947,
+        "sha256": "5290f2d5d53e17d300ade60b5e7f3047f9d44cbe7ca352a51f1f74dde379dced"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium",
+    "captures": 3,
+    "contact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium.png",
+    "recordingContact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium-recording.png",
+    "durationSeconds": 5.24,
+    "files": [
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/conversion-observations.json",
+        "bytes": 4316,
+        "sha256": "f6413e4da649ac429d243eaeb1413d711c3d2460670f1589e6188ab2e5ac7d47"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/conversion-report.json",
+        "bytes": 4056,
+        "sha256": "9b2be1371dfb52c7fc9d8c152089788ff148ce9bc5e2234a3d365ce23bf6fae4"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/import-options.png",
+        "bytes": 12217,
+        "sha256": "8c68a9841b58be37ead653cac0d3afe16c7fb081beeb580893550559b2cae628"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/retained-html-editor.png",
+        "bytes": 3969,
+        "sha256": "ecebe5f5ad7461b742a8de978f1eafb8ab0cc54718e2d9def1b8087de119d74f"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/retained-html-reopened.png",
+        "bytes": 41346,
+        "sha256": "3c9a8cbb8e9f21dca345d0a2c275197275524e7ad7dc945ff6deed43f8cd1ddb"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/trace.zip",
+        "bytes": 3960995,
+        "sha256": "86ff0e641bf59d296fc09ed497f7bc617d9d401871f383bd9a79719203c4af0c"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/untouched.md",
+        "bytes": 128,
+        "sha256": "e9405ea94628e260dfcde47ec5df714602e2573025e291241745ac8f1e4b9568"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/video.webm",
+        "bytes": 481724,
+        "sha256": "b78e8363fd1e68060063090c2d26c1ccee913c9507194a6ed27bee6f58fb6312"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox",
+    "captures": 3,
+    "contact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox.png",
+    "recordingContact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox-recording.png",
+    "durationSeconds": 6.32,
+    "files": [
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/conversion-observations.json",
+        "bytes": 4316,
+        "sha256": "238345de2c6b3f449f9a572e7ffb0acc788d58a67bbf049ce651e4aec3eb0af9"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/conversion-report.json",
+        "bytes": 4056,
+        "sha256": "1fb8434344e4905d19d30d59125f5df91448d4a3efe0e25cfe415b3567848a9d"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/import-options.png",
+        "bytes": 12060,
+        "sha256": "55c7ffc318edc2efccfadb8481a9885065d4879ef23fae9a68fd68b1d2188b18"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/retained-html-editor.png",
+        "bytes": 3985,
+        "sha256": "cc51f04f8924dbec8ed4add18c20607cc41b5b4f5798996b2cc681b553ba7c0d"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/retained-html-reopened.png",
+        "bytes": 44209,
+        "sha256": "f71b9911bbbc61ce03d1d136fce2ef2043fff8a0c1a93d32cecdc0f85221273c"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/trace.zip",
+        "bytes": 3578079,
+        "sha256": "2751579136b408a6348c407145c37575725ce363a0295c769b413deb7e68d9c3"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/untouched.md",
+        "bytes": 128,
+        "sha256": "e9405ea94628e260dfcde47ec5df714602e2573025e291241745ac8f1e4b9568"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/video.webm",
+        "bytes": 474495,
+        "sha256": "adb3a7dbcd45d9b96a78a78fefcced19fe92c635a0d2050bd49f0f92331d90eb"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit",
+    "captures": 3,
+    "contact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit.png",
+    "recordingContact": "artifacts/server-html-visual-review-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit-recording.png",
+    "durationSeconds": 8.76,
+    "files": [
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/conversion-observations.json",
+        "bytes": 4315,
+        "sha256": "ecdf55b7ae2aa727c2c326577a82c4b48c2251aec65c38bca07d232fd29eaf38"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/conversion-report.json",
+        "bytes": 4056,
+        "sha256": "2a596edc61f79bdd71c623e35177eeefc5e276de59db2c645838deaf1e1c7dd9"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/import-options.png",
+        "bytes": 32507,
+        "sha256": "5809d59b4270b9da809d5e28ae8e2fc59d18bd3ed956c6502461fcc155bf26a4"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/retained-html-editor.png",
+        "bytes": 11934,
+        "sha256": "3f1d3b5a248e0ed6234b3e1f26525090fbcb2f3fc6d98619e7cd22907dc928df"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/retained-html-reopened.png",
+        "bytes": 113059,
+        "sha256": "bbcb63c799858e64d9e84751b515b98cc16dc16e3a6d66bed80dbe9ce64db028"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/trace.zip",
+        "bytes": 2350814,
+        "sha256": "67cbc053434b8ebed04988204e00d8817d1c8789a883173782f4a69eedf273c8"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/untouched.md",
+        "bytes": 128,
+        "sha256": "e9405ea94628e260dfcde47ec5df714602e2573025e291241745ac8f1e4b9568"
+      },
+      {
+        "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/video.webm",
+        "bytes": 531005,
+        "sha256": "7f5e20ac72946047cff1cecef316a5338f74278375826d9fc5ead3d2aeb782e4"
+      }
+    ]
+  }
+]
