@@ -1,0 +1,29 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-retained-nodes.test.ts (21 tests | 1 failed) 72ms
+   × projects concurrent attribute fields in a deterministic order for document equality and hashing 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-retained-nodes.test.ts > projects concurrent attribute fields in a deterministic order for document equality and hashing
+AssertionError: expected '{"id":"root","type":"doc","content":[…' to be '{"id":"root","type":"doc","content":[…' // Object.is equality
+
+Expected: "{"id":"root","type":"doc","content":[{"id":"left-0","type":"paragraph","attrs":{"nodeId":"original-block","label":"Alpha","owner":"Ada","custom":{"source":["keep",12,true]},"alpha":"right","zeta":"left"},"content":[]},{"id":"left-2","type":"callout","attrs":{"title":"A"},"content":[]},{"id":"left-4","type":"blockquote","attrs":{"title":"B"},"content":[]}]}"
+Received: "{"id":"root","type":"doc","content":[{"id":"left-0","type":"paragraph","attrs":{"nodeId":"original-block","label":"Alpha","owner":"Ada","custom":{"source":["keep",12,true]},"zeta":"left","alpha":"right"},"content":[]},{"id":"left-2","type":"callout","attrs":{"title":"A"},"content":[]},{"id":"left-4","type":"blockquote","attrs":{"title":"B"},"content":[]}]}"
+
+ ❯ tests/yjs-retained-nodes.test.ts:174:54
+    172|     pair.left.setAttribute(pair.paragraph, 'zeta', 'left'); pair.right…
+    173|     expect(pair.left.project()).toEqual(pair.right.project());
+    174|     expect(JSON.stringify(pair.left.project().root)).toBe(JSON.stringi…
+       |                                                      ^
+    175|   } finally { pair.destroy(); }
+    176| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  21:51:48
+   Duration  396ms (import 39%, transform 30%, tests 29%, worker 2%)

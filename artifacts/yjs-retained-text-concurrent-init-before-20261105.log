@@ -1,0 +1,28 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-retained-text.test.ts (19 tests | 1 failed) 36ms
+   × merges concurrently initialized pools without replacing either shared container 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-retained-text.test.ts > merges concurrently initialized pools without replacing either shared container
+Error: Retained text containers cannot be replaced.
+ ❯ RetainedTextStore.assertLive src/yjs/retained-text.ts:80:13
+     78|     if (this.destroyed) throw new Error('Retained text store is destro…
+     79|     if (this.scope.get('version') !== VERSION || this.scope.get('texts…
+     80|       throw new Error('Retained text containers cannot be replaced.');
+       |             ^
+     81|     }
+     82|     if (this.owners.size > MAX_PARTITIONS || this.texts.size > MAX_PAR…
+ ❯ RetainedTextStore.project src/yjs/retained-text.ts:150:10
+ ❯ plain tests/yjs-retained-text.test.ts:6:63
+ ❯ tests/yjs-retained-text.test.ts:16:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  21:20:15
+   Duration  344ms (import 51%, transform 26%, tests 20%, worker 3%)

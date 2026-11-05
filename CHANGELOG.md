@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add unexported candidate Yjs text/node pools and an exact transaction-mapping
+  bridge for continued retention work. These components are not connected to
+  the default adapter or demos; the six existing collaboration failures remain
+  required. Current runtime bundles and public exports are unchanged. See the
+  [storage work in progress](docs/YJS_RETAINED_STORAGE_WORK_IN_PROGRESS.md).
+
 - Retain text/media block identities and metadata through quote/list wrapping,
   and preserve backward native selections when wrapping changes their paths.
   Split paragraphs/headings/list items without reporting retained text as

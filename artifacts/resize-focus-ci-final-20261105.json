@@ -1,0 +1,46 @@
+{
+  "commit": "1a9e1640ef8d2fd6f955baeac5b078ba9b0db859",
+  "pullRequest": "https://github.com/eddolo/fountainjs/pull/22",
+  "runId": 42104477777,
+  "browserJobId": 127515558612,
+  "browserUrl": "https://github.com/eddolo/fountainjs/actions/runs/42104477777/job/127515558612",
+  "browser": {
+    "conclusion": "success",
+    "preflightsPassed": [
+      60,
+      27,
+      5,
+      2
+    ],
+    "remainingMatrixPassed": 895,
+    "remainingMatrixSkipped": 16
+  },
+  "jobs": [
+    {
+      "id": 127515558612,
+      "name": "browser",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 127515558877,
+      "name": "lean-integration",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 127515559116,
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 127515559126,
+      "name": "performance",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "scope": "Earlier pushed resize/focus commit only; not the later local structural/history or candidate-storage commits. CI verify remains failed at the unchanged size step.",
+  "logSummaryObserved": true
+}

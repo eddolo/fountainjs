@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Retained Yjs storage foundations (2026-11-05, local work in progress): add
+isolated text pools with private split boundaries, stable node records with
+single-owner placement references, and character plans derived from exact
+transaction maps. All 51 new candidate cases pass; the focused binding run has
+88 passes and the same six required default-adapter failures. Twenty compiled
+ESM/CJS Node cases pass without DOM globals. Existing 171 runtime files remain
+byte-identical and all 423 public declarations verify. These unexported candidates
+are not connected to the adapter or demos. Model projection/scheduling, composed
+concurrent split order, selections/awareness, safe migration and large-document
+performance/compaction remain required. No capability, release or parity promotion.
+[Work in progress](YJS_RETAINED_STORAGE_WORK_IN_PROGRESS.md).
+
 Structural wrapping, split maps and local history (2026-11-05, unreleased):
 quote/list commands retain actual selected text/media blocks and their metadata.
 Native backward ranges remain backward after paths move. Paragraph/heading/list

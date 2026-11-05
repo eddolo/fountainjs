@@ -109,3 +109,10 @@ The existing six failing tests remain required. After an adapter repair, repeat
 the real two-peer invariants and recorded browser workflows with complete model,
 selection and history checks. No migration, wire-format change or new adapter
 implementation has been applied by this audit.
+
+Subsequent local work adds isolated retained-text, retained-node and transaction-
+mapping candidates. They are not wired into the default adapter and do not fix
+the six failures above yet. The
+[candidate storage checkpoint](YJS_RETAINED_STORAGE_WORK_IN_PROGRESS.md) records
+the implementation, focused/compiled tests and required integration/migration
+boundaries. Existing live collaboration documents are unchanged.

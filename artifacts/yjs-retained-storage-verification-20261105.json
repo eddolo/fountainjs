@@ -1,0 +1,261 @@
+{
+  "baseCommit": "60c0b498dab597279d60d38c7d555f96a62eca68",
+  "userRequestedLocalOnly": true,
+  "releaseCertified": false,
+  "publicAdapterChanged": false,
+  "publiclyExported": false,
+  "currentWireFormatChanged": false,
+  "dependenciesChanged": false,
+  "acceptanceLimitsChanged": false,
+  "focusedBindings": {
+    "files": 8,
+    "passed": 88,
+    "failed": 6,
+    "total": 94,
+    "candidateCasesPassed": 51,
+    "failures": [
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (quote)",
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (bullet)",
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (ordered)",
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (task)",
+      "tests/yjs-document-range.test.ts > preserves offline character order when another peer applies a partial text mark",
+      "tests/yjs-document-range.test.ts > keeps offline typing on its original side of a concurrent paragraph split"
+    ]
+  },
+  "fullSourceSuiteRerun": false,
+  "typesExitCode": 0,
+  "publicApiDeclarationsVerified": 423,
+  "sources": [
+    {
+      "path": "src/yjs/retained-text.ts",
+      "sha256": "f56f6cc99378b7e9d20a00e4fcd5106f7db9489fae58b21fd76715f6e638ead3"
+    },
+    {
+      "path": "src/yjs/retained-nodes.ts",
+      "sha256": "ca99eae214f580b6bba0ff7687d04f480cbbc6ac54c1d50311aceb9d181b202a"
+    },
+    {
+      "path": "src/yjs/retained-mapping.ts",
+      "sha256": "2bed6c285bfa381ff7b28c9a5f558aa1352890798920e07fc740dc242f0365da"
+    },
+    {
+      "path": "tests/yjs-retained-text.test.ts",
+      "sha256": "f613e8fc8729e2d36b7cdc3f8f2fd677c724ce0c4c235cce387cd33f7cb8094c"
+    },
+    {
+      "path": "tests/yjs-retained-nodes.test.ts",
+      "sha256": "d52b59840642886fb0349e22bb1d2281eb0a337d4290d97277f31524e3afc378"
+    },
+    {
+      "path": "tests/yjs-retained-mapping.test.ts",
+      "sha256": "3534ca8ee85011f4de4cab02ffd02c0b06b8365de1632c3a9505c28f0d155be8"
+    }
+  ],
+  "provenance": [
+    {
+      "file": "retained-mapping.cjs.map",
+      "source": "src/yjs/retained-mapping.ts",
+      "sha256": "2bed6c285bfa381ff7b28c9a5f558aa1352890798920e07fc740dc242f0365da"
+    },
+    {
+      "file": "retained-mapping.mjs.map",
+      "source": "src/yjs/retained-mapping.ts",
+      "sha256": "2bed6c285bfa381ff7b28c9a5f558aa1352890798920e07fc740dc242f0365da"
+    },
+    {
+      "file": "retained-nodes.cjs.map",
+      "source": "src/yjs/retained-nodes.ts",
+      "sha256": "ca99eae214f580b6bba0ff7687d04f480cbbc6ac54c1d50311aceb9d181b202a"
+    },
+    {
+      "file": "retained-nodes.mjs.map",
+      "source": "src/yjs/retained-nodes.ts",
+      "sha256": "ca99eae214f580b6bba0ff7687d04f480cbbc6ac54c1d50311aceb9d181b202a"
+    },
+    {
+      "file": "retained-text.cjs.map",
+      "source": "src/yjs/retained-text.ts",
+      "sha256": "f56f6cc99378b7e9d20a00e4fcd5106f7db9489fae58b21fd76715f6e638ead3"
+    },
+    {
+      "file": "retained-text.mjs.map",
+      "source": "src/yjs/retained-text.ts",
+      "sha256": "f56f6cc99378b7e9d20a00e4fcd5106f7db9489fae58b21fd76715f6e638ead3"
+    }
+  ],
+  "compiled": {
+    "existingRuntimeFilesByteIdentical": 171,
+    "candidateNodeCases": 20,
+    "records": [
+      {
+        "compiledCandidateOnly": true,
+        "currentAdapterReplaced": false,
+        "noDOM": true,
+        "cases": 10,
+        "results": [
+          {
+            "format": "es",
+            "reverse": false,
+            "kind": "wrap",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "es",
+            "reverse": false,
+            "kind": "mark",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "es",
+            "reverse": false,
+            "kind": "split",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "es",
+            "reverse": true,
+            "kind": "wrap",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "es",
+            "reverse": true,
+            "kind": "mark",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "es",
+            "reverse": true,
+            "kind": "split",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "es",
+            "kind": "quote",
+            "actualEngineTransactionPlan": true
+          },
+          {
+            "format": "es",
+            "kind": "mark",
+            "actualEngineTransactionPlan": true
+          },
+          {
+            "format": "es",
+            "kind": "split",
+            "actualEngineTransactionPlan": true
+          },
+          {
+            "format": "es",
+            "kind": "insert-delete",
+            "actualEngineTransactionPlan": true
+          }
+        ]
+      },
+      {
+        "compiledCandidateOnly": true,
+        "currentAdapterReplaced": false,
+        "noDOM": true,
+        "cases": 10,
+        "results": [
+          {
+            "format": "cjs",
+            "reverse": false,
+            "kind": "wrap",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "cjs",
+            "reverse": false,
+            "kind": "mark",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "cjs",
+            "reverse": false,
+            "kind": "split",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "cjs",
+            "reverse": true,
+            "kind": "wrap",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "cjs",
+            "reverse": true,
+            "kind": "mark",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "cjs",
+            "reverse": true,
+            "kind": "split",
+            "schemaValidated": true,
+            "independentTextAndMetadata": true,
+            "authorUndoRetainedPeerChanges": true
+          },
+          {
+            "format": "cjs",
+            "kind": "quote",
+            "actualEngineTransactionPlan": true
+          },
+          {
+            "format": "cjs",
+            "kind": "mark",
+            "actualEngineTransactionPlan": true
+          },
+          {
+            "format": "cjs",
+            "kind": "split",
+            "actualEngineTransactionPlan": true
+          },
+          {
+            "format": "cjs",
+            "kind": "insert-delete",
+            "actualEngineTransactionPlan": true
+          }
+        ]
+      }
+    ],
+    "publicAdapterChanged": false,
+    "publiclyExported": false,
+    "releaseCertified": false
+  },
+  "protocolTags": [
+    "fountain-retained-text/1",
+    "fountain-retained-nodes/1"
+  ],
+  "browserValidationClaimed": false,
+  "remaining": [
+    "Model/graph adapter projection and transaction scheduling",
+    "Composed concurrent split ordering",
+    "Actual adapter selections, awareness, review and combined undo/redo",
+    "Explicit existing-document/offline-client migration contract",
+    "Bounded large-document work and history/offline-aware compaction",
+    "Original six failures and real browser/provider/export acceptance"
+  ],
+  "committedLogNormalization": "Line endings and trailing whitespace only; result content retained"
+}

@@ -1,0 +1,161 @@
+{
+  "existingRuntimeFilesByteIdentical": 171,
+  "candidateNodeCases": 20,
+  "records": [
+    {
+      "compiledCandidateOnly": true,
+      "currentAdapterReplaced": false,
+      "noDOM": true,
+      "cases": 10,
+      "results": [
+        {
+          "format": "es",
+          "reverse": false,
+          "kind": "wrap",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "es",
+          "reverse": false,
+          "kind": "mark",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "es",
+          "reverse": false,
+          "kind": "split",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "es",
+          "reverse": true,
+          "kind": "wrap",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "es",
+          "reverse": true,
+          "kind": "mark",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "es",
+          "reverse": true,
+          "kind": "split",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "es",
+          "kind": "quote",
+          "actualEngineTransactionPlan": true
+        },
+        {
+          "format": "es",
+          "kind": "mark",
+          "actualEngineTransactionPlan": true
+        },
+        {
+          "format": "es",
+          "kind": "split",
+          "actualEngineTransactionPlan": true
+        },
+        {
+          "format": "es",
+          "kind": "insert-delete",
+          "actualEngineTransactionPlan": true
+        }
+      ]
+    },
+    {
+      "compiledCandidateOnly": true,
+      "currentAdapterReplaced": false,
+      "noDOM": true,
+      "cases": 10,
+      "results": [
+        {
+          "format": "cjs",
+          "reverse": false,
+          "kind": "wrap",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "cjs",
+          "reverse": false,
+          "kind": "mark",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "cjs",
+          "reverse": false,
+          "kind": "split",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "cjs",
+          "reverse": true,
+          "kind": "wrap",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "cjs",
+          "reverse": true,
+          "kind": "mark",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "cjs",
+          "reverse": true,
+          "kind": "split",
+          "schemaValidated": true,
+          "independentTextAndMetadata": true,
+          "authorUndoRetainedPeerChanges": true
+        },
+        {
+          "format": "cjs",
+          "kind": "quote",
+          "actualEngineTransactionPlan": true
+        },
+        {
+          "format": "cjs",
+          "kind": "mark",
+          "actualEngineTransactionPlan": true
+        },
+        {
+          "format": "cjs",
+          "kind": "split",
+          "actualEngineTransactionPlan": true
+        },
+        {
+          "format": "cjs",
+          "kind": "insert-delete",
+          "actualEngineTransactionPlan": true
+        }
+      ]
+    }
+  ],
+  "publicAdapterChanged": false,
+  "publiclyExported": false,
+  "releaseCertified": false
+}
