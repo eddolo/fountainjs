@@ -1,0 +1,648 @@
+{
+  "nativeCases": 24,
+  "captures": [
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-selection.png",
+      "sha256": "73b01a870b22acf3b8c5b52323751d99763a5d869f9b91a9c5ec948b07be837c"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-replaced.png",
+      "sha256": "5ee4413276644deb36e82d1e217fd84145f30c10393d5eb2c1787a6c7e95ea63"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-reader.png",
+      "sha256": "680434140ac65c1397bc34148d6c533320f93ed5a069a28e6c4b18b0203dc78a"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-selection.png",
+      "sha256": "27db613d5a40511ef82b794e0e58bdeb4c8d280559e48074cc9efa87a58ea4fd"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-replaced.png",
+      "sha256": "5ee4413276644deb36e82d1e217fd84145f30c10393d5eb2c1787a6c7e95ea63"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-reader.png",
+      "sha256": "680434140ac65c1397bc34148d6c533320f93ed5a069a28e6c4b18b0203dc78a"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-selection.png",
+      "sha256": "0ca7486fbcd2e0d4bedd55524e959ea61d91e89d922f75b5cd3c250f3db66559"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-replaced.png",
+      "sha256": "ebcdd755d6b329891f9146038df45aa9742a9faccf1dee439218d6fc129d0a45"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-reader.png",
+      "sha256": "5d2c48f9ecfbea0802f6ec75528b68b4a62788ac9838b19ba83ee55eb38eab7e"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-selection.png",
+      "sha256": "21200c6bc6119bdceee894cfbdc36c43453ed681993fd5cc936b756b42999899"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-replaced.png",
+      "sha256": "ebcdd755d6b329891f9146038df45aa9742a9faccf1dee439218d6fc129d0a45"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-reader.png",
+      "sha256": "5d2c48f9ecfbea0802f6ec75528b68b4a62788ac9838b19ba83ee55eb38eab7e"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-selection.png",
+      "sha256": "4fbd8cb1bc155808f6d9d346486f430f974a7db18d6900a09a26d82e455600ae"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-replaced.png",
+      "sha256": "cbe46b7edba618e4fd3b282b3e6fbb8c0c941a4f1312ed2c92ab30fb03839036"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-reader.png",
+      "sha256": "71d09c6902d717e675da25acfffbe4d08b753fc06da6c74b589cf970393c3a9b"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-selection.png",
+      "sha256": "7660a2fe8f7065c1fe55ab6f48f86238ef37577488eb11fbed02cef6840fcb63"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-replaced.png",
+      "sha256": "cbe46b7edba618e4fd3b282b3e6fbb8c0c941a4f1312ed2c92ab30fb03839036"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-reader.png",
+      "sha256": "71d09c6902d717e675da25acfffbe4d08b753fc06da6c74b589cf970393c3a9b"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-selection.png",
+      "sha256": "8bb59ef3e9663d295fe53b95d2a5592cc899a9fc484fe3ef15d2f241d87d4a7b"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-replaced.png",
+      "sha256": "c212748032a433b62f9110a4504240ce89da6f8bd0995e1f5233ea0701594ad4"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-reader.png",
+      "sha256": "bfcfcba38f54694afa150882f7ab145d496221364a6d507e756756c52f68af79"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-selection.png",
+      "sha256": "4460bd1aaa4395f8368838354bf18aeeed51b7503a43702cb1fe4c4fd16208a9"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-replaced.png",
+      "sha256": "55209dd492c6ca1ff75f9fca35cb7ce60d05105b3ba051d47b37881cee97a685"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-reader.png",
+      "sha256": "ef23f6359d6a2d4be5268f756f19a2334d27a0aa1e77f718c422b316830614d8"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-selection.png",
+      "sha256": "83167f9ab570593e82840bd164f992c0f8f805df51251aa4b2e807196096b960"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-replaced.png",
+      "sha256": "d8856e8a584969fa27d972615a5ca2f3849a99d9001ce81b2947f4bb514ef5b8"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-reader.png",
+      "sha256": "ddac1998cbcff97c342e2651c2d648dbb097826e6832e8eb379e06d082dc80d5"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-selection.png",
+      "sha256": "49cd27fe9ff9f9571c63f6ee2eeaafe70b2ef78f9bb0723f56fab5712a3015ed"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-replaced.png",
+      "sha256": "6b201d8d30391ccdb30328abff315b88b6ecc631464cc6ab096d3fc7a054472f"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-reader.png",
+      "sha256": "417bdd36265e237aafe9248843943b3972a75d448d3b35506eab90c5b242acf3"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-selection.png",
+      "sha256": "3c7b106cd284f2299c9429ac0dcf6d5007e838fb5ac316e3bbc8eac86dc69a32"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-replaced.png",
+      "sha256": "3b9aa6471d99f341b1f0da8db782ecf2f2b9fc1effd2cde412cf4bf09dc7192d"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-reader.png",
+      "sha256": "31f557d48934aef3ecb42fbf4bb2bccbe45728fdaaffa38bcd479de17ce36a0b"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-selection.png",
+      "sha256": "c139be301562885a384788bd34873a1a05321b1a9a586befdc5fa9c3b378781a"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-replaced.png",
+      "sha256": "3b9aa6471d99f341b1f0da8db782ecf2f2b9fc1effd2cde412cf4bf09dc7192d"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-reader.png",
+      "sha256": "6cc30e2869661f0116b9338f13f4b138224ddfc6c6c1a52aee8e686c5b9d5a24"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-selection.png",
+      "sha256": "2a61c963fe6cf82814b59fda5c763144f9a80b5c8857cc90c592fc5abf5e64bf"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-replaced.png",
+      "sha256": "66fdf19e28e940a511888c86116a1c01a0b6b94c6c5535df23c12f587f16add6"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-reader.png",
+      "sha256": "423eb288845e3f6aece4c8a1ae29efd5257032a634a769f8e526daf3dae4f147"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-selection.png",
+      "sha256": "2a61c963fe6cf82814b59fda5c763144f9a80b5c8857cc90c592fc5abf5e64bf"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-replaced.png",
+      "sha256": "66fdf19e28e940a511888c86116a1c01a0b6b94c6c5535df23c12f587f16add6"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-reader.png",
+      "sha256": "423eb288845e3f6aece4c8a1ae29efd5257032a634a769f8e526daf3dae4f147"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-selection.png",
+      "sha256": "1d00d647267a318db4f091c181bf14e6b091ab7022ac986d73c48ee2b045de93"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-replaced.png",
+      "sha256": "73de73b6c7c38c1bb5dc554e8c2b98880686b5d25ebbbe820bc46295e5a9c2c2"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-reader.png",
+      "sha256": "70363a6ef68edfd67d43c61d3f2ca3eed11fc4c823492d5cb040f15b6088d3ff"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-selection.png",
+      "sha256": "1d00d647267a318db4f091c181bf14e6b091ab7022ac986d73c48ee2b045de93"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-replaced.png",
+      "sha256": "73de73b6c7c38c1bb5dc554e8c2b98880686b5d25ebbbe820bc46295e5a9c2c2"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-reader.png",
+      "sha256": "70363a6ef68edfd67d43c61d3f2ca3eed11fc4c823492d5cb040f15b6088d3ff"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-selection.png",
+      "sha256": "0672a7621f9232c15b0537a08fde36f6455c43ddb0821f1a4e487a5dd5547a45"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-replaced.png",
+      "sha256": "83f6a66b1fa8e150e7775d3bbfa731e31998e0f7a5c0ee177bdb96108da65360"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-reader.png",
+      "sha256": "a4d7b9a18b5f610888724ecddcad0147843d25e7c9d15b57502ce3abede2b933"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-selection.png",
+      "sha256": "0672a7621f9232c15b0537a08fde36f6455c43ddb0821f1a4e487a5dd5547a45"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-replaced.png",
+      "sha256": "83f6a66b1fa8e150e7775d3bbfa731e31998e0f7a5c0ee177bdb96108da65360"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-reader.png",
+      "sha256": "a4d7b9a18b5f610888724ecddcad0147843d25e7c9d15b57502ce3abede2b933"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-selection.png",
+      "sha256": "33afe8c29513e8c79bd4f034e46ed9b0f06f11811d9db90bcfdcb07b5a468466"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-replaced.png",
+      "sha256": "f94cb3f55cf0e8a7508dc22105df24004d45cc15330546a91711dcc7e70f7f92"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-reader.png",
+      "sha256": "afee65da6fa87886828ac8fff802cbd7c05809d530fdda66083f8c83df4d2029"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-selection.png",
+      "sha256": "28c4c9207803b6065336d656b10e4b6395b2d46ff70fa6a0f3d0c932b88c21ff"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-replaced.png",
+      "sha256": "f94cb3f55cf0e8a7508dc22105df24004d45cc15330546a91711dcc7e70f7f92"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-reader.png",
+      "sha256": "afee65da6fa87886828ac8fff802cbd7c05809d530fdda66083f8c83df4d2029"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-selection.png",
+      "sha256": "713bf9bc9de31654eae2e80b97fadf241883b1b4ab73514089de26c00a132cff"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-replaced.png",
+      "sha256": "2f704c96d939444a5ba78fc4332b596fca01cfb7ebe2f4e5777d78236c5b2089"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-reader.png",
+      "sha256": "0199ed2ac793d048bbca721316cbb50175949e0309f9702f2ed865353ca39d44"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-selection.png",
+      "sha256": "2d2fb4eba338ccbc7a392ad4226f5158578f7be4373a97e6c31fb1a07e49626a"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-replaced.png",
+      "sha256": "2f704c96d939444a5ba78fc4332b596fca01cfb7ebe2f4e5777d78236c5b2089"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-reader.png",
+      "sha256": "0199ed2ac793d048bbca721316cbb50175949e0309f9702f2ed865353ca39d44"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-selection.png",
+      "sha256": "3cc8ef361382e5c45af842f67895e2c554778dc7654c751f8074a445adf118bf"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-replaced.png",
+      "sha256": "fa4c7eb3693cc1df03234b6c1cfb2e8d1d92df1a1a3fc131e6aac906eab49fec"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-reader.png",
+      "sha256": "19dcdd1224cc96af1f168710196bfc037b15cfacdfdf8c3a7806c5e8c6da0ba9"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-selection.png",
+      "sha256": "71746e697cebaa345025f481244f03152c7858987aaa03cc26929442f81f23ec"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-replaced.png",
+      "sha256": "fa4c7eb3693cc1df03234b6c1cfb2e8d1d92df1a1a3fc131e6aac906eab49fec"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-reader.png",
+      "sha256": "19dcdd1224cc96af1f168710196bfc037b15cfacdfdf8c3a7806c5e8c6da0ba9"
+    }
+  ],
+  "captureContacts": [
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-captures.png",
+      "sha256": "ff23fb5351f3595af0e44032c029d82cb024fc2e6040aa4208254654e82577e2",
+      "captures": 6
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-captures.png",
+      "sha256": "93b05d35fadff159e3bba9604f744d1cc6e089a26b0fd53d56a779aca0ef7e55",
+      "captures": 6
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-captures.png",
+      "sha256": "34b94890c25fbc1273835754c338e455eb913347646ec713eedba722adfa2325",
+      "captures": 6
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/chromium-range-captures.png",
+      "sha256": "4856e5ba398ba2c8b5bb7f851c4562cb203f89b20f66446f62f6e71e429f7712",
+      "captures": 18
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/firefox-range-captures.png",
+      "sha256": "379cca78e66553457d03d032e4f31a05d81233914c7fbcdc32d7841f5cae6c7f",
+      "captures": 18
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/webkit-range-captures.png",
+      "sha256": "cec36aaacdae7ca48da7206cd2def9af8edfa91f2d6799286ed98e1870209e9e",
+      "captures": 18
+    }
+  ],
+  "videos": [
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/video.webm",
+      "sha256": "2dc18ef0c630e2cf987160aa38b58f53e7afa3428e8816857354c26a42e635a4",
+      "duration": 6.6,
+      "samples": [
+        {
+          "seconds": 0.528,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-0.png",
+          "sha256": "01d4101b1aa3d95c77c13a479436ab89e3f841fb96dfc3b7845417ee92345927"
+        },
+        {
+          "seconds": 1.32,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-1.png",
+          "sha256": "6baa0407ba13e40bdf40c652c375680f6824a560e4cd5d1d35936fd523913f5c"
+        },
+        {
+          "seconds": 2.112,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-2.png",
+          "sha256": "f07afb4e2dc9b9728e9e1e957d3682b1813afe90da68c0dc908800ee13bfc753"
+        },
+        {
+          "seconds": 2.904,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-3.png",
+          "sha256": "9ea23eadc231455d979e42abfee3d05a5b2f8e83445cd1633dc607d3e8bc13f2"
+        },
+        {
+          "seconds": 3.696,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-4.png",
+          "sha256": "86ca77e0f4f73859371e24805fab15dde7350113d439b631d51ec082bc5f7c90"
+        },
+        {
+          "seconds": 4.488,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-5.png",
+          "sha256": "282309405e20b575cf0710c83ff5fec329ea62f8f7519d6aa4570ce0fa278c92"
+        },
+        {
+          "seconds": 5.28,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-6.png",
+          "sha256": "c958e160c4d1bd3e6bf52f704ed93383e40835e842d0432b8d968220cdab8df2"
+        },
+        {
+          "seconds": 6.072,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-7.png",
+          "sha256": "f09c1dee0292bdf197bffad211aedba1f20d6096027a3b3322647c5417b4d896"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/chromium-attributes-video-contact.png",
+      "contactSha256": "a06472cf937221be40091c3647d4304a6e44613640e295cf059bac470c596820"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/video.webm",
+      "sha256": "e447cde4c1fce4d4f22b819005d6596ff1af2eb46fe4303001cb273b53d18db8",
+      "duration": 6.16,
+      "samples": [
+        {
+          "seconds": 0.4928,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-0.png",
+          "sha256": "5d0b875fe0055ca956f1dd1ef8ed713a5ee871c0281f8598afa7dc0f6e62ae7e"
+        },
+        {
+          "seconds": 1.2320000000000002,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-1.png",
+          "sha256": "be78c76f8a1c26e2bfb5bc4422d444dc04126b1e7f0e2d6f421e14918744bae4"
+        },
+        {
+          "seconds": 1.9712,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-2.png",
+          "sha256": "4714338a0d7142bed0a123e3d812b3160fd786d0451b1c5b3e7141e39cdb10bf"
+        },
+        {
+          "seconds": 2.7104,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-3.png",
+          "sha256": "85b4fe94888d15514e6712100fef0aabca6143731644ef9fc85616a48e4ed221"
+        },
+        {
+          "seconds": 3.4496,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-4.png",
+          "sha256": "9e6265d5c192af2983161045f618de1030df1c350e006e988f4967cfe85973d5"
+        },
+        {
+          "seconds": 4.1888000000000005,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-5.png",
+          "sha256": "f6f63664c5f0667f37f55c2a61d5cb0a38cce8b8e09d6ae322b2656cef9d0ca0"
+        },
+        {
+          "seconds": 4.928000000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-6.png",
+          "sha256": "f66a00c031abdade530f7c02ccab9334b3a6358dab709906f536c814ec37663a"
+        },
+        {
+          "seconds": 5.6672,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-7.png",
+          "sha256": "4ed6737dee51ce9dc8c213188f49bfa2bc6b9a968f755f5adc4e4b2817c7fea2"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/firefox-attributes-video-contact.png",
+      "contactSha256": "7e3ae2ecad911e3c1e926a19c86ef20dea09af946e26dfc7b6928ae32cf26e49"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/video.webm",
+      "sha256": "783291c11139c5380096a0510d09770dd6043bfe0e04bfe5951ddd305575f51e",
+      "duration": 13.32,
+      "samples": [
+        {
+          "seconds": 1.0656,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-0.png",
+          "sha256": "454c9069854e360e6e30b97e06bb2178a17c3584d69812e2979ddaee762634d8"
+        },
+        {
+          "seconds": 2.664,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-1.png",
+          "sha256": "a480fb583da8f0597d0c55f83a04c9e1f26565ca355ec33d462236d0fa3d84cb"
+        },
+        {
+          "seconds": 4.2624,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-2.png",
+          "sha256": "0e7fbdc33e474fd37fe3cfea3dc49df78878bc8b0ed4d6cf9e84942b5a1bf93d"
+        },
+        {
+          "seconds": 5.8608,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-3.png",
+          "sha256": "91bbf570b839310175f6b9e0d55eb108c226ef384af3aae7c8cf20ebcd59bb0b"
+        },
+        {
+          "seconds": 7.459200000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-4.png",
+          "sha256": "55cc789a4244e0f089cf205f6dedf70b7fe02367da523b224a2c04e6f2a174d5"
+        },
+        {
+          "seconds": 9.0576,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-5.png",
+          "sha256": "761dd1f3827f4f2d17b3ac2ee867742ab8e6f44bb42846c70721f64fe698867b"
+        },
+        {
+          "seconds": 10.656,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-6.png",
+          "sha256": "19aef376ac2c210fc879810144e3bfd1ae285488a1cf13cfbc73e75bffed8b6a"
+        },
+        {
+          "seconds": 12.2544,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-7.png",
+          "sha256": "1f97f60629e9f7123253590e2b5f981f0c92faab75a6d038794ba91d9ded67c5"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/webkit-attributes-video-contact.png",
+      "contactSha256": "e6f6655bc6639f4467e0bc84f23ae8750ff3f979d37ce78c12e54cb7599c52f9"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/video.webm",
+      "sha256": "336de00d1e1c711e4895d7e08c08818309819794e16cafe437b81e4a577d6650",
+      "duration": 13.32,
+      "samples": [
+        {
+          "seconds": 1.0656,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-0.png",
+          "sha256": "c43d934004b41dcb8cd7064018a1b226424332ec583e52ad3db9a260571168bc"
+        },
+        {
+          "seconds": 2.664,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-1.png",
+          "sha256": "06f1e061c218720a9010dca0fefe2ffcb61a660e59360d24871c05c3b947d84e"
+        },
+        {
+          "seconds": 4.2624,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-2.png",
+          "sha256": "287f15ca254d90829c1d7da3fada2101a12936814d9bd586bd6531aa3d879715"
+        },
+        {
+          "seconds": 5.8608,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-3.png",
+          "sha256": "4598f0d8973eb53d4ea98f760afc904b5e9fbf15eab03b71413115aa10b35a0e"
+        },
+        {
+          "seconds": 7.459200000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-4.png",
+          "sha256": "bd8faf0d3df8d6f0af8583562c08a8c4eacd1f7ffef4c4f889cdcf29bf28ad62"
+        },
+        {
+          "seconds": 9.0576,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-5.png",
+          "sha256": "50ab147e76657f7bf33ddeb868911dff8ffac8250dad2e632f915553b5af46e7"
+        },
+        {
+          "seconds": 10.656,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-6.png",
+          "sha256": "29f14f86a9979da4291098167042d0b08d3ac920cb6448d7b242644b25cc1d6d"
+        },
+        {
+          "seconds": 12.2544,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-7.png",
+          "sha256": "2b75943540b416522657b1360bd41fa6ceb10992f31abfcc61ce4bebd18f8330"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/chromium-range-video-contact.png",
+      "contactSha256": "33f2478b5da5519bf8ea0dfd70837b48fafa7da76b312f47f6d37725ec46e343"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/video.webm",
+      "sha256": "c72a1b6938a4fb8199330e8847507c7e576c26e63a1889f111d1e2170359b841",
+      "duration": 15.48,
+      "samples": [
+        {
+          "seconds": 1.2384000000000002,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-0.png",
+          "sha256": "6575d0ae9625fc85d3f565ee8392082e9f4c2759f52204918f4a1ed49b524977"
+        },
+        {
+          "seconds": 3.096,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-1.png",
+          "sha256": "a94e40a8a59ffbfd982f5280cc143c6d0b2353619f60be36abae1f1b476bae9d"
+        },
+        {
+          "seconds": 4.953600000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-2.png",
+          "sha256": "1bd6257117ccbb198172fd89135601bcb412679059c85907b39489719b022b29"
+        },
+        {
+          "seconds": 6.8112,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-3.png",
+          "sha256": "88cddbcad171cbc65cb020fa7638af96f303fa0e237336a512d27afdd1102428"
+        },
+        {
+          "seconds": 8.668800000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-4.png",
+          "sha256": "d64ed08069187ab9c4f797163fd7b2825b1adf85bf8e43d6e9fd8668a4cf0c4c"
+        },
+        {
+          "seconds": 10.5264,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-5.png",
+          "sha256": "0321cb911b20988b24d6a81f31dbd321c3d60c17f9f75eeb46d78d92913b6e4d"
+        },
+        {
+          "seconds": 12.384,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-6.png",
+          "sha256": "ee820a8f7fa131244e8d6dda67853ebe32010dc8860c36f465349f04f113c215"
+        },
+        {
+          "seconds": 14.241600000000002,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-7.png",
+          "sha256": "ccc27080ad0a85e57580a5e40807340ca5a6be27bd3b27823d02844fd305dc9f"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/firefox-range-video-contact.png",
+      "contactSha256": "ae2ebea27f39a56dd1a5821f3874c83fde694f4b4426532e4f0a6e9140f1cab3"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/video.webm",
+      "sha256": "fd3e79b01830daf845617a13aed09fa3764c146d6b8fb23b19980d82468a73ab",
+      "duration": 34.68,
+      "samples": [
+        {
+          "seconds": 2.7744,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-0.png",
+          "sha256": "ffbe93eb92d731afcdb643f69a9bd755a5de53e63b98dfd49b5305e9a7d7e9e5"
+        },
+        {
+          "seconds": 6.936,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-1.png",
+          "sha256": "0865cb05ae670885b0c4932d61edd39207dc9a8b0ffcdcc1140834a8c8a28300"
+        },
+        {
+          "seconds": 11.0976,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-2.png",
+          "sha256": "a12475ebac5bbabc77748574161aa13ad60fa237f06d4f9912cdb82be6cddd77"
+        },
+        {
+          "seconds": 15.2592,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-3.png",
+          "sha256": "2c2872ee65fb0f0a65b055718379f43c572b64f8f7384c84af468611754b12af"
+        },
+        {
+          "seconds": 19.420800000000003,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-4.png",
+          "sha256": "bc4f67dd79d4ac49366917b445d6c7d173d91c3beba4385c9904b1f11759a457"
+        },
+        {
+          "seconds": 23.5824,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-5.png",
+          "sha256": "9e9953d8f96ab0b4e277721eaebfbb1517c5a751854e8c84e03d184afe356fab"
+        },
+        {
+          "seconds": 27.744,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-6.png",
+          "sha256": "9e0d2dfd115b27bfde3025fdfdaf35acda736fd24d347571516a5078c279e767"
+        },
+        {
+          "seconds": 31.9056,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-7.png",
+          "sha256": "013dec439365c0bcff0e61e103eec5cea4874bc474557596981183f0259c242a"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/webkit-range-video-contact.png",
+      "contactSha256": "c845e32865c7c2694931a666d8cd0cdf853f827376eb3d456bb060ab3fa4ebff"
+    }
+  ],
+  "traces": [
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/trace.zip",
+      "sha256": "7501d22fedc6af3a8746571394de9182c37a0b8742aac2fdec0f5d67f3d02980"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/trace.zip",
+      "sha256": "fa636c68d0191281c69a061588144fa56a90dc25c6f4415e1f7f47bde27680d3"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/trace.zip",
+      "sha256": "28739c0789080ed4d395070d9a511afc9546527425bb9bfb70eb5f6bd2f6e0f2"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/trace.zip",
+      "sha256": "2e5980157b646c401ca7f3be2ea0c0eca062a936d13b5d4bb92fd6cbad89f70a"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/trace.zip",
+      "sha256": "dfd6f3de9c871da60bb9ccfc592cd584531a84775fc34ba5a126403173656e36"
+    },
+    {
+      "path": "artifacts/cross-container-verified-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/trace.zip",
+      "sha256": "c32024ffbb8dbc5d1ea81d1e482edf09518fde4bbc74d8cee009877de51e67ec"
+    }
+  ],
+  "scope": "Desktop native input and supported Markdown/JSON file workflows. Contact sheets and eight sampled frames per recording; not every video frame or physical mobile coverage."
+}

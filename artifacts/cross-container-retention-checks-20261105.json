@@ -1,0 +1,12 @@
+[
+  {
+    "log": "artifacts/cross-container-retention-shared-direction-20261105.log",
+    "name": "shared-direction",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-retention-position-mapping-20261105.log",
+    "name": "position-mapping",
+    "exitCode": 0
+  }
+]

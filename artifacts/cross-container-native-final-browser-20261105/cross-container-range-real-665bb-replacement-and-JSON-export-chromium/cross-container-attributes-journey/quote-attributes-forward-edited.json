@@ -1,0 +1,78 @@
+{
+  "type": "doc",
+  "attrs": {
+    "audit": {
+      "title": "Preserve outside quote direction"
+    }
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Before."
+        }
+      ]
+    },
+    {
+      "type": "blockquote",
+      "attrs": {
+        "dir": "ltr"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "LeX"
+            },
+            {
+              "type": "text",
+              "text": "ht"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "blockquote",
+      "attrs": {
+        "dir": "rtl"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "align": "left"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Tail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "align": "left"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "After."
+        }
+      ]
+    }
+  ]
+}

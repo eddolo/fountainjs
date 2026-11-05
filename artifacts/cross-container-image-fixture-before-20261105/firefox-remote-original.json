@@ -1,0 +1,85 @@
+{
+  "type": "doc",
+  "attrs": {
+    "audit": {
+      "title": "Preserve outside quote direction"
+    }
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Before."
+        }
+      ]
+    },
+    {
+      "type": "blockquote",
+      "attrs": {
+        "dir": "ltr"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Left"
+            }
+          ]
+        },
+        {
+          "type": "image_super",
+          "attrs": {
+            "src": "https://example.test/selected.svg",
+            "alt": "Selected figure"
+          }
+        }
+      ]
+    },
+    {
+      "type": "blockquote",
+      "attrs": {
+        "dir": "rtl"
+      },
+      "content": [
+        {
+          "type": "image_super",
+          "attrs": {
+            "src": "https://example.test/selected.svg",
+            "alt": "Selected figure"
+          }
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Right"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Tail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "After."
+        }
+      ]
+    }
+  ]
+}

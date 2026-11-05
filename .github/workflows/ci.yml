@@ -226,6 +226,8 @@ jobs:
             test-results/**/issue-input-journey/**
             test-results/**/site-font-journey/**
             test-results/**/nested-sibling-range-journey/**
+            test-results/**/cross-container-range-journey/**
+            test-results/**/cross-container-attributes-journey/**
             test-results/**/virtual-selection-journey/**
             test-results/**/code-labels*.png
             test-results/**/code-labels*.md

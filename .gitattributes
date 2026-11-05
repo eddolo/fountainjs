@@ -36,3 +36,9 @@
 /artifacts/server-html-*.log -text -whitespace
 /artifacts/server-html-conversion-browser-20261105/**/*.md -text -whitespace
 /artifacts/server-html-rejected-wrapper-cache-20261105.patch -text -whitespace
+/artifacts/cross-container-*.log -text -whitespace
+/artifacts/cross-container-verified-browser-20261105/**/*.md -text -whitespace
+/artifacts/cross-container-verified-browser-20261105/**/*.json -text -whitespace
+/artifacts/cross-container-final-browser-20261105/**/*.md -text -whitespace
+/artifacts/cross-container-native-final-browser-20261105/**/*.md -text -whitespace
+/artifacts/cross-container-native-final-browser-20261105/**/*.json -text -whitespace

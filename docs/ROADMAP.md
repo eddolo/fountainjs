@@ -1,5 +1,23 @@
 # FountainJS opportunity roadmap
 
+Cross-container text-range follow-up (2026-11-05, unreleased): fit quote/list
+cut edges and remove fully selected media, with maps derived from actual retained
+text and structural units. Preserve unselected suffix marks, outside node objects,
+different quote attributes and custom required content; keep partial table grids
+and inline bookmark structure. The parent implementation fails all 15 new
+regressions; all 3,934 units / 269 files pass. Twenty-four native cases across Chromium/Firefox/WebKit exercise
+forward/backward input, history, Markdown/JSON download, reopen and reader output;
+the packed root/core ESM/CJS consumers pass 28 complete-model/mapping/history
+cases without a DOM. The 72 stage captures and eight sampled frames from each
+of six recordings are inspected; figures must load before selection, and the
+JSON lab fixture embeds PNGs under its existing no-network policy. The editor/core closure adds 4,916 raw / about 1,503 gzip
+bytes; DOCX and HTML-server closure sizes, the API and all ceilings are unchanged.
+The current performance gate fails at 1,000-block HTML p95 122.84 ms versus 120;
+do not certify that timing variability resolved. Mixed atom/gap selection endpoints,
+clipboard slices, the trailing-image shortcut and broader parity remain open.
+[Contract](SELECTION_RANGES.md) ·
+[Evidence](../artifacts/cross-container-verification-20261105.json). No release promotion.
+
 HTML import allocation follow-up (2026-11-05, unreleased): CPU/source-map
 profiling identifies temporary rule lists and GC work. Reject a wrapper-cache
 experiment with inconclusive paired results. Keep only two live empty-rule
@@ -67,9 +85,10 @@ in all three engines) and a reproducible Firefox code-label click that types in
 the heading. The mobile suggestion-menu overflow retry remains open.
 [Evidence and limits](../artifacts/nested-sibling-verification-20261104.json).
 
-The next selection foundation is a general structural range contract: partial
+The remaining selection foundation is a general structural range contract: partial
 text endpoints and gaps/atoms, native direction, step mapping, deletion, clipboard
-and history must agree, including ranges crossing ancestor containers. A separate
+and history must agree. Cross-container text replacement now fits cut edges and
+maps retained structure; this does not add mixed structural endpoints. A separate
 three-engine audit confirms that Ctrl+Shift+End currently misses a trailing
 atomic image. Do not hide this with a text-only test or a whole-document-only
 special case. [Current scope](VIRTUALIZATION.md#scope-and-limits).

@@ -1,0 +1,62 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/cross-container-range.test.ts (14 tests | 2 failed) 157ms
+   × inserts at exact text endpoints while retaining inline-wrapper identity (0..5) 9ms
+   × keeps custom required container shape when a joined cut would violate its schema 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+
+ FAIL  tests/cross-container-range.test.ts > inserts at exact text endpoints while retaining inline-wrapper identity (0..5)
+AssertionError: expected [ [ 'left', '' ], [ 'right', '' ] ] to deeply equal [ [ 'left', 'X' ], [ 'right', '' ] ]
+
+- Expected
++ Received
+
+@@ -1,9 +1,9 @@
+  [
+    [
+      "left",
+-     "X",
++     "",
+    ],
+    [
+      "right",
+      "",
+    ],
+
+ ❯ tests/cross-container-range.test.ts:127:83
+    125|     const step = new ReplaceTextRangeStep([0, 0, 0], from as number, […
+    126|     const after = step.apply(before), map = step.getMap(before);
+    127|     expect(after.child(0).content.map(node => [node.attrs.id, node.tex…
+       |                                                                                   ^
+    128|     if (to === 0) expect(map.map(textPointToPosition(before, [0, 1, 0]…
+    129|     expect(map.map(before.nodeSize - 2)).toBe(after.nodeSize - 2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/cross-container-range.test.ts > keeps custom required container shape when a joined cut would violate its schema
+Error: Content of pair does not match "paragraph paragraph".
+ ❯ visit src/core/schema/schema.ts:157:19
+    155|           const reusable = reusableCopyGrammar(copy?.grammar, expressi…
+    156|           if (!reusable && !matchesContentExpression(current.content, …
+    157|             throw new Error(`Content of ${current.type.name} does not …
+       |                   ^
+    158|           }
+    159|           grammar = reusable ? copy!.grammar : captureWideGrammar(curr…
+ ❯ visit src/core/schema/schema.ts:173:14
+ ❯ Schema.validate src/core/schema/schema.ts:184:5
+ ❯ tests/cross-container-range.test.ts:159:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed | 268 passed (269)
+      Tests  2 failed | 3931 passed (3933)
+   Start at  00:56:54
+   Duration  304.18s (environment 48%, import 27%, tests 20%, transform 5%, worker 1%)
+
+     Import  655 modules were evaluated 1256 times · 68.53s total, 27% of tracked time
+             ~32.79s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

@@ -1,5 +1,6 @@
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
+import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
 import { runVirtualSelectionJourney } from './virtual-selection-journey';
 import { expect, test, type Locator } from '@playwright/test';
 import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';
@@ -7669,6 +7670,14 @@ test('optional site fonts do not block issue editing', async ({ page }, info) =>
 
 test('replaces selected nested sibling blocks and media through native pointer input', async ({ page }, info) => {
   await runNestedSiblingRangeJourney(page, info);
+});
+
+test('replaces native selections across quote and list ancestors without leaving selected media', async ({ page }, info) => {
+  await runCrossContainerRangeJourney(page, info);
+});
+
+test('retains different quote attributes through native replacement and JSON export', async ({ page }, info) => {
+  await runCrossContainerAttributesJourney(page, info);
 });
 
 test('replaces and restores selections across offscreen document content', async ({ page }, info) => {

@@ -1,0 +1,38 @@
+{
+  "engine": "webkit",
+  "observations": [
+    {
+      "backward": false,
+      "nativeEndpoints": {
+        "anchor": "1.0.0",
+        "anchorOffset": 2,
+        "focus": "2.1.0",
+        "focusOffset": 3
+      },
+      "directionsRetained": [
+        "ltr",
+        "rtl"
+      ],
+      "completeJSONOriginalEditedUndoneRedone": true,
+      "rootMetadataRetained": true,
+      "exactReopenedModel": true
+    },
+    {
+      "backward": true,
+      "nativeEndpoints": {
+        "anchor": "2.1.0",
+        "anchorOffset": 3,
+        "focus": "1.0.0",
+        "focusOffset": 2
+      },
+      "directionsRetained": [
+        "ltr",
+        "rtl"
+      ],
+      "completeJSONOriginalEditedUndoneRedone": true,
+      "rootMetadataRetained": true,
+      "exactReopenedModel": true
+    }
+  ],
+  "errors": []
+}

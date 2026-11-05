@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Fit text-range replacement across quote/list ancestors instead of clearing
+  selected text while retaining selected media. Map actual retained text and
+  balancing structure, preserve unselected container attributes, and keep partial
+  grids, inline IDs and custom required content valid. General atom/gap range
+  endpoints and mixed structural clipboard behavior remain open. See
+  [text range contracts](docs/SELECTION_RANGES.md).
+
 - Avoid allocating parse-rule lists for HTML schema types that currently have no
   rules. Keep rule callbacks live, including additions/removals during an import;
   preserve model, diagnostic and source-token results. Large-document paired
@@ -22,7 +29,7 @@ policy on reopen. Native layout certification remains outstanding.
   attributes, unselected marked text, outside content and undo/redo. Keep
   Shift-click within one table cell available for native text selection;
   cross-cell gestures still select rectangular cell ranges. Mixed structural
-  endpoints and selection across different ancestor containers remain open.
+  endpoints remain open; cross-container text replacement is described above.
 
 - Load optional demo-site fonts without delaying editor startup. Keep the original
   typography and system fallbacks; prove native typing while the font response

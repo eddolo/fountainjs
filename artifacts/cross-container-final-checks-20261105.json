@@ -1,0 +1,47 @@
+[
+  {
+    "log": "artifacts/cross-container-final-types-20261105.log",
+    "name": "types",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-build-20261105.log",
+    "name": "build",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-api-20261105.log",
+    "name": "api",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-headless-20261105.log",
+    "name": "headless",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-package-20261105.log",
+    "name": "package",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-worker-20261105.log",
+    "name": "worker",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-conformance-20261105.log",
+    "name": "conformance",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/cross-container-final-budget-20261105.log",
+    "name": "budget",
+    "exitCode": 1
+  },
+  {
+    "log": "artifacts/cross-container-final-site-20261105.log",
+    "name": "site",
+    "exitCode": 0
+  }
+]

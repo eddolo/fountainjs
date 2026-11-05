@@ -1,0 +1,21 @@
+[WebServer] (node:13924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:15700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (21.4s)
+  ok 2 [chromium] › tests\manual\cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export (5.5s)
+(node:26964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (15.0s)
+  ok 4 [firefox] › tests\manual\cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export (7.1s)
+(node:21724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (33.9s)
+  ok 6 [webkit] › tests\manual\cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export (12.4s)
+
+  6 passed (1.8m)
