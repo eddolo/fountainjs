@@ -240,9 +240,10 @@ function collectCodeDecorations(state: EditorState, config: SyntaxHighlightConfi
 export function createSyntaxHighlightPlugin(config: SyntaxHighlightConfig = {}): Plugin {
   return new Plugin({ props: {
     decorations: (state) => collectCodeDecorations(state, config),
-    handleClick(editor, event) {
+    handlePointerDown(editor, event) {
       // The unselectable, wrapping label is generated CSS, not document text.
-      // Firefox/WebKit can leave a caret outside the code when it is clicked.
+      // Handle it before native focus changes: Firefox can restore an old
+      // caret and selection rendering can detach this node before click fires.
       // Resolve only that label area; ordinary text clicks and modified range
       // selection remain native. No browser globals are touched during import.
       if (!editor.editable || event.button !== 0 || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey

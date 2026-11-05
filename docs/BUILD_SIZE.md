@@ -258,3 +258,21 @@ input and structural selection failures remain explicit release work.
 See `artifacts/nested-sibling-verification-20261104.json` for the archive and
 loaded-size evidence, including the failed browser attempts. This is a bounded
 repair with measured growth, not a general production certification.
+
+## Code-label pointer repair, started 2026-11-04
+
+Move the existing label handler from click to an additive pointer-down hook so
+native focus cannot first restore an unrelated heading caret. Root/React static
+closures add 370 raw bytes (root gzip +39; React gzip +33). Core and DOCX closures
+are unchanged. The optional event type changes two plugin declaration hashes;
+the public declaration graph still contains 419 files and its no-DOM boundary
+still contains 122 modules. No acceptance ceiling changes.
+
+All 3,918 units, package/workerd and five recorded mouse/touch/source/reader
+workflows pass. Local latency is unresolved: the first run fails 5,000-block
+server HTML p95 (713.02 ms / 500 ms), and an unchanged isolated recheck fails
+1,000-block p95 (138.50 ms / 120 ms). Both reports remain evidence; unchanged core
+byte counts do not establish a cause or waive either failure. Retention checks
+pass. Aggregate budgets remain red by 19.7 KiB ESM / 15.1 KiB CommonJS; individual
+limits and CSS pass. See `artifacts/code-label-verification-20261104.json`.
+Fresh complete CI, performance diagnosis and broader production work remain open.

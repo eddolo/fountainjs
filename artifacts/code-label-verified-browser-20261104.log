@@ -1,0 +1,24 @@
+[WebServer] (node:24156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (7.9s)
+(node:17436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (16.8s)
+(node:5588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (17.2s)
+(node:17328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [mobile-chrome] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (9.7s)
+(node:25580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [mobile-safari] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (22.3s)
+
+  5 passed (1.4m)

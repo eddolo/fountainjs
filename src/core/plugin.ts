@@ -39,6 +39,8 @@ export interface PluginProps {
   handleCut?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
   handlePaste?: (editor: Editor, event: GlobalConstructorInstance<'ClipboardEvent', any>) => boolean;
   handleDrop?: (editor: Editor, event: GlobalConstructorInstance<'DragEvent', any>) => boolean;
+  /** Handle document chrome before the browser places a caret or changes focus. */
+  handlePointerDown?: (editor: Editor, event: GlobalConstructorInstance<'PointerEvent', any>) => boolean;
   handleClick?: (editor: Editor, event: GlobalConstructorInstance<'MouseEvent', any>) => boolean;
   onCreate?: (editor: Editor) => void;
   onDestroy?: (editor: Editor) => void;

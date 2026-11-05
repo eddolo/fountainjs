@@ -1,0 +1,72 @@
+[
+  {
+    "name": "final-browser",
+    "exitCode": 1,
+    "log": "artifacts/code-label-final-browser-20261104.log"
+  },
+  {
+    "name": "pack",
+    "exitCode": 0,
+    "log": "artifacts/code-label-pack-20261104.log"
+  },
+  {
+    "name": "extract",
+    "exitCode": 0,
+    "log": "artifacts/code-label-extract-20261104.log"
+  },
+  {
+    "name": "packed-node",
+    "exitCode": 0,
+    "log": "artifacts/code-label-packed-node-20261104.log"
+  },
+  {
+    "name": "types",
+    "exitCode": 0,
+    "log": "artifacts/code-label-types-20261104.log"
+  },
+  {
+    "name": "conformance",
+    "exitCode": 0,
+    "log": "artifacts/code-label-conformance-20261104.log"
+  },
+  {
+    "name": "package",
+    "exitCode": 0,
+    "log": "artifacts/code-label-package-20261104.log"
+  },
+  {
+    "name": "worker",
+    "exitCode": 0,
+    "log": "artifacts/code-label-worker-20261104.log"
+  },
+  {
+    "name": "size",
+    "exitCode": 1,
+    "log": "artifacts/code-label-size-20261104.log"
+  },
+  {
+    "name": "loaded-size",
+    "exitCode": 0,
+    "log": "artifacts/code-label-loaded-size-20261104.log"
+  },
+  {
+    "name": "latency",
+    "exitCode": 1,
+    "log": "artifacts/code-label-latency-20261104.log"
+  },
+  {
+    "name": "direction-retention",
+    "exitCode": 0,
+    "log": "artifacts/code-label-direction-retention-20261104.log"
+  },
+  {
+    "name": "mapping-retention",
+    "exitCode": 0,
+    "log": "artifacts/code-label-mapping-retention-20261104.log"
+  },
+  {
+    "name": "visual-contacts",
+    "exitCode": 0,
+    "log": "artifacts/code-label-visual-contacts-20261104.log"
+  }
+]

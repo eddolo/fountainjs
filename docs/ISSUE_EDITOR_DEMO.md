@@ -194,6 +194,14 @@ Shared browser journey: `tests/browser/issue-editor-journey.ts`; recorded entry:
 `tests/manual/issue-editor-audit.spec.ts`. Desktop browser tests run the same
 journey; a narrow viewport check is emulation, not physical-device certification.
 
+The code language label is metadata, separate from editable source. Clicking or
+tapping it enters the beginning of that code block, while ordinary source clicks
+and backward Shift-click retain their native positions. The label handler runs
+on pointer-down so Firefox cannot first restore a stale heading caret and remove
+the click target. `markdown-code-labels-journey.ts` checks the native caret before
+typing, unchanged headings, undo/redo, actual download/reopen and desktop/narrow
+reader views; mobile projects use a real emulated touch tap for label entry.
+
 `tests/browser/nested-sibling-range-journey.ts` uses real pointer placement and
 forward/backward Shift-click to replace text and an intervening image inside
 quotes, list items and table cells. It checks actual Markdown downloads, exact

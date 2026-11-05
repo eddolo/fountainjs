@@ -1,0 +1,39 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/code-label-pointer.test.ts (10 tests | 1 failed) 182ms
+   × enters code on label pointer-down before native focus can restore an unrelated caret (empty=true) 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/code-label-pointer.test.ts > enters code on label pointer-down before native focus can restore an unrelated caret (empty=true)
+AssertionError: expected [ +0, +0 ] to deeply equal [ 1 ]
+
+- Expected
++ Received
+
+  [
+-   1,
++   0,
++   0,
+  ]
+
+ ❯ tests/code-label-pointer.test.ts:33:41
+     31|     expect(document.activeElement).toBe(view.dom);
+     32|     expect(editor.state.selection).toBeInstanceOf(empty ? NodeSelectio…
+     33|     expect(editor.state.selection.path).toEqual(empty ? [1] : [1, 0]);
+       |                                         ^
+     34|     await Promise.resolve();
+     35|     expect(pre.contains(document.getSelection()?.anchorNode ?? null)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 88 passed (89)
+   Start at  23:43:18
+   Duration  10.09s (environment 49%, import 21%, transform 18%, tests 12%)
+
+    Isolate  4 workers spawned · ~1.31s startup each (spawn + environment, per file)
+             at least ~3.94s faster with isolate: false — reuses workers across files instead of one per file
+

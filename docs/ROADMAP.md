@@ -1,5 +1,27 @@
 # FountainJS opportunity roadmap
 
+Code-label pointer follow-up (2026-11-04, unreleased): the recorded Firefox
+failure types in the heading because mouse-down restores an old caret and
+selection rendering detaches the code element before its click handler runs.
+Move the existing label handler to an optional `PluginProps.handlePointerDown`
+hook, before native focus placement. Keep plugin ordering/cancellation and
+NodeView ownership, ordinary source clicks, modified range gestures, read-only
+behavior and keyboard code-region browsing. The initial three-engine event audit
+fails only Firefox; the repaired audit passes all three. Six full desktop
+source/reader journeys and two emulated touch journeys pass, including a native
+backward code-text selection and unchanged headings. The final five-engine
+workflow also checks empty imported code entry, undo, exact source download and
+reader output. All 3,918 units / 268 files, types, 419 API declarations, the
+122-module headless boundary, package/workerd and unchanged conformance checks
+pass. Actual packed root/core ESM/CJS consumers pass source/reference and nested
+range contracts plus no-DOM pointer guards; all 865 archive build files match.
+The hook adds 370 raw / 39 gzip bytes to the root closure; core/DOCX closures are
+unchanged. Local latency remains unresolved: first 5,000-block HTML p95 misses
+its limit, then an unchanged isolated recheck misses 1,000-block p95. Both are
+retained without a causal conclusion or threshold change. Broader selection,
+download, mobile menu, aggregate capacity and full fresh CI remain open.
+[Evidence](../artifacts/code-label-verification-20261104.json). No release promotion.
+
 Nested selection follow-up (2026-11-04, unreleased): replace a text range across
 sibling paragraphs inside a quote, list item or table cell by one joined block,
 including removal of fully selected media between its endpoints. Previously the
