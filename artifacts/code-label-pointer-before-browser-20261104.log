@@ -1,0 +1,64 @@
+[WebServer] (node:2812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:22988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › artifacts\code-label-pointer-audit-20261104.spec.ts:4:1 › label pointer delivery retains the intended code caret (12.4s)
+(node:13760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › artifacts\code-label-pointer-audit-20261104.spec.ts:4:1 › label pointer delivery retains the intended code caret (11.6s)
+(node:24640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › artifacts\code-label-pointer-audit-20261104.spec.ts:4:1 › label pointer delivery retains the intended code caret (3.6s)
+
+
+  1) [firefox] › artifacts\code-label-pointer-audit-20261104.spec.ts:4:1 › label pointer delivery retains the intended code caret 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+    Expected: "example 1 edited"
+    Received: "example 1"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+        14 × locator resolved to <pre title="x"y" tabindex="0" role="region" data-language="x"y" aria-label="x"y code" data-fountain-path="2" data-line-numbers="true" data-fountain-code-lines="1" data-fountain-node="code_block" data-fountain-decoration="syntax-block-2" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "example 1"
+
+
+      40 |     await page.keyboard.press('End');
+      41 |     await page.keyboard.type(' edited');
+    > 42 |     await expect(editor.locator('pre').first()).toHaveText('example 1 edited');
+         |                                                 ^
+      43 |   } finally {
+      44 |     await writeFile(info.outputPath('pointer-events.json'), JSON.stringify({ engine: info.project.name, events,
+      45 |       heading: await editor.locator('h1').textContent(), code: await editor.locator('pre').first().textContent() }, null, 2));
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\artifacts\code-label-pointer-audit-20261104.spec.ts:42:49
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-label-pointer-before-browser-20261104\code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-label-pointer-before-browser-20261104\code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-label-pointer-before-browser-20261104\code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-label-pointer-before-browser-20261104\code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-label-pointer-before-browser-20261104\code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › artifacts\code-label-pointer-audit-20261104.spec.ts:4:1 › label pointer delivery retains the intended code caret 
+  2 passed (37.3s)

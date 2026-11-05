@@ -31,3 +31,5 @@
 /artifacts/nested-sibling-*.log -text -whitespace
 /artifacts/nested-structural-range-*.log -text -whitespace
 /artifacts/virtual-atomic-boundary-verified-browser-20261104.log -text -whitespace
+/artifacts/code-label-*.log -text -whitespace
+/artifacts/code-label-verified-browser-20261104/**/*.md -text -whitespace

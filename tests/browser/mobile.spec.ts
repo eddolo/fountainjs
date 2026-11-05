@@ -1,8 +1,13 @@
 import { expect, test } from '@playwright/test';
+import { markdownCodeLabelsJourney } from './markdown-code-labels-journey';
 import { workflowTaskRemovalJourney } from './workflow-task-removal-journey';
 
 test('navigates workflow parents and restores deleted task drafts and histories on mobile', async ({ page }, info) => {
   await workflowTaskRemovalJourney(page, info);
+});
+
+test('enters code through a touch label and preserves source through a reader handoff', async ({ page }, info) => {
+  await markdownCodeLabelsJourney(page, info);
 });
 import { webComponentFormJourney } from './web-component-form-journey';
 import { explicitFocusJourney } from './explicit-focus-journey';

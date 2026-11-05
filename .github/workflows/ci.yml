@@ -227,6 +227,8 @@ jobs:
             test-results/**/site-font-journey/**
             test-results/**/nested-sibling-range-journey/**
             test-results/**/virtual-selection-journey/**
+            test-results/**/code-labels*.png
+            test-results/**/code-labels*.md
           if-no-files-found: ignore
           retention-days: 7
       # A passing diagnostic journey can still document known viewer failures.

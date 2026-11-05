@@ -598,7 +598,10 @@ describe('EditorView', () => {
       }
     }
 
-    const clickPlugin = new Plugin({ props: { handleClick: () => { pluginClicks += 1; return true; } } });
+    const clickPlugin = new Plugin({ props: {
+      handleClick: () => { pluginClicks += 1; return true; },
+      handlePointerDown: () => { pluginClicks += 1; return true; },
+    } });
     const visualPlugin = new Plugin({
       props: {
         decorations: (state) => state.doc.child(0).type.name === 'counter' && state.doc.child(0).attrs.count === 0
@@ -640,6 +643,7 @@ describe('EditorView', () => {
     expect(original?.dataset.counterState).toBe('pending');
 
     button?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    button?.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true }));
     expect(pluginClicks).toBe(0);
     expect(currentPath).toEqual([0]);
     const beforeControlInput = editor.getJSON();
@@ -819,7 +823,7 @@ describe('EditorView', () => {
     view.destroy();
   });
 
-  it('lets plugins intercept browser input, paste, drop, and click events', () => {
+  it('lets plugins intercept browser input, paste, drop, pointer-down, and click events', () => {
     const calls: string[] = [];
     const plugin = new Plugin({
       props: {
@@ -830,6 +834,7 @@ describe('EditorView', () => {
         },
         handlePaste: () => { calls.push('paste'); return true; },
         handleDrop: () => { calls.push('drop'); return true; },
+        handlePointerDown: () => { calls.push('pointerdown'); return true; },
         handleClick: () => { calls.push('click'); return true; },
       },
     });
@@ -841,14 +846,39 @@ describe('EditorView', () => {
     const paste = new Event('paste', { bubbles: true, cancelable: true });
     const drop = new Event('drop', { bubbles: true, cancelable: true });
     const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    const pointer = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
     view.dom.dispatchEvent(beforeInput);
     view.dom.dispatchEvent(paste);
     view.dom.dispatchEvent(drop);
+    view.dom.dispatchEvent(pointer);
     view.dom.dispatchEvent(click);
     expect(editor.getText()).toBe('extension');
-    expect(calls).toEqual(['beforeinput:insertText', 'paste', 'drop', 'click']);
-    expect([beforeInput, paste, drop, click].every((event) => event.defaultPrevented)).toBe(true);
+    expect(calls).toEqual(['beforeinput:insertText', 'paste', 'drop', 'pointerdown', 'click']);
+    expect([beforeInput, paste, drop, pointer, click].every((event) => event.defaultPrevented)).toBe(true);
     view.destroy();
+  });
+
+  it('dispatches pointer plugins in order, respects cancellation, and detaches on destruction', () => {
+    const calls: string[] = [];
+    const editor = createEditor({ schema: CoreSchemaSpec, plugins: [
+      new Plugin({ props: { handlePointerDown: () => { calls.push('first'); return false; } } }),
+      new Plugin({ props: { handlePointerDown: () => { calls.push('second'); return true; } } }),
+      new Plugin({ props: { handlePointerDown: () => { calls.push('third'); return true; } } }),
+    ] });
+    const mount = document.body.appendChild(document.createElement('div'));
+    const view = new EditorView(mount, editor);
+    try {
+      const cancelled = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+      cancelled.preventDefault(); view.dom.dispatchEvent(cancelled);
+      expect(calls).toEqual([]);
+      const pointer = new MouseEvent('pointerdown', { bubbles: true, cancelable: true });
+      view.dom.dispatchEvent(pointer);
+      expect(pointer.defaultPrevented).toBe(true);
+      expect(calls).toEqual(['first', 'second']);
+      view.destroy();
+      view.dom.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true }));
+      expect(calls).toEqual(['first', 'second']);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
   });
 
   it('renders mapped inline, node, and widget decorations without changing document JSON', () => {

@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Handle code-label pointer gestures before native focus can restore an unrelated
+  caret in Firefox. Add optional `PluginProps.handlePointerDown` for document
+  chrome; preserve native source selection, modified gestures and NodeView-owned
+  controls. Test mouse and touch label entry, history and source/reader handoff.
+
 - Replace selected sibling paragraphs inside quotes, list items and table cells
   without leaving fully selected media behind. Preserve the first block's
   attributes, unselected marked text, outside content and undo/redo. Keep

@@ -185,6 +185,7 @@ export class InputManager {
     dom.addEventListener('compositionstart', this.onCompositionStart);
     dom.addEventListener('compositionend', this.onCompositionEnd);
     dom.addEventListener('change', this.onChange);
+    dom.addEventListener('pointerdown', this.onPointerDown);
     dom.addEventListener('click', this.onClick);
   }
 
@@ -211,6 +212,7 @@ export class InputManager {
     this.dom.removeEventListener('compositionstart', this.onCompositionStart);
     this.dom.removeEventListener('compositionend', this.onCompositionEnd);
     this.dom.removeEventListener('change', this.onChange);
+    this.dom.removeEventListener('pointerdown', this.onPointerDown);
     this.dom.removeEventListener('click', this.onClick);
   }
 
@@ -769,6 +771,16 @@ export class InputManager {
     if (!input || !item) return;
     const path = (item.dataset.fountainPath ?? '').split('.').filter(Boolean).map(Number);
     setNodeAttributes(this.editor, path, { checked: input.checked });
+  };
+
+  private onPointerDown = (event: PointerEvent): void => {
+    if (event.defaultPrevented || this.options.shouldStopEvent?.(event)) return;
+    for (const plugin of this.editor.state.plugins) {
+      if (plugin.spec.props?.handlePointerDown?.(this.editor, event)) {
+        event.preventDefault();
+        return;
+      }
+    }
   };
 
   private onClick = (event: MouseEvent): void => {

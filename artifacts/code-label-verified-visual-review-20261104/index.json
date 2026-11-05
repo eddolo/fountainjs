@@ -1,0 +1,481 @@
+[
+  {
+    "folder": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium",
+    "captures": 1,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium-recording.png",
+    "durationSeconds": 12.68,
+    "files": [
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/pointer-events.json",
+        "bytes": 14522,
+        "sha256": "e7be0f0a60184ed2e9d8829e784634788e318ced3cd28f050e4edb13124a27e2"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/pointer-outcome.png",
+        "bytes": 84717,
+        "sha256": "f1b2bd2e6246d45c1d0ad3c7e474936a222b4fa27e364a3d83332aa211f904fa"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/trace.zip",
+        "bytes": 1730308,
+        "sha256": "ed2d4e4dc5c2673aba40bd28a8887a93ad483c1948d3c770efcdc07c9bc8974b"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/video.webm",
+        "bytes": 411269,
+        "sha256": "7814ccc79f3006640ca58a9a4ea418bccf85869607902046f6cfc7fcb2ca4ad6"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox",
+    "captures": 2,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox-recording.png",
+    "durationSeconds": 11.16,
+    "files": [
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/error-context.md",
+        "bytes": 4809,
+        "sha256": "8c5e8a977c34fde49f8f548fab132bca879f9046ab42971e51e98c87dcb775a1"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/pointer-events.json",
+        "bytes": 17350,
+        "sha256": "0134a6128080aa95ee6e702f22e3a7d174716d1878c50dd278950f82c7554709"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/pointer-outcome.png",
+        "bytes": 96542,
+        "sha256": "427f8bf3d78baa7785af17e21f89bbebbadad7e2bd4acf8e5228539783fdac26"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/test-failed-1.png",
+        "bytes": 96542,
+        "sha256": "427f8bf3d78baa7785af17e21f89bbebbadad7e2bd4acf8e5228539783fdac26"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/trace.zip",
+        "bytes": 4554089,
+        "sha256": "2abb2580f962b228b8b163793d9a936b6aee01b093908a23973a774025ad70cc"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/video.webm",
+        "bytes": 495126,
+        "sha256": "b0138d33d08ddce747a109d075b231b32c6445cbfd5ce8d5fd8b6496b2b91aa5"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit",
+    "captures": 1,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit-recording.png",
+    "durationSeconds": 4.12,
+    "files": [
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/pointer-events.json",
+        "bytes": 16407,
+        "sha256": "6cfe91f935b12c255a63c7d8a633c02b1543cc1fd7eb527820691b46e258b4c3"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/pointer-outcome.png",
+        "bytes": 187292,
+        "sha256": "19a97bb845685c6ca1528df5f7854a479cca3d8b9bc784a45b833a7f14297484"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/trace.zip",
+        "bytes": 1023050,
+        "sha256": "df3590fd5b984c6bffbd5c6caad88b0d3c93d510b3f5dbe9fbc1f3f05ab9569d"
+      },
+      {
+        "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/video.webm",
+        "bytes": 197539,
+        "sha256": "4dea9aa654029e3a686a4c629e79c87ee90bb94b9686693679ac6d6d1d5cdf07"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium",
+    "captures": 1,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium-recording.png",
+    "durationSeconds": 2.68,
+    "files": [
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/pointer-events.json",
+        "bytes": 13761,
+        "sha256": "cba5ec86b7b163f831d1c870b5c9b404358510e3252182a0be62dce5e8176193"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/pointer-outcome.png",
+        "bytes": 84717,
+        "sha256": "f1b2bd2e6246d45c1d0ad3c7e474936a222b4fa27e364a3d83332aa211f904fa"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/trace.zip",
+        "bytes": 1687367,
+        "sha256": "07279009de72d717b190baca1ed2efa52f203d06dabeaac1c22e471279deda4f"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/video.webm",
+        "bytes": 178515,
+        "sha256": "2027343b2510749ecb28f72245bba388c43593016f9fe42150fb35ee078ad1c7"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox",
+    "captures": 1,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox-recording.png",
+    "durationSeconds": 5.6,
+    "files": [
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/pointer-events.json",
+        "bytes": 15419,
+        "sha256": "6b8f1a2461f1538c383e14d6dc727974666804bdf80ca330f160f6c7e5f86587"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/pointer-outcome.png",
+        "bytes": 96230,
+        "sha256": "75b3f33971167a15017eab6dd6f94621ff7810cb02b1a9ae306fccd5153c55c4"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/trace.zip",
+        "bytes": 1969363,
+        "sha256": "e5b72e195030737ad5c9d21618a22ddd37ebd3a918b23ac7a6870baae3a5ab51"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/video.webm",
+        "bytes": 338639,
+        "sha256": "3bd4557f6eeff43b8e542ca53a6f0b090da44ac86775cebb16f5937805a1e865"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit",
+    "captures": 1,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit-recording.png",
+    "durationSeconds": 4.08,
+    "files": [
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/pointer-events.json",
+        "bytes": 13655,
+        "sha256": "13f9898accfe7049d42670524a295d23977cd5be2e54c484f95213d3d698b16b"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/pointer-outcome.png",
+        "bytes": 187292,
+        "sha256": "19a97bb845685c6ca1528df5f7854a479cca3d8b9bc784a45b833a7f14297484"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/trace.zip",
+        "bytes": 1179895,
+        "sha256": "0611db322976488b975670ede63b13679a3a787b88d9f1acca8b97f80b0db9e9"
+      },
+      {
+        "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/video.webm",
+        "bytes": 204953,
+        "sha256": "7e7edb09f972d02a208aa5fe816905791165c0610ddde24685674638b1146416"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium",
+    "captures": 6,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium-recording.png",
+    "durationSeconds": 8.68,
+    "files": [
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-backward-selection.png",
+        "bytes": 21365,
+        "sha256": "324eab3a0d42ab0bdd40b089770098a1744eada86a5ac0d1ceac39ed8317f168"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-editor.png",
+        "bytes": 253889,
+        "sha256": "235c5b6db92c8b93b096b3d47ef47b3ca1c09552473d676803f8452cb47cb572"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-empty-reader.png",
+        "bytes": 219444,
+        "sha256": "9ee80c7b6aa66acd1aa8e0557bc358a88615c3e34e2acf5331b43e3df84b5b83"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-empty.md",
+        "bytes": 32,
+        "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-mobile-editor.png",
+        "bytes": 239919,
+        "sha256": "c38a29d562fefce8c243109c450d02df6f3ee3f9ad12ceb8ef6155f48901bcf2"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-mobile-reader.png",
+        "bytes": 231837,
+        "sha256": "701464df6bcf96714258e3ddce79c8c1bb3d45b1196cf315b244e30020132916"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-reader.png",
+        "bytes": 245086,
+        "sha256": "a8158a30bd1f7a25821eb434d0ce8cc993a488f4cc2f77fdef58d836fb0dfeef"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels.md",
+        "bytes": 305,
+        "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/trace.zip",
+        "bytes": 4848678,
+        "sha256": "6d2c7481299306f8040e1c1e6044c24101b94b981cd4f6e5048aebd89648a554"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/video.webm",
+        "bytes": 645527,
+        "sha256": "4a8645c0be8aed60a7add5ef648a4da157df27c8a847fc263c1dd67398ab0092"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox",
+    "captures": 6,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox-recording.png",
+    "durationSeconds": 15.64,
+    "files": [
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-backward-selection.png",
+        "bytes": 21104,
+        "sha256": "35e59c5b90cf613dce735705c508edb63b54da3baf9f42a0241071e149535150"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-editor.png",
+        "bytes": 218516,
+        "sha256": "0ed5cdd9da573d468bd9c3134b80d5bbfe47c82ba38ee196de178615b55bf2fe"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-empty-reader.png",
+        "bytes": 190497,
+        "sha256": "bdd07367a0e9221e3c515b1c58d194006c026827e0fde684793c35ac5dd41b9d"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-empty.md",
+        "bytes": 32,
+        "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-mobile-editor.png",
+        "bytes": 208037,
+        "sha256": "c3166f1585ed123488add3c1845505f473e7352f03e807b8122d5622fb59353a"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-mobile-reader.png",
+        "bytes": 201415,
+        "sha256": "d7809eec2f5ed53029adcc6bf233b6410b86ef2dae0ffb6e7dfbe73afb7ac3e5"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-reader.png",
+        "bytes": 209073,
+        "sha256": "31b2f095cb388fb437b26fd27122da938b8c812d95ec458b263b2a73066c5bd5"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels.md",
+        "bytes": 305,
+        "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/trace.zip",
+        "bytes": 9588089,
+        "sha256": "fccf3e1289c6b47cf6f8aa15fecd16844fcd2ceb7f345af89374d528a4d63675"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/video.webm",
+        "bytes": 884332,
+        "sha256": "cd795d68ef435366c640a83649df494d2f17023d55cb8ef02f025771bc05060d"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome",
+    "captures": 6,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome-recording.png",
+    "durationSeconds": 10.64,
+    "files": [
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-backward-selection.png",
+        "bytes": 88525,
+        "sha256": "96736a3496fe7f4b9da7900ad58336e479351372dec840e69a384810cf28e535"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-editor.png",
+        "bytes": 827313,
+        "sha256": "90aa694a23e370fe081264b2826a0ba3bb59ff810b7bab878a0a3d85c8b1cd96"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-empty-reader.png",
+        "bytes": 745673,
+        "sha256": "d18d998120600e06fcc7b27f9a486a949f02519225fc8a63a444c97c0b77171b"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-empty.md",
+        "bytes": 32,
+        "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-mobile-editor.png",
+        "bytes": 826453,
+        "sha256": "52889e3bf2073677924fd465d4f89a8286aa96a2b7ef8a3f5762c7c3b6a7fe32"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-mobile-reader.png",
+        "bytes": 794487,
+        "sha256": "40b6469a20734b19dfa5a48e2ba9c856f2a8ddeac75eff03891094402e31b508"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-reader.png",
+        "bytes": 783668,
+        "sha256": "abe439ff97487c7996d63b8facb9e5fc2fb297fddeabcd38141a1d06d127b494"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels.md",
+        "bytes": 305,
+        "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/trace.zip",
+        "bytes": 5465141,
+        "sha256": "73b3d02cba6b157167742facc904152044240ca9b755d3a1d9d20b9b6b8369f6"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/video.webm",
+        "bytes": 932603,
+        "sha256": "04d23776257af64450b034671759f6d33780529be94cd088f134faf36235b1d2"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari",
+    "captures": 6,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari-recording.png",
+    "durationSeconds": 22.16,
+    "files": [
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-backward-selection.png",
+        "bytes": 77869,
+        "sha256": "9b57a0525399487e8acdf1877d56339b60f7dbd9e4697e68b7825f15f85552db"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-editor.png",
+        "bytes": 658206,
+        "sha256": "3adb4a646d0b276efc8dd482521d38622ed73a77a68df4d3cbaac12ed461e450"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-empty-reader.png",
+        "bytes": 590066,
+        "sha256": "08a86db608753720760a7b8811f32fbfb35c83929a0c9cfbf979e9b32d643981"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-empty.md",
+        "bytes": 32,
+        "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-mobile-editor.png",
+        "bytes": 657374,
+        "sha256": "8da5a71c657e4e0443e0e871aa767ac224c7aec67ee7fa5977560d1e5099a72d"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-mobile-reader.png",
+        "bytes": 633213,
+        "sha256": "f80c8daf2462195b9537a6acc1c40a4e95d238dd80d13b403e6d8dcae854d002"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-reader.png",
+        "bytes": 676695,
+        "sha256": "d4bce2138f1d1312392372cd07097d0cf2ad910f09131ea65dfd3cc04ec4171a"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels.md",
+        "bytes": 305,
+        "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/trace.zip",
+        "bytes": 2961913,
+        "sha256": "fa734a0f1dea4d5ca45649a316600d32f0c23bd340b021fff8cc9a34dc86a6b1"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/video.webm",
+        "bytes": 794828,
+        "sha256": "c928f89b0223cc65d25a4ccab3e4580cf5c77133c971e6816a226428aef65488"
+      }
+    ]
+  },
+  {
+    "folder": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit",
+    "captures": 6,
+    "contact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit.png",
+    "recordingContact": "artifacts/code-label-verified-visual-review-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit-recording.png",
+    "durationSeconds": 17.6,
+    "files": [
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-backward-selection.png",
+        "bytes": 52073,
+        "sha256": "f502c8c0b5ed75fa664cd0cefb6f6f4761164f0024c9fae0b7ed6df7bd4213d6"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-editor.png",
+        "bytes": 429739,
+        "sha256": "62f7a6ec77b72c37aece86b42ef7aa864e8ae8cf6c4597add3cdc1cd880d597e"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-empty-reader.png",
+        "bytes": 370672,
+        "sha256": "f9fd19ed27df36dd1d5802f769b093fe743eff1d69afb150af6abcf7e66d2dc9"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-empty.md",
+        "bytes": 32,
+        "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-mobile-editor.png",
+        "bytes": 411440,
+        "sha256": "f55a61154dfacf4b34ba19407e8e52503fc2fadf42e89f184851b735bc7dda0a"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-mobile-reader.png",
+        "bytes": 399815,
+        "sha256": "1100b21a2c16c5c8a0f6b5184b0e5e44ea79ba2861c5d2fef204068cdfc0367e"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-reader.png",
+        "bytes": 415268,
+        "sha256": "6c88183c0fb65c4907a9e46350a6a544bf7d3968fc090810261bbc6c848d54cd"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels.md",
+        "bytes": 305,
+        "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/trace.zip",
+        "bytes": 2953664,
+        "sha256": "e1753449825ccf2a8c9520e2f24112f25d43075d450be6950e7920b3182d2ead"
+      },
+      {
+        "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/video.webm",
+        "bytes": 828540,
+        "sha256": "a7450319917616a91818b066aaf8a1fedfd8e548937ed1825f6c09cef6166b21"
+      }
+    ]
+  }
+]

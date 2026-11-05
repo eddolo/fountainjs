@@ -216,9 +216,20 @@ A `Plugin` may define state plus event/lifecycle props:
 - `handleCut`
 - `handlePaste`
 - `handleDrop`
+- `handlePointerDown`
 - `handleClick`
 - `onCreate`
 - `onDestroy`
+
+Use `handlePointerDown` when document chrome must establish a caret before
+native focus/selection placement. Plugins run in order until one returns
+`true`, which prevents the browser default. This runs during editor bubbling,
+after view-owned semantic gestures and before the browser default. Already-cancelled gestures and
+NodeView-owned events are left alone. Ordinary activation remains on
+`handleClick`. The DOM adapter supplies the native pointer event; the portable
+declaration uses the same conditional event type boundary as other input hooks.
+The syntax-highlight label uses this earlier hook because native selection
+updates can replace its element before a later click is delivered.
 
 `filterTransaction(transaction, state)` runs before the initial transaction
 changes state and before each appended transaction. Returning `false` is a

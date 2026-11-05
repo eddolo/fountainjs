@@ -1,0 +1,298 @@
+{
+  "baseCommit": "3d1b2ee20e7dca8aaeae7227e4f7d386b8667ec9",
+  "releaseCertified": false,
+  "acceptanceLimitsChanged": false,
+  "apiChange": {
+    "kind": "additive optional PluginProps.handlePointerDown",
+    "changedDeclarations": [
+      "dist/core/plugin.d.cts",
+      "dist/core/plugin.d.ts"
+    ],
+    "declarationCount": 419,
+    "noDOMBoundaryModules": 122
+  },
+  "unit": {
+    "passed": 3918,
+    "files": 268
+  },
+  "initialQueue": [
+    {
+      "name": "final-browser",
+      "exitCode": 1,
+      "log": "artifacts/code-label-final-browser-20261104.log"
+    },
+    {
+      "name": "pack",
+      "exitCode": 0,
+      "log": "artifacts/code-label-pack-20261104.log"
+    },
+    {
+      "name": "extract",
+      "exitCode": 0,
+      "log": "artifacts/code-label-extract-20261104.log"
+    },
+    {
+      "name": "packed-node",
+      "exitCode": 0,
+      "log": "artifacts/code-label-packed-node-20261104.log"
+    },
+    {
+      "name": "types",
+      "exitCode": 0,
+      "log": "artifacts/code-label-types-20261104.log"
+    },
+    {
+      "name": "conformance",
+      "exitCode": 0,
+      "log": "artifacts/code-label-conformance-20261104.log"
+    },
+    {
+      "name": "package",
+      "exitCode": 0,
+      "log": "artifacts/code-label-package-20261104.log"
+    },
+    {
+      "name": "worker",
+      "exitCode": 0,
+      "log": "artifacts/code-label-worker-20261104.log"
+    },
+    {
+      "name": "size",
+      "exitCode": 1,
+      "log": "artifacts/code-label-size-20261104.log"
+    },
+    {
+      "name": "loaded-size",
+      "exitCode": 0,
+      "log": "artifacts/code-label-loaded-size-20261104.log"
+    },
+    {
+      "name": "latency",
+      "exitCode": 1,
+      "log": "artifacts/code-label-latency-20261104.log"
+    },
+    {
+      "name": "direction-retention",
+      "exitCode": 0,
+      "log": "artifacts/code-label-direction-retention-20261104.log"
+    },
+    {
+      "name": "mapping-retention",
+      "exitCode": 0,
+      "log": "artifacts/code-label-mapping-retention-20261104.log"
+    },
+    {
+      "name": "visual-contacts",
+      "exitCode": 0,
+      "log": "artifacts/code-label-visual-contacts-20261104.log"
+    }
+  ],
+  "finalTypeCheckExitCode": 0,
+  "finalWorkflows": {
+    "passed": 5,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "mobile-chrome",
+      "mobile-safari"
+    ],
+    "physicalMobileCertification": false,
+    "checks": [
+      "native code caret before typing",
+      "heading unchanged",
+      "backward source Shift-click replacement and undo",
+      "history",
+      "actual download/reopen",
+      "desktop and narrow reader",
+      "empty imported text leaf entry, undo, exact source download and reader"
+    ]
+  },
+  "pointerControl": [
+    {
+      "version": "before",
+      "engine": "chromium",
+      "heading": "Code label handoff",
+      "code": "example 1 edited"
+    },
+    {
+      "version": "before",
+      "engine": "firefox",
+      "heading": "Code label handoff edited",
+      "code": "example 1"
+    },
+    {
+      "version": "before",
+      "engine": "webkit",
+      "heading": "Code label handoff",
+      "code": "example 1 edited"
+    },
+    {
+      "version": "after",
+      "engine": "chromium",
+      "heading": "Code label handoff",
+      "code": "example 1 edited"
+    },
+    {
+      "version": "after",
+      "engine": "firefox",
+      "heading": "Code label handoff",
+      "code": "example 1 edited"
+    },
+    {
+      "version": "after",
+      "engine": "webkit",
+      "heading": "Code label handoff",
+      "code": "example 1 edited"
+    }
+  ],
+  "fixtureCorrections": [
+    "Initial unit asserted NodeSelection.path instead of nodePath; retain failure and correct the semantic-node assertion.",
+    "Initial added empty Markdown workflow wrongly expected a childless node. Actual importer retains one empty text leaf. Replace the wrong class assertion with a native code-owned caret assertion; retain all five failed attempts. No typing, history or source-retention assertion was removed."
+  ],
+  "package": {
+    "path": "artifacts/code-label-tarball-20261104/fountainjs-editor-0.4.0-beta.2.tgz",
+    "sha256": "a61534d1c60fecfcbe586fb488b688a3c087676fe36292b8e7b0d88654f54cf9",
+    "distFilesMatch": 865,
+    "entries": [
+      "root ESM",
+      "core ESM",
+      "root CommonJS",
+      "core CommonJS"
+    ],
+    "sourceReferenceCases": 244,
+    "nestedRangeCases": 12,
+    "inertNoDOMPointerGuards": 2
+  },
+  "sizeDeltaBytes": {
+    ".": {
+      "closureRawBytes": 370,
+      "closureGzipBytes": 39,
+      "closureBrotliBytes": 30
+    },
+    "./core": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./docx": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./react": {
+      "closureRawBytes": 370,
+      "closureGzipBytes": 33,
+      "closureBrotliBytes": 18
+    }
+  },
+  "performance": {
+    "status": "unresolved",
+    "first": "5000-block server HTML p95 713.02 ms > 500 ms",
+    "unchangedIsolatedRecheck": "1000-block server HTML p95 138.50 ms > 120 ms; 5000-block p95 334.61 ms passes",
+    "causalConclusion": "Not established. Core and DOCX static closure byte counts are unchanged; both failures remain evidence.",
+    "limitsChanged": false
+  },
+  "visualReview": {
+    "workflowCaptureContactSheets": 5,
+    "capturesInThoseSheets": 30,
+    "sampledWorkflowRecordings": 5,
+    "framesPerRecording": 6,
+    "additionalReadableCrops": [
+      "Firefox reader",
+      "mobile Safari reader",
+      "mobile Chromium empty-code reader"
+    ],
+    "scope": "Contact sheets, sampled frames and three readable crops inspected; not every raw full-page image pixel or complete video playback. Grey recording padding follows viewport changes."
+  },
+  "open": [
+    "Server HTML latency gate failures",
+    "Mixed structural/cross-ancestor ranges and terminal-image selection",
+    "Earlier intermittent Chromium download timeout",
+    "Mobile suggestion-menu overflow retry",
+    "Aggregate ESM/CJS capacity",
+    "Full fresh CI and remaining parity/production work"
+  ],
+  "retainedSources": [
+    {
+      "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/pointer-events.json",
+      "sha256": "e7be0f0a60184ed2e9d8829e784634788e318ced3cd28f050e4edb13124a27e2",
+      "bytes": 14522
+    },
+    {
+      "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/pointer-events.json",
+      "sha256": "0134a6128080aa95ee6e702f22e3a7d174716d1878c50dd278950f82c7554709",
+      "bytes": 17350
+    },
+    {
+      "path": "artifacts/code-label-pointer-before-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/pointer-events.json",
+      "sha256": "6cfe91f935b12c255a63c7d8a633c02b1543cc1fd7eb527820691b46e258b4c3",
+      "bytes": 16407
+    },
+    {
+      "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-chromium/pointer-events.json",
+      "sha256": "cba5ec86b7b163f831d1c870b5c9b404358510e3252182a0be62dce5e8176193",
+      "bytes": 13761
+    },
+    {
+      "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-firefox/pointer-events.json",
+      "sha256": "6b8f1a2461f1538c383e14d6dc727974666804bdf80ca330f160f6c7e5f86587",
+      "bytes": 15419
+    },
+    {
+      "path": "artifacts/code-label-pointer-after-browser-20261104/code-label-pointer-audit-2-c1ce1-ins-the-intended-code-caret-webkit/pointer-events.json",
+      "sha256": "13f9898accfe7049d42670524a295d23977cd5be2e54c484f95213d3d698b16b",
+      "bytes": 13655
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels-empty.md",
+      "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c",
+      "bytes": 32
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium/code-labels.md",
+      "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf",
+      "bytes": 305
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels-empty.md",
+      "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c",
+      "bytes": 32
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox/code-labels.md",
+      "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf",
+      "bytes": 305
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels-empty.md",
+      "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c",
+      "bytes": 32
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome/code-labels.md",
+      "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf",
+      "bytes": 305
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels-empty.md",
+      "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c",
+      "bytes": 32
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari/code-labels.md",
+      "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf",
+      "bytes": 305
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels-empty.md",
+      "sha256": "0140872fa71cfc44fbe7abbdb8d345cc5b0e7126878ed383ba111ba8a690ae2c",
+      "bytes": 32
+    },
+    {
+      "path": "artifacts/code-label-verified-browser-20261104/markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit/code-labels.md",
+      "sha256": "434d4065e7e4f9ec63582bda74418779d4f7f6b078cad4373db0acb7996a5ddf",
+      "bytes": 305
+    }
+  ]
+}

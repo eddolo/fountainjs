@@ -1,0 +1,21 @@
+[WebServer] (node:23440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:18500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader (7.9s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:440:1 › issue workflow preserves root references and validates local image files (4.6s)
+(node:4088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader (13.1s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:440:1 › issue workflow preserves root references and validates local image files (4.9s)
+(node:2556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\editor.spec.ts:381:1 › edits opaque code labels and reopens them safely in a reader (12.8s)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:440:1 › issue workflow preserves root references and validates local image files (6.2s)
+
+  6 passed (1.1m)

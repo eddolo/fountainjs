@@ -1,0 +1,260 @@
+[WebServer] (node:7520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:23676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (11.9s)
+(node:8372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (20.0s)
+(node:24988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (22.6s)
+(node:23432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [mobile-chrome] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (13.1s)
+(node:26644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [mobile-safari] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader (27.0s)
+
+
+  1) [chromium] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+        14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-code-lines="1" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "null"
+
+
+       at ..\browser\markdown-code-labels-journey.ts:105
+
+      103 |   if (info.project.use.hasTouch) await emptyCode.tap({ position: { x: 40, y: 24 } });
+      104 |   else await emptyCode.click({ position: { x: 40, y: 24 } });
+    > 105 |   await expect(emptyCode).toHaveAttribute('data-fountain-selected-node', 'true');
+          |                           ^
+      106 |   await page.keyboard.type('first code');
+      107 |   await expect(emptyCode).toHaveText('first code');
+      108 |   await expect(editor.locator('h1')).toHaveText('Empty code entry');
+        at markdownCodeLabelsJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:105:27)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-code-labels-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+        14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-code-lines="1" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "null"
+
+
+       at ..\browser\markdown-code-labels-journey.ts:105
+
+      103 |   if (info.project.use.hasTouch) await emptyCode.tap({ position: { x: 40, y: 24 } });
+      104 |   else await emptyCode.click({ position: { x: 40, y: 24 } });
+    > 105 |   await expect(emptyCode).toHaveAttribute('data-fountain-selected-node', 'true');
+          |                           ^
+      106 |   await page.keyboard.type('first code');
+      107 |   await expect(emptyCode).toHaveText('first code');
+      108 |   await expect(editor.locator('h1')).toHaveText('Empty code entry');
+        at markdownCodeLabelsJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:105:27)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-code-labels-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+        14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-code-lines="1" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "null"
+
+
+       at ..\browser\markdown-code-labels-journey.ts:105
+
+      103 |   if (info.project.use.hasTouch) await emptyCode.tap({ position: { x: 40, y: 24 } });
+      104 |   else await emptyCode.click({ position: { x: 40, y: 24 } });
+    > 105 |   await expect(emptyCode).toHaveAttribute('data-fountain-selected-node', 'true');
+          |                           ^
+      106 |   await page.keyboard.type('first code');
+      107 |   await expect(emptyCode).toHaveText('first code');
+      108 |   await expect(editor.locator('h1')).toHaveText('Empty code entry');
+        at markdownCodeLabelsJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:105:27)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-code-labels-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile-chrome] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+        14 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-code-lines="1" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "null"
+
+
+       at ..\browser\markdown-code-labels-journey.ts:105
+
+      103 |   if (info.project.use.hasTouch) await emptyCode.tap({ position: { x: 40, y: 24 } });
+      104 |   else await emptyCode.click({ position: { x: 40, y: 24 } });
+    > 105 |   await expect(emptyCode).toHaveAttribute('data-fountain-selected-node', 'true');
+          |                           ^
+      106 |   await page.keyboard.type('first code');
+      107 |   await expect(emptyCode).toHaveText('first code');
+      108 |   await expect(editor.locator('h1')).toHaveText('Empty code entry');
+        at markdownCodeLabelsJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:105:27)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-code-labels-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-chrome\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [mobile-safari] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+    Expected: "true"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('pre').first()
+        13 × locator resolved to <pre tabindex="0" title="text" role="region" data-language="text" aria-label="text code" data-fountain-path="1" data-line-numbers="true" data-fountain-code-lines="1" data-fountain-node="code_block" data-fountain-decoration="syntax-block-1" class="fjs-code-block fjs-highlight--dark">…</pre>
+           - unexpected value "null"
+
+
+       at ..\browser\markdown-code-labels-journey.ts:105
+
+      103 |   if (info.project.use.hasTouch) await emptyCode.tap({ position: { x: 40, y: 24 } });
+      104 |   else await emptyCode.click({ position: { x: 40, y: 24 } });
+    > 105 |   await expect(emptyCode).toHaveAttribute('data-fountain-selected-node', 'true');
+          |                           ^
+      106 |   await page.keyboard.type('first code');
+      107 |   await expect(emptyCode).toHaveText('first code');
+      108 |   await expect(editor.locator('h1')).toHaveText('Empty code entry');
+        at markdownCodeLabelsJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\markdown-code-labels-journey.ts:105:27)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\markdown-code-labels-audit.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\code-label-final-browser-20261104\markdown-code-labels-audit-eb6b4-ens-them-safely-in-a-reader-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [chromium] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+    [firefox] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+    [webkit] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+    [mobile-chrome] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
+    [mobile-safari] › tests\manual\markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader 
