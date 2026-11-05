@@ -1,0 +1,9 @@
+{
+  "parentCommit": "b6fc8e905c6190b90e2091c6c160b78489b1276b",
+  "exitCode": 1,
+  "parentStepSha256": "53cc4d184c99860610d15792d8ece5d398da783385778131ed2c9e8b63a2a5ce",
+  "restoredStepSha256": "de3adaa969c144202f919e561a009939dec7dce85e6b5c544215f0b0f302350e",
+  "testSha256": "62d5e0a0789858c3c07be271ab9de72d0b1b28c84e8ee2c872268f3c9dadd27e",
+  "restoredExactly": true,
+  "log": "artifacts/cross-container-parent-baseline-20261105.log"
+}

@@ -1,5 +1,6 @@
 import { Node } from '../schema';
-import { assertTextRange, getNodeAtPath, getTextRangeSegments, replaceNodeAtPath } from './path';
+import { assertTextRange, getNodeAtPath, replaceNodeAtPath } from './path';
+import { replaceNestedTextRange } from './nested-range-replacement';
 import { ReplaceTextStep } from './replace-text-step';
 import { StepMap, textPointToPosition } from './mapping';
 import { Step } from './step';
@@ -53,34 +54,6 @@ function replaceAcrossSiblingTextBlocks(
   return parentPath.length ? replaceNodeAtPath(doc, parentPath, replacement) : replacement;
 }
 
-function replaceAcrossNestedStructures(
-  doc: Node,
-  startPath: readonly number[],
-  from: number,
-  endPath: readonly number[],
-  to: number,
-  text: string,
-): Node {
-  const segments = getTextRangeSegments(doc, startPath, from, endPath, to);
-  const byPath = new Map(segments.map((segment) => [segment.path.join('.'), segment]));
-
-  const rewrite = (node: Node, path: readonly number[]): Node => {
-    if (node.isText) {
-      const segment = byPath.get(path.join('.'));
-      if (!segment) return node;
-      const value = node.text ?? '';
-      const isStart = samePath(path, startPath);
-      const isEnd = samePath(path, endPath);
-      return node.withText(
-        `${isStart ? value.slice(0, segment.from) + text : ''}${isEnd ? value.slice(segment.to) : ''}`,
-      );
-    }
-    return node.copy(node.content.map((child, index) => rewrite(child, [...path, index])));
-  };
-
-  return rewrite(doc, []);
-}
-
 /** Replaces an ordered range across inline fragments, text blocks, or nested text leaves. */
 export class ReplaceTextRangeStep extends Step {
   constructor(
@@ -100,7 +73,7 @@ export class ReplaceTextRangeStep extends Step {
     const endParentPath = this.endPath.slice(0, -1);
     if (!samePath(startParentPath, endParentPath)) {
       return replaceAcrossSiblingTextBlocks(doc, this.startPath, this.from, this.endPath, this.to, this.text)
-        ?? replaceAcrossNestedStructures(doc, this.startPath, this.from, this.endPath, this.to, this.text);
+        ?? replaceNestedTextRange(doc, this.startPath, this.from, this.endPath, this.to, this.text).document;
     }
 
     const startIndex = this.startPath.at(-1) as number;
@@ -124,6 +97,10 @@ export class ReplaceTextRangeStep extends Step {
   }
 
   override getMap(doc: Node): StepMap {
+    const sameParent = samePath(this.startPath.slice(0, -1), this.endPath.slice(0, -1));
+    if (!sameParent && !replaceAcrossSiblingTextBlocks(doc, this.startPath, this.from, this.endPath, this.to, this.text)) {
+      return replaceNestedTextRange(doc, this.startPath, this.from, this.endPath, this.to, this.text).map;
+    }
     const start = textPointToPosition(doc, this.startPath, this.from);
     const end = textPointToPosition(doc, this.endPath, this.to);
     return new StepMap([start, end - start, this.text.length]);

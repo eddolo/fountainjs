@@ -1,0 +1,736 @@
+{
+  "baseCommit": "b6fc8e905c6190b90e2091c6c160b78489b1276b",
+  "releaseCertified": false,
+  "apiChanged": false,
+  "acceptanceLimitsChanged": false,
+  "implementation": "Schema-checked cut-edge fitting with retained-unit provenance. No new selection kind or arbitrary open-slice contract.",
+  "unit": {
+    "passed": 3934,
+    "files": 269,
+    "newRegressions": 15,
+    "orderedCharacterMappingCases": 63
+  },
+  "parentNegativeControl": {
+    "parentCommit": "b6fc8e905c6190b90e2091c6c160b78489b1276b",
+    "exitCode": 1,
+    "parentStepSha256": "53cc4d184c99860610d15792d8ece5d398da783385778131ed2c9e8b63a2a5ce",
+    "restoredStepSha256": "de3adaa969c144202f919e561a009939dec7dce85e6b5c544215f0b0f302350e",
+    "testSha256": "62d5e0a0789858c3c07be271ab9de72d0b1b28c84e8ee2c872268f3c9dadd27e",
+    "restoredExactly": true,
+    "log": "artifacts/cross-container-parent-baseline-20261105.log"
+  },
+  "checks": [
+    {
+      "log": "artifacts/cross-container-final-types-20261105.log",
+      "name": "types",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-build-20261105.log",
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-api-20261105.log",
+      "name": "api",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-headless-20261105.log",
+      "name": "headless",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-package-20261105.log",
+      "name": "package",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-worker-20261105.log",
+      "name": "worker",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-conformance-20261105.log",
+      "name": "conformance",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-final-budget-20261105.log",
+      "name": "budget",
+      "exitCode": 1
+    },
+    {
+      "log": "artifacts/cross-container-final-site-20261105.log",
+      "name": "site",
+      "exitCode": 0
+    }
+  ],
+  "runtimeChecks": {
+    "browser": 0,
+    "unit": 0,
+    "performance": 1,
+    "packedNode": 0
+  },
+  "retentionChecks": [
+    {
+      "log": "artifacts/cross-container-retention-shared-direction-20261105.log",
+      "name": "shared-direction",
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/cross-container-retention-position-mapping-20261105.log",
+      "name": "position-mapping",
+      "exitCode": 0
+    }
+  ],
+  "declarations": 419,
+  "headlessModules": 123,
+  "package": {
+    "archive": "artifacts/cross-container-tarball-20261105/fountainjs-editor-0.4.0-beta.2.tgz",
+    "sha256": "6bf5e574ad8dc9bf7a8d4742dbb3006fe678e5e02d16921a83be23230090a480",
+    "distFilesMatch": 867
+  },
+  "packedCases": 28,
+  "builtSourceMapMatches": [
+    "dist/replace-text-range-step-D6IXHLHm.cjs.map",
+    "dist/replace-text-range-step-DYSIgkio.js.map"
+  ],
+  "sizeDeltaBytes": {
+    ".": {
+      "closureRawBytes": 4916,
+      "closureGzipBytes": 1503,
+      "closureBrotliBytes": 1373
+    },
+    "./core": {
+      "closureRawBytes": 4916,
+      "closureGzipBytes": 1502,
+      "closureBrotliBytes": 1394
+    },
+    "./docx": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./react": {
+      "closureRawBytes": 4916,
+      "closureGzipBytes": 1503,
+      "closureBrotliBytes": 1383
+    },
+    "./html/server": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    }
+  },
+  "performance": {
+    "passed": false,
+    "log": "artifacts/cross-container-performance-20261105.log",
+    "failure": "1,000-block server HTML p95 122.84 ms > 120 ms; no retry or ceiling change.",
+    "localEditingP95MsAt10000Blocks": 0.18,
+    "incrementalRemoteP95MsAt10000Blocks": 0.24,
+    "scope": "Standalone engine timing, not complete UI latency. HTML-server closure is unchanged; causation is not established."
+  },
+  "visualReview": {
+    "index": "artifacts/cross-container-visual-review-20261105/index.json",
+    "nativeCases": 24,
+    "captures": 72,
+    "captureContactsInspected": 6,
+    "recordings": 6,
+    "sampledFramesPerRecording": 8,
+    "scope": "Three desktop engines; Markdown issue drafts and JSON conversion drafts, forward/backward native selection, replacement, history, export/reopen/reader. No physical mobile certification."
+  },
+  "controls": {
+    "attributeFailure": "artifacts/cross-container-attribute-control-20261105.log",
+    "policyFixtureFailure": "artifacts/cross-container-policy-fixture-browser-20261105.log",
+    "policyFixtureExplanation": "Raw HTML quotes are deliberately literal in the issue demo. All three failed before selection. The attribute workflow uses supported JSON import in Conversion Lab without changing the Markdown policy.",
+    "packedScopeControl": "artifacts/cross-container-packed-scope-control-20261105.log",
+    "packedScopeExplanation": "The initial guard rejected repository self-reference. An independent consumer package scope now proves actual archive resolution for ESM and CommonJS root/core.",
+    "imageFixtureVisual": "artifacts/cross-container-image-fixture-before-20261105",
+    "imageFixtureExplanation": "Visual review found blocked remote SVGs in the JSON fixture, as required by Conversion Lab CSP. The final JSON fixture embeds PNGs and both native workflows require image load completion before selection. Privacy policy is unchanged.",
+    "intermediateUnit": "artifacts/cross-container-units-20261105.log",
+    "intermediateUnitExplanation": "Earlier audit overlapped candidate edits and had two new regressions fail; it is not final-source certification. Final full run was performed after source edits stopped."
+  },
+  "retainedSources": [
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/observations.json",
+      "sha256": "9c06ba2878b4b2fa9088b1e787a68c297a29a6b60cba0d518858b6df7706d2b2",
+      "bytes": 805
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-before.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-edited.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-original.json",
+      "sha256": "90e0b4b058568f2aa691c04280c11ccc397d7500787a81cd819ac869bdddc939",
+      "bytes": 9897
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-redone.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-undone.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-before.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-edited.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-original.json",
+      "sha256": "90e0b4b058568f2aa691c04280c11ccc397d7500787a81cd819ac869bdddc939",
+      "bytes": 9897
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-redone.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-undone.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/observations.json",
+      "sha256": "d84203cef5303deab959c06f84b4c42118bd5632494bd44775145a632024dde4",
+      "bytes": 804
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-before.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-edited.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-original.json",
+      "sha256": "90e0b4b058568f2aa691c04280c11ccc397d7500787a81cd819ac869bdddc939",
+      "bytes": 9897
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-redone.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-undone.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-before.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-edited.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-original.json",
+      "sha256": "90e0b4b058568f2aa691c04280c11ccc397d7500787a81cd819ac869bdddc939",
+      "bytes": 9897
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-redone.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-undone.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/observations.json",
+      "sha256": "4b89b542fac6d71505ed323dab5860dbc4917d132604f5ad83adc0df55c09191",
+      "bytes": 803
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-before.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-edited.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-original.json",
+      "sha256": "90e0b4b058568f2aa691c04280c11ccc397d7500787a81cd819ac869bdddc939",
+      "bytes": 9897
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-redone.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-undone.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-before.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-edited.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-original.json",
+      "sha256": "90e0b4b058568f2aa691c04280c11ccc397d7500787a81cd819ac869bdddc939",
+      "bytes": 9897
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-redone.json",
+      "sha256": "686a95d1667ae1751baa13446cc8765457cb967e79ee00dc6796b2225c082714",
+      "bytes": 1293
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-undone.json",
+      "sha256": "3bae863f43c1601aa1289a36d4608fa5cfd4131897d2feec1127ab43f9f34e32",
+      "bytes": 10697
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-edited.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-original.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-redone.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-undone.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-edited.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-original.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-redone.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-undone.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/observations.json",
+      "sha256": "2aedb36b7f363e6c0fdf4532b72e6c76f8be98c16b970787e835b6238af52e3f",
+      "bytes": 2687
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-edited.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-original.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-redone.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-undone.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-edited.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-original.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-redone.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-undone.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-edited.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-original.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-redone.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-undone.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-edited.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-original.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-redone.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-undone.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-edited.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-original.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-redone.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-undone.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-edited.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-original.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-redone.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-undone.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/observations.json",
+      "sha256": "e185e4daaffcc1eb2b4009f4fbc71a959984e17c98dd5b208bba5b381a01d367",
+      "bytes": 2686
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-edited.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-original.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-redone.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-undone.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-edited.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-original.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-redone.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-undone.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-edited.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-original.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-redone.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-undone.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-edited.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-original.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-redone.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-undone.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-edited.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-original.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-redone.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-undone.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-edited.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-original.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-redone.md",
+      "sha256": "283b196febc9a635e6d2b576bf4b91e25a846fa92bf2bd19a8ca46bb0e17e857",
+      "bytes": 41
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-undone.md",
+      "sha256": "fe4c91f9091cf6e8fd0f07fa8e209a4ea7a08cbb3d06243103e9a374b4b03364",
+      "bytes": 163
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/observations.json",
+      "sha256": "097c4fb979df4c921df6aefd54fdadf8ba6d20465fd5737201a236862ffc5115",
+      "bytes": 2685
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-edited.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-original.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-redone.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-undone.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-edited.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-original.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-redone.md",
+      "sha256": "1ff14c82ebcb8ede9a824b2ef9ce486ebd5c7179350bde61283060b449ef2045",
+      "bytes": 30
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-undone.md",
+      "sha256": "57ac062697e10b895b87e2b9934cdedf13a9c788e3e52f5f771f893dde05d294",
+      "bytes": 153
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-edited.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-original.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-redone.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-undone.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-edited.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-original.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-redone.md",
+      "sha256": "ca868b4a1aafce34b548a34a16f5aa7dd8150d674816c44265db9a05ba90f646",
+      "bytes": 24
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-undone.md",
+      "sha256": "7462dcfe133f7c46a665f19e67ea3015d61b6bcd26b5b2712be2e386847d230e",
+      "bytes": 144
+    }
+  ],
+  "implementationInputs": [
+    {
+      "path": "src/core/transaction/nested-range-replacement.ts",
+      "sha256": "b67eb770345807e3e5c611086209e229761b3dd4edf9c49461e107dc92dde908",
+      "bytes": 9498
+    },
+    {
+      "path": "src/core/transaction/replace-text-range-step.ts",
+      "sha256": "de3adaa969c144202f919e561a009939dec7dce85e6b5c544215f0b0f302350e",
+      "bytes": 4865
+    },
+    {
+      "path": "tests/cross-container-range.test.ts",
+      "sha256": "62d5e0a0789858c3c07be271ab9de72d0b1b28c84e8ee2c872268f3c9dadd27e",
+      "bytes": 13890
+    },
+    {
+      "path": "tests/browser/cross-container-range-journey.ts",
+      "sha256": "3cbdd20f5a41c4ab43ed020759eba0f5a9f895b327d5df830f1079ec44374f2c",
+      "bytes": 13587
+    },
+    {
+      "path": "tests/manual/cross-container-range-real.spec.ts",
+      "sha256": "adee2dfe9618d8048e02266be2153920e61692b53cf60253f8b78691c6ae4c20",
+      "bytes": 524
+    },
+    {
+      "path": "tests/fixtures/cross-container-figure.png",
+      "sha256": "e0c8ccf7ff92c5af314f34de55da109854b5971c04f20767ae8c16ce545c39b5",
+      "bytes": 3149
+    }
+  ],
+  "open": [
+    "General text/atom/gap endpoint selections and trailing-image boundary shortcut",
+    "Mixed structural clipboard slices and arbitrary schema fitting",
+    "Server HTML latency variability",
+    "Aggregate capacity limits",
+    "Prior intermittent download timeout and mobile menu reliability",
+    "Remaining CommonMark/import/export/native production parity and full fresh CI"
+  ]
+}

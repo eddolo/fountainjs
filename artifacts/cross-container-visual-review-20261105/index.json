@@ -1,0 +1,648 @@
+{
+  "nativeCases": 24,
+  "captures": [
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-selection.png",
+      "sha256": "1d0cb995fbf458718a460c2e39b803e4fda9351479c643ea680ef232441320de"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-replaced.png",
+      "sha256": "a1b471523d26701f70390c921184e9865c106e522db5a9ebb44f6023c8438bd4"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-backward-reader.png",
+      "sha256": "2a8528c54f8b2c64a36eeb90a85225467f6c6e18d5fbef90a47b3e3a5a7f1126"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-selection.png",
+      "sha256": "4026f43d3e8a36ab7cf27b798b17ab0d675a231461bd3b73174277e0d864229a"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-replaced.png",
+      "sha256": "a1b471523d26701f70390c921184e9865c106e522db5a9ebb44f6023c8438bd4"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/cross-container-attributes-journey/quote-attributes-forward-reader.png",
+      "sha256": "2a8528c54f8b2c64a36eeb90a85225467f6c6e18d5fbef90a47b3e3a5a7f1126"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-selection.png",
+      "sha256": "4ab492733ccd8ef2f1ed35476c7b985fe563acc17eb9f4cb4abf9186d23c8c5a"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-replaced.png",
+      "sha256": "fc4d16a3c057cc4faa0064d6756876429b38a2ec539fa680373c6dfd178707ab"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-backward-reader.png",
+      "sha256": "d3259de5718c10b53d8921a4e2beafbc455a6e2a9edc1852585b779709a4cb45"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-selection.png",
+      "sha256": "8f8746309a1695bb46f4568aee68c1937ffa82aca605137d338347c834617fb9"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-replaced.png",
+      "sha256": "fc4d16a3c057cc4faa0064d6756876429b38a2ec539fa680373c6dfd178707ab"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/cross-container-attributes-journey/quote-attributes-forward-reader.png",
+      "sha256": "d3259de5718c10b53d8921a4e2beafbc455a6e2a9edc1852585b779709a4cb45"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-selection.png",
+      "sha256": "584db85527036c01213d0700b9a96521de0ce71568d6c9b49faffb37cbf04809"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-replaced.png",
+      "sha256": "353f3ab49bad5f2fffc39501a690f682020900722882058d5a87086605b348f1"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-backward-reader.png",
+      "sha256": "7a5566a8b818128f0e8e0942d9dfaa2a91f21526cec5a64ac2102dd9899d4187"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-selection.png",
+      "sha256": "a74c8cd03fa2035e34840086e5ba2134883a0f6ff2a3cd5db601e896027fb342"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-replaced.png",
+      "sha256": "353f3ab49bad5f2fffc39501a690f682020900722882058d5a87086605b348f1"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/cross-container-attributes-journey/quote-attributes-forward-reader.png",
+      "sha256": "7a5566a8b818128f0e8e0942d9dfaa2a91f21526cec5a64ac2102dd9899d4187"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-selection.png",
+      "sha256": "8bb59ef3e9663d295fe53b95d2a5592cc899a9fc484fe3ef15d2f241d87d4a7b"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-replaced.png",
+      "sha256": "c212748032a433b62f9110a4504240ce89da6f8bd0995e1f5233ea0701594ad4"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-reader.png",
+      "sha256": "bfcfcba38f54694afa150882f7ab145d496221364a6d507e756756c52f68af79"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-selection.png",
+      "sha256": "4460bd1aaa4395f8368838354bf18aeeed51b7503a43702cb1fe4c4fd16208a9"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-replaced.png",
+      "sha256": "55209dd492c6ca1ff75f9fca35cb7ce60d05105b3ba051d47b37881cee97a685"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/list-items-backward-reader.png",
+      "sha256": "ef23f6359d6a2d4be5268f756f19a2334d27a0aa1e77f718c422b316830614d8"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-selection.png",
+      "sha256": "83167f9ab570593e82840bd164f992c0f8f805df51251aa4b2e807196096b960"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-replaced.png",
+      "sha256": "d8856e8a584969fa27d972615a5ca2f3849a99d9001ce81b2947f4bb514ef5b8"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-reader.png",
+      "sha256": "417bdd36265e237aafe9248843943b3972a75d448d3b35506eab90c5b242acf3"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-selection.png",
+      "sha256": "49cd27fe9ff9f9571c63f6ee2eeaafe70b2ef78f9bb0723f56fab5712a3015ed"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-replaced.png",
+      "sha256": "6b201d8d30391ccdb30328abff315b88b6ecc631464cc6ab096d3fc7a054472f"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/paragraph-to-quote-backward-reader.png",
+      "sha256": "417bdd36265e237aafe9248843943b3972a75d448d3b35506eab90c5b242acf3"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-selection.png",
+      "sha256": "3c7b106cd284f2299c9429ac0dcf6d5007e838fb5ac316e3bbc8eac86dc69a32"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-replaced.png",
+      "sha256": "3b9aa6471d99f341b1f0da8db782ecf2f2b9fc1effd2cde412cf4bf09dc7192d"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-reader.png",
+      "sha256": "6cc30e2869661f0116b9338f13f4b138224ddfc6c6c1a52aee8e686c5b9d5a24"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-selection.png",
+      "sha256": "c139be301562885a384788bd34873a1a05321b1a9a586befdc5fa9c3b378781a"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-replaced.png",
+      "sha256": "3b9aa6471d99f341b1f0da8db782ecf2f2b9fc1effd2cde412cf4bf09dc7192d"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/cross-container-range-journey/quote-to-paragraph-backward-reader.png",
+      "sha256": "6cc30e2869661f0116b9338f13f4b138224ddfc6c6c1a52aee8e686c5b9d5a24"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-selection.png",
+      "sha256": "2a61c963fe6cf82814b59fda5c763144f9a80b5c8857cc90c592fc5abf5e64bf"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-replaced.png",
+      "sha256": "66fdf19e28e940a511888c86116a1c01a0b6b94c6c5535df23c12f587f16add6"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-reader.png",
+      "sha256": "423eb288845e3f6aece4c8a1ae29efd5257032a634a769f8e526daf3dae4f147"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-selection.png",
+      "sha256": "2a61c963fe6cf82814b59fda5c763144f9a80b5c8857cc90c592fc5abf5e64bf"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-replaced.png",
+      "sha256": "66fdf19e28e940a511888c86116a1c01a0b6b94c6c5535df23c12f587f16add6"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/list-items-backward-reader.png",
+      "sha256": "423eb288845e3f6aece4c8a1ae29efd5257032a634a769f8e526daf3dae4f147"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-selection.png",
+      "sha256": "1d00d647267a318db4f091c181bf14e6b091ab7022ac986d73c48ee2b045de93"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-replaced.png",
+      "sha256": "73de73b6c7c38c1bb5dc554e8c2b98880686b5d25ebbbe820bc46295e5a9c2c2"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-reader.png",
+      "sha256": "70363a6ef68edfd67d43c61d3f2ca3eed11fc4c823492d5cb040f15b6088d3ff"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-selection.png",
+      "sha256": "1d00d647267a318db4f091c181bf14e6b091ab7022ac986d73c48ee2b045de93"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-replaced.png",
+      "sha256": "73de73b6c7c38c1bb5dc554e8c2b98880686b5d25ebbbe820bc46295e5a9c2c2"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/paragraph-to-quote-backward-reader.png",
+      "sha256": "70363a6ef68edfd67d43c61d3f2ca3eed11fc4c823492d5cb040f15b6088d3ff"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-selection.png",
+      "sha256": "0672a7621f9232c15b0537a08fde36f6455c43ddb0821f1a4e487a5dd5547a45"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-replaced.png",
+      "sha256": "83f6a66b1fa8e150e7775d3bbfa731e31998e0f7a5c0ee177bdb96108da65360"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-reader.png",
+      "sha256": "a4d7b9a18b5f610888724ecddcad0147843d25e7c9d15b57502ce3abede2b933"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-selection.png",
+      "sha256": "0672a7621f9232c15b0537a08fde36f6455c43ddb0821f1a4e487a5dd5547a45"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-replaced.png",
+      "sha256": "83f6a66b1fa8e150e7775d3bbfa731e31998e0f7a5c0ee177bdb96108da65360"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/cross-container-range-journey/quote-to-paragraph-backward-reader.png",
+      "sha256": "a4d7b9a18b5f610888724ecddcad0147843d25e7c9d15b57502ce3abede2b933"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-selection.png",
+      "sha256": "33afe8c29513e8c79bd4f034e46ed9b0f06f11811d9db90bcfdcb07b5a468466"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-replaced.png",
+      "sha256": "f94cb3f55cf0e8a7508dc22105df24004d45cc15330546a91711dcc7e70f7f92"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-reader.png",
+      "sha256": "afee65da6fa87886828ac8fff802cbd7c05809d530fdda66083f8c83df4d2029"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-selection.png",
+      "sha256": "28c4c9207803b6065336d656b10e4b6395b2d46ff70fa6a0f3d0c932b88c21ff"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-replaced.png",
+      "sha256": "f94cb3f55cf0e8a7508dc22105df24004d45cc15330546a91711dcc7e70f7f92"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/list-items-backward-reader.png",
+      "sha256": "afee65da6fa87886828ac8fff802cbd7c05809d530fdda66083f8c83df4d2029"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-selection.png",
+      "sha256": "713bf9bc9de31654eae2e80b97fadf241883b1b4ab73514089de26c00a132cff"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-replaced.png",
+      "sha256": "2f704c96d939444a5ba78fc4332b596fca01cfb7ebe2f4e5777d78236c5b2089"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-reader.png",
+      "sha256": "0199ed2ac793d048bbca721316cbb50175949e0309f9702f2ed865353ca39d44"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-selection.png",
+      "sha256": "2d2fb4eba338ccbc7a392ad4226f5158578f7be4373a97e6c31fb1a07e49626a"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-replaced.png",
+      "sha256": "2f704c96d939444a5ba78fc4332b596fca01cfb7ebe2f4e5777d78236c5b2089"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/paragraph-to-quote-backward-reader.png",
+      "sha256": "0199ed2ac793d048bbca721316cbb50175949e0309f9702f2ed865353ca39d44"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-selection.png",
+      "sha256": "3cc8ef361382e5c45af842f67895e2c554778dc7654c751f8074a445adf118bf"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-replaced.png",
+      "sha256": "fa4c7eb3693cc1df03234b6c1cfb2e8d1d92df1a1a3fc131e6aac906eab49fec"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-reader.png",
+      "sha256": "19dcdd1224cc96af1f168710196bfc037b15cfacdfdf8c3a7806c5e8c6da0ba9"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-selection.png",
+      "sha256": "71746e697cebaa345025f481244f03152c7858987aaa03cc26929442f81f23ec"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-replaced.png",
+      "sha256": "fa4c7eb3693cc1df03234b6c1cfb2e8d1d92df1a1a3fc131e6aac906eab49fec"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/cross-container-range-journey/quote-to-paragraph-backward-reader.png",
+      "sha256": "19dcdd1224cc96af1f168710196bfc037b15cfacdfdf8c3a7806c5e8c6da0ba9"
+    }
+  ],
+  "captureContacts": [
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-captures.png",
+      "sha256": "37a897d5891f258650a38fb5943116aa35d323f224e46b3a011c4087ccde4822",
+      "captures": 6
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-captures.png",
+      "sha256": "eeb58449d2392b04c532fffea2740f23ed8b7f52dee9f9412b0788ac8b98b772",
+      "captures": 6
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-captures.png",
+      "sha256": "014ab21536d376ea3ac13d15b9160c5f0ca9a3a6ac3156910f89583452773ba5",
+      "captures": 6
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/chromium-range-captures.png",
+      "sha256": "a2b841c32cd83526db90846ab3b97ef634eae2e8cceba9e8c7b1cbc98d91d5fb",
+      "captures": 18
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/firefox-range-captures.png",
+      "sha256": "379cca78e66553457d03d032e4f31a05d81233914c7fbcdc32d7841f5cae6c7f",
+      "captures": 18
+    },
+    {
+      "path": "artifacts/cross-container-visual-review-20261105/webkit-range-captures.png",
+      "sha256": "cec36aaacdae7ca48da7206cd2def9af8edfa91f2d6799286ed98e1870209e9e",
+      "captures": 18
+    }
+  ],
+  "videos": [
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/video.webm",
+      "sha256": "799093f34b39c8ae71f5cdbfe101d5056e753174de0c1d1841046f04d24da178",
+      "duration": 5.68,
+      "samples": [
+        {
+          "seconds": 0.45439999999999997,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-0.png",
+          "sha256": "153613166288a8f8bc773b26a7971785cda46eef2d752688b2af055cf8547be6"
+        },
+        {
+          "seconds": 1.136,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-1.png",
+          "sha256": "1a4b9e93ea01b0a9182401a66e5000dff5a3a3d8f9b2afb01fcbf115b62cf7ee"
+        },
+        {
+          "seconds": 1.8175999999999999,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-2.png",
+          "sha256": "3514b9cbd9589cb09d97735b1579299a5151528887e25c0bbe56379dc68aeecb"
+        },
+        {
+          "seconds": 2.4992,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-3.png",
+          "sha256": "0425dd2ab7562e006f437d30063e78f7dee8b2c99c91ff67aea213ed97e7f4a4"
+        },
+        {
+          "seconds": 3.1808,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-4.png",
+          "sha256": "0d47bfe07b45dd8b6d48909b65907d0205109ef8bbf155751162b5684824517d"
+        },
+        {
+          "seconds": 3.8624,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-5.png",
+          "sha256": "4a2c99a8f0c4c874023e1ce3f6541de37940615bf952567017a212e169ce1444"
+        },
+        {
+          "seconds": 4.544,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-6.png",
+          "sha256": "a347b94d696b5e2cbe227dd5b5e25da06ed0d5c918691fbed2bdf643f463988c"
+        },
+        {
+          "seconds": 5.2256,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-attributes-frame-7.png",
+          "sha256": "3147133313fbea7ce27ea1e48c1f4175b59287029297dad6d2e51a742f727579"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/chromium-attributes-video-contact.png",
+      "contactSha256": "25300ec57f0171f79c87d8a5d7eb85f0e07520d7b242a6dc03f0a476bbda50c9"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/video.webm",
+      "sha256": "216f43483d9511baf052daf900e7c69b72b67f55600ffc882dd8968d1f39044c",
+      "duration": 7.6,
+      "samples": [
+        {
+          "seconds": 0.608,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-0.png",
+          "sha256": "c3d1fa64892994987f93d7c01a915f8eabcf2157b18558de1494d2bf4ea9af18"
+        },
+        {
+          "seconds": 1.52,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-1.png",
+          "sha256": "607c08224613cf71e4dc75e8e616745e1ce4e6c67d28632fc24df85592c4d0b9"
+        },
+        {
+          "seconds": 2.432,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-2.png",
+          "sha256": "637246185acfc82d9ded2ac8b848c183abcb1fcbf87bd22f28d7f318e94028bd"
+        },
+        {
+          "seconds": 3.344,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-3.png",
+          "sha256": "827480992bacdadb18cd8e0c5ae902c6766560c699d72b66df2181940c570f76"
+        },
+        {
+          "seconds": 4.256,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-4.png",
+          "sha256": "cf00f93ebcf8a8b85560542bc669ad0a875045507555c9215ca31e8daf36b8e2"
+        },
+        {
+          "seconds": 5.168,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-5.png",
+          "sha256": "1f5fcaf9213a2efaffbb1931a130afc65bccb5a002af01ae258d7ccdd25d3d2f"
+        },
+        {
+          "seconds": 6.08,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-6.png",
+          "sha256": "ba2bb3e23fe615612da64d1062a4a9cbb06a078908b88dc07936aeb65d7942c2"
+        },
+        {
+          "seconds": 6.992,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-attributes-frame-7.png",
+          "sha256": "f62a42465f2418552dbe16be819c14937fbd31a8a86c42685c66a6ee5db0d4db"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/firefox-attributes-video-contact.png",
+      "contactSha256": "144d57786fec7b260ce94edefef312a487363af3daba654bc1ce144f92cf5779"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/video.webm",
+      "sha256": "b1fafe798070b94c2b2b88371dd6cb2bf639f629efdf5177b18f1f17c456f21b",
+      "duration": 12.88,
+      "samples": [
+        {
+          "seconds": 1.0304,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-0.png",
+          "sha256": "72e6c5e20c874da5e32455435ee7f82f09ddbd032a13e3c8c07923cab195bd87"
+        },
+        {
+          "seconds": 2.5760000000000005,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-1.png",
+          "sha256": "b2d7d404643b356fbc0b3c37fee07519a4c84c81ce86e1aa9aa638f71ab8a00c"
+        },
+        {
+          "seconds": 4.1216,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-2.png",
+          "sha256": "f71828aa46bef9865ef466a2faa2893233508e9fc5e56968f320193d8fc1b037"
+        },
+        {
+          "seconds": 5.6672,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-3.png",
+          "sha256": "854377f13457c70d20bd5decb065d171e4efea3ef897eaab624a280f33578242"
+        },
+        {
+          "seconds": 7.212800000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-4.png",
+          "sha256": "e35c1bf0e39aa71046f6b6abf323b42681141755ee16747090069a823d7d4223"
+        },
+        {
+          "seconds": 8.758400000000002,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-5.png",
+          "sha256": "741432c6a83aef11229b216f81e2973363012355d3c5866326bdcff027939bcc"
+        },
+        {
+          "seconds": 10.304000000000002,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-6.png",
+          "sha256": "63ccd462d830afd62aac5594501f88efeb55ba6dfb6956880176228a8f1f14c7"
+        },
+        {
+          "seconds": 11.8496,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-attributes-frame-7.png",
+          "sha256": "ad6fb74c68376df399615c2dc55e05483095fe6bbe961e977dce2bb5347be8b4"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/webkit-attributes-video-contact.png",
+      "contactSha256": "519632eeeb364a75f9342d5e346c7c6d22d46cf95c48c4b588cbef5904e7198b"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/video.webm",
+      "sha256": "cca2667bf2eabd8130ec16fc37ff430cca206db53722a2924203d2a7549a45ee",
+      "duration": 21.36,
+      "samples": [
+        {
+          "seconds": 1.7088,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-0.png",
+          "sha256": "927d8a369e3ef8d02282f3fe66f43e5cd1298b0ddc7fc17af062dc900ac6a933"
+        },
+        {
+          "seconds": 4.272,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-1.png",
+          "sha256": "eeb0a43fb87c9ba0ac4bbea96b782d1c473fc1952cb4edc2135edaed7c28b743"
+        },
+        {
+          "seconds": 6.8352,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-2.png",
+          "sha256": "79b681c3201377e43b118b5272c928d634d3c4f19863d718ca61bf5ab79d58fb"
+        },
+        {
+          "seconds": 9.3984,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-3.png",
+          "sha256": "3ff2400ea1e7975bec92b608ccc3ca8b4f4bb680759d3ccbea3bbf83ff7a5779"
+        },
+        {
+          "seconds": 11.9616,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-4.png",
+          "sha256": "7a0f53704e42ba0c3fa27d0b75a1633faf945652465ff8e1ad5affb1dc36cdb2"
+        },
+        {
+          "seconds": 14.5248,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-5.png",
+          "sha256": "86ab5caeb715c1131eb57bcdc0ce0d9faeeddbc1decb88b983b9805d5534bcb4"
+        },
+        {
+          "seconds": 17.088,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-6.png",
+          "sha256": "a961be36e150c101c11e3db587cb34d6802ca60bc0e711355f3591c380861189"
+        },
+        {
+          "seconds": 19.6512,
+          "path": "artifacts/cross-container-visual-review-20261105/chromium-range-frame-7.png",
+          "sha256": "acab4f23d0c6b2fba7eb4fc605d898145779bc6dac12ab96e5fba614a8546590"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/chromium-range-video-contact.png",
+      "contactSha256": "3575eb7658e0c78213c5157c018ba1a7f984e2321246ad927b43210325e9c00c"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/video.webm",
+      "sha256": "cceed966f7c2caa9f9c77d7dc059869af7fa905b628d3a0b06c496fcaa40b227",
+      "duration": 14.76,
+      "samples": [
+        {
+          "seconds": 1.1808,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-0.png",
+          "sha256": "3cee11066f46c8f9a70ef5b7ecf69d82a5357b2997b54cec6543c4c2be0c1b85"
+        },
+        {
+          "seconds": 2.952,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-1.png",
+          "sha256": "44a8a70b1e8e8a916e0ee54b99f27de2c46aa5b263a836dd9136c8c8d7a8f2e1"
+        },
+        {
+          "seconds": 4.7232,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-2.png",
+          "sha256": "ca7f8407bb5256e9ae92481d574924e1795d55f381a82f7f6881fe7b7e3b7800"
+        },
+        {
+          "seconds": 6.4944,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-3.png",
+          "sha256": "d3d7fa021cbddeee7d6f6c3b5b106bb8a377fda4e1477f9f887450c9d1793f28"
+        },
+        {
+          "seconds": 8.265600000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-4.png",
+          "sha256": "1730246651470bf8148775ee083f4fad097dd4da30478aff78cddd42cdcc503d"
+        },
+        {
+          "seconds": 10.036800000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-5.png",
+          "sha256": "fbefb7f89bbf37528f270c7dd2d73052e9548fb3abf8cafe2b9b7c9c6fdc97c3"
+        },
+        {
+          "seconds": 11.808,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-6.png",
+          "sha256": "a869572c61b7055c883041dae64763e256bd4ced8640f387300dbc7d05ad8025"
+        },
+        {
+          "seconds": 13.5792,
+          "path": "artifacts/cross-container-visual-review-20261105/firefox-range-frame-7.png",
+          "sha256": "8e1a270e5e2ac99c5e4b957dc9f17b27d30b8a153382cae4587d91c6b396d26c"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/firefox-range-video-contact.png",
+      "contactSha256": "59ac648b05220c7c7fa478cb68465a017bb417eb0e0c2bf737c03560b3e60de4"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/video.webm",
+      "sha256": "f64563b78714e4016ecac098d2a7c7bfe94015f9c964e30ba157a4dce3dd62fc",
+      "duration": 33.92,
+      "samples": [
+        {
+          "seconds": 2.7136,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-0.png",
+          "sha256": "d81703a8660ba357a38b7c5dd918d196549b3297816ff7be1465bee5159ffe58"
+        },
+        {
+          "seconds": 6.784000000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-1.png",
+          "sha256": "f0835f578f96e30da1235560a4dc45a0ea93bc815b66d89348cc90039f4eaf13"
+        },
+        {
+          "seconds": 10.8544,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-2.png",
+          "sha256": "c169e32e4f0c1303f19401a20c3a30a5d393fc1b7fbffaa33c2241af70c6054e"
+        },
+        {
+          "seconds": 14.924800000000001,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-3.png",
+          "sha256": "81a29e742a0075611695561fd04ef9ce8e5ad9e69c5e25cf7955554698992a46"
+        },
+        {
+          "seconds": 18.995200000000004,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-4.png",
+          "sha256": "82415d2ffae70fa050be5cbec45dfc338ed9c31d6c421156f11408a91d7deab0"
+        },
+        {
+          "seconds": 23.065600000000003,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-5.png",
+          "sha256": "0c25bd11918915d3a5c99bf5b3ceb975338f3190df993e58ae43e1fe5da3dba0"
+        },
+        {
+          "seconds": 27.136000000000003,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-6.png",
+          "sha256": "52849f3030f2f5a3de583de04e48e0061d6e68e70c67e1052436f2bc0144e398"
+        },
+        {
+          "seconds": 31.206400000000002,
+          "path": "artifacts/cross-container-visual-review-20261105/webkit-range-frame-7.png",
+          "sha256": "c037d1469b2abe78d0dc680681bb0470a339a2c12c7b206f7b343cf515937ea2"
+        }
+      ],
+      "contact": "artifacts/cross-container-visual-review-20261105/webkit-range-video-contact.png",
+      "contactSha256": "5d49633e826d40679866841e23c14ab2c4f1b47e9a1552bc7e0da24720d0869e"
+    }
+  ],
+  "traces": [
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-chromium/trace.zip",
+      "sha256": "bf58faad6d855dbac3dca83dec93bd9dce4331d90098e9e5aba2a737c23ff92d"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-firefox/trace.zip",
+      "sha256": "347bef649b767224546ea67ff2aa5e4beccdab201671c3764e6b257da84e3923"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-665bb-replacement-and-JSON-export-webkit/trace.zip",
+      "sha256": "f4ff3cc6548296d9a8d0bd90ea2f1ae9fa064830bbcaa66d35085a4e7462c533"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-chromium/trace.zip",
+      "sha256": "85a634095de439613cea3972e50e2bbe4857103a298320d601cb9de0bf6d5a38"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-firefox/trace.zip",
+      "sha256": "78426c0e774c47d704f265c758c8df96e217aa57fec76e2459c5d71dc2fe924e"
+    },
+    {
+      "path": "artifacts/cross-container-native-final-browser-20261105/cross-container-range-real-95379-hout-leaving-selected-media-webkit/trace.zip",
+      "sha256": "9d6015d94cebf658df3de788b9a910d8aa0d45a5be7862784e19fdfb8a0dd4d0"
+    }
+  ],
+  "scope": "Desktop native input and supported Markdown/JSON file workflows. Contact sheets and eight sampled frames per recording; not every video frame or physical mobile coverage."
+}

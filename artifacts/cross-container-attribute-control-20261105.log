@@ -1,0 +1,48 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/cross-container-range.test.ts (15 tests | 1 failed) 147ms
+   × does not apply the first quote attributes to the unselected tail of a different quote 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/cross-container-range.test.ts > does not apply the first quote attributes to the unselected tail of a different quote
+AssertionError: expected [ Array(1) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+    [
+      "blockquote",
+      "ltr",
+-     "LeXht",
+-   ],
+-   [
+-     "blockquote",
+-     "rtl",
+-     "Tail",
++     "LeXhtTail",
+    ],
+  ]
+
+ ❯ tests/cross-container-range.test.ts:178:8
+    176|     expect(insertText(editor, 'X')).toBe(true);
+    177|     expect(editor.state.doc.content.map(node => [node.type.name, node.…
+    178|       .toEqual([['blockquote', 'ltr', 'LeXht'], ['blockquote', 'rtl', …
+       |        ^
+    179|     expect(editor.state.doc.child(1).child(0)).toBe(before.child(1).ch…
+    180|   } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  01:06:36
+   Duration  5.39s (transform 63%, import 34%, tests 3%)
+
+  Transform  transforming modules took 3.19s · 63% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

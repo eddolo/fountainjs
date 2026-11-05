@@ -1,0 +1,154 @@
+[WebServer] (node:14880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:26172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (23.3s)
+(node:26808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (21.7s)
+(node:17820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (45.0s)
+
+
+  1) [chromium] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ })
+
+
+       at ..\browser\cross-container-range-journey.ts:36
+
+      34 |     const left = editor.locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ });
+      35 |     const right = editor.locator('[data-fountain-text-path]').filter({ hasText: /^Right$/ });
+    > 36 |     await expect(left).toBeVisible();
+         |                        ^
+      37 |     await expect(right).toBeVisible();
+      38 |     await expect(editor.locator('img')).toHaveCount(2);
+      39 |     const point = async (element: typeof left, offset: number) => {
+        at runCrossContainerRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\cross-container-range-journey.ts:36:24)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\cross-container-range-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ })
+
+
+       at ..\browser\cross-container-range-journey.ts:36
+
+      34 |     const left = editor.locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ });
+      35 |     const right = editor.locator('[data-fountain-text-path]').filter({ hasText: /^Right$/ });
+    > 36 |     await expect(left).toBeVisible();
+         |                        ^
+      37 |     await expect(right).toBeVisible();
+      38 |     await expect(editor.locator('img')).toHaveCount(2);
+      39 |     const point = async (element: typeof left, offset: number) => {
+        at runCrossContainerRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\cross-container-range-journey.ts:36:24)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\cross-container-range-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Issue description editor', exact: true }).locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ })
+
+
+       at ..\browser\cross-container-range-journey.ts:36
+
+      34 |     const left = editor.locator('[data-fountain-text-path]').filter({ hasText: /^Left$/ });
+      35 |     const right = editor.locator('[data-fountain-text-path]').filter({ hasText: /^Right$/ });
+    > 36 |     await expect(left).toBeVisible();
+         |                        ^
+      37 |     await expect(right).toBeVisible();
+      38 |     await expect(editor.locator('img')).toHaveCount(2);
+      39 |     const point = async (element: typeof left, offset: number) => {
+        at runCrossContainerRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\cross-container-range-journey.ts:36:24)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\cross-container-range-real.spec.ts:5:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\cross-container-final-browser-20261105\cross-container-range-real-95379-hout-leaving-selected-media-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media 
+    [firefox] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media 
+    [webkit] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media 

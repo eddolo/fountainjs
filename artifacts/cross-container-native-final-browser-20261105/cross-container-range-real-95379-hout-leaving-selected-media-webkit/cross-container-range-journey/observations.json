@@ -1,0 +1,108 @@
+{
+  "engine": "webkit",
+  "observations": [
+    {
+      "name": "quote-to-paragraph",
+      "nativeShiftClick": {
+        "anchor": "1.0.0",
+        "anchorOffset": 2,
+        "focus": "3.0",
+        "focusOffset": 3
+      },
+      "nativeCaretAfterTyping": {
+        "text": "LeX",
+        "offset": 3
+      },
+      "selectedImagesRemoved": 2,
+      "completeReopenedExpectedModel": true,
+      "exactOriginalSourceOnUndo": true,
+      "exactEditedSourceOnRedo": true
+    },
+    {
+      "name": "quote-to-paragraph-backward",
+      "nativeShiftClick": {
+        "anchor": "3.0",
+        "anchorOffset": 3,
+        "focus": "1.0.0",
+        "focusOffset": 2
+      },
+      "nativeCaretAfterTyping": {
+        "text": "LeX",
+        "offset": 3
+      },
+      "selectedImagesRemoved": 2,
+      "completeReopenedExpectedModel": true,
+      "exactOriginalSourceOnUndo": true,
+      "exactEditedSourceOnRedo": true
+    },
+    {
+      "name": "paragraph-to-quote",
+      "nativeShiftClick": {
+        "anchor": "1.0",
+        "anchorOffset": 2,
+        "focus": "3.1.0",
+        "focusOffset": 3
+      },
+      "nativeCaretAfterTyping": {
+        "text": "LeX",
+        "offset": 3
+      },
+      "selectedImagesRemoved": 2,
+      "completeReopenedExpectedModel": true,
+      "exactOriginalSourceOnUndo": true,
+      "exactEditedSourceOnRedo": true
+    },
+    {
+      "name": "paragraph-to-quote-backward",
+      "nativeShiftClick": {
+        "anchor": "3.1.0",
+        "anchorOffset": 3,
+        "focus": "1.0",
+        "focusOffset": 2
+      },
+      "nativeCaretAfterTyping": {
+        "text": "LeX",
+        "offset": 3
+      },
+      "selectedImagesRemoved": 2,
+      "completeReopenedExpectedModel": true,
+      "exactOriginalSourceOnUndo": true,
+      "exactEditedSourceOnRedo": true
+    },
+    {
+      "name": "list-items",
+      "nativeShiftClick": {
+        "anchor": "1.0.0.0",
+        "anchorOffset": 2,
+        "focus": "1.1.1.0",
+        "focusOffset": 3
+      },
+      "nativeCaretAfterTyping": {
+        "text": "LeX",
+        "offset": 3
+      },
+      "selectedImagesRemoved": 2,
+      "completeReopenedExpectedModel": true,
+      "exactOriginalSourceOnUndo": true,
+      "exactEditedSourceOnRedo": true
+    },
+    {
+      "name": "list-items-backward",
+      "nativeShiftClick": {
+        "anchor": "1.1.1.0",
+        "anchorOffset": 3,
+        "focus": "1.0.0.0",
+        "focusOffset": 2
+      },
+      "nativeCaretAfterTyping": {
+        "text": "LeX",
+        "offset": 3
+      },
+      "selectedImagesRemoved": 2,
+      "completeReopenedExpectedModel": true,
+      "exactOriginalSourceOnUndo": true,
+      "exactEditedSourceOnRedo": true
+    }
+  ],
+  "errors": []
+}

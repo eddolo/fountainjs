@@ -1,0 +1,769 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/cross-container-range.test.ts (15 tests | 15 failed) 55ms
+   × joins a quote to paragraph range, removes selected figures and retains outside content through undo 13ms
+   × joins a paragraph to quote range, removes selected figures and retains outside content through undo 4ms
+   × joins a different quotes range, removes selected figures and retains outside content through undo 2ms
+   × joins a quote to list range, removes selected figures and retains outside content through undo 3ms
+   × joins a list to quote range, removes selected figures and retains outside content through undo 7ms
+   × joins a list items range, removes selected figures and retains outside content through undo 2ms
+   × joins a nested unequal depths range, removes selected figures and retains outside content through undo 2ms
+   × maps surviving inline-wrapper structure rather than claiming that its tokens were deleted 3ms
+   × retains a partial table grid and maps all unselected cell content accurately 2ms
+   × inserts at exact text endpoints while retaining inline-wrapper identity (4..0) 1ms
+   × inserts at exact text endpoints while retaining inline-wrapper identity (0..5) 1ms
+   × joins boundary-only deletion and retains the first block attributes and suffix marks 5ms
+   × keeps custom required container shape when a joined cut would violate its schema 3ms
+   × does not apply the first quote attributes to the unselected tail of a different quote 4ms
+   × preserves every unselected text unit and maps it to its actual new position across ordered nested ranges 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a quote to paragraph range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -21,19 +21,59 @@
+            "content": [
+              {
+                "text": "LeX",
+                "type": "text",
+              },
++           ],
++           "type": "paragraph",
++         },
++         {
++           "attrs": {
++             "align": "center",
++             "alt": "Selected image",
++             "caption": "",
++             "decoding": "async",
++             "height": "auto",
++             "loading": "lazy",
++             "sizes": "",
++             "src": "/selected.png",
++             "srcset": "",
++             "title": "",
++             "width": "100%",
++           },
++           "type": "image_super",
++         },
++       ],
++       "type": "blockquote",
++     },
++     {
++       "attrs": {
++         "align": "center",
++         "alt": "Selected image",
++         "caption": "",
++         "decoding": "async",
++         "height": "auto",
++         "loading": "lazy",
++         "sizes": "",
++         "src": "/selected.png",
++         "srcset": "",
++         "title": "",
++         "width": "100%",
++       },
++       "type": "image_super",
++     },
++     {
++       "attrs": {
++         "align": "left",
++       },
++       "content": [
+          {
+            "text": "ht",
+            "type": "text",
+          },
+        ],
+        "type": "paragraph",
+-         },
+-       ],
+-       "type": "blockquote",
+      },
+      {
+        "attrs": {
+          "align": "left",
+        },
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a paragraph to quote range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -19,19 +19,59 @@
+        "content": [
+          {
+            "text": "LeX",
+            "type": "text",
+          },
++       ],
++       "type": "paragraph",
++     },
++     {
++       "attrs": {
++         "align": "center",
++         "alt": "Selected image",
++         "caption": "",
++         "decoding": "async",
++         "height": "auto",
++         "loading": "lazy",
++         "sizes": "",
++         "src": "/selected.png",
++         "srcset": "",
++         "title": "",
++         "width": "100%",
++       },
++       "type": "image_super",
++     },
++     {
++       "content": [
++         {
++           "attrs": {
++             "align": "center",
++             "alt": "Selected image",
++             "caption": "",
++             "decoding": "async",
++             "height": "auto",
++             "loading": "lazy",
++             "sizes": "",
++             "src": "/selected.png",
++             "srcset": "",
++             "title": "",
++             "width": "100%",
++           },
++           "type": "image_super",
++         },
++         {
++           "attrs": {
++             "align": "left",
++           },
++           "content": [
+              {
+                "text": "ht",
+                "type": "text",
+              },
+            ],
+            "type": "paragraph",
+          },
+-     {
+-       "content": [
+          {
+            "attrs": {
+              "align": "left",
+            },
+            "content": [
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a different quotes range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -21,10 +21,71 @@
+            "content": [
+              {
+                "text": "LeX",
+                "type": "text",
+              },
++           ],
++           "type": "paragraph",
++         },
++         {
++           "attrs": {
++             "align": "center",
++             "alt": "Selected image",
++             "caption": "",
++             "decoding": "async",
++             "height": "auto",
++             "loading": "lazy",
++             "sizes": "",
++             "src": "/selected.png",
++             "srcset": "",
++             "title": "",
++             "width": "100%",
++           },
++           "type": "image_super",
++         },
++       ],
++       "type": "blockquote",
++     },
++     {
++       "attrs": {
++         "align": "center",
++         "alt": "Selected image",
++         "caption": "",
++         "decoding": "async",
++         "height": "auto",
++         "loading": "lazy",
++         "sizes": "",
++         "src": "/selected.png",
++         "srcset": "",
++         "title": "",
++         "width": "100%",
++       },
++       "type": "image_super",
++     },
++     {
++       "content": [
++         {
++           "attrs": {
++             "align": "center",
++             "alt": "Selected image",
++             "caption": "",
++             "decoding": "async",
++             "height": "auto",
++             "loading": "lazy",
++             "sizes": "",
++             "src": "/selected.png",
++             "srcset": "",
++             "title": "",
++             "width": "100%",
++           },
++           "type": "image_super",
++         },
++         {
++           "attrs": {
++             "align": "left",
++           },
++           "content": [
+              {
+                "text": "ht",
+                "type": "text",
+              },
+            ],
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a quote to list range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -21,22 +21,67 @@
+            "content": [
+              {
+                "text": "LeX",
+                "type": "text",
+              },
++           ],
++           "type": "paragraph",
++         },
+          {
++           "attrs": {
++             "align": "center",
++             "alt": "Selected image",
++             "caption": "",
++             "decoding": "async",
++             "height": "auto",
++             "loading": "lazy",
++             "sizes": "",
++             "src": "/selected.png",
++             "srcset": "",
++             "title": "",
++             "width": "100%",
++           },
++           "type": "image_super",
++         },
++       ],
++       "type": "blockquote",
++     },
++     {
++       "content": [
++         {
++           "content": [
++             {
++               "attrs": {
++                 "align": "center",
++                 "alt": "Selected image",
++                 "caption": "",
++                 "decoding": "async",
++                 "height": "auto",
++                 "loading": "lazy",
++                 "sizes": "",
++                 "src": "/selected.png",
++                 "srcset": "",
++                 "title": "",
++                 "width": "100%",
++               },
++               "type": "image_super",
++             },
++             {
++               "attrs": {
++                 "align": "left",
++               },
++               "content": [
++                 {
+                    "text": "ht",
+                    "type": "text",
+                  },
+                ],
+                "type": "paragraph",
+              },
+            ],
+-       "type": "blockquote",
++           "type": "list_item",
+          },
+-     {
+-       "content": [
+          {
+            "content": [
+              {
+                "attrs": {
+                  "align": "left",
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a list to quote range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -23,25 +23,65 @@
+                "content": [
+                  {
+                    "text": "LeX",
+                    "type": "text",
+                  },
+-                 {
+-                   "text": "ht",
+-                   "type": "text",
+-                 },
+                ],
+                "type": "paragraph",
++             },
++             {
++               "attrs": {
++                 "align": "center",
++                 "alt": "Selected image",
++                 "caption": "",
++                 "decoding": "async",
++                 "height": "auto",
++                 "loading": "lazy",
++                 "sizes": "",
++                 "src": "/selected.png",
++                 "srcset": "",
++                 "title": "",
++                 "width": "100%",
+                },
++               "type": "image_super",
++             },
+            ],
+            "type": "list_item",
+          },
+        ],
+        "type": "bullet_list",
++     },
++     {
++       "content": [
++         {
++           "attrs": {
++             "align": "center",
++             "alt": "Selected image",
++             "caption": "",
++             "decoding": "async",
++             "height": "auto",
++             "loading": "lazy",
++             "sizes": "",
++             "src": "/selected.png",
++             "srcset": "",
++             "title": "",
++             "width": "100%",
+            },
++           "type": "image_super",
++         },
+          {
++           "attrs": {
++             "align": "left",
++           },
+            "content": [
++             {
++               "text": "ht",
++               "type": "text",
++             },
++           ],
++           "type": "paragraph",
++         },
+          {
+            "attrs": {
+              "align": "left",
+            },
+            "content": [
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a list items range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -23,10 +23,55 @@
+                "content": [
+                  {
+                    "text": "LeX",
+                    "type": "text",
+                  },
++               ],
++               "type": "paragraph",
++             },
++             {
++               "attrs": {
++                 "align": "center",
++                 "alt": "Selected image",
++                 "caption": "",
++                 "decoding": "async",
++                 "height": "auto",
++                 "loading": "lazy",
++                 "sizes": "",
++                 "src": "/selected.png",
++                 "srcset": "",
++                 "title": "",
++                 "width": "100%",
++               },
++               "type": "image_super",
++             },
++           ],
++           "type": "list_item",
++         },
++         {
++           "content": [
++             {
++               "attrs": {
++                 "align": "center",
++                 "alt": "Selected image",
++                 "caption": "",
++                 "decoding": "async",
++                 "height": "auto",
++                 "loading": "lazy",
++                 "sizes": "",
++                 "src": "/selected.png",
++                 "srcset": "",
++                 "title": "",
++                 "width": "100%",
++               },
++               "type": "image_super",
++             },
++             {
++               "attrs": {
++                 "align": "left",
++               },
++               "content": [
+                  {
+                    "text": "ht",
+                    "type": "text",
+                  },
+                ],
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins a nested unequal depths range, removes selected figures and retains outside content through undo
+AssertionError: expected { type: 'doc', …(1) } to deeply equal { type: 'doc', …(1) }
+
+- Expected
++ Received
+
+@@ -23,22 +23,46 @@
+                "content": [
+                  {
+                    "text": "LeX",
+                    "type": "text",
+                  },
+-                 {
+-                   "text": "ht",
+-                   "type": "text",
+-                 },
+                ],
+                "type": "paragraph",
++             },
++             {
++               "attrs": {
++                 "align": "center",
++                 "alt": "Selected image",
++                 "caption": "",
++                 "decoding": "async",
++                 "height": "auto",
++                 "loading": "lazy",
++                 "sizes": "",
++                 "src": "/selected.png",
++                 "srcset": "",
++                 "title": "",
++                 "width": "100%",
++               },
++               "type": "image_super",
+              },
+            ],
+            "type": "blockquote",
+          },
+        ],
+        "type": "blockquote",
++     },
++     {
++       "attrs": {
++         "align": "left",
++       },
++       "content": [
++         {
++           "text": "ht",
++           "type": "text",
++         },
++       ],
++       "type": "paragraph",
+      },
+      {
+        "attrs": {
+          "align": "left",
+        },
+
+ ❯ tests/cross-container-range.test.ts:49:29
+     47|     const step = new ReplaceTextRangeStep(start, 2, end, 3, 'X');
+     48|     const result = step.apply(before), map = step.getMap(before);
+     49|     expect(result.toJSON()).toEqual(expected.toJSON());
+       |                             ^
+     50|     expect(map.map(before.nodeSize - 2)).toBe(result.nodeSize - 2);
+     51|     expect(map.map(textPointToPosition(before, [before.childCount - 1,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > maps surviving inline-wrapper structure rather than claiming that its tokens were deleted
+AssertionError: expected 16 to be 18 // Object.is equality
+
+- Expected
++ Received
+
+- 18
++ 16
+
+ ❯ tests/cross-container-range.test.ts:88:42
+     86|     expect(after.child(0).content.map(node => node.attrs.id)).toEqual(…
+     87|     expect(after.child(0).textContent).toBe('LeXht');
+     88|     expect(map.map(before.nodeSize - 2)).toBe(after.nodeSize - 2);
+       |                                          ^
+     89|     expect(map.map(textPointToPosition(before, [0, 1, 0], 4))).toBe(te…
+     90|     expect(map.map(textPointToPosition(before, [1, 0], 2))).toBe(textP…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > retains a partial table grid and maps all unselected cell content accurately
+AssertionError: expected [ 'LeX[Image: Selected image]', …(2) ] to deeply equal [ 'LeX', 'ht', 'Tail' ]
+
+- Expected
++ Received
+
+  [
+-   "LeX",
+-   "ht",
++   "LeX[Image: Selected image]",
++   "[Image: Selected image]ht",
+    "Tail",
+  ]
+
+ ❯ tests/cross-container-range.test.ts:105:75
+    103|     const after = step.apply(before), map = step.getMap(before);
+    104|     expect(after.child(0).child(0).childCount).toBe(3);
+    105|     expect(after.child(0).child(0).content.map(node => node.textConten…
+       |                                                                           ^
+    106|     expect(nodeAt(after, [0, 0, 0]).childCount).toBe(1);
+    107|     expect(nodeAt(after, [0, 0, 1]).childCount).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > inserts at exact text endpoints while retaining inline-wrapper identity (4..0)
+AssertionError: expected 9 to be 11 // Object.is equality
+
+- Expected
++ Received
+
+- 11
++ 9
+
+ ❯ tests/cross-container-range.test.ts:128:78
+    126|     const after = step.apply(before), map = step.getMap(before);
+    127|     expect(after.child(0).content.map(node => [node.attrs.id, node.tex…
+    128|     if (to === 0) expect(map.map(textPointToPosition(before, [0, 1, 0]…
+       |                                                                              ^
+    129|     expect(map.map(before.nodeSize - 2)).toBe(after.nodeSize - 2);
+    130|   } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > inserts at exact text endpoints while retaining inline-wrapper identity (0..5)
+AssertionError: expected 5 to be 7 // Object.is equality
+
+- Expected
++ Received
+
+- 7
++ 5
+
+ ❯ tests/cross-container-range.test.ts:129:42
+    127|     expect(after.child(0).content.map(node => [node.attrs.id, node.tex…
+    128|     if (to === 0) expect(map.map(textPointToPosition(before, [0, 1, 0]…
+    129|     expect(map.map(before.nodeSize - 2)).toBe(after.nodeSize - 2);
+       |                                          ^
+    130|   } finally { editor.destroy(); }
+    131| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > joins boundary-only deletion and retains the first block attributes and suffix marks
+AssertionError: expected [ [ 'Left', [ 'strong' ] ] ] to deeply equal [ [ 'Left', [ 'strong' ] ], …(1) ]
+
+- Expected
++ Received
+
+@@ -3,12 +3,6 @@
+      "Left",
+      [
+        "strong",
+      ],
+    ],
+-   [
+-     "Right",
+-     [
+-       "em",
+-     ],
+-   ],
+  ]
+
+ ❯ tests/cross-container-range.test.ts:143:92
+    141|     const block = editor.state.doc.child(0).child(0);
+    142|     expect(block.attrs.align).toBe('right');
+    143|     expect(block.content.map(node => [node.text, node.marks.map(mark =…
+       |                                                                                            ^
+    144|       ['Left', ['strong']], ['Right', ['em']],
+    145|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > keeps custom required container shape when a joined cut would violate its schema
+AssertionError: expected 11 to be 16 // Object.is equality
+
+- Expected
++ Received
+
+- 16
++ 11
+
+ ❯ tests/cross-container-range.test.ts:165:59
+    163|   expect(after.child(0).textContent).toBe('LeX');
+    164|   expect(after.child(1).textContent).toBe('ht');
+    165|   expect(map.map(textPointToPosition(before, [2, 0], 2))).toBe(textPoi…
+       |                                                           ^
+    166|   expect(map.map(before.nodeSize - 2)).toBe(after.nodeSize - 2);
+    167| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > does not apply the first quote attributes to the unselected tail of a different quote
+AssertionError: expected [ Array(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+    [
+      "blockquote",
+      "ltr",
+-     "LeXht",
++     "LeX",
+    ],
+    [
+      "blockquote",
+      "rtl",
+-     "Tail",
++     "htTail",
+    ],
+  ]
+
+ ❯ tests/cross-container-range.test.ts:178:8
+    176|     expect(insertText(editor, 'X')).toBe(true);
+    177|     expect(editor.state.doc.content.map(node => [node.type.name, node.…
+    178|       .toEqual([['blockquote', 'ltr', 'LeXht'], ['blockquote', 'rtl', …
+       |        ^
+    179|     expect(editor.state.doc.child(1).child(0)).toBe(before.child(1).ch…
+    180|     const map = new ReplaceTextRangeStep([0, 0, 0], 2, [1, 0, 0], 3, '…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
+
+ FAIL  tests/cross-container-range.test.ts > preserves every unselected text unit and maps it to its actual new position across ordered nested ranges
+AssertionError: unselected character 1,0,0:3: expected undefined to be defined
+ ❯ tests/cross-container-range.test.ts:209:70
+    207|           return mapped >= position && mapped < position + candidate.n…
+    208|         });
+    209|         expect(owner, `unselected character ${leaf.path}:${offset}`).t…
+       |                                                                      ^
+    210|         expect(owner!.node.text![mapped - textPointToPosition(after, o…
+    211|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  15 failed (15)
+   Start at  01:08:09
+   Duration  4.02s (transform 55%, import 43%, tests 1%)
+
+  Transform  transforming modules took 2.05s · 55% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
