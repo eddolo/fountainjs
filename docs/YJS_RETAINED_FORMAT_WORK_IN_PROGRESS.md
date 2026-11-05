@@ -1,5 +1,9 @@
 # Retained insertion formats — local work in progress
 
+Historical checkpoint: the following local iteration reduces the measured
+storage/decoding cost while keeping the correctness checks. Current status:
+[compact retained formats](YJS_COMPACT_FORMAT_WORK_IN_PROGRESS.md).
+
 2026-11-05. The extra deletion regression from the
 [document bridge checkpoint](YJS_RETAINED_DOCUMENT_WORK_IN_PROGRESS.md) now passes
 in the isolated candidate. This does **not** repair the default adapter, certify

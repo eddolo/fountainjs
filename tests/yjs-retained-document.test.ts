@@ -170,7 +170,7 @@ for (const reverse of [false, true]) it.each([false, true])(`preserves the actua
     expect(left.child(0).child(0).attrs).toEqual({ source: 'middle' });
     expect(left.child(0).child(0).marks.map(mark => mark.type.name)).toEqual(['em']);
     expect(Y.encodeStateVector(pair.left.doc)).toEqual(state);
-    expect(JSON.stringify(left.toJSON())).not.toContain('$fountain:format');
+    expect(JSON.stringify(left.toJSON())).not.toContain('"$f":');
     const saved = new Y.Doc();
     try {
       Y.applyUpdate(saved, Y.encodeStateAsUpdate(pair.left.doc));

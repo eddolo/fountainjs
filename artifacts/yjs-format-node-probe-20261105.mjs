@@ -7,7 +7,8 @@ const noDOM = () => { for (const key of ['window', 'document', 'DOMParser', 'HTM
 noDOM();
 const Y = format === 'es' ? await import('yjs') : require('yjs');
 const engine = format === 'es' ? await import('../dist/index.js') : require('../dist/index.cjs');
-const { RetainedDocumentStore } = format === 'es' ? await import('./yjs-format-build-20261105/retained-document.mjs') : require('./yjs-format-build-20261105/retained-document.cjs');
+const directory = process.argv[3] ?? 'yjs-format-build-20261105';
+const { RetainedDocumentStore } = format === 'es' ? await import(`./${directory}/retained-document.mjs`) : require(`./${directory}/retained-document.cjs`);
 const factory = prefix => { let index = 0; return () => `${prefix}-${index++}`; };
 const source = { type: 'doc', attrs: { audit: { owner: 'Ada', keep: true } }, content: [
   { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] }, { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } },
@@ -75,7 +76,7 @@ for (const reverse of [false, true]) for (const reverseIDs of [false, true]) for
     const projection = fixture.sync(reverse), expected = projection.toJSON(), state = Y.encodeStateVector(left.doc);
     assert.equal(projection.child(0).textContent, 'Z\u200b😀');
     if (mixed) { assert.deepEqual(projection.child(0).child(0).attrs, { source: 'middle' }); assert.deepEqual(projection.child(0).child(0).marks.map(mark => mark.type.name), ['em']); }
-    assert.ok(!JSON.stringify(expected).includes('$fountain:format')); left.store.read(); assert.deepEqual(Y.encodeStateVector(left.doc), state);
+    assert.ok(!JSON.stringify(expected).includes('"$f":') && !JSON.stringify(expected).includes('"$fountain:format":')); left.store.read(); assert.deepEqual(Y.encodeStateVector(left.doc), state);
     assert.ok(manager.undo()); assert.equal(fixture.sync(reverse).child(0).textContent, '');
     assert.ok(manager.redo()); assert.deepEqual(fixture.sync(reverse).toJSON(), expected);
     const saved = new Y.Doc();
@@ -88,4 +89,4 @@ for (const reverse of [false, true]) for (const reverseIDs of [false, true]) for
   } finally { manager.destroy(); fixture.destroy(); }
 }
 noDOM();
-console.log(JSON.stringify({ format, noDOM: true, passingJourneys: results.length, currentAdapterReplaced: false, results }));
+console.log(JSON.stringify({ format, candidateDirectory: directory, noDOM: true, passingJourneys: results.length, currentAdapterReplaced: false, results }));

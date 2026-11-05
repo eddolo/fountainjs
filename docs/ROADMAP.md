@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Compact retained formats (2026-11-05, local work in progress): replace repeated
+source-format payloads with insertion-owned references to shared definitions and
+reuse exact validated format decodes. All 129 candidate checks and 48 compiled
+Node journeys pass; the combined 151-case run retains the six default-adapter
+failures. A three-trial controlled diagnostic reduces 1,024-edit median time from
+2,541.6 to 633.0 ms and encoded state from 259,165 to 58,619 bytes. This does not
+certify large-document or production budgets. Incremental lookup/projection,
+history/compaction, full adapter integration, migration and browser proof remain
+required. No public switch, ceiling increase, push or release.
+[Work in progress](YJS_COMPACT_FORMAT_WORK_IN_PROGRESS.md).
+
 Retained insertion formats (2026-11-05, local work in progress): the isolated
 candidate now passes full deletion against offline typing, mixed source styles,
 author undo/redo, mark-removal concurrency, split/format concurrency and six

@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reduce storage and repeated format-decoding cost in the isolated retained-Yjs
+  candidate using shared style definitions and exact wire-match caching. Keep
+  deletion/undo checks, validate missing references and saved state, and record
+  controlled diagnostic measurements. The public adapter's six retention failures
+  and large-document/integration requirements remain; no public release change.
+  See the [compact-format work](docs/YJS_COMPACT_FORMAT_WORK_IN_PROGRESS.md).
+
 - Preserve source formatting through concurrent full deletion in the isolated
   retained-document candidate, including undo/redo and mixed styles. Keep
   insertion provenance immutable and mark removals explicit. Candidate tests pass,

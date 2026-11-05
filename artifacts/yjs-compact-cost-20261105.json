@@ -1,0 +1,143 @@
+{
+  "scope": "isolated candidates, three alternating-order trials in one process; not production performance certification",
+  "medians": [
+    {
+      "label": "full-provenance-candidate",
+      "characters": 256,
+      "medianElapsedMs": 214.45890000000009,
+      "encodedSharedStateBytes": 64996,
+      "trials": 3
+    },
+    {
+      "label": "compact-candidate",
+      "characters": 256,
+      "medianElapsedMs": 90.99299999999994,
+      "encodedSharedStateBytes": 14978,
+      "trials": 3
+    },
+    {
+      "label": "full-provenance-candidate",
+      "characters": 1024,
+      "medianElapsedMs": 2541.5573,
+      "encodedSharedStateBytes": 259165,
+      "trials": 3
+    },
+    {
+      "label": "compact-candidate",
+      "characters": 1024,
+      "medianElapsedMs": 632.9503999999997,
+      "encodedSharedStateBytes": 58619,
+      "trials": 3
+    }
+  ],
+  "results": [
+    {
+      "label": "full-provenance-candidate",
+      "trial": 0,
+      "characters": 256,
+      "elapsedMs": 332.0366,
+      "millisecondsPerEdit": 1.29701796875,
+      "encodedSharedStateBytes": 64996,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "compact-candidate",
+      "trial": 0,
+      "characters": 256,
+      "elapsedMs": 158.36509999999998,
+      "millisecondsPerEdit": 0.6186136718749999,
+      "encodedSharedStateBytes": 14978,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "full-provenance-candidate",
+      "trial": 0,
+      "characters": 1024,
+      "elapsedMs": 2541.5573,
+      "millisecondsPerEdit": 2.48198955078125,
+      "encodedSharedStateBytes": 259165,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "compact-candidate",
+      "trial": 0,
+      "characters": 1024,
+      "elapsedMs": 632.9503999999997,
+      "millisecondsPerEdit": 0.6181156249999997,
+      "encodedSharedStateBytes": 58619,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "compact-candidate",
+      "trial": 1,
+      "characters": 256,
+      "elapsedMs": 90.99299999999994,
+      "millisecondsPerEdit": 0.35544140624999976,
+      "encodedSharedStateBytes": 14978,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "full-provenance-candidate",
+      "trial": 1,
+      "characters": 256,
+      "elapsedMs": 214.45890000000009,
+      "millisecondsPerEdit": 0.8377300781250003,
+      "encodedSharedStateBytes": 64996,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "compact-candidate",
+      "trial": 1,
+      "characters": 1024,
+      "elapsedMs": 662.9156999999996,
+      "millisecondsPerEdit": 0.6473786132812496,
+      "encodedSharedStateBytes": 58619,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "full-provenance-candidate",
+      "trial": 1,
+      "characters": 1024,
+      "elapsedMs": 2558.0666999999994,
+      "millisecondsPerEdit": 2.4981120117187494,
+      "encodedSharedStateBytes": 259165,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "full-provenance-candidate",
+      "trial": 2,
+      "characters": 256,
+      "elapsedMs": 195.04140000000007,
+      "millisecondsPerEdit": 0.7618804687500003,
+      "encodedSharedStateBytes": 64996,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "compact-candidate",
+      "trial": 2,
+      "characters": 256,
+      "elapsedMs": 71.02250000000004,
+      "millisecondsPerEdit": 0.27743164062500014,
+      "encodedSharedStateBytes": 14978,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "full-provenance-candidate",
+      "trial": 2,
+      "characters": 1024,
+      "elapsedMs": 2474.3339000000005,
+      "millisecondsPerEdit": 2.4163416992187505,
+      "encodedSharedStateBytes": 259165,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "compact-candidate",
+      "trial": 2,
+      "characters": 1024,
+      "elapsedMs": 526.3635000000013,
+      "millisecondsPerEdit": 0.5140268554687513,
+      "encodedSharedStateBytes": 58619,
+      "modelTextLeaves": 1
+    }
+  ]
+}

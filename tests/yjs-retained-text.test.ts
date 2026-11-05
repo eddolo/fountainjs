@@ -79,21 +79,97 @@ it.each(['missing', 'invalid', 'missing-fields'] as const)('refuses %s provenanc
   const pair = peers();
   try {
     const text = pair.leftDoc.getMap('candidate-text:texts').get('stream') as Y.Text;
-    text.format(1, 1, { '$fountain:format': kind === 'missing' ? null : kind === 'invalid' ? '{"id":"bad","attributes":{}}' : '{"id":"1:2","unknown":{}}' });
+    text.format(1, 1, { '$f': kind === 'missing' ? null : kind === 'invalid' ? '{"id":"bad","attributes":{}}' : '{"id":"1:2","unknown":{}}' });
     const state = Y.encodeStateVector(pair.leftDoc), original = text.toDelta();
     expect(() => pair.left.project('first')).toThrow(/provenance/);
     expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state); expect(text.toDelta()).toEqual(original);
   } finally { pair.destroy(); }
 });
 
-it('refuses the earlier provisional text codec instead of silently converting its existing data', () => {
+it.each([1, 2])('refuses provisional text codec %s instead of silently converting its existing data', version => {
   const document = new Y.Doc();
   try {
-    document.getMap('candidate-text:metadata').set('version', 'fountain-retained-text/1');
+    document.getMap('candidate-text:metadata').set('version', `fountain-retained-text/${version}`);
     const state = Y.encodeStateVector(document);
     expect(() => new RetainedTextStore(document, 'candidate-text')).toThrow('Unsupported');
     expect(Y.encodeStateVector(document)).toEqual(state);
   } finally { document.destroy(); }
+});
+
+it('shares one local style definition across insertions and keeps it available through author undo/redo', () => {
+  const pair = peers('Alpha', false);
+  const manager = new Y.UndoManager([...pair.left.scope], { trackedOrigins: new Set([pair.leftOrigin]), captureTimeout: 0 });
+  try {
+    pair.left.insert('first', 2, 'X', { strong: '{}' }); pair.left.insert('first', 3, 'Y', { strong: '{}' });
+    const definitions = pair.leftDoc.getMap('candidate-text:styles'); expect(definitions.size).toBe(2);
+    const original = pair.left.project('first'); pair.sync();
+    manager.undo(); manager.undo(); expect(plain(pair.left, 'first')).toBe('Alpha'); expect(definitions.size).toBe(2);
+    manager.redo(); manager.redo(); pair.sync(true);
+    expect(pair.left.project('first')).toEqual(original); expect(pair.right.project('first')).toEqual(original);
+    expect(definitions.size).toBe(2);
+  } finally { manager.destroy(); pair.destroy(); }
+});
+
+it('uses distinct definition identities for multiple controllers on the same Y.Doc', () => {
+  const pair = peers('Alpha', false), second = new RetainedTextStore(pair.leftDoc, 'candidate-text');
+  try {
+    pair.left.insert('first', 0, 'X', { strong: '{}' }); second.insert('first', 0, 'Y', { em: '{}' }); pair.sync();
+    expect(pair.left.project('first').runs).toEqual(second.project('first').runs);
+    expect(pair.left.project('first').runs.find(run => run.text === 'X')?.attributes).toEqual({ strong: '{}' });
+    expect(pair.left.project('first').runs.find(run => run.text === 'Y')?.attributes).toEqual({ em: '{}' });
+  } finally { second.destroy(); pair.destroy(); }
+});
+
+it.each(['missing', 'malformed'] as const)('invalidates decoded styles after a %s shared definition change without repairing it', kind => {
+  const pair = peers();
+  try {
+    pair.left.project('first'); const definitions = pair.leftDoc.getMap('candidate-text:styles'), key = [...definitions.keys()][0];
+    if (kind === 'missing') definitions.delete(key); else definitions.set(key, '"not a format object"');
+    const state = Y.encodeStateVector(pair.leftDoc), original = definitions.toJSON();
+    expect(() => pair.left.project('first')).toThrow(); expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state); expect(definitions.toJSON()).toEqual(original);
+  } finally { pair.destroy(); }
+});
+
+it('does not let the adjacent-run cache bypass validation of a changed wire field', () => {
+  const pair = peers();
+  try {
+    pair.left.insert('first', 0, 'X', { strong: '{}' }); pair.left.insert('first', 1, 'Y', { strong: '{}' });
+    const text = pair.leftDoc.getMap('candidate-text:texts').get('stream') as Y.Text;
+    text.format(2, 1, { strong: null, prototype: 'null' });
+    expect(() => pair.left.project('first')).toThrow('Invalid retained text attribute');
+  } finally { pair.destroy(); }
+});
+
+it('keeps literal null/false strings distinct from a format-removal value', () => {
+  const pair = peers();
+  try {
+    pair.left.insert('first', 2, 'X', { literalFalse: 'false', literalNull: 'null', quoted: '"quoted"' });
+    expect(pair.left.project('first').runs.find(run => run.text === 'X')?.attributes).toEqual({ literalFalse: 'false', literalNull: 'null', quoted: '"quoted"' });
+    pair.left.format('first', 2, 3, { literalFalse: null }); pair.sync();
+    expect(pair.right.project('first').runs.find(run => run.text === 'X')?.attributes).toEqual({ literalNull: 'null', quoted: '"quoted"' });
+  } finally { pair.destroy(); }
+});
+
+it('reopens compact definitions, removals and relative anchors from a Yjs V2 saved update', () => {
+  const pair = peers(), document = new Y.Doc(); let reopened: RetainedTextStore | undefined;
+  try {
+    pair.left.insert('first', 2, '😀', { strong: '{}' }); pair.left.split('first', 'second', 4);
+    pair.left.format('first', 2, 4, { strong: null, em: '{}' });
+    const anchor = JSON.parse(JSON.stringify(pair.left.relative('first', 4, -1)));
+    Y.applyUpdateV2(document, Y.encodeStateAsUpdateV2(pair.leftDoc));
+    reopened = new RetainedTextStore(document, 'candidate-text');
+    expect(reopened.partitions('stream')).toEqual(pair.left.partitions('stream'));
+    expect(reopened.resolve(anchor)).toEqual(pair.left.resolve(anchor));
+  } finally { reopened?.destroy(); document.destroy(); pair.destroy(); }
+});
+
+it.each([{ reference: [101, 1, 999_999] }, { reference: [101, -1, 0] }, { reference: [101, 1] }])('rejects an invalid compact reference $reference without a default-style fallback', ({ reference }) => {
+  const pair = peers('Alpha', false);
+  try {
+    const text = pair.leftDoc.getMap('candidate-text:texts').get('stream') as Y.Text;
+    text.format(1, 1, { '$f': reference }); const state = Y.encodeStateVector(pair.leftDoc);
+    expect(() => pair.left.project('first')).toThrow(/provenance/); expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state);
+  } finally { pair.destroy(); }
 });
 
 it.each([1, 7, 19, 31, 47, 73])('preserves each local text/style operation during a deterministic offline edit sequence (seed %s)', seed => {

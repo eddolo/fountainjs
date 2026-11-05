@@ -1,8 +1,8 @@
 import * as Y from 'yjs';
 
-const VERSION = 'fountain-retained-text/2';
+const VERSION = 'fountain-retained-text/3';
 const MARKER = '$fountain:partition';
-const PROVENANCE = '$fountain:format';
+const PROVENANCE = '$f';
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
 const SAFE_ATTRIBUTE = /^[A-Za-z_][\w.:-]{0,2047}$/;
 const UNSAFE = new Set(['__proto__', 'constructor', 'prototype']);
@@ -28,6 +28,9 @@ export interface RetainedTextPartition {
 }
 
 interface StreamIndex { readonly epoch: number; readonly entries: readonly RetainedTextPartition[] }
+interface DecodedFormatCache {
+  previous?: { client: number; style: number; raw: Record<string, unknown>; value: Record<string, string> };
+}
 
 function validId(value: unknown): value is string {
   return typeof value === 'string' && SAFE_ID.test(value) && !UNSAFE.has(value);
@@ -51,42 +54,37 @@ export function validateRetainedTextFormat(value: Readonly<Record<string, string
   if (JSON.stringify({ id: '9007199254740991:9007199254740991', attributes: format }).length > MAX_PROVENANCE) throw new RangeError('Retained format provenance is too large.');
 }
 
-/** Each insertion owns a distinct marker even when its visible format equals
- * its neighbours. An offline deletion cannot directly delete an unseen marker.
- * The complete source format travels with that insertion through Yjs undo. */
-function encodeProvenance(document: Y.Doc, value: Readonly<Record<string, string>>): string {
-  const clock = Y.decodeStateVector(Y.encodeStateVector(document)).get(document.clientID) ?? 0;
-  return JSON.stringify({ id: `${document.clientID}:${clock}`, attributes: value });
-}
-
 // Keep removals as explicit shared values. Absence alone cannot distinguish a
 // concurrent deletion of a formatting item from an intentional mark removal.
-function encodeAttributes(value: Readonly<Record<string, string | null>>): Record<string, string> {
-  return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, JSON.stringify(entry)]));
+function encodeAttributes(value: Readonly<Record<string, string | null>>): Record<string, string | false> {
+  // Logical values are always strings. A boolean is an unambiguous removal
+  // value, with no second JSON encoding of potentially large source strings.
+  return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, entry === null ? false : entry]));
 }
 
 function decodeFields(raw: Record<string, unknown>): Record<string, string | null> {
   return attributes(Object.fromEntries(Object.entries(raw).filter(([key]) => key !== PROVENANCE).map(([key, entry]) => {
-    if (typeof entry !== 'string' || entry.length > 6_000_002) throw new Error('Invalid retained format encoding.');
-    return [key, JSON.parse(entry)];
+    if (entry !== false && (typeof entry !== 'string' || entry.length > MAX_ATTRIBUTE_LENGTH)) throw new Error('Invalid retained format encoding.');
+    return [key, entry === false ? null : entry];
   })), true);
 }
 
-function decodeAttributes(value: unknown): Record<string, string> {
+function decodeAttributes(value: unknown, lookup: (client: number, clock: number) => Readonly<Record<string, string>>, cache?: DecodedFormatCache): Record<string, string> {
   if (value === undefined) throw new Error('Missing retained format provenance.');
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid retained text attributes.');
-  const raw = value as Record<string, unknown>, encoded = raw[PROVENANCE];
-  if (!Object.hasOwn(raw, PROVENANCE) || typeof encoded !== 'string' || encoded.length > MAX_PROVENANCE) throw new Error('Missing retained format provenance.');
-  const provenance: unknown = JSON.parse(encoded);
-  if (!provenance || typeof provenance !== 'object' || Array.isArray(provenance) || Object.keys(provenance).length !== 2
-    || !Object.hasOwn(provenance, 'id') || !Object.hasOwn(provenance, 'attributes') || (provenance as { attributes: unknown }).attributes === undefined) throw new Error('Invalid retained format provenance.');
-  const record = provenance as { id: unknown; attributes: unknown };
-  if (typeof record.id !== 'string' || !/^\d+:\d+$/.test(record.id)) throw new Error('Invalid retained format provenance identity.');
-  const original = attributes(record.attributes) as Record<string, string>;
+  const raw = value as Record<string, unknown>, provenance = raw[PROVENANCE];
+  if (!Object.hasOwn(raw, PROVENANCE)) throw new Error('Missing retained format provenance.');
+  if (!Array.isArray(provenance) || provenance.length !== 3 || provenance.some(entry => !Number.isSafeInteger(entry) || entry < 0)) throw new Error('Invalid retained format provenance.');
+  const previous = cache?.previous, keys = Object.keys(raw);
+  if (previous && previous.client === provenance[0] && previous.style === provenance[2] && keys.length === Object.keys(previous.raw).length
+    && keys.every(key => key === PROVENANCE || Object.hasOwn(previous.raw, key) && raw[key] === previous.raw[key])) return previous.value;
+  const original = lookup(provenance[0], provenance[2]);
   const current = decodeFields(raw);
   const result = { ...original };
   for (const [key, entry] of Object.entries(current)) { if (entry === null) delete result[key]; else result[key] = entry; }
-  return Object.fromEntries(Object.entries(result).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
+  const decoded = Object.fromEntries(Object.entries(result).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
+  if (cache) cache.previous = { client: provenance[0], style: provenance[2], raw, value: decoded };
+  return decoded;
 }
 
 /** Internal candidate storage for the next collaboration representation.
@@ -98,6 +96,9 @@ export class RetainedTextStore {
   readonly scope: readonly Y.Map<unknown>[];
   private readonly texts: Y.Map<unknown>;
   private readonly owners: Y.Map<unknown>;
+  private readonly styles: Y.Map<unknown>;
+  private localStyles = new Map<string, number>();
+  private decodedStyles = new Map<string, { encoded: string; value: Readonly<Record<string, string>> }>();
   private epoch = 0;
   private destroyed = false;
   private cache = new WeakMap<Y.Text, StreamIndex>();
@@ -112,10 +113,37 @@ export class RetainedTextStore {
     if (this.metadata.size === 0) document.transact(() => this.metadata.set('version', VERSION), origin);
     if (this.metadata.get('version') !== VERSION) throw new Error('Unsupported retained text representation.');
     this.texts = document.getMap(`${name}:texts`); this.owners = document.getMap(`${name}:owners`);
+    this.styles = document.getMap(`${name}:styles`);
+    // Immutable style definitions are metadata. Undoing the insertion that
+    // first introduced a style must not strand another insertion's reference.
     this.scope = Object.freeze([this.texts, this.owners]);
     this.metadata.observeDeep(this.invalidate);
     this.scope.forEach(type => type.observeDeep(this.invalidate));
+    this.styles.observeDeep(this.invalidate);
   }
+
+  private clock(): number { return Y.decodeStateVector(Y.encodeStateVector(this.document)).get(this.document.clientID) ?? 0; }
+
+  private provenance(value: Readonly<Record<string, string>>): readonly number[] {
+    const encoded = JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)));
+    const client = this.document.clientID, key = `${client}:${encoded}`;
+    let style = this.localStyles.get(key);
+    if (style === undefined) {
+      if (this.styles.size >= MAX_PARTITIONS) throw new RangeError('Retained style definitions need compaction.');
+      style = this.clock(); this.styles.set(`${client}:${style}`, encoded); this.localStyles.set(key, style);
+    } else if (this.styles.get(`${client}:${style}`) !== encoded) throw new Error('Retained style definition was changed.');
+    return [client, this.clock(), style];
+  }
+
+  private readonly style = (client: number, clock: number): Readonly<Record<string, string>> => {
+    if (this.styles.size > MAX_PARTITIONS) throw new RangeError('Too many retained style definitions.');
+    const key = `${client}:${clock}`, encoded = this.styles.get(key), cached = this.decodedStyles.get(key);
+    if (typeof encoded !== 'string' || encoded.length > MAX_PROVENANCE) throw new Error('Missing retained format provenance definition.');
+    if (cached?.encoded === encoded) return cached.value;
+    const value = JSON.parse(encoded); validateRetainedTextFormat(value);
+    const result = Object.freeze(attributes(value) as Record<string, string>);
+    this.decodedStyles.set(key, { encoded, value: result }); return result;
+  };
 
   private assertLive(): void {
     if (this.destroyed) throw new Error('Retained text store is destroyed.');
@@ -135,12 +163,15 @@ export class RetainedTextStore {
     const text = this.stream(streamId), cached = this.cache.get(text);
     if (cached?.epoch === this.epoch) return cached.entries;
     const entries: RetainedTextPartition[] = [], ids = new Set<string>();
+    // The insertion nonce changes every keystroke, but its style and explicit
+    // field values commonly do not. Reuse only a validated exact wire match.
+    const formats: DecodedFormatCache = {};
     let current: { id: string; streamId: string; from: number; to: number; runs: RetainedTextRun[] } | undefined;
     let position = 0, characters = 0;
     for (const operation of text.toDelta()) {
       if (typeof operation.insert === 'string') {
         if (!current) throw new Error('Retained characters need a partition boundary.');
-        const format = decodeAttributes(operation.attributes);
+        const format = decodeAttributes(operation.attributes, this.style, formats);
         const previous = current.runs.at(-1), keys = Object.keys(format);
         if (previous && Object.keys(previous.attributes ?? {}).length === keys.length && keys.every(key => previous.attributes?.[key] === format[key])) {
           current.runs[current.runs.length - 1] = Object.freeze({ text: previous.text + operation.insert,
@@ -157,7 +188,7 @@ export class RetainedTextStore {
         // A peer can format across a boundary it has not seen yet. Validate its
         // wire fields, but keep the private embed out of visible text/styles.
         if (operation.attributes) {
-          if (Object.hasOwn(operation.attributes, PROVENANCE)) decodeAttributes(operation.attributes);
+          if (Object.hasOwn(operation.attributes, PROVENANCE)) decodeAttributes(operation.attributes, this.style);
           else decodeFields(operation.attributes);
         }
         const id = marker[MARKER] as string;
@@ -194,7 +225,7 @@ export class RetainedTextStore {
       const text = new Y.Text(); this.texts.set(streamId, text); this.owners.set(id, streamId);
       text.insertEmbed(0, { [MARKER]: id }, {});
       for (const run of safeRuns) if (run.text) {
-        text.insert(text.length, run.text, { ...encodeAttributes(run.attributes), [PROVENANCE]: encodeProvenance(this.document, run.attributes as Record<string, string>) });
+        text.insert(text.length, run.text, { ...encodeAttributes(run.attributes), [PROVENANCE]: this.provenance(run.attributes as Record<string, string>) });
       }
       this.invalidate();
     }, this.origin);
@@ -248,7 +279,7 @@ export class RetainedTextStore {
     if (typeof value !== 'string' || text.length - this.index(partition.streamId).length + value.length > MAX_TEXT) throw new RangeError('Invalid retained text insertion.');
     validateRetainedTextFormat(safeFormat as Record<string, string>);
     this.document.transact(() => {
-      if (value) text.insert(position, value, { ...encodeAttributes(safeFormat), [PROVENANCE]: encodeProvenance(this.document, safeFormat as Record<string, string>) });
+      if (value) text.insert(position, value, { ...encodeAttributes(safeFormat), [PROVENANCE]: this.provenance(safeFormat as Record<string, string>) });
       this.invalidate();
     }, this.origin);
   }
@@ -300,6 +331,7 @@ export class RetainedTextStore {
   destroy(): void {
     if (this.destroyed) return;
     this.metadata.unobserveDeep(this.invalidate); this.scope.forEach(type => type.unobserveDeep(this.invalidate));
+    this.styles.unobserveDeep(this.invalidate); this.localStyles.clear(); this.decodedStyles.clear();
     this.cache = new WeakMap(); this.destroyed = true;
   }
 }
