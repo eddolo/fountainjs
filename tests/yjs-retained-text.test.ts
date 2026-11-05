@@ -17,11 +17,13 @@ it('merges concurrently initialized pools without replacing either shared contai
     expect(plain(right, 'left-block')).toBe('Left'); expect(plain(right, 'right-block')).toBe('Right');
   } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
 });
-function peers(value = 'Alpha') {
+function peers(value = 'Alpha', reverseIDs?: boolean) {
   const leftDoc = new Y.Doc(), leftOrigin = {}, rightOrigin = {};
+  if (reverseIDs !== undefined) leftDoc.clientID = reverseIDs ? 202 : 101;
   const left = new RetainedTextStore(leftDoc, 'candidate-text', leftOrigin);
   left.create('stream', 'first', [{ text: value }]);
-  const rightDoc = new Y.Doc(); Y.applyUpdate(rightDoc, Y.encodeStateAsUpdate(leftDoc));
+  const rightDoc = new Y.Doc(); if (reverseIDs !== undefined) rightDoc.clientID = reverseIDs ? 101 : 202;
+  Y.applyUpdate(rightDoc, Y.encodeStateAsUpdate(leftDoc));
   const right = new RetainedTextStore(rightDoc, 'candidate-text', rightOrigin);
   return { leftDoc, rightDoc, left, right, leftOrigin, rightOrigin,
     sync: (reverse = false) => {
@@ -32,6 +34,110 @@ function peers(value = 'Alpha') {
     destroy: () => { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); },
   };
 }
+
+for (const reverse of [false, true]) it.each([false, true])(`does not resurrect a removed mark from a concurrent format snapshot (reverse exchange: ${reverse}, reverse IDs: %s)`, reverseIDs => {
+  const pair = peers('Alpha', reverseIDs);
+  try {
+    pair.left.format('first', 0, 5, { strong: '{}' }); pair.sync();
+    pair.left.format('first', 1, 4, { strong: null }); pair.right.format('first', 1, 4, { em: '{}' }); pair.sync(reverse);
+    expect(pair.left.project('first').runs).toEqual(pair.right.project('first').runs);
+    const middle = pair.left.project('first').runs.filter(run => run.attributes?.em);
+    expect(middle.map(run => run.text).join('')).toBe('lph');
+    expect(middle.every(run => !run.attributes?.strong)).toBe(true);
+  } finally { pair.destroy(); }
+});
+
+it.each([false, true])('preserves both independently styled insertions when a third peer deletes all original text (reverse IDs: %s)', reverseIDs => {
+  const pair = peers('Alpha', reverseIDs), document = new Y.Doc();
+  Y.applyUpdate(document, Y.encodeStateAsUpdate(pair.leftDoc), 'seed');
+  const third = new RetainedTextStore(document, 'candidate-text');
+  try {
+    pair.left.insert('first', 2, 'X', { strong: '{}' }); pair.right.insert('first', 2, 'Y', { em: '{}' }); third.delete('first', 0, 5);
+    const updates = [pair.leftDoc, pair.rightDoc, document].map(doc => Y.encodeStateAsUpdate(doc));
+    for (const doc of [pair.leftDoc, pair.rightDoc, document]) for (const update of updates) Y.applyUpdate(doc, update, 'peer');
+    const runs = pair.left.project('first').runs;
+    expect(runs).toEqual(pair.right.project('first').runs); expect(runs).toEqual(third.project('first').runs);
+    expect(runs.map(run => run.text).join('').split('').sort().join('')).toBe('XY');
+    expect(runs.find(run => run.text.includes('X'))?.attributes).toEqual({ strong: '{}' });
+    expect(runs.find(run => run.text.includes('Y'))?.attributes).toEqual({ em: '{}' });
+  } finally { third.destroy(); document.destroy(); pair.destroy(); }
+});
+
+it('retains opaque format strings exactly and rejects oversized snapshots before writing', () => {
+  const pair = peers();
+  try {
+    const source = JSON.stringify({ source: '\u200b\\alpha\n"quoted"', attrs: JSON.parse('{"__proto__":"data"}') });
+    pair.left.insert('first', 2, 'X', { format: source }); pair.sync();
+    expect(pair.left.project('first').runs.find(run => run.text === 'X')?.attributes).toEqual({ format: source });
+    const state = Y.encodeStateVector(pair.leftDoc);
+    expect(() => pair.left.insert('first', 0, 'bad', { a: '\u0000'.repeat(400_000) })).toThrow('provenance is too large');
+    expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state);
+  } finally { pair.destroy(); }
+});
+
+it.each(['missing', 'invalid', 'missing-fields'] as const)('refuses %s provenance without overwriting the raw shared state', kind => {
+  const pair = peers();
+  try {
+    const text = pair.leftDoc.getMap('candidate-text:texts').get('stream') as Y.Text;
+    text.format(1, 1, { '$fountain:format': kind === 'missing' ? null : kind === 'invalid' ? '{"id":"bad","attributes":{}}' : '{"id":"1:2","unknown":{}}' });
+    const state = Y.encodeStateVector(pair.leftDoc), original = text.toDelta();
+    expect(() => pair.left.project('first')).toThrow(/provenance/);
+    expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state); expect(text.toDelta()).toEqual(original);
+  } finally { pair.destroy(); }
+});
+
+it('refuses the earlier provisional text codec instead of silently converting its existing data', () => {
+  const document = new Y.Doc();
+  try {
+    document.getMap('candidate-text:metadata').set('version', 'fountain-retained-text/1');
+    const state = Y.encodeStateVector(document);
+    expect(() => new RetainedTextStore(document, 'candidate-text')).toThrow('Unsupported');
+    expect(Y.encodeStateVector(document)).toEqual(state);
+  } finally { document.destroy(); }
+});
+
+it.each([1, 7, 19, 31, 47, 73])('preserves each local text/style operation during a deterministic offline edit sequence (seed %s)', seed => {
+  const pair = peers('Alpha', seed % 4 === 1); let state = seed;
+  const random = (limit: number) => { state = (Math.imul(state, 1_664_525) + 1_013_904_223) >>> 0; return state % limit; };
+  const cells = (store: RetainedTextStore, id: string) => store.project(id).runs.flatMap(run =>
+    run.text.split('').map(text => ({ text, attributes: { ...run.attributes } as Record<string, string> })));
+  try {
+    for (let round = 0; round < 4; round++) {
+      for (const [who, store] of [['left', pair.left], ['right', pair.right]] as const) for (let index = 0; index < 10; index++) {
+        const parts = store.partitions('stream'), at = random(parts.length), id = parts[at].id, before = cells(store, id);
+        const from = random(before.length + 1), to = from + random(before.length - from + 1), operation = random(5);
+        if (operation === 0) {
+          const format: Record<string, string> = random(2) ? { strong: '{}' } : { em: '{}' }, text = who === 'left' ? 'L' : 'R';
+          store.insert(id, from, text, format); before.splice(from, 0, { text, attributes: format });
+          expect(cells(store, id)).toEqual(before);
+        } else if (operation === 1) {
+          store.delete(id, from, to); before.splice(from, to - from); expect(cells(store, id)).toEqual(before);
+        } else if (operation === 2) {
+          const key = random(2) ? 'strong' : 'em', value = random(2) ? '{}' : null;
+          store.format(id, from, to, { [key]: value });
+          for (const cell of before.slice(from, to)) { if (value === null) delete cell.attributes[key]; else cell.attributes[key] = value; }
+          expect(cells(store, id)).toEqual(before);
+        } else if (operation === 3 && parts.length < 8) {
+          const next = `${who}-${round}-${index}`; store.split(id, next, from);
+          expect(cells(store, id)).toEqual(before.slice(0, from)); expect(cells(store, next)).toEqual(before.slice(from));
+        } else if (at + 1 < parts.length) {
+          const next = parts[at + 1].id, expected = [...before, ...cells(store, next)]; store.join(id, next); expect(cells(store, id)).toEqual(expected);
+        }
+      }
+      pair.sync(round % 2 === 1); expect(pair.left.partitions('stream')).toEqual(pair.right.partitions('stream'));
+    }
+  } finally { pair.destroy(); }
+});
+
+it.each([false, true])('projects a private split boundary that inherited concurrent formatting (reverse exchange: %s)', reverse => {
+  const pair = peers();
+  try {
+    pair.left.split('first', 'second', 3); pair.right.format('first', 0, 5, { strong: '{}' }); pair.sync(reverse);
+    expect(['first', 'second'].map(id => plain(pair.left, id))).toEqual(['Alp', 'ha']);
+    expect(pair.left.partitions('stream')).toEqual(pair.right.partitions('stream'));
+    for (const id of ['first', 'second']) expect(pair.left.project(id).runs.every(run => run.attributes?.strong === '{}')).toBe(true);
+  } finally { pair.destroy(); }
+});
 
 it.each([false, true])('retains character identity through concurrent formatting (reverse exchange: %s)', reverse => {
   const pair = peers();

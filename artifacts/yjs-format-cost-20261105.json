@@ -1,0 +1,38 @@
+{
+  "scope": "isolated candidate, single-process diagnostic; not a production performance gate or default-adapter comparison",
+  "measurementsAreNotCertification": true,
+  "results": [
+    {
+      "label": "previous-candidate",
+      "characters": 256,
+      "elapsedMs": 121.53899999999999,
+      "millisecondsPerEdit": 0.47476171874999995,
+      "encodedSharedStateBytes": 1419,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "format-candidate",
+      "characters": 256,
+      "elapsedMs": 299.02209999999997,
+      "millisecondsPerEdit": 1.1680550781249999,
+      "encodedSharedStateBytes": 74773,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "previous-candidate",
+      "characters": 1024,
+      "elapsedMs": 224.3709,
+      "millisecondsPerEdit": 0.21911220703125,
+      "encodedSharedStateBytes": 2187,
+      "modelTextLeaves": 1
+    },
+    {
+      "label": "format-candidate",
+      "characters": 1024,
+      "elapsedMs": 2518.4705,
+      "millisecondsPerEdit": 2.45944384765625,
+      "encodedSharedStateBytes": 296079,
+      "modelTextLeaves": 1
+    }
+  ]
+}

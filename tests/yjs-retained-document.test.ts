@@ -145,6 +145,41 @@ it('retains unseen peer typing when all locally observed characters are deleted'
   } finally { pair.destroy(); }
 });
 
+it('retains character formats when typing is undone and redone after a concurrent full deletion', () => {
+  const pair = peers(), manager = new Y.UndoManager([...pair.left.store.scope], { captureTimeout: 0 });
+  try {
+    pair.left.editor.dispatch(pair.left.editor.createTransaction().insertText([0, 0], 2, 'X')); pair.left.apply();
+    pair.right.editor.dispatch(pair.right.editor.createTransaction().replaceText([0, 0], 0, 5, '')); pair.right.apply();
+    pair.sync(false); const original = pair.left.store.read().toJSON();
+    manager.undo(); pair.sync(false); expect(pair.left.store.read().child(0).textContent).toBe('');
+    manager.redo(); pair.sync(true); expect(pair.left.store.read().toJSON()).toEqual(original);
+    expect(pair.right.store.read().toJSON()).toEqual(original);
+  } finally { manager.destroy(); pair.destroy(); }
+});
+
+for (const reverse of [false, true]) it.each([false, true])(`preserves the actual mixed-leaf insertion style after full deletion (reverse exchange: ${reverse}, reverse IDs: %s)`, reverseIDs => {
+  const pair = peers({ type: 'doc', content: [{ type: 'paragraph', content: [
+    { type: 'text', text: 'AA' }, { type: 'text', text: 'BBBB', attrs: { source: 'middle' }, marks: [{ type: 'em' }] },
+    { type: 'text', text: 'CC', marks: [{ type: 'strong' }] },
+  ] }] }, reverseIDs);
+  try {
+    pair.left.editor.dispatch(pair.left.editor.createTransaction().insertText([0, 1], 2, 'Z\u200b😀')); pair.left.apply();
+    pair.right.editor.dispatch(pair.right.editor.createTransaction().replaceRange(1, 9, '')); pair.right.apply(); pair.sync(reverse);
+    const state = Y.encodeStateVector(pair.left.doc), left = pair.left.store.read(), right = pair.right.store.read();
+    expect(left.toJSON()).toEqual(right.toJSON()); expect(left.child(0).textContent).toBe('Z\u200b😀');
+    expect(left.child(0).child(0).attrs).toEqual({ source: 'middle' });
+    expect(left.child(0).child(0).marks.map(mark => mark.type.name)).toEqual(['em']);
+    expect(Y.encodeStateVector(pair.left.doc)).toEqual(state);
+    expect(JSON.stringify(left.toJSON())).not.toContain('$fountain:format');
+    const saved = new Y.Doc();
+    try {
+      Y.applyUpdate(saved, Y.encodeStateAsUpdate(pair.left.doc));
+      const reopened = new RetainedDocumentStore(saved, 'candidate', pair.left.editor.state.schema, factory('reopened'));
+      try { expect(reopened.read().toJSON()).toEqual(left.toJSON()); } finally { reopened.destroy(); }
+    } finally { saved.destroy(); }
+  } finally { pair.destroy(); }
+});
+
 it.each(['bullet', 'ordered', 'task'] as const)('splits a nested %s item with marked leaves and following blocks intact', kind => {
   const pair = fixture({ type: 'doc', content: [{ type: `${kind}_list`, content: [{
     type: kind === 'task' ? 'task_item' : 'list_item', attrs: { checked: true, audit: 'item' }, content: [

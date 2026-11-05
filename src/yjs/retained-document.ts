@@ -7,7 +7,7 @@ import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyNa
 import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun } from './retained-text';
 import { planRetainedNodeStarts, planRetainedText } from './retained-mapping';
 
-const VERSION = 'fountain-retained-document/1';
+const VERSION = 'fountain-retained-document/2';
 const LEAF = 'fountain_leaf', ORDER = 'fountain_marks';
 const pathKey = (path: readonly number[]) => path.join('.');
 const same = (left: unknown, right: unknown): boolean => {

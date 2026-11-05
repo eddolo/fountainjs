@@ -1,5 +1,10 @@
 # Retained document bridge — local work in progress
 
+Historical checkpoint: the deletion failure described below is repaired in the
+next isolated candidate, which also exposes significant measured typing/storage
+overhead. Current status and unchanged default-adapter failures:
+[retained insertion-format work](YJS_RETAINED_FORMAT_WORK_IN_PROGRESS.md).
+
 2026-11-05. This is an unexported candidate, not the adapter used by the package
 or website. GitHub/npm/site publication is not authorized at this checkpoint;
 the user requested that the new commits remain local. The six original ordinary

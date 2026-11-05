@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Retained insertion formats (2026-11-05, local work in progress): the isolated
+candidate now passes full deletion against offline typing, mixed source styles,
+author undo/redo, mark-removal concurrency, split/format concurrency and six
+deterministic edit sequences. All 118 candidate source checks and 48 compiled
+Node journeys pass. The unchanged default adapter still has 16 passes/six required
+failures. A 1,024-edit diagnostic exposes substantial wire/projection overhead
+(296,079 bytes and 2,518.5 ms versus 2,187 bytes and 224.4 ms in the preceding,
+incorrect candidate). Performance/storage work is required before adoption; no
+default switch, ceiling increase, migration, browser certification or release.
+[Work in progress](YJS_RETAINED_FORMAT_WORK_IN_PROGRESS.md).
+
 Retained document bridge (2026-11-05, local work in progress): test actual
 Fountain quote/list/mark/split commands against pooled shared storage, including
 author undo/redo, native history, empty boundaries, mixed-content save/reopen and

@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve source formatting through concurrent full deletion in the isolated
+  retained-document candidate, including undo/redo and mixed styles. Keep
+  insertion provenance immutable and mark removals explicit. Candidate tests pass,
+  but measured wire/projection overhead blocks adoption; the public adapter's six
+  retention failures remain. No public adapter or release change. See the
+  [format work in progress](docs/YJS_RETAINED_FORMAT_WORK_IN_PROGRESS.md).
+
 - Add an unexported retained-document bridge that exercises actual Fountain
   transactions against the candidate pools. Check composed concurrent-cut order,
   native history, combined-scope author undo and mixed-content saved state.

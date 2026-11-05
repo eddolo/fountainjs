@@ -1,0 +1,573 @@
+{
+  "createdAt": "2026-11-05T23:14:53.595Z",
+  "baseCommit": "b6d86e185eb018a577ea1662cb877ec91f840fa3",
+  "state": "local-unexported-work-in-progress",
+  "published": false,
+  "userPreference": "Keep the new commit local for now",
+  "checks": {
+    "sourceTypecheck": "passed",
+    "candidateSource": {
+      "files": 4,
+      "passed": 118,
+      "failed": 0,
+      "skipped": 0
+    },
+    "defaultAdapter": {
+      "files": 1,
+      "passed": 16,
+      "failed": 6,
+      "skipped": 0,
+      "failures": [
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (task)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline character order when another peer applies a partial text mark"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "keeps offline typing on its original side of a concurrent paragraph split"
+        }
+      ]
+    },
+    "fullSourceSuiteRerun": false,
+    "combinedFocusedRuns": {
+      "total": 140,
+      "passed": 134,
+      "failed": 6,
+      "skipped": 0
+    },
+    "compiledNode": [
+      {
+        "format": "es",
+        "noDOM": true,
+        "passingJourneys": 24,
+        "currentAdapterReplaced": false,
+        "results": [
+          {
+            "kind": "quote",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "quote",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": false
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": false
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": false,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": false,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": true,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": true,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": false,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": false,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": true,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": true,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          }
+        ]
+      },
+      {
+        "format": "cjs",
+        "noDOM": true,
+        "passingJourneys": 24,
+        "currentAdapterReplaced": false,
+        "results": [
+          {
+            "kind": "quote",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": false,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "quote",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": false
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": false
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": false,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": false,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": true,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": false,
+            "reverseIDs": true,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": false,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": false,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": true,
+            "mixed": false,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "reverse": true,
+            "reverseIDs": true,
+            "mixed": true,
+            "actualStyleRetained": true,
+            "authorUndoRedo": true,
+            "savedStateReopened": true
+          }
+        ]
+      }
+    ],
+    "apiDeclarations": 423,
+    "headlessSourceModules": 132,
+    "productionBudgets": {
+      "unchanged": true,
+      "rerunAtThisCheckpoint": false,
+      "lastKnownStatus": "failed",
+      "candidateCertified": false
+    }
+  },
+  "formatProtocol": {
+    "document": 2,
+    "text": 2,
+    "nodes": 2,
+    "liveMigration": false,
+    "oldProvisionalCodecRefused": true
+  },
+  "defaultAdapterReplaced": false,
+  "publicRuntimeChanged": false,
+  "browserJourneyClaimed": false,
+  "resolvedCandidateRegression": "retains unseen peer typing when all locally observed characters are deleted",
+  "adoptionBlockers": [
+    "Measured per-insertion shared-state growth and full-projection typing cost",
+    "Large-document incremental lookup/projection, long histories, wire growth and compaction",
+    "Selections/presence/review/structured-state integration and provider lifecycle",
+    "Explicit recoverable legacy cutover",
+    "General moves/joins/custom invariants, original default-adapter acceptance and recorded browser journeys"
+  ],
+  "diagnosticCostSample": {
+    "scope": "isolated candidate, single-process diagnostic; not a production performance gate or default-adapter comparison",
+    "measurementsAreNotCertification": true,
+    "results": [
+      {
+        "label": "previous-candidate",
+        "characters": 256,
+        "elapsedMs": 121.53899999999999,
+        "millisecondsPerEdit": 0.47476171874999995,
+        "encodedSharedStateBytes": 1419,
+        "modelTextLeaves": 1
+      },
+      {
+        "label": "format-candidate",
+        "characters": 256,
+        "elapsedMs": 299.02209999999997,
+        "millisecondsPerEdit": 1.1680550781249999,
+        "encodedSharedStateBytes": 74773,
+        "modelTextLeaves": 1
+      },
+      {
+        "label": "previous-candidate",
+        "characters": 1024,
+        "elapsedMs": 224.3709,
+        "millisecondsPerEdit": 0.21911220703125,
+        "encodedSharedStateBytes": 2187,
+        "modelTextLeaves": 1
+      },
+      {
+        "label": "format-candidate",
+        "characters": 1024,
+        "elapsedMs": 2518.4705,
+        "millisecondsPerEdit": 2.45944384765625,
+        "encodedSharedStateBytes": 296079,
+        "modelTextLeaves": 1
+      }
+    ]
+  },
+  "compiledSourceMatches": [
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-nodes.ts",
+      "sha256": "3de19f2d220b3ba799630948ab173e8507946ef24c0d3a977ef6acec78826b0c"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-text.ts",
+      "sha256": "8ba79f8e636e59313880691e64ff1e651e14550f2da7219f04cd438635d04e1d"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-mapping.ts",
+      "sha256": "c3e868ad3346824d2a8df8667ced652d890d71fed258cb2951fc2725a44cc87a"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-document.ts",
+      "sha256": "161255e02a624830ea4773940de1d0bedba1cae18c8ced0b44351a36a0f54b72"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-nodes.ts",
+      "sha256": "3de19f2d220b3ba799630948ab173e8507946ef24c0d3a977ef6acec78826b0c"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-text.ts",
+      "sha256": "8ba79f8e636e59313880691e64ff1e651e14550f2da7219f04cd438635d04e1d"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-mapping.ts",
+      "sha256": "c3e868ad3346824d2a8df8667ced652d890d71fed258cb2951fc2725a44cc87a"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-document.ts",
+      "sha256": "161255e02a624830ea4773940de1d0bedba1cae18c8ced0b44351a36a0f54b72"
+    }
+  ],
+  "rawUnitCapturesRetainedLocally": [
+    {
+      "path": "artifacts/yjs-format-focused-20261105.json",
+      "sha256": "87fef471a54bebbb104a62c7f111bc83b5efa6afcccc70abae78d5703a2bf8d4"
+    },
+    {
+      "path": "artifacts/yjs-format-default-20261105.json",
+      "sha256": "431c7b948a4e94fe607ecc8aa9512aa556e0b1b1f950df5e763000fefa699e5b"
+    }
+  ],
+  "files": [
+    {
+      "path": "src/yjs/retained-text.ts",
+      "sha256": "8ba79f8e636e59313880691e64ff1e651e14550f2da7219f04cd438635d04e1d"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "161255e02a624830ea4773940de1d0bedba1cae18c8ced0b44351a36a0f54b72"
+    },
+    {
+      "path": "tests/yjs-retained-text.test.ts",
+      "sha256": "95a6c95d62283d4485df6846f1cb380473e0507446f94708c7df1ac3dbdf9e40"
+    },
+    {
+      "path": "tests/yjs-retained-document.test.ts",
+      "sha256": "46a412ecb36c816e7295b668b9166f38ca00394514ef6dc3609c5f7d61497e07"
+    },
+    {
+      "path": "artifacts/yjs-format-build-20261105/retained-document.cjs",
+      "sha256": "7e7586853b4221be078b2ff79ca47a3232158b8c970919977db1eaaea0a1ce1f"
+    },
+    {
+      "path": "artifacts/yjs-format-build-20261105/retained-document.cjs.map",
+      "sha256": "8fce04d5ea35e7aeeaa4653f1d0b50d02d3b9ccfdea038f4a75867b37eb36bde"
+    },
+    {
+      "path": "artifacts/yjs-format-build-20261105/retained-document.mjs",
+      "sha256": "57d55fe3694521b360350d69bfbb1e17a53ead79435e9694b93e2a132424bd1a"
+    },
+    {
+      "path": "artifacts/yjs-format-build-20261105/retained-document.mjs.map",
+      "sha256": "6fc4d5b486f5c44d53fc993234cc95a560603a9794b0d9053f3013e35dd1cf97"
+    },
+    {
+      "path": "artifacts/yjs-format-node-es-20261105.json",
+      "sha256": "2574742b443aad6917564ccb0ab16e8e174e3ab057e293ff6c2bd1c99c51b95e"
+    },
+    {
+      "path": "artifacts/yjs-format-node-cjs-20261105.json",
+      "sha256": "03fbee8d463ae91f3831bdc5924182baba11ecf1ffced1b07dfe15c71a53ee30"
+    },
+    {
+      "path": "artifacts/yjs-format-cost-20261105.json",
+      "sha256": "fcab61809d7c8decbd85e1e3d51831936b98d18506b50e9f2f0b225b6ce131d7"
+    }
+  ]
+}
