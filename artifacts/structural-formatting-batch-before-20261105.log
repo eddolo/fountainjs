@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/document-range-formatting.test.ts (18 tests | 1 failed) 31ms
+   × validates the completed conversion rather than rejecting a temporary mixed container 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/document-range-formatting.test.ts > validates the completed conversion rather than rejecting a temporary mixed container
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-formatting.test.ts:238:59
+    236|   try {
+    237|     editor.dispatch(editor.createTransaction().setSelection(new AllSel…
+    238|     expect(setBlockType(editor, 'heading', { level: 2 })).toBe(true);
+       |                                                           ^
+    239|     expect(editor.state.doc.child(0).content.map(node => node.type.nam…
+    240|     editor.state.schema.validate(editor.state.doc);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  04:38:19
+   Duration  3.63s (import 52%, transform 47%, tests 1%)
+

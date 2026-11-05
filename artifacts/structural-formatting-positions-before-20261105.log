@@ -1,0 +1,76 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-document-range.test.ts (12 tests | 2 failed) 92ms
+   × retains peer caret/range positions through a remote text-block type change (range: true) 9ms
+   × merges an offline character insertion with a concurrent heading conversion without dropping text 6ms
+ ❯ tests/document-range-formatting.test.ts (13 tests | 1 failed) 40ms
+   × does not mark unchanged text positions deleted when changing their block type 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/document-range-formatting.test.ts > does not mark unchanged text positions deleted when changing their block type
+AssertionError: unchanged structural/text position 9: expected { position: 14, deleted: true, …(3) } to match object { position: 9, deleted: false }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deleted": false,
+-   "position": 9,
++   "deleted": true,
++   "position": 14,
+  }
+
+ ❯ tests/document-range-formatting.test.ts:18:94
+     16|     expect(setBlockType(editor, 'heading', { level: 2 })).toBe(true);
+     17|     for (let position = 0; position <= before.nodeSize - 2; position++…
+     18|       expect(mapping!.mapResult(position), `unchanged structural/text …
+       |                                                                                              ^
+     19|     }
+     20|   } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > retains peer caret/range positions through a remote text-block type change (range: true)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/yjs-document-range.test.ts:159:48
+    157|     pair.sync();
+    158|     expect(left.state.doc.child(0).type.name).toBe('heading');
+    159|     expect(left.state.selection.eq(selection)).toBe(true);
+       |                                                ^
+    160|     expect(getCollaborationState(right)?.presences[0]?.selection).toEq…
+    161|   } finally { pair.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > merges an offline character insertion with a concurrent heading conversion without dropping text
+AssertionError: expected 'Alpha' to be 'AlXpha' // Object.is equality
+
+Expected: "AlXpha"
+Received: "Alpha"
+
+ ❯ tests/yjs-document-range.test.ts:174:54
+    172|     expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    173|     expect(pair.left.state.doc.child(0).type.name).toBe('heading');
+    174|     expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
+       |                                                      ^
+    175|     expect(pair.left.state.doc.child(1).type.name).toBe('image_super');
+    176|   } finally { pair.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 22 passed (25)
+   Start at  04:17:48
+   Duration  3.73s (import 48%, transform 48%, tests 4%)
+

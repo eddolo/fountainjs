@@ -46,3 +46,7 @@
 /artifacts/structural-range-*.json -text -whitespace
 /artifacts/structural-range-native-visible-browser-20261105/**/*.md -text -whitespace
 /artifacts/structural-range-native-visible-browser-20261105/**/*.json -text -whitespace
+/artifacts/structural-formatting-*.log -text -whitespace
+/artifacts/structural-formatting-*.json -text -whitespace
+/artifacts/structural-formatting-verified-browser-20261105/**/*.json -text -whitespace
+/artifacts/structural-formatting-table-verified-browser-20261105/**/*.json -text -whitespace

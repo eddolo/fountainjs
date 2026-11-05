@@ -1,0 +1,64 @@
+[WebServer] (node:11648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:3408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr (6.7s)
+
+
+  1) [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: 'Conversion workspace: ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('table').locator('td').filter({ has: getByText('Inserted left', { exact: true }) })
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: ltr.html', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator('table').locator('td').filter({ has: getByText('Inserted left', { exact: true }) })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       at ..\browser\table-column-side-journey.ts:48
+
+      46 |         await page.keyboard.insertText(`Inserted ${side}`);
+      47 |         const inserted = table.locator('td').filter({ has: page.getByText(`Inserted ${side}`, { exact: true }) });
+    > 48 |         await expect(inserted).toHaveCount(1);
+         |                                ^
+      49 |         const a = (await active.boundingBox())!, b = (await inserted.boundingBox())!;
+      50 |         if (side === 'left') expect(b.x + b.width).toBeLessThanOrEqual(a.x + 1);
+      51 |         else expect(b.x).toBeGreaterThanOrEqual(a.x + a.width - 1);
+        at tableColumnSideJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\table-column-side-journey.ts:48:32)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\table-column-side-real.spec.ts:6:5
+
+    attachment #1: table-side-observations (application/json) ──────────────────────────────────────
+    artifacts\structural-formatting-table-before-browser-20261105\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\attachments\table-side-observations-407ea8a30a8cd9addcd8ccaed2b645d26e27de6a.json
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-formatting-table-before-browser-20261105\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-formatting-table-before-browser-20261105\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-formatting-table-before-browser-20261105\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-formatting-table-before-browser-20261105\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-formatting-table-before-browser-20261105\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr 

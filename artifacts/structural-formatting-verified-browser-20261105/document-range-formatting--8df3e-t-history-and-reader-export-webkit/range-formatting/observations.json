@@ -1,0 +1,74 @@
+{
+  "engine": "webkit",
+  "observations": [
+    {
+      "name": "forward",
+      "selected": {
+        "anchor": {
+          "text": "Left",
+          "offset": 2,
+          "path": "1.0"
+        },
+        "head": {
+          "text": "Before — leave this paragraph alone.LeftImage could not be loaded. Retry",
+          "offset": 3,
+          "path": null
+        },
+        "collapsed": false
+      },
+      "formattedNative": {
+        "anchor": {
+          "text": "Left",
+          "offset": 2,
+          "path": "1.0"
+        },
+        "head": {
+          "text": "Before — leave this paragraph alone.LeftImage could not be loaded. Retry",
+          "offset": 3,
+          "path": null
+        },
+        "collapsed": false
+      },
+      "untouchedOutsideBlock": true,
+      "metadataRetained": true,
+      "imageLoadedAndRetained": true,
+      "historyExact": true,
+      "downloadedJSONReopened": true
+    },
+    {
+      "name": "backward",
+      "selected": {
+        "anchor": {
+          "text": "Before — leave this paragraph alone.LeftImage could not be loaded. Retry",
+          "offset": 3,
+          "path": null
+        },
+        "head": {
+          "text": "Left",
+          "offset": 2,
+          "path": "1.0"
+        },
+        "collapsed": false
+      },
+      "formattedNative": {
+        "anchor": {
+          "text": "Before — leave this paragraph alone.LeftImage could not be loaded. Retry",
+          "offset": 3,
+          "path": null
+        },
+        "head": {
+          "text": "Left",
+          "offset": 2,
+          "path": "1.0"
+        },
+        "collapsed": false
+      },
+      "untouchedOutsideBlock": true,
+      "metadataRetained": true,
+      "imageLoadedAndRetained": true,
+      "historyExact": true,
+      "downloadedJSONReopened": true
+    }
+  ],
+  "errors": []
+}

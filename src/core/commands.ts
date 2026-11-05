@@ -16,7 +16,8 @@ import { createImageNode, getActiveImage, type ImageAttributes } from './image';
 import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
 import { ReplaceRangeStep } from './transaction/replace-range-step';
-import { nodeRangeAtPath } from './transaction/mapping';
+import { SetBlockTypeStep } from './transaction/set-block-type-step';
+import { nodeRangeAtPath, textPointToPosition } from './transaction/mapping';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
 import { matchesContentExpression } from './schema/content-expression';
 import { textAlignmentAttribute, textDirectionAttribute } from './text-direction';
@@ -315,6 +316,26 @@ function textRangeForNode(doc: Node, path: readonly number[]): Selection | null 
     [...path, ...last.path],
     last.node.text?.length ?? 0,
   );
+}
+
+/** Exact block intersection for directed ranges, including empty carriers.
+ * Text projections alone cannot describe a selected empty paragraph. */
+function textBlockPathsBetween(doc: Node, from: number, to: number, includeCode = false, basePath: readonly number[] = []): number[][] {
+  const paths: number[][] = [], collapsed = from === to;
+  const visit = (node: Node, path: number[], before: number, root = false): void => {
+    const after = before + node.nodeSize - (root ? 2 : 0);
+    if (collapsed ? from < before || from > after : from >= after || to <= before) return;
+    if (TEXT_BLOCKS.includes(node.type.name) || includeCode && node.type.name === 'code_block') {
+      const contentFrom = before + (root ? 0 : 1), contentTo = after - (root ? 0 : 1);
+      if (collapsed ? from >= contentFrom && from <= contentTo : from <= contentTo && to > contentFrom) paths.push(path);
+      return;
+    }
+    if (node.isText || node.type.spec.atom) return;
+    let position = before + (root ? 0 : 1);
+    node.content.forEach((child, index) => { visit(child, [...path, index], position); position += child.nodeSize; });
+  };
+  visit(getNodeAtPath(doc, basePath), [...basePath], basePath.length ? nodeRangeAtPath(doc, basePath).from : 0, !basePath.length);
+  return paths;
 }
 
 function selectedTextRanges(doc: Node, selection: AnySelection): readonly Selection[] {
@@ -927,7 +948,8 @@ function setTextBlockAttribute(editor: Editor, attribute: 'align' | 'dir', value
     }
     if (!node.type.spec.atom) node.content.forEach((child, index) => visit(child, [...path, index]));
   };
-  const roots = selection instanceof CellSelection ? selection.cellPaths
+  const roots = selection instanceof RangeSelection ? textBlockPathsBetween(state.doc, selection.structuralFrom, selection.structuralTo, attribute === 'dir')
+    : selection instanceof CellSelection ? selection.cellPaths
     : selection instanceof NodeSelection ? [selection.nodePath] : [[]];
   roots.forEach(path => visit(getNodeAtPath(state.doc, path), [...path]));
   if (!paths.length) return false;
@@ -981,15 +1003,20 @@ export function insertHardBreak(editor: Editor): boolean {
 export function setBlockType(editor: Editor, typeName: string, attrs: Attributes = {}): boolean {
   if (!editor.editable) return false;
   const { state } = editor;
-  if (state.selection.kind !== 'text' && !(state.selection instanceof NodeSelection)) return false;
+  if (state.selection instanceof GapSelection) return false;
   const type = state.schema.nodes[typeName];
   if (!type || !type.isBlock) return false;
-  const blockPaths = state.selection instanceof NodeSelection
-    ? [state.selection.nodePath]
-    : getTextLeaves(state.doc)
-      .filter(({ path }) => comparePaths(path, state.selection.path) >= 0 && comparePaths(path, state.selection.endPath) <= 0)
-      .map(({ path }) => path.slice(0, -1))
-      .filter((path, index, paths) => index === 0 || comparePaths(path, paths[index - 1] as readonly number[]) !== 0);
+  const selection = state.selection;
+  let blockPaths: number[][];
+  if (selection instanceof NodeSelection) blockPaths = [[...selection.nodePath]];
+  else if (selection instanceof CellSelection) blockPaths = selection.cellPaths.flatMap(path => {
+    const range = nodeRangeAtPath(state.doc, path);
+    return textBlockPathsBetween(state.doc, range.from, range.to, false, path);
+  });
+  else if (selection instanceof AllSelection) blockPaths = textBlockPathsBetween(state.doc, 0, state.doc.nodeSize - 2);
+  else if (selection instanceof RangeSelection) blockPaths = textBlockPathsBetween(state.doc, selection.structuralFrom, selection.structuralTo);
+  else blockPaths = textBlockPathsBetween(state.doc,
+    textPointToPosition(state.doc, selection.path, selection.from), textPointToPosition(state.doc, selection.endPath, selection.to));
   if (!blockPaths.length) return false;
   const transaction = state.createTransaction();
   try {
@@ -1002,22 +1029,20 @@ export function setBlockType(editor: Editor, typeName: string, attrs: Attributes
       const sharedDirection = block.attrs.directionGroup !== undefined && type.spec.attrs?.directionGroup ? { directionGroup: block.attrs.directionGroup } : {};
       const alignment = block.attrs.align !== undefined && type.spec.attrs?.align ? { align: block.attrs.align } : {};
       const explicitAlignment = block.attrs.alignExplicit === true && type.spec.attrs?.alignExplicit ? { alignExplicit: true } : {};
-      transaction.replaceNode(blockPath, [type.create({ ...emphasis, ...layout, ...direction, ...sharedDirection, ...alignment, ...explicitAlignment, ...attrs }, block.content)]);
+      const presentation = ['emphasis', 'layout', 'dir', 'directionGroup', 'align', 'alignExplicit'];
+      const metadata = Object.fromEntries(Object.entries(block.attrs).filter(([name]) => !presentation.includes(name)
+        && (!Object.hasOwn(block.type.spec.attrs ?? {}, name) || Object.hasOwn(type.spec.attrs ?? {}, name))));
+      transaction.step(new SetBlockTypeStep(blockPath, type.create({ ...metadata, ...emphasis, ...layout, ...direction,
+        ...sharedDirection, ...alignment, ...explicitAlignment, ...attrs }, block.content, undefined, block.marks)));
     }
     state.schema.validate(transaction.doc);
+    if (selection instanceof NodeSelection) transaction.setSelection(new NodeSelection(transaction.doc, selection.nodePath));
+    else if (selection instanceof RangeSelection) transaction.setSelection(new RangeSelection(transaction.doc, selection.anchor, selection.head));
+    else if (selection instanceof CellSelection) transaction.setSelection(new CellSelection(transaction.doc, selection.anchorCellPath, selection.headCellPath));
+    else if (selection instanceof AllSelection) transaction.setSelection(new AllSelection(transaction.doc));
+    else transaction.setSelection(new Selection(selection.path, selection.from, selection.to, selection.endPath));
   } catch { return false; }
-  if (state.selection instanceof NodeSelection) {
-    transaction.setSelection(new NodeSelection(transaction.doc, state.selection.nodePath));
-  } else {
-    transaction.setSelection(new Selection(
-      state.selection.path,
-      state.selection.from,
-      state.selection.to,
-      state.selection.endPath,
-    ));
-  }
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 export function insertBlock(editor: Editor, typeName: string, attrs: Attributes = {}, text = ''): boolean {

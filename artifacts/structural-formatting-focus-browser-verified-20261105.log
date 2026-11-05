@@ -1,0 +1,27 @@
+[WebServer] (node:2664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:12704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:211:1 › compares list-first code text-click focus and editing to a plain native surface (3.9s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:223:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (7.3s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:5549:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (14.0s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:5667:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (3.4s)
+(node:26916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:211:1 › compares list-first code text-click focus and editing to a plain native surface (12.4s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:223:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (12.0s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:5549:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (19.3s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:5667:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (7.1s)
+(node:13896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:211:1 › compares list-first code text-click focus and editing to a plain native surface (9.7s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:223:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (16.0s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:5549:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (27.4s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:5667:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (5.2s)
+
+  12 passed (2.6m)

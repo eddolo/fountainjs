@@ -23,6 +23,30 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it('restores the committed model caret when the editing host receives programmatic focus from a toolbar', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Before'), paragraph('Target')] } });
+    const mount = document.createElement('div'), toolbar = document.createElement('button');
+    document.body.append(mount, toolbar);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.focus();
+      toolbar.focus();
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 2)));
+      await settleSelection();
+      await settleSelection();
+      // Native controls may leave old endpoints behind while the model moves.
+      // Raw host focus must restore the requested model caret before typing.
+      const old = view.dom.querySelector('[data-fountain-text-path="0.0"]')!;
+      native.setBaseAndExtent(old.firstChild!, 0, old.firstChild!, 0);
+      toolbar.focus();
+      view.dom.focus();
+      await settleSelection();
+      expect(native.focusNode?.textContent).toBe('Target');
+      expect(native.focusOffset).toBe(2);
+      expect(editor.state.selection).toEqual(Selection.cursor([1, 0], 2));
+    } finally { view.destroy(); editor.destroy(); mount.remove(); toolbar.remove(); native.removeAllRanges(); }
+  });
+
   it.each([false, true])('leaves Shift-click text selection inside one cell to the browser (backward: %s)', async backward => {
     const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [{ type: 'table', content: [
       { type: 'table_row', content: [{ type: 'table_cell', content: [paragraph('Left'), paragraph('Right')] }] },

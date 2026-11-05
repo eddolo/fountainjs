@@ -7,6 +7,18 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Apply headings, alignment and reading direction only to text blocks intersected
+  by a directed structural range, including empty paragraphs. Heading conversion
+  also accepts whole-document and cell selections, excludes a next paragraph at
+  offset zero, and retains portable IDs and compatible attributes. Unchanged
+  content positions stay valid; Yjs preserves shared text during conversion,
+  including concurrent offline typing and author undo/redo. Validate the completed
+  conversion atomically against its container schema. Restore the model caret
+  when focus returns from a toolbar without taking over native pointer placement.
+  Two declaration hashes change only for a private focus handler; public method
+  signatures and wire/document formats are unchanged. General command coverage,
+  open slices and physical mobile validation remain open.
+
 - Add directed `RangeSelection`, structural document-point resolution and
   `ReplaceRangeStep`/`Transform.replaceRange` for mixed text, media and gap
   endpoints. Preserve direction in history and Yjs relative selections; keep

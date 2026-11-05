@@ -82,6 +82,24 @@ General open-slice transport and insertion fitting remain unfinished.
 
 ## Position mapping
 
+Text-block formatting (unreleased follow-up, 2026-11-05) uses the structural
+interval, not just its nearest-text projection. Alignment and direction affect
+only intersected text blocks; an image-only range cannot format neighboring
+paragraphs. Heading/paragraph conversion also supports `AllSelection` and
+`CellSelection`, retaining their kind and range direction. A range ending at the
+first text offset of a following paragraph excludes that paragraph. Eligible
+empty paragraphs are included; code and media are not converted to headings.
+
+Changing a text block's type preserves its children and positions. Stable IDs,
+unknown portable metadata and compatible declared attributes survive; attributes
+specific to the old type are omitted. The whole result must satisfy the schema,
+and a filtered or invalid conversion changes neither the document nor history.
+The Yjs adapter retains the existing shared text for this operation, so a
+concurrent text insertion is not discarded by replacing its containing paragraph.
+This does not equate unrelated replacement nodes by their text or require stored
+node IDs. Raw editor-host focus restores the current command landing; native
+pointer placement and embedded control focus retain their own behavior.
+
 `ReplaceTextRangeStep.getMap(before)` describes the actual resulting tree.
 Positions count UTF-16 text units plus opening/closing units for non-root nodes.
 Joining different ancestor depths can remove old tokens and add balancing tokens

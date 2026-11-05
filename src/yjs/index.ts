@@ -25,6 +25,7 @@ import {
 } from '../extensions/collaboration';
 import type { FountainExtension } from '../extensions/extension';
 import { registerSharedDirectionIdentity } from '../core/shared-direction';
+import { hasSharedBlockLineage } from '../core/schema/block-lineage';
 import {
   YjsStructuredAttributeStore,
   type YjsStructuredAttributesOptions,
@@ -180,6 +181,14 @@ function synchronizeText(shared: Y.XmlText, desired: string): void {
   if (inserted) shared.insert(prefix, inserted);
 }
 
+function pairScore(before: Node | undefined, after: Node | undefined): number {
+  if (!before || !after) return Number.NEGATIVE_INFINITY;
+  if (before.type.name === after.type.name) return before.eq(after) ? 8 : 2;
+  // An explicit type conversion owns the same copied block. Text equality
+  // alone cannot distinguish a conversion from an unrelated replacement.
+  return hasSharedBlockLineage(before, after) ? 6 : Number.NEGATIVE_INFINITY;
+}
+
 function alignment(before: readonly Node[], after: readonly Node[]): ReadonlyMap<number, number> {
   if (before.length * after.length > MAXIMUM_ALIGNMENT_CELLS) return greedyAlignment(before, after);
   const rows = before.length + 1;
@@ -191,9 +200,7 @@ function alignment(before: readonly Node[], after: readonly Node[]): ReadonlyMap
     for (let column = 1; column < columns; column++) {
       const previous = before[row - 1] as Node;
       const next = after[column - 1] as Node;
-      const pair = previous.type.name === next.type.name
-        ? scores[row - 1]![column - 1]! + (previous.eq(next) ? 8 : 2)
-        : Number.NEGATIVE_INFINITY;
+      const pair = scores[row - 1]![column - 1]! + pairScore(previous, next);
       scores[row]![column] = Math.max(pair, scores[row - 1]![column]! - 1, scores[row]![column - 1]! - 1);
     }
   }
@@ -203,10 +210,10 @@ function alignment(before: readonly Node[], after: readonly Node[]): ReadonlyMap
   while (row > 0 || column > 0) {
     const previous = row ? before[row - 1] : undefined;
     const next = column ? after[column - 1] : undefined;
-    const pairScore = previous && next && previous.type.name === next.type.name
-      ? scores[row - 1]![column - 1]! + (previous.eq(next) ? 8 : 2)
+    const pair = previous && next
+      ? scores[row - 1]![column - 1]! + pairScore(previous, next)
       : Number.NEGATIVE_INFINITY;
-    if (previous && next && scores[row]![column] === pairScore) {
+    if (previous && next && scores[row]![column] === pair) {
       matched.set(column - 1, row - 1);
       row--;
       column--;
@@ -243,7 +250,10 @@ function greedyAlignment(before: readonly Node[], after: readonly Node[]): Reado
     for (let offset = 1; offset < afterEnd - afterStart; offset++) {
       const afterIndex = afterStart + offset;
       const beforeIndex = beforeStart + offset;
-      if (before[beforeIndex]?.type.name === after[afterIndex]?.type.name) matched.set(afterIndex, beforeIndex);
+      const previousNode = before[beforeIndex], nextNode = after[afterIndex];
+      if (previousNode && nextNode && (previousNode.type.name === nextNode.type.name || hasSharedBlockLineage(previousNode, nextNode))) {
+        matched.set(afterIndex, beforeIndex);
+      }
     }
   }
   return matched;

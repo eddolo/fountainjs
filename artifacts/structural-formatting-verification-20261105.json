@@ -1,0 +1,417 @@
+{
+  "baseCommit": "217c3d742c8a57ad0ea128a2379e7658f185c874",
+  "releaseCertified": false,
+  "publicSignaturesChanged": false,
+  "privateDeclarationFilesReviewed": 2,
+  "acceptanceLimitsChanged": false,
+  "runtimeDependenciesChanged": false,
+  "unit": {
+    "passed": 4045,
+    "files": 275,
+    "addedSinceBase": 27
+  },
+  "native": {
+    "formattingCases": 6,
+    "tableWorkflows": 15,
+    "physicalColumnInsertions": 30,
+    "existingFocusRegressions": 12,
+    "engines": [
+      {
+        "engine": "chromium",
+        "formattingCases": 2,
+        "observations": "artifacts\\structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\observations.json"
+      },
+      {
+        "engine": "firefox",
+        "formattingCases": 2,
+        "observations": "artifacts\\structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\observations.json"
+      },
+      {
+        "engine": "webkit",
+        "formattingCases": 2,
+        "observations": "artifacts\\structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\observations.json"
+      }
+    ]
+  },
+  "packed": {
+    "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-formatting-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+    "archiveSha256": "ebd6d529c67386197c164021e4c519a847de88378e0fd381ff7b8465eb7b4ec5",
+    "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-formatting-consumer-20261105-1793855346583",
+    "allBuildFilesMatch": 881,
+    "exitCode": 0,
+    "proof": {
+      "actualTarball": true,
+      "noDOM": true,
+      "cases": 14,
+      "results": [
+        {
+          "entry": "esm-root",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-root",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-root",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "esm-core",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-core",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-core",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "cjs-root",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-root",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-root",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "cjs-core",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-core",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-core",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "esm-yjs",
+          "sameSharedElement": true,
+          "concurrentOfflineTextPreserved": true,
+          "authorUndoRedoPreservesRemoteText": true
+        },
+        {
+          "entry": "cjs-yjs",
+          "sameSharedElement": true,
+          "concurrentOfflineTextPreserved": true,
+          "authorUndoRedoPreservesRemoteText": true
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "name": "build-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "build"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-build-verified-20261105.log"
+    },
+    {
+      "name": "types-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-types-verified-20261105.log"
+    },
+    {
+      "name": "api-verified",
+      "executable": "node",
+      "arguments": [
+        "scripts/check-api-surface.mjs"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-api-verified-20261105.log"
+    },
+    {
+      "name": "headless-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "test:headless"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-headless-verified-20261105.log"
+    },
+    {
+      "name": "unit-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "exec",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-unit-verified-20261105.log"
+    },
+    {
+      "name": "package-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "test:package"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-package-verified-20261105.log"
+    },
+    {
+      "name": "server-runtimes-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "test:server-runtimes"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-server-runtimes-verified-20261105.log"
+    },
+    {
+      "name": "conformance-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "test:markdown-conformance"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-conformance-verified-20261105.log"
+    },
+    {
+      "name": "size-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "test:budget"
+      ],
+      "exitCode": 1,
+      "log": "artifacts/structural-formatting-size-verified-20261105.log"
+    },
+    {
+      "name": "performance-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "test:performance"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-performance-verified-20261105.log"
+    },
+    {
+      "name": "demo-build-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "exec",
+        "vite",
+        "build",
+        "--config",
+        "vite.input-audit.config.ts"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-demo-build-verified-20261105.log"
+    },
+    {
+      "name": "table-browser-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "artifacts/structural-formatting-table-browser-20261105.config.ts",
+        "--output",
+        "artifacts/structural-formatting-table-verified-browser-20261105"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-table-browser-verified-20261105.log"
+    },
+    {
+      "name": "formatting-browser-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "artifacts/structural-formatting-browser-20261105.config.ts",
+        "--output",
+        "artifacts/structural-formatting-verified-browser-20261105"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-formatting-browser-verified-20261105.log"
+    },
+    {
+      "name": "focus-browser-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "artifacts/structural-formatting-focus-browser-20261105.config.ts"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-focus-browser-verified-20261105.log"
+    },
+    {
+      "name": "loaded-size-verified",
+      "executable": "node",
+      "arguments": [
+        "artifacts/measure-loaded-build-size-20261104.mjs",
+        ".",
+        "artifacts/structural-formatting-loaded-size-20261105.json"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-loaded-size-verified-20261105.log"
+    },
+    {
+      "name": "pack-verified",
+      "executable": "pnpm",
+      "arguments": [
+        "pack",
+        "--pack-destination",
+        "artifacts/structural-formatting-package-20261105"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-pack-verified-20261105.log"
+    },
+    {
+      "name": "packed-consumer-verified",
+      "executable": "node",
+      "arguments": [
+        "artifacts/run-structural-formatting-packed-20261105.mjs",
+        "artifacts/structural-formatting-package-20261105/fountainjs-editor-0.4.0-beta.2.tgz"
+      ],
+      "exitCode": 0,
+      "log": "artifacts/structural-formatting-packed-consumer-verified-20261105.log"
+    }
+  ],
+  "sourceInputsNormalizedSha256": {
+    "src/core/commands.ts": "340b02a4273304b78abd74b3053cbcc0626aa8cb4440d5fd4ee8930beb33fa05",
+    "src/core/schema/node.ts": "987ad830825e214e53a8416e5228be17c003ef1c833f43a8671aa745dafbac7b",
+    "src/core/schema/block-lineage.ts": "5d37dd0bffc30c9e9e5cc4b4581daabafce25fc31852f840e48ee4adee15062e",
+    "src/core/transaction/set-block-type-step.ts": "6005df4921a53f14c652840122fdb368c8f70d228c0915110fbed18387e6c442",
+    "src/view/selection-handler.ts": "55b5998ca58d9a86d916c3d3994a36a6fcbdcff8d00df2fc00c32358ee086eb7",
+    "src/yjs/index.ts": "f97cb47e361331e99f4efbf8186f88ad4976505b3ec33e220cc3f1c540aac81e"
+  },
+  "sourceMappedRuntimeInputs": [
+    "src/core/commands.ts",
+    "src/core/schema/block-lineage.ts",
+    "src/core/schema/node.ts",
+    "src/core/transaction/set-block-type-step.ts",
+    "src/view/selection-handler.ts",
+    "src/yjs/index.ts"
+  ],
+  "loadedSize": {
+    "method": "Static ESM import/re-export closure, each emitted chunk compressed independently",
+    "excludes": [
+      "dynamic imports",
+      "external peers",
+      "CSS",
+      "browser/framework application code",
+      "HTTP headers"
+    ],
+    "measuresRuntimeSpeed": false,
+    "entries": [
+      {
+        "entry": ".",
+        "closureRawBytes": 789914,
+        "closureGzipBytes": 242381,
+        "deltaRawBytes": 2884,
+        "deltaGzipBytes": 1036
+      },
+      {
+        "entry": "./core",
+        "closureRawBytes": 426485,
+        "closureGzipBytes": 142229,
+        "deltaRawBytes": 2455,
+        "deltaGzipBytes": 958
+      },
+      {
+        "entry": "./docx",
+        "closureRawBytes": 247383,
+        "closureGzipBytes": 73243,
+        "deltaRawBytes": 0,
+        "deltaGzipBytes": 0
+      },
+      {
+        "entry": "./react",
+        "closureRawBytes": 561183,
+        "closureGzipBytes": 159823,
+        "deltaRawBytes": 2884,
+        "deltaGzipBytes": 1035
+      },
+      {
+        "entry": "./yjs",
+        "closureRawBytes": 113611,
+        "closureGzipBytes": 38508,
+        "deltaRawBytes": 581,
+        "deltaGzipBytes": 372
+      },
+      {
+        "entry": "./html/server",
+        "closureRawBytes": 363557,
+        "closureGzipBytes": 104375,
+        "deltaRawBytes": 456,
+        "deltaGzipBytes": 299
+      }
+    ]
+  },
+  "visual": {
+    "manifest": "artifacts/structural-formatting-visual-review-20261105.json",
+    "stageCapturesReviewed": 48,
+    "recordingsSampled": 18,
+    "framesReviewedPerRecording": 4,
+    "continuousVideoCompletelyReviewed": false
+  },
+  "priorCI": {
+    "commit": "217c3d742c8a57ad0ea128a2379e7658f185c874",
+    "run": 41965238651,
+    "performance": "success",
+    "leanIntegration": "success",
+    "verify": "failure: unchanged size limits",
+    "browser": "failure: 15 physical table-column typing workflows",
+    "nativeDOCXRun": 41965238603,
+    "nativeDOCXRendering": "success"
+  },
+  "limits": [
+    "general open-slice transport/fitting remains unfinished",
+    "full command coverage for RangeSelection remains unfinished",
+    "physical mobile not certified",
+    "large whole-document formatting latency not certified",
+    "fresh complete CI and size acceptance remain outstanding",
+    "broader CommonMark/source fidelity, conversion and production parity remain open"
+  ],
+  "indexVerification": {
+    "sourceInputs": 6,
+    "allEqual": true
+  }
+}

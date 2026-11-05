@@ -1,0 +1,114 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/code-region-keyboard.test.ts (7 tests | 4 failed) 211ms
+   ❯ keyboard browsing of scrolling code regions (7)
+     × enters the actual source, not the previous paragraph (empty=false) 24ms
+     × pastes into a keyboard-focused code region instead of the old paragraph range 8ms
+     × establishes the source caret before the browser invokes native Ctrl+V 8ms
+     × retains extension precedence and calls the key hook only once when typing enters the source 7ms
+ ❯ tests/document-utilities.test.ts (42 tests | 1 failed) 104ms
+   ❯ headless slash command registry (9)
+     × runs the default heading 2 command atomically 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed | 273 passed (275)
+      Tests  5 failed | 4039 passed (4044)
+   Start at  04:47:54
+   Duration  288.97s (environment 46%, import 29%, tests 20%, transform 5%, worker 1%)
+
+     Import  667 modules were evaluated 1282 times · 69.96s total, 29% of tracked time
+             ~33.56s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+ FAIL  tests/code-region-keyboard.test.ts > keyboard browsing of scrolling code regions > enters the actual source, not the previous paragraph (empty=false)
+AssertionError: expected 'xBefore' to be 'Before' // Object.is equality
+
+Expected: "Before"
+Received: "xBefore"
+
+ ❯ tests/code-region-keyboard.test.ts:49:51
+     47|     expect(key('Enter')).toBe(false);
+     48|     type('x');
+     49|     expect(editor.state.doc.child(0).textContent).toBe('Before');
+       |                                                   ^
+     50|     expect(editor.state.doc.child(1).type.name).toBe('code_block');
+     51|     expect(editor.state.doc.child(1).textContent).toBe(empty ? 'x' : '…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/code-region-keyboard.test.ts > keyboard browsing of scrolling code regions > pastes into a keyboard-focused code region instead of the old paragraph range
+AssertionError: expected 'copied Before' to be 'Before' // Object.is equality
+
+Expected: "Before"
+Received: "copied Before"
+
+ ❯ tests/code-region-keyboard.test.ts:74:51
+     72|     code.dispatchEvent(event);
+     73|     expect(event.defaultPrevented).toBe(true);
+     74|     expect(editor.state.doc.child(0).textContent).toBe('Before');
+       |                                                   ^
+     75|     expect(editor.state.doc.child(1).textContent).toBe('copied print(1…
+     76|     expect(undo(editor)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/code-region-keyboard.test.ts > keyboard browsing of scrolling code regions > establishes the source caret before the browser invokes native Ctrl+V
+AssertionError: expected [ +0, +0 ] to deeply equal [ 1, +0 ]
+
+- Expected
++ Received
+
+  [
+-   1,
++   0,
+    0,
+  ]
+
+ ❯ tests/code-region-keyboard.test.ts:85:41
+     83|     const original = editor.getJSON();
+     84|     expect(key('v', { ctrlKey: true })).toBe(true);
+     85|     expect(editor.state.selection.path).toEqual([1, 0]);
+       |                                         ^
+     86|     expect(editor.getJSON()).toEqual(original);
+     87|     destroy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/code-region-keyboard.test.ts > keyboard browsing of scrolling code regions > retains extension precedence and calls the key hook only once when typing enters the source
+AssertionError: expected 'print(1)' to be 'xprint(1)' // Object.is equality
+
+Expected: "xprint(1)"
+Received: "print(1)"
+
+ ❯ tests/code-region-keyboard.test.ts:95:51
+     93|     key('x'); type('x');
+     94|     expect(handleKeyDown).toHaveBeenCalledTimes(1);
+     95|     expect(editor.state.doc.child(1).textContent).toBe('xprint(1)');
+       |                                                   ^
+     96|     destroy();
+     97|     const intercept = vi.fn(() => true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/document-utilities.test.ts > headless slash command registry > runs the default heading 2 command atomically
+Error: Block conversion must preserve schema-owned content.
+ ❯ SetBlockTypeStep.apply src/core/transaction/set-block-type-step.ts:22:13
+     20|       || before.content.length !== this.node.content.length
+     21|       || before.content.some((child, index) => child !== this.node.con…
+     22|       throw new Error('Block conversion must preserve schema-owned con…
+       |             ^
+     23|     }
+     24|     const result = replaceNodeAtPath(doc, this.path, this.node);
+ ❯ Transaction.step src/core/transaction/transform.ts:31:23
+ ❯ src/core/editor.ts:114:54
+ ❯ src/core/editor.ts:114:27
+ ❯ Editor.runCommandBatch src/core/editor.ts:113:26
+ ❯ SuggestionController.executeSlashCommand [as acceptItem] src/extensions/slash-command.ts:303:17
+ ❯ SuggestionController.accept src/extensions/suggestion.ts:218:17
+ ❯ tests/document-utilities.test.ts:435:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+

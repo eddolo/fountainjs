@@ -2,6 +2,7 @@ import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
 import '../manual/document-boundary-range-real.spec';
+import '../manual/document-range-formatting-real.spec';
 import { runVirtualSelectionJourney } from './virtual-selection-journey';
 import { expect, test, type Locator } from '@playwright/test';
 import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';

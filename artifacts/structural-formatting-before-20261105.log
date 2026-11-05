@@ -1,0 +1,137 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/document-range-formatting.test.ts (7 tests | 7 failed) 27ms
+   × formats only intersected text blocks and retains mixed-range direction (backward: false) 15ms
+   × formats only intersected text blocks and retains mixed-range direction (backward: true) 4ms
+   × does not format neighboring text through an image-only range 2ms
+   × changes selected text blocks to headings without converting media or outside text (backward: false) 1ms
+   × changes selected text blocks to headings without converting media or outside text (backward: true) 1ms
+   × formats selected empty paragraphs even when the range has no text projection 1ms
+   × does not include the next paragraph when the range ends at its first text offset 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/document-range-formatting.test.ts > formats only intersected text blocks and retains mixed-range direction (backward: false)
+ FAIL  tests/document-range-formatting.test.ts > formats only intersected text blocks and retains mixed-range direction (backward: true)
+AssertionError: expected Node{ type: NodeType{ …(5) }, …(4) } to be Node{ type: NodeType{ …(5) }, …(4) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  {
+    "attrs": {
+-     "align": "left",
++     "align": "center",
+    },
+    "content": [
+      {
+        "text": "Before",
+        "type": "text",
+
+ ❯ tests/document-range-formatting.test.ts:16:39
+     14|     editor.dispatch(editor.createTransaction().setSelection(selection)…
+     15|     expect(setTextAlignment(editor, 'center')).toBe(true);
+     16|     expect(editor.state.doc.child(0)).toBe(before.child(0));
+       |                                       ^
+     17|     expect(editor.state.doc.child(1).attrs.align).toBe('center');
+     18|     expect(editor.state.doc.child(2)).toBe(before.child(2));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/document-range-formatting.test.ts > does not format neighboring text through an image-only range
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/document-range-formatting.test.ts:39:48
+     37|     const before = editor.state.doc;
+     38|     editor.dispatch(editor.createTransaction().setSelection(new RangeS…
+     39|     expect(setTextAlignment(editor, 'center')).toBe(false);
+       |                                                ^
+     40|     expect(setTextDirection(editor, 'rtl')).toBe(false);
+     41|     expect(setBlockType(editor, 'heading', { level: 2 })).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/document-range-formatting.test.ts > changes selected text blocks to headings without converting media or outside text (backward: false)
+ FAIL  tests/document-range-formatting.test.ts > changes selected text blocks to headings without converting media or outside text (backward: true)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-formatting.test.ts:52:59
+     50|     const selection = new RangeSelection(before, backward ? to : from,…
+     51|     editor.dispatch(editor.createTransaction().setSelection(selection)…
+     52|     expect(setBlockType(editor, 'heading', { level: 2 })).toBe(true);
+       |                                                           ^
+     53|     expect(editor.state.doc.child(1).type.name).toBe('heading');
+     54|     expect(editor.state.doc.child(1).attrs.level).toBe(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/document-range-formatting.test.ts > formats selected empty paragraphs even when the range has no text projection
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-formatting.test.ts:73:59
+     71|     editor.dispatch(editor.createTransaction().setSelection(new RangeS…
+     72|     expect((editor.state.selection as RangeSelection).textSelection).t…
+     73|     expect(setBlockType(editor, 'heading', { level: 3 })).toBe(true);
+       |                                                           ^
+     74|     expect(editor.state.doc.child(1).type.name).toBe('heading');
+     75|     expect(editor.state.doc.child(1).attrs.id).toBe('empty');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/document-range-formatting.test.ts > does not include the next paragraph when the range ends at its first text offset
+AssertionError: expected Node{ type: NodeType{ …(5) }, …(4) } to be Node{ type: NodeType{ …(5) }, …(4) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  {
+    "attrs": {
+-     "align": "left",
++     "align": "right",
+    },
+    "content": [
+      {
+        "text": "After",
+        "type": "text",
+
+ ❯ tests/document-range-formatting.test.ts:92:39
+     90|     expect(setTextAlignment(editor, 'right')).toBe(true);
+     91|     expect(editor.state.doc.child(1).attrs.align).toBe('right');
+     92|     expect(editor.state.doc.child(3)).toBe(before.child(3));
+       |                                       ^
+     93|     expect(setBlockType(editor, 'heading', { level: 2 })).toBe(true);
+     94|     expect(editor.state.doc.child(1).type.name).toBe('heading');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  04:06:19
+   Duration  6.19s (transform 61%, import 38%, worker 1%)
+
+  Transform  transforming modules took 3.39s · 61% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
