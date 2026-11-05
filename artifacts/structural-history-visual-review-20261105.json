@@ -1,0 +1,205 @@
+{
+  "stages": [
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/split-deletion.png",
+      "sha256": "c4f578bde0287eeee82ad0cd24c8084001bce003019525c71a14eba376500689"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/undo-deletion.png",
+      "sha256": "c28a50187b32b422da77300c2a1aaae30f232648d8cf2b4cd263ca46cc6bd325"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/redo-deletion.png",
+      "sha256": "665f0fbb127af829c9174fea90e47015ff4feb1f90d1fdf749ff9e97ad58538d"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/split-BB.png",
+      "sha256": "601750ffe50d58d7c49f3cd77e993a7d88f640427d95cc9d2ea55ba02dfe3f0c"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/undo-BB.png",
+      "sha256": "e62c175350998a08e6ba982d82738332f41207e4a46cea406acb266831bb0531"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/redo-BB.png",
+      "sha256": "37388e54500c9ea0173d01d37d103eaddb62bd0dd40b4267f1763c367a4e3723"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/quote-forward-selected.png",
+      "sha256": "1f43aecd30618f607d1c74e1a5e7f14f37ba643e316f7d610e1e37c12c31b6b7"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/quote-forward-wrapped.png",
+      "sha256": "5509284340f169cc0839ad56f462469f46ca7d85c4056342522248141427ab8c"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/quote-forward-reader.png",
+      "sha256": "526c613fb6cfe9a07455910c07a55dd4bea191fe76d59a33c014e925fe4cd0cd"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/task-backward-selected.png",
+      "sha256": "db4ec07b86b472a878f38f0b00460ef4f720fdeacfafa90838693040248e41c8"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/task-backward-wrapped.png",
+      "sha256": "66630c2fc3461f87544d86b8dd15e688bcab3255f2fd26263ab6a72515c1774e"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/task-backward-reader.png",
+      "sha256": "d772533733dd644622c990bfe1a5cacb3d4e91936648ccab39d8094c0d0d8b7b"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/split-deletion.png",
+      "sha256": "5b8d0629e9bfe3e559de50253c86ede01516b5d2aef655b093fe70b9c5c23e5d"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/undo-deletion.png",
+      "sha256": "d30600f47d9d40cba6d7d5e7fb4604bafd1fb633fcb34376b665e4147542985f"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/redo-deletion.png",
+      "sha256": "0154d6e0a4f925d984c2c33bbfb2920c6e5fb79f79442acb90d6f609ea9890a0"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/split-BB.png",
+      "sha256": "5b8d0629e9bfe3e559de50253c86ede01516b5d2aef655b093fe70b9c5c23e5d"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/undo-BB.png",
+      "sha256": "b86ad284ae2b09a86baf6aff0e188aad368fc78208a72607effb03140b7cb07e"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/redo-BB.png",
+      "sha256": "3bfe05606d7dec085e02d8bbfbae7948c4d9e717892b41ccd2475c168fd423a6"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/quote-forward-selected.png",
+      "sha256": "b0ffe68c36b595301ca31031f0bcb57930a3a09c37ec39a6a98b6fc172e6b9f3"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/quote-forward-wrapped.png",
+      "sha256": "41806e3ff20015b16a20843ceaa46a2e560a56acb997861b683120a08d6aa8ec"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/quote-forward-reader.png",
+      "sha256": "97f850b46ab64d4c6f6a341a4ca1c4bd5cefb3b06089dc4b312512c4801a4958"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/task-backward-selected.png",
+      "sha256": "8f536df0f0a4b364a03762b519da8994499956498489a0460d487ad75f53d75e"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/task-backward-wrapped.png",
+      "sha256": "7fe5bbf9256b67559dfe32e94f72b5a6bb81939bfd3e9b27aa6c2ed78d1606e2"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/task-backward-reader.png",
+      "sha256": "3882e79ba9da061f322ad000b82d33082626f554caa2a68b88c0492b03c9d1a7"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/split-deletion.png",
+      "sha256": "660f53917734f71079b3415a3683a04439243e95ddb87f0c66e66e648bb9ec50"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/undo-deletion.png",
+      "sha256": "c3a4ce35e727e4ae32662c57f301eb3f95681c69851c38a39c00d228ca9b4caf"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/redo-deletion.png",
+      "sha256": "e29301ac986a33821ab67dbd31484423ac7816656f58edd3266800b91bb56826"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/split-BB.png",
+      "sha256": "660f53917734f71079b3415a3683a04439243e95ddb87f0c66e66e648bb9ec50"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/undo-BB.png",
+      "sha256": "34a103f23f0336607919e3a12dad2d5b94a1b0e3c8c7b2801ecb9f712de8146e"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/redo-BB.png",
+      "sha256": "66e8973afe8815227d3d17382993cf32db83208f633b3c4102994dec1219837f"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/quote-forward-selected.png",
+      "sha256": "9528ef5130c86692605d33da149cd2889e5062e80c40ffc2aaa2acc552f4aad1"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/quote-forward-wrapped.png",
+      "sha256": "bd8162a147246663e955e015909a6d47a2379c9bb9c3f3b97148a3883f082d5b"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/quote-forward-reader.png",
+      "sha256": "1096f8e0141ebca9db389bb4b5713c20f76aebe67393ce84c58b0ce5775d4c72"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/task-backward-selected.png",
+      "sha256": "9528ef5130c86692605d33da149cd2889e5062e80c40ffc2aaa2acc552f4aad1"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/task-backward-wrapped.png",
+      "sha256": "c5fede0dab1f70d4ac523440ac898cdc2bc71ff11107e1ed6739aa4c276de070"
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/task-backward-reader.png",
+      "sha256": "e8c3dd734277ac743e270a95f8a68155bb6be969ab5dffc7c3c483111e1bb648"
+    }
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/video.webm",
+      "sha256": "38dac2c7d93b1e89a4a6386c99591313e56af483827a17367e5bc000449d4a85",
+      "durationSeconds": 25.64,
+      "sampleSeconds": [
+        3.846,
+        10.256,
+        16.666,
+        21.794
+      ]
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/video.webm",
+      "sha256": "6ec031f7c7b70d9c337c0f1e6761f143ee084fa01c90767e4455007ec4d67753",
+      "durationSeconds": 23.48,
+      "sampleSeconds": [
+        3.522,
+        9.392000000000001,
+        15.262,
+        19.958
+      ]
+    },
+    {
+      "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/video.webm",
+      "sha256": "2b655313cd52d740816c9d7bda4632fadbbc626ee35025c4d42414d7f4339161",
+      "durationSeconds": 48.48,
+      "sampleSeconds": [
+        7.271999999999999,
+        19.392,
+        31.512,
+        41.208
+      ]
+    }
+  ],
+  "contacts": [
+    "artifacts/structural-history-visual-review-20261105/history-chromium.png",
+    "artifacts/structural-history-visual-review-20261105/wrapping-chromium.png",
+    "artifacts/structural-history-visual-review-20261105/video-chromium.png",
+    "artifacts/structural-history-visual-review-20261105/history-firefox.png",
+    "artifacts/structural-history-visual-review-20261105/wrapping-firefox.png",
+    "artifacts/structural-history-visual-review-20261105/video-firefox.png",
+    "artifacts/structural-history-visual-review-20261105/history-webkit.png",
+    "artifacts/structural-history-visual-review-20261105/wrapping-webkit.png",
+    "artifacts/structural-history-visual-review-20261105/video-webkit.png"
+  ],
+  "stageContactsReviewed": true,
+  "sampledVideoContactsReviewed": true,
+  "continuousPlaybackReviewed": false,
+  "physicalMobileCertified": false,
+  "sampledVideoFrames": 12,
+  "notes": [
+    "Reviewed 36 stage captures: six native history stages and six representative quote/task selection, wrapped and reopened-reader stages per engine.",
+    "Paragraph splits occupy visible separate lines; undo retains the later deletion/replacement; source image remains visible in author and reader views. Quote border and task controls remain associated with their blocks.",
+    "Reviewed 12 sampled frames from three wrapping recordings. Native selection paint differs by engine; assertions separately verify anchor/focus direction. Other wrapping cases have model/history/export assertions, not an assertion that every frame was visually reviewed.",
+    "Continuous playback and physical-device certification are not claimed."
+  ]
+}

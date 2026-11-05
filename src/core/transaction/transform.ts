@@ -11,7 +11,7 @@ import { ReplaceTextRangeStep } from './replace-text-range-step';
 import { ReplaceRangeStep } from './replace-range-step';
 import { SetNodeAttrsStep } from './set-node-attrs-step';
 import { Step } from './step';
-import { Mapping, type StepMap } from './mapping';
+import { Mapping, type PositionMapper, type StepMap } from './mapping';
 
 export class Transform {
   readonly originalDoc: Node;
@@ -31,15 +31,21 @@ export class Transform {
     const next = step.apply(before);
     if (!next.eq(before)) {
       const map = step.getMap(before);
+      const maps = step.getMaps?.(before);
       this.doc = next;
       this.steps.push(step);
-      this.mapping.appendMap(map);
-      this.onStepApplied(before, next, map);
+      if (maps) {
+        maps.forEach(part => this.mapping.appendMap(part));
+        this.onStepApplied(before, next, map, new Mapping(maps));
+      } else {
+        this.mapping.appendMap(map);
+        this.onStepApplied(before, next, map);
+      }
     }
     return this;
   }
 
-  protected onStepApplied(_before: Node, _after: Node, _map: StepMap): void {}
+  protected onStepApplied(_before: Node, _after: Node, _map: StepMap, _mapping?: PositionMapper): void {}
 
   replace(from: number, to: number, content: readonly Node[] = []): this {
     return this.step(new ReplaceStep(from, to, content));

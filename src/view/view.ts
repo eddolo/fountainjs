@@ -261,6 +261,7 @@ export class EditorView {
 
   private onStateChange = (state: EditorState, transaction: import('../core').Transaction): void => {
     if (this.destroyed) return;
+    this.selections.mapTransactionSelection(transaction);
     const revealVirtualCaret = this.virtualized && transaction.docChanged
       && state.doc.childCount < transaction.originalDoc.childCount
       && transaction.getMeta('fountain$collaborationRemote') !== true;

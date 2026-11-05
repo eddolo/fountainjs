@@ -1,0 +1,118 @@
+{
+  "engine": "chromium",
+  "observations": [
+    {
+      "name": "quote-forward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "Left",
+        "anchorOffset": 2,
+        "headText": "",
+        "headOffset": 0
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "quote-backward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "",
+        "anchorOffset": 0,
+        "headText": "Left",
+        "headOffset": 2
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "bullet-forward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "Left",
+        "anchorOffset": 2,
+        "headText": "",
+        "headOffset": 0
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "bullet-backward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "",
+        "anchorOffset": 0,
+        "headText": "Left",
+        "headOffset": 2
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "ordered-forward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "Left",
+        "anchorOffset": 2,
+        "headText": "",
+        "headOffset": 0
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "ordered-backward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "",
+        "anchorOffset": 0,
+        "headText": "Left",
+        "headOffset": 2
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "task-forward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "Left",
+        "anchorOffset": 2,
+        "headText": "",
+        "headOffset": 0
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    },
+    {
+      "name": "task-backward",
+      "native": {
+        "collapsed": false,
+        "anchorText": "",
+        "anchorOffset": 0,
+        "headText": "Left",
+        "headOffset": 2
+      },
+      "exactWrappedModel": true,
+      "exactUnwrappedModel": true,
+      "historyExact": true,
+      "loadedFigurePreserved": true
+    }
+  ],
+  "errors": []
+}

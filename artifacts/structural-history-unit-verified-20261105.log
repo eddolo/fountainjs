@@ -1,0 +1,80 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-document-range.test.ts (22 tests | 6 failed) 216ms
+   × preserves offline typing when another peer wraps its paragraph (quote) 7ms
+   × preserves offline typing when another peer wraps its paragraph (bullet) 4ms
+   × preserves offline typing when another peer wraps its paragraph (ordered) 4ms
+   × preserves offline typing when another peer wraps its paragraph (task) 3ms
+   × preserves offline character order when another peer applies a partial text mark 5ms
+   × keeps offline typing on its original side of a concurrent paragraph split 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (quote)
+ FAIL  tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (bullet)
+ FAIL  tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (ordered)
+ FAIL  tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (task)
+AssertionError: expected 'Alpha' to be 'AlXpha' // Object.is equality
+
+Expected: "AlXpha"
+Received: "Alpha"
+
+ ❯ tests/yjs-document-range.test.ts:262:35
+    260|     expect(pair.left.state.doc.child(0).type.name).toBe(kind === 'quot…
+    261|     const paragraph = kind === 'quote' ? pair.left.state.doc.child(0).…
+    262|     expect(paragraph.textContent).toBe('AlXpha');
+       |                                   ^
+    263|   } finally { pair.destroy(); }
+    264| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > preserves offline character order when another peer applies a partial text mark
+AssertionError: expected 'AlphXa' to be 'AlXpha' // Object.is equality
+
+Expected: "AlXpha"
+Received: "AlphXa"
+
+ ❯ tests/yjs-document-range.test.ts:276:54
+    274|     pair.sync();
+    275|     expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    276|     expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
+       |                                                      ^
+    277|     expect(pair.left.state.doc.child(1).toJSON()).toEqual(image);
+    278|   } finally { pair.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/yjs-document-range.test.ts > keeps offline typing on its original side of a concurrent paragraph split
+AssertionError: expected [ 'Alp', 'Xha' ] to deeply equal [ 'AlXp', 'ha' ]
+
+- Expected
++ Received
+
+  [
+-   "AlXp",
+-   "ha",
++   "Alp",
++   "Xha",
+  ]
+
+ ❯ tests/yjs-document-range.test.ts:291:83
+    289|     pair.sync();
+    290|     expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    291|     expect(pair.left.state.doc.content.slice(0, 2).map(node => node.te…
+       |                                                                                   ^
+    292|     expect(pair.left.state.doc.child(2).toJSON()).toEqual(image);
+    293|   } finally { pair.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+
+ Test Files  1 failed | 281 passed (282)
+      Tests  6 failed | 4133 passed (4139)
+   Start at  20:54:10
+   Duration  250.19s (environment 47%, import 28%, tests 20%, transform 5%, worker 1%)
+
+     Import  679 modules were evaluated 1216 times · 57.83s total, 28% of tracked time
+             ~25.54s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

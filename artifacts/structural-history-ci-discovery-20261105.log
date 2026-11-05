@@ -1,0 +1,4 @@
+Listing tests:
+  [chromium] › ..\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  [chromium] › ..\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs
+Total: 2 tests in 2 files

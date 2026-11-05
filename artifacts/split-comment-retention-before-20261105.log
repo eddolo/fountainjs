@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/split-comment-retention.test.ts (4 tests | 1 failed) 47ms
+   × retains a comment over offsets 1..3 through split and history 38ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/split-comment-retention.test.ts > retains a comment over offsets 1..3 through split and history
+AssertionError: expected { type: 'inline', …(6) } to deeply equal { type: 'inline', …(6) }
+
+- Expected
++ Received
+
+  {
+    "from": 2,
+    "prefix": "A",
+-   "quote": "lp",
+-   "status": "attached",
++   "quote": "l
++ p",
++   "status": "orphaned",
+    "suffix": "ha",
+-   "to": 4,
++   "to": 6,
+    "type": "inline",
+  }
+
+ ❯ tests/split-comment-retention.test.ts:26:24
+     24|       expect(undo(editor)).toBe(true);
+     25|       await Promise.resolve();
+     26|       expect(anchor()).toEqual(initial);
+       |                        ^
+     27|       expect(redo(editor)).toBe(true);
+     28|       await Promise.resolve();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  19:28:43
+   Duration  3.57s (transform 56%, import 43%, tests 1%)

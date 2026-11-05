@@ -1,0 +1,69 @@
+{
+  "baseCommit": "1a9e1640ef8d2fd6f955baeac5b078ba9b0db859",
+  "declarationFiles": 423,
+  "changes": [
+    {
+      "file": "dist/core/transaction/mapping.d.cts",
+      "before": "4dbff215ff63516fc32f7327033a1814d15d385ff10092bafd762401d9b1c8e2",
+      "after": "c2fb3525046e936a397dafff4f7637b807e8e2f995e27c1f04a8591b979cb5c8",
+      "reason": "mapSelection accepts the existing structural PositionMapper interface; StepMap remains accepted"
+    },
+    {
+      "file": "dist/core/transaction/mapping.d.ts",
+      "before": "314da707038afe5b0f1f6774e39f18b56fb4a451d11020388585c24b941dc066",
+      "after": "d7a1ce963ac170545b4189fd224b39d6391960d5ef837b317158998959a60671",
+      "reason": "mapSelection accepts the existing structural PositionMapper interface; StepMap remains accepted"
+    },
+    {
+      "file": "dist/core/transaction/step.d.cts",
+      "before": "c5a0a39c70a0e2be497e4337b3bd6c0fc1b774631197aeff6243f5810f51ce3b",
+      "after": "5e72b3ede8af6fcb9090b8f94b370020e7d9ba6b8bd3cd51547a9fa16f142dcf",
+      "reason": "optional getMaps method; legacy apply/getMap step objects remain accepted"
+    },
+    {
+      "file": "dist/core/transaction/step.d.ts",
+      "before": "5de100d30f44fb08daab84eb70b96c0b6f4672cc8074c4c94859ef92ad4816af",
+      "after": "a878026a9b9e471d6e827367447042bcc593c535ef004f2ba101898704e8705e",
+      "reason": "optional getMaps method; legacy apply/getMap step objects remain accepted"
+    },
+    {
+      "file": "dist/core/transaction/transaction.d.cts",
+      "before": "0f52cc7206087f081145f5686abe21cd61be82265ebca5158eb8872ece8ff732",
+      "after": "d45c2dfc0dde0c2e540a72a4ba37d5f044bfad5de19eec1d6f26a0538a898012",
+      "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+    },
+    {
+      "file": "dist/core/transaction/transaction.d.ts",
+      "before": "0897a08c39591fe83522a5114a4a6679fb88465eac73b197dc29fe627f44ebdd",
+      "after": "4e34867a7fe6023ac36ffff0262475f1be21ce0089f264fe1c175bf12452eae8",
+      "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+    },
+    {
+      "file": "dist/core/transaction/transform.d.cts",
+      "before": "cb4acec3605f878fb67283824a09d08ff9596f9011864c68994e4f872cd88433",
+      "after": "cf9e1d2190d26df21113befc979fe77b11b0cad40b7078f0f7bafdac14276396",
+      "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+    },
+    {
+      "file": "dist/core/transaction/transform.d.ts",
+      "before": "75e164059435e23d22a3a3d7ad87f0e01e8f3640fe57ed27fadaa73d2ab0c9af",
+      "after": "680f36abe78c32fb43c8209ad2ae920307d8623108ad5e875284ed280a2d0573",
+      "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+    },
+    {
+      "file": "dist/view/selection-handler.d.cts",
+      "before": "5eae87630bead0eec96a48957f0be629b3f826c5be6005f9f3171e6c96431789",
+      "after": "f442e498fdecdacbb638c0a80a01126b40ad8cdbd70e18bda11a8ea022cf5581",
+      "reason": "internal DOM selection-direction mapping hook; existing methods unchanged"
+    },
+    {
+      "file": "dist/view/selection-handler.d.ts",
+      "before": "496ed777c0913655addf4dc0f2bf2394a2ab63646f546dca8bccdb23ce7d403a",
+      "after": "1ac19cc709479461a391e61989d7cf624f4badfce35c57b6db5898cbcb58aee3",
+      "reason": "internal DOM selection-direction mapping hook; existing methods unchanged"
+    }
+  ],
+  "newPublicEntryPoints": false,
+  "existingCallsCompatible": true,
+  "legacyDuckTypedStepTestPassed": true
+}

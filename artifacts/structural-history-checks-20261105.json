@@ -1,0 +1,58 @@
+[
+  {
+    "command": "pnpm exec vitest run --maxWorkers=1",
+    "log": "artifacts/structural-history-unit-verified-20261105.log",
+    "seconds": 251.2183527,
+    "exitCode": 1,
+    "id": "unit"
+  },
+  {
+    "command": "pnpm typecheck",
+    "log": "artifacts/structural-history-types-verified-20261105.log",
+    "seconds": 18.752536,
+    "exitCode": 0,
+    "id": "types"
+  },
+  {
+    "command": "pnpm test:api",
+    "log": "artifacts/structural-history-api-verified-20261105.log",
+    "seconds": 0.7489999,
+    "exitCode": 0,
+    "id": "api"
+  },
+  {
+    "command": "pnpm test:headless",
+    "log": "artifacts/structural-history-headless-verified-20261105.log",
+    "seconds": 1.3637546,
+    "exitCode": 0,
+    "id": "headless"
+  },
+  {
+    "command": "pnpm test:package",
+    "log": "artifacts/structural-history-package-verified-20261105.log",
+    "seconds": 4.6812344,
+    "exitCode": 0,
+    "id": "package"
+  },
+  {
+    "command": "pnpm test:server-runtimes",
+    "log": "artifacts/structural-history-server-runtimes-verified-20261105.log",
+    "seconds": 3.3040207,
+    "exitCode": 0,
+    "id": "server-runtimes"
+  },
+  {
+    "command": "pnpm test:performance",
+    "log": "artifacts/structural-history-performance-verified-20261105.log",
+    "seconds": 15.9243458,
+    "exitCode": 0,
+    "id": "performance"
+  },
+  {
+    "command": "pnpm test:budget",
+    "log": "artifacts/structural-history-size-verified-20261105.log",
+    "seconds": 0.5913593,
+    "exitCode": 1,
+    "id": "size"
+  }
+]

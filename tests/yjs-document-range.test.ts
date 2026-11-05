@@ -3,7 +3,7 @@
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, GapSelection, RangeSelection, Selection, composeExtensions, createEditor,
-  getCollaborationState, insertText, redoCollaboration, setBlockType, setTextAlignment, undoCollaboration, type NodeJSON } from '../src';
+  getCollaborationState, insertText, redoCollaboration, setBlockType, setMark, setTextAlignment, splitBlock, toggleList, toggleQuote, undoCollaboration, type NodeJSON } from '../src';
 import { createYjsCollaborationExtension, type YjsAwareness } from '../src/yjs';
 
 const p = (text: string): NodeJSON => ({ type: 'paragraph', content: [{ type: 'text', text }] });
@@ -245,5 +245,50 @@ it('undoes and redoes local heading conversion without undoing a remote characte
     expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
     expect(pair.left.state.doc.child(0).type.name).toBe('heading');
     expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
+  } finally { pair.destroy(); }
+});
+
+it.each(['quote', 'bullet', 'ordered', 'task'] as const)('preserves offline typing when another peer wraps its paragraph (%s)', kind => {
+  const pair = peers();
+  try {
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(kind === 'quote' ? toggleQuote(pair.right) : toggleList(pair.right, kind)).toBe(true);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).type.name).toBe(kind === 'quote' ? 'blockquote' : `${kind}_list`);
+    const paragraph = kind === 'quote' ? pair.left.state.doc.child(0).child(0) : pair.left.state.doc.child(0).child(0).child(0);
+    expect(paragraph.textContent).toBe('AlXpha');
+  } finally { pair.destroy(); }
+});
+
+it('preserves offline character order when another peer applies a partial text mark', () => {
+  const pair = peers();
+  try {
+    const image = pair.left.state.doc.child(1).toJSON();
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.range([0, 0], 1, [0, 0], 4)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(setMark(pair.right, 'strong')).toBe(true);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(pair.left.state.doc.child(1).toJSON()).toEqual(image);
+  } finally { pair.destroy(); }
+});
+
+it('keeps offline typing on its original side of a concurrent paragraph split', () => {
+  const pair = peers();
+  try {
+    const image = pair.left.state.doc.child(1).toJSON();
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(splitBlock(pair.right)).toBe(true);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.content.slice(0, 2).map(node => node.textContent)).toEqual(['AlXp', 'ha']);
+    expect(pair.left.state.doc.child(2).toJSON()).toEqual(image);
   } finally { pair.destroy(); }
 });

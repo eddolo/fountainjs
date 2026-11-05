@@ -1103,8 +1103,10 @@ Transforms include `replace`, `replaceNode`, `insertText`, `replaceText`, `repla
 
 `replaceRange(from, to, text)` uses structural document positions, including
 boundaries beside media; it is not a pair of top-level child indexes. The new
-`RangeSelection` preserves backward direction through local history and Yjs
-relative selections. Downstream exhaustive `AnySelection.kind` switches need a
+`RangeSelection` carries directed anchor/head positions through local history;
+the Yjs adapter encodes relative endpoints. Concurrent structural/text retention
+is still incomplete: see the [required Yjs failures](YJS_STRUCTURAL_RETENTION_AUDIT.md).
+Downstream exhaustive `AnySelection.kind` switches need a
 `range` case. The original text-selection signatures remain available. See
 [range contracts and remaining slice limits](SELECTION_RANGES.md).
 
@@ -1130,12 +1132,30 @@ compiled SVG, transient view IDs or session history. External assets are not
 bundled, missing extensions are rejected rather than projected, and a native
 `.fjs` archive/standalone reader remains a proposal.
 
-Every document-changing step contributes a `StepMap` to
+Every document-changing step contributes position maps to
 `transaction.mapping`. A map describes changed structural ranges as
 `start, oldSize, newSize` triples and exposes `map()`, `mapResult()`, and
 `invert()`. `Mapping` composes multiple step maps. FountainJS automatically
 maps the transaction selection after every applied step, including path
 changes caused by inserted blocks or text-fragment splits.
+
+Unreleased: an indivisible custom `Step` may implement optional
+`getMaps(document): readonly StepMap[] | undefined` to supply an exact sequence
+instead of a single map. `undefined` uses the original `getMap()` behavior.
+The sequence describes the same before/after document as `apply()` and is
+appended in order; do not collapse deletion/insertion boundaries into one
+replacement if that changes association. Older `apply`/`getMap` step objects
+remain accepted. A `Transform` subclass can receive the complete positional
+mapper in the optional fourth `onStepApplied` argument; the original third
+`StepMap` remains available. `mapSelection()` accepts `PositionMapper`.
+
+Local history uses these sequences to retain comment anchors through split,
+undo and redo. Independent same-leaf `ReplaceTextStep` edits marked
+`addToHistory: false` are rebased into stored snapshots, including insertions,
+deletions and replacements. This is not general preservation of arbitrary
+structural/custom independent operations. Explicit
+`fountain$preserveHistoryGroup` appends remain in their owning undo group.
+See the [retention audit and current limits](STEP_RETENTION_WORK_IN_PROGRESS.md).
 
 Use `textPointToPosition()` and `positionToTextPoint()` at integration
 boundaries that need stable structural positions. `nodeRangeAtPath()` returns

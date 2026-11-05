@@ -1,0 +1,128 @@
+[WebServer] (node:15268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:24628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (3.5s)
+  x  2 [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (6.0s)
+(node:16908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (7.3s)
+  x  4 [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (6.6s)
+(node:19676) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (6.6s)
+  x  6 [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (11.5s)
+
+
+  1) [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Left"
+    Received: ""
+
+      66 |     });
+      67 |     expect(native.collapsed).toBe(false);
+    > 68 |     expect(backward ? native.headText : native.anchorText).toBe('Left');
+         |                                                            ^
+      69 |     expect(backward ? native.headOffset : native.anchorOffset).toBe(2);
+      70 |     await editor.screenshot({ path: resolve(root, `${name}-wrapped.png`) });
+      71 |     const wrapped = await download('wrapped');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\structural-wrapping-real.spec.ts:68:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Left"
+    Received: ""
+
+      66 |     });
+      67 |     expect(native.collapsed).toBe(false);
+    > 68 |     expect(backward ? native.headText : native.anchorText).toBe('Left');
+         |                                                            ^
+      69 |     expect(backward ? native.headOffset : native.anchorOffset).toBe(2);
+      70 |     await editor.screenshot({ path: resolve(root, `${name}-wrapped.png`) });
+      71 |     const wrapped = await download('wrapped');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\structural-wrapping-real.spec.ts:68:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Left"
+    Received: ""
+
+      66 |     });
+      67 |     expect(native.collapsed).toBe(false);
+    > 68 |     expect(backward ? native.headText : native.anchorText).toBe('Left');
+         |                                                            ^
+      69 |     expect(backward ? native.headOffset : native.anchorOffset).toBe(2);
+      70 |     await editor.screenshot({ path: resolve(root, `${name}-wrapped.png`) });
+      71 |     const wrapped = await download('wrapped');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\structural-wrapping-real.spec.ts:68:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-history-browser-final-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+    [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+    [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  3 passed (50.3s)

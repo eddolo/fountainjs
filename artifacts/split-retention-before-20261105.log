@@ -1,0 +1,111 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/split-block-retention.test.ts (10 tests | 9 failed) 49ms
+   × retains every old position through a paragraph split at 0, with exact history 13ms
+   × retains every old position through a paragraph split at 2, with exact history 2ms
+   × retains every old position through a paragraph split at 5, with exact history 2ms
+   × retains every old position through a heading split at 2, with exact history 1ms
+   × retains text and following blocks when splitting a bullet item 1ms
+   × retains text and following blocks when splitting a ordered item 1ms
+   × retains text and following blocks when splitting a task item 1ms
+   × returns a filtered split failure without changing the document or history 1ms
+   × rejects a split that violates its container schema 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/split-block-retention.test.ts > retains every old position through a paragraph split at 0, with exact history
+ FAIL  tests/split-block-retention.test.ts > retains every old position through a paragraph split at 2, with exact history
+ FAIL  tests/split-block-retention.test.ts > retains every old position through a paragraph split at 5, with exact history
+ FAIL  tests/split-block-retention.test.ts > retains every old position through a heading split at 2, with exact history
+AssertionError: expected { position: 8, deleted: true, …(3) } to match object { position: 9, deleted: false }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deleted": false,
+-   "position": 9,
++   "deleted": true,
++   "position": 8,
+  }
+
+ ❯ tests/split-block-retention.test.ts:26:59
+     24|       expect(after.child(2).type.name).toBe(type === 'heading' ? 'para…
+     25|       for (let position = 0; position <= before.nodeSize - 2; position…
+     26|         expect(mapping!.mapResult(position, association)).toMatchObjec…
+       |                                                           ^
+     27|           position: position + (position > cut || position === cut && …
+     28|         });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/split-block-retention.test.ts > retains text and following blocks when splitting a bullet item
+ FAIL  tests/split-block-retention.test.ts > retains text and following blocks when splitting a ordered item
+ FAIL  tests/split-block-retention.test.ts > retains text and following blocks when splitting a task item
+AssertionError: expected { position: 1, deleted: true, …(3) } to match object { position: 2, deleted: false }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deleted": false,
+-   "position": 2,
++   "deleted": true,
++   "position": 1,
+  }
+
+ ❯ tests/split-block-retention.test.ts:56:57
+     54|     if (kind === 'task') { expect(list.child(0).attrs.checked).toBe(tr…
+     55|     for (let position = 0; position <= before.nodeSize - 2; position++…
+     56|       expect(mapping!.mapResult(position, association)).toMatchObject({
+       |                                                         ^
+     57|         position: position + (position > cut || position === cut && as…
+     58|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/split-block-retention.test.ts > returns a filtered split failure without changing the document or history
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/split-block-retention.test.ts:85:32
+     83|     const before = editor.state.doc;
+     84|     editor.dispatch(editor.createTransaction().setSelection(Selection.…
+     85|     expect(splitBlock(editor)).toBe(false); expect(editor.state.doc).t…
+       |                                ^
+     86|   } finally { editor.destroy(); }
+     87| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/split-block-retention.test.ts > rejects a split that violates its container schema
+Error: Content of doc does not match "paragraph".
+ ❯ visit src/core/schema/schema.ts:157:19
+    155|           const reusable = reusableCopyGrammar(copy?.grammar, expressi…
+    156|           if (!reusable && !matchesContentExpression(current.content, …
+    157|             throw new Error(`Content of ${current.type.name} does not …
+       |                   ^
+    158|           }
+    159|           grammar = reusable ? copy!.grammar : captureWideGrammar(curr…
+ ❯ Schema.validate src/core/schema/schema.ts:184:5
+ ❯ new EditorState src/core/state.ts:79:17
+ ❯ EditorState.apply src/core/state.ts:112:21
+ ❯ Editor.dispatch src/core/editor.ts:69:43
+ ❯ splitBlock src/core/commands.ts:1321:10
+ ❯ tests/split-block-retention.test.ts:95:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 1 passed (10)
+   Start at  19:20:20
+   Duration  3.13s (transform 52%, import 46%, tests 2%)

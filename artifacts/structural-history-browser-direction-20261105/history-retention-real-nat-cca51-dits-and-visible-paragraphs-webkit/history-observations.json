@@ -1,0 +1,256 @@
+{
+  "engine": "webkit",
+  "observations": [
+    {
+      "replacement": "",
+      "geometry": [
+        {
+          "top": 123.875,
+          "bottom": 151.0625,
+          "height": 27.1875
+        },
+        {
+          "top": 167.0625,
+          "bottom": 194.25,
+          "height": 27.1875
+        },
+        {
+          "top": 210.25,
+          "bottom": 237.4375,
+          "height": 27.1875
+        },
+        {
+          "top": 253.4375,
+          "bottom": 280.625,
+          "height": 27.1875
+        }
+      ],
+      "undone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Alha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      },
+      "redone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Al"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "ha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "replacement": "BB",
+      "geometry": [
+        {
+          "top": 123.875,
+          "bottom": 151.0625,
+          "height": 27.1875
+        },
+        {
+          "top": 167.0625,
+          "bottom": 194.25,
+          "height": 27.1875
+        },
+        {
+          "top": 210.25,
+          "bottom": 237.4375,
+          "height": 27.1875
+        },
+        {
+          "top": 253.4375,
+          "bottom": 280.625,
+          "height": 27.1875
+        }
+      ],
+      "undone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "AlBBha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      },
+      "redone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Al"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "BBha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

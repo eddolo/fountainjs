@@ -1,0 +1,174 @@
+{
+  "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-history-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+  "archiveSha256": "210001c616d4222e2481c84a42318e41d3fec290129b57aab6fa56964b0011a8",
+  "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-history-consumer-20261105-1793912423432",
+  "allBuildFilesMatch": 891,
+  "exitCode": 0,
+  "proof": {
+    "actualTarball": true,
+    "noDOM": true,
+    "cases": 28,
+    "results": [
+      {
+        "entry": "esm-root",
+        "kind": "quote",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-root",
+        "kind": "bullet",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-root",
+        "kind": "ordered",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-root",
+        "kind": "task",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-root",
+        "replacement": "",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "esm-root",
+        "replacement": "BB",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "esm-root",
+        "compoundStepMapSequence": true
+      },
+      {
+        "entry": "esm-core",
+        "kind": "quote",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-core",
+        "kind": "bullet",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-core",
+        "kind": "ordered",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-core",
+        "kind": "task",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "esm-core",
+        "replacement": "",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "esm-core",
+        "replacement": "BB",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "esm-core",
+        "compoundStepMapSequence": true
+      },
+      {
+        "entry": "cjs-root",
+        "kind": "quote",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-root",
+        "kind": "bullet",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-root",
+        "kind": "ordered",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-root",
+        "kind": "task",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-root",
+        "replacement": "",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "cjs-root",
+        "replacement": "BB",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "cjs-root",
+        "compoundStepMapSequence": true
+      },
+      {
+        "entry": "cjs-core",
+        "kind": "quote",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-core",
+        "kind": "bullet",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-core",
+        "kind": "ordered",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-core",
+        "kind": "task",
+        "originalObjectsAndMetadata": true,
+        "exactHistory": true
+      },
+      {
+        "entry": "cjs-core",
+        "replacement": "",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "cjs-core",
+        "replacement": "BB",
+        "independentTextRetained": true,
+        "exactOutsideObjectAndMetadata": true
+      },
+      {
+        "entry": "cjs-core",
+        "compoundStepMapSequence": true
+      }
+    ]
+  }
+}

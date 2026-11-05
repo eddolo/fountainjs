@@ -1,0 +1,1885 @@
+{
+  "baseCommit": "1a9e1640ef8d2fd6f955baeac5b078ba9b0db859",
+  "releaseCertified": false,
+  "acceptanceLimitsChanged": false,
+  "runtimeDependenciesChanged": false,
+  "unit": {
+    "passed": 4133,
+    "failed": 6,
+    "total": 4139,
+    "files": 282,
+    "failures": [
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (quote)",
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (bullet)",
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (ordered)",
+      "tests/yjs-document-range.test.ts > preserves offline typing when another peer wraps its paragraph (task)",
+      "tests/yjs-document-range.test.ts > preserves offline character order when another peer applies a partial text mark",
+      "tests/yjs-document-range.test.ts > keeps offline typing on its original side of a concurrent paragraph split"
+    ]
+  },
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --maxWorkers=1",
+      "log": "artifacts/structural-history-unit-verified-20261105.log",
+      "seconds": 251.2183527,
+      "exitCode": 1,
+      "id": "unit"
+    },
+    {
+      "command": "pnpm typecheck",
+      "log": "artifacts/structural-history-types-verified-20261105.log",
+      "seconds": 18.752536,
+      "exitCode": 0,
+      "id": "types"
+    },
+    {
+      "command": "pnpm test:api",
+      "log": "artifacts/structural-history-api-verified-20261105.log",
+      "seconds": 0.7489999,
+      "exitCode": 0,
+      "id": "api"
+    },
+    {
+      "command": "pnpm test:headless",
+      "log": "artifacts/structural-history-headless-verified-20261105.log",
+      "seconds": 1.3637546,
+      "exitCode": 0,
+      "id": "headless"
+    },
+    {
+      "command": "pnpm test:package",
+      "log": "artifacts/structural-history-package-verified-20261105.log",
+      "seconds": 4.6812344,
+      "exitCode": 0,
+      "id": "package"
+    },
+    {
+      "command": "pnpm test:server-runtimes",
+      "log": "artifacts/structural-history-server-runtimes-verified-20261105.log",
+      "seconds": 3.3040207,
+      "exitCode": 0,
+      "id": "server-runtimes"
+    },
+    {
+      "command": "pnpm test:performance",
+      "log": "artifacts/structural-history-performance-verified-20261105.log",
+      "seconds": 15.9243458,
+      "exitCode": 0,
+      "id": "performance"
+    },
+    {
+      "command": "pnpm test:budget",
+      "log": "artifacts/structural-history-size-verified-20261105.log",
+      "seconds": 0.5913593,
+      "exitCode": 1,
+      "id": "size"
+    }
+  ],
+  "api": {
+    "baseCommit": "1a9e1640ef8d2fd6f955baeac5b078ba9b0db859",
+    "declarationFiles": 423,
+    "changes": [
+      {
+        "file": "dist/core/transaction/mapping.d.cts",
+        "before": "4dbff215ff63516fc32f7327033a1814d15d385ff10092bafd762401d9b1c8e2",
+        "after": "c2fb3525046e936a397dafff4f7637b807e8e2f995e27c1f04a8591b979cb5c8",
+        "reason": "mapSelection accepts the existing structural PositionMapper interface; StepMap remains accepted"
+      },
+      {
+        "file": "dist/core/transaction/mapping.d.ts",
+        "before": "314da707038afe5b0f1f6774e39f18b56fb4a451d11020388585c24b941dc066",
+        "after": "d7a1ce963ac170545b4189fd224b39d6391960d5ef837b317158998959a60671",
+        "reason": "mapSelection accepts the existing structural PositionMapper interface; StepMap remains accepted"
+      },
+      {
+        "file": "dist/core/transaction/step.d.cts",
+        "before": "c5a0a39c70a0e2be497e4337b3bd6c0fc1b774631197aeff6243f5810f51ce3b",
+        "after": "5e72b3ede8af6fcb9090b8f94b370020e7d9ba6b8bd3cd51547a9fa16f142dcf",
+        "reason": "optional getMaps method; legacy apply/getMap step objects remain accepted"
+      },
+      {
+        "file": "dist/core/transaction/step.d.ts",
+        "before": "5de100d30f44fb08daab84eb70b96c0b6f4672cc8074c4c94859ef92ad4816af",
+        "after": "a878026a9b9e471d6e827367447042bcc593c535ef004f2ba101898704e8705e",
+        "reason": "optional getMaps method; legacy apply/getMap step objects remain accepted"
+      },
+      {
+        "file": "dist/core/transaction/transaction.d.cts",
+        "before": "0f52cc7206087f081145f5686abe21cd61be82265ebca5158eb8872ece8ff732",
+        "after": "d45c2dfc0dde0c2e540a72a4ba37d5f044bfad5de19eec1d6f26a0538a898012",
+        "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+      },
+      {
+        "file": "dist/core/transaction/transaction.d.ts",
+        "before": "0897a08c39591fe83522a5114a4a6679fb88465eac73b197dc29fe627f44ebdd",
+        "after": "4e34867a7fe6023ac36ffff0262475f1be21ce0089f264fe1c175bf12452eae8",
+        "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+      },
+      {
+        "file": "dist/core/transaction/transform.d.cts",
+        "before": "cb4acec3605f878fb67283824a09d08ff9596f9011864c68994e4f872cd88433",
+        "after": "cf9e1d2190d26df21113befc979fe77b11b0cad40b7078f0f7bafdac14276396",
+        "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+      },
+      {
+        "file": "dist/core/transaction/transform.d.ts",
+        "before": "75e164059435e23d22a3a3d7ad87f0e01e8f3640fe57ed27fadaa73d2ab0c9af",
+        "after": "680f36abe78c32fb43c8209ad2ae920307d8623108ad5e875284ed280a2d0573",
+        "reason": "optional fourth positional mapper on protected onStepApplied; original third StepMap remains"
+      },
+      {
+        "file": "dist/view/selection-handler.d.cts",
+        "before": "5eae87630bead0eec96a48957f0be629b3f826c5be6005f9f3171e6c96431789",
+        "after": "f442e498fdecdacbb638c0a80a01126b40ad8cdbd70e18bda11a8ea022cf5581",
+        "reason": "internal DOM selection-direction mapping hook; existing methods unchanged"
+      },
+      {
+        "file": "dist/view/selection-handler.d.ts",
+        "before": "496ed777c0913655addf4dc0f2bf2394a2ab63646f546dca8bccdb23ce7d403a",
+        "after": "1ac19cc709479461a391e61989d7cf624f4badfce35c57b6db5898cbcb58aee3",
+        "reason": "internal DOM selection-direction mapping hook; existing methods unchanged"
+      }
+    ],
+    "newPublicEntryPoints": false,
+    "existingCallsCompatible": true,
+    "legacyDuckTypedStepTestPassed": true
+  },
+  "provenance": [
+    {
+      "file": "dist/commands-Chz1bf9Z.js.map",
+      "source": "src/core/block-range.ts",
+      "sha256": "41aff8fd0c712927b4f993860067d663df330d3dc1ea14f41291eaa66cfbe256"
+    },
+    {
+      "file": "dist/commands-Chz1bf9Z.js.map",
+      "source": "src/core/transaction/restructure-children-step.ts",
+      "sha256": "0667afcf6dffeefd4a6b9133ebfebefbc581d15354aa19a84f2c49ca91cf1ec6"
+    },
+    {
+      "file": "dist/commands-Chz1bf9Z.js.map",
+      "source": "src/core/structure-commands.ts",
+      "sha256": "0470cb04d87b8e5050597ce459dc3605fc624f40bfdb760e6abf3674bf483118"
+    },
+    {
+      "file": "dist/commands-Chz1bf9Z.js.map",
+      "source": "src/core/transaction/split-node-step.ts",
+      "sha256": "abb30f9de489d3370dcd8a5bdbf0d5f33fb7407c4aebdd7e3c73bd20c7fad768"
+    },
+    {
+      "file": "dist/commands-Chz1bf9Z.js.map",
+      "source": "src/core/commands.ts",
+      "sha256": "cc2c5d48af543f7243c7928fe6f198723c18b41269bce6d85850ee10281e4a4c"
+    },
+    {
+      "file": "dist/commands-CTSW1qhe.cjs.map",
+      "source": "src/core/block-range.ts",
+      "sha256": "41aff8fd0c712927b4f993860067d663df330d3dc1ea14f41291eaa66cfbe256"
+    },
+    {
+      "file": "dist/commands-CTSW1qhe.cjs.map",
+      "source": "src/core/transaction/restructure-children-step.ts",
+      "sha256": "0667afcf6dffeefd4a6b9133ebfebefbc581d15354aa19a84f2c49ca91cf1ec6"
+    },
+    {
+      "file": "dist/commands-CTSW1qhe.cjs.map",
+      "source": "src/core/structure-commands.ts",
+      "sha256": "0470cb04d87b8e5050597ce459dc3605fc624f40bfdb760e6abf3674bf483118"
+    },
+    {
+      "file": "dist/commands-CTSW1qhe.cjs.map",
+      "source": "src/core/transaction/split-node-step.ts",
+      "sha256": "abb30f9de489d3370dcd8a5bdbf0d5f33fb7407c4aebdd7e3c73bd20c7fad768"
+    },
+    {
+      "file": "dist/commands-CTSW1qhe.cjs.map",
+      "source": "src/core/commands.ts",
+      "sha256": "cc2c5d48af543f7243c7928fe6f198723c18b41269bce6d85850ee10281e4a4c"
+    },
+    {
+      "file": "dist/editor-CDEXQ9LI.js.map",
+      "source": "src/core/transaction/transform.ts",
+      "sha256": "6be4f8280a34ff476d8495183e8e60a0dbaec161f567264411de156e940d2a8f"
+    },
+    {
+      "file": "dist/editor-CDEXQ9LI.js.map",
+      "source": "src/core/transaction/transaction.ts",
+      "sha256": "cc75a03bc679e571651ae328826f81db54245ccc4a0e34500bd6bae547fc1c87"
+    },
+    {
+      "file": "dist/editor-DTKmzZ4w.cjs.map",
+      "source": "src/core/transaction/transform.ts",
+      "sha256": "6be4f8280a34ff476d8495183e8e60a0dbaec161f567264411de156e940d2a8f"
+    },
+    {
+      "file": "dist/editor-DTKmzZ4w.cjs.map",
+      "source": "src/core/transaction/transaction.ts",
+      "sha256": "cc75a03bc679e571651ae328826f81db54245ccc4a0e34500bd6bae547fc1c87"
+    },
+    {
+      "file": "dist/history-CPkI3mYJ.cjs.map",
+      "source": "src/core/transaction/rebase-insertion.ts",
+      "sha256": "7caa7f462f572dbf67b0b54a000246bf7c4be66ea15441e62e4fdbbb73bd7bc5"
+    },
+    {
+      "file": "dist/history-CPkI3mYJ.cjs.map",
+      "source": "src/core/transaction/rebase-deletion.ts",
+      "sha256": "bd99abf70af8bd17f99447778f50d3182dd312453ac45e92a560123a0634ec0d"
+    },
+    {
+      "file": "dist/history-CPkI3mYJ.cjs.map",
+      "source": "src/extensions/plugins/history.ts",
+      "sha256": "7825a7a09cdd0ec5f41f9b96d0b411faab244d943b67fb7ed394cecd608e7daa"
+    },
+    {
+      "file": "dist/history-Dxu-9d_H.js.map",
+      "source": "src/core/transaction/rebase-insertion.ts",
+      "sha256": "7caa7f462f572dbf67b0b54a000246bf7c4be66ea15441e62e4fdbbb73bd7bc5"
+    },
+    {
+      "file": "dist/history-Dxu-9d_H.js.map",
+      "source": "src/core/transaction/rebase-deletion.ts",
+      "sha256": "bd99abf70af8bd17f99447778f50d3182dd312453ac45e92a560123a0634ec0d"
+    },
+    {
+      "file": "dist/history-Dxu-9d_H.js.map",
+      "source": "src/extensions/plugins/history.ts",
+      "sha256": "7825a7a09cdd0ec5f41f9b96d0b411faab244d943b67fb7ed394cecd608e7daa"
+    },
+    {
+      "file": "dist/mapping-DLMr5-8G.js.map",
+      "source": "src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "file": "dist/mapping-P-atFptq.cjs.map",
+      "source": "src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "file": "dist/step-B0XaC5Gk.cjs.map",
+      "source": "src/core/transaction/step.ts",
+      "sha256": "0e53571fb576093629bfddbeaddbbff34b4ec23186d99a4bab51b1adbf07f365"
+    },
+    {
+      "file": "dist/step-BemI2QEq.js.map",
+      "source": "src/core/transaction/step.ts",
+      "sha256": "0e53571fb576093629bfddbeaddbbff34b4ec23186d99a4bab51b1adbf07f365"
+    },
+    {
+      "file": "dist/view-C4uPUYos.cjs.map",
+      "source": "src/view/selection-handler.ts",
+      "sha256": "57f82e7d4f92bf7ee62966c9f6e7b59f50b85de4eab004b142258f9a4594ec0b"
+    },
+    {
+      "file": "dist/view-C4uPUYos.cjs.map",
+      "source": "src/view/view.ts",
+      "sha256": "bad8cbb865537447f754cb871792503ca14927dc507d2ffa7d2e4043518060b9"
+    },
+    {
+      "file": "dist/view-DM394ov-.js.map",
+      "source": "src/view/selection-handler.ts",
+      "sha256": "57f82e7d4f92bf7ee62966c9f6e7b59f50b85de4eab004b142258f9a4594ec0b"
+    },
+    {
+      "file": "dist/view-DM394ov-.js.map",
+      "source": "src/view/view.ts",
+      "sha256": "bad8cbb865537447f754cb871792503ca14927dc507d2ffa7d2e4043518060b9"
+    }
+  ],
+  "packed": {
+    "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-history-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+    "archiveSha256": "210001c616d4222e2481c84a42318e41d3fec290129b57aab6fa56964b0011a8",
+    "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-history-consumer-20261105-1793912423432",
+    "allBuildFilesMatch": 891,
+    "exitCode": 0,
+    "proof": {
+      "actualTarball": true,
+      "noDOM": true,
+      "cases": 28,
+      "results": [
+        {
+          "entry": "esm-root",
+          "kind": "quote",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-root",
+          "kind": "bullet",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-root",
+          "kind": "ordered",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-root",
+          "kind": "task",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-root",
+          "replacement": "",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "esm-root",
+          "replacement": "BB",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "esm-root",
+          "compoundStepMapSequence": true
+        },
+        {
+          "entry": "esm-core",
+          "kind": "quote",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-core",
+          "kind": "bullet",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-core",
+          "kind": "ordered",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-core",
+          "kind": "task",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "esm-core",
+          "replacement": "",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "esm-core",
+          "replacement": "BB",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "esm-core",
+          "compoundStepMapSequence": true
+        },
+        {
+          "entry": "cjs-root",
+          "kind": "quote",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-root",
+          "kind": "bullet",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-root",
+          "kind": "ordered",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-root",
+          "kind": "task",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-root",
+          "replacement": "",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "cjs-root",
+          "replacement": "BB",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "cjs-root",
+          "compoundStepMapSequence": true
+        },
+        {
+          "entry": "cjs-core",
+          "kind": "quote",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-core",
+          "kind": "bullet",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-core",
+          "kind": "ordered",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-core",
+          "kind": "task",
+          "originalObjectsAndMetadata": true,
+          "exactHistory": true
+        },
+        {
+          "entry": "cjs-core",
+          "replacement": "",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "cjs-core",
+          "replacement": "BB",
+          "independentTextRetained": true,
+          "exactOutsideObjectAndMetadata": true
+        },
+        {
+          "entry": "cjs-core",
+          "compoundStepMapSequence": true
+        }
+      ]
+    }
+  },
+  "observations": [
+    {
+      "kind": "native-history",
+      "engine": "chromium",
+      "observations": [
+        {
+          "replacement": "",
+          "geometry": [
+            {
+              "top": 123.875,
+              "bottom": 151.0625,
+              "height": 27.1875
+            },
+            {
+              "top": 167.0625,
+              "bottom": 194.25,
+              "height": 27.1875
+            },
+            {
+              "top": 210.25,
+              "bottom": 237.4375,
+              "height": 27.1875
+            },
+            {
+              "top": 253.4375,
+              "bottom": 280.625,
+              "height": 27.1875
+            }
+          ],
+          "undone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Alha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          },
+          "redone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Al"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "ha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "replacement": "BB",
+          "geometry": [
+            {
+              "top": 123.875,
+              "bottom": 151.0625,
+              "height": 27.1875
+            },
+            {
+              "top": 167.0625,
+              "bottom": 194.25,
+              "height": 27.1875
+            },
+            {
+              "top": 210.25,
+              "bottom": 237.4375,
+              "height": 27.1875
+            },
+            {
+              "top": 253.4375,
+              "bottom": 280.625,
+              "height": 27.1875
+            }
+          ],
+          "undone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "AlBBha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          },
+          "redone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Al"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "BBha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "kind": "native-history",
+      "engine": "firefox",
+      "observations": [
+        {
+          "replacement": "",
+          "geometry": [
+            {
+              "top": 124.86666870117188,
+              "bottom": 152.06666564941406,
+              "height": 27.199996948242188
+            },
+            {
+              "top": 168.06666564941406,
+              "bottom": 195.26666259765625,
+              "height": 27.199996948242188
+            },
+            {
+              "top": 211.26666259765625,
+              "bottom": 238.46665954589844,
+              "height": 27.199996948242188
+            },
+            {
+              "top": 254.46665954589844,
+              "bottom": 281.6666717529297,
+              "height": 27.20001220703125
+            }
+          ],
+          "undone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Alha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          },
+          "redone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Al"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "ha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "replacement": "BB",
+          "geometry": [
+            {
+              "top": 124.86666870117188,
+              "bottom": 152.06666564941406,
+              "height": 27.199996948242188
+            },
+            {
+              "top": 168.06666564941406,
+              "bottom": 195.26666259765625,
+              "height": 27.199996948242188
+            },
+            {
+              "top": 211.26666259765625,
+              "bottom": 238.46665954589844,
+              "height": 27.199996948242188
+            },
+            {
+              "top": 254.46665954589844,
+              "bottom": 281.6666717529297,
+              "height": 27.20001220703125
+            }
+          ],
+          "undone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "AlBBha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          },
+          "redone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Al"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "BBha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "kind": "native-history",
+      "engine": "webkit",
+      "observations": [
+        {
+          "replacement": "",
+          "geometry": [
+            {
+              "top": 123.875,
+              "bottom": 151.0625,
+              "height": 27.1875
+            },
+            {
+              "top": 167.0625,
+              "bottom": 194.25,
+              "height": 27.1875
+            },
+            {
+              "top": 210.25,
+              "bottom": 237.4375,
+              "height": 27.1875
+            },
+            {
+              "top": 253.4375,
+              "bottom": 280.625,
+              "height": 27.1875
+            }
+          ],
+          "undone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Alha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          },
+          "redone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Al"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "ha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "replacement": "BB",
+          "geometry": [
+            {
+              "top": 123.875,
+              "bottom": 151.0625,
+              "height": 27.1875
+            },
+            {
+              "top": 167.0625,
+              "bottom": 194.25,
+              "height": 27.1875
+            },
+            {
+              "top": 210.25,
+              "bottom": 237.4375,
+              "height": 27.1875
+            },
+            {
+              "top": 253.4375,
+              "bottom": 280.625,
+              "height": 27.1875
+            }
+          ],
+          "undone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "AlBBha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          },
+          "redone": {
+            "type": "doc",
+            "attrs": {
+              "audit": "native independent edit"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Al"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "BBha"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "kind": "native-wrapping",
+      "engine": "chromium",
+      "observations": [
+        {
+          "name": "quote-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "quote-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "bullet-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "bullet-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "ordered-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "ordered-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "task-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "task-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "kind": "native-wrapping",
+      "engine": "firefox",
+      "observations": [
+        {
+          "name": "quote-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "quote-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "bullet-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "bullet-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "ordered-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "ordered-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "task-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "task-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "kind": "native-wrapping",
+      "engine": "webkit",
+      "observations": [
+        {
+          "name": "quote-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "quote-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "bullet-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "bullet-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "ordered-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "ordered-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "task-forward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "Left",
+            "anchorOffset": 2,
+            "headText": "",
+            "headOffset": 0
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        },
+        {
+          "name": "task-backward",
+          "native": {
+            "collapsed": false,
+            "anchorText": "",
+            "anchorOffset": 0,
+            "headText": "Left",
+            "headOffset": 2
+          },
+          "exactWrappedModel": true,
+          "exactUnwrappedModel": true,
+          "historyExact": true,
+          "loadedFigurePreserved": true
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "visual": {
+    "stages": [
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/split-deletion.png",
+        "sha256": "c4f578bde0287eeee82ad0cd24c8084001bce003019525c71a14eba376500689"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/undo-deletion.png",
+        "sha256": "c28a50187b32b422da77300c2a1aaae30f232648d8cf2b4cd263ca46cc6bd325"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/redo-deletion.png",
+        "sha256": "665f0fbb127af829c9174fea90e47015ff4feb1f90d1fdf749ff9e97ad58538d"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/split-BB.png",
+        "sha256": "601750ffe50d58d7c49f3cd77e993a7d88f640427d95cc9d2ea55ba02dfe3f0c"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/undo-BB.png",
+        "sha256": "e62c175350998a08e6ba982d82738332f41207e4a46cea406acb266831bb0531"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-chromium/redo-BB.png",
+        "sha256": "37388e54500c9ea0173d01d37d103eaddb62bd0dd40b4267f1763c367a4e3723"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/quote-forward-selected.png",
+        "sha256": "1f43aecd30618f607d1c74e1a5e7f14f37ba643e316f7d610e1e37c12c31b6b7"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/quote-forward-wrapped.png",
+        "sha256": "5509284340f169cc0839ad56f462469f46ca7d85c4056342522248141427ab8c"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/quote-forward-reader.png",
+        "sha256": "526c613fb6cfe9a07455910c07a55dd4bea191fe76d59a33c014e925fe4cd0cd"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/task-backward-selected.png",
+        "sha256": "db4ec07b86b472a878f38f0b00460ef4f720fdeacfafa90838693040248e41c8"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/task-backward-wrapped.png",
+        "sha256": "66630c2fc3461f87544d86b8dd15e688bcab3255f2fd26263ab6a72515c1774e"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/structural-wrapping/task-backward-reader.png",
+        "sha256": "d772533733dd644622c990bfe1a5cacb3d4e91936648ccab39d8094c0d0d8b7b"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/split-deletion.png",
+        "sha256": "5b8d0629e9bfe3e559de50253c86ede01516b5d2aef655b093fe70b9c5c23e5d"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/undo-deletion.png",
+        "sha256": "d30600f47d9d40cba6d7d5e7fb4604bafd1fb633fcb34376b665e4147542985f"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/redo-deletion.png",
+        "sha256": "0154d6e0a4f925d984c2c33bbfb2920c6e5fb79f79442acb90d6f609ea9890a0"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/split-BB.png",
+        "sha256": "5b8d0629e9bfe3e559de50253c86ede01516b5d2aef655b093fe70b9c5c23e5d"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/undo-BB.png",
+        "sha256": "b86ad284ae2b09a86baf6aff0e188aad368fc78208a72607effb03140b7cb07e"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-firefox/redo-BB.png",
+        "sha256": "3bfe05606d7dec085e02d8bbfbae7948c4d9e717892b41ccd2475c168fd423a6"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/quote-forward-selected.png",
+        "sha256": "b0ffe68c36b595301ca31031f0bcb57930a3a09c37ec39a6a98b6fc172e6b9f3"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/quote-forward-wrapped.png",
+        "sha256": "41806e3ff20015b16a20843ceaa46a2e560a56acb997861b683120a08d6aa8ec"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/quote-forward-reader.png",
+        "sha256": "97f850b46ab64d4c6f6a341a4ca1c4bd5cefb3b06089dc4b312512c4801a4958"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/task-backward-selected.png",
+        "sha256": "8f536df0f0a4b364a03762b519da8994499956498489a0460d487ad75f53d75e"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/task-backward-wrapped.png",
+        "sha256": "7fe5bbf9256b67559dfe32e94f72b5a6bb81939bfd3e9b27aa6c2ed78d1606e2"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/structural-wrapping/task-backward-reader.png",
+        "sha256": "3882e79ba9da061f322ad000b82d33082626f554caa2a68b88c0492b03c9d1a7"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/split-deletion.png",
+        "sha256": "660f53917734f71079b3415a3683a04439243e95ddb87f0c66e66e648bb9ec50"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/undo-deletion.png",
+        "sha256": "c3a4ce35e727e4ae32662c57f301eb3f95681c69851c38a39c00d228ca9b4caf"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/redo-deletion.png",
+        "sha256": "e29301ac986a33821ab67dbd31484423ac7816656f58edd3266800b91bb56826"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/split-BB.png",
+        "sha256": "660f53917734f71079b3415a3683a04439243e95ddb87f0c66e66e648bb9ec50"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/undo-BB.png",
+        "sha256": "34a103f23f0336607919e3a12dad2d5b94a1b0e3c8c7b2801ecb9f712de8146e"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/history-retention-real-nat-cca51-dits-and-visible-paragraphs-webkit/redo-BB.png",
+        "sha256": "66e8973afe8815227d3d17382993cf32db83208f633b3c4102994dec1219837f"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/quote-forward-selected.png",
+        "sha256": "9528ef5130c86692605d33da149cd2889e5062e80c40ffc2aaa2acc552f4aad1"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/quote-forward-wrapped.png",
+        "sha256": "bd8162a147246663e955e015909a6d47a2379c9bb9c3f3b97148a3883f082d5b"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/quote-forward-reader.png",
+        "sha256": "1096f8e0141ebca9db389bb4b5713c20f76aebe67393ce84c58b0ce5775d4c72"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/task-backward-selected.png",
+        "sha256": "9528ef5130c86692605d33da149cd2889e5062e80c40ffc2aaa2acc552f4aad1"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/task-backward-wrapped.png",
+        "sha256": "c5fede0dab1f70d4ac523440ac898cdc2bc71ff11107e1ed6739aa4c276de070"
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/structural-wrapping/task-backward-reader.png",
+        "sha256": "e8c3dd734277ac743e270a95f8a68155bb6be969ab5dffc7c3c483111e1bb648"
+      }
+    ],
+    "recordings": [
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium/video.webm",
+        "sha256": "38dac2c7d93b1e89a4a6386c99591313e56af483827a17367e5bc000449d4a85",
+        "durationSeconds": 25.64,
+        "sampleSeconds": [
+          3.846,
+          10.256,
+          16.666,
+          21.794
+        ]
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox/video.webm",
+        "sha256": "6ec031f7c7b70d9c337c0f1e6761f143ee084fa01c90767e4455007ec4d67753",
+        "durationSeconds": 23.48,
+        "sampleSeconds": [
+          3.522,
+          9.392000000000001,
+          15.262,
+          19.958
+        ]
+      },
+      {
+        "path": "artifacts/structural-history-browser-direction-20261105/structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit/video.webm",
+        "sha256": "2b655313cd52d740816c9d7bda4632fadbbc626ee35025c4d42414d7f4339161",
+        "durationSeconds": 48.48,
+        "sampleSeconds": [
+          7.271999999999999,
+          19.392,
+          31.512,
+          41.208
+        ]
+      }
+    ],
+    "contacts": [
+      "artifacts/structural-history-visual-review-20261105/history-chromium.png",
+      "artifacts/structural-history-visual-review-20261105/wrapping-chromium.png",
+      "artifacts/structural-history-visual-review-20261105/video-chromium.png",
+      "artifacts/structural-history-visual-review-20261105/history-firefox.png",
+      "artifacts/structural-history-visual-review-20261105/wrapping-firefox.png",
+      "artifacts/structural-history-visual-review-20261105/video-firefox.png",
+      "artifacts/structural-history-visual-review-20261105/history-webkit.png",
+      "artifacts/structural-history-visual-review-20261105/wrapping-webkit.png",
+      "artifacts/structural-history-visual-review-20261105/video-webkit.png"
+    ],
+    "stageContactsReviewed": true,
+    "sampledVideoContactsReviewed": true,
+    "continuousPlaybackReviewed": false,
+    "physicalMobileCertified": false,
+    "sampledVideoFrames": 12,
+    "notes": [
+      "Reviewed 36 stage captures: six native history stages and six representative quote/task selection, wrapped and reopened-reader stages per engine.",
+      "Paragraph splits occupy visible separate lines; undo retains the later deletion/replacement; source image remains visible in author and reader views. Quote border and task controls remain associated with their blocks.",
+      "Reviewed 12 sampled frames from three wrapping recordings. Native selection paint differs by engine; assertions separately verify anchor/focus direction. Other wrapping cases have model/history/export assertions, not an assertion that every frame was visually reviewed.",
+      "Continuous playback and physical-device certification are not claimed."
+    ]
+  },
+  "loadedSize": {
+    "consumerTreeShakingApplied": false,
+    "payloadIsNotSpeedMeasurement": true,
+    "entries": [
+      {
+        "entry": ".",
+        "rawBytes": 804521,
+        "gzipBytes": 246760,
+        "rawDelta": 12841,
+        "gzipDelta": 4001
+      },
+      {
+        "entry": "./core",
+        "rawBytes": 439617,
+        "gzipBytes": 146280,
+        "rawDelta": 12472,
+        "gzipDelta": 3890
+      },
+      {
+        "entry": "./react",
+        "rawBytes": 575745,
+        "gzipBytes": 164185,
+        "rawDelta": 12913,
+        "gzipDelta": 4032
+      },
+      {
+        "entry": "./docx",
+        "rawBytes": 247383,
+        "gzipBytes": 73243,
+        "rawDelta": -18,
+        "gzipDelta": -11
+      },
+      {
+        "entry": "./yjs",
+        "rawBytes": 113626,
+        "gzipBytes": 38518,
+        "rawDelta": 15,
+        "gzipDelta": 10
+      },
+      {
+        "entry": "./html/server",
+        "rawBytes": 363557,
+        "gzipBytes": 104375,
+        "rawDelta": -738,
+        "gzipDelta": -93
+      }
+    ]
+  },
+  "historyRetention": {
+    "scope": "Built Node engine history: bounded groups, one long group, discarded roots and exact undo",
+    "cases": [
+      {
+        "grouped": false,
+        "edits": 2000,
+        "blocks": 1000,
+        "retainedGroups": 32,
+        "elapsedMs": 73.51830000000001,
+        "discardedRootsCollected": 18,
+        "sampledDiscardedRoots": 18,
+        "liveGrowthBytes": 1561376,
+        "releasedGrowthBytes": 1174752
+      },
+      {
+        "grouped": true,
+        "edits": 2000,
+        "blocks": 1000,
+        "retainedGroups": 1,
+        "elapsedMs": 78.08889999999997,
+        "discardedRootsCollected": 18,
+        "sampledDiscardedRoots": 18,
+        "liveGrowthBytes": 633200,
+        "releasedGrowthBytes": 185176
+      }
+    ]
+  },
+  "scope": [
+    "Native directed quote/list wrapping, retained positions and exact JSON/reader/history",
+    "Paragraph/heading/list split maps and comments across local undo/redo",
+    "Independent same-leaf ReplaceTextStep insertions/deletions/replacements; not arbitrary custom/structural independent steps"
+  ],
+  "remaining": [
+    "Six required offline Yjs retention failures; no storage migration implemented",
+    "Broader custom/structural independent-edit rebasing",
+    "Fresh complete CI and unchanged size failures",
+    "Broader parity, format fidelity and physical-device coverage"
+  ],
+  "committedLogNormalization": "Line endings and trailing whitespace only; result content retained"
+}

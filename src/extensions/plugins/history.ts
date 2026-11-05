@@ -1,4 +1,7 @@
-import { Editor, Node, Plugin, PluginKey, type AnySelection } from '../../core';
+import { Editor, InsertTextStep, Mapping, Node, Plugin, PluginKey, ReplaceDocumentStep, ReplaceTextStep, StepMap,
+  mapSelection, positionToTextPoint, textPointToPosition, type AnySelection, type Transaction } from '../../core';
+import { rebaseInsertion } from '../../core/transaction/rebase-insertion';
+import { rebaseDeletion, type DeletedRange } from '../../core/transaction/rebase-deletion';
 
 export interface HistorySnapshot {
   doc: Node;
@@ -27,6 +30,135 @@ const CLOSE_HISTORY = 'fountain$closeHistory';
 const PRESERVE_HISTORY_GROUP = 'fountain$preserveHistoryGroup';
 export const historyKey = new PluginKey<HistoryState>('history');
 
+interface MapChain {
+  readonly maps: readonly StepMap[];
+  readonly next?: MapChain;
+}
+
+// Chains contain only immutable position maps, never snapshots or documents.
+// Extending an input group is constant-time and cannot retain old model roots
+// through discarded snapshot keys.
+const snapshotMaps = new WeakMap<HistorySnapshot, MapChain>();
+const inverseMaps = (transaction: Transaction): readonly StepMap[] =>
+  Object.freeze([...transaction.mapping.maps].reverse().map(map => map.invert()));
+
+function prependMaps(snapshot: HistorySnapshot, maps: readonly StepMap[]): HistorySnapshot {
+  const previous = snapshotMaps.get(snapshot);
+  if (!previous) return snapshot; // External/legacy snapshots retain replacement semantics.
+  const updated = { ...snapshot };
+  snapshotMaps.set(updated, { maps, next: previous });
+  return updated;
+}
+
+function advanceTop(snapshots: readonly HistorySnapshot[], maps: readonly StepMap[]): readonly HistorySnapshot[] {
+  const last = snapshots.at(-1);
+  return last ? [...snapshots.slice(0, -1), prependMaps(last, maps)] : snapshots;
+}
+
+function rebaseInsertedText(snapshots: readonly HistorySnapshot[], sourceSize: number, position: number,
+  text: string): readonly HistorySnapshot[] | undefined {
+  const updated = [...snapshots];
+  for (let index = snapshots.length - 1; index >= 0; index--) {
+    const snapshot = snapshots[index]!, chain = snapshotMaps.get(snapshot);
+    if (!chain) return undefined;
+    const maps: StepMap[] = [];
+    for (let current: MapChain | undefined = chain; current; current = current.next) for (const map of current.maps) {
+      const rebased = rebaseInsertion(map, sourceSize, position, text.length);
+      maps.push(rebased.map); sourceSize = rebased.targetSize; position = rebased.targetPosition;
+    }
+    if (sourceSize !== snapshot.doc.nodeSize - 2) return undefined;
+    const point = positionToTextPoint(snapshot.doc, position, 1);
+    if (textPointToPosition(snapshot.doc, point.path, point.offset) !== position) return undefined;
+    const insertion = new InsertTextStep(point.path, point.offset, text), doc = insertion.apply(snapshot.doc);
+    doc.type.schema.validate(doc);
+    const rebasedSnapshot = { doc, selection: mapSelection(snapshot.selection, snapshot.doc, doc, insertion.getMap(snapshot.doc)) };
+    snapshotMaps.set(rebasedSnapshot, { maps: Object.freeze(maps) });
+    updated[index] = rebasedSnapshot;
+  }
+  return updated;
+}
+
+function deleteSnapshotText(snapshot: HistorySnapshot, ranges: readonly DeletedRange[]): HistorySnapshot {
+  if (!ranges.length) return { ...snapshot };
+  let covered = 0, rangeIndex = 0;
+  const visit = (node: Node, position: number, root = false): Node => {
+    while (rangeIndex < ranges.length && ranges[rangeIndex]!.to <= position) rangeIndex++;
+    if (rangeIndex >= ranges.length || ranges[rangeIndex]!.from >= position + node.nodeSize) return node;
+    if (node.isText) {
+      const text = node.text!, parts: string[] = [];
+      let cursor = 0;
+      for (let index = rangeIndex; index < ranges.length && ranges[index]!.from < position + text.length; index++) {
+        const range = ranges[index]!, from = Math.max(0, range.from - position), to = Math.min(text.length, range.to - position);
+        if (to <= from) continue;
+        parts.push(text.slice(cursor, from)); cursor = to; covered += to - from;
+      }
+      parts.push(text.slice(cursor));
+      return cursor ? node.withText(parts.join('')) : node;
+    }
+    let offset = root ? position : position + 1, changed = false;
+    const content = node.content.map(child => {
+      const next = visit(child, offset); offset += child.nodeSize; changed ||= next !== child; return next;
+    });
+    return changed ? node.copy(content) : node;
+  };
+  const doc = visit(snapshot.doc, 0, true);
+  if (covered !== ranges.reduce((sum, range) => sum + range.to - range.from, 0)) {
+    throw new Error('Independent text deletion cannot remove structural units.');
+  }
+  doc.type.schema.validate(doc);
+  const mapping = new Mapping([...ranges].reverse().map(range => new StepMap([range.from, range.to - range.from, 0])));
+  return { doc, selection: mapSelection(snapshot.selection, snapshot.doc, doc, mapping) };
+}
+
+function rebaseDeletedText(snapshots: readonly HistorySnapshot[], sourceSize: number,
+  ranges: readonly DeletedRange[]): readonly HistorySnapshot[] | undefined {
+  const updated = [...snapshots];
+  for (let index = snapshots.length - 1; index >= 0; index--) {
+    const snapshot = snapshots[index]!, chain = snapshotMaps.get(snapshot);
+    if (!chain) return undefined;
+    const maps: StepMap[] = [];
+    for (let current: MapChain | undefined = chain; current; current = current.next) for (const map of current.maps) {
+      const rebased = rebaseDeletion(map, sourceSize, ranges);
+      maps.push(rebased.map); sourceSize = rebased.targetSize; ranges = rebased.targetRanges;
+    }
+    if (sourceSize !== snapshot.doc.nodeSize - 2) return undefined;
+    const rebasedSnapshot = deleteSnapshotText(snapshot, ranges);
+    snapshotMaps.set(rebasedSnapshot, { maps: Object.freeze(maps) }); updated[index] = rebasedSnapshot;
+  }
+  return updated;
+}
+
+function rebaseIndependentText(value: HistoryState, transaction: Transaction): HistoryState | undefined {
+  if (!transaction.steps.length) return undefined;
+  let current = value, before = transaction.originalDoc;
+  try {
+    for (const step of transaction.steps) {
+      if (!(step instanceof ReplaceTextStep)) return undefined;
+      const position = textPointToPosition(before, step.path, step.from), removed = step.to - step.from;
+      const size = before.nodeSize - 2;
+      if (removed) {
+        const ranges = [{ from: position, to: position + removed }];
+        const done = rebaseDeletedText(current.done, size, ranges), undone = rebaseDeletedText(current.undone, size, ranges);
+        if (!done || !undone) return undefined;
+        current = { ...current, done, undone };
+      }
+      if (step.text.length) {
+        const done = rebaseInsertedText(current.done, size - removed, position, step.text);
+        const undone = rebaseInsertedText(current.undone, size - removed, position, step.text);
+        if (!done || !undone) return undefined;
+        current = { ...current, done, undone };
+      }
+      before = step.apply(before);
+    }
+  } catch { return undefined; } // Unrepresentable destinations keep the existing fallback pending broader rebasing.
+  return current;
+}
+
+class RestoreHistoryStep extends ReplaceDocumentStep {
+  constructor(document: Node, private readonly maps: readonly StepMap[]) { super(document); }
+  override getMaps(): readonly StepMap[] { return this.maps; }
+}
+
 function withoutOpenGroup(value: HistoryState): HistoryState {
   if (value.lastGroup === undefined && value.lastAddedAt === undefined && value.lastSelection === undefined) return value;
   return { done: value.done, undone: value.undone };
@@ -45,12 +177,24 @@ export function createHistoryPlugin(options: HistoryOptions = {}): Plugin<Histor
       apply: (transaction, value, oldState) => {
         const action = transaction.getMeta<'undo' | 'redo'>(HISTORY_ACTION);
         const current = { doc: oldState.doc, selection: oldState.selection };
-        if (action === 'undo') return { done: value.done.slice(0, -1), undone: [...value.undone, current] };
-        if (action === 'redo') return { done: [...value.done, current].slice(-depth), undone: value.undone.slice(0, -1) };
-        if (transaction.getMeta(CLOSE_HISTORY) === true) return withoutOpenGroup(value);
-        if (transaction.getMeta(PRESERVE_HISTORY_GROUP) === true) return value;
+        const inverse = transaction.docChanged ? inverseMaps(transaction) : [];
+        if (action === 'undo' || action === 'redo') {
+          snapshotMaps.set(current, { maps: inverse });
+          return action === 'undo'
+            ? { done: value.done.slice(0, -1), undone: [...value.undone, current] }
+            : { done: [...value.done, current].slice(-depth), undone: value.undone.slice(0, -1) };
+        }
+        const unrecorded = transaction.getMeta('addToHistory') === false
+          || transaction.getMeta(CLOSE_HISTORY) === true || transaction.getMeta(PRESERVE_HISTORY_GROUP) === true;
+        const independent = transaction.docChanged && transaction.getMeta('addToHistory') === false
+          && transaction.getMeta(PRESERVE_HISTORY_GROUP) !== true && transaction.getMeta(CLOSE_HISTORY) !== true;
+        const rebased = independent ? rebaseIndependentText(value, transaction) : undefined;
+        const advanced = rebased ?? (transaction.docChanged && unrecorded ? { ...value,
+          done: advanceTop(value.done, inverse), undone: advanceTop(value.undone, inverse) } : value);
+        if (transaction.getMeta(CLOSE_HISTORY) === true) return withoutOpenGroup(advanced);
+        if (transaction.getMeta(PRESERVE_HISTORY_GROUP) === true) return advanced;
         if (!transaction.docChanged || transaction.getMeta('addToHistory') === false) {
-          return transaction.selectionSet || transaction.docChanged ? withoutOpenGroup(value) : value;
+          return transaction.selectionSet || transaction.docChanged ? withoutOpenGroup(advanced) : advanced;
         }
 
         const group = transaction.getMeta<string>(HISTORY_GROUP);
@@ -60,8 +204,16 @@ export function createHistoryPlugin(options: HistoryOptions = {}): Plugin<Histor
           && value.lastAddedAt !== undefined
           && addedAt - value.lastAddedAt <= newGroupDelay
           && value.lastSelection?.eq(oldState.selection) === true;
+        const previous = joinsPrevious ? value.done.at(-1) : undefined;
+        let done: readonly HistorySnapshot[];
+        if (previous) {
+          done = [...value.done.slice(0, -1), prependMaps(previous, inverse)];
+        } else {
+          snapshotMaps.set(current, { maps: inverse });
+          done = [...value.done, current].slice(-depth);
+        }
         return {
-          done: joinsPrevious ? value.done : [...value.done, current].slice(-depth),
+          done,
           undone: [],
           lastAddedAt: addedAt,
           lastGroup: group,
@@ -99,13 +251,20 @@ export function setHistoryGroup(
 }
 
 function restore(editor: Editor, snapshot: HistorySnapshot, action: 'undo' | 'redo'): boolean {
-  const transaction = editor.state.createTransaction()
-    .replaceDocument(snapshot.doc)
+  const chain = snapshotMaps.get(snapshot);
+  const transaction = editor.state.createTransaction();
+  if (chain) {
+    const maps: StepMap[] = [];
+    for (let current: MapChain | undefined = chain; current; current = current.next) {
+      current.maps.forEach(map => maps.push(map));
+    }
+    transaction.step(new RestoreHistoryStep(snapshot.doc, Object.freeze(maps)));
+  } else transaction.replaceDocument(snapshot.doc);
+  transaction
     .setSelection(snapshot.selection)
     .setMeta(HISTORY_ACTION, action)
     .setMeta('addToHistory', false);
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 export function canUndo(editor: Editor): boolean { return (historyKey.get(editor.state)?.done.length ?? 0) > 0; }

@@ -92,12 +92,22 @@ describe('shared automatic list scopes', () => {
     expect(undo(editor)).toBe(true); expect(editor.getJSON()).toEqual(original);
   });
 
-  it('refuses wrapping across different container parents', () => {
+  it('wraps complete sibling ancestors while retaining one inherited automatic scope', () => {
     const editor = make(CoreSchemaSpec, { type: 'direction_scope', attrs: { dir: 'auto' },
       content: [{ type: 'blockquote', content: [p('שלום')] }, p('English')] });
     editor.dispatch(editor.createTransaction().setSelection(Selection.range([0, 0, 0, 0], 0, [0, 1, 0], 4)));
-    const original = editor.state;
-    expect(toggleList(editor, 'bullet')).toBe(false); expect(editor.state).toBe(original);
+    const original = editor.state.doc;
+    expect(toggleList(editor, 'bullet')).toBe(true);
+    const group = editor.state.doc.child(0), list = group.child(0);
+    expect(group.type.name).toBe('direction_scope'); expect(group.attrs).toEqual(original.child(0).attrs);
+    expect(group.childCount).toBe(1); expect(list.type.name).toBe('bullet_list'); expect(list.childCount).toBe(2);
+    expect(list.attrs.dir).toBeUndefined();
+    expect(list.child(0).child(0)).toBe(original.child(0).child(0));
+    expect(list.child(1).child(0)).toBe(original.child(0).child(1));
+    expect(editor.state.doc.textContent).toBe(original.textContent);
+    editor.state.schema.validate(editor.state.doc);
+    expect(undo(editor)).toBe(true); expect(editor.state.doc.eq(original)).toBe(true);
+    editor.destroy();
   });
 
   it.each(['bullet', 'task'] as const)('keeps one shared automatic group when converting the middle item to %s', kind => {

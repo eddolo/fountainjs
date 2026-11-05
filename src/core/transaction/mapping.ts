@@ -374,7 +374,7 @@ function findMappedNodePath(
   return found;
 }
 
-export function mapSelection(selection: AnySelection, before: Node, after: Node, map: StepMap): AnySelection {
+export function mapSelection(selection: AnySelection, before: Node, after: Node, map: PositionMapper): AnySelection {
   // Empty intermediate snapshots have neither a text caret nor a block gap.
   if (!after.childCount) return new AllSelection(after);
   if (selection instanceof AllSelection) return new AllSelection(after);

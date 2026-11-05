@@ -6,11 +6,13 @@ import {
   NodeSelection,
   RangeSelection,
   Selection,
+  mapSelection,
   nodeRangeAtPath,
   resolveDocumentPoint,
   selectionAtPosition,
   textPointToPosition,
   type AnySelection,
+  type Transaction,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
 
@@ -199,7 +201,6 @@ export class SelectionHandler {
 
   read(allowGapMovement = false): AnySelection | null {
     const domSelection = document.getSelection();
-    delete (this as SelectionHandler & DirectionState)._b;
     if (!domSelection?.anchorNode || !domSelection.focusNode || !this.dom.contains(domSelection.anchorNode)) return null;
     // selectNode(inlineAtom) uses two offsets on its paragraph parent. Those
     // endpoints are the existing semantic selection, not a new text caret.
@@ -262,6 +263,7 @@ export class SelectionHandler {
       return anchorPosition === headPosition ? selectionAtPosition(this.editor.state.doc, anchorPosition)
         : new RangeSelection(this.editor.state.doc, anchorPosition, headPosition);
     }
+    delete (this as SelectionHandler & DirectionState)._b;
     if (anchorElement === focusElement) {
       const result = new Selection(anchorPath, Math.min(anchor, focus), Math.max(anchor, focus));
       if (anchor > focus) (this as SelectionHandler & DirectionState)._b = result;
@@ -316,6 +318,18 @@ export class SelectionHandler {
   requestDOMSync(): void {
     this.#domSyncRequested = true;
     queueMicrotask(() => { this.#domSyncRequested = false; });
+  }
+
+  /** @internal Carry native direction only through the transaction's actual
+   * mapped range. A fresh explicit selection does not inherit an unrelated drag. */
+  mapTransactionSelection(transaction: Transaction): void {
+    const direction = this as SelectionHandler & DirectionState, backward = direction._b;
+    if (!backward) return;
+    if (transaction.docChanged && backward.eq(transaction.originalSelection)) {
+      const mapped = mapSelection(backward, transaction.originalDoc, transaction.doc, transaction.mapping);
+      if (mapped.kind === 'text' && !mapped.isCollapsed && mapped.eq(transaction.selection)) direction._b = mapped;
+      else delete direction._b;
+    } else if (!backward.eq(transaction.selection)) delete direction._b;
   }
 
   /** A committed selection must reach the DOM before incidental native

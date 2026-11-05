@@ -12,6 +12,8 @@ import {
   createEditor,
   selectGap,
   setTextAlignment,
+  toggleList,
+  toggleQuote,
   topLevelPosition,
 } from '../src';
 
@@ -23,6 +25,29 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each(['quote', 'bullet', 'ordered', 'task'].flatMap(kind => [false, true].map(backward => ({ kind, backward }))))(
+    'keeps native selection direction while $kind wrapping moves text paths (backward: $backward)', async ({ kind, backward }) => {
+      const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: { type: 'doc', content: [
+        paragraph('Before'), paragraph('Left'), { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } }, paragraph(''),
+      ] } });
+      const mount = document.createElement('div'); document.body.append(mount);
+      const view = new EditorView(mount, editor), native = document.getSelection()!;
+      try {
+        await settleSelection(); view.dom.focus();
+        const left = view.dom.querySelector('[data-fountain-text-path="1.0"]')!.firstChild!;
+        const end = view.dom.querySelector('[data-fountain-text-path="3.0"]')!;
+        native.setBaseAndExtent(backward ? end : left, backward ? 0 : 2, backward ? left : end, backward ? 2 : 0);
+        view.dom.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp', shiftKey: true, bubbles: true }));
+        await settleSelection(); expect(editor.state.selection.kind).toBe('text');
+        expect(kind === 'quote' ? toggleQuote(editor) : toggleList(editor, kind as 'bullet' | 'ordered' | 'task')).toBe(true);
+        await settleSelection();
+        expect(native.isCollapsed).toBe(false);
+        expect(backward ? native.focusNode?.textContent : native.anchorNode?.textContent).toBe('Left');
+        expect(backward ? native.focusOffset : native.anchorOffset).toBe(2);
+        expect(backward ? native.anchorNode?.textContent : native.focusNode?.textContent).toBe('');
+      } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+    });
+
   it.each(['text', 'gap'] as const)('selects the resize handle cell when focus arrives from a %s projection of that same cell', async kind => {
     const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [
       { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', attrs: { colwidth: [120] }, content: [paragraph('Cell')] }] }] },

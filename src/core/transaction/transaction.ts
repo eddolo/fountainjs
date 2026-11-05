@@ -1,7 +1,7 @@
 import { Mark, Node } from '../schema';
 import { Selection, type AnySelection } from '../selection';
 import { Transform } from './transform';
-import { mapSelection, type StepMap } from './mapping';
+import { mapSelection, type PositionMapper, type StepMap } from './mapping';
 
 export class Transaction extends Transform {
   /** Selection at transaction creation, before any steps mapped it. */
@@ -45,7 +45,7 @@ export class Transaction extends Transform {
     return Object.freeze([...this.metadata.entries()].map(([key, value]) => Object.freeze([key, value] as const)));
   }
 
-  protected override onStepApplied(before: Node, after: Node, map: StepMap): void {
-    this.selection = mapSelection(this.selection, before, after, map);
+  protected override onStepApplied(before: Node, after: Node, map: StepMap, mapping?: PositionMapper): void {
+    this.selection = mapSelection(this.selection, before, after, mapping ?? map);
   }
 }

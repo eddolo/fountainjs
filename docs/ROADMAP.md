@@ -1,5 +1,23 @@
 # FountainJS opportunity roadmap
 
+Structural wrapping, split maps and local history (2026-11-05, unreleased):
+quote/list commands retain actual selected text/media blocks and their metadata.
+Native backward ranges remain backward after paths move. Paragraph/heading/list
+splits retain original positions; comment anchors survive split undo/redo.
+Independent same-leaf text edits survive local history, including deletions and
+replacements. General custom/structural independent-edit rebasing remains open.
+Final source tests: 4,133 pass, six required Yjs retention cases fail (4,139 total
+in 282 files). Types/API/headless/package/workerd and performance/retention pass.
+Three browser engines pass 24 directed wrapping workflows and six native history
+scenarios; both journeys now run in ordinary browser CI. Actual packed root/core
+ESM/CJS consumers pass 28 cases; 891 distribution files match the build. Review
+36 representative stage captures and 12 sampled frames, without claiming full
+playback or physical-device certification. Root static growth is 12,841 raw /
+4,001 gzip bytes; existing size failures remain and no ceilings/dependencies
+change. The six Yjs failures require further adapter work. No release promotion.
+[Audit](STEP_RETENTION_WORK_IN_PROGRESS.md) ·
+[Evidence](../artifacts/structural-history-verification-20261105.json).
+
 Table resize retention (2026-11-05, unreleased): preserve semantic cell focus
 through keyboard/pointer resizing and retain every content position for column
 width changes. All three previously failing desktop-engine resize journeys,

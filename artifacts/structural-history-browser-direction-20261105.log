@@ -1,0 +1,21 @@
+[WebServer] (node:27768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25832) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:27420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (2.7s)
+  ok 2 [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (23.9s)
+(node:26288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (5.9s)
+  ok 4 [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (22.9s)
+(node:18372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (5.8s)
+  ok 6 [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (48.5s)
+
+  6 passed (2.0m)

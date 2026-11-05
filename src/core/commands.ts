@@ -17,6 +17,9 @@ import { outdentListItem } from './structure-commands';
 import { mapMarkRangeSelection } from './transaction/mark-range-step';
 import { ReplaceRangeStep } from './transaction/replace-range-step';
 import { SetBlockTypeStep } from './transaction/set-block-type-step';
+import { RestructureChildrenStep } from './transaction/restructure-children-step';
+import { SplitNodeStep } from './transaction/split-node-step';
+import { blockSelectionRange, selectedBlockPaths } from './block-range';
 import { nodeRangeAtPath, textPointToPosition } from './transaction/mapping';
 import { comparePaths, getNodeAtPath, getTextLeaves, getTextRangeSegments } from './transaction/path';
 import { matchesContentExpression } from './schema/content-expression';
@@ -53,8 +56,7 @@ function paragraphWithText(editor: Editor, text: string): Node | null {
 function dispatchIfValid(editor: Editor, transaction: ReturnType<Editor['createTransaction']>): boolean {
   try { editor.state.schema.validate(transaction.doc); }
   catch { return false; }
-  editor.dispatch(transaction);
-  return true;
+  return editor.dispatch(transaction);
 }
 
 function replaceAllSelection(editor: Editor, text: string): boolean {
@@ -1147,103 +1149,48 @@ export function insertQuote(editor: Editor, text = ''): boolean {
   ]));
 }
 
-function nearestBlockPath(document: Node, path: readonly number[]): number[] | null {
-  for (let length = path.length - 1; length > 0; length -= 1) {
-    const candidate = path.slice(0, length);
-    try {
-      if (getNodeAtPath(document, candidate).type.isBlock) return candidate;
-    } catch { return null; }
-  }
-  return null;
-}
-
-function sharedPrefix(left: readonly number[], right: readonly number[]): number[] {
-  const result: number[] = [];
-  for (let index = 0; index < Math.min(left.length, right.length); index += 1) {
-    if (left[index] !== right[index]) break;
-    result.push(left[index] as number);
-  }
-  return result;
-}
-
-function quoteAncestor(document: Node, path: readonly number[]): number[] | null {
-  for (let length = path.length - 1; length > 0; length -= 1) {
-    const candidate = path.slice(0, length);
-    if (getNodeAtPath(document, candidate).type.name === 'blockquote') return candidate;
-  }
-  return null;
-}
-
 /** Wraps the selected block range in a quote, or unwraps the quote containing the selection. */
 export function toggleQuote(editor: Editor): boolean {
-  if (!editor.editable || (editor.state.selection.kind !== 'text' && !(editor.state.selection instanceof NodeSelection))) return false;
+  if (!editor.editable || editor.state.selection instanceof GapSelection) return false;
+  if (editor.state.selection instanceof CellSelection) {
+    const selection = editor.state.selection;
+    return editor.runCommandBatch(() => {
+      for (const path of selection.cellPaths) {
+        const range = nodeRangeAtPath(editor.state.doc, path);
+        if (!editor.dispatch(editor.createTransaction().setSelection(new RangeSelection(editor.state.doc, range.from + 1, range.to - 1)))
+          || !toggleQuote(editor)) return false;
+      }
+      return editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, selection.anchorCellPath, selection.headCellPath)));
+    });
+  }
   const { state } = editor;
   const quoteType = state.schema.nodes.blockquote;
   if (!quoteType) return false;
-  const startQuote = quoteAncestor(state.doc, state.selection.path);
-  const endQuote = quoteAncestor(state.doc, state.selection.endPath);
-  if (startQuote && endQuote && comparePaths(startQuote, endQuote) === 0) {
-    const quote = getNodeAtPath(state.doc, startQuote);
-    const parentPath = startQuote.slice(0, -1);
-    const quoteIndex = startQuote.at(-1) as number;
-    const mapPoint = (path: readonly number[]): number[] => [
-      ...parentPath,
-      quoteIndex + Number(path[startQuote.length] ?? 0),
-      ...path.slice(startQuote.length + 1),
-    ];
-    try {
-      const transaction = state.createTransaction().replaceNode(startQuote, quote.content);
-      state.schema.validate(transaction.doc);
-      transaction.setSelection(new Selection(
-        mapPoint(state.selection.path),
-        state.selection.from,
-        state.selection.to,
-        mapPoint(state.selection.endPath),
-      ));
-      editor.dispatch(transaction);
-      return true;
-    } catch { return false; }
+  const paths = selectedBlockPaths(state.doc, state.selection), first = paths[0];
+  if (!first) return false;
+  let quotePath: readonly number[] | undefined;
+  for (let length = first.length; length > 0; length--) {
+    const path = first.slice(0, length);
+    if (getNodeAtPath(state.doc, path).type.name === 'blockquote'
+      && paths.every(candidate => path.every((value, index) => candidate[index] === value))) { quotePath = path; break; }
   }
-
-  const startBlock = nearestBlockPath(state.doc, state.selection.path);
-  const endBlock = nearestBlockPath(state.doc, state.selection.endPath);
-  if (!startBlock || !endBlock) return false;
-  const common = sharedPrefix(startBlock, endBlock);
-  const sameBlock = comparePaths(startBlock, endBlock) === 0;
-  const parentPath = sameBlock ? startBlock.slice(0, -1) : common;
-  const startPath = sameBlock ? startBlock : [...parentPath, startBlock[parentPath.length] as number];
-  const endPath = sameBlock ? endBlock : [...parentPath, endBlock[parentPath.length] as number];
-  const startIndex = startPath.at(-1) as number;
-  const endIndex = endPath.at(-1) as number;
-  if (endIndex < startIndex) return false;
-  let parent: Node;
-  try { parent = getNodeAtPath(state.doc, parentPath); }
-  catch { return false; }
-  const blocks = parent.content.slice(startIndex, endIndex + 1);
-  let quote: Node;
-  try { quote = quoteType.create({}, blocks); }
-  catch { return false; }
-  const quotePath = [...parentPath, startIndex];
-  const startRelative = state.selection.path.slice(startPath.length);
-  const endRelative = state.selection.endPath.slice(endPath.length);
   try {
     const transaction = state.createTransaction();
-    if (!parentPath.length) transaction.replace(startIndex, endIndex + 1, [quote]);
-    else {
-      for (let index = endIndex; index > startIndex; index -= 1) {
-        transaction.replaceNode([...parentPath, index], []);
+    if (quotePath) {
+      const quote = getNodeAtPath(state.doc, quotePath);
+      transaction.step(new RestructureChildrenStep(quotePath.slice(0, -1), quotePath.at(-1)!, [quote], quote.content));
+      if (state.selection instanceof NodeSelection && comparePaths(state.selection.nodePath, quotePath) === 0) {
+        transaction.setSelection(new RangeSelection(transaction.doc,
+          transaction.mapping.map(state.selection.structuralFrom, 1), transaction.mapping.map(state.selection.structuralTo, -1)));
       }
-      transaction.replaceNode(startPath, [quote]);
+    } else {
+      const range = blockSelectionRange(state.doc, state.selection);
+      if (!range) return false;
+      const parent = getNodeAtPath(state.doc, range.parentPath), blocks = parent.content.slice(range.from, range.to);
+      transaction.step(new RestructureChildrenStep(range.parentPath, range.from, blocks, [quoteType.create({}, blocks)]));
     }
     state.schema.validate(transaction.doc);
-    transaction.setSelection(new Selection(
-      [...quotePath, 0, ...startRelative],
-      state.selection.from,
-      state.selection.to,
-      [...quotePath, blocks.length - 1, ...endRelative],
-    ));
-    editor.dispatch(transaction);
-    return true;
+    return editor.dispatch(transaction);
   } catch { return false; }
 }
 
@@ -1331,9 +1278,7 @@ export function splitBlock(editor: Editor): boolean {
       .setSelection(Selection.cursor(landing, 0));
     return dispatchIfValid(editor, transaction);
   }
-  const leftText = (text.text ?? '').slice(0, from);
   const rightText = (text.text ?? '').slice(to);
-  const left = block.copy([...block.content.slice(0, textIndex), text.withText(leftText)]);
   const nextType = ['heading', 'html_flow', 'html_source_empty_body'].includes(block.type.name) ? state.schema.nodes.paragraph : block.type;
   const nextAttrs = block.type === nextType ? block.attrs
     : {
@@ -1357,22 +1302,19 @@ export function splitBlock(editor: Editor): boolean {
     if (item.childCount === 1 && item.textContent.length === 0) return outdentListItem(editor);
     const paragraphIndex = blockPath.at(-1) as number;
     const itemIndex = itemPath.at(-1) as number;
-    const leftItem = item.copy([...item.content.slice(0, paragraphIndex), left]);
     const rightItem = item.type.create(
       item.type.name === 'task_item' ? { ...item.attrs, checked: false } : item.attrs,
       [right, ...item.content.slice(paragraphIndex + 1)],
     );
     const transaction = state.createTransaction()
-      .replaceNode(itemPath, [leftItem, rightItem])
+      .step(new SplitNodeStep(itemPath, item, [paragraphIndex, textIndex], from, [rightItem, right, rightTextNode]))
       .setSelection(Selection.cursor([...itemPath.slice(0, -1), itemIndex + 1, 0, 0], 0));
-    editor.dispatch(transaction);
-    return true;
+    return dispatchIfValid(editor, transaction);
   }
   const transaction = state.createTransaction()
-    .replaceNode(blockPath, [left, right])
+    .step(new SplitNodeStep(blockPath, block, [textIndex], from, [right, rightTextNode]))
     .setSelection(Selection.cursor([...blockPath.slice(0, -1), blockIndex + 1, 0], 0));
-  editor.dispatch(transaction);
-  return true;
+  return dispatchIfValid(editor, transaction);
 }
 
 export function joinBackward(editor: Editor): boolean {

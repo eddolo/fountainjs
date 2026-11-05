@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/selection-view.test.ts (32 tests | 4 failed) 448ms
+   ❯ semantic selection DOM bridge (32)
+     × keeps native selection direction while quote wrapping moves text paths (backward: true) 19ms
+     × keeps native selection direction while bullet wrapping moves text paths (backward: true) 14ms
+     × keeps native selection direction while ordered wrapping moves text paths (backward: true) 10ms
+     × keeps native selection direction while task wrapping moves text paths (backward: true) 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps native selection direction while quote wrapping moves text paths (backward: true)
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps native selection direction while bullet wrapping moves text paths (backward: true)
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps native selection direction while ordered wrapping moves text paths (backward: true)
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps native selection direction while task wrapping moves text paths (backward: true)
+AssertionError: expected '' to be 'Left' // Object.is equality
+
+- Expected
++ Received
+
+- Left
+
+ ❯ tests/selection-view.test.ts:45:91
+     43|         await settleSelection();
+     44|         expect(native.isCollapsed).toBe(false);
+     45|         expect(backward ? native.focusNode?.textContent : native.ancho…
+       |                                                                                           ^
+     46|         expect(backward ? native.focusOffset : native.anchorOffset).to…
+     47|         expect(backward ? native.anchorNode?.textContent : native.focu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 28 passed (32)
+   Start at  20:50:09
+   Duration  4.72s (transform 33%, import 33%, environment 25%, tests 10%)

@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/history-map-retention.test.ts (18 tests | 1 failed) 298ms
+   × preserves an independent deletion when undoing an earlier split 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/history-map-retention.test.ts > preserves an independent deletion when undoing an earlier split
+AssertionError: expected 'Alpha' to be 'Alha' // Object.is equality
+
+Expected: "Alha"
+Received: "Alpha"
+
+ ❯ tests/history-map-retention.test.ts:198:75
+    196|     expect(splitBlock(editor)).toBe(true);
+    197|     editor.dispatch(editor.createTransaction().replaceText([1, 0], 0, …
+    198|     expect(undo(editor)).toBe(true); expect(editor.state.doc.textConte…
+       |                                                                           ^
+    199|     expect(redo(editor)).toBe(true); expect(editor.state.doc.content.m…
+    200|   } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 35 passed (36)
+   Start at  19:52:23
+   Duration  4.59s (import 43%, transform 40%, tests 16%)
+
+    Isolate  4 workers spawned · ~151ms startup each (spawn + environment, per file)
+             at least ~452ms faster with isolate: false — reuses workers across files instead of one per file

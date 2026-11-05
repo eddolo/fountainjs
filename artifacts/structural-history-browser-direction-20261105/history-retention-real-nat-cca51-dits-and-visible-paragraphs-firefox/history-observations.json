@@ -1,0 +1,256 @@
+{
+  "engine": "firefox",
+  "observations": [
+    {
+      "replacement": "",
+      "geometry": [
+        {
+          "top": 124.86666870117188,
+          "bottom": 152.06666564941406,
+          "height": 27.199996948242188
+        },
+        {
+          "top": 168.06666564941406,
+          "bottom": 195.26666259765625,
+          "height": 27.199996948242188
+        },
+        {
+          "top": 211.26666259765625,
+          "bottom": 238.46665954589844,
+          "height": 27.199996948242188
+        },
+        {
+          "top": 254.46665954589844,
+          "bottom": 281.6666717529297,
+          "height": 27.20001220703125
+        }
+      ],
+      "undone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Alha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      },
+      "redone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Al"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "ha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "replacement": "BB",
+      "geometry": [
+        {
+          "top": 124.86666870117188,
+          "bottom": 152.06666564941406,
+          "height": 27.199996948242188
+        },
+        {
+          "top": 168.06666564941406,
+          "bottom": 195.26666259765625,
+          "height": 27.199996948242188
+        },
+        {
+          "top": 211.26666259765625,
+          "bottom": 238.46665954589844,
+          "height": 27.199996948242188
+        },
+        {
+          "top": 254.46665954589844,
+          "bottom": 281.6666717529297,
+          "height": 27.20001220703125
+        }
+      ],
+      "undone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "AlBBha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      },
+      "redone": {
+        "type": "doc",
+        "attrs": {
+          "audit": "native independent edit"
+        },
+        "content": [
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Before"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Al"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "BBha"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "attrs": {
+              "align": "left"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "After"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

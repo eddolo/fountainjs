@@ -1,0 +1,90 @@
+{
+  "beforeHead": "252509009058fb974a7d9b8fb2c1d84632cd6923",
+  "afterHead": "1a9e1640ef8d2fd6f955baeac5b078ba9b0db859",
+  "preservedWorkingFiles": [
+    {
+      "path": "docs/STEP_RETENTION_WORK_IN_PROGRESS.md",
+      "sha256": "d8d20bb09bc114ac8174e85cc73098d388d97b8c5eaf979a99039770d3c6e94d"
+    },
+    {
+      "path": "docs/YJS_STRUCTURAL_RETENTION_AUDIT.md",
+      "sha256": "6d8b6be486b0d1ea364116c340cbee86d1871be94b4e86395e43a97fd26be34a"
+    },
+    {
+      "path": "src/core/block-range.ts",
+      "sha256": "41aff8fd0c712927b4f993860067d663df330d3dc1ea14f41291eaa66cfbe256"
+    },
+    {
+      "path": "src/core/transaction/rebase-insertion.ts",
+      "sha256": "7caa7f462f572dbf67b0b54a000246bf7c4be66ea15441e62e4fdbbb73bd7bc5"
+    },
+    {
+      "path": "src/core/transaction/restructure-children-step.ts",
+      "sha256": "0667afcf6dffeefd4a6b9133ebfebefbc581d15354aa19a84f2c49ca91cf1ec6"
+    },
+    {
+      "path": "src/core/transaction/split-node-step.ts",
+      "sha256": "abb30f9de489d3370dcd8a5bdbf0d5f33fb7407c4aebdd7e3c73bd20c7fad768"
+    },
+    {
+      "path": "tests/document-range-wrapping.test.ts",
+      "sha256": "87410308003e220a39844b8fdf8ac34b1ec5c0a6e08903f74460fc80c8c7a83f"
+    },
+    {
+      "path": "tests/history-map-retention.test.ts",
+      "sha256": "a06ac48763b38fe0320abfffed39becd3e09c4c64a83235e5c5031636bab2b85"
+    },
+    {
+      "path": "tests/insertion-rebase.test.ts",
+      "sha256": "ef9b97cc0252d42ebf07160deac1d7417a3eb8d81080936fc42c729f0d863ae3"
+    },
+    {
+      "path": "tests/manual/structural-wrapping-real.spec.ts",
+      "sha256": "22cc78047230d0b2aef6a36e663cf67172293c41023b152ede3ffc53f5410d06"
+    },
+    {
+      "path": "tests/split-block-retention.test.ts",
+      "sha256": "2ad7f9d695236c1a27a5c972010f51e328cd47ed976726dcf0c705a78172865f"
+    },
+    {
+      "path": "tests/split-comment-retention.test.ts",
+      "sha256": "2534b13d523c32a6a645d9baa1b70bcbde7219db103198229410819b20ff2f67"
+    },
+    {
+      "path": "src/core/commands.ts",
+      "sha256": "cc2c5d48af543f7243c7928fe6f198723c18b41269bce6d85850ee10281e4a4c"
+    },
+    {
+      "path": "src/core/structure-commands.ts",
+      "sha256": "0470cb04d87b8e5050597ce459dc3605fc624f40bfdb760e6abf3674bf483118"
+    },
+    {
+      "path": "src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "path": "src/core/transaction/step.ts",
+      "sha256": "0e53571fb576093629bfddbeaddbbff34b4ec23186d99a4bab51b1adbf07f365"
+    },
+    {
+      "path": "src/core/transaction/transaction.ts",
+      "sha256": "cc75a03bc679e571651ae328826f81db54245ccc4a0e34500bd6bae547fc1c87"
+    },
+    {
+      "path": "src/core/transaction/transform.ts",
+      "sha256": "6be4f8280a34ff476d8495183e8e60a0dbaec161f567264411de156e940d2a8f"
+    },
+    {
+      "path": "src/extensions/plugins/history.ts",
+      "sha256": "ac525a60cfc143c5327578ad68310096613dc08c57bb7db29b969b6fdcbfde11"
+    },
+    {
+      "path": "tests/list-auto-scope.test.ts",
+      "sha256": "3054e26ea64d6c47fd8d5c8ce608a17612d22702c1f7237e872f3207432ad92a"
+    },
+    {
+      "path": "tests/yjs-document-range.test.ts",
+      "sha256": "760d2a2482219ba7e423a9c440ad339b50308a5ec1549ec5467128fd6817a06b"
+    }
+  ]
+}

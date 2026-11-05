@@ -1,6 +1,9 @@
 import type { Editor } from './editor';
 import { insertNode } from './commands';
-import { NodeSelection, Selection } from './selection';
+import { AllSelection, CellSelection, GapSelection, NodeSelection, RangeSelection, Selection } from './selection';
+import { blockSelectionRange, selectedBlockPaths } from './block-range';
+import { RestructureChildrenStep } from './transaction/restructure-children-step';
+import { nodeRangeAtPath } from './transaction/mapping';
 import { Node, type Attributes } from './schema';
 import { getActiveTableCell } from './table-commands';
 import { TableMap } from './table-map';
@@ -18,7 +21,16 @@ function ancestorPath(editor: Editor, names: readonly string[]): number[] | null
 }
 
 export function isInsideNode(editor: Editor, typeName: string): boolean {
-  if (editor.state.selection instanceof NodeSelection && editor.state.selection.nodeType === typeName) return true;
+  const selection = editor.state.selection;
+  if (selection instanceof NodeSelection || selection instanceof RangeSelection || selection instanceof AllSelection) {
+    const paths = selectedBlockPaths(editor.state.doc, selection);
+    return paths.length > 0 && paths.every(path => {
+      for (let length = path.length; length > 0; length--) {
+        if (getNodeAtPath(editor.state.doc, path.slice(0, length)).type.name === typeName) return true;
+      }
+      return false;
+    });
+  }
   return ancestorPath(editor, [typeName]) !== null;
 }
 
@@ -61,23 +73,26 @@ function layoutForListKind(value: unknown, kind: ListKind, sameKind: boolean, ne
       markerPrefix: kind === 'ordered' ? '' : '•', markerSuffix: kind === 'ordered' ? '.' : '' } : {}) };
 }
 
-function ancestorPathFrom(editor: Editor, path: readonly number[], names: readonly string[]): number[] | null {
-  for (let length = path.length - 1; length >= 1; length -= 1) {
-    const candidate = path.slice(0, length);
-    if (names.includes(getNodeAtPath(editor.state.doc, candidate).type.name)) return candidate;
-  }
-  return null;
-}
-
 function selectedListRange(editor: Editor): ListRange | null {
   const selection = editor.state.selection;
-  if (selection.kind !== 'text') return null;
-  const startItemPath = ancestorPathFrom(editor, selection.path, ['list_item', 'task_item']);
-  const endItemPath = ancestorPathFrom(editor, selection.endPath, ['list_item', 'task_item']);
+  if (selection instanceof GapSelection || selection instanceof CellSelection) return null;
+  const wholePath = selection instanceof NodeSelection ? selection.nodePath
+    : selection instanceof AllSelection && editor.state.doc.childCount === 1 ? [0] : null;
+  const whole = wholePath && getNodeAtPath(editor.state.doc, wholePath);
+  const paths = whole && kindForList(whole) ? whole.content.map((_, index) => [...wholePath!, index])
+    : selectedBlockPaths(editor.state.doc, selection);
+  const itemPath = (path: readonly number[]): number[] | null => {
+    for (let length = path.length; length > 0; length--) {
+      const candidate = path.slice(0, length);
+      if (['list_item', 'task_item'].includes(getNodeAtPath(editor.state.doc, candidate).type.name)) return candidate;
+    }
+    return null;
+  };
+  const items = paths.map(itemPath), startItemPath = items[0], endItemPath = items.at(-1);
   if (!startItemPath || !endItemPath) return null;
   const listPath = startItemPath.slice(0, -1);
-  if (listPath.length !== endItemPath.length - 1
-    || listPath.some((part, index) => part !== endItemPath[index])) return null;
+  if (items.some(path => !path || path.length !== listPath.length + 1
+    || listPath.some((part, index) => part !== path[index]))) return null;
   const list = getNodeAtPath(editor.state.doc, listPath);
   if (!kindForList(list)) return null;
   return {
@@ -182,13 +197,22 @@ function copyListSlice(list: Node, content: readonly Node[], offset = 0): Node {
   );
 }
 
-function rangeSelection(
+function selectListRange(
   editor: Editor,
+  transaction: ReturnType<Editor['createTransaction']>,
   startPath: readonly number[],
   endPath: readonly number[],
-): Selection {
+): void {
   const selection = editor.state.selection;
-  return new Selection(startPath, selection.from, selection.to, endPath);
+  if (selection.kind === 'text') transaction.setSelection(new Selection(startPath, selection.from, selection.to, endPath));
+  else if (selection instanceof NodeSelection && transaction.selection instanceof GapSelection) {
+    const from = transaction.mapping.map(selection.structuralFrom, 1), to = transaction.mapping.map(selection.structuralTo, -1);
+    if (from < to) transaction.setSelection(new RangeSelection(transaction.doc, from, to));
+  }
+}
+
+function restructureNode(transaction: ReturnType<Editor['createTransaction']>, path: readonly number[], content: readonly Node[]): void {
+  transaction.step(new RestructureChildrenStep(path.slice(0, -1), path.at(-1)!, [getNodeAtPath(transaction.doc, path)], content));
 }
 
 export function setNodeAttributes(editor: Editor, path: readonly number[], attrs: Attributes): boolean {
@@ -456,8 +480,8 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
   const nestedPath = [...range.listPath, range.from - 1, previousContent.length - 1];
   const transaction = editor.state.createTransaction();
   applySharedDirectionOwners(transaction, prepared);
-  transaction.replaceNode(range.listPath, [updatedList])
-    .setSelection(rangeSelection(editor, [
+  restructureNode(transaction, range.listPath, [updatedList]);
+  selectListRange(editor, transaction, [
       ...nestedPath,
       nestedIndex,
       ...startRelative,
@@ -465,7 +489,7 @@ export function indentListItem(editor: Editor, nestedKind?: ListKind): boolean {
       ...nestedPath,
       nestedIndex + items.length - 1,
       ...endRelative,
-    ]));
+    ]);
   return dispatchListTransform(editor, transaction);
 }
 
@@ -526,12 +550,12 @@ export function outdentListItem(editor: Editor): boolean {
         ? [...base, (ownsAuto ? 0 : blockIndex) + slot, ...relative]
         : [...base, (ownsAuto ? 0 : blockIndex) + slot + (relative[0] ?? 0), ...relative.slice(1)];
     };
-    const transaction = editor.state.createTransaction()
-      .replaceNode(range.listPath, replacements)
-      .setSelection(rangeSelection(editor,
+    const transaction = editor.state.createTransaction();
+    restructureNode(transaction, range.listPath, replacements);
+    selectListRange(editor, transaction,
         movedPath(0, startRelative),
         movedPath(selected.length - 1, endRelative),
-      ));
+      );
     return dispatchListTransform(editor, transaction);
   }
 
@@ -589,17 +613,28 @@ export function outdentListItem(editor: Editor): boolean {
   ]);
   const transaction = editor.state.createTransaction();
   applySharedDirectionOwners(transaction, prepared);
-  transaction.replaceNode(outerListPath, [updatedOuter])
-    .setSelection(rangeSelection(editor,
+  restructureNode(transaction, outerListPath, [updatedOuter]);
+  selectListRange(editor, transaction,
       [...outerListPath, parentItemIndex + 1, ...startRelative],
       [...outerListPath, parentItemIndex + liftedItems.length, ...endRelative],
-    ));
+    );
   return dispatchListTransform(editor, transaction);
 }
 
 /** Wraps sibling text blocks in their existing parent, converts a list range, or toggles it off. */
 export function toggleList(editor: Editor, kind: ListKind): boolean {
-  if (!editor.editable || editor.state.selection.kind !== 'text') return false;
+  if (!editor.editable || editor.state.selection instanceof GapSelection) return false;
+  if (editor.state.selection instanceof CellSelection) {
+    const selection = editor.state.selection;
+    return editor.runCommandBatch(() => {
+      for (const path of selection.cellPaths) {
+        const range = nodeRangeAtPath(editor.state.doc, path);
+        if (!editor.dispatch(editor.createTransaction().setSelection(new RangeSelection(editor.state.doc, range.from + 1, range.to - 1)))
+          || !toggleList(editor, kind)) return false;
+      }
+      return editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, selection.anchorCellPath, selection.headCellPath)));
+    });
+  }
   const target = listNames(kind);
   const targetListType = editor.state.schema.nodes[target.list];
   if (!targetListType || !editor.state.schema.nodes[target.item]) return false;
@@ -645,54 +680,39 @@ export function toggleList(editor: Editor, kind: ListKind): boolean {
     }
     const startRelative = editor.state.selection.path.slice(range.startItemPath.length);
     const endRelative = editor.state.selection.endPath.slice(range.endItemPath.length);
-    const transaction = editor.state.createTransaction()
-      .replaceNode(range.listPath, replacements)
-      .setSelection(rangeSelection(editor,
+    const transaction = editor.state.createTransaction();
+    restructureNode(transaction, range.listPath, replacements);
+    selectListRange(editor, transaction,
         [...convertedPath, 0, ...startRelative],
         [...convertedPath, (selected as Node[]).length - 1, ...endRelative],
-      ));
+      );
+    if (editor.state.selection instanceof NodeSelection && editor.state.selection.nodePath.join('.') === range.listPath.join('.')) {
+      transaction.setSelection(new NodeSelection(transaction.doc, convertedPath));
+    }
     return dispatchListTransform(editor, transaction);
   }
 
   const { selection, doc, schema } = editor.state;
-  const startBlockPath = ancestorPathFrom(editor, selection.path, ['paragraph', 'heading']);
-  const endBlockPath = ancestorPathFrom(editor, selection.endPath, ['paragraph', 'heading']);
-  if (!startBlockPath || !endBlockPath) return false;
-  const parentPath = startBlockPath.slice(0, -1);
-  if (endBlockPath.length !== startBlockPath.length
-    || parentPath.some((part, index) => part !== endBlockPath[index])) return false;
+  const scope = blockSelectionRange(doc, selection);
+  if (!scope) return false;
+  const { parentPath, from, to } = scope;
   const parent = getNodeAtPath(doc, parentPath);
-  const from = startBlockPath.at(-1);
-  const to = endBlockPath.at(-1);
-  if (!Number.isInteger(from) || !Number.isInteger(to)) return false;
-  const blocks = parent.content.slice(from, (to as number) + 1);
-  if (!blocks.length || blocks.some((block) => !['paragraph', 'heading'].includes(block.type.name))) return false;
+  const blocks = parent.content.slice(from, to);
+  if (!blocks.length) return false;
   let items: Node[];
   let list: Node;
   try {
     items = blocks.map((block) => {
-      const paragraph = block.type.name === 'paragraph'
+      const paragraph = block.type.name !== 'heading'
         ? block
-        : schema.node('paragraph', { align: block.attrs.align ?? 'left',
-          ...(schema.nodes.paragraph.spec.attrs?.dir && block.attrs.dir !== undefined ? { dir: block.attrs.dir } : {}),
-          ...(schema.nodes.paragraph.spec.attrs?.directionGroup && block.attrs.directionGroup !== undefined ? { directionGroup: block.attrs.directionGroup } : {}),
-          ...(schema.nodes.paragraph.spec.attrs?.alignExplicit && block.attrs.alignExplicit ? { alignExplicit: true } : {}),
-        }, block.content);
+        : schema.nodes.paragraph.create(Object.fromEntries(Object.entries(block.attrs).filter(([name]) =>
+          !Object.hasOwn(block.type.spec.attrs ?? {}, name) || Object.hasOwn(schema.nodes.paragraph.spec.attrs ?? {}, name))), block.content, undefined, block.marks);
       return schema.node(target.item, target.item === 'task_item' ? { checked: false } : {}, [paragraph]);
     });
     list = targetListType.create(target.attrs, items);
   } catch { return false; }
-  const startRelative = selection.path.slice(startBlockPath.length);
-  const endRelative = selection.endPath.slice(endBlockPath.length);
   const transaction = editor.state.createTransaction();
-  if (parentPath.length) transaction.replaceNode(parentPath, [parent.copy([
-    ...parent.content.slice(0, from), list, ...parent.content.slice((to as number) + 1),
-  ])]);
-  else transaction.replace(from as number, (to as number) + 1, [list]);
-  transaction.setSelection(rangeSelection(editor,
-    [...parentPath, from as number, 0, 0, ...startRelative],
-    [...parentPath, from as number, items.length - 1, 0, ...endRelative],
-  ));
+  transaction.step(new RestructureChildrenStep(parentPath, from, blocks, [list]));
   return dispatchListTransform(editor, transaction);
 }
 

@@ -1,0 +1,27 @@
+{
+  "scope": "Built Node engine history: bounded groups, one long group, discarded roots and exact undo",
+  "cases": [
+    {
+      "grouped": false,
+      "edits": 2000,
+      "blocks": 1000,
+      "retainedGroups": 32,
+      "elapsedMs": 73.51830000000001,
+      "discardedRootsCollected": 18,
+      "sampledDiscardedRoots": 18,
+      "liveGrowthBytes": 1561376,
+      "releasedGrowthBytes": 1174752
+    },
+    {
+      "grouped": true,
+      "edits": 2000,
+      "blocks": 1000,
+      "retainedGroups": 1,
+      "elapsedMs": 78.08889999999997,
+      "discardedRootsCollected": 18,
+      "sampledDiscardedRoots": 18,
+      "liveGrowthBytes": 633200,
+      "releasedGrowthBytes": 185176
+    }
+  ]
+}

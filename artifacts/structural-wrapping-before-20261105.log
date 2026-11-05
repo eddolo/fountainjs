@@ -1,0 +1,224 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/document-range-wrapping.test.ts (16 tests | 15 failed) 35ms
+   × wraps and unwraps a directed text/media range in a quote without changing its content (backward: false) 10ms
+   × wraps and unwraps a directed text/media range in a quote without changing its content (backward: true) 2ms
+   × puts all selected blocks, including media, into bullet list items and can unwrap them 1ms
+   × puts all selected blocks, including media, into ordered list items and can unwrap them 1ms
+   × puts all selected blocks, including media, into task list items and can unwrap them 1ms
+   × excludes a following paragraph at its first text offset: quote 2ms
+   × excludes a following paragraph at its first text offset: bullet 1ms
+   × quotes a selected image while retaining its node selection, not a neighboring text projection 7ms
+   × wraps an image-only structural range without formatting neighboring paragraphs: quote 1ms
+   × wraps an image-only structural range without formatting neighboring paragraphs: bullet 1ms
+   × supports Select all and preserves its selection kind: quote 1ms
+   × supports Select all and preserves its selection kind: bullet 1ms
+   × quotes selected cell contents independently without changing the table rectangle 2ms
+   × preserves text positions instead of marking retained quote contents deleted 3ms
+   × returns a transaction-filter rejection without adding history: quote 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > wraps and unwraps a directed text/media range in a quote without changing its content (backward: false)
+ FAIL  tests/document-range-wrapping.test.ts > wraps and unwraps a directed text/media range in a quote without changing its content (backward: true)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-wrapping.test.ts:14:33
+     12|     const before = editor.state.doc, selection = new RangeSelection(be…
+     13|     editor.dispatch(editor.createTransaction().setSelection(selection)…
+     14|     expect(toggleQuote(editor)).toBe(true);
+       |                                 ^
+     15|     const wrapped = editor.state.doc;
+     16|     expect(wrapped.content.map(node => node.type.name)).toEqual(['para…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > puts all selected blocks, including media, into bullet list items and can unwrap them
+ FAIL  tests/document-range-wrapping.test.ts > puts all selected blocks, including media, into ordered list items and can unwrap them
+ FAIL  tests/document-range-wrapping.test.ts > puts all selected blocks, including media, into task list items and can unwrap them
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-wrapping.test.ts:32:38
+     30|     const before = editor.state.doc, selection = new RangeSelection(be…
+     31|     editor.dispatch(editor.createTransaction().setSelection(selection)…
+     32|     expect(toggleList(editor, kind)).toBe(true);
+       |                                      ^
+     33|     const wrapped = editor.state.doc, list = wrapped.child(1);
+     34|     expect(list.type.name).toBe(`${kind}_list`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > excludes a following paragraph at its first text offset: quote
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ tests/document-range-wrapping.test.ts:52:41
+     50|     editor.dispatch(editor.createTransaction().setSelection(Selection.…
+     51|     expect(command === 'quote' ? toggleQuote(editor) : toggleList(edit…
+     52|     expect(editor.state.doc.childCount).toBe(3);
+       |                                         ^
+     53|     expect(editor.state.doc.child(0)).toBe(before.child(0)); expect(ed…
+     54|     expect(editor.state.doc.child(1).textContent).toBe('Left');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > excludes a following paragraph at its first text offset: bullet
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-wrapping.test.ts:51:86
+     49|     const before = editor.state.doc;
+     50|     editor.dispatch(editor.createTransaction().setSelection(Selection.…
+     51|     expect(command === 'quote' ? toggleQuote(editor) : toggleList(edit…
+       |                                                                                      ^
+     52|     expect(editor.state.doc.childCount).toBe(3);
+     53|     expect(editor.state.doc.child(0)).toBe(before.child(0)); expect(ed…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > quotes a selected image while retaining its node selection, not a neighboring text projection
+AssertionError: expected 'image_super' to be 'blockquote' // Object.is equality
+
+Expected: "blockquote"
+Received: "image_super"
+
+ ❯ tests/document-range-wrapping.test.ts:64:49
+     62|     editor.dispatch(editor.createTransaction().setSelection(new NodeSe…
+     63|     expect(toggleQuote(editor)).toBe(true);
+     64|     expect(editor.state.doc.child(2).type.name).toBe('blockquote');
+       |                                                 ^
+     65|     expect(editor.state.doc.child(2).child(0)).toBe(before.child(2));
+     66|     expect(editor.state.doc.child(1)).toBe(before.child(1)); expect(ed…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > wraps an image-only structural range without formatting neighboring paragraphs: quote
+ FAIL  tests/document-range-wrapping.test.ts > wraps an image-only structural range without formatting neighboring paragraphs: bullet
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-wrapping.test.ts:76:86
+     74|     const before = editor.state.doc;
+     75|     editor.dispatch(editor.createTransaction().setSelection(new RangeS…
+     76|     expect(command === 'quote' ? toggleQuote(editor) : toggleList(edit…
+       |                                                                                      ^
+     77|     const wrapper = editor.state.doc.child(2);
+     78|     expect(command === 'quote' ? wrapper.child(0) : wrapper.child(0).c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > supports Select all and preserves its selection kind: quote
+ FAIL  tests/document-range-wrapping.test.ts > supports Select all and preserves its selection kind: bullet
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-wrapping.test.ts:89:86
+     87|     const before = editor.state.doc;
+     88|     editor.dispatch(editor.createTransaction().setSelection(new AllSel…
+     89|     expect(command === 'quote' ? toggleQuote(editor) : toggleList(edit…
+       |                                                                                      ^
+     90|     expect(editor.state.doc.childCount).toBe(1); expect(editor.state.s…
+     91|     expect(editor.state.doc.child(0).textContent).toBe(before.textCont…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > quotes selected cell contents independently without changing the table rectangle
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/document-range-wrapping.test.ts:103:33
+    101|     const before = editor.state.doc, selection = new CellSelection(bef…
+    102|     editor.dispatch(editor.createTransaction().setSelection(selection)…
+    103|     expect(toggleQuote(editor)).toBe(true);
+       |                                 ^
+    104|     expect(editor.state.doc.child(1).child(0).content.map(node => node…
+    105|     expect(editor.state.doc.child(1).child(0).child(2)).toBe(before.ch…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > preserves text positions instead of marking retained quote contents deleted
+AssertionError: expected { position: 16, deleted: true, …(3) } to match object { position: 10, deleted: false }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deleted": false,
+-   "position": 10,
++   "deleted": true,
++   "position": 16,
+  }
+
+ ❯ tests/document-range-wrapping.test.ts:122:47
+    120|       const oldPosition = textPointToPosition(before, [index, 0], offs…
+    121|       const path = index === 1 ? [1, 0, 0] : [index, 0];
+    122|       expect(mapping!.mapResult(oldPosition)).toMatchObject({ position…
+       |                                               ^
+    123|     }
+    124|   } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  tests/document-range-wrapping.test.ts > returns a transaction-filter rejection without adding history: quote
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/document-range-wrapping.test.ts:132:86
+    130|     const before = editor.state.doc;
+    131|     editor.dispatch(editor.createTransaction().setSelection(Selection.…
+    132|     expect(command === 'quote' ? toggleQuote(editor) : toggleList(edit…
+       |                                                                                      ^
+    133|     expect(editor.state.doc).toBe(before); expect(canUndo(editor)).toB…
+    134|   } finally { editor.destroy(); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  15 failed | 1 passed (16)
+   Start at  05:23:51
+   Duration  3.92s (import 51%, transform 48%, tests 1%, worker 1%)

@@ -1,0 +1,152 @@
+[WebServer] (node:12444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:28180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (2.3s)
+  x  2 [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (2.7s)
+(node:20956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (5.9s)
+  x  4 [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (4.1s)
+(node:7464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (4.6s)
+  x  6 [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (2.9s)
+
+
+  1) [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p')
+    Expected: "Before — leave this paragraph alone."
+    Error: strict mode violation: getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p') resolved to 2 elements:
+        1) <p data-fountain-path="0" data-fountain-content-dom="" data-fountain-node="paragraph">…</p> aka getByLabel('Imported document editor').getByRole('paragraph').filter({ hasText: 'Before — leave this paragraph' })
+        2) <p data-fountain-path="2" data-fountain-content-dom="" data-fountain-node="paragraph">…</p> aka getByRole('paragraph').filter({ hasText: /^$/ })
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p')
+
+
+      55 |     await workspace.getByRole('button', { name: command.label, exact: true }).click();
+      56 |     await expect(editor.locator(command.selector)).toHaveCount(1);
+    > 57 |     await expect(editor.locator(':scope > p')).toHaveText('Before — leave this paragraph alone.');
+         |                                                ^
+      58 |     await expect(editor.locator('img')).toHaveCount(1);
+      59 |     const native = await page.evaluate(() => {
+      60 |       const selection = getSelection();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\structural-wrapping-real.spec.ts:57:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p')
+    Expected: "Before — leave this paragraph alone."
+    Error: strict mode violation: getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p') resolved to 2 elements:
+        1) <p data-fountain-path="0" data-fountain-content-dom="" data-fountain-node="paragraph">…</p> aka getByLabel('Imported document editor').getByRole('paragraph').filter({ hasText: 'Before — leave this paragraph' })
+        2) <p data-fountain-path="2" data-fountain-content-dom="" data-fountain-node="paragraph">…</p> aka getByRole('paragraph').filter({ hasText: /^$/ })
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p')
+
+
+      55 |     await workspace.getByRole('button', { name: command.label, exact: true }).click();
+      56 |     await expect(editor.locator(command.selector)).toHaveCount(1);
+    > 57 |     await expect(editor.locator(':scope > p')).toHaveText('Before — leave this paragraph alone.');
+         |                                                ^
+      58 |     await expect(editor.locator('img')).toHaveCount(1);
+      59 |     const native = await page.evaluate(() => {
+      60 |       const selection = getSelection();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\structural-wrapping-real.spec.ts:57:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p')
+    Expected: "Before — leave this paragraph alone."
+    Error: strict mode violation: getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p') resolved to 2 elements:
+        1) <p data-fountain-path="0" data-fountain-content-dom="" data-fountain-node="paragraph">…</p> aka getByLabel('Imported document editor').getByRole('paragraph').filter({ hasText: 'Before — leave this paragraph' })
+        2) <p data-fountain-path="2" data-fountain-content-dom="" data-fountain-node="paragraph">…</p> aka getByRole('paragraph').filter({ hasText: /^$/ })
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('region', { name: 'Conversion workspace: quote-forward.json', exact: true }).getByRole('textbox', { name: 'Imported document editor', exact: true }).locator(':scope > p')
+
+
+      55 |     await workspace.getByRole('button', { name: command.label, exact: true }).click();
+      56 |     await expect(editor.locator(command.selector)).toHaveCount(1);
+    > 57 |     await expect(editor.locator(':scope > p')).toHaveText('Before — leave this paragraph alone.');
+         |                                                ^
+      58 |     await expect(editor.locator('img')).toHaveCount(1);
+      59 |     const native = await page.evaluate(() => {
+      60 |       const selection = getSelection();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\structural-wrapping-real.spec.ts:57:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-history-browser-20261105\structural-wrapping-real-w-fa69a-e-data-and-toggles-them-off-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+    [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+    [webkit] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  3 passed (31.8s)

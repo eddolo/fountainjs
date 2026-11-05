@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain text/media block identities and metadata through quote/list wrapping,
+  and preserve backward native selections when wrapping changes their paths.
+  Split paragraphs/headings/list items without reporting retained text as
+  deleted. Local history records exact map sequences so comments remain anchored
+  through split undo/redo; independent same-leaf text insertions, deletions and
+  replacements survive snapshot restoration. Optional compound-step mappings
+  preserve the original custom-step contract. Six required offline Yjs retention
+  failures remain unresolved; this work does not certify collaboration parity.
+  See the [retention audit](docs/STEP_RETENTION_WORK_IN_PROGRESS.md).
+
 - Keep the table resize handle focused through keyboard resizing, pointer drag
   and undo/redo. Handle focus establishes an actual cell selection; NodeViews
   retain gesture ownership when release occurs outside the handle. Column-width
