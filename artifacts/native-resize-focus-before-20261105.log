@@ -1,0 +1,63 @@
+Scope: all 3 workspace projects
+✓ Lockfile passes supply-chain policies (verified 24d ago)
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+Done in 954ms using pnpm v11.25.0
+[WebServer] (node:16992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:26656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:4741:1 › announces table resize values through real keyboard, pointer and history workflows (7.7s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:4741:1 › announces table resize values through real keyboard, pointer and history workflows
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('[data-fountain-path="0.0.0"] .fountain-table-cell__resize-handle')
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" with timeout 5000ms
+      - waiting for locator('[data-fountain-path="0.0.0"] .fountain-table-cell__resize-handle')
+        14 × locator resolved to <span tabindex="0" role="separator" aria-valuemin="40" aria-valuenow="310" aria-valuemax="2000" contenteditable="false" aria-orientation="vertical" aria-valuetext="310 pixels" aria-label="Resize table column" class="fountain-table-cell__resize-handle"></span>
+           - unexpected value "inactive"
+
+
+      4782 |   await expect(handle).toHaveAttribute('aria-valuetext', '310 pixels');
+      4783 |   await page.mouse.up();
+    > 4784 |   await expect(handle).toBeFocused();
+           |                        ^
+      4785 |   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.state.selection.kind)).toBe('cell');
+      4786 |   await expect(page.locator('[data-fountain-path="0.1.1"] .fountain-table-cell__resize-handle')).toHaveAttribute('aria-valuenow', '310');
+      4787 |   await editor.screenshot({ path: info.outputPath('table-resize-announced-and-committed.png') });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:4784:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-resize-focus-before-20261105\editor-announces-table-res-81504-inter-and-history-workflows-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-resize-focus-before-20261105\editor-announces-table-res-81504-inter-and-history-workflows-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-resize-focus-before-20261105\editor-announces-table-res-81504-inter-and-history-workflows-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-resize-focus-before-20261105\editor-announces-table-res-81504-inter-and-history-workflows-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-resize-focus-before-20261105\editor-announces-table-res-81504-inter-and-history-workflows-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\browser\editor.spec.ts:4741:1 › announces table resize values through real keyboard, pointer and history workflows

@@ -1,0 +1,19 @@
+{
+  "baseCommit": "252509009058fb974a7d9b8fb2c1d84632cd6923",
+  "declarationFiles": 423,
+  "publicSignaturesUnchangedSinceBase": true,
+  "changes": [
+    {
+      "file": "dist/view/selection-handler.d.cts",
+      "before": "a08fefaa9c4f1635f0cebb202f03648ceed27a8e30083d27ae61526fc1bc193e",
+      "after": "5eae87630bead0eec96a48957f0be629b3f826c5be6005f9f3171e6c96431789",
+      "onlyChange": "private nodeViewPointerActive"
+    },
+    {
+      "file": "dist/view/selection-handler.d.ts",
+      "before": "ac39b72feb865ae89a29a083a1f29614d3a8fc91465cb6d8bdd63aaa118ab908",
+      "after": "496ed777c0913655addf4dc0f2bf2394a2ab63646f546dca8bccdb23ce7d403a",
+      "onlyChange": "private nodeViewPointerActive"
+    }
+  ]
+}

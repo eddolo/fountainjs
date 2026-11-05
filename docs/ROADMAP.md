@@ -1,5 +1,20 @@
 # FountainJS opportunity roadmap
 
+Table resize retention (2026-11-05, unreleased): preserve semantic cell focus
+through keyboard/pointer resizing and retain every content position for column
+width changes. All three previously failing desktop-engine resize journeys,
+63 recovery cases and 27 additional control cases pass locally. All 4,061 units
+in 276 files pass, together with types/API/headless/package/workerd and
+performance/retention checks. Actual packed consumers pass 24 checks; 881 build
+files match the archive. Six stage captures and twelve sampled video frames
+were reviewed. Public signatures and dependencies are unchanged. Static root
+growth is 774 raw / 169 gzip bytes, not a runtime-speed measurement. Existing
+size ceilings remain red and unchanged. Full fresh CI remains required; separate
+structural/history work still has six required Yjs retention failures and one
+independent-deletion history failure. No release promotion.
+[Audit](TABLE_RESIZE_RETENTION_AUDIT.md) ·
+[Evidence](../artifacts/resize-retention-verification-20261105.json).
+
 Native focus recovery (2026-11-05, unreleased): fresh CI exposed 63 browser
 regressions in the preceding focus restoration. Restore only a pending explicit
 local command caret; let fresh native placements supersede it without taking

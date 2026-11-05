@@ -56,6 +56,7 @@ export class SelectionHandler {
   private syncing = false;
   private pointerSelectionHandled = false;
   private pointerSelectionActive = false;
+  private nodeViewPointerActive = false;
   private pendingModelSync = false;
   private pendingFocusSelection = false;
   #domSyncRequested = false;
@@ -547,7 +548,7 @@ export class SelectionHandler {
   };
 
   private onSelectionInteraction = (event: Event): void => {
-    if (this.shouldStopEvent?.(event)) return;
+    if (this.nodeViewPointerActive || this.shouldStopEvent?.(event)) return;
     if (this.pointerSelectionHandled) {
       this.pointerSelectionHandled = false;
       return;
@@ -559,14 +560,20 @@ export class SelectionHandler {
     if (!this.syncing) this.capture(event.type === 'pointerup' || nativeNavigation && !documentNavigation);
   };
 
-  private endPointerSelection = (): void => { this.pointerSelectionActive = false; };
+  private endPointerSelection = (): void => {
+    this.pointerSelectionActive = false;
+    this.nodeViewPointerActive = false;
+  };
 
   private onPointerDown = (event: PointerEvent): void => {
-    if (this.shouldStopEvent?.(event)) return;
     const target = event.target instanceof Element ? event.target : null;
     if (!target || !this.dom.contains(target)) return;
-    this.pointerSelectionActive = true;
     this.pendingFocusSelection = false;
+    // A resize/widget gesture can finish over editable content rather than its
+    // original handle. NodeView ownership lasts until document pointerup/cancel.
+    this.nodeViewPointerActive = Boolean(this.shouldStopEvent?.(event));
+    if (this.nodeViewPointerActive) return;
+    this.pointerSelectionActive = true;
     this.requestDOMSync();
 
     const cell = target.closest<HTMLElement>('td[data-fountain-path], th[data-fountain-path]');

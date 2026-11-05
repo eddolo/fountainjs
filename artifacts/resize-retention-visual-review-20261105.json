@@ -1,0 +1,79 @@
+{
+  "stageCaptures": [
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-chromium/table-resize-announced-and-committed.png",
+      "sha256": "49e5bd531aa3f2cf9b03271f116fff4e679f39ee2c3b5f0bcce16b3937113489"
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-chromium/table-resize-undo-exact-document.png",
+      "sha256": "0b9be8bd523ad07f3d0fb4f9122fc6e61e142ab539e6e2c2ba84534240389e1e"
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-firefox/table-resize-announced-and-committed.png",
+      "sha256": "43ab7988fb11b54e7b5fda7760e8eebf9031ff281096cbcbd1a3ec1a2e5e1854"
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-firefox/table-resize-undo-exact-document.png",
+      "sha256": "9df91cdb0cb0b9e42d327ecad5d356c91dfca2b133ebae075732c45b0263d16f"
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-webkit/table-resize-announced-and-committed.png",
+      "sha256": "f41bc7a6def6e184d455a92b7697d72d82047a7250f760be3bbe1a82292126cb"
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-webkit/table-resize-undo-exact-document.png",
+      "sha256": "08386d50461d6d2678bbb4a4cf2314dab100af334de1a2a132c933d286d81910"
+    }
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-chromium/video.webm",
+      "sha256": "314cfb1efc5c09f92a1051fc81efc48f9aef737a52f44f96d7cb88c6f48d1268",
+      "durationSeconds": 4.16,
+      "sampleSeconds": [
+        0.624,
+        1.6640000000000001,
+        2.704,
+        3.536
+      ]
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-firefox/video.webm",
+      "sha256": "0a331c3037b069db631866039d79e36933b62b7d54f5d9d8631a20da913c56bc",
+      "durationSeconds": 6.04,
+      "sampleSeconds": [
+        0.9059999999999999,
+        2.4160000000000004,
+        3.926,
+        5.1339999999999995
+      ]
+    },
+    {
+      "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-webkit/video.webm",
+      "sha256": "cd755ff61e3b59f25f02c3b34628e4a5eef52a484a95af33b488992f4fb3e01a",
+      "durationSeconds": 4.84,
+      "sampleSeconds": [
+        0.726,
+        1.936,
+        3.146,
+        4.114
+      ]
+    }
+  ],
+  "contactSheets": [
+    "artifacts/resize-retention-visual-review-20261105/stages.png",
+    "artifacts/resize-retention-visual-review-20261105/video-chromium.png",
+    "artifacts/resize-retention-visual-review-20261105/video-firefox.png",
+    "artifacts/resize-retention-visual-review-20261105/video-webkit.png"
+  ],
+  "sampledVideoFrames": 12,
+  "stageContactsReviewed": true,
+  "sampledVideoContactsReviewed": true,
+  "continuousPlaybackReviewed": false,
+  "physicalMobileCertified": false,
+  "reviewNotes": [
+    "Reviewed six committed/undo stage captures and twelve sampled recording frames across Chromium, Firefox and WebKit.",
+    "Table geometry and merged cells remain visible through resize and undo; native selection paint varies by engine. Early recording samples include page loading.",
+    "Sampled frames only: continuous playback and physical mobile certification are not claimed."
+  ]
+}

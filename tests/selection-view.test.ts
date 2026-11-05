@@ -23,6 +23,54 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each(['text', 'gap'] as const)('selects the resize handle cell when focus arrives from a %s projection of that same cell', async kind => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [
+      { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', attrs: { colwidth: [120] }, content: [paragraph('Cell')] }] }] },
+      paragraph('Outside'),
+    ] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    try {
+      editor.dispatch(editor.createTransaction().setSelection(kind === 'gap'
+        ? new GapSelection(editor.state.doc, 0) : Selection.cursor([0, 0, 0, 0, 0], 2)));
+      await settleSelection();
+      const handle = view.dom.querySelector<HTMLElement>('.fountain-table-cell__resize-handle')!;
+      handle.focus(); await settleSelection();
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      expect((editor.state.selection as CellSelection).cellPaths).toEqual([[0, 0, 0]]);
+      expect(document.activeElement).toBe(handle);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it.each(['pointerup', 'pointercancel'] as const)('keeps a NodeView resize gesture owned through %s outside its handle, then accepts keyboard placement', async finish => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [
+      { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', attrs: { colwidth: [120] }, content: [paragraph('Cell')] }] }] },
+      paragraph('Outside'),
+    ] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      const handle = view.dom.querySelector<HTMLElement>('.fountain-table-cell__resize-handle')!;
+      const content = view.dom.querySelector<HTMLElement>('.fountain-table-cell__content')!;
+      const outside = view.dom.querySelector<HTMLElement>('[data-fountain-text-path="1.0"]')!;
+      editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, [0, 0, 0])));
+      handle.focus(); await settleSelection();
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      // A native control can retain unrelated endpoints from before focus.
+      native.setBaseAndExtent(outside.firstChild!, 1, outside.firstChild!, 3);
+      handle.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, button: 0, clientX: 120 }));
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 155 }));
+      content.dispatchEvent(new MouseEvent(finish, { bubbles: true }));
+      await settleSelection();
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      expect(document.activeElement).toBe(handle);
+      view.dom.focus(); native.setBaseAndExtent(outside.firstChild!, 2, outside.firstChild!, 2);
+      outside.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight', bubbles: true }));
+      await settleSelection();
+      expect(editor.state.selection).toEqual(Selection.cursor([1, 0], 2));
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
   it.each([[false, false], [true, false], [false, true], [true, true]])('accepts an explicit native placement after a deferred command (range: %s, return focus: %s)', async (range, returnFocus) => {
     const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Before'), paragraph('Target')] } });
     const mount = document.createElement('div'), button = document.createElement('button'); document.body.append(mount, button);

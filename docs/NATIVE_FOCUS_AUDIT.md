@@ -4,6 +4,12 @@ Unreleased follow-up, 2026-11-05. This supersedes the broad focus-restoration
 claim in the [structural formatting checkpoint](STRUCTURAL_FORMATTING_AUDIT.md).
 It does not certify complete editor parity or authorize a release.
 
+Subsequent CI passed 894 cases in the remaining browser matrix and exposed
+three failures in the same table-resize journey. The
+[table resize follow-up](TABLE_RESIZE_RETENTION_AUDIT.md) records the owning
+selection/attribute-map boundaries and their verified repairs; the earlier
+checkpoint below remains historical evidence.
+
 ## Failure and boundary
 
 The fresh browser job for commit

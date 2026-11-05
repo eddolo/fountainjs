@@ -4,7 +4,8 @@ import { Node, type Attributes } from './schema';
 import { CellSelection, Selection } from './selection';
 import { TableMap, type TableCellInfo, type TableRect } from './table-map';
 import type { EditorState } from './state';
-import { comparePaths, getNodeAtPath } from './transaction/path';
+import { comparePaths, getNodeAtPath, replaceNodeAtPath } from './transaction/path';
+import { Step } from './transaction/step';
 
 const CELL_NAMES = new Set(['table_cell', 'table_header']);
 const MIN_COLUMN_WIDTH = 40;
@@ -273,6 +274,32 @@ export function selectTableColumn(editor: Editor, requestedColumn?: number): boo
   return true;
 }
 
+/** Column geometry changes attributes only. Retain every content position and
+ * rebuild the affected rows once, including during command-batch replay. */
+class ResizeTableColumnStep extends Step {
+  readonly path: readonly number[];
+
+  constructor(path: readonly number[], readonly column: number, readonly width: number) {
+    super();
+    this.path = Object.freeze([...path]);
+  }
+
+  apply(doc: Node): Node {
+    const table = getNodeAtPath(doc, this.path);
+    if (table.type.name !== 'table') throw new Error('Column resizing requires a table.');
+    const map = TableMap.create(table, this.path);
+    if (this.column < 0 || this.column >= map.width) throw new RangeError('Invalid resize column.');
+    const rows = table.content.map((row, rowIndex) => row.copy(row.content.map((cell, cellIndex) => {
+      const info = map.cellInfo(pathForCell(this.path, rowIndex, cellIndex));
+      if (!info || this.column < info.column || this.column >= info.column + info.colspan) return cell;
+      const widths = normalizedWidths(cell, info.colspan) ?? Array(info.colspan).fill(0);
+      widths[this.column - info.column] = this.width;
+      return recreateCell(cell, { colwidth: widths });
+    })));
+    return replaceNodeAtPath(doc, this.path, table.copy(rows));
+  }
+}
+
 export function resizeTableColumn(
   editor: Editor,
   width: number,
@@ -290,16 +317,10 @@ export function resizeTableColumn(
   const column = requestedColumn ?? context?.cell.column;
   if (column === undefined || column < 0 || column >= map.width) return false;
   const nextWidth = Math.max(MIN_COLUMN_WIDTH, Math.min(MAX_COLUMN_WIDTH, width));
-  const rows = table.content.map((row, rowIndex) => row.copy(row.content.map((cell, cellIndex) => {
-    const info = map.cellInfo(pathForCell(tablePath, rowIndex, cellIndex));
-    if (!info || column < info.column || column >= info.column + info.colspan) return cell;
-    const widths = normalizedWidths(cell, info.colspan) ?? Array(info.colspan).fill(0);
-    widths[column - info.column] = nextWidth;
-    return recreateCell(cell, { colwidth: widths });
-  })));
-  const transaction = editor.state.createTransaction().replaceNode(tablePath, [table.copy(rows)]).setMeta('table$resize', true);
-  editor.dispatch(transaction);
-  return true;
+  const transaction = editor.state.createTransaction().step(new ResizeTableColumnStep(tablePath, column, nextWidth)).setMeta('table$resize', true);
+  if (!transaction.docChanged) return true;
+  try { editor.state.schema.validate(transaction.doc); } catch { return false; }
+  return editor.dispatch(transaction);
 }
 
 function repairedTable(table: Node): Node {

@@ -1,0 +1,39 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-focus-audit
+
+ ❯ tests/selection-view.test.ts (24 tests | 2 failed) 409ms
+   ❯ semantic selection DOM bridge (24)
+     × selects the resize handle cell when focus arrives from a text projection of that same cell 151ms
+     × selects the resize handle cell when focus arrives from a gap projection of that same cell 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > selects the resize handle cell when focus arrives from a text projection of that same cell
+AssertionError: expected Selection{ …(5) } to be an instance of CellSelection
+ ❯ tests/selection-view.test.ts:39:38
+     37|       const handle = view.dom.querySelector<HTMLElement>('.fountain-ta…
+     38|       handle.focus(); await settleSelection();
+     39|       expect(editor.state.selection).toBeInstanceOf(CellSelection);
+       |                                      ^
+     40|       expect((editor.state.selection as CellSelection).cellPaths).toEq…
+     41|       expect(document.activeElement).toBe(handle);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > selects the resize handle cell when focus arrives from a gap projection of that same cell
+AssertionError: expected GapSelection{ …(9) } to be an instance of CellSelection
+ ❯ tests/selection-view.test.ts:39:38
+     37|       const handle = view.dom.querySelector<HTMLElement>('.fountain-ta…
+     38|       handle.focus(); await settleSelection();
+     39|       expect(editor.state.selection).toBeInstanceOf(CellSelection);
+       |                                      ^
+     40|       expect((editor.state.selection as CellSelection).cellPaths).toEq…
+     41|       expect(document.activeElement).toBe(handle);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 22 passed (24)
+   Start at  20:09:48
+   Duration  4.69s (transform 34%, import 32%, environment 25%, tests 9%)
