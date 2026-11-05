@@ -1,5 +1,12 @@
 # Retained collaboration storage candidate
 
+This document records the earlier storage-foundation checkpoint. Subsequent
+local work adds a model/transaction bridge, node codec version 2, composed split
+ordering and another required deletion/format-provenance failure. Current status:
+[document bridge work in progress](YJS_RETAINED_DOCUMENT_WORK_IN_PROGRESS.md).
+The counts, codec tag and runtime-byte comparison below belong to that earlier
+checkpoint, not to the latest working tree.
+
 Local work in progress, 2026-11-05. These components are not exported through
 the package, connected to `YjsCollaborationAdapter`, or used by the demos. The
 six ordinary failing cases in `tests/yjs-document-range.test.ts` still fail.

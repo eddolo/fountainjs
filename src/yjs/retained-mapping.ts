@@ -12,6 +12,7 @@ export interface RetainedTextPlan {
   readonly removed: readonly TextSlice[];
   readonly inserted: readonly TextSlice[];
 }
+export interface RetainedNodeStart { readonly before: readonly number[]; readonly after: readonly number[] }
 interface Leaf { readonly node: Node; readonly path: readonly number[]; readonly position: number }
 
 function leaves(document: Node): readonly Leaf[] {
@@ -66,6 +67,32 @@ function gaps(all: readonly Leaf[], retained: readonly TextSlice[]): readonly Te
       position = slice.to;
     }
     if (position < leaf.node.nodeSize) result.push({ path: leaf.path, from: position, to: leaf.node.nodeSize });
+  }
+  return result;
+}
+
+/** Retain container identity only where its opening unit is actually retained. */
+export function planRetainedNodeStarts(before: Node, after: Node, mapping: Mapping): readonly RetainedNodeStart[] {
+  const collect = (document: Node) => {
+    const result: { path: readonly number[]; position: number }[] = [];
+    const visit = (node: Node, path: readonly number[], position: number, root = false): void => {
+      if (node.isText) return;
+      if (!root) result.push({ path, position });
+      let next = root ? 0 : position + 1;
+      node.content.forEach((child, index) => { visit(child, [...path, index], next); next += child.nodeSize; });
+    };
+    visit(document, [], 0, true); return result;
+  };
+  const next = new Map(collect(after).map(entry => [entry.position, entry.path]));
+  const { spans, size } = retainedUnits(before.nodeSize - 2, mapping.maps), result: RetainedNodeStart[] = [];
+  if (size !== after.nodeSize - 2) throw new Error('Transaction maps do not describe the target document size.');
+  let index = 0;
+  for (const entry of collect(before)) {
+    while (index < spans.length && spans[index]!.before + spans[index]!.length <= entry.position) index++;
+    const span = spans[index];
+    if (!span || entry.position < span.before) continue;
+    const path = next.get(span.after + entry.position - span.before);
+    if (path) result.push({ before: entry.path, after: path });
   }
   return result;
 }

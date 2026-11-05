@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Retained document bridge (2026-11-05, local work in progress): test actual
+Fountain quote/list/mark/split commands against pooled shared storage, including
+author undo/redo, native history, empty boundaries, mixed-content save/reopen and
+deterministic composed concurrent-cut order. Compiled ESM/CJS consumers pass 32
+pure-Node journeys and reproduce the new full-deletion/format-ownership blocker.
+The original six default-adapter failures still fail, and the new candidate
+regression remains an ordinary required failure. No adapter/migration switch,
+performance certification, public entry, release or parity promotion. Keep the
+new commits local per the user's latest publishing preference.
+[Work in progress](YJS_RETAINED_DOCUMENT_WORK_IN_PROGRESS.md).
+
 Retained Yjs storage foundations (2026-11-05, local work in progress): add
 isolated text pools with private split boundaries, stable node records with
 single-owner placement references, and character plans derived from exact

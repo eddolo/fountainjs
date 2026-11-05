@@ -1,17 +1,21 @@
 import * as Y from 'yjs';
 import type { Attributes, MarkJSON } from '../core/schema';
 
-const VERSION = 'fountain-retained-nodes/1';
+const VERSION = 'fountain-retained-nodes/2';
 const ROOT = 'root';
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
-const SAFE_KEY = /^[A-Za-z_][\w.-]{0,127}$/;
 const UNSAFE = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_NODES = 100_000;
 const MAX_REFERENCES = 1_000_000;
 
 interface Placement { readonly parent: string; readonly token: string }
 interface Reference { readonly id: string; readonly token: string }
-export interface RetainedNodeValue { readonly type: string; readonly attrs?: Attributes; readonly marks?: readonly MarkJSON[] }
+export interface RetainedTextLayout { readonly field: string; readonly empty: boolean }
+export interface RetainedNodeValue {
+  readonly type: string; readonly attrs?: Attributes; readonly marks?: readonly MarkJSON[];
+  /** Private projection state, never stored in application attributes. */
+  readonly textLayout?: RetainedTextLayout;
+}
 export interface RetainedNodeProjection extends RetainedNodeValue {
   readonly id: string;
   readonly content: readonly RetainedNodeProjection[];
@@ -19,7 +23,14 @@ export interface RetainedNodeProjection extends RetainedNodeValue {
 export interface RetainedNodeIssue { readonly kind: 'cycle-lifted' | 'duplicate-reference' | 'unattached'; readonly id: string }
 
 function id(value: unknown): value is string { return typeof value === 'string' && SAFE_ID.test(value) && !UNSAFE.has(value); }
-function key(value: string): boolean { return typeof value === 'string' && SAFE_KEY.test(value) && !UNSAFE.has(value); }
+function key(value: string): boolean { return typeof value === 'string' && value.length <= 200; }
+// Yjs encodes map keys as UTF-8. Encoding the original UTF-16 units first also
+// preserves application attribute names containing unpaired surrogates.
+export const retainedNameKey = (name: string): string => Array.from({ length: name.length }, (_, index) => name.charCodeAt(index).toString(16).padStart(4, '0')).join('');
+export function retainedKeyName(value: string): string {
+  if (!/^(?:[a-f0-9]{4}){0,200}$/.test(value)) throw new Error('Invalid retained attribute encoding.');
+  return (value.match(/..../g) ?? []).map(entry => String.fromCharCode(Number.parseInt(entry, 16))).join('');
+}
 function encode(value: unknown): string {
   let entries = 0;
   const ancestors = new Set<object>();
@@ -37,8 +48,7 @@ function encode(value: unknown): string {
         validate(item[index], depth + 1);
       }
     }
-    else for (const [name, entry] of Object.entries(item)) {
-      if (UNSAFE.has(name)) throw new TypeError('Unsafe retained metadata key.');
+    else for (const entry of Object.values(item)) {
       validate(entry, depth + 1);
     }
     ancestors.delete(item);
@@ -48,6 +58,7 @@ function encode(value: unknown): string {
   if (result.length > 1_000_000) throw new RangeError('Retained node value is too large.');
   return result;
 }
+export function validateRetainedMetadata(value: unknown): void { encode(value); }
 function decode(value: unknown): unknown {
   if (typeof value !== 'string' || value.length > 1_000_000) throw new Error('Invalid retained metadata encoding.');
   const result: unknown = JSON.parse(value); encode(result); return result;
@@ -132,6 +143,9 @@ export class RetainedNodeStore {
     }).map(reference => reference.id);
   }
 
+  childrenOf(parent: string): readonly string[] { return this.liveChildren(parent); }
+  placementIdentity(nodeId: string): string | undefined { this.valid(); return this.placement(nodeId)?.token; }
+
   private placementTarget(nodeId: string, parent: string, index: number): { array: Y.Array<unknown>; index: number } {
     const target = this.record(parent);
     if (target.get('deleted') === true) throw new Error('Cannot place a retained node inside a deleted parent.');
@@ -152,18 +166,20 @@ export class RetainedNodeStore {
     const nodeId = this.fresh(), token = this.fresh();
     if (nodeId === token) throw new Error('ID factory must supply distinct retained identities.');
     if (this.nodes.size >= MAX_NODES || this.identities.size + 2 > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
-    if (!key(value.type)) throw new TypeError('Invalid retained node type.');
+    if (!key(value.type) || !value.type.length) throw new TypeError('Invalid retained node type.');
     encode(value.attrs ?? {});
     const attrs = Object.entries(value.attrs ?? {}).map(([name, entry]) => {
       if (!key(name)) throw new TypeError('Invalid retained attribute name.');
-      return [`attr:${name}`, encode(entry)] as const;
+      return [`attr:${retainedNameKey(name)}`, encode(entry)] as const;
     });
     if (attrs.length > 1_000 || value.marks !== undefined && !Array.isArray(value.marks)) throw new TypeError('Invalid retained node metadata.');
     const marks = value.marks === undefined ? undefined : encode(value.marks);
+    const layout = value.textLayout === undefined ? undefined : this.layout(value.type, value.textLayout);
     const target = this.placementTarget(nodeId, parent, index);
     this.document.transact(() => {
       const record = new Y.Map<unknown>(); record.set('type', value.type); record.set('children', new Y.Array());
       attrs.forEach(([name, entry]) => record.set(name, entry)); if (marks !== undefined) record.set('marks', marks);
+      if (layout !== undefined) record.set('textLayout', layout);
       this.nodes.set(nodeId, record); this.identities.set(nodeId, true); this.place(nodeId, parent, token, target);
     }, this.origin);
     return nodeId;
@@ -172,16 +188,19 @@ export class RetainedNodeStore {
   setAttribute(nodeId: string, name: string, value: unknown): void {
     const record = this.record(nodeId);
     if (!key(name)) throw new TypeError('Invalid retained attribute name.');
-    if (value !== undefined && !record.has(`attr:${name}`) && [...record.keys()].filter(entry => entry.startsWith('attr:')).length >= 1_000) {
+    const field = `attr:${retainedNameKey(name)}`;
+    if (value !== undefined && !record.has(field) && [...record.keys()].filter(entry => entry.startsWith('attr:')).length >= 1_000) {
       throw new RangeError('Too many retained node attributes.');
     }
     const encoded = value === undefined ? undefined : encode(value);
-    this.document.transact(() => { if (encoded === undefined) record.delete(`attr:${name}`); else record.set(`attr:${name}`, encoded); }, this.origin);
+    if (record.get(field) === encoded) return;
+    this.document.transact(() => { if (encoded === undefined) record.delete(field); else record.set(field, encoded); }, this.origin);
   }
 
   setType(nodeId: string, type: string): void {
     const record = this.record(nodeId);
-    if (!key(type)) throw new TypeError('Invalid retained node type.');
+    if (!key(type) || !type.length) throw new TypeError('Invalid retained node type.');
+    if (record.get('type') === type) return;
     this.document.transact(() => record.set('type', type), this.origin);
   }
 
@@ -189,7 +208,22 @@ export class RetainedNodeStore {
     const record = this.record(nodeId);
     if (marks !== undefined && !Array.isArray(marks)) throw new TypeError('Invalid retained node marks.');
     const value = marks === undefined ? undefined : encode(marks);
+    if (record.get('marks') === value) return;
     this.document.transact(() => { if (value === undefined) record.delete('marks'); else record.set('marks', value); }, this.origin);
+  }
+
+  private layout(type: unknown, value: unknown): RetainedTextLayout {
+    if (type !== 'text' || !value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError('Invalid retained text layout.');
+    const candidate = value as Record<string, unknown>;
+    if (Object.keys(candidate).length !== 2 || !id(candidate.field) || typeof candidate.empty !== 'boolean') throw new TypeError('Invalid retained text layout.');
+    return { field: candidate.field, empty: candidate.empty };
+  }
+
+  setTextLayout(nodeId: string, value: RetainedTextLayout): void {
+    const record = this.record(nodeId), layout = this.layout(record.get('type'), value);
+    const previous = record.get('textLayout') as RetainedTextLayout | undefined;
+    if (previous?.field === layout.field && previous.empty === layout.empty) return;
+    this.document.transact(() => record.set('textLayout', layout), this.origin);
   }
 
   move(nodeId: string, parent: string, index: number): void {
@@ -213,21 +247,22 @@ export class RetainedNodeStore {
   }
 
   private value(nodeId: string): RetainedNodeValue {
-    const record = this.record(nodeId), type = record.get('type'), attrs: Attributes = {};
-    if (typeof type !== 'string' || !key(type) || record.size > 1_004
+    const record = this.record(nodeId), type = record.get('type'), attrs: Attributes = Object.create(null);
+    if (typeof type !== 'string' || !type.length || !key(type) || record.size > 1_005
       || record.has('deleted') && typeof record.get('deleted') !== 'boolean') throw new Error('Invalid retained node metadata.');
     // Y.Map key iteration can reflect each peer's arrival order. Metadata
     // projection needs one portable order for equality/fingerprint consumers.
     for (const [name, entry] of [...record].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)) {
-      if (name === 'type' || name === 'children' || name === 'deleted' || name === 'marks') continue;
-      if (!name.startsWith('attr:') || !key(name.slice(5))) throw new Error('Unknown retained node metadata.');
-      attrs[name.slice(5)] = decode(entry);
+      if (name === 'type' || name === 'children' || name === 'deleted' || name === 'marks' || name === 'textLayout') continue;
+      if (!name.startsWith('attr:')) throw new Error('Unknown retained node metadata.');
+      attrs[retainedKeyName(name.slice(5))] = decode(entry);
     }
     const marks = record.get('marks');
     const decodedMarks = marks === undefined ? undefined : decode(marks);
     if (decodedMarks !== undefined && !Array.isArray(decodedMarks)) throw new Error('Invalid retained node marks.');
     return { type, ...(Object.keys(attrs).length ? { attrs } : {}),
-      ...(decodedMarks === undefined ? {} : { marks: decodedMarks as unknown as readonly MarkJSON[] }) };
+      ...(decodedMarks === undefined ? {} : { marks: decodedMarks as unknown as readonly MarkJSON[] }),
+      ...(record.has('textLayout') ? { textLayout: this.layout(type, record.get('textLayout')) } : {}) };
   }
 
   project(): { readonly root: RetainedNodeProjection; readonly issues: readonly RetainedNodeIssue[] } {

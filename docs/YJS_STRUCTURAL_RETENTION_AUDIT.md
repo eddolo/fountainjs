@@ -116,3 +116,10 @@ the six failures above yet. The
 [candidate storage checkpoint](YJS_RETAINED_STORAGE_WORK_IN_PROGRESS.md) records
 the implementation, focused/compiled tests and required integration/migration
 boundaries. Existing live collaboration documents are unchanged.
+
+The next [local document bridge](YJS_RETAINED_DOCUMENT_WORK_IN_PROGRESS.md) tests
+actual Fountain commands against the pools, including concurrent cuts and author
+undo. It remains disconnected from the default adapter. An additional ordinary
+failure exposes lost private formatting ownership after concurrent full deletion
+and typing; that failure is preserved rather than covered by a default-style
+fallback.

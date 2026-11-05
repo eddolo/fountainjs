@@ -1,0 +1,438 @@
+{
+  "createdAt": "2026-11-05T22:43:58.310Z",
+  "baseCommit": "6589ceb6387290e451b787947b3b8bef7c6ab687",
+  "state": "local-unexported-work-in-progress",
+  "publication": {
+    "userPreference": "Keep the new commit local for now",
+    "pushed": false,
+    "npm": false,
+    "site": false
+  },
+  "checks": {
+    "build": "passed",
+    "fullTypes": "passed",
+    "publicApiDeclarations": 423,
+    "headlessModules": 132,
+    "packageSmoke": "passed",
+    "fullSource": {
+      "passed": 4226,
+      "failed": 7,
+      "total": 4233,
+      "files": 286,
+      "skipped": 0,
+      "failures": [
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline typing when another peer wraps its paragraph (task)"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "preserves offline character order when another peer applies a partial text mark"
+        },
+        {
+          "file": "tests/yjs-document-range.test.ts",
+          "name": "keeps offline typing on its original side of a concurrent paragraph split"
+        },
+        {
+          "file": "tests/yjs-retained-document.test.ts",
+          "name": "retains unseen peer typing when all locally observed characters are deleted"
+        }
+      ]
+    },
+    "candidateSource": {
+      "passed": 42,
+      "failed": 1,
+      "total": 43
+    },
+    "compiledNode": [
+      {
+        "format": "es",
+        "noDOM": true,
+        "passingJourneys": 16,
+        "knownBlockersReproduced": 1,
+        "currentAdapterReplaced": false,
+        "results": [
+          {
+            "kind": "quote",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "quote",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": false,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": true,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": false,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": true,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "knownFailureReproduced": true,
+            "candidateReady": false
+          }
+        ]
+      },
+      {
+        "format": "cjs",
+        "noDOM": true,
+        "passingJourneys": 16,
+        "knownBlockersReproduced": 1,
+        "currentAdapterReplaced": false,
+        "results": [
+          {
+            "kind": "quote",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": false,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "quote",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "bullet",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "ordered",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "task",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "mark",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "split",
+            "reverse": true,
+            "actualEngineCommands": true,
+            "retainedPeerTyping": true,
+            "authorUndoRedo": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": false,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": false,
+            "reverseIDs": true,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": false,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "concurrent-cuts",
+            "reverse": true,
+            "reverseIDs": true,
+            "textBoundaryOrder": true
+          },
+          {
+            "kind": "delete-all-versus-typing",
+            "knownFailureReproduced": true,
+            "candidateReady": false
+          }
+        ]
+      }
+    ],
+    "budgets": {
+      "status": "failed",
+      "ceilingsChanged": false,
+      "failures": [
+        "core ESM +0.1 KiB",
+        "aggregate ESM +67.0 KiB",
+        "aggregate CommonJS +52.5 KiB"
+      ]
+    }
+  },
+  "defaultAdapterReplaced": false,
+  "liveMigration": false,
+  "publicExportsChanged": false,
+  "browserJourneyClaimed": false,
+  "compiledSourceMatches": [
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-nodes.ts",
+      "sha256": "3de19f2d220b3ba799630948ab173e8507946ef24c0d3a977ef6acec78826b0c"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-text.ts",
+      "sha256": "044e102fcf90c5193a3d00a5d4f62028bec32ce7cb97d8f58f83dc962920ed3c"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-mapping.ts",
+      "sha256": "c3e868ad3346824d2a8df8667ced652d890d71fed258cb2951fc2725a44cc87a"
+    },
+    {
+      "map": "retained-document.mjs.map",
+      "source": "../../src/yjs/retained-document.ts",
+      "sha256": "ad906044a1c54b785d8b98824f5f104f4cbcfdc31a31973b10d194fc39784a14"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/core/transaction/mapping.ts",
+      "sha256": "edf271c5bbfe5f1925bd9d5a2b0cacfc28ea44cd4390ff64849fefc6472997bd"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-nodes.ts",
+      "sha256": "3de19f2d220b3ba799630948ab173e8507946ef24c0d3a977ef6acec78826b0c"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-text.ts",
+      "sha256": "044e102fcf90c5193a3d00a5d4f62028bec32ce7cb97d8f58f83dc962920ed3c"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-mapping.ts",
+      "sha256": "c3e868ad3346824d2a8df8667ced652d890d71fed258cb2951fc2725a44cc87a"
+    },
+    {
+      "map": "retained-document.cjs.map",
+      "source": "../../src/yjs/retained-document.ts",
+      "sha256": "ad906044a1c54b785d8b98824f5f104f4cbcfdc31a31973b10d194fc39784a14"
+    }
+  ],
+  "requiredNext": [
+    "Independent recoverable text/format ownership through concurrent full deletion",
+    "General moves/joins, multi-peer cases and custom intermediate invariants",
+    "Selection/presence/review/structured-state and provider lifecycle integration",
+    "Explicit recoverable legacy protocol cutover",
+    "Large-document lookup/projection, memory, history and compaction budgets",
+    "Unchanged original six acceptance tests and recorded browser/IME/clipboard journeys"
+  ],
+  "fullUnitRawCapture": {
+    "path": "artifacts/yjs-document-unit-20261105.json",
+    "retainedLocally": true,
+    "sha256": "2b64d06916dabf1664bdd5778e9dd35dba457899997fd4a2b7f292213f0eafe8"
+  },
+  "files": [
+    {
+      "path": "src/core/transaction/split-node-step.ts",
+      "sha256": "f6b54813ebf2a41d6f8e552adda5fe16d50a4c32771ab7cf03dbcf1b29f0426c"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "ad906044a1c54b785d8b98824f5f104f4cbcfdc31a31973b10d194fc39784a14"
+    },
+    {
+      "path": "src/yjs/retained-nodes.ts",
+      "sha256": "3de19f2d220b3ba799630948ab173e8507946ef24c0d3a977ef6acec78826b0c"
+    },
+    {
+      "path": "src/yjs/retained-text.ts",
+      "sha256": "044e102fcf90c5193a3d00a5d4f62028bec32ce7cb97d8f58f83dc962920ed3c"
+    },
+    {
+      "path": "src/yjs/retained-mapping.ts",
+      "sha256": "c3e868ad3346824d2a8df8667ced652d890d71fed258cb2951fc2725a44cc87a"
+    },
+    {
+      "path": "tests/yjs-retained-document.test.ts",
+      "sha256": "03aa1c0208aceb4533f95939dd38857bbc4b535a9440ce3f0d2a6040e851d37f"
+    },
+    {
+      "path": "tests/yjs-retained-nodes.test.ts",
+      "sha256": "255e251c6e65fddf64719a889035d2db07cb97e929d7b0760586ab35cb65e925"
+    },
+    {
+      "path": "artifacts/yjs-document-node-es-20261105.json",
+      "sha256": "384fde52dbd3318b3aa04d1edd3690c12de3e6e2a25c1e49fa3915daf859ecdb"
+    },
+    {
+      "path": "artifacts/yjs-document-node-cjs-20261105.json",
+      "sha256": "8004a074dee536718e609ab03831525b8582b9e8268d5f986e117be1ebb008cb"
+    },
+    {
+      "path": "artifacts/yjs-document-build-20261105/retained-document.cjs",
+      "sha256": "81bf117cc1ce6a0f0597c9b8d20710a891d7561a8e49509512f0f294d0e73b8f"
+    },
+    {
+      "path": "artifacts/yjs-document-build-20261105/retained-document.cjs.map",
+      "sha256": "0b8518133cf0ca1446a0030ecfea488513d94c4c8e588f0c8aa81db7b0af8a45"
+    },
+    {
+      "path": "artifacts/yjs-document-build-20261105/retained-document.mjs",
+      "sha256": "ccf17f04b71254790bf036c08eadab842dc1632da58d994b3994a577341c5f8f"
+    },
+    {
+      "path": "artifacts/yjs-document-build-20261105/retained-document.mjs.map",
+      "sha256": "af68ea9e655862e6cb24e72d0f5e6ffb5029cdc88ce6018166c7625d1ce46172"
+    }
+  ]
+}

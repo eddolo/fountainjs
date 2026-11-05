@@ -7,10 +7,18 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add an unexported retained-document bridge that exercises actual Fountain
+  transactions against the candidate pools. Check composed concurrent-cut order,
+  native history, combined-scope author undo and mixed-content saved state.
+  Preserve an additional failing deletion/format-ownership regression; the six
+  existing default-adapter failures remain. No adapter or release promotion.
+  See the [bridge work in progress](docs/YJS_RETAINED_DOCUMENT_WORK_IN_PROGRESS.md).
+
 - Add unexported candidate Yjs text/node pools and an exact transaction-mapping
   bridge for continued retention work. These components are not connected to
   the default adapter or demos; the six existing collaboration failures remain
-  required. Current runtime bundles and public exports are unchanged. See the
+  required. Runtime bundles and public exports were unchanged at that storage
+  checkpoint. See the
   [storage work in progress](docs/YJS_RETAINED_STORAGE_WORK_IN_PROGRESS.md).
 
 - Retain text/media block identities and metadata through quote/list wrapping,

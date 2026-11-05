@@ -122,7 +122,7 @@ it('rejects malformed metadata, cycles, bounds and bad identity factories before
     expect(() => pair.left.move(pair.a, pair.a, 0)).toThrow('cycle');
     expect(() => pair.left.create({ type: 'paragraph', attrs: { invalid: NaN } })).toThrow();
     expect(() => pair.left.create({ type: 'paragraph' }, pair.a, 3)).toThrow();
-    expect(() => pair.left.setAttribute(pair.paragraph, '__proto__', 'bad')).toThrow();
+    expect(() => pair.left.setAttribute(pair.paragraph, 'x'.repeat(201), 'bad')).toThrow();
     expect(() => pair.left.setAttribute(pair.paragraph, 'sparse', new Array(2))).toThrow('sparse');
     expect(() => pair.left.setAttribute(pair.paragraph, 'symbols', { [Symbol()]: 'lost' })).toThrow('symbol');
     expect(Y.encodeStateVector(pair.leftDoc)).toEqual(before);

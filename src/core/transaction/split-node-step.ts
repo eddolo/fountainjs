@@ -51,4 +51,11 @@ export class SplitNodeStep extends Step {
     assertTextRange(getNodeAtPath(doc, textPath), this.offset, this.offset);
     return new StepMap([textPointToPosition(doc, textPath, this.offset), 0, this.splitPath.length * 2]);
   }
+
+  /** Internal, structural split intent for shared-storage adapters. No model
+   * objects or constructor identity are required to consume this descriptor. */
+  getRetainedSplit(): { readonly textPath: readonly number[]; readonly rightTextPath: readonly number[]; readonly offset: number } {
+    return { textPath: [...this.path, ...this.splitPath],
+      rightTextPath: [...this.path.slice(0, -1), this.path.at(-1)! + 1, ...this.splitPath.map(() => 0)], offset: this.offset };
+  }
 }

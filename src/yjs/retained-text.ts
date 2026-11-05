@@ -3,7 +3,7 @@ import * as Y from 'yjs';
 const VERSION = 'fountain-retained-text/1';
 const MARKER = '$fountain:partition';
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
-const SAFE_ATTRIBUTE = /^[A-Za-z_][\w.:-]{0,127}$/;
+const SAFE_ATTRIBUTE = /^[A-Za-z_][\w.:-]{0,2047}$/;
 const UNSAFE = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_TEXT = 10_000_000;
 const MAX_PARTITIONS = 100_000;
@@ -44,6 +44,7 @@ function attributes(value: unknown, remove = false): Record<string, string | nul
   }
   return Object.fromEntries(entries);
 }
+export function validateRetainedTextFormat(value: Readonly<Record<string, string>>): void { attributes(value); }
 
 /** Internal candidate storage for the next collaboration representation.
  * Character sequences live outside the document tree. Private boundary embeds
@@ -151,6 +152,8 @@ export class RetainedTextStore {
     if (!entry) throw new Error('Retained text partition boundary is missing.');
     return entry;
   }
+
+  has(id: string): boolean { this.assertLive(); return validId(id) && this.owners.has(id); }
 
   partitions(streamId: string): readonly RetainedTextPartition[] { return this.index(streamId); }
 
