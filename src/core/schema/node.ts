@@ -3,6 +3,7 @@ import { freezeAttributes, type Attributes } from './node-spec';
 import type { NodeType, Schema } from './schema';
 import { inheritChildOffset } from './child-offset';
 import { inheritCopyValidation } from './copy-validation';
+import { inheritBlockLineage } from './block-lineage';
 
 export interface NodeJSON {
   type: string;
@@ -67,7 +68,7 @@ export class Node {
     const node = new Node(this.type, this.attrs, content, undefined, this.marks);
     const commonPrefix = inheritChildOffset(this, node);
     inheritCopyValidation(this, node, commonPrefix);
-    return node;
+    return inheritBlockLineage(this, node);
   }
 
   withText(text: string): Node {
@@ -81,7 +82,7 @@ export class Node {
   }
 
   withAttrs(attrs: Attributes): Node {
-    return new Node(this.type, attrs, this.content, this.text, this.marks);
+    return inheritBlockLineage(this, new Node(this.type, attrs, this.content, this.text, this.marks));
   }
 
   descendants(visitor: DescendantVisitor, path: number[] = [], parent: Node | null = null): void {

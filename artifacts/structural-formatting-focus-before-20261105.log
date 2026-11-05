@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/selection-view.test.ts (13 tests | 1 failed) 306ms
+   ❯ semantic selection DOM bridge (13)
+     × restores the committed model caret when the editing host receives programmatic focus from a toolbar 123ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > restores the committed model caret when the editing host receives programmatic focus from a toolbar
+AssertionError: expected 'BeforeTarget' to be 'Target' // Object.is equality
+
+Expected: "Target"
+Received: "BeforeTarget"
+
+ ❯ tests/selection-view.test.ts:42:45
+     40|       toolbar.focus();
+     41|       view.dom.focus();
+     42|       expect(native.focusNode?.textContent).toBe('Target');
+       |                                             ^
+     43|       expect(native.focusOffset).toBe(2);
+     44|       expect(editor.state.selection).toEqual(Selection.cursor([1, 0], …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  04:40:55
+   Duration  4.83s (transform 38%, import 29%, environment 26%, tests 7%)
+

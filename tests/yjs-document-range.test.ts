@@ -3,7 +3,7 @@
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, GapSelection, RangeSelection, Selection, composeExtensions, createEditor,
-  getCollaborationState, insertText, redoCollaboration, undoCollaboration, type NodeJSON } from '../src';
+  getCollaborationState, insertText, redoCollaboration, setBlockType, setTextAlignment, undoCollaboration, type NodeJSON } from '../src';
 import { createYjsCollaborationExtension, type YjsAwareness } from '../src/yjs';
 
 const p = (text: string): NodeJSON => ({ type: 'paragraph', content: [{ type: 'text', text }] });
@@ -36,7 +36,7 @@ function peers(source: NodeJSON = content) {
   const rightDocument = new Y.Doc();
   Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument), 'initial-sync');
   const right = create(rightDocument, 'right');
-  return { left, right, states, sync: () => {
+  return { left, right, leftDocument, rightDocument, states, sync: () => {
     const leftUpdate = Y.encodeStateAsUpdate(leftDocument), rightUpdate = Y.encodeStateAsUpdate(rightDocument);
     Y.applyUpdate(leftDocument, rightUpdate, 'right-peer');
     Y.applyUpdate(rightDocument, leftUpdate, 'left-peer');
@@ -143,5 +143,107 @@ it('tracks an insertion gap inside a retained quote, rather than anchoring it at
     pair.sync();
     expect(pair.left.state.selection).toMatchObject({ kind: 'gap', position: 10, parentPath: [0], index: 2, association: -1 });
     expect(getCollaborationState(pair.right)?.presences[0]?.selection).toEqual({ anchor: 10, head: 10 });
+  } finally { pair.destroy(); }
+});
+
+it.each([false, true])('retains peer caret/range positions through a remote text-block type change (range: %s)', range => {
+  const pair = peers();
+  try {
+    const { left, right } = pair;
+    const selection = range ? new RangeSelection(left.state.doc, 9, 3) : Selection.cursor([0, 0], 2);
+    left.dispatch(left.createTransaction().setSelection(selection));
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(setBlockType(right, 'heading', { level: 2 })).toBe(true);
+    pair.sync();
+    expect(left.state.doc.child(0).type.name).toBe('heading');
+    expect(left.state.selection.eq(selection)).toBe(true);
+    expect(getCollaborationState(right)?.presences[0]?.selection).toEqual(range ? { anchor: 9, head: 3 } : { anchor: 3, head: 3 });
+  } finally { pair.destroy(); }
+});
+
+it('merges an offline character insertion with a concurrent heading conversion without dropping text', () => {
+  const pair = peers();
+  try {
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(setBlockType(pair.right, 'heading', { level: 2 })).toBe(true);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).type.name).toBe('heading');
+    expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(pair.left.state.doc.child(1).type.name).toBe('image_super');
+  } finally { pair.destroy(); }
+});
+
+it('retains shared text through an attribute/type/text command chain with concurrent offline typing', () => {
+  const pair = peers();
+  try {
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(insertText(pair.left, 'L')).toBe(true);
+    const root = pair.rightDocument.getXmlFragment('fountain').get(0) as Y.XmlElement;
+    const shared = root.get(0);
+    expect(pair.right.runCommandBatch(() => setTextAlignment(pair.right, 'center')
+      && setBlockType(pair.right, 'heading', { level: 2 }) && insertText(pair.right, 'R'))).toBe(true);
+    expect(root.get(0)).toBe(shared);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).type.name).toBe('heading');
+    expect(pair.left.state.doc.child(0).attrs.align).toBe('center');
+    expect(pair.left.state.doc.child(0).textContent).toBe('RAlLpha');
+  } finally { pair.destroy(); }
+});
+
+it('retains the changed shared block on the large-document greedy alignment path', () => {
+  const pair = peers({ type: 'doc', content: Array.from({ length: 600 }, (_, index) => p(`Block ${index}`)) });
+  try {
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([599, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([599, 0], 0)));
+    const root = pair.rightDocument.getXmlFragment('fountain').get(0) as Y.XmlElement;
+    const shared = root.get(599);
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(setBlockType(pair.right, 'heading', { level: 2 })).toBe(true);
+    expect(root.get(599)).toBe(shared);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(599).type.name).toBe('heading');
+    expect(pair.left.state.doc.child(599).textContent).toBe('BlXock 599');
+    expect(pair.left.state.doc.child(0).type.name).toBe('paragraph');
+  } finally { pair.destroy(); }
+});
+
+it('does not infer conversion identity from equal text during an unrelated node replacement', () => {
+  const pair = peers();
+  try {
+    const root = pair.rightDocument.getXmlFragment('fountain').get(0) as Y.XmlElement;
+    const shared = root.get(0);
+    const replacement = pair.right.state.schema.nodeFromJSON({ type: 'heading', attrs: { level: 2, id: 'new-entity' }, content: [{ type: 'text', text: 'Alpha' }] });
+    pair.right.dispatch(pair.right.createTransaction().replaceNode([0], [replacement]));
+    expect(root.get(0)).not.toBe(shared);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).attrs.id).toBe('new-entity');
+  } finally { pair.destroy(); }
+});
+
+it('undoes and redoes local heading conversion without undoing a remote character insertion', () => {
+  const pair = peers();
+  try {
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(setBlockType(pair.right, 'heading', { level: 2 })).toBe(true);
+    pair.sync();
+    expect(undoCollaboration(pair.right)).toBe(true);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).type.name).toBe('paragraph');
+    expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(redoCollaboration(pair.right)).toBe(true);
+    pair.sync();
+    expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+    expect(pair.left.state.doc.child(0).type.name).toBe('heading');
+    expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');
   } finally { pair.destroy(); }
 });

@@ -1,5 +1,29 @@
 # FountainJS opportunity roadmap
 
+Structural formatting and focus follow-up (2026-11-05, unreleased): mixed ranges
+format only intersected text blocks; heading conversion supports whole-document
+and cell selections, retains IDs/metadata and preserves unchanged positions.
+Yjs retains the existing shared text through conversion and concurrent offline
+typing, including author undo/redo. Atomic conversion validates the final parent
+shape and survives command-batch replay after text edits. Returning from an
+external toolbar restores the command caret; native pointer and embedded-code
+focus keep their own behavior. All 4,045 units / 275 files pass (27 added).
+Three engines pass six native directed-formatting workflows, 15 unchanged table
+workflows (30 physical column insertions), and 12 existing focus regressions.
+Review 48 stage captures and four sampled frames from each of 18 recordings;
+this is not continuous playback or physical-mobile certification. Actual packed
+root/core ESM/CJS and Yjs consumers pass 14 cases without DOM globals; all 881
+distribution files match the build. Types/API/headless/package/workerd, unchanged
+conformance, performance and retention gates pass. The measured root closure
+adds 2,884 raw / 1,036 gzip bytes; this payload estimate does not measure speed.
+Size limits still fail (core facade and aggregate ESM/CJS), and no ceilings or
+runtime dependencies changed. The parent CI's 15 table failures reproduce before
+the repair and pass locally afterward; full fresh CI remains open. General
+open slices, the rest of structural command coverage, bulk-formatting latency,
+physical mobile and broader parity remain open. No release promotion.
+[Audit](STRUCTURAL_FORMATTING_AUDIT.md) ·
+[Evidence](../artifacts/structural-formatting-verification-20261105.json).
+
 Structural-range foundation (2026-11-05, unreleased): add directed text/media/gap
 endpoints, schema-checked replacement, exact position mapping and closed rich
 clipboard projection. Preserve range direction, gap association and collapsed

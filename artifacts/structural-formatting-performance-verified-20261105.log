@@ -1,0 +1,40 @@
+$ node --expose-gc scripts/check-performance-budgets.mjs && node --expose-gc scripts/check-shared-direction-retention.mjs && node --expose-gc scripts/check-position-mapping-retention.mjs
+100 blocks: local p50 0.03 ms, p95 0.06 ms; incremental remote p50 0.01 ms, p95 0.05 ms; JSON boundary p50 0.69 ms, p95 1.55 ms
+  first edit / initial p95 / initial peak: local 1.01 ms / 0.14 ms / 3.43 ms; incremental remote 0.28 ms / 0.06 ms / 1.05 ms
+1,000 blocks: local p50 0.03 ms, p95 0.06 ms; incremental remote p50 0.02 ms, p95 0.05 ms; JSON boundary p50 12.30 ms, p95 25.70 ms
+  first edit / initial p95 / initial peak: local 1.29 ms / 0.11 ms / 1.29 ms; incremental remote 0.11 ms / 0.05 ms / 0.71 ms
+5,000 blocks: local p50 0.07 ms, p95 0.13 ms; incremental remote p50 0.07 ms, p95 0.13 ms; JSON boundary p50 38.58 ms, p95 49.39 ms
+  first edit / initial p95 / initial peak: local 6.44 ms / 0.16 ms / 8.00 ms; incremental remote 0.38 ms / 0.13 ms / 5.39 ms
+10,000 blocks: local p50 0.15 ms, p95 0.17 ms; incremental remote p50 0.13 ms, p95 0.43 ms; JSON boundary p50 67.40 ms, p95 107.45 ms
+  first edit / initial p95 / initial peak: local 13.12 ms / 0.24 ms / 13.12 ms; incremental remote 1.09 ms / 0.33 ms / 10.12 ms
+100 HTML blocks: server parse p50 10.01 ms, p95 33.80 ms
+1,000 HTML blocks: server parse p50 63.83 ms, p95 83.73 ms
+5,000 HTML blocks: server parse p50 248.69 ms, p95 275.84 ms
+10,000 HTML blocks: server parse p50 476.96 ms, p95 587.34 ms
+server HTML 1,000→10,000 median growth: 7.47x / 15x
+local 1,000→10,000 median growth: 4.37x / 15x
+incremental remote 1,000→10,000 median growth: 5.94x / 15x
+2,000-edit live-session heap growth: 0.00 MiB / 8 MiB
+destroyed-editor retained heap: 0.16 MiB / 16 MiB
+retained 10,000-block server HTML document: 15.17 MiB / 48 MiB
+{
+  "scope": "Bounded public HTML projection with shared direction; no DOM or history plugin",
+  "edits": 2000,
+  "blocks": 1000,
+  "elapsedMs": 8519.1165,
+  "liveGrowthBytes": 407336,
+  "liveLimitBytes": 8388608,
+  "destroyedEditors": 40,
+  "destroyedGrowthBytes": 278856,
+  "destroyedLimitBytes": 16777216
+}
+{
+  "blocks": 5000,
+  "snapshots": 500,
+  "validatedEverySnapshot": true,
+  "measurement": "heapUsed + arrayBuffers after forced GC",
+  "retainedBytes": 24084304,
+  "retainedLimitBytes": 33554432,
+  "releasedBytes": 792248,
+  "releasedLimitBytes": 4194304
+}

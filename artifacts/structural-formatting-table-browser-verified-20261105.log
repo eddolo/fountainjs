@@ -1,0 +1,30 @@
+[WebServer] (node:20708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:14516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr (3.0s)
+  ok  2 [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-cell-ltr (2.9s)
+  ok  3 [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: auto (2.9s)
+  ok  4 [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: host-css (3.4s)
+  ok  5 [chromium] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-spans (3.0s)
+(node:3528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [firefox] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr (7.8s)
+  ok  7 [firefox] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-cell-ltr (4.0s)
+  ok  8 [firefox] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: auto (3.6s)
+  ok  9 [firefox] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: host-css (3.9s)
+  ok 10 [firefox] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-spans (3.6s)
+(node:15612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 11 [webkit] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr (8.0s)
+  ok 12 [webkit] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-cell-ltr (7.3s)
+  ok 13 [webkit] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: auto (7.7s)
+  ok 14 [webkit] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: host-css (7.8s)
+  ok 15 [webkit] › tests\manual\table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-spans (7.3s)
+
+  15 passed (1.4m)

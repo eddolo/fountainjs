@@ -1,0 +1,18 @@
+{
+  "declarationFiles": 423,
+  "publicSignaturesUnchanged": true,
+  "changes": [
+    {
+      "file": "dist/view/selection-handler.d.ts",
+      "before": "16a0538d61b8ecb0c4b20223675487ee4fbe5216947a3ef7d5d71c9e0adc67ce",
+      "after": "eb22517d328cbed89e81d64284832ad2001742e44d80393293389a9e1b22a8ad",
+      "onlyChange": "private onHostFocus declaration"
+    },
+    {
+      "file": "dist/view/selection-handler.d.cts",
+      "before": "e217d368080b953a0bec1eb878f9aed9c5ef4e251f64cd8026232489c2676c47",
+      "after": "d40f54fc309541b0c07512101f1522b9733b0d32410400e2e6e5b2a166c78b52",
+      "onlyChange": "private onHostFocus declaration"
+    }
+  ]
+}

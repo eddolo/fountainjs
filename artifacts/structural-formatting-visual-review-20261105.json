@@ -1,0 +1,333 @@
+{
+  "captures": [
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\backward-formatted.png",
+      "sha256": "d07f1f20a7aa0cd8ae8d066779bfcc62276ad6104fd6d5e4b48d38068099bc4f"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\backward-reader.png",
+      "sha256": "8a1594f8ee60652a989cc939c1c667bb47beec633b76bf7fd2d1272ee0e220b1"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\backward-selected.png",
+      "sha256": "d618567c862517dae44bbf157408ab67a12df52c418c639a1edfeafa116b5195"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\forward-formatted.png",
+      "sha256": "d07f1f20a7aa0cd8ae8d066779bfcc62276ad6104fd6d5e4b48d38068099bc4f"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\forward-reader.png",
+      "sha256": "8a1594f8ee60652a989cc939c1c667bb47beec633b76bf7fd2d1272ee0e220b1"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\range-formatting\\forward-selected.png",
+      "sha256": "248771f4dad59b556a921ce3016c8db8046d9e8ece7a6d7b3630ee5c951f3917"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\backward-formatted.png",
+      "sha256": "84ba8518ad003912c387bb3d0c901bbf400a7800073d129e1ae4b6a658907f0f"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\backward-reader.png",
+      "sha256": "bb00103d75575f440fac9ddbdba46d45b908a1181f864fece6673e700144982a"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\backward-selected.png",
+      "sha256": "ad727f2cefb3bf20e7287d92b97d64b214d064e4ca9a5d711b3a73681c7f8178"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\forward-formatted.png",
+      "sha256": "84ba8518ad003912c387bb3d0c901bbf400a7800073d129e1ae4b6a658907f0f"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\forward-reader.png",
+      "sha256": "bb00103d75575f440fac9ddbdba46d45b908a1181f864fece6673e700144982a"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\range-formatting\\forward-selected.png",
+      "sha256": "ad727f2cefb3bf20e7287d92b97d64b214d064e4ca9a5d711b3a73681c7f8178"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\backward-formatted.png",
+      "sha256": "b9821ae3898f1859e28f51f4d79eaf5b749c2df53206976d7cf1f66aa247f478"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\backward-reader.png",
+      "sha256": "b2049b0db91687f2ee51a4119db6cf79d18de85e6d707cef247a80c2738d0b3d"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\backward-selected.png",
+      "sha256": "85eb6782323830f051892d14566b8a8d0015f2f346d6fbb222c6861fb3309344"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\forward-formatted.png",
+      "sha256": "b9821ae3898f1859e28f51f4d79eaf5b749c2df53206976d7cf1f66aa247f478"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\forward-reader.png",
+      "sha256": "b2049b0db91687f2ee51a4119db6cf79d18de85e6d707cef247a80c2738d0b3d"
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\range-formatting\\forward-selected.png",
+      "sha256": "85eb6782323830f051892d14566b8a8d0015f2f346d6fbb222c6861fb3309344"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\\table-side-ltr-left.png",
+      "sha256": "94b3b86eb5e35089fc2457ed762ff2b53d863af60d2be100a13e76c57a4be601"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\\table-side-ltr-right.png",
+      "sha256": "6cb83f48afaae20320d95fdb884e0165c9e32ee435f8f953ad461f657e6951cb"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-chromium\\table-side-rtl-cell-ltr-left.png",
+      "sha256": "5cb05e3c305b90cb58df1b40d171ecd2de9a6bcbea06a31611dfe629c942f4c5"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-chromium\\table-side-rtl-cell-ltr-right.png",
+      "sha256": "b125815e4ca17c9c62d1cb0c4254777257d570ae65f22c78c0722c7935243a46"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-chromium\\table-side-rtl-spans-left.png",
+      "sha256": "3dfe99e6f8760722d9e736e399bad77b39f2092a2136dcff730887c7b7bf5c82"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-chromium\\table-side-rtl-spans-right.png",
+      "sha256": "ec2f01435005b5f3cb8824c876e3ed59f4cc59d302ab68771487c17c3dd51966"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-chromium\\table-side-host-css-left.png",
+      "sha256": "83ecefca5b440284e616c3d55f98a3b934289cdc8cf7274d132081807ca90f9d"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-chromium\\table-side-host-css-right.png",
+      "sha256": "60781dd6622d35276a60d7171aa268bb1fa91d69832ac4ad4ed9d8a8cd5cf16d"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-chromium\\table-side-auto-left.png",
+      "sha256": "7e818176b55bca786f0528228ce281ed62bd4c436af01b9cadbb631c6484e3ff"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-chromium\\table-side-auto-right.png",
+      "sha256": "b853b088b02a0684ca08a6e6f2cec2be47825b527a827dcd53b80334fcc98fbc"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-firefox\\table-side-ltr-left.png",
+      "sha256": "50b7531e9a2408c16463cc4ac27c94ca5f9a4a960fa92c5df1f864b4052f9c70"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-firefox\\table-side-ltr-right.png",
+      "sha256": "010590f0002d939fde7882514768d8a9ecfd900b12f59fcb75436583568c722a"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-firefox\\table-side-rtl-cell-ltr-left.png",
+      "sha256": "f10147c9362f67c126808655678d6e2e7c38e3472a74067eb1471485c3dd90ca"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-firefox\\table-side-rtl-cell-ltr-right.png",
+      "sha256": "deb6a5ab500113fed36e26c66a2a58d243219da2ea4ace088d2caad3b4d64f36"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-firefox\\table-side-rtl-spans-left.png",
+      "sha256": "28c68b5d43850812db62ed77535d5a26b0479b9d3d6595e02299ccd2aa24dc1e"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-firefox\\table-side-rtl-spans-right.png",
+      "sha256": "a7fb5d6aae689f036c735113f25ad27db64ed1439dbacfe1a345ae7ad88d6224"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-firefox\\table-side-host-css-left.png",
+      "sha256": "09f0ac461d3e6417aed1f36234497e8aeb63128751ede9e14830e392ed1ea4ae"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-firefox\\table-side-host-css-right.png",
+      "sha256": "0b093976b83153a19e9e4c003303d76da30080be5d298e60e2e9f24714406467"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-firefox\\table-side-auto-left.png",
+      "sha256": "f1ed54c661d78455390fc0164248df41593da67f9d3a36b6b021920f964dc1a9"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-firefox\\table-side-auto-right.png",
+      "sha256": "484203aa4f858bcf9785f7b2f9ea77e079a0be6fa9a2d39c8401fc1005b5eba5"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-webkit\\table-side-ltr-left.png",
+      "sha256": "28cd113e1b1c4de748cec86d9566baf64c1ca8216e3cc44205f2ff082bee0efc"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-webkit\\table-side-ltr-right.png",
+      "sha256": "d4437ce0fed5acbc64e330e06d7f262e5d2aa7e89815f7232fe055e0c794abce"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-webkit\\table-side-rtl-cell-ltr-left.png",
+      "sha256": "cd6f5ab6390831e27f5053ec0c670b768c35087370a79c513c93f9207e91e3b2"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-webkit\\table-side-rtl-cell-ltr-right.png",
+      "sha256": "23833a75babfa74b66627e45ab9ea5896f59e5d30c0ca1a1e645fff3100c399a"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-webkit\\table-side-rtl-spans-left.png",
+      "sha256": "6911da6cfc1476cc34aa05c9995fda542d7a42cfa8ddf7417dbf9e60dae75718"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-webkit\\table-side-rtl-spans-right.png",
+      "sha256": "dca9800fb27a7fd8b9d939df4f5cfe3ba88fdc5327faebd4ddf683e50ad36e3e"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-webkit\\table-side-host-css-left.png",
+      "sha256": "12b4becd6a38fe3013883646a9e46e231dd0ff056667364b2468a8763c904d7b"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-webkit\\table-side-host-css-right.png",
+      "sha256": "0651c82e00823ff44d3e89439a9cbb187331724be48595c79df2875fcb03fde3"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-webkit\\table-side-auto-left.png",
+      "sha256": "2d428e4db2cc3987a456799ca1d223d8a73f646fa439427732b72dd6a42e7e18"
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-webkit\\table-side-auto-right.png",
+      "sha256": "175a637a97ffd7d990cbb803e156bed2b4003809025adbe0b91b964c86f77dfc"
+    }
+  ],
+  "recordings": [
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-chromium\\video.webm",
+      "sha256": "ebe4de41fe8ef884c98d599ea426a362437f2d120086ebe2d7d91fd6a60e1596",
+      "durationSeconds": 7.36,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-firefox\\video.webm",
+      "sha256": "9867ad597e54e12d3ff0ea745676cf59b83e808b1bb63f5987c6c50d1aeeffb3",
+      "durationSeconds": 10.28,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-verified-browser-20261105\\document-range-formatting--8df3e-t-history-and-reader-export-webkit\\video.webm",
+      "sha256": "22d3fdef42c1080c902139e24b70fb82778f77352ee6fd7a6b0f507c37da95d2",
+      "durationSeconds": 14.84,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-chromium\\video.webm",
+      "sha256": "7ddd00c24f0ec2630d1c8a9d81fb231fd91456ecc962275fb0ee49c6f6e5eb1f",
+      "durationSeconds": 3.76,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-chromium\\video.webm",
+      "sha256": "286d1ae6a0a3b7b659cb619a7178027edc28a11833e170945af2762dc95e0eb8",
+      "durationSeconds": 3.4,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-chromium\\video.webm",
+      "sha256": "198918bed5bc0080c1aca1dc040fc1820432302fd661fa744f7d8fa3fdabb394",
+      "durationSeconds": 3.44,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-chromium\\video.webm",
+      "sha256": "b47b3e6778152925ebd541f87e15f88c69e52cea51690f83758ac48a971c951a",
+      "durationSeconds": 4.28,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-chromium\\video.webm",
+      "sha256": "545e5e109281601edb962b1cfc65d0a3ae30a7b16eb6eae0619846fee57cff62",
+      "durationSeconds": 3.36,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-firefox\\video.webm",
+      "sha256": "6cd00631249a26e55ec33daf0f808146724b6a982f90fda9b74f80bb29c10d1a",
+      "durationSeconds": 6.92,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-firefox\\video.webm",
+      "sha256": "a4b5df7f20647e702bf885e1235c55289f6e5268cfccf10aa436d24cd1fba40c",
+      "durationSeconds": 4.56,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-firefox\\video.webm",
+      "sha256": "df297388bd8b8d79ebfaf4b4db334826b7593b9dcbc219494bcc161e1dce08da",
+      "durationSeconds": 4.28,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-firefox\\video.webm",
+      "sha256": "af685a7ef183902963af269760462039ac757bfc87927b8f6b82f245cffd3eec",
+      "durationSeconds": 4.56,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-firefox\\video.webm",
+      "sha256": "7d661c9da839f8adcf5e531aab4fe8c897da4d36135e12379e8f29b25d927bcf",
+      "durationSeconds": 4.24,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-11210-physical-left-and-right-ltr-webkit\\video.webm",
+      "sha256": "0db15d6dd9529a1b72dcc3b12bdec2c33f208f6ce5a34b44c0ccc337977d3db1",
+      "durationSeconds": 8.12,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-127a8-left-and-right-rtl-cell-ltr-webkit\\video.webm",
+      "sha256": "3cf84467015f6a4bb699163b4ad79f3c6b89438887828973c80919d8bb5df126",
+      "durationSeconds": 7.88,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-2b809-al-left-and-right-rtl-spans-webkit\\video.webm",
+      "sha256": "dae293868af4044792f42e06cb3fd6ccbc90cde70116020ef1cfba737f482df9",
+      "durationSeconds": 7.76,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-52ee3-cal-left-and-right-host-css-webkit\\video.webm",
+      "sha256": "e08b30bf12370e0427ac2423465edc3e134875b917cf3812182de9824654075a",
+      "durationSeconds": 8.2,
+      "sampledFrames": 4
+    },
+    {
+      "path": "structural-formatting-table-verified-browser-20261105\\table-column-side-real-ins-b1dcf-hysical-left-and-right-auto-webkit\\video.webm",
+      "sha256": "5a67e717da9ab186e84a6096853dffd5604b6d6376fa985a0441887bab34f186",
+      "durationSeconds": 8.16,
+      "sampledFrames": 4
+    }
+  ],
+  "contactSheets": [
+    "structural-formatting-visual-review-20261105\\chromium-formatting-stages.png",
+    "structural-formatting-visual-review-20261105\\chromium-formatting-recordings-1.png",
+    "structural-formatting-visual-review-20261105\\firefox-formatting-stages.png",
+    "structural-formatting-visual-review-20261105\\firefox-formatting-recordings-1.png",
+    "structural-formatting-visual-review-20261105\\webkit-formatting-stages.png",
+    "structural-formatting-visual-review-20261105\\webkit-formatting-recordings-1.png",
+    "structural-formatting-visual-review-20261105\\chromium-table-stages.png",
+    "structural-formatting-visual-review-20261105\\chromium-table-recordings-1.png",
+    "structural-formatting-visual-review-20261105\\chromium-table-recordings-2.png",
+    "structural-formatting-visual-review-20261105\\chromium-table-recordings-3.png",
+    "structural-formatting-visual-review-20261105\\firefox-table-stages.png",
+    "structural-formatting-visual-review-20261105\\firefox-table-recordings-1.png",
+    "structural-formatting-visual-review-20261105\\firefox-table-recordings-2.png",
+    "structural-formatting-visual-review-20261105\\firefox-table-recordings-3.png",
+    "structural-formatting-visual-review-20261105\\webkit-table-stages.png",
+    "structural-formatting-visual-review-20261105\\webkit-table-recordings-1.png",
+    "structural-formatting-visual-review-20261105\\webkit-table-recordings-2.png",
+    "structural-formatting-visual-review-20261105\\webkit-table-recordings-3.png"
+  ],
+  "inspectionStatus": "reviewed: 48 stage captures and 72 sampled recording frames",
+  "inspectionNotes": [
+    "All 18 contact sheets inspected, plus full-resolution backward formatting in each engine.",
+    "Some recording samples show initial loading or intermediate/undo states; stage captures and complete model assertions cover the completed actions.",
+    "WebKit capture does not certify native selection paint; directed native endpoints and model/history assertions pass.",
+    "Raw recordings remain local; this is sampled frame review, not continuous full playback."
+  ]
+}

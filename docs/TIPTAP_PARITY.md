@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Structural formatting follow-up (2026-11-05, unreleased): directed text/media
+ranges, whole-document selections and cell rectangles can convert text blocks
+without losing IDs, unchanged positions or concurrent Yjs text. Native toolbar
+return focus now lands typing in newly inserted table cells. All 4,045 units,
+three-engine formatting/table/focus journeys and actual packed Node consumers
+pass. Size acceptance, fresh complete CI, broader command coverage and physical
+mobile remain open; no parity-percentage or release promotion.
+[Contract and evidence](STRUCTURAL_FORMATTING_AUDIT.md).
+
 Reference-boundary follow-up (2026-11-04, unreleased): existing root captures
 reuse their original link-definition scope to prevent open fences consuming
 other blocks or the definition footer. Native Enter now exits a terminal

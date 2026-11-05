@@ -1,0 +1,183 @@
+[
+  {
+    "name": "build-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "build"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-build-verified-20261105.log"
+  },
+  {
+    "name": "types-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "typecheck"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-types-verified-20261105.log"
+  },
+  {
+    "name": "api-verified",
+    "executable": "node",
+    "arguments": [
+      "scripts/check-api-surface.mjs"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-api-verified-20261105.log"
+  },
+  {
+    "name": "headless-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "test:headless"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-headless-verified-20261105.log"
+  },
+  {
+    "name": "unit-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "exec",
+      "vitest",
+      "run",
+      "--maxWorkers=1"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-unit-verified-20261105.log"
+  },
+  {
+    "name": "package-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "test:package"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-package-verified-20261105.log"
+  },
+  {
+    "name": "server-runtimes-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "test:server-runtimes"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-server-runtimes-verified-20261105.log"
+  },
+  {
+    "name": "conformance-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "test:markdown-conformance"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-conformance-verified-20261105.log"
+  },
+  {
+    "name": "size-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "test:budget"
+    ],
+    "exitCode": 1,
+    "log": "artifacts/structural-formatting-size-verified-20261105.log"
+  },
+  {
+    "name": "performance-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "test:performance"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-performance-verified-20261105.log"
+  },
+  {
+    "name": "demo-build-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "exec",
+      "vite",
+      "build",
+      "--config",
+      "vite.input-audit.config.ts"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-demo-build-verified-20261105.log"
+  },
+  {
+    "name": "table-browser-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "exec",
+      "playwright",
+      "test",
+      "--config",
+      "artifacts/structural-formatting-table-browser-20261105.config.ts",
+      "--output",
+      "artifacts/structural-formatting-table-verified-browser-20261105"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-table-browser-verified-20261105.log"
+  },
+  {
+    "name": "formatting-browser-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "exec",
+      "playwright",
+      "test",
+      "--config",
+      "artifacts/structural-formatting-browser-20261105.config.ts",
+      "--output",
+      "artifacts/structural-formatting-verified-browser-20261105"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-formatting-browser-verified-20261105.log"
+  },
+  {
+    "name": "focus-browser-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "exec",
+      "playwright",
+      "test",
+      "--config",
+      "artifacts/structural-formatting-focus-browser-20261105.config.ts"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-focus-browser-verified-20261105.log"
+  },
+  {
+    "name": "loaded-size-verified",
+    "executable": "node",
+    "arguments": [
+      "artifacts/measure-loaded-build-size-20261104.mjs",
+      ".",
+      "artifacts/structural-formatting-loaded-size-20261105.json"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-loaded-size-verified-20261105.log"
+  },
+  {
+    "name": "pack-verified",
+    "executable": "pnpm",
+    "arguments": [
+      "pack",
+      "--pack-destination",
+      "artifacts/structural-formatting-package-20261105"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-pack-verified-20261105.log"
+  },
+  {
+    "name": "packed-consumer-verified",
+    "executable": "node",
+    "arguments": [
+      "artifacts/run-structural-formatting-packed-20261105.mjs",
+      "artifacts/structural-formatting-package-20261105/fountainjs-editor-0.4.0-beta.2.tgz"
+    ],
+    "exitCode": 0,
+    "log": "artifacts/structural-formatting-packed-consumer-verified-20261105.log"
+  }
+]

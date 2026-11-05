@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-document-range.test.ts (15 tests | 1 failed) 225ms
+   × retains shared text through an attribute/type/text command chain with concurrent offline typing 17ms
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  04:28:58
+   Duration  3.44s (transform 49%, import 44%, tests 7%)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-document-range.test.ts > retains shared text through an attribute/type/text command chain with concurrent offline typing
+AssertionError: expected YXmlElement{ …(11) } to be YXmlElement{ …(11) } // Object.is equality
+
+- Expected
++ Received
+
+- "<fountain-node></fountain-node>"
++ "<fountain-node fountain:attr:align=\"\"center\"\" fountain:attr:level=\"2\" fountain:type=\"heading\"><fountain-node fountain:type=\"text\">RAlpha</fountain-node></fountain-node>"
+
+ ❯ tests/yjs-document-range.test.ts:189:25
+    187|     expect(pair.right.runCommandBatch(() => setTextAlignment(pair.righ…
+    188|       && setBlockType(pair.right, 'heading', { level: 2 }) && insertTe…
+    189|     expect(root.get(0)).toBe(shared);
+       |                         ^
+    190|     pair.sync();
+    191|     expect(pair.left.getJSON()).toEqual(pair.right.getJSON());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

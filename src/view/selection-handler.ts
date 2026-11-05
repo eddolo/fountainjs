@@ -65,6 +65,7 @@ export class SelectionHandler {
     private readonly shouldStopEvent?: (event: Event) => boolean,
   ) {
     document.addEventListener('selectionchange', this.onSelectionChange);
+    dom.addEventListener('focus', this.onHostFocus);
     dom.addEventListener('pointerdown', this.onPointerDown);
     dom.addEventListener('pointerup', this.onSelectionInteraction);
     dom.addEventListener('keyup', this.onSelectionInteraction);
@@ -489,12 +490,26 @@ export class SelectionHandler {
 
   destroy(): void {
     document.removeEventListener('selectionchange', this.onSelectionChange);
+    this.dom.removeEventListener('focus', this.onHostFocus);
     this.dom.removeEventListener('pointerdown', this.onPointerDown);
     this.dom.removeEventListener('pointerup', this.onSelectionInteraction);
     this.dom.removeEventListener('keyup', this.onSelectionInteraction);
     document.removeEventListener('pointerup', this.endPointerSelection);
     document.removeEventListener('pointercancel', this.endPointerSelection);
   }
+
+  private onHostFocus = (event: FocusEvent): void => {
+    // Returning from a toolbar must apply the committed command landing before
+    // native beforeinput captures stale endpoints. Real pointer placement still
+    // belongs to the browser, and nested native controls do not fire host focus.
+    if (this.syncing || this.pointerSelectionActive
+      || event.relatedTarget instanceof Element && this.dom.contains(event.relatedTarget)) return;
+    this.requestModelSync();
+    // Some hosts restore their old native range after the focus event. Apply
+    // the command landing after that default action, before the next input.
+    queueMicrotask(() => this.sync(this.editor.state.selection,
+      this.dom.ownerDocument.activeElement === this.dom && !this.pointerSelectionActive));
+  };
 
   private onSelectionChange = (): void => {
     const activeElement = document.activeElement;
