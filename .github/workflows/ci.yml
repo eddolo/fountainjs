@@ -105,7 +105,7 @@ jobs:
       # Independent controls prove headless Linux WebKit loses rich clipboard
       # data while the real Xvfb-backed display retains it. Serialize native
       # clipboard owners; keep the rest of the matrix headless.
-      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted"
+      FOUNTAIN_DISPLAY_CLIPBOARD_PATTERN: "pastes native rich research notes|copies shared automatic list scope|disabled line numbers through native copy|native shared-context|inherited node direction survives trusted|copies and cuts a partial text-to-image range"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

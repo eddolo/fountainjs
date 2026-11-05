@@ -1,0 +1,21 @@
+[WebServer] (node:16744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:2572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (13.0s)
+  ok 2 [chromium] › tests\manual\document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events (1.7s)
+(node:23160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (17.9s)
+  ok 4 [firefox] › tests\manual\document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events (1.9s)
+(node:27588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (40.3s)
+  ok 6 [webkit] › tests\manual\document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events (3.2s)
+
+  6 passed (1.5m)

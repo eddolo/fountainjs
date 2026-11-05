@@ -7,6 +7,24 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add directed `RangeSelection`, structural document-point resolution and
+  `ReplaceRangeStep`/`Transform.replaceRange` for mixed text, media and gap
+  endpoints. Preserve direction in history and Yjs relative selections; keep
+  remote insertions from expanding a collapsed text caret. Add closed structural
+  clipboard projection and report unrepresentable open fragments without cutting
+  them. Extend `AnySelection`/`SelectionKind` with `range`; downstream exhaustive
+  switches need that case. Existing text-selection signatures and `view.focus()`
+  semantics stay intact. Recorded journeys check ordinary/virtual media-edge
+  selection, history, visible caret placement, export/reopen and clipboard
+  behavior across three desktop engines. General open-slice fitting, complete
+  command coverage and physical mobile certification remain open. See
+  [range contracts](docs/SELECTION_RANGES.md).
+
+- Keep native caret movement across virtual viewport refreshes and reveal the
+  edited caret after deleting a long virtual range. Paste replaces an empty text
+  carrier without adding blank surrounding paragraphs; a pasted terminal media
+  block leaves an insertion caret so following typing does not replace it.
+
 - Fit text-range replacement across quote/list ancestors instead of clearing
   selected text while retaining selected media. Map actual retained text and
   balancing structure, preserve unselected container attributes, and keep partial

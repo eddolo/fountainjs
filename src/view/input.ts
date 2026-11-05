@@ -27,11 +27,13 @@ import {
   CellSelection,
   Node,
   Selection,
+  RangeSelection,
 } from '../core';
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
 import { textReplacementSelection } from '../core/text-replacement-selection';
+import { extractDocumentRange } from '../core/transaction/document-fragment';
 import { copySharedDirectionGroups, snapshotIncompleteSharedDirections, snapshotInheritedNodeDirection } from '../core/shared-direction';
 import { redo, setHistoryGroup, undo } from '../extensions/plugins/history';
 import {
@@ -619,6 +621,10 @@ export class InputManager {
     const { doc, schema, selection } = this.editor.state;
     let document: Node | null = null;
     if (selection instanceof AllSelection) document = doc;
+    else if (selection instanceof RangeSelection && !selection.isCollapsed) {
+      try { document = extractDocumentRange(doc, selection.structuralFrom, selection.structuralTo); }
+      catch { return null; }
+    }
     else if (selection instanceof Selection) document = selectedTextDocument(doc, selection);
     else if (selection instanceof NodeSelection) {
       const selected = getNodeAtPath(doc, selection.nodePath);
@@ -675,7 +681,12 @@ export class InputManager {
         return;
       }
     }
-    if (!this.writeCellSelection(event) && !this.writeFountainSelection(event)) this.options.prepareClipboard?.();
+    if (!this.writeCellSelection(event) && !this.writeFountainSelection(event)) {
+      if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
+        event.preventDefault();
+        this.options.onError?.(new Error('This selection cannot be copied without losing document structure.'));
+      } else this.options.prepareClipboard?.();
+    }
   };
 
   private onCut = (event: ClipboardEvent): void => {
@@ -690,8 +701,14 @@ export class InputManager {
         return;
       }
     }
-    if (this.writeCellSelection(event) || this.writeFountainSelection(event)) deleteSelection(this.editor);
-    else this.options.prepareClipboard?.();
+    if (this.writeCellSelection(event) || this.writeFountainSelection(event)) {
+      if (!deleteSelection(this.editor) && this.editor.state.selection instanceof RangeSelection) {
+        this.options.onError?.(new Error('The selection was copied, but could not be removed safely.'));
+      }
+    } else if (this.editor.state.selection instanceof RangeSelection && !this.editor.state.selection.isCollapsed) {
+      event.preventDefault();
+      this.options.onError?.(new Error('This selection cannot be cut without losing document structure.'));
+    } else this.options.prepareClipboard?.();
   };
 
   private onCompositionStart = (event: CompositionEvent): void => {

@@ -1,0 +1,58 @@
+[WebServer] (node:20168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:9060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (22.8s)
+
+
+  1) [chromium] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents 
+
+    Error: After replacing a long virtual range the edited text and caret must remain visible.
+
+    After replacing a long virtual range the edited text and caret must remain visible.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+       at ..\browser\document-boundary-range-journey.ts:127
+
+      125 |       const header = document.querySelector('.site-header')?.getBoundingClientRect();
+      126 |       return rect.top >= Math.max(0, header?.bottom ?? 0) && rect.bottom <= innerHeight;
+    > 127 |     }), { message: 'After replacing a long virtual range the edited text and caret must remain visible.' }).toBe(true);
+          |                                                                                                             ^
+      128 |     await page.screenshot({ path: resolve(root, `${name}-edited.png`) });
+      129 |     const download = async (suffix: string) => {
+      130 |       const event = page.waitForEvent('download');
+        at runDocumentBoundaryRangeJourney (C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\document-boundary-range-journey.ts:127:109)
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\document-boundary-range-real.spec.ts:7:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\structural-range-caret-visible-before-browser-20261105\document-boundary-range-re-13852-inary-and-virtual-documents-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\structural-range-caret-visible-before-browser-20261105\document-boundary-range-re-13852-inary-and-virtual-documents-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\structural-range-caret-visible-before-browser-20261105\document-boundary-range-re-13852-inary-and-virtual-documents-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\structural-range-caret-visible-before-browser-20261105\document-boundary-range-re-13852-inary-and-virtual-documents-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\structural-range-caret-visible-before-browser-20261105\document-boundary-range-re-13852-inary-and-virtual-documents-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents 

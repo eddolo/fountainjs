@@ -1,0 +1,54 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/selection-view.test.ts (12 tests | 1 failed) 299ms
+   ❯ semantic selection DOM bridge (12)
+     × preserves a native inline-node range but allows returning to text (delete: false) 13ms
+ ❯ tests/extensions.test.ts (16 tests | 1 failed) 35ms
+   ❯ modular extension composition (16)
+     × wraps matching multiline paste through schema validation 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/extensions.test.ts > modular extension composition > wraps matching multiline paste through schema validation
+RangeError: No child at index 1.
+ ❯ Node.child src/core/schema/node.ts:62:23
+     60|   child(index: number): Node {
+     61|     const child = this.content[index];
+     62|     if (!child) throw new RangeError(`No child at index ${index}.`);
+       |                       ^
+     63|     return child;
+     64|   }
+ ❯ tests/extensions.test.ts:287:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > preserves a native inline-node range but allows returning to text (delete: false)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/selection-view.test.ts:93:70
+     91|       document.dispatchEvent(new Event('selectionchange'));
+     92|       await settleSelection();
+     93|       expect(editor.state.selection.eq(Selection.cursor([0, 2], 2))).t…
+       |                                                                      ^
+     94|     }
+     95|     view.destroy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 272 passed (274)
+      Tests  2 failed | 4013 passed (4015)
+   Start at  03:32:48
+   Duration  275.41s (environment 47%, import 28%, tests 20%, transform 5%, worker 1%)
+
+     Import  663 modules were evaluated 1340 times · 63.37s total, 28% of tracked time
+             ~32.02s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+

@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/document-range-commands.test.ts (21 tests | 2 failed) 37ms
+   × keeps pasted terminal media intact when typing after a all paste 7ms
+   × keeps pasted terminal media intact when typing after a gap paste 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/document-range-commands.test.ts > keeps pasted terminal media intact when typing after a all paste
+ FAIL  tests/document-range-commands.test.ts > keeps pasted terminal media intact when typing after a gap paste
+AssertionError: expected 'node' to be 'gap' // Object.is equality
+
+Expected: "gap"
+Received: "node"
+
+ ❯ tests/document-range-commands.test.ts:182:41
+    180|     const fragment = editor.state.schema.nodeFromJSON({ type: 'doc', c…
+    181|     expect(insertDocument(editor, fragment)).toBe(true);
+    182|     expect(editor.state.selection.kind).toBe('gap');
+       |                                         ^
+    183|     const pasted = editor.getJSON();
+    184|     expect(insertText(editor, 'After')).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  03:39:56
+   Duration  3.30s (transform 54%, import 44%, tests 1%)
+

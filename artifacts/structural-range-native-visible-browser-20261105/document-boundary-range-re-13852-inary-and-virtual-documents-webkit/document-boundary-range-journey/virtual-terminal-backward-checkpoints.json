@@ -1,0 +1,43 @@
+[
+  {
+    "phase": "edge",
+    "anchor": "DIV",
+    "anchorText": "Paragraph 257.Paragraph 258.Pa",
+    "anchorOffset": 46,
+    "head": "DIV",
+    "headOffset": 46,
+    "gaps": [
+      {
+        "path": "301",
+        "gap": "after"
+      }
+    ]
+  },
+  {
+    "phase": "document-extended",
+    "anchor": "DIV",
+    "anchorText": "LeftParagraph 1.Paragraph 2.Pa",
+    "anchorOffset": 49,
+    "head": "#text",
+    "headOffset": 0,
+    "gaps": []
+  },
+  {
+    "phase": "character-extended-1",
+    "anchor": "DIV",
+    "anchorText": "LeftParagraph 1.Paragraph 2.Pa",
+    "anchorOffset": 49,
+    "head": "#text",
+    "headOffset": 1,
+    "gaps": []
+  },
+  {
+    "phase": "character-extended-2",
+    "anchor": "DIV",
+    "anchorText": "LeftParagraph 1.Paragraph 2.Pa",
+    "anchorOffset": 49,
+    "head": "#text",
+    "headOffset": 2,
+    "gaps": []
+  }
+]

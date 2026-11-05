@@ -4,6 +4,8 @@ import {
   CellSelection,
   GapSelection,
   NodeSelection,
+  RangeSelection,
+  selectionAtPosition,
   Selection,
   isTextSelection,
   type AnySelection,
@@ -47,6 +49,8 @@ function normalizeSelection(doc: Node, selection: AnySelection): AnySelection {
     if (selection instanceof GapSelection) return new GapSelection(doc, selection.position, selection.association);
     if (selection instanceof AllSelection) return new AllSelection(doc);
     if (selection instanceof CellSelection) return new CellSelection(doc, selection.anchorCellPath, selection.headCellPath);
+    if (selection instanceof RangeSelection) return selection.isCollapsed
+      ? selectionAtPosition(doc, selection.anchor) : new RangeSelection(doc, selection.anchor, selection.head);
     const start = getNodeAtPath(doc, selection.path);
     const end = getNodeAtPath(doc, selection.endPath);
     if (!start.isText || !end.isText) throw new Error('Selection is not inside text.');

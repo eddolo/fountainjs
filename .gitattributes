@@ -42,3 +42,7 @@
 /artifacts/cross-container-final-browser-20261105/**/*.md -text -whitespace
 /artifacts/cross-container-native-final-browser-20261105/**/*.md -text -whitespace
 /artifacts/cross-container-native-final-browser-20261105/**/*.json -text -whitespace
+/artifacts/structural-range-*.log -text -whitespace
+/artifacts/structural-range-*.json -text -whitespace
+/artifacts/structural-range-native-visible-browser-20261105/**/*.md -text -whitespace
+/artifacts/structural-range-native-visible-browser-20261105/**/*.json -text -whitespace

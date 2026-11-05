@@ -1,0 +1,18 @@
+[WebServer] (node:11436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:26876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image (2.2s)
+(node:2664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image (4.8s)
+(node:13892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › artifacts\virtual-atomic-boundary-audit-20261104.spec.ts:6:1 › document-boundary replacement includes a terminal atomic image (4.0s)
+
+  3 passed (20.5s)

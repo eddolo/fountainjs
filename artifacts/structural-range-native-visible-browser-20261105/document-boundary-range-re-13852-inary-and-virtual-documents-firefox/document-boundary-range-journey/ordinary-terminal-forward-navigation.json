@@ -1,0 +1,250 @@
+[
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "End",
+    "prevented": true,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "End",
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Control",
+    "prevented": false,
+    "anchor": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "head": {
+      "text": "LeftImage could not be loaded. Retr",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "Home",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 0
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keydown",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 1
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "selectionchange",
+    "key": null,
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  },
+  {
+    "type": "keyup",
+    "key": "ArrowRight",
+    "prevented": false,
+    "anchor": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "head": {
+      "path": "0.0",
+      "text": "Left",
+      "offset": 2
+    },
+    "active": "Issue description editor"
+  }
+]

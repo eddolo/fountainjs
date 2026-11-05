@@ -1,0 +1,78 @@
+{
+  "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-range-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+  "archiveSha256": "c0db4b4ec9eb5bcd102fe6319f49c1537ed2f94864bd3a9b3208ae45c6051130",
+  "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-range-consumer-20261105-1793850253784",
+  "allBuildFilesMatch": 873,
+  "exitCode": 0,
+  "proof": {
+    "actualTarball": true,
+    "noDOM": true,
+    "cases": 14,
+    "results": [
+      {
+        "entry": "esm-root",
+        "backward": false,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "esm-root",
+        "backward": true,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "esm-root",
+        "structuralRichPasteAndFollowingTyping": true
+      },
+      {
+        "entry": "esm-core",
+        "backward": false,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "esm-core",
+        "backward": true,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "esm-core",
+        "structuralRichPasteAndFollowingTyping": true
+      },
+      {
+        "entry": "cjs-root",
+        "backward": false,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "cjs-root",
+        "backward": true,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "cjs-root",
+        "structuralRichPasteAndFollowingTyping": true
+      },
+      {
+        "entry": "cjs-core",
+        "backward": false,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "cjs-core",
+        "backward": true,
+        "modelMappingDirectionHistory": true
+      },
+      {
+        "entry": "cjs-core",
+        "structuralRichPasteAndFollowingTyping": true
+      },
+      {
+        "entry": "esm-yjs",
+        "relativeMixedRangeAndCollaborativeUndo": true
+      },
+      {
+        "entry": "cjs-yjs",
+        "relativeMixedRangeAndCollaborativeUndo": true
+      }
+    ]
+  }
+}

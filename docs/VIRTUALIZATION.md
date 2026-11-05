@@ -75,12 +75,21 @@ restores the complete source. The read-only preview retains the same selection
 anchor without changing the document. The permanent regression is
 `tests/browser/virtual-selection-journey.ts`.
 
-This does not yet cover structural endpoints. A separate recorded audit finds
-that Ctrl+Shift+End stops at the last text leaf when an image follows it. Typing
-over that range leaves the terminal image in the document in Chromium, Firefox
-and WebKit. Whole-document and mixed text/atomic boundary behavior remains an
-open editor foundation issue; the text-only regression is not proof that it is
-solved.
+The unreleased structural-range follow-up adds exact text/media/gap endpoints.
+The original terminal-image audit now passes in Chromium, Firefox and WebKit.
+The recorded boundary journey covers ordinary and 302-block virtual documents,
+leading/trailing images, forward/backward selection, character extension,
+replacement, exact-source undo/redo, download, reopen and reader output.
+Replacing a long range must also keep the resulting text/caret visible; a model
+assertion alone previously missed a page left scrolled at the footer.
+
+Viewport refresh captures pending native selection movement before restoring
+model selection. Otherwise a refresh between browser navigation and keyup can
+roll the caret back. Structural anchors remain model-owned when a browser
+normalizes an element-boundary caret into nearby text. This is separate from
+the existing `view.focus('start'/'end')` API, which still targets editable content.
+Arbitrary open clipboard slices, every custom NodeView and physical mobile
+behavior remain outside this focused proof. See [range contracts](SELECTION_RANGES.md).
 
 The current window is top-level-block based. A single enormous table, code
 block, custom NodeView, or other top-level node is mounted as one unit; the host

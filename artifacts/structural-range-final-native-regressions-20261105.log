@@ -1,0 +1,27 @@
+[WebServer] (node:16276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:9708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (10.1s)
+  ok  2 [chromium] › tests\manual\cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export (5.4s)
+  ok  3 [chromium] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (9.6s)
+  ok  4 [chromium] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (4.3s)
+(node:12548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (13.3s)
+  ok  6 [firefox] › tests\manual\cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export (4.9s)
+  ok  7 [firefox] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (10.2s)
+  ok  8 [firefox] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (5.8s)
+(node:18716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\manual\cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media (1.9m)
+  ok 10 [webkit] › tests\manual\cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export (11.7s)
+  ok 11 [webkit] › tests\manual\nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input (28.7s)
+  ok 12 [webkit] › tests\manual\virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content (10.7s)
+
+  12 passed (4.0m)

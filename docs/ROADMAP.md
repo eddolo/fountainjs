@@ -1,5 +1,29 @@
 # FountainJS opportunity roadmap
 
+Structural-range foundation (2026-11-05, unreleased): add directed text/media/gap
+endpoints, schema-checked replacement, exact position mapping and closed rich
+clipboard projection. Preserve range direction, gap association and collapsed
+carets through Yjs updates/undo. Keep media after paste and subsequent typing;
+preserve empty-block identity and the established `view.focus()` API. Capture
+native navigation before a virtual refresh can restore an older caret, and keep
+the edited caret visible after a large replacement. All 4,018 units / 274 files
+pass (84 added since the previous checkpoint), including 245 legal mixed-endpoint
+mapping pairs. Three desktop engines pass 24 new boundary workflows, trusted
+copy/cut, 12 existing browser regressions and the three original terminal-image
+regressions. Actual internal/external OS paste is checked in Chromium. Inspect
+72 stage captures and eight sampled frames from each of six recordings.
+Actual packed root/core ESM/CJS and Yjs consumers pass 14 cases without DOM globals;
+873 build files match the archive. Types/API/headless/package/workerd, unchanged
+CommonMark profiles, performance and retention checks pass. Static unshaken ESM
+closures grow by 23,373 raw / 5,650 gzip bytes at root and 11,608 / 3,184 at core;
+DOCX and HTML-server closures do not grow. These are payload measurements, not
+speed benchmarks. Existing size limits remain red (core facade and aggregates);
+no limits or runtime dependencies changed. General open-slice fitting, complete
+command coverage for the new kind, physical mobile, fresh CI and broader parity
+remain open. No release promotion.
+[Contract](SELECTION_RANGES.md) ·
+[Evidence](../artifacts/structural-range-verification-20261105.json).
+
 Cross-container text-range follow-up (2026-11-05, unreleased): fit quote/list
 cut edges and remove fully selected media, with maps derived from actual retained
 text and structural units. Preserve unselected suffix marks, outside node objects,

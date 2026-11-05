@@ -1,0 +1,302 @@
+{
+  "baseCommit": "5c5e494e7965088437ddff53d4fef63cfe29161f",
+  "releaseCertified": false,
+  "apiChanged": true,
+  "publicDeclarationFiles": 423,
+  "acceptanceLimitsChanged": false,
+  "runtimeDependenciesChanged": false,
+  "unit": {
+    "passed": 4018,
+    "files": 274,
+    "addedSinceBase": 84,
+    "legalMixedEndpointMappingPairs": 245
+  },
+  "native": {
+    "newRegisteredTests": 6,
+    "rangeWorkflowCases": 24,
+    "existingRegressionTests": 12,
+    "unchangedOriginalTerminalRegressionTests": 3,
+    "engines": [
+      {
+        "engine": "chromium",
+        "rangeCases": 8,
+        "trustedCopyAndCut": true,
+        "actualInternalAndExternalOSPaste": true,
+        "observations": "artifacts\\structural-range-native-visible-browser-20261105\\document-boundary-range-re-13852-inary-and-virtual-documents-chromium\\document-boundary-range-journey\\observations.json"
+      },
+      {
+        "engine": "firefox",
+        "rangeCases": 8,
+        "trustedCopyAndCut": true,
+        "actualInternalAndExternalOSPaste": false,
+        "observations": "artifacts\\structural-range-native-visible-browser-20261105\\document-boundary-range-re-13852-inary-and-virtual-documents-firefox\\document-boundary-range-journey\\observations.json"
+      },
+      {
+        "engine": "webkit",
+        "rangeCases": 8,
+        "trustedCopyAndCut": true,
+        "actualInternalAndExternalOSPaste": false,
+        "observations": "artifacts\\structural-range-native-visible-browser-20261105\\document-boundary-range-re-13852-inary-and-virtual-documents-webkit\\document-boundary-range-journey\\observations.json"
+      }
+    ]
+  },
+  "packed": {
+    "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-range-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+    "archiveSha256": "c0db4b4ec9eb5bcd102fe6319f49c1537ed2f94864bd3a9b3208ae45c6051130",
+    "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\structural-range-consumer-20261105-1793850253784",
+    "allBuildFilesMatch": 873,
+    "exitCode": 0,
+    "proof": {
+      "actualTarball": true,
+      "noDOM": true,
+      "cases": 14,
+      "results": [
+        {
+          "entry": "esm-root",
+          "backward": false,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "esm-root",
+          "backward": true,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "esm-root",
+          "structuralRichPasteAndFollowingTyping": true
+        },
+        {
+          "entry": "esm-core",
+          "backward": false,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "esm-core",
+          "backward": true,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "esm-core",
+          "structuralRichPasteAndFollowingTyping": true
+        },
+        {
+          "entry": "cjs-root",
+          "backward": false,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "cjs-root",
+          "backward": true,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "cjs-root",
+          "structuralRichPasteAndFollowingTyping": true
+        },
+        {
+          "entry": "cjs-core",
+          "backward": false,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "cjs-core",
+          "backward": true,
+          "modelMappingDirectionHistory": true
+        },
+        {
+          "entry": "cjs-core",
+          "structuralRichPasteAndFollowingTyping": true
+        },
+        {
+          "entry": "esm-yjs",
+          "relativeMixedRangeAndCollaborativeUndo": true
+        },
+        {
+          "entry": "cjs-yjs",
+          "relativeMixedRangeAndCollaborativeUndo": true
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "Name": "native-regressions",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-native-regressions-20261105.log"
+    },
+    {
+      "Name": "terminal-smoke",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-terminal-smoke-20261105.log"
+    },
+    {
+      "Name": "visual-contacts",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-visual-contacts-20261105.log"
+    },
+    {
+      "Name": "unit",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-unit-20261105.log"
+    },
+    {
+      "Name": "types",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-types-20261105.log"
+    },
+    {
+      "Name": "api",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-api-20261105.log"
+    },
+    {
+      "Name": "headless",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-headless-20261105.log"
+    },
+    {
+      "Name": "package",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-package-20261105.log"
+    },
+    {
+      "Name": "server-runtimes",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-server-runtimes-20261105.log"
+    },
+    {
+      "Name": "markdown",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-markdown-20261105.log"
+    },
+    {
+      "Name": "budget",
+      "ExitCode": 1,
+      "Log": "artifacts/structural-range-final-budget-20261105.log"
+    },
+    {
+      "Name": "performance",
+      "ExitCode": 0,
+      "Log": "artifacts/structural-range-final-performance-20261105.log"
+    }
+  ],
+  "loadedSize": {
+    "method": "Static ESM import/re-export closure, each emitted chunk compressed independently",
+    "excludes": [
+      "dynamic imports",
+      "external peers",
+      "CSS",
+      "browser/framework application code",
+      "HTTP headers"
+    ],
+    "doesNotApplyConsumerTreeShaking": true,
+    "measuresRuntimeSpeed": false,
+    "entries": [
+      {
+        "entry": ".",
+        "facadeRawBytes": 88547,
+        "closureRawBytes": 787030,
+        "closureGzipBytes": 241345,
+        "deltaRawBytes": 23373,
+        "deltaGzipBytes": 5650
+      },
+      {
+        "entry": "./core",
+        "facadeRawBytes": 9806,
+        "closureRawBytes": 424030,
+        "closureGzipBytes": 141271,
+        "deltaRawBytes": 11608,
+        "deltaGzipBytes": 3184
+      },
+      {
+        "entry": "./docx",
+        "facadeRawBytes": 215704,
+        "closureRawBytes": 247383,
+        "closureGzipBytes": 73243,
+        "deltaRawBytes": 0,
+        "deltaGzipBytes": 0
+      },
+      {
+        "entry": "./react",
+        "facadeRawBytes": 94791,
+        "closureRawBytes": 558299,
+        "closureGzipBytes": 158788,
+        "deltaRawBytes": 23236,
+        "deltaGzipBytes": 5609
+      },
+      {
+        "entry": "./yjs",
+        "facadeRawBytes": 30017,
+        "closureRawBytes": 113030,
+        "closureGzipBytes": 38136,
+        "deltaRawBytes": 5487,
+        "deltaGzipBytes": 1461
+      },
+      {
+        "entry": "./html/server",
+        "facadeRawBytes": 113,
+        "closureRawBytes": 363101,
+        "closureGzipBytes": 104076,
+        "deltaRawBytes": 0,
+        "deltaGzipBytes": 0
+      }
+    ]
+  },
+  "sourceInputsNormalizedSha256": {
+    "src/core/commands.ts": "9eb99df0214090d45734a63969f301221322bd14d9d182d7f81f573ca9a619f4",
+    "src/core/selection.ts": "4ea630b6c060e1450d95adaeaf47b4cc86ee54a2ff5c87d7e021837400054972",
+    "src/core/state.ts": "40e6d16aaaae82d8358ffb26caa3779e1e9a747afeab6adf785460695abd2637",
+    "src/core/transaction/index.ts": "17b3851000bf06cff6055219a62014955af10fca3218249d648b3e499bc86c82",
+    "src/core/transaction/mapping.ts": "c68348925baf15a4e7c8fdf101d818013bb5f57eca0ed1a9515c0b49b3f95ef4",
+    "src/core/transaction/nested-range-replacement.ts": "1401bc625b9e378d8c72b38cd42ae411d8346ad564f9f553b6ab3ff47a9052a7",
+    "src/core/transaction/transform.ts": "ddbfb1908a9ce6577f1601a4773a5848fcf9bb23bcfc2c0aa9bb81da0fd2a684",
+    "src/core/transaction/document-point.ts": "fbaee581445b6294e75eb78c916e8157bf9cb0fcefd56b3367352e15efac0564",
+    "src/core/transaction/document-fragment.ts": "7c172dda37848ce812c08c1a93d3bddbd56e596b75edf450072a782145968437",
+    "src/core/transaction/replace-range-step.ts": "4c0f438728499b014b6496f45db9ef87971695ba597d05965d565fc9b36ffc91",
+    "src/view/input.ts": "c2c2cf6674dfd764825a4feb6b3a9e04071720e14db365be8495d31207bffaa2",
+    "src/view/selection-handler.ts": "7df792c4c28062e0804b19fbb36b620dd097a5787bf0738bbd93fc8bb2e775a6",
+    "src/view/view.ts": "61ef01c2931a5c8f3673f1ec053ab7208a503b7c77505b057984e6d1b923e1cf",
+    "src/yjs/index.ts": "87a970f08f09932df445abb4ad656af940967d106cc4f9c556c731145c6273ab"
+  },
+  "sourceMappedRuntimeInputs": [
+    "src/core/commands.ts",
+    "src/core/selection.ts",
+    "src/core/state.ts",
+    "src/core/transaction/document-fragment.ts",
+    "src/core/transaction/document-point.ts",
+    "src/core/transaction/mapping.ts",
+    "src/core/transaction/nested-range-replacement.ts",
+    "src/core/transaction/replace-range-step.ts",
+    "src/core/transaction/transform.ts",
+    "src/view/input.ts",
+    "src/view/selection-handler.ts",
+    "src/view/view.ts",
+    "src/yjs/index.ts"
+  ],
+  "visual": {
+    "manifest": "artifacts/structural-range-visual-review-final-20261105.json",
+    "stageCapturesReviewed": 72,
+    "recordingsSampled": 6,
+    "framesReviewedPerRecording": 8,
+    "continuousVideoCompletelyReviewed": false
+  },
+  "controls": {
+    "priorYjsAdapter": "6 failing / 1 passing cases before the adapter repair; two further cases added afterward",
+    "viewportRace": "deterministic failed caret-position regression before capture-before-render repair",
+    "pasteCaret": "whole-document and gap rich paste selected terminal media before the shared insertion-caret repair",
+    "visualVisibility": "native Chromium test failed when edited text stayed offscreen after a virtual range replacement",
+    "intermediateFullSuite": "4013 passed / 2 failed; node-selection handoff repaired and an incidental blank-paragraph lookup replaced with a complete correct-model assertion"
+  },
+  "limits": [
+    "general open-slice transport/fitting remains unfinished",
+    "physical mobile behavior not certified",
+    "actual Firefox/WebKit external OS paste not certified by the copy/cut payload checks",
+    "full fresh CI and unchanged size-budget acceptance remain outstanding",
+    "broader CommonMark/source fidelity and production parity remain open"
+  ],
+  "indexVerification": {
+    "rawNativeFixtures": 163,
+    "sourceInputs": 14,
+    "allEqual": true
+  }
+}

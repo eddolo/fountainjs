@@ -1,0 +1,190 @@
+{
+  "engine": "webkit",
+  "observations": [
+    {
+      "name": "ordinary-terminal-forward",
+      "native": {
+        "anchor": {
+          "textPath": "0.0",
+          "element": "#text",
+          "offset": 2
+        },
+        "head": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 2
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 2,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "ordinary-terminal-backward",
+      "native": {
+        "anchor": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 2
+        },
+        "head": {
+          "textPath": "0.0",
+          "element": "#text",
+          "offset": 2
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 2,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "ordinary-leading-forward",
+      "native": {
+        "anchor": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 0
+        },
+        "head": {
+          "textPath": "1.0",
+          "element": "#text",
+          "offset": 3
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 2,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "ordinary-leading-backward",
+      "native": {
+        "anchor": {
+          "textPath": "1.0",
+          "element": "#text",
+          "offset": 3
+        },
+        "head": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 0
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 2,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "virtual-terminal-forward",
+      "native": {
+        "anchor": {
+          "textPath": "0.0",
+          "element": "#text",
+          "offset": 2
+        },
+        "head": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 42
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 302,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "virtual-terminal-backward",
+      "native": {
+        "anchor": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 49
+        },
+        "head": {
+          "textPath": "0.0",
+          "element": "#text",
+          "offset": 2
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 302,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "virtual-leading-forward",
+      "native": {
+        "anchor": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 0
+        },
+        "head": {
+          "textPath": "301.0",
+          "element": "#text",
+          "offset": 3
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 302,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    },
+    {
+      "name": "virtual-leading-backward",
+      "native": {
+        "anchor": {
+          "textPath": "301.0",
+          "element": "#text",
+          "offset": 3
+        },
+        "head": {
+          "textPath": null,
+          "element": "DIV",
+          "offset": 0
+        },
+        "collapsed": false
+      },
+      "originalBlocks": 302,
+      "replacedBlocks": 1,
+      "loadedImageWidth": 400,
+      "completeExportedModel": true,
+      "originalSourceUndo": true,
+      "editedSourceRedo": true,
+      "reopenedReader": true
+    }
+  ],
+  "errors": []
+}

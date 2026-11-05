@@ -3,7 +3,11 @@ import {
   DecorationSet,
   GapSelection,
   NodeSelection,
+  RangeSelection,
   Selection,
+  resolveDocumentPoint,
+  selectionAtPosition,
+  textPointToPosition,
   nodeRangeAtPath,
   setBlockType,
   toggleMark,
@@ -177,6 +181,7 @@ export class EditorView {
       prepareClipboard: this.prepareVirtualClipboard,
       paste: options.paste,
     });
+    this.dom.addEventListener('keydown', this.onDocumentBoundaryKeyDown);
     if (typeof MutationObserver !== 'undefined') {
       this.mutationObserver = new MutationObserver(this.onMutations);
       this.observeMutations();
@@ -246,6 +251,7 @@ export class EditorView {
     this.unsubscribe();
     this.unregisterTableDirectionRoot();
     this.input.destroy();
+    this.dom.removeEventListener('keydown', this.onDocumentBoundaryKeyDown);
     this.selections.destroy();
     this.blockHandles?.destroy();
     this.dropCursor?.destroy();
@@ -255,6 +261,9 @@ export class EditorView {
 
   private onStateChange = (state: EditorState, transaction: import('../core').Transaction): void => {
     if (this.destroyed) return;
+    const revealVirtualCaret = this.virtualized && transaction.docChanged
+      && state.doc.childCount < transaction.originalDoc.childCount
+      && transaction.getMeta('fountain$collaborationRemote') !== true;
     const ownsDOMSelection = this.selections.consumeDOMSyncRequest()
       || this.selections.ownsDOMSelection()
       || this.dom === document.activeElement
@@ -266,12 +275,29 @@ export class EditorView {
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
+    this.selections.requestModelSync();
     queueMicrotask(() => {
       // A synchronous nested dispatch (for example restoring a resize control)
       // can supersede this snapshot before its DOM selection task runs.
-      if (!this.destroyed && this.editor.state === state) this.selections.sync(state.selection, ownsDOMSelection);
+      if (!this.destroyed && this.editor.state === state) {
+        this.selections.sync(state.selection, ownsDOMSelection);
+        if (revealVirtualCaret && ownsDOMSelection && state.selection.isCollapsed
+          && this.dom.ownerDocument.activeElement === this.dom) this.revealCaret();
+      }
     });
   };
+
+  private revealCaret(): void {
+    const native = this.dom.ownerDocument.getSelection(), ownerWindow = this.dom.ownerDocument.defaultView;
+    if (!native?.isCollapsed || !native.rangeCount || !native.focusNode || !this.dom.contains(native.focusNode) || !ownerWindow) return;
+    const element = native.focusNode.nodeType === 1 ? native.focusNode as HTMLElement : native.focusNode.parentElement;
+    if (!element) return;
+    const range = native.getRangeAt(0);
+    const bounds = typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : element.getBoundingClientRect();
+    if (bounds.top < 0 || bounds.bottom > ownerWindow.innerHeight) {
+      element.scrollIntoView?.({ block: 'center', inline: 'nearest' });
+    }
+  }
 
   private render(
     document: Node,
@@ -454,7 +480,6 @@ export class EditorView {
   private startVirtualization(): void {
     if (!this.virtualLayout || !this.virtualScrollTarget) return;
     this.virtualScrollTarget.addEventListener('scroll', this.onVirtualViewportChange, { passive: true });
-    this.dom.addEventListener('keydown', this.onVirtualKeyDown);
     const ownerWindow = this.dom.ownerDocument.defaultView;
     ownerWindow?.addEventListener('resize', this.onVirtualViewportChange, { passive: true });
     ownerWindow?.addEventListener('beforeprint', this.onVirtualBeforePrint);
@@ -469,7 +494,6 @@ export class EditorView {
   private stopVirtualization(): void {
     const ownerWindow = this.dom.ownerDocument.defaultView;
     this.virtualScrollTarget?.removeEventListener('scroll', this.onVirtualViewportChange);
-    this.dom.removeEventListener('keydown', this.onVirtualKeyDown);
     ownerWindow?.removeEventListener('resize', this.onVirtualViewportChange);
     ownerWindow?.removeEventListener('beforeprint', this.onVirtualBeforePrint);
     ownerWindow?.removeEventListener('afterprint', this.onVirtualAfterPrint);
@@ -482,20 +506,25 @@ export class EditorView {
     this.virtualRestoreTimer = undefined;
   }
 
-  private onVirtualKeyDown = (event: KeyboardEvent): void => {
-    if (!this.virtualized || event.defaultPrevented || event.altKey || event.isComposing || this.input.composing
-      || (!event.ctrlKey && !event.metaKey)) return;
-    const start = event.key === 'Home' || (event.metaKey && event.key === 'ArrowUp');
-    const end = event.key === 'End' || (event.metaKey && event.key === 'ArrowDown');
-    if (!start && !end) return;
+  private onDocumentBoundaryKeyDown = (event: KeyboardEvent): void => {
+    if (event.defaultPrevented || event.altKey || event.isComposing || this.input.composing) return;
+    const character = event.shiftKey && !event.ctrlKey && !event.metaKey
+      && (event.key === 'ArrowLeft' || event.key === 'ArrowRight');
+    const start = (event.ctrlKey || event.metaKey) && (event.key === 'Home' || (event.metaKey && event.key === 'ArrowUp'));
+    const end = (event.ctrlKey || event.metaKey) && (event.key === 'End' || (event.metaKey && event.key === 'ArrowDown'));
+    if (!start && !end && !character) return;
     const target = event.target;
     if (!(target instanceof Element) || (target !== this.dom
       && target.closest('input, textarea, select, button, [contenteditable]') !== this.dom)
       || this.shouldStopNodeViewEvent(event)) return;
+    if (character) {
+      if (this.selections.extendStructuralRange(event.key === 'ArrowLeft' ? 'left' : 'right')) event.preventDefault();
+      return;
+    }
     event.preventDefault();
-    // Browser document boundaries see only mounted DOM. Navigate the model,
-    // then reuse selection pinning and native direction handling for the range.
-    this.moveSelection(start ? 'start' : 'end', event.shiftKey);
+    // Model edges include terminal media and empty content, including blocks
+    // outside a virtual window. Preserve the same semantics on ordinary views.
+    this.moveSelection(start ? 'start' : 'end', event.shiftKey, true);
     this.dom.focus({ preventScroll: true });
     this.selections.sync(this.editor.state.selection);
     const native = this.dom.ownerDocument.getSelection();
@@ -506,7 +535,12 @@ export class EditorView {
       this.selections.capture();
     }
     const selection = this.editor.state.selection;
-    const path = selection instanceof NodeSelection ? selection.nodePath : start ? selection.path : selection.endPath;
+    let path = selection instanceof NodeSelection ? selection.nodePath : start ? selection.path : selection.endPath;
+    if (selection instanceof RangeSelection || selection instanceof GapSelection) {
+      const point = resolveDocumentPoint(this.editor.state.doc, selection instanceof RangeSelection ? selection.head : selection.position);
+      path = point.kind === 'text' ? point.path : point.parentPath.length ? point.parentPath
+        : [Math.max(0, Math.min(this.editor.state.doc.childCount - 1, point.index - (start ? 0 : 1)))];
+    }
     this.dom.querySelector<HTMLElement>(`[data-fountain-path="${path[0]}"]`)
       ?.scrollIntoView?.({ block: start ? 'start' : 'end', inline: 'nearest' });
   };
@@ -517,6 +551,10 @@ export class EditorView {
     this.virtualRenderFrame = ownerWindow?.requestAnimationFrame(() => {
       this.virtualRenderFrame = undefined;
       if (this.destroyed) return;
+      // Default keyboard navigation can move the native caret before keyup /
+      // selectionchange reaches the model. A viewport refresh must capture
+      // that movement before replacing DOM and restoring a stale selection.
+      if (!this.input.composing && this.selections.ownsDOMSelection()) this.selections.capture();
       this.render(this.editor.state.doc, this.decorations, undefined, true, true);
       this.syncNodeViewSelection(this.editor.state.selection);
       queueMicrotask(() => this.selections.sync(this.editor.state.selection, this.selections.ownsDOMSelection()));
@@ -590,6 +628,14 @@ export class EditorView {
   };
 
   private virtualSelectionBounds(selection: AnySelection, blockCount: number): VirtualBlockRange {
+    if (selection instanceof RangeSelection) {
+      const start = resolveDocumentPoint(this.editor.state.doc, selection.structuralFrom);
+      const end = resolveDocumentPoint(this.editor.state.doc, selection.structuralTo);
+      const from = start.kind === 'text' ? start.path[0] ?? 0 : start.parentPath[0] ?? start.index;
+      const to = end.kind === 'text' ? (end.path[0] ?? 0) + 1
+        : end.parentPath.length ? end.parentPath[0]! + 1 : end.index;
+      return Object.freeze({ from: Math.max(0, Math.min(blockCount - 1, from)), to: Math.min(blockCount, Math.max(from + 1, to)) });
+    }
     if (selection instanceof NodeSelection) {
       const index = selection.nodePath[0] ?? 0;
       return Object.freeze({ from: index, to: Math.min(blockCount, index + 1) });
@@ -633,42 +679,63 @@ export class EditorView {
     return DecorationSet.create(state.doc, decorations);
   }
 
-  private moveSelection(position: EditorFocusPosition, extend = false): void {
+  private moveSelection(position: EditorFocusPosition, extend = false, structuralEdges = false): void {
     if (position === 'current') return;
     const doc = this.editor.state.doc, path: number[] = [];
     const forward = position === 'start';
     let target: AnySelection | undefined;
-    const visit = (node: Node): boolean => {
-      if (node.type.spec.atom) return false;
+    let targetPosition = forward ? 0 : doc.nodeSize - 2;
+    const visit = (node: Node, before: number, root = false): void => {
       if (node.isText) {
         target = Selection.cursor(path, forward ? 0 : node.text?.length ?? 0);
-        return true;
+        targetPosition = before + (forward ? 0 : node.nodeSize);
+        return;
       }
-      // A childless text source is editable without inventing a text leaf.
-      // Use the same schema-owned eligibility as rendering and first typing.
+      // Empty source carriers retain their established focus behavior. A
+      // selectable media NodeView is an edge, not an empty text paragraph.
       if (path.length && !node.childCount && (node.type.isBlock || node.type.spec.code)
-        && node.type.spec.content && matchesContentExpression([node.type.schema.text('')], node.type.spec.content)) {
+        && (!node.type.spec.nodeView || node.type.spec.code || node.type.spec.paragraphFlow === 'text')
+        && !node.type.spec.atom && node.type.spec.content
+        && matchesContentExpression([node.type.schema.text('')], node.type.spec.content)) {
         target = new NodeSelection(doc, path);
-        return true;
+        targetPosition = before + 1;
+        return;
       }
+      if (node.type.spec.atom || !node.childCount) {
+        if (!structuralEdges) return;
+        targetPosition = before + (forward ? 0 : node.nodeSize - (root ? 2 : 0));
+        target = selectionAtPosition(doc, targetPosition);
+        return;
+      }
+      let at = forward ? before + (root ? 0 : 1) : before + node.nodeSize - (root ? 2 : 1);
       for (let index = forward ? 0 : node.childCount - 1; forward ? index < node.childCount : index >= 0; index += forward ? 1 : -1) {
+        const child = node.child(index), childBefore = forward ? at : at - child.nodeSize;
         path.push(index);
-        const found = visit(node.child(index));
+        visit(child, childBefore);
         path.pop();
-        if (found) return true;
+        if (target) break;
+        at = forward ? at + child.nodeSize : childBefore;
       }
-      return false;
     };
-    visit(doc);
+    visit(doc, 0, true);
     if (!target) return;
     if (extend) {
       const previous = this.editor.state.selection, native = this.dom.ownerDocument.getSelection();
       const range = native?.rangeCount ? native.getRangeAt(0) : undefined;
       const backward = range && !native!.isCollapsed && native!.anchorNode === range.endContainer && native!.anchorOffset === range.endOffset;
       const anchorPath = backward ? previous.endPath : previous.path, anchorOffset = backward ? previous.to : previous.from;
-      const order = comparePaths(target.path, anchorPath) || target.from - anchorOffset;
-      target = order <= 0 ? Selection.range(target.path, target.from, anchorPath, anchorOffset)
-        : Selection.range(anchorPath, anchorOffset, target.path, target.from);
+      const anchor = previous instanceof RangeSelection ? previous.anchor : previous instanceof GapSelection ? previous.position
+        : this.selections.anchorPosition() ?? (previous instanceof NodeSelection ? previous.structuralFrom
+          : textPointToPosition(doc, anchorPath, anchorOffset));
+      const a = resolveDocumentPoint(doc, anchor), b = resolveDocumentPoint(doc, targetPosition);
+      if (anchor === targetPosition) target = selectionAtPosition(doc, anchor);
+      else if (!(previous instanceof RangeSelection) && a.kind === 'text' && b.kind === 'text') {
+        const anchorText = previous.kind === 'text' && textPointToPosition(doc, anchorPath, anchorOffset) === anchor
+          ? { path: anchorPath, offset: anchorOffset } : a;
+        const targetText = target instanceof Selection ? { path: target.path, offset: target.from } : b;
+        target = anchor < targetPosition ? Selection.range(anchorText.path, anchorText.offset, targetText.path, targetText.offset)
+          : Selection.range(targetText.path, targetText.offset, anchorText.path, anchorText.offset);
+      } else target = new RangeSelection(doc, anchor, targetPosition);
     }
     this.editor.dispatch(this.editor.state.createTransaction().setSelection(target));
   }

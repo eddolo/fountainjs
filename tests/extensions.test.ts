@@ -284,7 +284,13 @@ describe('modular extension composition', () => {
     const editor = createEditor({ schema: CoreSchemaSpec, plugins: [plugin] });
 
     expect(plugin.spec.props?.handlePaste?.(editor, clipboardEvent('> first\nsecond'))).toBe(true);
-    expect(editor.state.doc.child(1).type.name).toBe('blockquote');
-    expect(editor.state.doc.child(1).textContent).toBe('> firstsecond');
+    // Replacing an empty insertion paragraph does not invent leading/trailing
+    // blank paragraphs around the pasted block. Check the complete document.
+    expect(editor.getJSON()).toEqual(editor.state.schema.nodeFromJSON({ type: 'doc', content: [{
+      type: 'blockquote', content: [
+        { type: 'paragraph', content: [{ type: 'text', text: '> first' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'second' }] },
+      ],
+    }] }).toJSON());
   });
 });
