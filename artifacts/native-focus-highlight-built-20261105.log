@@ -1,0 +1,145 @@
+[WebServer] (node:7808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:23432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (8.8s)
+(node:7504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (12.2s)
+(node:13516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (10.9s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+    Expected: "rgb(255, 0, 170)"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+
+
+      6421 |   await page.getByLabel('Highlight colour').fill('#ff00aa');
+      6422 |   await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+    > 6423 |   await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+           |                                           ^
+      6424 |   await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+      6425 |   await expect(editor.locator('h1 mark')).toHaveCount(0);
+      6426 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:6423:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+    Expected: "rgb(255, 0, 170)"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+
+
+      6421 |   await page.getByLabel('Highlight colour').fill('#ff00aa');
+      6422 |   await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+    > 6423 |   await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+           |                                           ^
+      6424 |   await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+      6425 |   await expect(editor.locator('h1 mark')).toHaveCount(0);
+      6426 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:6423:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+    Expected: "rgb(255, 0, 170)"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+
+
+      6421 |   await page.getByLabel('Highlight colour').fill('#ff00aa');
+      6422 |   await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+    > 6423 |   await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+           |                                           ^
+      6424 |   await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+      6425 |   await expect(editor.locator('h1 mark')).toHaveCount(0);
+      6426 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:6423:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-focus-highlight-built-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+    [firefox] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+    [webkit] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo

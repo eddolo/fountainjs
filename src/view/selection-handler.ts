@@ -57,6 +57,7 @@ export class SelectionHandler {
   private pointerSelectionHandled = false;
   private pointerSelectionActive = false;
   private pendingModelSync = false;
+  private pendingFocusSelection = false;
   #domSyncRequested = false;
 
   constructor(
@@ -318,7 +319,10 @@ export class SelectionHandler {
 
   /** A committed selection must reach the DOM before incidental native
    * endpoints from the preceding render can replace it. */
-  requestModelSync(): void { this.pendingModelSync = true; }
+  requestModelSync(preserveForFocus = false): void {
+    this.pendingModelSync = true;
+    this.pendingFocusSelection ||= preserveForFocus;
+  }
 
   consumeDOMSyncRequest(): boolean {
     const requested = this.#domSyncRequested;
@@ -502,16 +506,18 @@ export class SelectionHandler {
     // Returning from a toolbar must apply the committed command landing before
     // native beforeinput captures stale endpoints. Real pointer placement still
     // belongs to the browser, and nested native controls do not fire host focus.
-    if (this.syncing || this.pointerSelectionActive
+    if (!this.pendingFocusSelection || this.syncing || this.pointerSelectionActive
       || event.relatedTarget instanceof Element && this.dom.contains(event.relatedTarget)) return;
     this.requestModelSync();
     // Some hosts restore their old native range after the focus event. Apply
     // the command landing after that default action, before the next input.
-    queueMicrotask(() => this.sync(this.editor.state.selection,
-      this.dom.ownerDocument.activeElement === this.dom && !this.pointerSelectionActive));
+    queueMicrotask(() => {
+      if (this.pendingFocusSelection) this.sync(this.editor.state.selection,
+        this.dom.ownerDocument.activeElement === this.dom && !this.pointerSelectionActive);
+    });
   };
 
-  private onSelectionChange = (): void => {
+  private onSelectionChange = (event: Event): void => {
     const activeElement = document.activeElement;
     const activeEditingHost = activeElement instanceof Element
       ? activeElement.closest<HTMLElement>('[contenteditable]')
@@ -521,6 +527,21 @@ export class SelectionHandler {
       && this.dom.contains(activeElement)
       && (activeElement.closest('[data-fountain-widget]') || activeEditingHost?.contentEditable === 'false')) {
       return;
+    }
+    // Explicit host placement supersedes a deferred command caret, including
+    // during the host's focus default or while its toolbar button keeps focus.
+    // Browser-generated events can instead report stale endpoints. Native
+    // text/colour fields retain ownership of their selection and keyboard.
+    if (!this.syncing && !event.isTrusted && (this.ownsDOMSelection()
+      || activeElement?.matches('button') && !this.dom.contains(activeElement))) {
+      const native = this.dom.ownerDocument.getSelection();
+      if (native?.anchorNode && native.focusNode
+        && this.dom.contains(native.anchorNode) && this.dom.contains(native.focusNode)) {
+        this.pendingFocusSelection = false;
+        this.pendingModelSync = false;
+        this.capture(true);
+        return;
+      }
     }
     if (!this.syncing && this.ownsDOMSelection()) this.capture();
   };
@@ -545,6 +566,7 @@ export class SelectionHandler {
     const target = event.target instanceof Element ? event.target : null;
     if (!target || !this.dom.contains(target)) return;
     this.pointerSelectionActive = true;
+    this.pendingFocusSelection = false;
     this.requestDOMSync();
 
     const cell = target.closest<HTMLElement>('td[data-fountain-path], th[data-fountain-path]');
@@ -672,6 +694,7 @@ export class SelectionHandler {
   }
 
   private finishSync(): void {
+    if (this.syncing && this.dom.ownerDocument.activeElement === this.dom) this.pendingFocusSelection = false;
     queueMicrotask(() => { this.syncing = false; });
   }
 }

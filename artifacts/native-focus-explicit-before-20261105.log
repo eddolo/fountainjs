@@ -1,0 +1,83 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-focus-audit
+
+ ❯ tests/selection-view.test.ts (17 tests | 2 failed) 281ms
+   ❯ semantic selection DOM bridge (17)
+     × accepts an explicit native placement after a deferred command while an external button keeps focus (range: false) 98ms
+     × accepts an explicit native placement after a deferred command while an external button keeps focus (range: true) 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > accepts an explicit native placement after a deferred command while an external button keeps focus (range: false)
+AssertionError: expected Selection{ path: [ 1, +0 ], …(4) } to deeply equal Selection{ path: [ +0, +0 ], …(4) }
+
+- Expected
++ Received
+
+  Selection {
+    "endPath": [
+-     0,
++     1,
+      0,
+    ],
+-   "from": 3,
++   "from": 2,
+    "kind": "text",
+    "path": [
++     1,
+      0,
+-     0,
+    ],
+-   "to": 3,
++   "to": 2,
+  }
+
+ ❯ tests/selection-view.test.ts:36:38
+     34|       native.setBaseAndExtent(target, range ? 5 : 3, target, range ? 1…
+     35|       document.dispatchEvent(new Event('selectionchange'));
+     36|       expect(editor.state.selection).toEqual(range ? Selection.range([…
+       |                                      ^
+     37|       expect(document.activeElement).toBe(button);
+     38|     } finally { view.destroy(); editor.destroy(); mount.remove(); butt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > accepts an explicit native placement after a deferred command while an external button keeps focus (range: true)
+AssertionError: expected Selection{ path: [ 1, +0 ], …(4) } to deeply equal Selection{ path: [ +0, +0 ], …(4) }
+
+- Expected
++ Received
+
+  Selection {
+    "endPath": [
+-     0,
++     1,
+      0,
+    ],
+-   "from": 1,
++   "from": 2,
+    "kind": "text",
+    "path": [
++     1,
+      0,
+-     0,
+    ],
+-   "to": 5,
++   "to": 2,
+  }
+
+ ❯ tests/selection-view.test.ts:36:38
+     34|       native.setBaseAndExtent(target, range ? 5 : 3, target, range ? 1…
+     35|       document.dispatchEvent(new Event('selectionchange'));
+     36|       expect(editor.state.selection).toEqual(range ? Selection.range([…
+       |                                      ^
+     37|       expect(document.activeElement).toBe(button);
+     38|     } finally { view.destroy(); editor.destroy(); mount.remove(); butt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+   Start at  18:36:08
+   Duration  17.57s (environment 79%, import 10%, transform 9%, tests 2%)

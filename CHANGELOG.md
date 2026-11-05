@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Narrow raw-host focus restoration to a pending explicit local command from
+  an external control. Preserve fresh native caret/range placement, including
+  an explicit host notification that supersedes a deferred toolbar caret.
+  Retain native input focus and the existing table-column command landing.
+  Two SelectionHandler declaration files gain a private field and an optional
+  internal synchronization parameter; existing calls remain compatible.
+  This corrects the broader focus behavior described in the previous checkpoint.
+  See the [focus audit](docs/NATIVE_FOCUS_AUDIT.md).
+
 - Apply headings, alignment and reading direction only to text blocks intersected
   by a directed structural range, including empty paragraphs. Heading conversion
   also accepts whole-document and cell selections, excludes a next paragraph at

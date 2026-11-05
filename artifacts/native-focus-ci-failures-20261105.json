@@ -1,0 +1,261 @@
+{
+  "baseCommit": "8a9c51f650317b8598356badaa452faec6568ec7",
+  "ciRun": 41972730191,
+  "job": 127064457020,
+  "failed": 63,
+  "passed": 834,
+  "failures": [
+    {
+      "engine": "chromium",
+      "title": "edits, selects, and composes across guarded page shells in one contenteditable"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps one paragraph editable when its measured lines span page shells"
+    },
+    {
+      "engine": "chromium",
+      "title": "maps carets, ranges, and composition around injected paragraph page gaps"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps one canonical ordered list editable and numbered across page shells"
+    },
+    {
+      "engine": "chromium",
+      "title": "honours explicit table repetition independently of cell roles (ordinary)"
+    },
+    {
+      "engine": "chromium",
+      "title": "honours explicit table repetition independently of cell roles (off)"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps one canonical table editable with repeated headers across page shells"
+    },
+    {
+      "engine": "chromium",
+      "title": "reports an oversized table row without clipping or splitting its editable model"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps canonical page furniture and footnotes editable while projecting every page copy"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps tracked review and Yjs collaboration live across automatic page boundaries"
+    },
+    {
+      "engine": "chromium",
+      "title": "replaces a DOM selection that crosses block boundaries"
+    },
+    {
+      "engine": "chromium",
+      "title": "composes and keyboard-navigates the public toolbar by stable group and action IDs"
+    },
+    {
+      "engine": "chromium",
+      "title": "applies the complete text-style suite through the public React toolbar"
+    },
+    {
+      "engine": "chromium",
+      "title": "opens the searchable clipboard-history picker in the public React toolbar"
+    },
+    {
+      "engine": "chromium",
+      "title": "exposes and explicitly cleans invisible text in the public playground"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps rich and multiline paste structurally predictable in the public editor"
+    },
+    {
+      "engine": "chromium",
+      "title": "makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo"
+    },
+    {
+      "engine": "chromium",
+      "title": "round-trips a Fountain multi-block selection through Chromium clipboard HTML"
+    },
+    {
+      "engine": "chromium",
+      "title": "undoes and redoes real typing with both common browser keyboard chords"
+    },
+    {
+      "engine": "chromium",
+      "title": "keeps a backward DOM selection backward after model synchronization"
+    },
+    {
+      "engine": "chromium",
+      "title": "turns multi-format and multi-block selections into visible paragraph boundaries"
+    },
+    {
+      "engine": "firefox",
+      "title": "edits, selects, and composes across guarded page shells in one contenteditable"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps one paragraph editable when its measured lines span page shells"
+    },
+    {
+      "engine": "firefox",
+      "title": "maps carets, ranges, and composition around injected paragraph page gaps"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps one canonical ordered list editable and numbered across page shells"
+    },
+    {
+      "engine": "firefox",
+      "title": "honours explicit table repetition independently of cell roles (ordinary)"
+    },
+    {
+      "engine": "firefox",
+      "title": "honours explicit table repetition independently of cell roles (off)"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps one canonical table editable with repeated headers across page shells"
+    },
+    {
+      "engine": "firefox",
+      "title": "reports an oversized table row without clipping or splitting its editable model"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps canonical page furniture and footnotes editable while projecting every page copy"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps tracked review and Yjs collaboration live across automatic page boundaries"
+    },
+    {
+      "engine": "firefox",
+      "title": "replaces a DOM selection that crosses block boundaries"
+    },
+    {
+      "engine": "firefox",
+      "title": "composes and keyboard-navigates the public toolbar by stable group and action IDs"
+    },
+    {
+      "engine": "firefox",
+      "title": "applies the complete text-style suite through the public React toolbar"
+    },
+    {
+      "engine": "firefox",
+      "title": "opens the searchable clipboard-history picker in the public React toolbar"
+    },
+    {
+      "engine": "firefox",
+      "title": "exposes and explicitly cleans invisible text in the public playground"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps rich and multiline paste structurally predictable in the public editor"
+    },
+    {
+      "engine": "firefox",
+      "title": "makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo"
+    },
+    {
+      "engine": "firefox",
+      "title": "undoes and redoes real typing with both common browser keyboard chords"
+    },
+    {
+      "engine": "firefox",
+      "title": "keeps a backward DOM selection backward after model synchronization"
+    },
+    {
+      "engine": "firefox",
+      "title": "turns multi-format and multi-block selections into visible paragraph boundaries"
+    },
+    {
+      "engine": "webkit",
+      "title": "edits, selects, and composes across guarded page shells in one contenteditable"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps one paragraph editable when its measured lines span page shells"
+    },
+    {
+      "engine": "webkit",
+      "title": "maps carets, ranges, and composition around injected paragraph page gaps"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps one canonical ordered list editable and numbered across page shells"
+    },
+    {
+      "engine": "webkit",
+      "title": "honours explicit table repetition independently of cell roles (ordinary)"
+    },
+    {
+      "engine": "webkit",
+      "title": "honours explicit table repetition independently of cell roles (off)"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps one canonical table editable with repeated headers across page shells"
+    },
+    {
+      "engine": "webkit",
+      "title": "reports an oversized table row without clipping or splitting its editable model"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps canonical page furniture and footnotes editable while projecting every page copy"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps tracked review and Yjs collaboration live across automatic page boundaries"
+    },
+    {
+      "engine": "webkit",
+      "title": "replaces a DOM selection that crosses block boundaries"
+    },
+    {
+      "engine": "webkit",
+      "title": "composes and keyboard-navigates the public toolbar by stable group and action IDs"
+    },
+    {
+      "engine": "webkit",
+      "title": "applies the complete text-style suite through the public React toolbar"
+    },
+    {
+      "engine": "webkit",
+      "title": "opens the searchable clipboard-history picker in the public React toolbar"
+    },
+    {
+      "engine": "webkit",
+      "title": "exposes and explicitly cleans invisible text in the public playground"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps rich and multiline paste structurally predictable in the public editor"
+    },
+    {
+      "engine": "webkit",
+      "title": "makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo"
+    },
+    {
+      "engine": "webkit",
+      "title": "undoes and redoes real typing with both common browser keyboard chords"
+    },
+    {
+      "engine": "webkit",
+      "title": "keeps a backward DOM selection backward after model synchronization"
+    },
+    {
+      "engine": "webkit",
+      "title": "turns multi-format and multi-block selections into visible paragraph boundaries"
+    },
+    {
+      "engine": "mobile-chrome",
+      "title": "preserves split-paragraph selection and composition through mobile page fallback"
+    },
+    {
+      "engine": "mobile-safari",
+      "title": "preserves split-paragraph selection and composition through mobile page fallback"
+    }
+  ]
+}

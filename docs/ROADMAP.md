@@ -1,5 +1,21 @@
 # FountainJS opportunity roadmap
 
+Native focus recovery (2026-11-05, unreleased): fresh CI exposed 63 browser
+regressions in the preceding focus restoration. Restore only a pending explicit
+local command caret; let fresh native placements supersede it without taking
+focus from native inputs. All 63 previously failing cases and 27 additional
+table/control/RTL cases now pass locally; two existing clipboard platform skips
+remain. All 4,052 units / 275 files pass (seven added), together with types,
+API, headless/package/workerd, performance and retention checks. Review 48 stage
+captures and 12 sampled frames from three recordings; this does not certify
+continuous playback, physical mobile or complete fresh CI. The packed archive's
+881 files match the tested build. Static root payload grows by 992 raw / 209
+gzip bytes; this is not a speed measurement. Existing size failures remain;
+no ceilings, dependencies or wire formats change. Offline text retention through
+quote/list reparenting remains a known failure in separate unfinished work.
+No release promotion. [Audit](NATIVE_FOCUS_AUDIT.md) ·
+[Evidence](../artifacts/native-focus-verification-20261105.json).
+
 Structural formatting and focus follow-up (2026-11-05, unreleased): mixed ranges
 format only intersected text blocks; heading conversion supports whole-document
 and cell selections, retains IDs/metadata and preserves unchanged positions.

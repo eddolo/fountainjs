@@ -1,0 +1,12 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-focus-audit
+
+
+ Test Files  3 passed (3)
+      Tests  55 passed (55)
+   Start at  18:46:30
+   Duration  7.98s (import 34%, transform 34%, environment 26%, tests 6%)
+
+     Import  191 modules were evaluated 379 times · 2.57s total, 34% of tracked time
+             ~1.28s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
