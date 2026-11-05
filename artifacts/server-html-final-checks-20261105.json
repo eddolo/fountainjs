@@ -1,0 +1,52 @@
+[
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-unit-20261105.log"
+  },
+  {
+    "name": "types",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-types-20261105.log"
+  },
+  {
+    "name": "api",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-api-20261105.log"
+  },
+  {
+    "name": "headless",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-headless-20261105.log"
+  },
+  {
+    "name": "conformance",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-conformance-20261105.log"
+  },
+  {
+    "name": "package",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-package-20261105.log"
+  },
+  {
+    "name": "worker",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-worker-20261105.log"
+  },
+  {
+    "name": "browser",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-browser-20261105.log"
+  },
+  {
+    "name": "size",
+    "exitCode": 1,
+    "log": "artifacts/server-html-final-size-20261105.log"
+  },
+  {
+    "name": "loaded-size",
+    "exitCode": 0,
+    "log": "artifacts/server-html-final-loaded-size-20261105.log"
+  }
+]

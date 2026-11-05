@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid allocating parse-rule lists for HTML schema types that currently have no
+  rules. Keep rule callbacks live, including additions/removals during an import;
+  preserve model, diagnostic and source-token results. Large-document paired
+  samples improve about 8–9%; this is not a universal performance guarantee.
+
 - Handle code-label pointer gestures before native focus can restore an unrelated
   caret in Firefox. Add optional `PluginProps.handlePointerDown` for document
   chrome; preserve native source selection, modified gestures and NodeView-owned

@@ -1,0 +1,21 @@
+[WebServer] (node:18108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:13584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:31:53 › keeps per-file HTML conversion settings through html editing and export (5.5s)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:31:53 › keeps per-file HTML conversion settings through markdown editing and export (4.7s)
+(node:17856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [firefox] › tests\browser\editor.spec.ts:31:53 › keeps per-file HTML conversion settings through html editing and export (8.6s)
+  ok 4 [firefox] › tests\browser\editor.spec.ts:31:53 › keeps per-file HTML conversion settings through markdown editing and export (5.7s)
+(node:26984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [webkit] › tests\browser\editor.spec.ts:31:53 › keeps per-file HTML conversion settings through html editing and export (8.0s)
+  ok 6 [webkit] › tests\browser\editor.spec.ts:31:53 › keeps per-file HTML conversion settings through markdown editing and export (8.0s)
+
+  6 passed (52.7s)

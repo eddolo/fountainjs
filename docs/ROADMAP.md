@@ -1,5 +1,24 @@
 # FountainJS opportunity roadmap
 
+HTML import allocation follow-up (2026-11-05, unreleased): CPU/source-map
+profiling identifies temporary rule lists and GC work. Reject a wrapper-cache
+experiment with inconclusive paired results. Keep only two live empty-rule
+guards, preserving callbacks and rule changes during/between imports. Same-process
+alternate-order comparisons retain all seven samples and prove complete model/
+issue equality: 5,000-block median 260.48→239.76 ms, 10,000-block 517.35→471.10 ms;
+100-block samples are slower (11.09→13.00 ms), so this is not a universal speedup.
+The unchanged current-code performance gate passes at all four sizes. Earlier
+failures remain evidence; their full timing variability is not certified resolved.
+All 3,919 units / 268 files, types/API/headless, unchanged conformance, package/
+workerd and six recorded conversion journeys pass. Actual packed ESM/CJS
+root/core/server combinations match the parent in 64 complete model, diagnostic
+and source-token comparisons. All 865 archive build files match the tested build.
+The optional HTML-server closure adds 116 raw / 17 gzip bytes; editor/core/React/
+DOCX closures and all limits are unchanged. Aggregate budgets remain red. Captures
+and sampled recordings inspected; fresh CI, structural ranges, download/mobile
+reliability and wider parity remain open. No release or score promotion.
+[Evidence](../artifacts/server-html-verification-20261105.json).
+
 Code-label pointer follow-up (2026-11-04, unreleased): the recorded Firefox
 failure types in the heading because mouse-down restores an old caret and
 selection rendering detaches the code element before its click handler runs.

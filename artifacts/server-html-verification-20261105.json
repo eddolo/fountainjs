@@ -1,0 +1,265 @@
+{
+  "baseCommit": "70be656dceb6aa24b0d1939213ffc71b85a8f0db",
+  "releaseCertified": false,
+  "apiChanged": false,
+  "acceptanceLimitsChanged": false,
+  "implementation": "Two live empty-rule guards only; no rule-result/schema/tree cache, wrapper cache rejected.",
+  "unit": {
+    "passed": 3919,
+    "files": 268
+  },
+  "checks": [
+    {
+      "name": "unit",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-unit-20261105.log"
+    },
+    {
+      "name": "types",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-types-20261105.log"
+    },
+    {
+      "name": "api",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-api-20261105.log"
+    },
+    {
+      "name": "headless",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-headless-20261105.log"
+    },
+    {
+      "name": "conformance",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-conformance-20261105.log"
+    },
+    {
+      "name": "package",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-package-20261105.log"
+    },
+    {
+      "name": "worker",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-worker-20261105.log"
+    },
+    {
+      "name": "browser",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-browser-20261105.log"
+    },
+    {
+      "name": "size",
+      "exitCode": 1,
+      "log": "artifacts/server-html-final-size-20261105.log"
+    },
+    {
+      "name": "loaded-size",
+      "exitCode": 0,
+      "log": "artifacts/server-html-final-loaded-size-20261105.log"
+    }
+  ],
+  "declarations": 419,
+  "headlessModules": 122,
+  "package": {
+    "sha256": "adf4a6c99aea0c8dad18638690ead8a8c53140ce4bedf97b55b5cf6267262dee",
+    "distFilesMatch": 865,
+    "probe": {
+      "actualTarball": true,
+      "noFakeDOM": true,
+      "entries": 4,
+      "fullModelIssueAndTokenComparisons": 64,
+      "reference": "actual parent package",
+      "skippedDOMCallbacks": true
+    }
+  },
+  "pairedComparison": [
+    {
+      "size": 100,
+      "medianWallMs": {
+        "parent": 11.093899999999962,
+        "candidate": 13.004700000000014
+      }
+    },
+    {
+      "size": 1000,
+      "medianWallMs": {
+        "parent": 74.07159999999999,
+        "candidate": 71.38980000000004
+      }
+    },
+    {
+      "size": 5000,
+      "medianWallMs": {
+        "parent": 260.4769000000001,
+        "candidate": 239.75570000000016
+      }
+    },
+    {
+      "size": 10000,
+      "medianWallMs": {
+        "parent": 517.347600000001,
+        "candidate": 471.10390000000007
+      }
+    }
+  ],
+  "performanceGate": {
+    "path": "artifacts/server-html-empty-rules-gate-20261105.json",
+    "failures": [],
+    "scope": "One unchanged current-code gate pass. Prior timing failures are retained; their entire variability is not explained or certified resolved."
+  },
+  "profiles": [
+    {
+      "version": "before",
+      "path": "artifacts/server-html-cpu-before-20261105/server.cpuprofile.gz",
+      "rawSha256": "0016d2e28d729a0119b40c24d0728dd4713af2ee4a929611e6f6c1836ee1b2ff",
+      "hotspots": "artifacts/server-html-cpu-before-20261105/hotspots.json"
+    },
+    {
+      "version": "after",
+      "path": "artifacts/server-html-cpu-after-20261105/server.cpuprofile.gz",
+      "rawSha256": "7c3f2e1e3eab42dd6c6b29f5995e63677c6b35e5ae1a3ca4003dd600e3270e16",
+      "hotspots": "artifacts/server-html-cpu-after-20261105/hotspots.json"
+    }
+  ],
+  "rejectedExperiment": {
+    "patch": "artifacts/server-html-rejected-wrapper-cache-20261105.patch",
+    "comparison": "artifacts/server-html-wrappers-paired-20261105.json",
+    "reason": "No reliable paired latency benefit; not included in runtime code."
+  },
+  "sizeDeltaBytes": {
+    ".": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./core": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./docx": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./react": {
+      "closureRawBytes": 0,
+      "closureGzipBytes": 0,
+      "closureBrotliBytes": 0
+    },
+    "./html/server": {
+      "closureRawBytes": 116,
+      "closureGzipBytes": 17,
+      "closureBrotliBytes": 19
+    }
+  },
+  "visualReview": {
+    "journeys": 6,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "formats": [
+      "html",
+      "markdown"
+    ],
+    "captureContactSheetsInspected": 6,
+    "capturesInSheets": 18,
+    "sampledRecordings": 6,
+    "framesPerRecording": 6,
+    "scope": "Bounded per-file policy/import/edit/round-trip workflows. Samples include the initial browser test fixture; not every video frame or general original-file fidelity."
+  },
+  "retainedSources": [
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+      "bytes": 45
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/conversion-observations.json",
+      "sha256": "67da1ed97af22886d85f1517b252c169d973348b0b1ea4140d14335844bb141a",
+      "bytes": 3212
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-chromium/conversion-report.json",
+      "sha256": "3a448a575b5bc9c9d8f5c34d52cceed3301ffa48799a6a9b77ab17ff5a43fdb0",
+      "bytes": 2982
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/conversion-observations.json",
+      "sha256": "83511de091b550d0abaa13f078faa12ffafd7f74437cdc0878ec6b91db4e86cb",
+      "bytes": 3212
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-firefox/conversion-report.json",
+      "sha256": "2e88daff5b69b49b09bb75db554ab5c256e88721e9bf591a10f7a66d2e33db59",
+      "bytes": 2982
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/conversion-observations.json",
+      "sha256": "b3fda6bc9d9cfc9acafcb905bf62eeed706d110a03e8177f0f4c746229607e34",
+      "bytes": 3211
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-846e3-ugh-html-editing-and-export-webkit/conversion-report.json",
+      "sha256": "0d90e4f916e40840f1ed2a4da720b3b003c9ee7f3c3a444584e4f924e5cb9fc3",
+      "bytes": 2982
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/conversion-observations.json",
+      "sha256": "f6413e4da649ac429d243eaeb1413d711c3d2460670f1589e6188ab2e5ac7d47",
+      "bytes": 4316
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/conversion-report.json",
+      "sha256": "9b2be1371dfb52c7fc9d8c152089788ff148ce9bc5e2234a3d365ce23bf6fae4",
+      "bytes": 4056
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-chromium/untouched.md",
+      "sha256": "e9405ea94628e260dfcde47ec5df714602e2573025e291241745ac8f1e4b9568",
+      "bytes": 128
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/conversion-observations.json",
+      "sha256": "238345de2c6b3f449f9a572e7ffb0acc788d58a67bbf049ce651e4aec3eb0af9",
+      "bytes": 4316
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/conversion-report.json",
+      "sha256": "1fb8434344e4905d19d30d59125f5df91448d4a3efe0e25cfe415b3567848a9d",
+      "bytes": 4056
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-firefox/untouched.md",
+      "sha256": "e9405ea94628e260dfcde47ec5df714602e2573025e291241745ac8f1e4b9568",
+      "bytes": 128
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/conversion-observations.json",
+      "sha256": "ecdf55b7ae2aa727c2c326577a82c4b48c2251aec65c38bca07d232fd29eaf38",
+      "bytes": 4315
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/conversion-report.json",
+      "sha256": "2a596edc61f79bdd71c623e35177eeefc5e276de59db2c645838deaf1e1c7dd9",
+      "bytes": 4056
+    },
+    {
+      "path": "artifacts/server-html-conversion-browser-20261105/editor-keeps-per-file-HTML-97bac-markdown-editing-and-export-webkit/untouched.md",
+      "sha256": "e9405ea94628e260dfcde47ec5df714602e2573025e291241745ac8f1e4b9568",
+      "bytes": 128
+    }
+  ],
+  "open": [
+    "Broader timing variability and full fresh CI",
+    "Aggregate ESM/CJS budgets",
+    "Structural range/terminal-image selection",
+    "Earlier intermittent download timeout",
+    "Mobile suggestion-menu reliability",
+    "Remaining standards/import/export and production parity"
+  ]
+}

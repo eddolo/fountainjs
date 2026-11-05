@@ -1,0 +1,155 @@
+[
+  {
+    "source": "",
+    "line": 0,
+    "name": "(garbage collector)",
+    "selfMs": 1098.36
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 783,
+    "name": "Bs",
+    "snippet": "function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark[], context: ImportContext, reportUnknown: boolean): Mark[] {",
+    "selfMs": 347.73
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 14,
+    "name": "O",
+    "snippet": "function computeAttrs(",
+    "selfMs": 324.25
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 377,
+    "name": "getAttribute",
+    "snippet": "getAttribute(name: string): string | null {",
+    "selfMs": 312.61
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 130,
+    "name": "a",
+    "snippet": "const visit = (current: Node, path: readonly number[]): boolean => {",
+    "selfMs": 312.34
+  },
+  {
+    "source": "../src/core/schema/node-spec.ts",
+    "line": 27,
+    "name": "t",
+    "snippet": "export function freezeAttributes(attrs: Attributes): Readonly<Attributes> {",
+    "selfMs": 234.09
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 492,
+    "name": "_callState",
+    "snippet": "_callState(cp) {",
+    "selfMs": 126.44
+  },
+  {
+    "source": "../node_modules/.pnpm/parse5@8.0.1/node_modules/parse5/dist/tokenizer/index.js",
+    "line": 205,
+    "name": "_runParsingLoop",
+    "snippet": "_runParsingLoop() {",
+    "selfMs": 124.36
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 342,
+    "name": "xs",
+    "snippet": "function wrapChildren(parent: RawParent, source: SourceInput | undefined, selectors: SelectorCache): SourceNode[] {",
+    "selfMs": 113.97
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 676,
+    "name": "Ls",
+    "snippet": "function configuredNode(",
+    "selfMs": 109.02
+  },
+  {
+    "source": "../node_modules/.pnpm/domhandler@6.0.1/node_modules/domhandler/dist/node.js",
+    "line": 207,
+    "name": "get attributes",
+    "snippet": "get attributes() {",
+    "selfMs": 107.43
+  },
+  {
+    "source": "../src/core/url.ts",
+    "line": 12,
+    "name": "r",
+    "snippet": "export function isSafeURL(value: unknown, options: SafeURLOptions = {}): value is string {",
+    "selfMs": 99.41
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 288,
+    "name": "_s",
+    "snippet": "function parseStyle(source: string): Readonly<Record<string, string>> {",
+    "selfMs": 97.18
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 880,
+    "name": "",
+    "snippet": "parent.childNodes.forEach((child) => {",
+    "selfMs": 91.89
+  },
+  {
+    "source": "../src/core/schema/schema.ts",
+    "line": 35,
+    "name": "k",
+    "snippet": "function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {",
+    "selfMs": 83.05
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 594,
+    "name": "Ms",
+    "snippet": "function configuredRules(",
+    "selfMs": 81.44
+  },
+  {
+    "source": "../src/core/schema/node.ts",
+    "line": 26,
+    "name": "r",
+    "snippet": "constructor(",
+    "selfMs": 80.04
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 640,
+    "name": "Fs",
+    "snippet": "function configuredMarks(element: SourceElement, schema: Schema, context: ImportContext): Mark[] {",
+    "selfMs": 68.87
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 343,
+    "name": "",
+    "snippet": "return htmlparser2Adapter.getChildNodes(parent).flatMap((node) => {",
+    "selfMs": 68.06
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 441,
+    "name": "ws",
+    "snippet": "function validateTree(parent: RawParent, limits: Required<ServerHTMLImporterOptions>, context: ImportContext): void {",
+    "selfMs": 65.14
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 301,
+    "name": "vs",
+    "snippet": "function rawText(node: RawNode): string {",
+    "selfMs": 64.75
+  },
+  {
+    "source": "../src/html/server.ts",
+    "line": 1279,
+    "name": "sc",
+    "snippet": "function projectBlock(element: SourceElement, schema: Schema, context: ImportContext): FountainNode[] {",
+    "selfMs": 60.18
+  }
+]
