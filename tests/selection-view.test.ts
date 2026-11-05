@@ -23,6 +23,106 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each(['text', 'gap'] as const)('selects the resize handle cell when focus arrives from a %s projection of that same cell', async kind => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [
+      { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', attrs: { colwidth: [120] }, content: [paragraph('Cell')] }] }] },
+      paragraph('Outside'),
+    ] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    try {
+      editor.dispatch(editor.createTransaction().setSelection(kind === 'gap'
+        ? new GapSelection(editor.state.doc, 0) : Selection.cursor([0, 0, 0, 0, 0], 2)));
+      await settleSelection();
+      const handle = view.dom.querySelector<HTMLElement>('.fountain-table-cell__resize-handle')!;
+      handle.focus(); await settleSelection();
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      expect((editor.state.selection as CellSelection).cellPaths).toEqual([[0, 0, 0]]);
+      expect(document.activeElement).toBe(handle);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
+  it.each(['pointerup', 'pointercancel'] as const)('keeps a NodeView resize gesture owned through %s outside its handle, then accepts keyboard placement', async finish => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [
+      { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', attrs: { colwidth: [120] }, content: [paragraph('Cell')] }] }] },
+      paragraph('Outside'),
+    ] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      const handle = view.dom.querySelector<HTMLElement>('.fountain-table-cell__resize-handle')!;
+      const content = view.dom.querySelector<HTMLElement>('.fountain-table-cell__content')!;
+      const outside = view.dom.querySelector<HTMLElement>('[data-fountain-text-path="1.0"]')!;
+      editor.dispatch(editor.createTransaction().setSelection(new CellSelection(editor.state.doc, [0, 0, 0])));
+      handle.focus(); await settleSelection();
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      // A native control can retain unrelated endpoints from before focus.
+      native.setBaseAndExtent(outside.firstChild!, 1, outside.firstChild!, 3);
+      handle.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, cancelable: true, button: 0, clientX: 120 }));
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 155 }));
+      content.dispatchEvent(new MouseEvent(finish, { bubbles: true }));
+      await settleSelection();
+      expect(editor.state.selection).toBeInstanceOf(CellSelection);
+      expect(document.activeElement).toBe(handle);
+      view.dom.focus(); native.setBaseAndExtent(outside.firstChild!, 2, outside.firstChild!, 2);
+      outside.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight', bubbles: true }));
+      await settleSelection();
+      expect(editor.state.selection).toEqual(Selection.cursor([1, 0], 2));
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
+  it.each([[false, false], [true, false], [false, true], [true, true]])('accepts an explicit native placement after a deferred command (range: %s, return focus: %s)', async (range, returnFocus) => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Before'), paragraph('Target')] } });
+    const mount = document.createElement('div'), button = document.createElement('button'); document.body.append(mount, button);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      button.focus();
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 2)));
+      if (returnFocus) view.dom.focus();
+      const target = view.dom.querySelector('[data-fountain-text-path="0.0"]')!.firstChild!;
+      native.setBaseAndExtent(target, range ? 5 : 3, target, range ? 1 : 3);
+      document.dispatchEvent(new Event('selectionchange'));
+      expect(editor.state.selection).toEqual(range ? Selection.range([0, 0], 1, [0, 0], 5) : Selection.cursor([0, 0], 3));
+      await settleSelection();
+      expect(editor.state.selection).toEqual(range ? Selection.range([0, 0], 1, [0, 0], 5) : Selection.cursor([0, 0], 3));
+      expect(document.activeElement).toBe(returnFocus ? view.dom : button);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); button.remove(); native.removeAllRanges(); }
+  });
+
+  it('keeps an external native input focused when stale editor endpoints are reported', async () => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Before'), paragraph('Target')] } });
+    const mount = document.createElement('div'), input = document.createElement('input'); document.body.append(mount, input);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      input.value = 'Native field'; input.focus(); input.setSelectionRange(2, 5);
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 2)));
+      const target = view.dom.querySelector('[data-fountain-text-path="0.0"]')!.firstChild!;
+      native.setBaseAndExtent(target, 1, target, 4);
+      document.dispatchEvent(new Event('selectionchange'));
+      await settleSelection();
+      expect(editor.state.selection).toEqual(Selection.cursor([1, 0], 2));
+      expect(document.activeElement).toBe(input);
+      expect([input.selectionStart, input.selectionEnd]).toEqual([2, 5]);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); input.remove(); native.removeAllRanges(); }
+  });
+
+  it.each([false, true])('keeps a fresh native caret/range when host focus has no unapplied command selection (backward: %s)', async backward => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Before'), paragraph('Target')] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      await settleSelection();
+      view.dom.focus();
+      const target = view.dom.querySelector('[data-fountain-text-path="1.0"]')!.firstChild!;
+      native.setBaseAndExtent(target, backward ? 5 : 2, target, backward ? 1 : 2);
+      document.dispatchEvent(new Event('selectionchange'));
+      await settleSelection(); await settleSelection();
+      expect(native.anchorNode).toBe(target); expect(native.focusNode).toBe(target);
+      expect(native.anchorOffset).toBe(backward ? 5 : 2); expect(native.focusOffset).toBe(backward ? 1 : 2);
+      expect(editor.state.selection).toEqual(backward ? Selection.range([1, 0], 1, [1, 0], 5) : Selection.cursor([1, 0], 2));
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
   it('restores the committed model caret when the editing host receives programmatic focus from a toolbar', async () => {
     const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Before'), paragraph('Target')] } });
     const mount = document.createElement('div'), toolbar = document.createElement('button');

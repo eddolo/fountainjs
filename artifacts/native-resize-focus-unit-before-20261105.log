@@ -1,0 +1,26 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-focus-audit
+
+ ❯ tests/selection-view.test.ts (21 tests | 1 failed) 354ms
+   ❯ semantic selection DOM bridge (21)
+     × keeps a NodeView resize gesture owned through pointerup outside its handle, then accepts normal text placement 163ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps a NodeView resize gesture owned through pointerup outside its handle, then accepts normal text placement
+AssertionError: expected Selection{ path: [ 1, +0 ], …(4) } to be an instance of CellSelection
+ ❯ tests/selection-view.test.ts:45:38
+     43|       content.dispatchEvent(new MouseEvent('pointerup', { bubbles: tru…
+     44|       await settleSelection();
+     45|       expect(editor.state.selection).toBeInstanceOf(CellSelection);
+       |                                      ^
+     46|       expect(document.activeElement).toBe(handle);
+     47|       outside.dispatchEvent(new MouseEvent('pointerdown', { bubbles: t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  19:57:21
+   Duration  4.50s (transform 36%, import 29%, environment 26%, tests 8%)

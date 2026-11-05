@@ -1,5 +1,36 @@
 # FountainJS opportunity roadmap
 
+Table resize retention (2026-11-05, unreleased): preserve semantic cell focus
+through keyboard/pointer resizing and retain every content position for column
+width changes. All three previously failing desktop-engine resize journeys,
+63 recovery cases and 27 additional control cases pass locally. All 4,061 units
+in 276 files pass, together with types/API/headless/package/workerd and
+performance/retention checks. Actual packed consumers pass 24 checks; 881 build
+files match the archive. Six stage captures and twelve sampled video frames
+were reviewed. Public signatures and dependencies are unchanged. Static root
+growth is 774 raw / 169 gzip bytes, not a runtime-speed measurement. Existing
+size ceilings remain red and unchanged. Full fresh CI remains required; separate
+structural/history work still has six required Yjs retention failures and one
+independent-deletion history failure. No release promotion.
+[Audit](TABLE_RESIZE_RETENTION_AUDIT.md) ·
+[Evidence](../artifacts/resize-retention-verification-20261105.json).
+
+Native focus recovery (2026-11-05, unreleased): fresh CI exposed 63 browser
+regressions in the preceding focus restoration. Restore only a pending explicit
+local command caret; let fresh native placements supersede it without taking
+focus from native inputs. All 63 previously failing cases and 27 additional
+table/control/RTL cases now pass locally; two existing clipboard platform skips
+remain. All 4,052 units / 275 files pass (seven added), together with types,
+API, headless/package/workerd, performance and retention checks. Review 48 stage
+captures and 12 sampled frames from three recordings; this does not certify
+continuous playback, physical mobile or complete fresh CI. The packed archive's
+881 files match the tested build. Static root payload grows by 992 raw / 209
+gzip bytes; this is not a speed measurement. Existing size failures remain;
+no ceilings, dependencies or wire formats change. Offline text retention through
+quote/list reparenting remains a known failure in separate unfinished work.
+No release promotion. [Audit](NATIVE_FOCUS_AUDIT.md) ·
+[Evidence](../artifacts/native-focus-verification-20261105.json).
+
 Structural formatting and focus follow-up (2026-11-05, unreleased): mixed ranges
 format only intersected text blocks; heading conversion supports whole-document
 and cell selections, retains IDs/metadata and preserves unchanged positions.

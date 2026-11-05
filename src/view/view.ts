@@ -275,7 +275,11 @@ export class EditorView {
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
-    this.selections.requestModelSync();
+    const active = this.dom.ownerDocument.activeElement;
+    const externalControlFocused = active && active !== this.dom.ownerDocument.body
+      && active !== this.dom.ownerDocument.documentElement && !this.dom.contains(active);
+    this.selections.requestModelSync(Boolean(transaction.selectionSet && externalControlFocused
+      && transaction.getMeta('fountain$collaborationRemote') !== true));
     queueMicrotask(() => {
       // A synchronous nested dispatch (for example restoring a resize control)
       // can supersede this snapshot before its DOM selection task runs.

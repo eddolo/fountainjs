@@ -1,0 +1,18 @@
+[WebServer] (node:23748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:28384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › artifacts\native-focus-highlight-visual.spec.ts:2:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (3.1s)
+(node:152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › artifacts\native-focus-highlight-visual.spec.ts:2:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (6.1s)
+(node:26564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › artifacts\native-focus-highlight-visual.spec.ts:2:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (7.3s)
+
+  3 passed (23.5s)

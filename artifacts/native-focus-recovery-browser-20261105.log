@@ -1,0 +1,219 @@
+[WebServer] (node:12120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 65 tests using 1 worker
+
+(node:1596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:1467:1 › edits, selects, and composes across guarded page shells in one contenteditable (2.0s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:1543:1 › keeps one paragraph editable when its measured lines span page shells (1.8s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:1670:1 › maps carets, ranges, and composition around injected paragraph page gaps (1.8s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:1774:1 › keeps one canonical ordered list editable and numbered across page shells (1.8s)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:1909:52 › honours explicit table repetition independently of cell roles (ordinary) (2.2s)
+  ok  6 [chromium] › tests\browser\editor.spec.ts:1909:52 › honours explicit table repetition independently of cell roles (off) (2.1s)
+  ok  7 [chromium] › tests\browser\editor.spec.ts:1942:1 › keeps one canonical table editable with repeated headers across page shells (2.1s)
+  ok  8 [chromium] › tests\browser\editor.spec.ts:2158:1 › reports an oversized table row without clipping or splitting its editable model (1.6s)
+  ok  9 [chromium] › tests\browser\editor.spec.ts:2200:1 › keeps canonical page furniture and footnotes editable while projecting every page copy (2.0s)
+  ok 10 [chromium] › tests\browser\editor.spec.ts:2678:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries (2.1s)
+  ok 11 [chromium] › tests\browser\editor.spec.ts:4401:1 › replaces a DOM selection that crosses block boundaries (1.0s)
+  ok 12 [chromium] › tests\browser\editor.spec.ts:5407:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (13.0s)
+  ok 13 [chromium] › tests\browser\editor.spec.ts:5444:1 › applies the complete text-style suite through the public React toolbar (3.9s)
+  ok 14 [chromium] › tests\browser\editor.spec.ts:5798:1 › opens the searchable clipboard-history picker in the public React toolbar (2.8s)
+  ok 15 [chromium] › tests\browser\editor.spec.ts:5856:1 › exposes and explicitly cleans invisible text in the public playground (3.5s)
+  x  16 [chromium] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (8.2s)
+(node:27968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 17 [chromium] › tests\browser\editor.spec.ts:6428:1 › keeps rich and multiline paste structurally predictable in the public editor (2.6s)
+  ok 18 [chromium] › tests\browser\editor.spec.ts:6501:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML (1.7s)
+  ok 19 [chromium] › tests\browser\editor.spec.ts:6893:1 › undoes and redoes real typing with both common browser keyboard chords (1.1s)
+  ok 20 [chromium] › tests\browser\editor.spec.ts:6910:1 › keeps a backward DOM selection backward after model synchronization (1.2s)
+  ok 21 [chromium] › tests\browser\editor.spec.ts:6985:1 › turns multi-format and multi-block selections into visible paragraph boundaries (1.7s)
+(node:23148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 22 [firefox] › tests\browser\editor.spec.ts:1467:1 › edits, selects, and composes across guarded page shells in one contenteditable (6.4s)
+  ok 23 [firefox] › tests\browser\editor.spec.ts:1543:1 › keeps one paragraph editable when its measured lines span page shells (4.2s)
+  ok 24 [firefox] › tests\browser\editor.spec.ts:1670:1 › maps carets, ranges, and composition around injected paragraph page gaps (3.1s)
+  ok 25 [firefox] › tests\browser\editor.spec.ts:1774:1 › keeps one canonical ordered list editable and numbered across page shells (4.1s)
+  ok 26 [firefox] › tests\browser\editor.spec.ts:1909:52 › honours explicit table repetition independently of cell roles (ordinary) (4.2s)
+  ok 27 [firefox] › tests\browser\editor.spec.ts:1909:52 › honours explicit table repetition independently of cell roles (off) (3.3s)
+  ok 28 [firefox] › tests\browser\editor.spec.ts:1942:1 › keeps one canonical table editable with repeated headers across page shells (4.3s)
+  ok 29 [firefox] › tests\browser\editor.spec.ts:2158:1 › reports an oversized table row without clipping or splitting its editable model (3.2s)
+  ok 30 [firefox] › tests\browser\editor.spec.ts:2200:1 › keeps canonical page furniture and footnotes editable while projecting every page copy (5.2s)
+  ok 31 [firefox] › tests\browser\editor.spec.ts:2678:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries (4.7s)
+  ok 32 [firefox] › tests\browser\editor.spec.ts:4401:1 › replaces a DOM selection that crosses block boundaries (2.0s)
+  ok 33 [firefox] › tests\browser\editor.spec.ts:5407:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (4.5s)
+  ok 34 [firefox] › tests\browser\editor.spec.ts:5444:1 › applies the complete text-style suite through the public React toolbar (5.8s)
+  ok 35 [firefox] › tests\browser\editor.spec.ts:5798:1 › opens the searchable clipboard-history picker in the public React toolbar (5.0s)
+  ok 36 [firefox] › tests\browser\editor.spec.ts:5856:1 › exposes and explicitly cleans invisible text in the public playground (5.0s)
+  x  37 [firefox] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (9.7s)
+(node:13828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 38 [firefox] › tests\browser\editor.spec.ts:6428:1 › keeps rich and multiline paste structurally predictable in the public editor (7.5s)
+  -  39 [firefox] › tests\browser\editor.spec.ts:6501:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+  ok 40 [firefox] › tests\browser\editor.spec.ts:6893:1 › undoes and redoes real typing with both common browser keyboard chords (2.2s)
+  ok 41 [firefox] › tests\browser\editor.spec.ts:6910:1 › keeps a backward DOM selection backward after model synchronization (1.8s)
+  ok 42 [firefox] › tests\browser\editor.spec.ts:6985:1 › turns multi-format and multi-block selections into visible paragraph boundaries (3.3s)
+(node:19984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 43 [webkit] › tests\browser\editor.spec.ts:1467:1 › edits, selects, and composes across guarded page shells in one contenteditable (3.0s)
+  ok 44 [webkit] › tests\browser\editor.spec.ts:1543:1 › keeps one paragraph editable when its measured lines span page shells (2.8s)
+  ok 45 [webkit] › tests\browser\editor.spec.ts:1670:1 › maps carets, ranges, and composition around injected paragraph page gaps (2.4s)
+  ok 46 [webkit] › tests\browser\editor.spec.ts:1774:1 › keeps one canonical ordered list editable and numbered across page shells (3.0s)
+  ok 47 [webkit] › tests\browser\editor.spec.ts:1909:52 › honours explicit table repetition independently of cell roles (ordinary) (4.1s)
+  ok 48 [webkit] › tests\browser\editor.spec.ts:1909:52 › honours explicit table repetition independently of cell roles (off) (3.6s)
+  ok 49 [webkit] › tests\browser\editor.spec.ts:1942:1 › keeps one canonical table editable with repeated headers across page shells (3.9s)
+  ok 50 [webkit] › tests\browser\editor.spec.ts:2158:1 › reports an oversized table row without clipping or splitting its editable model (2.9s)
+  ok 51 [webkit] › tests\browser\editor.spec.ts:2200:1 › keeps canonical page furniture and footnotes editable while projecting every page copy (3.7s)
+  ok 52 [webkit] › tests\browser\editor.spec.ts:2678:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries (3.7s)
+  ok 53 [webkit] › tests\browser\editor.spec.ts:4401:1 › replaces a DOM selection that crosses block boundaries (1.5s)
+  ok 54 [webkit] › tests\browser\editor.spec.ts:5407:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (3.7s)
+  ok 55 [webkit] › tests\browser\editor.spec.ts:5444:1 › applies the complete text-style suite through the public React toolbar (6.9s)
+  ok 56 [webkit] › tests\browser\editor.spec.ts:5798:1 › opens the searchable clipboard-history picker in the public React toolbar (4.3s)
+  ok 57 [webkit] › tests\browser\editor.spec.ts:5856:1 › exposes and explicitly cleans invisible text in the public playground (5.8s)
+  x  58 [webkit] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (10.7s)
+(node:24864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 59 [webkit] › tests\browser\editor.spec.ts:6428:1 › keeps rich and multiline paste structurally predictable in the public editor (3.7s)
+  -  60 [webkit] › tests\browser\editor.spec.ts:6501:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+  ok 61 [webkit] › tests\browser\editor.spec.ts:6893:1 › undoes and redoes real typing with both common browser keyboard chords (1.8s)
+  ok 62 [webkit] › tests\browser\editor.spec.ts:6910:1 › keeps a backward DOM selection backward after model synchronization (1.5s)
+  ok 63 [webkit] › tests\browser\editor.spec.ts:6985:1 › turns multi-format and multi-block selections into visible paragraph boundaries (2.6s)
+(node:26148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 64 [mobile-chrome] › tests\browser\mobile.spec.ts:240:1 › preserves split-paragraph selection and composition through mobile page fallback (1.5s)
+(node:18908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 65 [mobile-safari] › tests\browser\mobile.spec.ts:240:1 › preserves split-paragraph selection and composition through mobile page fallback (2.2s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+    Expected: "rgb(255, 0, 170)"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+
+
+      6421 |   await page.getByLabel('Highlight colour').fill('#ff00aa');
+      6422 |   await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+    > 6423 |   await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+           |                                           ^
+      6424 |   await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+      6425 |   await expect(editor.locator('h1 mark')).toHaveCount(0);
+      6426 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:6423:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+    Expected: "rgb(255, 0, 170)"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+
+
+      6421 |   await page.getByLabel('Highlight colour').fill('#ff00aa');
+      6422 |   await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+    > 6423 |   await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+           |                                           ^
+      6424 |   await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+      6425 |   await expect(editor.locator('h1 mark')).toHaveCount(0);
+      6426 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:6423:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+    Expected: "rgb(255, 0, 170)"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Rich text editor' }).locator('h1 mark')
+
+
+      6421 |   await page.getByLabel('Highlight colour').fill('#ff00aa');
+      6422 |   await page.getByRole('button', { name: 'Apply highlight', exact: true }).click();
+    > 6423 |   await expect(editor.locator('h1 mark')).toHaveCSS('background-color', 'rgb(255, 0, 170)');
+           |                                           ^
+      6424 |   await page.getByRole('button', { name: 'Remove highlight', exact: true }).click();
+      6425 |   await expect(editor.locator('h1 mark')).toHaveCount(0);
+      6426 | });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-focus-audit\tests\browser\editor.spec.ts:6423:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-focus-recovery-browser-20261105\editor-makes-table-sizing--bd2d2-explicit-in-the-public-demo-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+    [firefox] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+    [webkit] › tests\browser\editor.spec.ts:6380:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo
+  2 skipped
+  60 passed (4.3m)

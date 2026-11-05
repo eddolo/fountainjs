@@ -240,7 +240,7 @@ export function createTableCellNodeView(tagName: 'td' | 'th'): new (
       if (!editor) return;
       const path = this.getPath();
       const active = getActiveTableCell(editor);
-      if (active?.cell.path.join('.') === path.join('.')) return;
+      if (editor.state.selection instanceof CellSelection && active?.cell.path.join('.') === path.join('.')) return;
       try {
         editor.dispatch(editor.state.createTransaction().setSelection(new CellSelection(editor.state.doc, path)));
       } catch { /* Ignore a stale handle while the table is being redrawn. */ }

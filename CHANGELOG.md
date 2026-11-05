@@ -7,6 +7,23 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep the table resize handle focused through keyboard resizing, pointer drag
+  and undo/redo. Handle focus establishes an actual cell selection; NodeViews
+  retain gesture ownership when release occurs outside the handle. Column-width
+  changes preserve content positions, text/node/cell selections and atomic
+  command-batch history, and report transaction-filter rejection. Public
+  signatures are unchanged. See the
+  [table resize audit](docs/TABLE_RESIZE_RETENTION_AUDIT.md).
+
+- Narrow raw-host focus restoration to a pending explicit local command from
+  an external control. Preserve fresh native caret/range placement, including
+  an explicit host notification that supersedes a deferred toolbar caret.
+  Retain native input focus and the existing table-column command landing.
+  Two SelectionHandler declaration files gain a private field and an optional
+  internal synchronization parameter; existing calls remain compatible.
+  This corrects the broader focus behavior described in the previous checkpoint.
+  See the [focus audit](docs/NATIVE_FOCUS_AUDIT.md).
+
 - Apply headings, alignment and reading direction only to text blocks intersected
   by a directed structural range, including empty paragraphs. Heading conversion
   also accepts whole-document and cell selections, excludes a next paragraph at

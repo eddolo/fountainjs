@@ -1,0 +1,98 @@
+{
+  "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-focus-audit\\artifacts\\native-focus-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+  "archiveSha256": "b2d4be855e9b750fc0ee35eeedff288cb24773566088e37b4c5d69cf2baf4eeb",
+  "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-focus-audit\\artifacts\\native-focus-consumer-20261105-1793905238923",
+  "allBuildFilesMatch": 881,
+  "exitCode": 0,
+  "proof": {
+    "actualTarball": true,
+    "noDOM": true,
+    "cases": 14,
+    "results": [
+      {
+        "entry": "esm-root",
+        "backward": false,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "esm-root",
+        "backward": true,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "esm-root",
+        "replayAfterTextStep": true
+      },
+      {
+        "entry": "esm-core",
+        "backward": false,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "esm-core",
+        "backward": true,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "esm-core",
+        "replayAfterTextStep": true
+      },
+      {
+        "entry": "cjs-root",
+        "backward": false,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "cjs-root",
+        "backward": true,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "cjs-root",
+        "replayAfterTextStep": true
+      },
+      {
+        "entry": "cjs-core",
+        "backward": false,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "cjs-core",
+        "backward": true,
+        "exactOutsideContentAndMetadata": true,
+        "identityPositionMap": true,
+        "singleHistoryBatch": true
+      },
+      {
+        "entry": "cjs-core",
+        "replayAfterTextStep": true
+      },
+      {
+        "entry": "esm-yjs",
+        "sameSharedElement": true,
+        "concurrentOfflineTextPreserved": true,
+        "authorUndoRedoPreservesRemoteText": true
+      },
+      {
+        "entry": "cjs-yjs",
+        "sameSharedElement": true,
+        "concurrentOfflineTextPreserved": true,
+        "authorUndoRedoPreservesRemoteText": true
+      }
+    ]
+  }
+}

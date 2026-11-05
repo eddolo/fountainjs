@@ -1,0 +1,446 @@
+{
+  "baseCommit": "252509009058fb974a7d9b8fb2c1d84632cd6923",
+  "releaseCertified": false,
+  "acceptanceLimitsChanged": false,
+  "runtimeDependenciesChanged": false,
+  "browserAssertionsUnchanged": true,
+  "committedLogNormalization": "Line endings and trailing whitespace only; result content retained",
+  "unit": {
+    "passed": 4061,
+    "files": 276,
+    "addedSinceBase": 9
+  },
+  "browser": {
+    "previousCiRun": 42090626543,
+    "previousBrowserJob": 127467375835,
+    "previousRemainingMatrix": {
+      "passed": 894,
+      "failed": 3
+    },
+    "repairedResizeJourneys": 3,
+    "earlierRecoveryCasesPassed": 63,
+    "existingPlatformSkips": 2,
+    "additionalControlCasesPassed": 27,
+    "completeFreshCiCertified": false,
+    "physicalMobileCertified": false
+  },
+  "checks": [
+    {
+      "seconds": 259.5577014,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-unit-verified-20261105.log",
+      "command": "pnpm exec vitest run --maxWorkers=1",
+      "id": "unit",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 20.0710884,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-types-verified-20261105.log",
+      "command": "pnpm typecheck",
+      "id": "types",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 0.980778,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-api-verified-20261105.log",
+      "command": "pnpm test:api",
+      "id": "api",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 1.2788445,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-headless-verified-20261105.log",
+      "command": "pnpm test:headless",
+      "id": "headless",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 5.1030079,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-package-verified-20261105.log",
+      "command": "pnpm test:package",
+      "id": "package",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 3.0953076,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-server-runtimes-verified-20261105.log",
+      "command": "pnpm test:server-runtimes",
+      "id": "server-runtimes",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 17.6273177,
+      "exitCode": 0,
+      "log": "artifacts/resize-retention-performance-verified-20261105.log",
+      "command": "pnpm test:performance",
+      "id": "performance",
+      "expectedFailure": false
+    },
+    {
+      "seconds": 0.7021288,
+      "exitCode": 1,
+      "log": "artifacts/resize-retention-size-verified-20261105.log",
+      "command": "pnpm test:budget",
+      "id": "size",
+      "expectedFailure": true
+    }
+  ],
+  "api": {
+    "baseCommit": "252509009058fb974a7d9b8fb2c1d84632cd6923",
+    "declarationFiles": 423,
+    "publicSignaturesUnchangedSinceBase": true,
+    "changes": [
+      {
+        "file": "dist/view/selection-handler.d.cts",
+        "before": "a08fefaa9c4f1635f0cebb202f03648ceed27a8e30083d27ae61526fc1bc193e",
+        "after": "5eae87630bead0eec96a48957f0be629b3f826c5be6005f9f3171e6c96431789",
+        "onlyChange": "private nodeViewPointerActive"
+      },
+      {
+        "file": "dist/view/selection-handler.d.ts",
+        "before": "ac39b72feb865ae89a29a083a1f29614d3a8fc91465cb6d8bdd63aaa118ab908",
+        "after": "496ed777c0913655addf4dc0f2bf2394a2ab63646f546dca8bccdb23ce7d403a",
+        "onlyChange": "private nodeViewPointerActive"
+      }
+    ]
+  },
+  "mappedSources": [
+    {
+      "file": "dist/commands-C9bRZQod.cjs.map",
+      "source": "src/core/table-commands.ts",
+      "sha256": "624180511befeb1b2c0735d9a2d439b01207d0867cb626ad00d802b4624b6332"
+    },
+    {
+      "file": "dist/commands-PnSDwiq0.js.map",
+      "source": "src/core/table-commands.ts",
+      "sha256": "624180511befeb1b2c0735d9a2d439b01207d0867cb626ad00d802b4624b6332"
+    },
+    {
+      "file": "dist/extensions-BdY3cEnC.cjs.map",
+      "source": "src/extensions/nodes/table-cell-view.ts",
+      "sha256": "7768c94ea2aac67f9169527460e0bd152b215ca230e729493b0c0c73d2f80c6f"
+    },
+    {
+      "file": "dist/extensions-vU72K1cE.js.map",
+      "source": "src/extensions/nodes/table-cell-view.ts",
+      "sha256": "7768c94ea2aac67f9169527460e0bd152b215ca230e729493b0c0c73d2f80c6f"
+    },
+    {
+      "file": "dist/view-BXadu8pF.cjs.map",
+      "source": "src/view/selection-handler.ts",
+      "sha256": "79d77297292b46d4638036d6a5ba1ea0e39b4a76f115b3416461f1447a3ca96a"
+    },
+    {
+      "file": "dist/view-C9F9DTF3.js.map",
+      "source": "src/view/selection-handler.ts",
+      "sha256": "79d77297292b46d4638036d6a5ba1ea0e39b4a76f115b3416461f1447a3ca96a"
+    }
+  ],
+  "packed": {
+    "archive": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-focus-audit\\artifacts\\resize-retention-package-20261105\\fountainjs-editor-0.4.0-beta.2.tgz",
+    "archiveSha256": "fbec138d4c36543371856dde6820f32765e4b32dd370274d56317ea569954cd9",
+    "consumer": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-focus-audit\\artifacts\\resize-retention-consumer-20261105-1793910333348",
+    "allBuildFilesMatch": 881,
+    "exitCode": 0,
+    "proof": {
+      "actualTarball": true,
+      "noDOM": true,
+      "cases": 24,
+      "results": [
+        {
+          "entry": "esm-root",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-root",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-root",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "esm-core",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-core",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "esm-core",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "cjs-root",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-root",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-root",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "cjs-core",
+          "backward": false,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-core",
+          "backward": true,
+          "exactOutsideContentAndMetadata": true,
+          "identityPositionMap": true,
+          "singleHistoryBatch": true
+        },
+        {
+          "entry": "cjs-core",
+          "replayAfterTextStep": true
+        },
+        {
+          "entry": "esm-yjs",
+          "sameSharedElement": true,
+          "concurrentOfflineTextPreserved": true,
+          "authorUndoRedoPreservesRemoteText": true
+        },
+        {
+          "entry": "cjs-yjs",
+          "sameSharedElement": true,
+          "concurrentOfflineTextPreserved": true,
+          "authorUndoRedoPreservesRemoteText": true
+        },
+        {
+          "entry": "esm-root",
+          "resizeSelection": "cell",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "esm-root",
+          "resizeSelection": "text",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "esm-core",
+          "resizeSelection": "cell",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "esm-core",
+          "resizeSelection": "text",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "cjs-root",
+          "resizeSelection": "cell",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "cjs-root",
+          "resizeSelection": "text",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "cjs-core",
+          "resizeSelection": "cell",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "cjs-core",
+          "resizeSelection": "text",
+          "completeModelAndHistory": true,
+          "identityPositionMap": true
+        },
+        {
+          "entry": "esm-yjs",
+          "resizeKeepsSharedText": true,
+          "concurrentOfflineTextPreserved": true
+        },
+        {
+          "entry": "cjs-yjs",
+          "resizeKeepsSharedText": true,
+          "concurrentOfflineTextPreserved": true
+        }
+      ]
+    }
+  },
+  "visual": {
+    "stageCaptures": [
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-chromium/table-resize-announced-and-committed.png",
+        "sha256": "49e5bd531aa3f2cf9b03271f116fff4e679f39ee2c3b5f0bcce16b3937113489"
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-chromium/table-resize-undo-exact-document.png",
+        "sha256": "0b9be8bd523ad07f3d0fb4f9122fc6e61e142ab539e6e2c2ba84534240389e1e"
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-firefox/table-resize-announced-and-committed.png",
+        "sha256": "43ab7988fb11b54e7b5fda7760e8eebf9031ff281096cbcbd1a3ec1a2e5e1854"
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-firefox/table-resize-undo-exact-document.png",
+        "sha256": "9df91cdb0cb0b9e42d327ecad5d356c91dfca2b133ebae075732c45b0263d16f"
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-webkit/table-resize-announced-and-committed.png",
+        "sha256": "f41bc7a6def6e184d455a92b7697d72d82047a7250f760be3bbe1a82292126cb"
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-webkit/table-resize-undo-exact-document.png",
+        "sha256": "08386d50461d6d2678bbb4a4cf2314dab100af334de1a2a132c933d286d81910"
+      }
+    ],
+    "recordings": [
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-chromium/video.webm",
+        "sha256": "314cfb1efc5c09f92a1051fc81efc48f9aef737a52f44f96d7cb88c6f48d1268",
+        "durationSeconds": 4.16,
+        "sampleSeconds": [
+          0.624,
+          1.6640000000000001,
+          2.704,
+          3.536
+        ]
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-firefox/video.webm",
+        "sha256": "0a331c3037b069db631866039d79e36933b62b7d54f5d9d8631a20da913c56bc",
+        "durationSeconds": 6.04,
+        "sampleSeconds": [
+          0.9059999999999999,
+          2.4160000000000004,
+          3.926,
+          5.1339999999999995
+        ]
+      },
+      {
+        "path": "artifacts/native-resize-semantic-browser-20261105/editor-announces-table-res-81504-inter-and-history-workflows-webkit/video.webm",
+        "sha256": "cd755ff61e3b59f25f02c3b34628e4a5eef52a484a95af33b488992f4fb3e01a",
+        "durationSeconds": 4.84,
+        "sampleSeconds": [
+          0.726,
+          1.936,
+          3.146,
+          4.114
+        ]
+      }
+    ],
+    "contactSheets": [
+      "artifacts/resize-retention-visual-review-20261105/stages.png",
+      "artifacts/resize-retention-visual-review-20261105/video-chromium.png",
+      "artifacts/resize-retention-visual-review-20261105/video-firefox.png",
+      "artifacts/resize-retention-visual-review-20261105/video-webkit.png"
+    ],
+    "sampledVideoFrames": 12,
+    "stageContactsReviewed": true,
+    "sampledVideoContactsReviewed": true,
+    "continuousPlaybackReviewed": false,
+    "physicalMobileCertified": false,
+    "reviewNotes": [
+      "Reviewed six committed/undo stage captures and twelve sampled recording frames across Chromium, Firefox and WebKit.",
+      "Table geometry and merged cells remain visible through resize and undo; native selection paint varies by engine. Early recording samples include page loading.",
+      "Sampled frames only: continuous playback and physical mobile certification are not claimed."
+    ]
+  },
+  "loadedSize": {
+    "method": "Static ESM import/re-export closure, each emitted chunk compressed independently",
+    "consumerTreeShakingApplied": false,
+    "runtimeSpeedMeasured": false,
+    "entries": [
+      {
+        "entry": ".",
+        "beforeRaw": 790906,
+        "afterRaw": 791680,
+        "rawDelta": 774,
+        "beforeGzip": 242590,
+        "afterGzip": 242759,
+        "gzipDelta": 169
+      },
+      {
+        "entry": "./core",
+        "beforeRaw": 426557,
+        "afterRaw": 427145,
+        "rawDelta": 588,
+        "beforeGzip": 142258,
+        "afterGzip": 142390,
+        "gzipDelta": 132
+      },
+      {
+        "entry": "./react",
+        "beforeRaw": 562103,
+        "afterRaw": 562832,
+        "rawDelta": 729,
+        "beforeGzip": 160004,
+        "afterGzip": 160153,
+        "gzipDelta": 149
+      },
+      {
+        "entry": "./docx",
+        "beforeRaw": 247401,
+        "afterRaw": 247401,
+        "rawDelta": 0,
+        "beforeGzip": 73254,
+        "afterGzip": 73254,
+        "gzipDelta": 0
+      },
+      {
+        "entry": "./yjs",
+        "beforeRaw": 113611,
+        "afterRaw": 113611,
+        "rawDelta": 0,
+        "beforeGzip": 38508,
+        "afterGzip": 38508,
+        "gzipDelta": 0
+      },
+      {
+        "entry": "./html/server",
+        "beforeRaw": 364295,
+        "afterRaw": 364295,
+        "rawDelta": 0,
+        "beforeGzip": 104468,
+        "afterGzip": 104468,
+        "gzipDelta": 0
+      }
+    ]
+  },
+  "remaining": [
+    "Full fresh CI",
+    "Existing core-facade and aggregate size failures",
+    "Separate unfinished structural/history work: six Yjs retention failures and an independent-deletion history failure",
+    "Broader parity, conversion and physical-device coverage"
+  ]
+}

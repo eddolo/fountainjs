@@ -1,0 +1,51 @@
+Scope: all 3 workspace projects
+✓ Lockfile passes supply-chain policies (verified 24d ago)
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+   ╭────────────────────────────────────────────────────────────────────────╮
+   │                                                                        │
+   │                  Update available! 11.25.0 → 12.16.1.                  │
+   │                  Changelog: https://pnpm.io/v/12.16.1                  │
+   │   To update, run: Invoke-WebRequest https://get.pnpm.io/install.ps1    │
+   │                 -UseBasicParsing | Invoke-Expression                   │
+   │                                                                        │
+   ╰────────────────────────────────────────────────────────────────────────╯
+
+
+Done in 1.6s using pnpm v11.25.0
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-focus-audit
+
+ ❯ tests/selection-view.test.ts (15 tests | 2 failed) 315ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps a fresh native caret/range when host focus has no unapplied command selection (backward: false)
+ FAIL  tests/selection-view.test.ts > semantic selection DOM bridge > keeps a fresh native caret/range when host focus has no unapplied command selection (backward: true)
+AssertionError: expected Text{ …(1) } to be Text{ …(1) } // Object.is equality
+
+- Expected
++ Received
+
+- Target
++ Before
+
+ ❯ tests/selection-view.test.ts:37:33
+     35|       document.dispatchEvent(new Event('selectionchange'));
+     36|       await settleSelection(); await settleSelection();
+     37|       expect(native.anchorNode).toBe(target); expect(native.focusNode)…
+       |                                 ^
+     38|       expect(native.anchorOffset).toBe(backward ? 5 : 2); expect(nativ…
+     39|       expect(editor.state.selection).toEqual(backward ? Selection.rang…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+   ❯ semantic selection DOM bridge (15)
+     × keeps a fresh native caret/range when host focus has no unapplied command selection (backward: false) 118ms
+     × keeps a fresh native caret/range when host focus has no unapplied command selection (backward: true) 26ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 passed (15)
+   Start at  18:26:08
+   Duration  25.92s (environment 74%, transform 17%, import 8%, tests 1%)

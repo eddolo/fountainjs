@@ -6,6 +6,11 @@ coverage or editor parity. The
 [verification record](../artifacts/structural-formatting-verification-20261105.json)
 contains command results, source hashes, package provenance and remaining limits.
 
+Subsequent full CI contradicted the targeted focus evidence: 63 browser cases
+failed. The [native focus follow-up](NATIVE_FOCUS_AUDIT.md) documents the cause,
+narrower restoration contract and recovery verification. The original results
+below remain a historical checkpoint, not full-suite certification.
+
 ## Repairs
 
 `src/core/commands.ts` previously bounded text-block formatting only for legacy

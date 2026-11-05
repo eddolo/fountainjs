@@ -1,0 +1,66 @@
+[
+  {
+    "expectedFailure": false,
+    "command": "pnpm exec vitest run --maxWorkers=1",
+    "log": "artifacts/native-focus-unit-verified-20261105.log",
+    "id": "unit",
+    "exitCode": 0,
+    "seconds": 248.5935449
+  },
+  {
+    "expectedFailure": false,
+    "command": "pnpm typecheck",
+    "log": "artifacts/native-focus-types-verified-20261105.log",
+    "id": "types",
+    "exitCode": 0,
+    "seconds": 19.54722
+  },
+  {
+    "expectedFailure": false,
+    "command": "pnpm test:api",
+    "log": "artifacts/native-focus-api-verified-20261105.log",
+    "id": "api",
+    "exitCode": 0,
+    "seconds": 0.7306082
+  },
+  {
+    "expectedFailure": false,
+    "command": "pnpm test:headless",
+    "log": "artifacts/native-focus-headless-verified-20261105.log",
+    "id": "headless",
+    "exitCode": 0,
+    "seconds": 1.1789839
+  },
+  {
+    "expectedFailure": false,
+    "command": "pnpm test:package",
+    "log": "artifacts/native-focus-package-verified-20261105.log",
+    "id": "package",
+    "exitCode": 0,
+    "seconds": 5.3072116
+  },
+  {
+    "expectedFailure": false,
+    "command": "pnpm test:server-runtimes",
+    "log": "artifacts/native-focus-server-runtimes-verified-20261105.log",
+    "id": "server-runtimes",
+    "exitCode": 0,
+    "seconds": 5.3383532
+  },
+  {
+    "expectedFailure": false,
+    "command": "pnpm test:performance",
+    "log": "artifacts/native-focus-performance-verified-20261105.log",
+    "id": "performance",
+    "exitCode": 0,
+    "seconds": 15.5155407
+  },
+  {
+    "expectedFailure": true,
+    "command": "pnpm test:budget",
+    "log": "artifacts/native-focus-size-verified-20261105.log",
+    "id": "size",
+    "exitCode": 1,
+    "seconds": 0.6182417
+  }
+]

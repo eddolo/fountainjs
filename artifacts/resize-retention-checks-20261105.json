@@ -1,0 +1,66 @@
+[
+  {
+    "seconds": 259.5577014,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-unit-verified-20261105.log",
+    "command": "pnpm exec vitest run --maxWorkers=1",
+    "id": "unit",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 20.0710884,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-types-verified-20261105.log",
+    "command": "pnpm typecheck",
+    "id": "types",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 0.980778,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-api-verified-20261105.log",
+    "command": "pnpm test:api",
+    "id": "api",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 1.2788445,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-headless-verified-20261105.log",
+    "command": "pnpm test:headless",
+    "id": "headless",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 5.1030079,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-package-verified-20261105.log",
+    "command": "pnpm test:package",
+    "id": "package",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 3.0953076,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-server-runtimes-verified-20261105.log",
+    "command": "pnpm test:server-runtimes",
+    "id": "server-runtimes",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 17.6273177,
+    "exitCode": 0,
+    "log": "artifacts/resize-retention-performance-verified-20261105.log",
+    "command": "pnpm test:performance",
+    "id": "performance",
+    "expectedFailure": false
+  },
+  {
+    "seconds": 0.7021288,
+    "exitCode": 1,
+    "log": "artifacts/resize-retention-size-verified-20261105.log",
+    "command": "pnpm test:budget",
+    "id": "size",
+    "expectedFailure": true
+  }
+]

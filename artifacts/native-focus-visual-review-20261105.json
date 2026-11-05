@@ -1,0 +1,253 @@
+{
+  "stageCaptures": [
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-chromium/title-selected.png",
+      "sha256": "aaced8900a1b3e0fed450801cf7e144e4bf30477b9a1cd6e118f26e405f5c6df"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-chromium/title-highlighted.png",
+      "sha256": "e42195a273efba7a30fb178c86710af0b531520149608360f9dcddf92219dd8a"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-chromium/title-cleared.png",
+      "sha256": "7bfcbf5daa26ea49009f40e2262603711130552a5507c3f49fa8b77ccc106a99"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-firefox/title-selected.png",
+      "sha256": "8e64aaa40ddf16e6e6b835c0b4e7da7d004f6a6248ad2a6c49b42370648e25b9"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-firefox/title-highlighted.png",
+      "sha256": "7dc434462079c1bd29a5dec72d4c4fe4235c0ba01c74e27b5045eb9c625262e7"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-firefox/title-cleared.png",
+      "sha256": "31e167e3e3ade63af6c7c4619641e6b68cfcf3f7c7d183020f595b0597ef150c"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-webkit/title-selected.png",
+      "sha256": "9f58602919a2403aab1055dba6443e9a1940cccf91113ba6c75f08de19c7183f"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-webkit/title-highlighted.png",
+      "sha256": "c0a8187ff6419907d3401c6535793a5b54b5d1292fe8a640d10b2dae5520e4d4"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-webkit/title-cleared.png",
+      "sha256": "4594e58ed6a798cfecbc1e5a98d893a3e085d5a4591fc7b11ba01891e585afa9"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-chromium/table-side-ltr-left.png",
+      "sha256": "94b3b86eb5e35089fc2457ed762ff2b53d863af60d2be100a13e76c57a4be601"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-chromium/table-side-ltr-right.png",
+      "sha256": "6cb83f48afaae20320d95fdb884e0165c9e32ee435f8f953ad461f657e6951cb"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-chromium/table-side-rtl-cell-ltr-left.png",
+      "sha256": "5cb05e3c305b90cb58df1b40d171ecd2de9a6bcbea06a31611dfe629c942f4c5"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-chromium/table-side-rtl-cell-ltr-right.png",
+      "sha256": "b125815e4ca17c9c62d1cb0c4254777257d570ae65f22c78c0722c7935243a46"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-chromium/table-side-auto-left.png",
+      "sha256": "7e818176b55bca786f0528228ce281ed62bd4c436af01b9cadbb631c6484e3ff"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-chromium/table-side-auto-right.png",
+      "sha256": "b853b088b02a0684ca08a6e6f2cec2be47825b527a827dcd53b80334fcc98fbc"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-chromium/table-side-host-css-left.png",
+      "sha256": "83ecefca5b440284e616c3d55f98a3b934289cdc8cf7274d132081807ca90f9d"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-chromium/table-side-host-css-right.png",
+      "sha256": "60781dd6622d35276a60d7171aa268bb1fa91d69832ac4ad4ed9d8a8cd5cf16d"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-left.png",
+      "sha256": "3dfe99e6f8760722d9e736e399bad77b39f2092a2136dcff730887c7b7bf5c82"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-chromium/table-side-rtl-spans-right.png",
+      "sha256": "ec2f01435005b5f3cb8824c876e3ed59f4cc59d302ab68771487c17c3dd51966"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-firefox/table-side-ltr-left.png",
+      "sha256": "50b7531e9a2408c16463cc4ac27c94ca5f9a4a960fa92c5df1f864b4052f9c70"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-firefox/table-side-ltr-right.png",
+      "sha256": "010590f0002d939fde7882514768d8a9ecfd900b12f59fcb75436583568c722a"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-firefox/table-side-rtl-cell-ltr-left.png",
+      "sha256": "f10147c9362f67c126808655678d6e2e7c38e3472a74067eb1471485c3dd90ca"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-firefox/table-side-rtl-cell-ltr-right.png",
+      "sha256": "deb6a5ab500113fed36e26c66a2a58d243219da2ea4ace088d2caad3b4d64f36"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-firefox/table-side-auto-left.png",
+      "sha256": "f1ed54c661d78455390fc0164248df41593da67f9d3a36b6b021920f964dc1a9"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-firefox/table-side-auto-right.png",
+      "sha256": "484203aa4f858bcf9785f7b2f9ea77e079a0be6fa9a2d39c8401fc1005b5eba5"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-firefox/table-side-host-css-left.png",
+      "sha256": "09f0ac461d3e6417aed1f36234497e8aeb63128751ede9e14830e392ed1ea4ae"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-firefox/table-side-host-css-right.png",
+      "sha256": "0b093976b83153a19e9e4c003303d76da30080be5d298e60e2e9f24714406467"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-left.png",
+      "sha256": "28c68b5d43850812db62ed77535d5a26b0479b9d3d6595e02299ccd2aa24dc1e"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-firefox/table-side-rtl-spans-right.png",
+      "sha256": "a7fb5d6aae689f036c735113f25ad27db64ed1439dbacfe1a345ae7ad88d6224"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-webkit/table-side-ltr-left.png",
+      "sha256": "28cd113e1b1c4de748cec86d9566baf64c1ca8216e3cc44205f2ff082bee0efc"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-22cc3-physical-left-and-right-ltr-webkit/table-side-ltr-right.png",
+      "sha256": "d4437ce0fed5acbc64e330e06d7f262e5d2aa7e89815f7232fe055e0c794abce"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-webkit/table-side-rtl-cell-ltr-left.png",
+      "sha256": "cd6f5ab6390831e27f5053ec0c670b768c35087370a79c513c93f9207e91e3b2"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-ecc35-left-and-right-rtl-cell-ltr-webkit/table-side-rtl-cell-ltr-right.png",
+      "sha256": "23833a75babfa74b66627e45ab9ea5896f59e5d30c0ca1a1e645fff3100c399a"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-webkit/table-side-auto-left.png",
+      "sha256": "2d428e4db2cc3987a456799ca1d223d8a73f646fa439427732b72dd6a42e7e18"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-fe764-hysical-left-and-right-auto-webkit/table-side-auto-right.png",
+      "sha256": "175a637a97ffd7d990cbb803e156bed2b4003809025adbe0b91b964c86f77dfc"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-webkit/table-side-host-css-left.png",
+      "sha256": "12b4becd6a38fe3013883646a9e46e231dd0ff056667364b2468a8763c904d7b"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-8f1fa-cal-left-and-right-host-css-webkit/table-side-host-css-right.png",
+      "sha256": "0651c82e00823ff44d3e89439a9cbb187331724be48595c79df2875fcb03fde3"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-left.png",
+      "sha256": "6911da6cfc1476cc34aa05c9995fda542d7a42cfa8ddf7417dbf9e60dae75718"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-inserts-table-colum-25f53-al-left-and-right-rtl-spans-webkit/table-side-rtl-spans-right.png",
+      "sha256": "dca9800fb27a7fd8b9d939df4f5cfe3ba88fdc5327faebd4ddf683e50ad36e3e"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-chromium/native-colour-mapped-selection.png",
+      "sha256": "2eb83b60e63319066526d9a16220a14f12913643e72d232f1d3b2b84f97f3e82"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-firefox/native-colour-mapped-selection.png",
+      "sha256": "5ac40a0686f474da38bced566ebbf68d06036905379ea9ca291e4217bb7ee856"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-keeps-the-public-na-5da44-d-allows-undo-in-the-editor-webkit/native-colour-mapped-selection.png",
+      "sha256": "0fca16c6440c7db3fd46900fa71d97666ed71672c1eaf559b59e0ba4cc1207b2"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-compares-list-first-994c3-g-to-a-plain-native-surface-chromium/code-click-fountain-edit.png",
+      "sha256": "3f2162a2d80cd34859823d97efb7e460aa9325659abedf7d7a2f7215c2cc8e10"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-compares-list-first-994c3-g-to-a-plain-native-surface-firefox/code-click-fountain-edit.png",
+      "sha256": "e9d78c7adf2a270a35f5295c0b1ebc62f6aaba7287e88196b669a45961d58ec6"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-compares-list-first-994c3-g-to-a-plain-native-surface-webkit/code-click-fountain-edit.png",
+      "sha256": "007351b900d918ed33a566f5ff6460306e8966f21188e838d8e6dcab03d41d8a"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-edits-RTL-blocks-wi-99159-tory-and-HTML-reader-export-chromium/rtl-editor-desktop.png",
+      "sha256": "1054ea20fd2163dde15889343f1b2310dc86f082aa91ce27b1d58bccee39a681"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-edits-RTL-blocks-wi-99159-tory-and-HTML-reader-export-firefox/rtl-editor-desktop.png",
+      "sha256": "2ab3f2211dc6c5d59b419761e6dcee4795c1e7f865f6aa41d5e05227c1d1a66b"
+    },
+    {
+      "path": "artifacts/native-focus-regression-browser-20261105/editor-edits-RTL-blocks-wi-99159-tory-and-HTML-reader-export-webkit/rtl-editor-desktop.png",
+      "sha256": "429f0a2e7a0eb1392daeb1cce088130dcb3922e132f50427cafaccc448fdc7ea"
+    }
+  ],
+  "contactSheets": [
+    "artifacts/native-focus-visual-review-20261105/highlight-stages.png",
+    "artifacts/native-focus-visual-review-20261105/tables-chromium.png",
+    "artifacts/native-focus-visual-review-20261105/tables-firefox.png",
+    "artifacts/native-focus-visual-review-20261105/tables-webkit.png",
+    "artifacts/native-focus-visual-review-20261105/native-controls.png",
+    "artifacts/native-focus-visual-review-20261105/native-colour-top.png",
+    "artifacts/native-focus-visual-review-20261105/video-chromium.png",
+    "artifacts/native-focus-visual-review-20261105/video-firefox.png",
+    "artifacts/native-focus-visual-review-20261105/video-webkit.png"
+  ],
+  "recordings": [
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-chromium/video.webm",
+      "durationSeconds": 3.84,
+      "sampleSeconds": [
+        0.576,
+        1.536,
+        2.496,
+        3.264
+      ],
+      "sha256": "34b5829a88fbc91f4dbcfbc879b67e44b33f20eb48189073c1f54e81a1f87be1"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-firefox/video.webm",
+      "durationSeconds": 6.04,
+      "sampleSeconds": [
+        0.9059999999999999,
+        2.4160000000000004,
+        3.926,
+        5.1339999999999995
+      ],
+      "sha256": "dfc42decca32fc005cd2ba32c1def67ef5aef04aa14827efad2aac3a11b1dea3"
+    },
+    {
+      "path": "artifacts/native-focus-highlight-visual-20261105/native-focus-highlight-vis-12df7-explicit-in-the-public-demo-webkit/video.webm",
+      "durationSeconds": 7.88,
+      "sampleSeconds": [
+        1.182,
+        3.152,
+        5.122,
+        6.6979999999999995
+      ],
+      "sha256": "15910dae55488b6f417f4843351a1667a5160436d2d9d6107fea5650394dc281"
+    }
+  ],
+  "sampledVideoFrames": 12,
+  "stageContactsReviewed": true,
+  "sampledVideoContactsReviewed": true,
+  "continuousPlaybackReviewed": false,
+  "physicalMobileCertified": false,
+  "reviewNotes": [
+    "48 stage captures reviewed through contact sheets; colour control additionally inspected with a legible top crop.",
+    "All 30 physical table placements show inserted text in the requested cell; highlight applies only to Create and then clears in all three engines.",
+    "12 sampled video frames from three recordings inspected; some early frames show loading and samples do not capture every brief action. Stage captures verify the selected/highlighted/cleared states.",
+    "Sampled frames are not continuous playback review; browser emulation is not physical mobile certification."
+  ]
+}

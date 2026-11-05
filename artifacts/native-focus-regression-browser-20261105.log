@@ -1,0 +1,42 @@
+[WebServer] (node:1936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 27 tests using 1 worker
+
+(node:2116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: ltr (5.5s)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: rtl-cell-ltr (3.9s)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: auto (3.6s)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: host-css (3.9s)
+  ok  5 [chromium] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: rtl-spans (3.9s)
+  ok  6 [chromium] › tests\browser\editor.spec.ts:211:1 › compares list-first code text-click focus and editing to a plain native surface (2.9s)
+  ok  7 [chromium] › tests\browser\editor.spec.ts:223:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (4.1s)
+  ok  8 [chromium] › tests\browser\editor.spec.ts:5549:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (10.0s)
+  ok  9 [chromium] › tests\browser\editor.spec.ts:5667:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (3.2s)
+(node:10756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 10 [firefox] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: ltr (7.8s)
+  ok 11 [firefox] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: rtl-cell-ltr (6.2s)
+  ok 12 [firefox] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: auto (5.8s)
+  ok 13 [firefox] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: host-css (5.4s)
+  ok 14 [firefox] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: rtl-spans (5.7s)
+  ok 15 [firefox] › tests\browser\editor.spec.ts:211:1 › compares list-first code text-click focus and editing to a plain native surface (5.3s)
+  ok 16 [firefox] › tests\browser\editor.spec.ts:223:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (6.7s)
+  ok 17 [firefox] › tests\browser\editor.spec.ts:5549:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (14.0s)
+  ok 18 [firefox] › tests\browser\editor.spec.ts:5667:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (4.3s)
+(node:28164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 [webkit] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: ltr (7.9s)
+  ok 20 [webkit] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: rtl-cell-ltr (7.8s)
+  ok 21 [webkit] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: auto (7.5s)
+  ok 22 [webkit] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: host-css (7.7s)
+  ok 23 [webkit] › tests\browser\editor.spec.ts:198:3 › inserts table columns on the physical left and right: rtl-spans (7.7s)
+  ok 24 [webkit] › tests\browser\editor.spec.ts:211:1 › compares list-first code text-click focus and editing to a plain native surface (7.0s)
+  ok 25 [webkit] › tests\browser\editor.spec.ts:223:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (12.4s)
+  ok 26 [webkit] › tests\browser\editor.spec.ts:5549:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (22.5s)
+  ok 27 [webkit] › tests\browser\editor.spec.ts:5667:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (4.5s)
+
+  27 passed (3.4m)
