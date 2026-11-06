@@ -27,6 +27,16 @@ export interface RetainedTextPartition {
   readonly runs: readonly RetainedTextRun[];
 }
 
+interface StreamRead {
+  readonly text: Y.Text;
+  readonly entries: readonly RetainedTextPartition[];
+  readonly byId: ReadonlyMap<string, RetainedTextPartition>;
+}
+interface TextRead {
+  readonly partitions: ReadonlyMap<string, RetainedTextPartition>;
+  readonly streams: ReadonlyMap<string, StreamRead>;
+}
+
 interface DecodedFormatCache {
   previous?: { client: number; style: number; raw: Record<string, unknown>; value: Record<string, string> };
 }
@@ -233,32 +243,41 @@ export class RetainedTextStore {
 
   /** One synchronous read, not a cache that can outlive pending Yjs edits. */
   projectMany(ids: readonly string[]): ReadonlyMap<string, RetainedTextPartition> {
+    return this.readFrame(ids).partitions;
+  }
+
+  private readFrame(ids: readonly string[]): TextRead {
     this.assertLive();
     if (ids.length > MAX_PARTITIONS) throw new RangeError('Too many retained text partitions.');
-    const streams = new Map<string, ReadonlyMap<string, RetainedTextPartition>>(), result = new Map<string, RetainedTextPartition>();
+    const streams = new Map<string, StreamRead>(), result = new Map<string, RetainedTextPartition>();
     for (const id of ids) {
       const streamId = this.owners.get(id);
       if (!validId(id) || !validId(streamId)) throw new Error('Unknown retained text partition.');
-      let entries = streams.get(streamId);
-      if (!entries) {
-        entries = new Map(this.scan(streamId, this.readStream(streamId)).map(entry => [entry.id, entry]));
-        streams.set(streamId, entries);
+      let stream = streams.get(streamId);
+      if (!stream) {
+        const text = this.readStream(streamId), entries = this.scan(streamId, text);
+        stream = { text, entries, byId: new Map(entries.map(entry => [entry.id, entry])) };
+        streams.set(streamId, stream);
       }
-      const entry = entries.get(id);
+      const entry = stream.byId.get(id);
       if (!entry) throw new Error('Retained text partition boundary is missing.');
       result.set(id, entry);
     }
-    return result;
+    return { partitions: result, streams };
   }
 
   has(id: string): boolean { this.assertLive(); return validId(id) && this.owners.has(id); }
 
   partitions(streamId: string): readonly RetainedTextPartition[] { return this.index(streamId); }
 
-  private point(id: string, offset: number): { partition: RetainedTextPartition; text: Y.Text; position: number } {
-    const partition = this.project(id);
+  private position(partition: RetainedTextPartition, offset: number): number {
     if (!Number.isSafeInteger(offset) || offset < 0 || offset > partition.to - partition.from) throw new RangeError('Invalid retained text offset.');
-    return { partition, text: this.stream(partition.streamId), position: partition.from + offset };
+    return partition.from + offset;
+  }
+
+  private point(id: string, offset: number): { partition: RetainedTextPartition; text: Y.Text; position: number; characters: number } {
+    const frame = this.readFrame([id]), partition = frame.partitions.get(id)!, stream = frame.streams.get(partition.streamId)!;
+    return { partition, text: stream.text, position: this.position(partition, offset), characters: stream.text.length - stream.entries.length };
   }
 
   private wireFormatAt(text: Y.Text, index: number): Record<string, unknown> {
@@ -285,8 +304,8 @@ export class RetainedTextStore {
   }
 
   insert(id: string, offset: number, value: string, format?: Readonly<Record<string, string>>): void {
-    const { partition, text, position } = this.point(id, offset), safeFormat = attributes(format);
-    if (typeof value !== 'string' || text.length - this.index(partition.streamId).length + value.length > MAX_TEXT) throw new RangeError('Invalid retained text insertion.');
+    const safeFormat = attributes(format), { text, position, characters } = this.point(id, offset);
+    if (typeof value !== 'string' || characters + value.length > MAX_TEXT) throw new RangeError('Invalid retained text insertion.');
     validateRetainedTextFormat(safeFormat as Record<string, string>);
     this.document.transact(() => {
       if (value) text.insert(position, value, { ...encodeAttributes(safeFormat), [PROVENANCE]: this.provenance(safeFormat as Record<string, string>) });
@@ -294,26 +313,26 @@ export class RetainedTextStore {
   }
 
   delete(id: string, from: number, to: number): void {
-    const start = this.point(id, from), end = this.point(id, to);
+    const start = this.point(id, from), end = this.position(start.partition, to);
     if (to < from) throw new RangeError('Retained text deletion must be ordered.');
-    this.document.transact(() => { start.text.delete(start.position, end.position - start.position); }, this.origin);
+    this.document.transact(() => { start.text.delete(start.position, end - start.position); }, this.origin);
   }
 
   format(id: string, from: number, to: number, value: Readonly<Record<string, string | null>>): void {
-    const start = this.point(id, from), end = this.point(id, to), safeFormat = attributes(value, true);
+    const safeFormat = attributes(value, true), start = this.point(id, from), end = this.position(start.partition, to);
     if (to < from) throw new RangeError('Retained text formatting must be ordered.');
     this.document.transact(() => {
       // Keep the insertion-owned provenance immutable. Replacing that marker
       // for an observed range can detach unseen splits from their source.
-      start.text.format(start.position, end.position - start.position, encodeAttributes(safeFormat));
+      start.text.format(start.position, end - start.position, encodeAttributes(safeFormat));
     }, this.origin);
   }
 
   /** Merge adjacent partitions in one stream without deleting any characters. */
   join(leftId: string, rightId: string): void {
-    const partitions = this.projectMany([leftId, rightId]), left = partitions.get(leftId)!, right = partitions.get(rightId)!, entries = this.index(left.streamId);
+    const frame = this.readFrame([leftId, rightId]), left = frame.partitions.get(leftId)!, right = frame.partitions.get(rightId)!, stream = frame.streams.get(left.streamId)!, entries = stream.entries;
     if (left.streamId !== right.streamId || entries[entries.findIndex(entry => entry.id === leftId) + 1]?.id !== rightId) throw new Error('Only adjacent retained partitions can join.');
-    this.document.transact(() => { this.stream(left.streamId).delete(right.from - 1, 1); this.owners.delete(rightId); }, this.origin);
+    this.document.transact(() => { stream.text.delete(right.from - 1, 1); this.owners.delete(rightId); }, this.origin);
   }
 
   relative(id: string, offset: number, association: -1 | 1 = 1): unknown {

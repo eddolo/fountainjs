@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local text/session follow-up, 2026-11-06: operation-local retained text reads
+pass 191 candidate cases, 36 compiled Node journeys and 93 recorded browser
+journeys. Three paired 1,024-edit sessions per build preserve exact documents
+and shared bytes through offline typing, author undo/redo and reopen. History
+growth remains measurable and timing changes are mixed across document sizes.
+The six default-adapter failures remain; COLLAB-01 stays Partial. No general
+speed, bounded-memory, adoption, release or overall parity claim follows.
+[Current session audit](YJS_RETAINED_TEXT_SESSION_AUDIT.md).
+
 Local follow-up, 2026-11-06: observer-checked projection reuse passes 191 focused
 candidate cases, 36 compiled Node journeys and 93 distinct recorded browser
 journeys. The combined retention run still has six default failures. Controlled

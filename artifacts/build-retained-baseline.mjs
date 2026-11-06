@@ -1,0 +1,13 @@
+import {execFileSync} from 'node:child_process';
+import {mkdir} from 'node:fs/promises';
+import {resolve,sep} from 'node:path';
+import {build} from 'vite';
+const commit=process.argv[2],prefix=process.argv[3];
+if(!/^[a-f0-9]{7,40}$/.test(commit??'')||!/^[a-z][a-z0-9-]{1,100}$/.test(prefix??''))throw new Error('Supply a commit SHA and a safe artifact prefix.');
+const full=execFileSync('git',['-c','core.longpaths=true','rev-parse','--verify',commit+'^{commit}'],{encoding:'utf8'}).trim();
+const root=resolve('artifacts'),base=resolve(root,prefix+'-source-'+full),out=resolve(root,prefix+'-build'),archive=resolve(root,prefix+'-source.tar');
+for(const path of [base,out,archive])if(!path.startsWith(root+sep))throw new Error('Baseline paths must stay inside artifacts.');
+await mkdir(base,{recursive:true});
+execFileSync('git',['-c','core.longpaths=true','archive','--format=tar','--output='+archive,full,'src']);
+execFileSync('tar',['-xf',archive,'-C',base]);
+await build({configFile:false,build:{lib:{entry:{engine:resolve(base,'src/index.ts'),'retained-adapter':resolve(base,'src/yjs/retained-adapter.ts')},formats:['es','cjs'],fileName:(format,name)=>`${name}.${format==='es'?'js':'cjs'}`},rollupOptions:{external:['react','react-dom','react-dom/client','react/jsx-runtime','vue','svelte','svelte/store','yjs']},outDir:out,sourcemap:true,minify:false,emptyOutDir:true}});

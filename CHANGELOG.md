@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse validated stream/partition reads within individual private retained-Yjs
+  text operations while preserving fresh reads between calls, including inside
+  an outer transaction. Add compiled long-session evidence for offline edits,
+  complete author undo/redo, reopen and destruction. History growth and mixed
+  timing results remain explicit adoption concerns; public adapter, protocol
+  and acceptance limits are unchanged.
+
 - Avoid duplicate projection in the private retained-Yjs candidate while
   preserving fresh reads after relevant observer/cleanup writes, including
   matching-origin transactions. Validate the returned model and release the

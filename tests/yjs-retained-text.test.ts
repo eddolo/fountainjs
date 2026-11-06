@@ -319,12 +319,17 @@ it('joins adjacent partitions without copying source text and preserves remote t
   } finally { pair.destroy(); }
 });
 
-it('updates indexes inside a single transaction and releases observation on destroy', () => {
+it('updates text operations inside a single transaction and refuses reads after destroy', () => {
   const pair = peers();
   try {
     pair.leftDoc.transact(() => {
       pair.left.split('first', 'second', 2); pair.left.insert('second', 0, 'X'); pair.left.format('second', 0, 1, { strong: '{}' });
       expect(plain(pair.left, 'first')).toBe('Al'); expect(plain(pair.left, 'second')).toBe('Xpha');
+      pair.left.delete('second', 1, 2); expect(plain(pair.left, 'second')).toBe('Xha');
+      pair.left.join('first', 'second'); expect(plain(pair.left, 'first')).toBe('AlXha');
+      pair.left.format('first', 2, 3, { strong: null });
+      expect(pair.left.project('first').runs.some(run => run.attributes?.strong)).toBe(false);
+      expect(pair.left.has('second')).toBe(false);
     }, pair.leftOrigin);
     pair.sync(); expect(pair.left.partitions('stream')).toEqual(pair.right.partitions('stream'));
     pair.left.destroy(); pair.left.destroy(); expect(() => pair.left.project('first')).toThrow('destroyed');

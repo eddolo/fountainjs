@@ -1,0 +1,2848 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "29f8e6ea",
+  "goalComplete": false,
+  "publication": "Local only; no GitHub/npm/website update.",
+  "defaultAdapterSwitched": false,
+  "source": [
+    {
+      "path": "src/yjs/retained-text.ts",
+      "sha256": "0171d68b54b01b6adf01a67844a8f58611f2a9532b265c3e8c659165e1968812"
+    },
+    {
+      "path": "tests/yjs-retained-text.test.ts",
+      "sha256": "b76e58c4e301e49978f43a7c46f4714a63b5996f6de5074f88d15e5eb15fc803"
+    },
+    {
+      "path": "artifacts/retained-session-20261106.mjs",
+      "sha256": "8b87f404b36eeb83abd7a4fe3d5f2ce7f2792273cbaa6d3b27b2ef50355a735e"
+    },
+    {
+      "path": "artifacts/build-retained-baseline.mjs",
+      "sha256": "e7bcd0b5d7ebcfe980ef290f4988d87498b21c953ae04c4bc1917953ab3b28a7"
+    },
+    {
+      "path": "artifacts/build-cursor-overlay-canary-20261106.mjs",
+      "sha256": "558719e99f881a9319c62ced4f94042e0f5c2b9358970c5a77d7aedd85244b9f"
+    },
+    {
+      "path": "artifacts/retained-adapter-node-20261106.mjs",
+      "sha256": "4cde16c11531812846fc14335aa9b1cb2bf0750f39f5ff21bc43b7511e1d9f05"
+    },
+    {
+      "path": "artifacts/retained-read-controlled-cost-20261106.mjs",
+      "sha256": "e6c9d9ec2a4f48db9cf0c6fbfd0f765c9dde57eabe0b0ed108ffdfbe89aeb31a"
+    },
+    {
+      "path": "artifacts/compare-retained-frame-20261106.mjs",
+      "sha256": "91c2f5ea0f8e8f8bdc9f18945864645e2182e8e2918ec9a3e68f2964fdd14f72"
+    },
+    {
+      "path": "artifacts/verify-retained-frame-20261106.mjs",
+      "sha256": "b7c807ff410912c8ad784d61bf1ea9d97e0775cc8b2d10bc6044a0a4d0d50db4"
+    },
+    {
+      "path": "artifacts/retained-frame-browser-20261106.config.ts",
+      "sha256": "4a6fead79e4fdc554e4fb37685d52f83bb1e1a4b75cbc8512d1965fa1bd37bc1"
+    },
+    {
+      "path": "tests/manual/retained-adapter-real.spec.ts",
+      "sha256": "807d92350cd41c21b35a34ed682aa25c2ca7a26e92a763868eee62be92393959"
+    },
+    {
+      "path": "tests/manual/cursor-native-reference.spec.ts",
+      "sha256": "3ef12b5e8ed7c349cf83cf4aca492a5a96d71c76d368b4a4f2cd15be376cedbf"
+    }
+  ],
+  "focused": {
+    "path": "artifacts/retained-frame-focused-20261106.json",
+    "sha256": "0588056d78587996a05503266c2f00120e587e2b13ca021f9648c3206fc48601",
+    "total": 213,
+    "passed": 207,
+    "failed": 6,
+    "candidatePassed": 191,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ],
+    "fullSourceSuiteRerun": false
+  },
+  "browser": {
+    "path": "artifacts/retained-frame-browser-20261106.json",
+    "sha256": "8d6bb53141cb2bb4d247d7fae64156cd6d1b3d36a5efddd3da48471b6d23b33a",
+    "distinctPassed": 93,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "workers": 1,
+    "perProject": {
+      "chromium": 31,
+      "firefox": 31,
+      "webkit": 31
+    },
+    "compiledRuntimeVerifiedInEveryJourney": true,
+    "currentSourceMapModules": 190,
+    "recordings": 93,
+    "evidence": [
+      {
+        "path": "artifacts/retained-frame-browser-20261106/.last-run.json",
+        "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/narrow-label.png",
+        "sha256": "fb6e6433fe1b82df8dde3887909bcf85f80bf4d6262626853efba57b41a8cae2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/top-edge-label.png",
+        "sha256": "2a33a19f7b30af3cdc083ead9a6323f45a63f151df94faa72be43d1662f7ffc6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/trace.zip",
+        "sha256": "1412c599f87448e6253a1f0147ae335876a463aefd6b3ec2c4262808d5c91da1"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/video.webm",
+        "sha256": "85c85426b379b9e9b5329bbdd5a6d54f4e3bacca3ac52425840fe56a5105cc6f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/narrow-label.png",
+        "sha256": "4860d33da955575e1b5d2ba75151337e2242b466b4069d2b7c93345efd058f92"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/top-edge-label.png",
+        "sha256": "4f167979afeea89eb664abaab2b2b6063a95d12bfaef3c0ad59d452a8fb0d276"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/trace.zip",
+        "sha256": "a6f5ee780f4b0551be63b49ef6a5a1efcefd029364053a479c17d82d827bbdfb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/video.webm",
+        "sha256": "d6c3f07e4401ab57ac71c7dcb9a24776e1812e272a279d076eb0ea0ebfe62588"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/narrow-label.png",
+        "sha256": "5069a08d4293b2a8c6f041f7f8ac0c4d01ee024abad521ba946ccfeb8752eb42"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/top-edge-label.png",
+        "sha256": "322037d8e3ce110c966bb2b6c77a5e0fa6a0ca8a3eac16e04b1b290ebbc3b1d6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/trace.zip",
+        "sha256": "15ec441d2a8025ab6e168b57266b93481c82ae131b1804fd4ca1218ea3ef3799"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/video.webm",
+        "sha256": "5ab20d7a1ea1b94794460d166585c71319bff4e315590c4ab63de1d80501806c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/narrow-label.png",
+        "sha256": "5bfef94fd0d59554fed67521e06f3b55a2b98a64707a3b7af91d899810aba086"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/top-edge-label.png",
+        "sha256": "3db857d4f9c2ddb18a97ebf2f34890aff5dd365ffc63cc313238864796bed9a5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/trace.zip",
+        "sha256": "49dd2d3b2dd9706522a4356e14f9084faa34935ce5683245ad6cecf758bf4d7d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/video.webm",
+        "sha256": "b5c641ad4875e90073c888f5269ed65dff3d1e2c01811b8f025a55d96072ca0f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/narrow-label.png",
+        "sha256": "10d9534f32dda53ad560b6f41ef1c587fb0c75c4a79f79c6588c2bbfa5bbe807"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/top-edge-label.png",
+        "sha256": "2185d902d279a3a25995748aeed62d9b7cdbc965f573be71b30960facb36c178"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/trace.zip",
+        "sha256": "74606a17e5ca8c594b6dd8a788a8005546eb9da6086baa20a8e4e0e3092283cf"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/video.webm",
+        "sha256": "5fea4795e219bf8e97361d5a8d41e19c25182ea4562eb6197bb3ac335b282d2f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/narrow-label.png",
+        "sha256": "7dd31b9c8979e1e71847fb5cea5de6759e7ac0147ffc8c4bf6dba19f32578939"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/top-edge-label.png",
+        "sha256": "967ea30d376118c65f21778984902e8a496e1610263f82c255af8bd1640b42cb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/trace.zip",
+        "sha256": "ebf892aa82250802ca405f8f4cc3345ece417df666ea299e1a0da63e461768e9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/video.webm",
+        "sha256": "d4898fb970a6b1d97ffeebe19f7d4617810858fe595383c689940e9f0b485f2b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/comparison.png",
+        "sha256": "88f789a87242d448747f4178ea0c421739aa232b70af26190acef7c94461c894"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/trace.zip",
+        "sha256": "e0067480ccb8b1ac04c0cbc99103d8a5e5ad5e740db8ceb66e95fed6a06385b4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/video.webm",
+        "sha256": "a05cd9102aaa4af64eac36e914d421d3399e24adca92669af315ad92a132328b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/comparison.png",
+        "sha256": "3464e0626071786a56c78220dbe39a0ccd6700089b5af03c9c10a4b8c8b2d15b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/trace.zip",
+        "sha256": "90ac51d449db8786c386e74752fe6d795d34baca92e1363170a67e67bf5ef84b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/video.webm",
+        "sha256": "6f54b33dcc085dd68970dfbe03c5d9f98e283af3046b7560f09924dc746c24dc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/comparison.png",
+        "sha256": "932e21a476a3f6dbcda5e72c6289687839d587f12174d07655d412ba6d51eef7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/trace.zip",
+        "sha256": "db6651a06317f78d49d8cd51359b9bf73a0f48939cfa64d909301b4c70b1eda9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/video.webm",
+        "sha256": "d03f2a566f357b21ddcd0e23c9ffa715b5306de7c468139082eec18251df4308"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/comparison.png",
+        "sha256": "7e77314d719abfa9d56e2ef501f3ec0fdacc305dff814fe24c54aa57a001ce8c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/trace.zip",
+        "sha256": "01bb736c3b22b4972560f5f5e1ab8ccba1f4bf744682f224d31e3220b2eba24b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/video.webm",
+        "sha256": "832a87dd367212546805acebcd900cdf27a166791d086f0d53a5ad0081740720"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/comparison.png",
+        "sha256": "3b5ca6ec58e5e36c30034427d777b5386033d69c3a3b6406147c1ed70330e039"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/trace.zip",
+        "sha256": "99440ecfce5a0930fc6fa9ceca86ea5b522f0da40a50a55fbc35803dde9268b8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/video.webm",
+        "sha256": "574d0d1b286119b742f2e073a9443f6a24979dbcdc66d0c08828fd2772c69292"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/comparison.png",
+        "sha256": "191e881e9376dcc3ef4d3152e4bddf5fee131be04f3a1628e4f02f9e00951fa7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/trace.zip",
+        "sha256": "d023aaa9530cc4176cb1b6b4efbf74fcdf9b92325cbf2995558314ccbb6b0998"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/video.webm",
+        "sha256": "f1ef38e14aafffd67a2b686f8524fd1287dd60e9380a8a60292745ec829f1f59"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/comparison.png",
+        "sha256": "a43e2c6d91a3d0174601f26c57258dc7b225fb57ff9016d5d558ebca4bb3ab73"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/trace.zip",
+        "sha256": "6036ff7c5507a1d2d149c4ff81a6caf64f9273d04d8f4b4f9befdf73a9a47c77"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/video.webm",
+        "sha256": "b499792270fa38edae4e524c0d4e723a912e7da834a1b33c70f4bc52aba01ea2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/comparison.png",
+        "sha256": "f23fd216d7afc23f361187b4e0baa20bdd8aea942910529a685dc42a1a36ba44"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/trace.zip",
+        "sha256": "209b4f379eb1f601d309241ed65b5d953400d1f0b7b465bd230f8e26f7ded5ca"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/video.webm",
+        "sha256": "f9819e4b06f8d5f8dd60c280f9c640ee05d782d6a851245f306706fd2b1422ab"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/comparison.png",
+        "sha256": "a73b4900d9752d8e554606ab119fd417320f3cfe476107a5d617342a753eebf7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/trace.zip",
+        "sha256": "8e54b9208a0651deca3cc98b9badc907fe3c5d5846007e3ad37cc9b27d984933"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/video.webm",
+        "sha256": "97639860a0647129bbfcafdd9d9ed0701d16deddfb008fa246df332ffbcf76b5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/comparison.png",
+        "sha256": "75ce571099ad3431b90df887ca5579a3de5cfe3e4d5f03748e4ef0f34bd4c9ff"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/trace.zip",
+        "sha256": "edbf721ea9652ca92139421884f5d9a438a21f35d8d5910642a4461fdd40e1ef"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/video.webm",
+        "sha256": "1a9b05d005a039a374e4d8169735017074f1d009c3f9cea6042805f785eb495e"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/comparison.png",
+        "sha256": "bca57f8379f5e447320cbd7507d64afc98f1204e8ed09b180ac685a3fc7249d6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/trace.zip",
+        "sha256": "3a8a6cc5ee0ad745a87b71eafe7645c9108a41c48a8e226863e126b9bb7e0316"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/video.webm",
+        "sha256": "4c6da611ef09bcdc6ae158ddd5617a24dd0d8cb9532ceb9eb14e8ea6411da29f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/comparison.png",
+        "sha256": "ee4468567dbe445a0b132ee311881b0f556dac9e52ada78c3269d2b1e3200e03"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/trace.zip",
+        "sha256": "27885ca750ad323c8b8691c5006ad91e2e4753f106a5c73b4557f94901183079"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/video.webm",
+        "sha256": "585264e22844b5aef0b3ad5e986e6a4c2b33bb310d681d9e37a51d0e2f5f1673"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/comparison.png",
+        "sha256": "3cbdf98b3859793da29ef4057240f814bf26d79eb171b7faf3229a513be089ed"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/trace.zip",
+        "sha256": "0a0a38dcfb2436422bd38fa0ad7b0ac3f50653e6464bcf593857dc3169ef3ccf"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/video.webm",
+        "sha256": "459af211895b6f581b4e5a06d3fc3e7c70fb424477510b8cfce8bb4538f1aa16"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/comparison.png",
+        "sha256": "c171a6cadc7ab61b92df9ece860c4ab05310b0e81eab347dd73d899aa3b8e3e6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/trace.zip",
+        "sha256": "90668f5ca1d1b8d79e0acc090611c6da53dea6938d300d82df746e403e07db71"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/video.webm",
+        "sha256": "ddb680147b7ef1d0dcad2fedd530ef5ef9f0b6c774763ea1ad034b64600bc1f0"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/comparison.png",
+        "sha256": "41539bdd00badb2af9c7aad00c73089a8161598b946af45f014b187c0744d99f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/trace.zip",
+        "sha256": "99283a158ac516e2d2fc61b8838c46af8dac0127dab7947150fa38be2d399989"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/video.webm",
+        "sha256": "31449b7a6b2b585917c9a86c95f4bcbd573d4c7d0e4e207049ba907434e567f5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/comparison.png",
+        "sha256": "f6fba97c740d0600e181c58994b7e263bd4eaf72977ca7626078dba22304043a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/trace.zip",
+        "sha256": "cf126b22eccc51ebd6cab738f5bf43de2c092ea020110543bf420bbf0ff68cfc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/video.webm",
+        "sha256": "5d76095f8c9d6267923d838c11594ea69e3819cf6ec502e00e6d1797a3a17df8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/comparison.png",
+        "sha256": "52d8fe519a96f3b0749208903955569a09ece4060eeb93b84450bcf56d869bbe"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/trace.zip",
+        "sha256": "64bd6bc1ed9043f1302ba596615e3a890ebb7fdd70d333d729019a39491a7945"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/video.webm",
+        "sha256": "3e979d567c308b6545d9922c0ed3c9d4163c78cff3351c48b0a69f684d8d2645"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/comparison.png",
+        "sha256": "6c9578a63b41bc1263f0c93475770107ce73e206b0bfc825410431e8590e1676"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/trace.zip",
+        "sha256": "596281eea4d07c0331a323a09625b87dc494609a78f497b4c585ccd1397bb9ba"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/video.webm",
+        "sha256": "00e260a60eb3c4f7bb7e0b97c0bf0b0d3b6e7c0ee4a0013816abe543b444a60a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/comparison.png",
+        "sha256": "64aa55f72b972c331553011b4600e129084389de6b0f6b2807d419fc51d2fa72"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/trace.zip",
+        "sha256": "e73f4866844f73afd1c00d45c2f6706aefd2870a8ef15b237fc9bf304193cbfb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/video.webm",
+        "sha256": "699a3ff6b2aabadb2d020eef4e85225a0a5f049d2da283ae2ea3174fe94d3ca0"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/comparison.png",
+        "sha256": "5509f5101db5d9e42de81b0fd2438e85da41ea62b05b07ef89f3c1b77527e01a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/trace.zip",
+        "sha256": "ce35dfd032447a6d8484f4026efa8ba9dcdced1945c8b2d04e246e01e12f9094"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/video.webm",
+        "sha256": "055c3999c50dcb2706ceeab588286e1576cd753eba62a326aeffce446cbde38d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/comparison.png",
+        "sha256": "092e15d1b03acee6df3af19ab8afe7bc3547569697fdab9897a05ad9499b356c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/trace.zip",
+        "sha256": "2bd53f7ac91059f4cf5f6c1b9ce6aa156937404ea6cb05558819c6daa478d9cf"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/video.webm",
+        "sha256": "97388cffee2caf536f35519909825936975729b622f49f809d4b9d9e297323ef"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/comparison.png",
+        "sha256": "63fe7fa8546f0484593050ad5eebdf2893a3662d896462a665556b983b735cd8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/trace.zip",
+        "sha256": "e0493e0103b7d2982cf0926cc9e5bc09ef0e8fbe2bebb7f3c34be399e24c5204"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/video.webm",
+        "sha256": "69bed2681043e01f0f1a37d0bf29e8cadc62004920d0c72a7eb8c7ebbe71f008"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/comparison.png",
+        "sha256": "531754a2a0443a9528e570030b05e8c49645474d2f7ba7a48fc5f545597810a8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/trace.zip",
+        "sha256": "d7d89f471d1fce9a61e5afe9a10f3cf7c1cbba0d52dc2351e88a588a7042cf49"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/video.webm",
+        "sha256": "98fe7afb8fadf2e510b43e0e5722244e82c88d5a958791ff06f51cd8c067c016"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/comparison.png",
+        "sha256": "839c39ade03329cd598ea65b99f9bea70b080cd2db9d39d00155566bd87c71a2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/trace.zip",
+        "sha256": "1eaba971f99794f957d983345e90862adda6cfae1ee07212d67d58b314f0a463"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/video.webm",
+        "sha256": "45d4f9fab1a4d3c01606cd631363e2101cc325d26d23fcae5cbeefdbebdc16c2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/comparison.png",
+        "sha256": "a589efd0e64f122e759fd41b485d8a2afdd165cf91586996223ea5de7b8a14f0"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/trace.zip",
+        "sha256": "4734a429731bccec6a8069d4d3328bbbecec745bba373e2d4cf0be73790a1b0e"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/video.webm",
+        "sha256": "fd16756796a61047994a36dad9a8fff8501c4e07fb5b27e626a5f98d54bf9b2d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/comparison.png",
+        "sha256": "bee295a641c2c1fd030030d2e61a8559a3ec364e471219c3d58c328157aa9723"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/trace.zip",
+        "sha256": "d2d9364141c6a79abaeaa75a84716565ae790a39fee49508584f6aa60303e10a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/video.webm",
+        "sha256": "b55ca04851a2bbf355dd30bd8274d6a1d30ff339612c89c425753999cf46b17f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/comparison.png",
+        "sha256": "e3b216ce79fbf1c6b5e047179def0081035600124e7027456276841e7fa965e0"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/trace.zip",
+        "sha256": "c4614ff5dd3f4329edd22cb57ad109847ef4cb378b8782cc2efa04c901dc5208"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/video.webm",
+        "sha256": "653c1cf943b57548bea6d1d38c30bbc859662a598fa95e0211b878563a890883"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/comparison.png",
+        "sha256": "33d477c3ce1b3b965401b1fcbf7811e6f634e31be8437c470fec76e009a4a398"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/trace.zip",
+        "sha256": "81aad6572e196144dbc459a71a98dc93d033c5d5b4de3dc3df19c554ea7698b6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/video.webm",
+        "sha256": "ef421a8e958de6cbecddfeca1ef1b3bfdd0cb1326934f71cd53e408ae34f1f87"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/comparison.png",
+        "sha256": "d2f996c2a668c658e3f08c9745aacce6f30c531bd5ff4167a40edd535db07b53"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/trace.zip",
+        "sha256": "3a868abd34e0b64b1283b1c6a8028ed38c08ce9e8d6f47160d42bf6b42a53f0d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/video.webm",
+        "sha256": "682c97cfc436b3e69df2951af1c0c5240b6bbc105612856021d47ef0be7ac714"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/comparison.png",
+        "sha256": "0f72de607926eb54de7f77be3106dbb0ca86d62ae261ec7812c784cdfe50e2bb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/trace.zip",
+        "sha256": "a4f92d138f29d2ce91472dc9b58644e6d38e9bcc177712e1c1c6fffd501489da"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/video.webm",
+        "sha256": "6a937995210fadf465e305257df72edcc6e5bd999350e0b5ab0ff717c810ae67"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/comparison.png",
+        "sha256": "40c3a9a04ee01641070fd530ef5a216e8bebfbce2bd8cfa5e3b1ee71939667be"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/trace.zip",
+        "sha256": "ffb6e7b028865999a0a9f248d5b876336f6ea19b53504674112eaa52b8bb03e4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/video.webm",
+        "sha256": "34827a387e07e6107eacca0020cbcfc4dbb15e65bd83022ff967ef0f8528b061"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/comparison.png",
+        "sha256": "51b4d782f608ebc376dce5c3d754dcd767899687fee252b11c48ed1e2eabe9b7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/trace.zip",
+        "sha256": "e4cbc8a5baff0df89bbd90416251006b91d1f5bc16dc330b87b37f45137a6b44"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/video.webm",
+        "sha256": "32405d8ff1821d8ccfa27b1e424ad68572c71a3dad6cefdf81f57992bc1ba73d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/comparison.png",
+        "sha256": "8bd82fb2bdc2c99bca68aca29aeb890b7d9fd6e65cca9a49f762afdbca74e883"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/trace.zip",
+        "sha256": "9c2ff5634ba476ffd7c1fb18d6807f30a32fc2198a89343032330a9e2135dfdd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/video.webm",
+        "sha256": "4a80b7340d10fbc0989dab59711fefae387935ecb171a0a85186c4ff04e1a681"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/comparison.png",
+        "sha256": "c930718e059f28d17a47e5797b989fa7ec361955404b341cfb0daac0a2378e84"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/trace.zip",
+        "sha256": "2ffd2bbf8689079a4081843e3f95461ec649c947e0ebdb3f710bd72258d7ec4d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/video.webm",
+        "sha256": "e764b42f9c15b594d7f880122f6649308205d41d1b1f276d9afc6d1be40ad366"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/comparison.png",
+        "sha256": "14288cf6eec3112cc9b45775cab2d46066121d6220c42d3281e8a66426279d33"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/trace.zip",
+        "sha256": "b789b4a3a416860b35ab3f3fb09462931ab9c85087ae4e5749872db979909907"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/video.webm",
+        "sha256": "2f2355846662953a6e264352d262e888dd79e651f2b1bb3db0cf881548b1c179"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/comparison.png",
+        "sha256": "a94f789f4ac7e5dfc496b969175b32801b113bd679ae52ab6039f77ec523e473"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/trace.zip",
+        "sha256": "00d05e3ee79c042b9572e8e25d36f8cac87584b57512d2fa8f405b3ca9b8a147"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/video.webm",
+        "sha256": "1267fd8829b7e0e6da4eea84a12754ff76cc57b1b1e07ebd2d7c7800981d108b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/comparison.png",
+        "sha256": "e09617925103647673a6e3c0322bc56909756a493d3be605f5cd7c26799fa1a5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/trace.zip",
+        "sha256": "55be48c80800b7fff31aeaeba510583bbdbb1a233daf15d8fe0d2fd4401423e3"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/video.webm",
+        "sha256": "86afe7febb6b902ab5393e869e1f4c288eda2f21033c86b61e4dcca76318c6be"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/comparison.png",
+        "sha256": "56f9f7b1a6909beb0686b036042a63562a8dde2f1aef95575d50771d2d3b758f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/trace.zip",
+        "sha256": "0e85815a33b6b59a88cf76074d993e9ee2e02618d1736b67068a03b0a758a6f4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/video.webm",
+        "sha256": "fcc16f006e1354a0a93365cc4e6f09150fe73f8890d2e5fb0341b78a1ad0ec42"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/comparison.png",
+        "sha256": "27cdb8c567a1980dc82ccb1fef2311d2a77539df5e0cdd0345fe9202040c4ff7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/trace.zip",
+        "sha256": "10d9b0ad6f5788f167bc73743969d8542afe37ce8de92ecf9429142aeb131f28"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/video.webm",
+        "sha256": "0053637ea5765f649687038a0d12cf0cd924568e0478c6341c3aa2ebcfa33f2d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/restored-overlay.png",
+        "sha256": "9550c5a93463a086ec4c877aec218a05362b65e2f9ed0a1e539543830055c2c0"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/scrolled-overlay.png",
+        "sha256": "d73c215c13d395f56d35fb484a1d5ff06d0fb8c3116f7ce68ab352b8b8190391"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/trace.zip",
+        "sha256": "a9540e49fc90ef5f8dfde9a95d03feb267afaab18ce60fa2a4b969bbb25d21c7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/video.webm",
+        "sha256": "64c603ebf37f5c871fa53961ca82b2c4334255125baf0d3198c28cc55ffd7e71"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/restored-overlay.png",
+        "sha256": "baefe5e3f0258a21c7539e6d56bfef1efcb96144de748742d094cd3f9b8f9be3"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/scrolled-overlay.png",
+        "sha256": "05054c1c70d1e87ad927828546b2f1b5010491a477df46392048df4e2595bda5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/trace.zip",
+        "sha256": "a82821460fa93fc921c738c540cc8e384466b19fb7d5f8441b1727990e1d42b6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/video.webm",
+        "sha256": "c87287f506043d1a7f54569ce75a25e5b660c7772191ae0aa30680de45279abb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/restored-overlay.png",
+        "sha256": "56b230371bb6772545060d03a48734069d38cbd39f9fe73a1774f7683ad2eebc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/scrolled-overlay.png",
+        "sha256": "3b43d9b50ad1be352ddc9efb3c2ade08220c9d846d04b7ea8cf1a2b6fd31a789"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/trace.zip",
+        "sha256": "62172607a133ab143d2961c7f62ce9169d393dc4fe0261383f4e9c46388cb8e8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/video.webm",
+        "sha256": "ca4ec9d87a365d9a774da8391fadca3d3e6c1fba52c9586310aea42735a595c9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/anchor.png",
+        "sha256": "fbf62163b9087e3af7f4465837b751d3adc23f6dab369c0f877f8af5fcada867"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/trace.zip",
+        "sha256": "921e559a3cf813973bb840e9f2ccbf5cebafa69fc5074f551b86e2f04baec8fc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/video.webm",
+        "sha256": "ee0ee06afb9a163b3a643b64e1e8671664884669c764935e18fb83256f990a78"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/anchor.png",
+        "sha256": "12847b526f714c84fc602a5117a9d6a502475c5ce7afe05bdf938bb9edca6241"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/trace.zip",
+        "sha256": "f1ec8acc8bf32a23ca589333f483bbceba03d317dcd8c9a0d99c6f9654972143"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/video.webm",
+        "sha256": "955f54ed66b7ac444c7b58c3f31a2c5d8203c63666c6fa006636b411c3679bc4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/anchor.png",
+        "sha256": "1a95a5440054e0adab2a7a5a8c38fb86ebfe862e5d3b187a3b295cdcf583c4cc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/trace.zip",
+        "sha256": "a0399a1caf2e38369f0a5f812618c58252451fbe7f9e9036f0609cae4842b2fe"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/video.webm",
+        "sha256": "657ea4016d9ec2258820d308ced12c65e60da412029f4a89c70977f9b134c2af"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/anchor.png",
+        "sha256": "4d7327fe7276a37394a65e631f57754f8024dfbddbb2370e78134ea679598ba3"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/trace.zip",
+        "sha256": "2546f9288f4b27f60272baf054485d0279af6a57dedbd63d13bf0fa256dfefe9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/video.webm",
+        "sha256": "45737238140f5fdf40acbbd17d1de43c8fc63f4ed636822b352b34fc23e55e00"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/anchor.png",
+        "sha256": "01a3b2762cb0015982f1ee4e6873df8c9b2686af986c1ccccbc211df87a0329a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/trace.zip",
+        "sha256": "9d76559f9c7090ad7b700ccc12560947c62988bc225852f1e279161bd140d0fd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/video.webm",
+        "sha256": "aefaa264f7ad732a23754c26827f717c672e821cddbe1ee98511e2576264b613"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/anchor.png",
+        "sha256": "3c04d076619128c7e393e7ae0359560b7bc9eb5ba76741b6f6a7f26a06bd52e0"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/trace.zip",
+        "sha256": "2473911689b29749e201d3b3f2709e2004cffbd62ab622875fabc27936c70a80"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/video.webm",
+        "sha256": "9cda9c625a061c750cabf729ab116211d8c9a71264f7de8415053f62d2192757"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/anchor.png",
+        "sha256": "f6d4c922ef420a3d4914e140ddf3bb3fc9affffbb7db1303e3f1a35beb43b8bd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/trace.zip",
+        "sha256": "945d0e819533bbc584208f883e9fe38fc6865b44ac50e201eb4754b325c4792b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/video.webm",
+        "sha256": "59a1a189a5de5357c25035c41c7db93866f65907a7f6f3c4bf5eae7fd4d35052"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/anchor.png",
+        "sha256": "f92a456739539cb5bdb201b4a42ec7029395ff4a27d5e36ba20467606cd63007"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/trace.zip",
+        "sha256": "07128cd92fa34ac4d1701d18ff32a0f2158526f48e9c8147e5bc88283eb44d4f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/video.webm",
+        "sha256": "cf4a2032f473ccc49639d8d6fa751a226557eaaabb16ce960910d605e9201501"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/anchor.png",
+        "sha256": "ac85148954a84b178c30904b790d955103141bbe28106dc33469b9e2c6cc2f56"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/trace.zip",
+        "sha256": "46a3bbd7ee75766bb1100d45eafcf3eba22fd45f36d47f253030c78ce78456a1"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/video.webm",
+        "sha256": "124afba7dc5454e3f3a467b18ea1ec5b0fbcea9964891243a4a2901e0e3c828d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/anchor.png",
+        "sha256": "47684e6941d8b1a3c973966121b9f51f3667ebf97847e74e5123415505fce858"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/trace.zip",
+        "sha256": "8effb3fb0c000596446783e26779dba4556fc6e42cc0390ac3f256ebdf6d27d2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/video.webm",
+        "sha256": "8a2b5dec875850e8988d6cd78e34c61633132969fe038053b34aa9ec288cad99"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/anchor.png",
+        "sha256": "96c1f916da191b9fd47bd9448b5017292bb3cd83d8082b257309a82ea8224b21"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/trace.zip",
+        "sha256": "77447529cb247b58cb8f155423cc35bc03d48f02fe978e9c6f5473ffa9fa7bef"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/video.webm",
+        "sha256": "8fe9c56465c60960bd8de0ad7cf614168909b0b079d5eebb8496af82c9fa8b1d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/anchor.png",
+        "sha256": "a81c8f0ccfaa5236d9c3388884ee645a678d67ff2f6d1065c25ad55117543399"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/trace.zip",
+        "sha256": "fcd148ffa544729f04538442dfad6edba671a040bb53a6feefbc6ad4f4bdc1a8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/video.webm",
+        "sha256": "9b87468a2b89791925f0e97ebcb0f9b37b7ae93467b953a82000837cbbcc64e2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/observer-continued-typing.png",
+        "sha256": "7886fb48de27aac12d0a134a9f7d28b7ba2580e89f0bc8d2ed80a51d72a570b8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/trace.zip",
+        "sha256": "8ae9a924e7247c5260e8842c2d1f25855ea460b46d4f4090e4bab80e5ce9e7f5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/video.webm",
+        "sha256": "65275146288fc66dc7004f47c85a86f08a6201837f0a4e8e37030122660c9f26"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/observer-continued-typing.png",
+        "sha256": "c2b03f3f56409fdc2546a0fa4954b3eb083781e79850b8f5458c3d5a7714ddaf"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/trace.zip",
+        "sha256": "500323deab189c748221eea244b442b860ce1e537b2c19c60c4f1fae90ea10b8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/video.webm",
+        "sha256": "83a22779c9a4b44f6d408b46dfe4bea16d3807396e01eb963fafeae8c35bcc2a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/observer-continued-typing.png",
+        "sha256": "673a30dbd8155a9f9f4cee595786dd244d58ebc1f42446d7b1d0bffd3fe5d979"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/trace.zip",
+        "sha256": "353dd1051a37683b2252afb6fe806dc36a679c0c7f6522014a49a3aac3ff125a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/video.webm",
+        "sha256": "c5e504d06287a2e3dc183f8d7d94a82e5c8c7ff50b009e3d32cf36997b47ce9f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/backward-selection.png",
+        "sha256": "2da45cff164c35ad91096c5ce0d4394f01221136f3d677f3e7cb3b6831c5490f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/reopened.png",
+        "sha256": "eef5e175d2661c74400c8e1057c3497eb0282d042920fb75dd44926603d1c951"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/trace.zip",
+        "sha256": "952af400fb5cbe650e8941d78eeb6b9f1fe76c5eac1f84307ea16d4d74dc629a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/video.webm",
+        "sha256": "b6f12c098808acdef78130f41fda8c0eb17a43daaa9f29207779c1d1abb515ac"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/backward-selection.png",
+        "sha256": "4e5347534807d82349de2f439cc88a3330cd2080256c67b3b6e19b89663a99ba"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/reopened.png",
+        "sha256": "cea4a8a24d886deb4629873e6bdb198eecc9761795e8f86bf14d9bde2a386c62"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/trace.zip",
+        "sha256": "f0038ca0be5d2e8a3a6cf7c167885fef67f0412ed56dfc5a9c0cc7beacd7bd7c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/video.webm",
+        "sha256": "d3563b1a38a49e4d7ad48103ffc4ebf9ef8ecaffcc9054b2e0bf762e4258f7d9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/backward-selection.png",
+        "sha256": "7257d152eb4d7a8d996070216ff557d62816f4caec8516fe9993473096c23f40"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/reopened.png",
+        "sha256": "c57b8bdcc8a0d656fd86a5aafcb0e03c8ed613c8a8cbc899dcb63e179eb5a42a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/trace.zip",
+        "sha256": "114ccd32c6dce9b617c7f3ff0cefeede9c0aeb72b91af16b762be7861fba0384"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/video.webm",
+        "sha256": "7e0715942433f027a0ddde77b41cf156f9648507c849bbe0d936a1e152beeffd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/converged.png",
+        "sha256": "768c6f69a3bf65489e516808c8b11e15301f2eeb6f64bfdc36839fa7858cc2fd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "9669129a212851c1fd6c69242506e7a0cb848b12e24610958c9678819b6237c9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/video.webm",
+        "sha256": "833bf080131589bad804d097dcc31df45057a1121da53378c023b76d504c6fc8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/converged.png",
+        "sha256": "acb69923a7d67cc1d171637d5689721541ca50eea17521e56883f87c9b32205a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "329f14108c3da95ec9d7667a56d937259169a17f125cb54ac5daaaf88f59ea95"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/video.webm",
+        "sha256": "cd4832edae483f1387c0921ae801f779903c6aad79a80906ac7d931d1650c1a7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/converged.png",
+        "sha256": "64e09f2cbb3740ebdda7d8e557a63d75484993ec2dd2667d66b8f69b60203fa1"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "a7e4dd2bcae09133500d406822c372349f8b2636b8e13b487622b4ffef0e8a04"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/video.webm",
+        "sha256": "9926c1228d7e10f81318aca2a0b9707d8380c4ae29e6efc43067802b78534d87"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/converged.png",
+        "sha256": "80f6efbecc38ee901e1cb040e7a40622946a1855dfc5bce170c8a6c66c01ea99"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "0e38e60763c85bbd96a0c5a72bd4f1b5317f22a83acec24f7f765260c2e912c4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/video.webm",
+        "sha256": "57278e2ecb58c60acbff42b05ff31a9b1dccd0d45854809e5ebbe9b1c8a75ed8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/converged.png",
+        "sha256": "4c4f430c9e86ff533242ed1a860d1ff8a707185c03054c9d816264d756a5ddc4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "44f13af61e947b4c641ba0f02d6d43c12b02c34e816fc46f21205e61ed5b1f6c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/video.webm",
+        "sha256": "8d27fcce086d63d2c3b4e2ceef3b52832eb98d019ce09b6edfebd1d89fc4faef"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/converged.png",
+        "sha256": "091e0c5b2207b8e972025f180334997f06ea351bdfe50885626d336ec77ee6d8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "b35bac23cdeb70a7abe137ea0d9cb6bed76eac18c7d2fcf0018008aeb51e8bd7"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/video.webm",
+        "sha256": "66a5999731b3142c08fbc53bb0de9da1cffd64d739ba593e8c9230baef312e7c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/multi-paragraph-converged.png",
+        "sha256": "9b9a8a9abc0ee0f4d57b3f4d1db87fef5667690d24ee85fc4a01f059efbfc8d1"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/trace.zip",
+        "sha256": "10948c9f27640e73f19b3b54c3267607854494cb8bd68d97b162614b7811e5b4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/video.webm",
+        "sha256": "c4157951130191f93d2e9d2ae7e201804f68f02a15b446f1c0a9c99bd44d8ff2"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/multi-paragraph-converged.png",
+        "sha256": "b3c116bfe7e462e04af6b852170070c92378ab2f06b9588e3dc7e0df001be64f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/trace.zip",
+        "sha256": "12dff9003d97566c02bad0082fb3982d5cfa5492b097c3bf984e0838e9a87bb1"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/video.webm",
+        "sha256": "6c6a6f72209bc55014cc4985497379fff9ecbfc97f8a76cc81c5e7321c110cfc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/multi-paragraph-converged.png",
+        "sha256": "50981067d8a78308c05ace590b7fa3947bb7f78fba523ad926942c2adde7066a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/trace.zip",
+        "sha256": "9965a740677afb44ebd701c5367f615553ca713f33b238cc0ca8feff4ec792a9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/video.webm",
+        "sha256": "9a7019cddc0949db7df3ce935497f502b81b5fc3757f0beb789f0799a879f158"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/converged.png",
+        "sha256": "49a9a16e67f673d1c89cec362b944a7f11ddba11719d3baedbd080b10dff3a96"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "a8611022da7e4225597bf38357ffa4496d1287fcd8c87dd0bcff7a3a0a47d218"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/video.webm",
+        "sha256": "704fd48e6a8cbf4f13d07d4cf77bcdaa5f06ecf6624498530d218dbdae1d45a8"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/converged.png",
+        "sha256": "4c7ab7cf586e4a0b6f545c0a4feee349f5f073600824f7ed3650411d9aff6bae"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "cf347773b38f53c8a5aecf4e6281cd55ec45f8c6287e2c7717beae406f335880"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/video.webm",
+        "sha256": "dafabf86145a12fe00fbaa24ad9f300c2364b9634296ea68deb70d72cf255e47"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/converged.png",
+        "sha256": "683bcdbea966d39b42850b8cdc3036892dc8d414a16ba5a95978d7432bedb7d5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "a0566116b891718d9d9c56daba4186f0cb66ef5d0165b7bc37013aad5b7be7cc"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/video.webm",
+        "sha256": "e00d7d0b25952450dd4431fbf41f774f520a12baaf236336da9de16f1ff40041"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/observer-annotation.png",
+        "sha256": "af967eb0fe044441d5cd98ee526fa224af67f9d64f48b9036bca5bf68a1bdf83"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/trace.zip",
+        "sha256": "2a0e254dd7bfcd9b09eed5d39efd6b75f0457b5052c0571dae13cd216d91ce2f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/video.webm",
+        "sha256": "06388dea395e0ee02158e62e29503d215c0031c85d0daa55686c960e716ad63e"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/observer-annotation.png",
+        "sha256": "7fcaa945b05ac63e28e2bda35edf16508df025fe46dbc6b8263f6266e031963d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/trace.zip",
+        "sha256": "2523441f79b078f7f8ce92117b0fc9b9499a738de849ff274d4c3fcd65e1502f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/video.webm",
+        "sha256": "c5d758e1cded310de83f9a513e2ef422fb8b614c630278fe03e95d9659b65e05"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/observer-annotation.png",
+        "sha256": "b437390bfcfcacee31f71a9e5be9f909e9e14e6a988365438cc6b8ec734abefb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/trace.zip",
+        "sha256": "ef24acd9dac3c320538297753aef1c064845cefff1dc48bcae0c2e00cfe0da8b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/video.webm",
+        "sha256": "678c21f8b5a202cc2d18844d817874b38eda9b5cabed332500e21c760414064c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/converged.png",
+        "sha256": "b28c038e6fef1a13b660228e29b8496f5ca8151111df22f688f6da26479d92fd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "77e46ae7b68cbde727f7e99c6434a128661ce9bfe690111a5d90e19f919eed7a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/video.webm",
+        "sha256": "8f8db263e1f786708298612dd885aa478f507f8443787315401009d588e01730"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/converged.png",
+        "sha256": "75ee29dea0a2045e63215f202da82bf1d6ca9a0c41f7b51edcf1fc7deedc473c"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "b3c0ba116c360a3dcde3bf2cbb005caa5c1c48431dd07c9f22b1642b5077e5ce"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/video.webm",
+        "sha256": "f6386b4625d8a297d3e8200ad5fa25e332b44e65310f50951d44f4952ce1a83a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/converged.png",
+        "sha256": "2bb3d972b1e9c3cc856b21887e7f0fc33ce8af3cfef79988ec2d939e241d27b1"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "2f8dbffa9a3dd31b9abc4eb7b78ebeac60a40c0ef820cbf38d9999390681a6d9"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/video.webm",
+        "sha256": "44d2b1e0b3cb3abcb7016e1651e97a90f61cb223f467e2eaa903fe303dadc08b"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/converged.png",
+        "sha256": "202903c621aa214ccfdefe0f0e010a53e829ff62f011328e2b3f3380c071ae5e"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "dd7afa7eb4f0e4b8f6301f32f9cabe16a3d7e639b9566be0fb72b3036c585bd6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/video.webm",
+        "sha256": "c198aec2793105fc3f7b85abdb32da015aba80d1dfa583700fb289604f058d52"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/converged.png",
+        "sha256": "52007f2f8d9b72c60e1cf76b1fb4d16ee69844717cc204c7ac873ceaa8191578"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "5273ace686bd41ae690eb5c2e3a75614bbd48ecc64439978833cffbb627e3d61"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/video.webm",
+        "sha256": "978992830625b1d501fcd2fc680894eb159b8337b780a88c1d942a3540957349"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/converged.png",
+        "sha256": "f02359805e38a3b5447e490c59861ea328fac1f11f96a02fdf26f23903c84205"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "51b2a0d3e1073504cc9bfc1f964496c4e753a0f33473b58224334d39cd73cbb6"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/video.webm",
+        "sha256": "d6fbd26218cb3f94e4c2f52b4b526a050caf92239a9e4d3bd82e8b35587f21fd"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/converged.png",
+        "sha256": "70237e3f4120ac37018a444a27fe6fa54bbfe043d008dcc7daa26983bf4d6c6e"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "d6db616ffab158f9a6270badfabb47d3b0db9773ffe074c5a0a59ba422c35974"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/video.webm",
+        "sha256": "ee1f55e7e0c1e2ff199675aca9c148b95e31329dceef7e5f32feedce7f140f46"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/converged.png",
+        "sha256": "b8791f9d6b88082e52f874d1689643160d9b53639a6634327b0ef6d7b2a3a3eb"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "a70af4dfbb91990708995906d2b43cef77e70e028a5a15daac96362324f7b19a"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/video.webm",
+        "sha256": "88a1cd1262add3d58152be431509253ed8171601d7cf60cdd3fd1512f07169d4"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/converged.png",
+        "sha256": "3a522527d2ac382b1148de92dd98fb75562d201ab31548f68afc70d34339ea1d"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "59224bda8869167e682859d7328e21a51b58d3fa3052bd6716046c2059ce14fa"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/video.webm",
+        "sha256": "320f8afd0f3935d8c98446c23701496b80bf7f73c5142fdf666dcfdb4682df24"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/trace.zip",
+        "sha256": "d5abcd1abe9b79a0d1e0481ac6770ebe9078e973c5cf9adf9100caa9b0735404"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/video.webm",
+        "sha256": "ca8c6ed0fc3f1fdead20a7425612acfa47c8b974de039ccb8e823f582eb8f161"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/trace.zip",
+        "sha256": "3943257c802bdd20aea0df765d6dd96f1fbce3ec298d5917b87ff1499d5dd8d5"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/video.webm",
+        "sha256": "1e488cb4b70aeee18795e9d73680f3151d634d82ebd67add0aa2804bceac7647"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/trace.zip",
+        "sha256": "b99d4230552f944eaf0d80cb4a5ece69b1de40584f8cb0d8ee495448f421ee0f"
+      },
+      {
+        "path": "artifacts/retained-frame-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/video.webm",
+        "sha256": "08986401195b61c80ce2c58c75e59c4d1521e679a67b2d7864b41c58c30396b1"
+      }
+    ],
+    "visualReview": "Representative structural editing, continued typing, backward selection and reopened-document captures and sampled video frames reviewed in all three desktop engines. Not physical mobile/IME certification."
+  },
+  "compiledNode": {
+    "journeys": 36,
+    "formats": [
+      {
+        "format": "es",
+        "passed": 18,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup."
+      },
+      {
+        "format": "cjs",
+        "passed": 18,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup."
+      }
+    ]
+  },
+  "checks": [
+    {
+      "check": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "check": "focused",
+      "exitCode": 1
+    },
+    {
+      "check": "build",
+      "exitCode": 0
+    },
+    {
+      "check": "test:api",
+      "exitCode": 0
+    },
+    {
+      "check": "test:headless",
+      "exitCode": 0
+    },
+    {
+      "check": "test:package",
+      "exitCode": 0
+    },
+    {
+      "check": "test:server-runtimes",
+      "exitCode": 0
+    },
+    {
+      "check": "test:budget",
+      "exitCode": 1
+    },
+    {
+      "check": "test:performance",
+      "exitCode": 0
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/retained-frame-typecheck-20261106.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/retained-frame-focused-20261106.log",
+      "sha256": "75696e5858ba414cf6e3bf970136798e1afdf88f0f3d025e04824d317c5117f8"
+    },
+    {
+      "path": "artifacts/retained-frame-build-20261106.log",
+      "sha256": "751ff0bf7216dc5b5a9ac202d0c9a39391ded48ed3e4b74889508b821c51fbff"
+    },
+    {
+      "path": "artifacts/retained-frame-test-api-20261106.log",
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-frame-test-headless-20261106.log",
+      "sha256": "a3a5f9c587bf5e9de1afc23ac1b4594956680c621894d464f115cba355011534"
+    },
+    {
+      "path": "artifacts/retained-frame-test-package-20261106.log",
+      "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a"
+    },
+    {
+      "path": "artifacts/retained-frame-test-server-runtimes-20261106.log",
+      "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96"
+    },
+    {
+      "path": "artifacts/retained-frame-test-budget-20261106.log",
+      "sha256": "7993139dcabf160c51fadb4121fa7af30f3d14411f8bf4313d8ac9e5a8fe978a"
+    },
+    {
+      "path": "artifacts/retained-frame-test-performance-20261106.log",
+      "sha256": "49b90619ca289c462b6ee636ec2be3d3d672014018a1045ebe387ea4612da512"
+    }
+  ],
+  "compiledArtifacts": [
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-DGpirzUe.cjs",
+      "sha256": "005757220b830271cf64b51a8e451e61632f19a2aafbec29c6e847c37d7603ba"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-DGpirzUe.cjs.map",
+      "sha256": "dd2e044cdb0b976902ca5ab1f706d8f332c0d344f036939bd7b06d4f91a74f03"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-GTHSw9Ig.js",
+      "sha256": "f9f01fb05774ce839c2ddb7cc98c0a528c55b013e848ba3933bdb7f759b2ad3c"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-GTHSw9Ig.js.map",
+      "sha256": "496903f1a5162079dbcaee06f6b90234d03c43241fcd1e31ca678ffeddbb7278"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.cjs",
+      "sha256": "62009b3e71b59bf1d15538991d24793ba9d7075d8f4f300af28c38de7154b91d"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.cjs.map",
+      "sha256": "f3b88f307df0c272911d9b9661b090e072f35b269db0381a4d6047a3635adfa3"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.js",
+      "sha256": "7bffffed4b1a21349993ec02cce8b85fff69cef3bd9111ccfee15214cc7d5898"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.js.map",
+      "sha256": "d420515a67478c0efde216ad69f329c45e96b327bd49cd232268312a928de02a"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.cjs",
+      "sha256": "823ad816312a04fcab278a73ccc0217d111b48d8769aed2eb99649b12fe901e5"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.cjs.map",
+      "sha256": "518c80182a1f8971a73326e9ac8b7967b1e9590ef51bfc8d42970e537c7847aa"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.js",
+      "sha256": "fb6dd82bfb2fb97615d18f0fb244bf4514e4567ba1dac3bcdaebe727cf376e53"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.js.map",
+      "sha256": "00b4549a5bbc48175581ae7912c059140af0029b150f501ed51a8a8363f4d93d"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/styles.css",
+      "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7"
+    }
+  ],
+  "measurements": [
+    {
+      "path": "artifacts/retained-frame-cost-baseline-20261106.json",
+      "sha256": "ec07d7e0ba66c4e7229c8f61997e1ab91c7e28360a499c42343d1a2900381dc4"
+    },
+    {
+      "path": "artifacts/retained-frame-cost-candidate-20261106.json",
+      "sha256": "1dd58f71b9d65f6ac5e577915b9e4be9d3663206d15cde401089e2325f769f04"
+    },
+    {
+      "path": "artifacts/retained-frame-session-baseline-trials-20261106.json",
+      "sha256": "43504bd695625807b2314147677442ac43be0104667376616f12b03d5af3831a"
+    },
+    {
+      "path": "artifacts/retained-frame-session-candidate-trials-20261106.json",
+      "sha256": "121da8dfcfcaf4848bc4dab1d9bb5805fd7cad8ced74e8980f0ee5e47955a11d"
+    },
+    {
+      "path": "artifacts/retained-frame-comparison-20261106.json",
+      "sha256": "d8fe220ee95d18d94399d0c7601d5b7b3e8558068dc4f20882bca7d249c7c8a1"
+    }
+  ],
+  "comparison": {
+    "baselineCommit": "29f8e6ea",
+    "runtime": "v24.22.1",
+    "controlled": [
+      {
+        "blocks": 100,
+        "sharedBytes": 181389,
+        "before": {
+          "medianOfEditMediansMs": 6.6195000000006985,
+          "maximumTimedSampleMs": 20.57299999999998,
+          "medianInitializationMs": 79.89930000000004,
+          "extraEditSizeGetterCalls": [
+            527,
+            527,
+            527
+          ],
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 100,
+              "retained": true,
+              "initializationMs": 85.1166,
+              "p50Ms": 14.461600000000033,
+              "p95Ms": 20.57299999999998,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+              "sharedBytes": 181389,
+              "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 527,
+                "sumReportedMapEntries": 14602,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 600
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 1200
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 200,
+                    "reportedEntries": 800
+                  },
+                  "fountain:splits": {
+                    "calls": 200,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 100,
+              "retained": true,
+              "initializationMs": 79.89930000000004,
+              "p50Ms": 6.100300000000061,
+              "p95Ms": 15.2507999999998,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+              "sharedBytes": 181389,
+              "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 527,
+                "sumReportedMapEntries": 14602,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 600
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 1200
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 200,
+                    "reportedEntries": 800
+                  },
+                  "fountain:splits": {
+                    "calls": 200,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 100,
+              "retained": true,
+              "initializationMs": 67.42239999999947,
+              "p50Ms": 6.6195000000006985,
+              "p95Ms": 16.71680000000015,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+              "sharedBytes": 181389,
+              "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 527,
+                "sumReportedMapEntries": 14602,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 600
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 1200
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 200,
+                    "reportedEntries": 800
+                  },
+                  "fountain:splits": {
+                    "calls": 200,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianOfEditMediansMs": 8.56130000000121,
+          "maximumTimedSampleMs": 43.6336,
+          "medianInitializationMs": 62.93509999999969,
+          "extraEditSizeGetterCalls": [
+            494,
+            494,
+            494
+          ],
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 100,
+              "retained": true,
+              "initializationMs": 111.58120000000002,
+              "p50Ms": 12.540100000000052,
+              "p95Ms": 43.6336,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+              "sharedBytes": 181389,
+              "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 494,
+                "sumReportedMapEntries": 11302,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 600
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 1200
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 200,
+                    "reportedEntries": 800
+                  },
+                  "fountain:splits": {
+                    "calls": 200,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 100,
+              "retained": true,
+              "initializationMs": 62.93509999999969,
+              "p50Ms": 6.515899999999419,
+              "p95Ms": 20.47149999999965,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+              "sharedBytes": 181389,
+              "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 494,
+                "sumReportedMapEntries": 11302,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 600
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 1200
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 200,
+                    "reportedEntries": 800
+                  },
+                  "fountain:splits": {
+                    "calls": 200,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 100,
+              "retained": true,
+              "initializationMs": 51.56029999999919,
+              "p50Ms": 8.56130000000121,
+              "p95Ms": 20.754100000000108,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+              "sharedBytes": 181389,
+              "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 494,
+                "sumReportedMapEntries": 11302,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 2900
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 600
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 1200
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 200,
+                    "reportedEntries": 800
+                  },
+                  "fountain:splits": {
+                    "calls": 200,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "blocks": 500,
+        "sharedBytes": 911676,
+        "before": {
+          "medianOfEditMediansMs": 33.2523999999994,
+          "maximumTimedSampleMs": 53.35140000000001,
+          "medianInitializationMs": 752.4032000000007,
+          "extraEditSizeGetterCalls": [
+            2127,
+            2127,
+            2127
+          ],
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 500,
+              "retained": true,
+              "initializationMs": 831.4716000000001,
+              "p50Ms": 42.57820000000015,
+              "p95Ms": 53.35140000000001,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+              "sharedBytes": 911676,
+              "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 2127,
+                "sumReportedMapEntries": 73002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 3000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 1000,
+                    "reportedEntries": 4000
+                  },
+                  "fountain:splits": {
+                    "calls": 1000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 500,
+              "retained": true,
+              "initializationMs": 752.4032000000007,
+              "p50Ms": 33.2523999999994,
+              "p95Ms": 39.593300000000454,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+              "sharedBytes": 911676,
+              "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 2127,
+                "sumReportedMapEntries": 73002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 3000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 1000,
+                    "reportedEntries": 4000
+                  },
+                  "fountain:splits": {
+                    "calls": 1000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 500,
+              "retained": true,
+              "initializationMs": 713.2672999999995,
+              "p50Ms": 31.95470000000023,
+              "p95Ms": 52.54060000000027,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+              "sharedBytes": 911676,
+              "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 2127,
+                "sumReportedMapEntries": 73002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 3000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 1000,
+                    "reportedEntries": 4000
+                  },
+                  "fountain:splits": {
+                    "calls": 1000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianOfEditMediansMs": 34.794199999999364,
+          "maximumTimedSampleMs": 81.18470000000002,
+          "medianInitializationMs": 758.4907999999996,
+          "extraEditSizeGetterCalls": [
+            2094,
+            2094,
+            2094
+          ],
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 500,
+              "retained": true,
+              "initializationMs": 1169.1828,
+              "p50Ms": 40.13589999999999,
+              "p95Ms": 81.18470000000002,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+              "sharedBytes": 911676,
+              "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 2094,
+                "sumReportedMapEntries": 56502,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 3000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 1000,
+                    "reportedEntries": 4000
+                  },
+                  "fountain:splits": {
+                    "calls": 1000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 500,
+              "retained": true,
+              "initializationMs": 758.4907999999996,
+              "p50Ms": 34.794199999999364,
+              "p95Ms": 44.54690000000028,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+              "sharedBytes": 911676,
+              "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 2094,
+                "sumReportedMapEntries": 56502,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 3000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 1000,
+                    "reportedEntries": 4000
+                  },
+                  "fountain:splits": {
+                    "calls": 1000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 500,
+              "retained": true,
+              "initializationMs": 700.6911,
+              "p50Ms": 31.303499999999985,
+              "p95Ms": 38.052999999999884,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+              "sharedBytes": 911676,
+              "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 2094,
+                "sumReportedMapEntries": 56502,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 14500
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 3000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 1000,
+                    "reportedEntries": 4000
+                  },
+                  "fountain:splits": {
+                    "calls": 1000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "blocks": 1000,
+        "sharedBytes": 1834709,
+        "before": {
+          "medianOfEditMediansMs": 70.79320000000007,
+          "maximumTimedSampleMs": 102.08159999999953,
+          "medianInitializationMs": 2759.3238999999994,
+          "extraEditSizeGetterCalls": [
+            4127,
+            4127,
+            4127
+          ],
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 2758.1226,
+              "p50Ms": 66.59580000000005,
+              "p95Ms": 85.9348,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834709,
+              "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4127,
+                "sumReportedMapEntries": 146002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 2846.1289000000006,
+              "p50Ms": 75.59709999999905,
+              "p95Ms": 94.96389999999883,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834709,
+              "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4127,
+                "sumReportedMapEntries": 146002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 2759.3238999999994,
+              "p50Ms": 70.79320000000007,
+              "p95Ms": 102.08159999999953,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834709,
+              "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4127,
+                "sumReportedMapEntries": 146002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 40,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianOfEditMediansMs": 66.19520000000011,
+          "maximumTimedSampleMs": 94.66579999999885,
+          "medianInitializationMs": 2844.8293999999987,
+          "extraEditSizeGetterCalls": [
+            4094,
+            4094,
+            4094
+          ],
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 2782.4254000000005,
+              "p50Ms": 67.54299999999967,
+              "p95Ms": 84.07229999999981,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834709,
+              "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 2958.2331000000004,
+              "p50Ms": 60.5679999999993,
+              "p95Ms": 72.85689999999886,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834709,
+              "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 2844.8293999999987,
+              "p50Ms": 66.19520000000011,
+              "p95Ms": 94.66579999999885,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834709,
+              "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "session": {
+      "editsPerTrial": 1024,
+      "trialsPerBuild": 3,
+      "stages": [
+        {
+          "stage": "seed",
+          "sharedBytes": 3058,
+          "sharedV2Bytes": 2948,
+          "textDeltaOperations": 2,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-128",
+          "sharedBytes": 9935,
+          "sharedV2Bytes": 7818,
+          "textDeltaOperations": 130,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-256",
+          "sharedBytes": 16975,
+          "sharedV2Bytes": 12682,
+          "textDeltaOperations": 258,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-384",
+          "sharedBytes": 24156,
+          "sharedV2Bytes": 17546,
+          "textDeltaOperations": 386,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-512",
+          "sharedBytes": 31452,
+          "sharedV2Bytes": 22410,
+          "textDeltaOperations": 514,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-640",
+          "sharedBytes": 38748,
+          "sharedV2Bytes": 27274,
+          "textDeltaOperations": 642,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-768",
+          "sharedBytes": 46044,
+          "sharedV2Bytes": 32138,
+          "textDeltaOperations": 770,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-896",
+          "sharedBytes": 53340,
+          "sharedV2Bytes": 37002,
+          "textDeltaOperations": 898,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-1024",
+          "sharedBytes": 60636,
+          "sharedV2Bytes": 41866,
+          "textDeltaOperations": 1026,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "converged",
+          "sharedBytes": 60805,
+          "sharedV2Bytes": 42032,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "all-undone",
+          "sharedBytes": 60810,
+          "sharedV2Bytes": 42037,
+          "textDeltaOperations": 4,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "all-redone",
+          "sharedBytes": 118390,
+          "sharedV2Bytes": 77881,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        }
+      ],
+      "before": {
+        "directory": "retained-frame-baseline-20261106-build",
+        "medianFinal128EditMs": 6.986300000000483,
+        "medianUndoMs": 1255.3665,
+        "medianRedoMs": 1361.858900000001,
+        "postGcTotals": [
+          12809793,
+          12955553,
+          13116625
+        ],
+        "postGcDeltas": [
+          2240240,
+          135336,
+          160392
+        ]
+      },
+      "after": {
+        "directory": "cursor-overlay-build-20261106",
+        "medianFinal128EditMs": 6.5604000000003,
+        "medianUndoMs": 1178.5781000000006,
+        "medianRedoMs": 1347.3670999999995,
+        "postGcTotals": [
+          12915337,
+          12930169,
+          13091233
+        ],
+        "postGcDeltas": [
+          2374864,
+          135448,
+          160384
+        ]
+      },
+      "identicalSharedStateAndDocuments": true,
+      "allEditorsAndSharedDocumentsReleased": true
+    },
+    "interpretation": "Fewer repeated reads, not a universal speedup. Timings vary and are not acceptance gates. History/wire growth remains; V2 is diagnostic only. GC observations include runtime warmup and diagnostic records, and do not certify bounded memory. No compaction, public adapter switch or acceptance-limit change."
+  },
+  "invariants": {
+    "publicRuntimeAndCssFilesByteIdentical": 171,
+    "apiSnapshotUnchanged": true,
+    "limitsUnchanged": true,
+    "defaultRequiredFailuresUnchanged": true,
+    "defaultAdapterUnchanged": true,
+    "ciWorkflowUnchanged": true
+  },
+  "open": [
+    "Six default-adapter retention failures",
+    "History/wire state grows through author undo/redo",
+    "Large-document initialization and full projection remain expensive",
+    "Compaction, migration and safe adoption remain open",
+    "Three existing size overruns",
+    "Fresh full source and complete CI required for release",
+    "Overall editor parity remains incomplete"
+  ],
+  "visualArtifacts": [
+    {
+      "path": "artifacts/retained-frame-visual-20261106/chromium-backward-selection.png",
+      "sha256": "2da45cff164c35ad91096c5ce0d4394f01221136f3d677f3e7cb3b6831c5490f"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/chromium-continued-filmstrip.png",
+      "sha256": "5f6ad09528d06a1b589e983314c36e5a8fbb2ad0e083e1e5039ed2f3b7ba686d"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/chromium-continued-typing.webm",
+      "sha256": "65275146288fc66dc7004f47c85a86f08a6201837f0a4e8e37030122660c9f26"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/chromium-multi-paragraph-converged.png",
+      "sha256": "9b9a8a9abc0ee0f4d57b3f4d1db87fef5667690d24ee85fc4a01f059efbfc8d1"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/chromium-observer-continued-typing.png",
+      "sha256": "7886fb48de27aac12d0a134a9f7d28b7ba2580e89f0bc8d2ed80a51d72a570b8"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/chromium-reopened.png",
+      "sha256": "eef5e175d2661c74400c8e1057c3497eb0282d042920fb75dd44926603d1c951"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/firefox-backward-selection.png",
+      "sha256": "4e5347534807d82349de2f439cc88a3330cd2080256c67b3b6e19b89663a99ba"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/firefox-continued-filmstrip.png",
+      "sha256": "41c054176fcbd6e53b10007a359d14066eb4083c3a1d867d49807340832dfcd0"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/firefox-continued-typing.webm",
+      "sha256": "83a22779c9a4b44f6d408b46dfe4bea16d3807396e01eb963fafeae8c35bcc2a"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/firefox-multi-paragraph-converged.png",
+      "sha256": "b3c116bfe7e462e04af6b852170070c92378ab2f06b9588e3dc7e0df001be64f"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/firefox-observer-continued-typing.png",
+      "sha256": "c2b03f3f56409fdc2546a0fa4954b3eb083781e79850b8f5458c3d5a7714ddaf"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/firefox-reopened.png",
+      "sha256": "cea4a8a24d886deb4629873e6bdb198eecc9761795e8f86bf14d9bde2a386c62"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/webkit-backward-selection.png",
+      "sha256": "7257d152eb4d7a8d996070216ff557d62816f4caec8516fe9993473096c23f40"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/webkit-continued-filmstrip.png",
+      "sha256": "81fc28fe697ee425d370f3dd203de4b6acb2ba8bb195cfc0037bba9c9f43245c"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/webkit-continued-typing.webm",
+      "sha256": "c5e504d06287a2e3dc183f8d7d94a82e5c8c7ff50b009e3d32cf36997b47ce9f"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/webkit-multi-paragraph-converged.png",
+      "sha256": "50981067d8a78308c05ace590b7fa3947bb7f78fba523ad926942c2adde7066a"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/webkit-observer-continued-typing.png",
+      "sha256": "673a30dbd8155a9f9f4cee595786dd244d58ebc1f42446d7b1d0bffd3fe5d979"
+    },
+    {
+      "path": "artifacts/retained-frame-visual-20261106/webkit-reopened.png",
+      "sha256": "c57b8bdcc8a0d656fd86a5aafcb0e03c8ed613c8a8cbc899dcb63e179eb5a42a"
+    }
+  ],
+  "baselineCompiledSourceProof": {
+    "commit": "29f8e6ea9574c9b04bf55503a3b3334b800c4616",
+    "verifiedGitBlobModules": 190,
+    "sourceSetMatchesCurrent": true
+  }
+}

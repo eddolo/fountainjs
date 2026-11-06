@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Text operation/session follow-up (2026-11-06, local): avoid repeated retained
+stream reads within insert/delete/format/join while keeping every separate call
+fresh. All 191 candidate tests, 36 compiled Node journeys and 93 recorded browser
+journeys pass; six required default-adapter failures remain. Three paired
+1,024-edit sessions per build preserve exact documents/shared bytes through
+offline edits, full author undo/redo and reopen, and release editor/document
+references after destruction. They also expose history growth from 60,805 to
+118,390 encoded V1 bytes after redo. Controlled timings are mixed across sizes;
+this is not a universal speedup or a bounded-memory certificate. Growth,
+compaction, scaling, migration, full CI and existing size overruns remain open.
+No public adapter switch, acceptance-limit increase or publication.
+[Audit and evidence](YJS_RETAINED_TEXT_SESSION_AUDIT.md).
+
 Projection reuse with observer checks (2026-11-06, local follow-up): reuse the
 final checked projection within a store apply only when no relevant follow-up
 Yjs transaction occurs; otherwise read again, including matching-origin observer

@@ -1,5 +1,9 @@
 # Retained document projection and observer writes
 
+The later [text-operation/session audit](YJS_RETAINED_TEXT_SESSION_AUDIT.md)
+adds repeated compiled long-session diagnostics and current browser proof.
+Numbers below belong to this earlier projection checkpoint.
+
 2026-11-06, local follow-up to `168707c6` and the
 [fresh-read audit](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md). The default adapter,
 wire format, migration policy and public package entries remain unchanged.
