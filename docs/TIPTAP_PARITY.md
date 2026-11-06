@@ -1,5 +1,21 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Current local status, 2026-11-06 (`33ae43bb`): feature breadth is substantial,
+but overall parity and production readiness remain incomplete. Deeper structural
+audits reopened COLLAB-01: the default adapter still fails six required offline
+typing versus wrapping/mark/split cases. The experimental retained adapter has
+182 passing focused cases, 32 compiled Node journeys and 87 recorded browser
+journeys, but performance at larger sizes, long-session growth, compaction,
+migration and safe adoption remain open. Its controlled 500-paragraph diagnostic
+improves from 1,370.19 to 42.84 ms median per edit with identical shared bytes;
+this is not a general performance or production-parity claim. Full source tests
+have 4,328 passes and those six failures. Three existing size overruns, fresh
+complete CI and the other partial capability/readiness rows remain open.
+The later repairs are local and unpublished. Historical checkpoint results and
+"Delivered" entries below describe bounded capabilities, not certification of
+every later combination or of the complete current stack.
+[Current audit](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md).
+
 Structural formatting follow-up (2026-11-05, unreleased): directed text/media
 ranges, whole-document selections and cell rectangles can convert text blocks
 without losing IDs, unchanged positions or concurrent Yjs text. Native toolbar
@@ -1426,7 +1442,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
-| COLLAB-01 | Concurrent conflict-free document editing | Delivered | The optional Yjs adapter provides character-level text merging, retained structural identity, independent node attributes, disconnected convergence, deterministic seed repair, schema-safe remote application, and local-origin history. It is covered by 244 behavioral tests, the complete 150-test Chromium/Firefox/WebKit/mobile [CI run for `f98a1b5`](https://github.com/eddolo/fountainjs/actions/runs/33891892320), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33891892227), and live deployed two-document convergence plus author-local undo. |
+| COLLAB-01 | Concurrent conflict-free document editing | Partial | Reopened by the November structural audit: six required default-adapter cases lose or misplace offline typing during quote/list wrapping, partial marks and paragraph splits. The private retained candidate passes the corresponding actual-adapter cases, author history and recorded browser journeys, but larger-scale performance, history/metadata growth, compaction, migration and safe adoption remain required. The earlier 244-case and [150-journey CI checkpoint](https://github.com/eddolo/fountainjs/actions/runs/33891892320) covered a narrower contract and does not supersede these counterexamples. See [current evidence and remaining work](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md). |
 | COLLAB-02 | Provider-independent synchronization | Delivered | Framework-neutral lifecycle/status/reconnect contracts keep WebSocket, WebRTC, managed, custom, and offline providers optional while authentication, authorization, persistence, and retention stay host-owned. Adapter teardown, failure containment, package boundaries, documentation, the complete [CI gate](https://github.com/eddolo/fountainjs/actions/runs/33891892320), and the deployed provider-boundary demo verify the contract. |
 | COLLAB-03 | Presence and remote selections | Delivered | Awareness-relative text selections, normalized immutable users, overlapping-safe accessible range/caret decorations, departure cleanup, and the two-editor demo are covered by unit and all-engine browser tests in the complete [CI run](https://github.com/eddolo/fountainjs/actions/runs/33891892320), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33891892227), and live deployed peer/caret verification. |
 | COLLAB-04 | Threaded inline and document comments | Delivered | Provider-neutral thread records and lifecycle; inline/cross-block, point, block, and document anchors; overlapping decorations; mapped movement, deterministic recovery/orphan reattachment; replies, rich bodies, editing, reactions, resolve/archive/delete; permission hooks; authoritative storage operations plus an in-memory reference; accessible React UI; isolated ESM/CommonJS/types entries; and production/security guidance are covered by 252 behavioral tests, the complete 153-test Chromium/Firefox/WebKit/mobile [CI run for `75ae25f`](https://github.com/eddolo/fountainjs/actions/runs/33895703954), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33895703856), and live deployed verification of shared annotations, reply, reaction, resolution, and document-thread creation. |
