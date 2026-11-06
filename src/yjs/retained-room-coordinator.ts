@@ -43,6 +43,19 @@ const validId = (value: unknown): value is string => typeof value === 'string' &
 const fail = (code: ConstructorParameters<typeof RetainedRoomError>[0], message: string): never => { throw new RetainedRoomError(code, message); };
 const view = (row: RetainedRoomRecord): CoordinatedRoomSnapshot => Object.freeze({ key: row.key, epoch: row.epoch, revision: row.revision, phase: row.phase, checkpoint: row.checkpoint });
 
+/** Private shared metadata check; checkpoint validation is a separate boundary. */
+export function validateRetainedRoomRecord(row: RetainedRoomRecord | undefined, key: string, schemaVersion: string): asserts row is RetainedRoomRecord {
+  if (!row) throw new Error('Coordinated room does not exist.');
+  if (row.key !== key || !validId(row.epoch) || !validId(row.generation) || !Number.isSafeInteger(row.revision) || row.revision < 0
+    || !['active', 'frozen'].includes(row.phase) || row.phase === 'active' && (row.freezeId !== null || row.preparationId !== null)
+    || row.phase === 'frozen' && (!validId(row.freezeId) || row.preparationId !== null && !validId(row.preparationId))
+    || row.checkpoint.manifest.schemaVersion !== schemaVersion) throw new Error('Invalid or incompatible coordinated room record.');
+  const receipt = row.lastResume;
+  if (receipt !== null && (!receipt || !validId(receipt.freezeId) || !validId(receipt.preparationId) || !validId(receipt.sourceEpoch) || !validId(receipt.targetEpoch)
+    || receipt.sourceEpoch === receipt.targetEpoch || receipt.targetEpoch !== row.epoch || !Number.isSafeInteger(receipt.sourceRevision) || receipt.sourceRevision < 0
+    || receipt.targetRevision !== receipt.sourceRevision + 1 || receipt.targetRevision > row.revision || !/^[a-f0-9]{64}$/.test(receipt.checkpointSha256))) throw new Error('Invalid coordinated resume receipt.');
+}
+
 /** Private provider reference. All instances coordinate through persistent CAS;
  * epochs are consistency versions, not credentials. Administrative methods need
  * host authorization. No new-room reseeding or offline-update disposal. */
@@ -60,15 +73,7 @@ export class CoordinatedRetainedRoom {
 
   private async current(): Promise<RetainedRoomRecord> {
     const row = await this.repository.read(this.key);
-    if (!row) throw new Error('Coordinated room does not exist.');
-    if (row.key !== this.key || !validId(row.epoch) || !validId(row.generation) || !Number.isSafeInteger(row.revision) || row.revision < 0
-      || !['active', 'frozen'].includes(row.phase) || row.phase === 'active' && (row.freezeId !== null || row.preparationId !== null)
-      || row.phase === 'frozen' && (!validId(row.freezeId) || row.preparationId !== null && !validId(row.preparationId))
-      || row.checkpoint.manifest.schemaVersion !== this.schemaVersion) throw new Error('Invalid or incompatible coordinated room record.');
-    const receipt = row.lastResume;
-    if (receipt !== null && (!receipt || !validId(receipt.freezeId) || !validId(receipt.preparationId) || !validId(receipt.sourceEpoch) || !validId(receipt.targetEpoch)
-      || receipt.sourceEpoch === receipt.targetEpoch || receipt.targetEpoch !== row.epoch || !Number.isSafeInteger(receipt.sourceRevision) || receipt.sourceRevision < 0
-      || receipt.targetRevision !== receipt.sourceRevision + 1 || receipt.targetRevision > row.revision || !/^[a-f0-9]{64}$/.test(receipt.checkpointSha256))) throw new Error('Invalid coordinated resume receipt.');
+    validateRetainedRoomRecord(row, this.key, this.schemaVersion);
     return row;
   }
   private writable(row: RetainedRoomRecord, epoch: string): void {

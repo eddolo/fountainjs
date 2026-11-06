@@ -74,15 +74,20 @@ function synchronous(value: unknown): void {
 
 /** Build and verify an isolated fresh-room candidate. No authoritative write,
  * provider handoff, offline-edit disposal or automatic history clearing. */
-export async function buildRetainedMigrationCandidate(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string, options: RetainedMigrationOptions): Promise<RetainedMigrationCandidate> {
+export function snapshotRetainedMigrationOptions(options: RetainedMigrationOptions): RetainedMigrationOptions {
   const history = options?.history, offline = options?.offline, externalState = options?.externalState;
   if (history !== 'reset-with-source-checkpoint' || offline !== 'reconcile-before-activation' || externalState !== 'host-coordinated'
     || !Array.isArray(options.migrators)) throw new Error('Migration needs explicit history, offline and external-state policies.');
   const migrators = options.migrators.map(migrator => {
     if (!migrator || typeof migrator.name !== 'string' || !migrator.name.trim() || migrator.name.length > 200
       || !Array.isArray(migrator.roots) || !migrator.roots.length || typeof migrator.migrate !== 'function' || typeof migrator.verify !== 'function') throw new Error('Invalid migration root owner.');
-    return { name: migrator.name, roots: [...migrator.roots], migrate: migrator.migrate.bind(migrator), verify: migrator.verify.bind(migrator) };
+    return Object.freeze({ name: migrator.name, roots: Object.freeze([...migrator.roots]), migrate: migrator.migrate.bind(migrator), verify: migrator.verify.bind(migrator) });
   });
+  return Object.freeze({ history, offline, externalState, migrators: Object.freeze(migrators) });
+}
+
+export async function buildRetainedMigrationCandidate(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string, options: RetainedMigrationOptions): Promise<RetainedMigrationCandidate> {
+  const { history, offline, externalState, migrators } = snapshotRetainedMigrationOptions(options);
   const source = await validateRetainedRoomCheckpoint(checkpoint, schema, schemaVersion), restored = await restoreRetainedCheckpoint(source, schema, schemaVersion);
   const from = restored.document, room = source.manifest.room, target = new Y.Doc({ gc: from.gc });
   let sourceStore: RetainedDocumentStore | undefined, targetStore: RetainedDocumentStore | undefined, active = true;

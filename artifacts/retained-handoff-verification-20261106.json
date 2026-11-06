@@ -1,0 +1,707 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "4262c6ba",
+  "goalComplete": false,
+  "publication": "Local private reference only; no default-adapter switch or publication.",
+  "source": [
+    {
+      "path": "src/yjs/retained-handoff.ts",
+      "bytes": 13822,
+      "sha256": "9bf24cab27dc1c07bb867feeabc50474b1802222ea03ac679f95757e731021db"
+    },
+    {
+      "path": "src/yjs/retained-migration.ts",
+      "bytes": 14170,
+      "sha256": "3e2ac8521983827ca4ac7086c1e1f88e6f5451e549d37843bc73937cd848e12a"
+    },
+    {
+      "path": "src/yjs/retained-room-coordinator.ts",
+      "bytes": 11184,
+      "sha256": "f0d5ae4794eb0b54f2aa7ca85b5e5762c44a25905779b299f94d1eaaf7ca4bba"
+    },
+    {
+      "path": "examples/backends/retained-sqlite.ts",
+      "bytes": 9507,
+      "sha256": "82924346f3841777bebcc31d4617e051a4b77324be9a4a4023f55729b3ef8d44"
+    },
+    {
+      "path": "tests/yjs-retained-handoff.test.ts",
+      "bytes": 22423,
+      "sha256": "1445853728884dcebbf0a9465d1fda464b574edaf5aa07a6f8ad71b0cdee63d1"
+    },
+    {
+      "path": "tests/manual/retained-handoff-real.spec.ts",
+      "bytes": 7695,
+      "sha256": "4afa689c446ac9d8736be7457b0ff240e3a467d8f9fb2eac0a395c47f88dda30"
+    },
+    {
+      "path": "artifacts/build-retained-handoff-20261106.mjs",
+      "bytes": 975,
+      "sha256": "75a07fe9504a1abaadf9e413c334fe653094696729c6fc355e9a40c7f7c1dfb4"
+    },
+    {
+      "path": "artifacts/retained-handoff-fixture-20261106.html",
+      "bytes": 9755,
+      "sha256": "8bbfae3e40e2f8b151c0f6b45ef4fe1e22e4f2d540791d3a69126b1387567cb2"
+    },
+    {
+      "path": "artifacts/retained-handoff-server-20261106.mjs",
+      "bytes": 4400,
+      "sha256": "d8cdd7328954c95296e13c87e9920444af4d7ce85be33245dab32b9b3607519f"
+    },
+    {
+      "path": "artifacts/retained-handoff-browser-20261106.config.ts",
+      "bytes": 700,
+      "sha256": "46ecafd09eaadcd5986663b0cc1dda1480a73c52e4a86d4ad8efb03ad382b890"
+    },
+    {
+      "path": "artifacts/retained-handoff-process-20261106.mjs",
+      "bytes": 11067,
+      "sha256": "0feee4e67a7022ea7b790f96a66a7fb3689249621eabe535be04b153c41bdc07"
+    },
+    {
+      "path": "artifacts/curate-retained-handoff-20261106.mjs",
+      "bytes": 1985,
+      "sha256": "267b49e22220f4c7f9a83f5f38de33437ee691af2f2afcf2b49d1e94fe2da84a"
+    },
+    {
+      "path": "artifacts/run-retained-handoff-checks-20261106.ps1",
+      "bytes": 1737,
+      "sha256": "e5647295500aa4277d37b74130f1955c7646149a766f925bb39e8d6eb59f1dfe"
+    },
+    {
+      "path": "artifacts/verify-retained-handoff-20261106.mjs",
+      "bytes": 9009,
+      "sha256": "7e2da9469a14701dc568a1aa6eab14a5e1328e8faa7ac85b5b1635a518a814a7"
+    }
+  ],
+  "fullSource": {
+    "path": "artifacts/retained-handoff-full-source-20261106.json",
+    "bytes": 1768979,
+    "sha256": "4fd02c350d7166f87190266c7b9770686538f791aa090ac85534ad6bd2af57fe",
+    "total": 4606,
+    "passed": 4600,
+    "failed": 6,
+    "skipped": 0,
+    "files": 294,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "passed": 148,
+    "newHandoffCases": [
+      "atomically installs an exact fresh-room document with immutable original and destination archives",
+      "refuses active migration without archiving or replacing the source",
+      "refuses prepared migration without archiving or replacing the source",
+      "refuses stale-ticket migration without archiving or replacing the source",
+      "refuses foreign-ticket migration without archiving or replacing the source",
+      "requires an explicit history handoff policy",
+      "requires an explicit offline handoff policy",
+      "requires an explicit externalReceipt handoff policy",
+      "refuses unclaimed source state and invalid operation identities without touching the frozen source",
+      "rolls back the live-row update when archive insertion fails inside the same SQLite transaction",
+      "does not install a validated candidate after a competing administrator aborts and refreezes",
+      "allows only one competing fresh-room installation and retains the losing operation for explicit retry",
+      "fences the old writer before reading bytes, retaining its edits only in the retired branch",
+      "does not read late update bytes for a different retired room",
+      "does not change either room or archive after a late invalid-wire update",
+      "does not change either room or archive after a late different-room update",
+      "does not change either room or archive after a late missing-dependency update",
+      "rejects a racing branch replacement and preserves both authors after explicit retry",
+      "rolls back to frozen-source while archiving every accepted new-room edit",
+      "rolls back to retained-branch while archiving every accepted new-room edit",
+      "refuses rollback when a late branch changes after its validation but before installation",
+      "replays a committed migration after connection restart without replacing later accepted edits",
+      "reports a historical replay as superseded rather than reinstalling an old destination",
+      "refuses reuse of an operation UUID for a different ticket",
+      "refuses reuse of an operation UUID for a different policy",
+      "refuses reuse of an operation UUID for a different kind",
+      "snapshots ticket, migration options and host policy before the first storage await",
+      "rejects corrupt archived source_wire before retaining updates or replacing the live room",
+      "rejects corrupt archived destination_wire before retaining updates or replacing the live room",
+      "rejects corrupt archived branch_wire before retaining updates or replacing the live room",
+      "finds the latest retired incarnation after rollback and a second migration of the same room identity"
+    ]
+  },
+  "checks": [
+    {
+      "log": "artifacts/retained-handoff-types-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.2132436,
+      "check": "types"
+    },
+    {
+      "log": "artifacts/retained-handoff-focused-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 14.5517103,
+      "check": "focused"
+    },
+    {
+      "log": "artifacts/retained-handoff-full-source-20261106.log",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "seconds": 308.2114128,
+      "check": "full-source"
+    },
+    {
+      "log": "artifacts/retained-handoff-build-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 15.7482748,
+      "check": "build"
+    },
+    {
+      "log": "artifacts/retained-handoff-api-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.0708795,
+      "check": "api"
+    },
+    {
+      "log": "artifacts/retained-handoff-headless-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.5021548,
+      "check": "headless"
+    },
+    {
+      "log": "artifacts/retained-handoff-budget-20261106.log",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "seconds": 0.8135965,
+      "check": "budget"
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/retained-handoff-types-20261106.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/retained-handoff-focused-20261106.log",
+      "bytes": 129,
+      "sha256": "229bb52c2878dda1e84c0ae8b5264f50558dc44eafb50db78391504d9a23173a"
+    },
+    {
+      "path": "artifacts/retained-handoff-full-source-20261106.log",
+      "bytes": 133,
+      "sha256": "d9fe796f0843ddee07d873ac83e105eaa075abfc57bda6e14c938b48df570151"
+    },
+    {
+      "path": "artifacts/retained-handoff-build-20261106.log",
+      "bytes": 15898,
+      "sha256": "0364e9caa4299484a2bc303125de3e90410762da356facf2f108675caeade353"
+    },
+    {
+      "path": "artifacts/retained-handoff-api-20261106.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-handoff-headless-20261106.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/retained-handoff-budget-20261106.log",
+      "bytes": 3896,
+      "sha256": "be518a88e3b034933718340d61c20f2ce596eb03945b941bccc1705249c2ad42"
+    }
+  ],
+  "compiled": {
+    "sourceModules": 198,
+    "processCases": 16,
+    "processes": [
+      {
+        "mode": "es",
+        "passed": 8,
+        "cases": [
+          "kill between live-row write and archive insertion rolls back the SQLite transaction (storage oracle)",
+          "kill after migration commit leaves the fresh room and complete original archive durable",
+          "writer validated in another process before freeze cannot overwrite the migrated room",
+          "reopen and retry a lost migration acknowledgement does not install or rotate twice",
+          "old writer is fenced before byte access and its batch is retained only in a retired branch",
+          "kill after rollback commit preserves the old pending branch and archives all accepted fresh-room edits",
+          "rollback acknowledgement retry is idempotent and both prior writer epochs stay fenced",
+          "superseded migration receipt cannot reinstall its destination or rewrite the immutable original"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "workers": 4,
+        "finalRevision": 3,
+        "checkpointSha256": "8d22e892261099d36922295942a83c06ae753074f7d1348dc9f82cd760e7d9f3"
+      },
+      {
+        "mode": "cjs",
+        "passed": 8,
+        "cases": [
+          "kill between live-row write and archive insertion rolls back the SQLite transaction (storage oracle)",
+          "kill after migration commit leaves the fresh room and complete original archive durable",
+          "writer validated in another process before freeze cannot overwrite the migrated room",
+          "reopen and retry a lost migration acknowledgement does not install or rotate twice",
+          "old writer is fenced before byte access and its batch is retained only in a retired branch",
+          "kill after rollback commit preserves the old pending branch and archives all accepted fresh-room edits",
+          "rollback acknowledgement retry is idempotent and both prior writer epochs stay fenced",
+          "superseded migration receipt cannot reinstall its destination or rewrite the immutable original"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "workers": 4,
+        "finalRevision": 3,
+        "checkpointSha256": "13cb0cd3394d18175ae6bf2174b6a577a3b46b17f47d3feff22bde8b4392e407"
+      }
+    ]
+  },
+  "browser": {
+    "passed": 9,
+    "scope": "Actual compiled Node/SQLite authority through test-only loopback HTTP; offline branch retention and rollback, not automatic cross-room reconciliation.",
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-chromium\\video.webm",
+        "bytes": 222494,
+        "sha256": "b0804398ab888c2355a6fbd38347915b52ae759c194d8b21fa9488430ee09142",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-chromium\\trace.zip",
+          "bytes": 2421764,
+          "sha256": "002d5bf9ffc7f1081488a6386950c64a8a5f097e77914e73d2bc986665fa9428"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-chromium\\video.webm",
+        "bytes": 103271,
+        "sha256": "c12bd5aa81501723fd04d5757de17fe581df27457ed0ab12fcfc8c3fb2034be1",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-chromium\\trace.zip",
+          "bytes": 1659637,
+          "sha256": "06b61336938dbbd1d521f0d5e4a21e6e2d4de3d5480596b52fb7503ed89b5235"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-chromium\\video.webm",
+        "bytes": 98139,
+        "sha256": "1706c8be2115d73625dafa6e5f3fab4ba3b3f46ff331563098576dca1c2e377f",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-chromium\\trace.zip",
+          "bytes": 1460568,
+          "sha256": "ee4378377cb9f5f0b31c4a72d4d9a137cbf57cf9b1be5401f5c2c2ca0f6a4586"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-firefox\\video.webm",
+        "bytes": 284544,
+        "sha256": "40557067ab963a31430c7e31ff2bc3b67d6dbcc4f5bf35c47d6385ba3dd42407",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-firefox\\trace.zip",
+          "bytes": 3960400,
+          "sha256": "08d045f7bb32f89c4486d7de8ad698bf7ba4966cf03a0a31c910f2c85e5b5629"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-firefox\\video.webm",
+        "bytes": 205098,
+        "sha256": "5e18203015d438ef78647eed0850bd5dc2fff08db4fd17821983a8aaaf670c87",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-firefox\\trace.zip",
+          "bytes": 2565148,
+          "sha256": "56bc19bb9e6ef9014890e98b5139b833bdab7486f9acc20368500fc80c3e7fc2"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-firefox\\video.webm",
+        "bytes": 167010,
+        "sha256": "8c28c72491ecc865e7de0dbab0bc141cdf6c7fb1934cbb6f3b7dfffef9143260",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-firefox\\trace.zip",
+          "bytes": 2032382,
+          "sha256": "1d93d9d0294f8963a51ff35bd3ab6e565afc411fd64d0af065a5f8da13d65f4c"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-webkit\\video.webm",
+        "bytes": 410174,
+        "sha256": "41d48c760359dc7a6e0d117ccc73147ec7edaf35c668d8f00b5c12ce26d712ee",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-webkit\\trace.zip",
+          "bytes": 2368562,
+          "sha256": "26fbf208d0061f9044a3b1909e7c8f5fa281ce37028661ee07902a0a8ad49724"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-webkit\\video.webm",
+        "bytes": 292795,
+        "sha256": "318e58052f627760f72bf125d01b2d2dcdb0efb8af302faabb99216bd9b4f114",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-webkit\\trace.zip",
+          "bytes": 1623473,
+          "sha256": "2875673b4e15736639e3d714c2208b97ee13290b29bdd61716502d97fa2076d0"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-webkit\\video.webm",
+        "bytes": 267124,
+        "sha256": "774986c24cda2577ac51962af34cb0fe8e072ba986bafdcd65890edebf7e6f76",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-webkit\\trace.zip",
+          "bytes": 1048588,
+          "sha256": "9ce74fc2f4cbe48b8076f5d99f045c5c7111080690da5c319b71288bceec43bf"
+        }
+      }
+    ],
+    "layouts": [
+      {
+        "project": "chromium",
+        "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+        "frames": 159,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+        "frames": 102,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+        "frames": 85,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+        "frames": 210,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+        "frames": 124,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+        "frames": 95,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+        "frames": 250,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+        "frames": 158,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+        "frames": 134,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      }
+    ]
+  },
+  "visualReview": {
+    "method": "Selected stage screenshots and sampled filmstrips, not full playback or physical-device certification.",
+    "artifacts": [
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-branch-branches.png",
+        "bytes": 71608,
+        "sha256": "8725dfc0ee9066e68236fdc1a82e32d93413c1c05fd2cdcaafcb346cc3eab8ed"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-branch-filmstrip.png",
+        "bytes": 293992,
+        "sha256": "a940ab2ed59bb058dfcd433a5798df592beac8518329d432936adede41b1fea0"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-branch-final.png",
+        "bytes": 72874,
+        "sha256": "73a90247afe773a1223f3864bf2abe6de0ad80d4c6a744f05358cb25d7d20c73"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-branch-rollback.png",
+        "bytes": 72714,
+        "sha256": "5919071e0c860b7aabec06a1deb391fc5df1d9ac01ef1f7526d0a5c9c50caff9"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-branch.webm",
+        "bytes": 222494,
+        "sha256": "b0804398ab888c2355a6fbd38347915b52ae759c194d8b21fa9488430ee09142"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-lost-ack-filmstrip.png",
+        "bytes": 287238,
+        "sha256": "3150da3cefcfaea0cc3d291e35cc7d0697237543d41137002c933edb72b1cab8"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-lost-ack-final.png",
+        "bytes": 71160,
+        "sha256": "7666699caca0192225c3daecf304331f4118758b7ff16fc8bf52877e7ff6f964"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-lost-ack-lost-ack.png",
+        "bytes": 65690,
+        "sha256": "2376b66019cd1817090a9a28616f508061f4e961c6c722a477829e7b6fdc8d3d"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-lost-ack.webm",
+        "bytes": 98139,
+        "sha256": "1706c8be2115d73625dafa6e5f3fab4ba3b3f46ff331563098576dca1c2e377f"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-original-filmstrip.png",
+        "bytes": 274572,
+        "sha256": "961c1001e420e0780a152986fdf828ebe187fe12d688ef4fcdb23bae8197ff77"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-original-final.png",
+        "bytes": 72646,
+        "sha256": "22c8d3858ffe4fca99eb387afda3fd4b961b8d5867389c19f472047c7f48c634"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/chromium-original.webm",
+        "bytes": 103271,
+        "sha256": "c12bd5aa81501723fd04d5757de17fe581df27457ed0ab12fcfc8c3fb2034be1"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-branch-branches.png",
+        "bytes": 79376,
+        "sha256": "d7352abe478827a7cbaf827c2d402e9d2837d11006c63ebe04c477974344c6ec"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-branch-filmstrip.png",
+        "bytes": 280709,
+        "sha256": "ccef4c7ab82f40d6c53802693047d40d7581dbc91b9adeba4e73b961b3dc614f"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-branch-final.png",
+        "bytes": 83502,
+        "sha256": "8e57e28f6055d1183939539eca767c9bcb48b40bd92829631e6c9717f7b344b0"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-branch-rollback.png",
+        "bytes": 79798,
+        "sha256": "2ea482f9decf4c637e7e64861a068aa290c46be69a2b7eb848b6eaad50b60bcb"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-branch.webm",
+        "bytes": 284544,
+        "sha256": "40557067ab963a31430c7e31ff2bc3b67d6dbcc4f5bf35c47d6385ba3dd42407"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-lost-ack-filmstrip.png",
+        "bytes": 297123,
+        "sha256": "cc9ab982c4ee29dba6db4d17a666f2351eaecce6ee79c8065f6a444955c5fc9a"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-lost-ack-final.png",
+        "bytes": 78678,
+        "sha256": "049fc9c807e79af1caf74c4f6956283620d87e711b5e422b93dfa3cbe3fb362f"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-lost-ack-lost-ack.png",
+        "bytes": 73794,
+        "sha256": "c4b33a5d988cc820d57a5480127d1c2bd01442efb44777b32ecd2764ebcad3e2"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-lost-ack.webm",
+        "bytes": 167010,
+        "sha256": "8c28c72491ecc865e7de0dbab0bc141cdf6c7fb1934cbb6f3b7dfffef9143260"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-original-filmstrip.png",
+        "bytes": 288258,
+        "sha256": "a685881418aca514fab5f4649ef983e26b32a16db46adea04ca7d4589501c9a9"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-original-final.png",
+        "bytes": 78941,
+        "sha256": "f7d06b3a91e4eb647cf4b68a6ec33ad0c6606b371ba9a6cd894d67a297efb336"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/firefox-original.webm",
+        "bytes": 205098,
+        "sha256": "5e18203015d438ef78647eed0850bd5dc2fff08db4fd17821983a8aaaf670c87"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-branch-branches.png",
+        "bytes": 73613,
+        "sha256": "b58d5a658c951085cbf6413201813a9fe1078437f9d639b466efd03339441286"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-branch-filmstrip.png",
+        "bytes": 313293,
+        "sha256": "4be567fa82c2287286a75ecfcf9c04b1d45b8bde40ad215a4c42e22d3a1ae490"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-branch-final.png",
+        "bytes": 74552,
+        "sha256": "05c2cd62d1db448982c8e326d6018fb889f1e7776581e137e1943d0684544f37"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-branch-rollback.png",
+        "bytes": 74394,
+        "sha256": "823a7edb846cebe9816055f6024c533ad26845cd636914d7b52446ff41ed9699"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-branch.webm",
+        "bytes": 410174,
+        "sha256": "41d48c760359dc7a6e0d117ccc73147ec7edaf35c668d8f00b5c12ce26d712ee"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-lost-ack-filmstrip.png",
+        "bytes": 324133,
+        "sha256": "8f00ad915f18c5907cc20b3d28279bb44cb92f8d3901472d2d87bf3daba8a7ea"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-lost-ack-final.png",
+        "bytes": 72951,
+        "sha256": "08cf6426be7d048658a2b8091fa3da094d8fbd9f9051ae933a98864dfc582ec1"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-lost-ack-lost-ack.png",
+        "bytes": 63987,
+        "sha256": "aa8536fea0e0fbf9126194a1801178a42473c2285248590951bc53c5d3a23fd7"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-lost-ack.webm",
+        "bytes": 267124,
+        "sha256": "774986c24cda2577ac51962af34cb0fe8e072ba986bafdcd65890edebf7e6f76"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-original-filmstrip.png",
+        "bytes": 355035,
+        "sha256": "d9f5d9922099f0c9b918d882118f3b5d71ba9c5385b88571393d008a84d11c2f"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-original-final.png",
+        "bytes": 73643,
+        "sha256": "2c7129a0ae39f17209af65e4ef2db2e91f93723f9f0af7ca94fda3c9b49e944b"
+      },
+      {
+        "path": "artifacts/retained-handoff-visual-20261106/webkit-original.webm",
+        "bytes": 292795,
+        "sha256": "318e58052f627760f72bf125d01b2d2dcdb0efb8af302faabb99216bd9b4f114"
+      }
+    ]
+  },
+  "invariants": {
+    "publicRuntimeAndCssByteIdentical": 171,
+    "unchanged": [
+      "src/yjs/index.ts",
+      "package.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_RETAINED_HANDOFF_AUDIT.md",
+      "bytes": 8625,
+      "sha256": "964db3e7129c6ef1586942f0eab83758068083a08a2a87ab9faa09d12148c1c2"
+    },
+    {
+      "path": "docs/YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md",
+      "bytes": 11972,
+      "sha256": "e790698826c7296b79914f22c5261fa68f52558e153ee5e596e52ce86f05d6e7"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 300720,
+      "sha256": "0db8a7274355fa8780e3e561d889ba44e0faf76abea95de3dc1f046ffe671fa5"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 165914,
+      "sha256": "0ba6318940ebe5fa42475378ebf4e821c414f6adc06ca6078a53dcb3d9e1b065"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 189106,
+      "sha256": "3e487131b332a18a8de07902fbbb3b0fd3e8accea0554fee88eb728098c9b2ea"
+    }
+  ],
+  "open": [
+    "Six default-adapter failures and safe adoption",
+    "Cross-room semantic offline reconciliation and actual external/provider coordination",
+    "Legacy conversion and host history approval",
+    "Production compaction, archive retention and large-room costs",
+    "Three size overruns and fresh complete release CI",
+    "Overall parity"
+  ]
+}

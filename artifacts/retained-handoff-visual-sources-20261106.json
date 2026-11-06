@@ -1,0 +1,74 @@
+[
+  {
+    "engine": "chromium",
+    "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+    "kind": "branch",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-chromium\\video.webm",
+    "durationSeconds": 4.4,
+    "target": "artifacts\\retained-handoff-visual-20261106\\chromium-branch"
+  },
+  {
+    "engine": "chromium",
+    "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-chromium\\video.webm",
+    "durationSeconds": 3.24,
+    "target": "artifacts\\retained-handoff-visual-20261106\\chromium-original"
+  },
+  {
+    "engine": "chromium",
+    "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-chromium\\video.webm",
+    "durationSeconds": 2.96,
+    "target": "artifacts\\retained-handoff-visual-20261106\\chromium-lost-ack"
+  },
+  {
+    "engine": "firefox",
+    "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+    "kind": "branch",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-firefox\\video.webm",
+    "durationSeconds": 6.72,
+    "target": "artifacts\\retained-handoff-visual-20261106\\firefox-branch"
+  },
+  {
+    "engine": "firefox",
+    "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-firefox\\video.webm",
+    "durationSeconds": 4.32,
+    "target": "artifacts\\retained-handoff-visual-20261106\\firefox-original"
+  },
+  {
+    "engine": "firefox",
+    "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-firefox\\video.webm",
+    "durationSeconds": 3.68,
+    "target": "artifacts\\retained-handoff-visual-20261106\\firefox-lost-ack"
+  },
+  {
+    "engine": "webkit",
+    "name": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+    "kind": "branch",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reta-dfe6b-h-while-archiving-new-edits-webkit\\video.webm",
+    "durationSeconds": 12.56,
+    "target": "artifacts\\retained-handoff-visual-20261106\\webkit-branch"
+  },
+  {
+    "engine": "webkit",
+    "name": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-rest-9c596-ing-the-replaced-fresh-room-webkit\\video.webm",
+    "durationSeconds": 8.28,
+    "target": "artifacts\\retained-handoff-visual-20261106\\webkit-original"
+  },
+  {
+    "engine": "webkit",
+    "name": "recovers a lost switch acknowledgement by replaying the durable receipt",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-handoff-browser-20261106\\retained-handoff-real-reco-739f8-playing-the-durable-receipt-webkit\\video.webm",
+    "durationSeconds": 6.92,
+    "target": "artifacts\\retained-handoff-visual-20261106\\webkit-lost-ack"
+  }
+]

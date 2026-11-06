@@ -6,6 +6,10 @@ an existing retained checkpoint. It is the next step after
 compaction command, authoritative destination install or default-adapter switch.
 COLLAB-01 stays Partial. The six default-adapter counterexamples remain open.
 
+The subsequent [persistent handoff audit](YJS_RETAINED_HANDOFF_AUDIT.md) adds
+atomic installation, late-branch retention and rollback to the backend reference.
+This candidate-only audit remains evidence for the earlier isolated scope.
+
 ## Code and ownership
 
 `src/yjs/retained-migration.ts` imports Yjs, the schema `Node`/`Schema` types,

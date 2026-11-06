@@ -20,13 +20,28 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,569 passes and six failures, with no skips. Three
+The current source suite has 4,600 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest migration-candidate audit](YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md).
+[latest persistent-handoff audit](YJS_RETAINED_HANDOFF_AUDIT.md).
+
+Atomic retained-room handoff (2026-11-06, local): install a verified fresh room
+and archive the frozen source in one SQLite transaction. Retain late old-room
+updates in a separately validated branch; rollback archives accepted new-room
+edits before restoring the selected original/branch. Durable operation replay
+survives lost acknowledgements and cannot reinstall superseded destinations.
+All 31 new cases / 148 focused cases, 16 compiled ESM/CommonJS process checks and
+nine recorded Chromium/Firefox/WebKit HTTP/editor journeys pass. Complete source
+has 4,600 passes and the same six default failures across 294 files, with no skips.
+All 171 public runtime/CSS files remain byte-identical. This is an internal local
+backend reference, not automatic cross-room reconciliation, production
+compaction or default-adapter adoption. History reset/external coordination remain
+host responsibilities. Three size overruns and fresh complete release CI remain
+open. COLLAB-01 stays Partial; no publication.
+[Audit](YJS_RETAINED_HANDOFF_AUDIT.md).
 
 Fresh retained-room candidates (2026-11-06, local): preserve the complete source
 checkpoint and exact current document/application IDs while reseeding internal

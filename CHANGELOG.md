@@ -7,6 +7,16 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add private atomic fresh-room installation and durable recovery archives to
+  the retained Node/SQLite reference. Retain late old-room edits in a separate
+  validated branch; rollback archives accepted replacement-room edits before
+  restoring the selected original/branch. Guard competing writes and rollback
+  races; replay durable operation receipts after lost acknowledgements without
+  reinstalling superseded rooms. Test actual process termination and recorded
+  three-engine HTTP/editor journeys. Cross-room semantic reconciliation,
+  production deployment and default-adapter adoption remain open. See
+  [the handoff audit](docs/YJS_RETAINED_HANDOFF_AUDIT.md).
+
 - Add private fresh retained-room candidate construction with explicit history,
   offline and external-state policies, full source recovery, declared auxiliary
   root ownership, relative-anchor/selection/node-ID translation and structured
