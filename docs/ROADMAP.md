@@ -20,13 +20,29 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,452 passes and six failures, with no skips. Three
+The current source suite has 4,487 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest binding audit](YJS_RETAINED_NORMALIZE_PATHS_AUDIT.md).
+[latest checkpoint audit](YJS_RETAINED_CHECKPOINT_AUDIT.md).
+
+Internal retained recovery checkpoints (2026-11-06, local): preserve full Yjs
+wire state, empty/shared roots, GUID and original room/CRDT identity with explicit
+schema version and update/model/manifest SHA-256 checks. Capture refuses source
+changes and active transactions; restore is isolated and owns input bytes.
+A fidelity probe exposed UTF-8 replacement of unpaired UTF-16. New wire/document
+preflight rejects unrepresentable text before writes or capture, preserves
+escaped metadata and standard relative-position IDs, and does no cleanup.
+All 35 checkpoint / 341 retained-candidate cases pass; full source has 4,487
+passes and six unchanged default failures across 290 files without skips.
+The refreshed 108 recorded browser and 16 compiled Node checks pass. Public
+runtime/CSS bytes and API stay unchanged. Local history, awareness, external
+providers/assets and a self-contained file format are outside this checkpoint.
+Migration epochs, writer fencing, compaction, legacy adoption, three size overruns
+and fresh release CI remain open; no default switch or publication.
+[Audit](YJS_RETAINED_CHECKPOINT_AUDIT.md).
 
 Single-pass retained projection bindings (2026-11-06, local): build numeric
 identity/text/partition paths in one traversal, retain frozen text coordinates,

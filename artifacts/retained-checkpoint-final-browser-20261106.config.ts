@@ -1,0 +1,3 @@
+import {defineConfig} from '@playwright/test';
+import base from './cursor-navigation-browser-20261106.config';
+export default defineConfig({...base,testMatch:['**/cursor-native-reference.spec.ts','**/retained-adapter-real.spec.ts','**/retained-checkpoint-real.spec.ts'],outputDir:'./retained-checkpoint-final-browser-20261106',reporter:[['list'],['json',{outputFile:'retained-checkpoint-final-browser-20261106.json'}]],webServer:{...base.webServer,command:'node artifacts/build-cursor-overlay-canary-20261106.mjs && node artifacts/build-retained-checkpoint-20261106.mjs && pnpm exec vite --config artifacts/retained-adapter-vite-20261106.config.ts'}});

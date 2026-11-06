@@ -1,0 +1,24 @@
+{
+  "runtime": "v24.22.1",
+  "rows": [
+    {
+      "name": "unpaired-high",
+      "source": "a\ud800b",
+      "restored": "a�b",
+      "equal": false
+    },
+    {
+      "name": "unpaired-low",
+      "source": "a\udc00b",
+      "restored": "a�b",
+      "equal": false
+    },
+    {
+      "name": "valid-pair",
+      "source": "a😀b",
+      "restored": "a😀b",
+      "equal": true
+    }
+  ],
+  "scope": "Underlying Yjs wire behavior; current Fountain guards reject the unrepresentable inputs."
+}

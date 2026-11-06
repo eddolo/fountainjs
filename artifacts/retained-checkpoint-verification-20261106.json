@@ -1,0 +1,1521 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "93f05fb0662cdd350471549d929a3d093fbff238",
+  "goalComplete": false,
+  "publication": "Local only; no GitHub/npm/site update.",
+  "defaultAdapterSwitched": false,
+  "source": [
+    {
+      "path": "src/yjs/retained-checkpoint.ts",
+      "sha256": "d00466c6eee50cf673ecd58f21ad89f6a47fbdc7395c1b32e907a73bc16ccb77"
+    },
+    {
+      "path": "src/yjs/retained-wire.ts",
+      "sha256": "c5bdfefff56dafb41c2658650d86063c87af7337d7de1b0759e32a30ad0cd8a4"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "8706d447cbbf47ee497a2a0973ddb64aec783f37a861def9b0ed9398a58ee7da"
+    },
+    {
+      "path": "tests/yjs-retained-checkpoint.test.ts",
+      "sha256": "afdfcde6e6fe4ab39a647c543f89d72214bc29c22953d376e2be8e0d936dd5d0"
+    },
+    {
+      "path": "tests/manual/retained-checkpoint-real.spec.ts",
+      "sha256": "86e20efa2a872e5685479107c988a9b4b620fa57882675f874224a2f0a0d4b54"
+    },
+    {
+      "path": "artifacts/build-retained-checkpoint-20261106.mjs",
+      "sha256": "7c017d400e56674acd4fc2b3104e3b053aa0786a24910e0ac784df4ec3b32db3"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-fixture-20261106.html",
+      "sha256": "570a4a3de5b50893709f254ae7722c0515315ac603c9eed8683c9e5360c31382"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-node-20261106.mjs",
+      "sha256": "78dd2da46780b9035aa08513eccc0b0589cff72053a5af897e1ff98fdd26cd3e"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-large-20261106.mjs",
+      "sha256": "ce433804832624ee0696a2503874162d97ea7ed2acbc16dde640fa0b394a73ac"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-release-20261106.mjs",
+      "sha256": "24c3e631825a2b1155fe4d85b7732e73130f9ba96a61d3187f9fee64fdf407d0"
+    },
+    {
+      "path": "artifacts/run-retained-checkpoint-probes-20261106.ps1",
+      "sha256": "98e563a91c6bf4dca945ddaed834f546c7ff76f8554eea760c638b6ab83e7336"
+    },
+    {
+      "path": "artifacts/reproduce-yjs-utf16-loss-20261106.mjs",
+      "sha256": "65c3e5ac869782ad2d52bd9dbebe93b06f927a594ba46ebbb2cc56f20688a427"
+    },
+    {
+      "path": "artifacts/curate-retained-checkpoint-20261106.mjs",
+      "sha256": "a911ebb10d6036a9ab3930a97713e3a300adedc7d35eb8390bf38976e2f6e125"
+    },
+    {
+      "path": "artifacts/verify-retained-checkpoint-20261106.mjs",
+      "sha256": "565be7c0f2dcc8e6629e422f99b4daa6b90bc3ca7cf0ab1166a118fdef0bf10a"
+    },
+    {
+      "path": "artifacts/run-retained-checkpoint-final-checks-20261106.ps1",
+      "sha256": "b97d815c5284085070a401bb6d57e2e025257383c040d102cb4c7439a0055559"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-browser-20261106.config.ts",
+      "sha256": "01188c35961918bdf6b1e433f9c79d919da364765ae858cc5fca78f3ba96fd6e"
+    },
+    {
+      "path": "artifacts/build-cursor-overlay-canary-20261106.mjs",
+      "sha256": "558719e99f881a9319c62ced4f94042e0f5c2b9358970c5a77d7aedd85244b9f"
+    },
+    {
+      "path": "artifacts/cursor-navigation-browser-20261106.config.ts",
+      "sha256": "3be3404d4d3f638b10d46bb527126c33fa141416dfbd2ff2dcf8e7dfd477f872"
+    }
+  ],
+  "fullSource": {
+    "path": "artifacts/retained-checkpoint-final-full-source-20261106.json",
+    "sha256": "8ca13da053a6ca7ba0b3555b32a03e0d1ec1bf248cc3cf04f921aeded4032eb6",
+    "total": 4493,
+    "passed": 4487,
+    "failed": 6,
+    "skipped": 0,
+    "files": 290,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "path": "artifacts/retained-checkpoint-final-focused-20261106.json",
+    "sha256": "aaa53deb42f208ff48b7fe77b6178cfc596b00ef015bf774c3b78c7d2af2c646",
+    "total": 363,
+    "passed": 357,
+    "failed": 6,
+    "candidatePassed": 341,
+    "checkpointPassed": 35
+  },
+  "checks": [
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-typecheck-20261106.log",
+      "check": "typecheck",
+      "seconds": 20.369401
+    },
+    {
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "log": "artifacts/retained-checkpoint-final-focused-20261106.log",
+      "check": "focused",
+      "seconds": 10.8347015
+    },
+    {
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "log": "artifacts/retained-checkpoint-final-full-source-20261106.log",
+      "check": "full-source",
+      "seconds": 276.6813916
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-build-20261106.log",
+      "check": "build",
+      "seconds": 13.4407395
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-test-api-20261106.log",
+      "check": "test:api",
+      "seconds": 0.9497836
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-test-headless-20261106.log",
+      "check": "test:headless",
+      "seconds": 1.1696533
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-test-package-20261106.log",
+      "check": "test:package",
+      "seconds": 5.1719044
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-test-server-runtimes-20261106.log",
+      "check": "test:server-runtimes",
+      "seconds": 3.7326866
+    },
+    {
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "log": "artifacts/retained-checkpoint-final-test-budget-20261106.log",
+      "check": "test:budget",
+      "seconds": 0.6450064
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-test-performance-20261106.log",
+      "check": "test:performance",
+      "seconds": 17.7153124
+    },
+    {
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-checkpoint-final-browser-20261106.log",
+      "check": "browser",
+      "seconds": 285.502827
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/retained-checkpoint-final-typecheck-20261106.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-focused-20261106.log",
+      "sha256": "4fbba2c56c90948e66a9339273128bdade07c9a36478d7857f9de7bd2b2d4cb7"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-full-source-20261106.log",
+      "sha256": "55f7629e05b36551cfa3c8b19b2bed6aefe7e8886849ec2c80982d44cf59ddad"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-build-20261106.log",
+      "sha256": "64b86fa77232a3466d7b0401a8eee291221a5edcae5c36c49a8d9665486d656e"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-test-api-20261106.log",
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-test-headless-20261106.log",
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-test-package-20261106.log",
+      "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-test-server-runtimes-20261106.log",
+      "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-test-budget-20261106.log",
+      "sha256": "be518a88e3b034933718340d61c20f2ce596eb03945b941bccc1705249c2ad42"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-test-performance-20261106.log",
+      "sha256": "ff2e87f15344cfa66b3fb5056e3450341a4f7155ae88924338cd785874facb51"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-final-browser-20261106.log",
+      "sha256": "cceed785c938b8713f5fbb04f7112d36bfddb3df101ae9eeeefc340df9957cbe"
+    }
+  ],
+  "browser": {
+    "path": "artifacts/retained-checkpoint-final-browser-20261106.json",
+    "sha256": "43312c52d5589e614a9447084b52f5e77461748033b625297295e3d8faf00418",
+    "passed": 108,
+    "checkpointCases": 9,
+    "otherAdapterAndNavigationCases": 99,
+    "skipped": 0,
+    "retries": 0,
+    "workers": 1,
+    "projects": {
+      "chromium": 36,
+      "firefox": 36,
+      "webkit": 36
+    },
+    "compiledRuntimeVerified": true,
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: english",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium\\video.webm",
+        "bytes": 52928,
+        "sha256": "799387a82a7465616487988fab2f189ac95d24c89dc07bfbd5076c0db27caa9f"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: rtl",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium\\video.webm",
+        "bytes": 48057,
+        "sha256": "e7d54359bf1f106ac6f270adbe66eb8675524827ab92c710a61438f168fb0ea8"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: mixed",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium\\video.webm",
+        "bytes": 51715,
+        "sha256": "174ab8dddf2968dd22a347e484aeaf83730d60d4a9b0189dcaff1f03a8290249"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: emoji",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium\\video.webm",
+        "bytes": 50443,
+        "sha256": "4878f74053c77edc0fef35ae98ea53af976fe3ab2a9aa49939b8148642f34bd6"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: combining-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium\\video.webm",
+        "bytes": 51173,
+        "sha256": "3cb9d74f7b7d95559e1bbf8594e9c4b0cb7d7b61a8e6d81c6e86c2917fa6d4b8"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: zwj-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium\\video.webm",
+        "bytes": 48817,
+        "sha256": "c830b1fc2c0ffe8e707f4933b5a55a91e56ccb3198eceb3395789788143e806f"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: surrogate-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium\\video.webm",
+        "bytes": 54621,
+        "sha256": "2eb9d287e56c00012ee564c9dafe6e36ede511ca98d3e2bb6c13c7ee09851df3"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: code",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium\\video.webm",
+        "bytes": 52768,
+        "sha256": "5f9e956a8daba8297bbd6ba6e85391d92375398c7976a04891620a675d0851eb"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: empty",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium\\video.webm",
+        "bytes": 40450,
+        "sha256": "3ab310c50eaaacb055ba15b8f8888f2a28edd1efc9f45e90817c93d2c85034f7"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: english-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium\\video.webm",
+        "bytes": 55167,
+        "sha256": "80dcb40600b4908ac854057ae19b2e0dbc0397f5d15831c5f8efe660c985e3ba"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: combining-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-74890-ting-combining-inside-range-chromium\\video.webm",
+        "bytes": 52055,
+        "sha256": "cae997c4c33b0547f623cdc23460cdc918e9903f74177ba2ad469d841086b706"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: zwj-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium\\video.webm",
+        "bytes": 52884,
+        "sha256": "ec9d02a97d292c618f8ab9ae3e35bfe97bf7dcacc1db67c571f962418bf4001e"
+      },
+      {
+        "project": "chromium",
+        "name": "matches native visual/grapheme navigation and editing: surrogate-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium\\video.webm",
+        "bytes": 53427,
+        "sha256": "c9df3644006232e17cd3e0d6f7deb269a7960c2632ceca20d96e4f69fc232aa6"
+      },
+      {
+        "project": "chromium",
+        "name": "shows a passive remote caret at a mounted empty anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium\\video.webm",
+        "bytes": 35295,
+        "sha256": "a6e25f88ff68ab34866b507cdd998ef2a0cc2642a82b5e0c930d54f0527e5dd7"
+      },
+      {
+        "project": "chromium",
+        "name": "shows a passive remote caret at a mounted block-gap anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium\\video.webm",
+        "bytes": 39172,
+        "sha256": "cb6ba51488c94547183eaa68618308feff398d43c9b05f73e8e7b07318168b01"
+      },
+      {
+        "project": "chromium",
+        "name": "shows a passive remote caret at a mounted atomic-image anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium\\video.webm",
+        "bytes": 55204,
+        "sha256": "1150b9024476482ff5e30dfdb4e8927ec3c819ac0873642b309a4ddb41858e14"
+      },
+      {
+        "project": "chromium",
+        "name": "shows a passive remote caret at a mounted table anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium\\video.webm",
+        "bytes": 27455,
+        "sha256": "e5f34112cc54d5584e1c81203ce197078abeafbf94c8cc7fb6351597ab5febaf"
+      },
+      {
+        "project": "chromium",
+        "name": "paints remote carets through scrolling, transforms and resize without remounting text or taking focus",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium\\video.webm",
+        "bytes": 62511,
+        "sha256": "8babd5ccb833cc0e8c7cb2ba6a40b26b11f3a17544bc4d7bf49a8ce88063ad29"
+      },
+      {
+        "project": "chromium",
+        "name": "keeps remote name labels inside clipped editors without moving their anchor (ltr)",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium\\video.webm",
+        "bytes": 94857,
+        "sha256": "0e2844c8c2813e222f303465baff3521c11e541f8d71ddc2d899e61df9bbe645"
+      },
+      {
+        "project": "chromium",
+        "name": "keeps remote name labels inside clipped editors without moving their anchor (rtl)",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium\\video.webm",
+        "bytes": 78358,
+        "sha256": "12add301993da50a5d95eabbbfe42c767e95e93247f14868ba73cb849ed2d41b"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: english",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox\\video.webm",
+        "bytes": 69766,
+        "sha256": "a2cef80aca144b6b0c2c60c67de704be54cb78a0c07bf7262e8192e1fe34a0d4"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: rtl",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox\\video.webm",
+        "bytes": 79661,
+        "sha256": "c33a7bdf7198075c0dc4ce373e91fb7d1b06b7f00b18c5057683d3d115ad9414"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: mixed",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox\\video.webm",
+        "bytes": 75046,
+        "sha256": "1bf7c9b01d2757394a3f9279187797f676e5070d457e132df93eeda9fc0f11c5"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: emoji",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox\\video.webm",
+        "bytes": 83275,
+        "sha256": "d9f493730a54f24e5b4e97bc26597716682650d8ee1efb382f04de10cb9d1e58"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: combining-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox\\video.webm",
+        "bytes": 69533,
+        "sha256": "fa1789cf793f89d8399074d5c137d52fcade1d5c0d5cbb3ffb2c25dc65edaa20"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: zwj-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox\\video.webm",
+        "bytes": 75629,
+        "sha256": "b3c3d239e38628f0c157026e5708d6b3d866695ee983a798a6caedd852f36bb7"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: surrogate-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox\\video.webm",
+        "bytes": 69604,
+        "sha256": "993e32bfc07902ddf974b06bad449750a58499cc405c4ddef5d68ccca8c5eef1"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: code",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox\\video.webm",
+        "bytes": 67595,
+        "sha256": "0015fe05db8922a15721d8ad32bfd53d732e923bc23f371db7d80a19a17d39f7"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: empty",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox\\video.webm",
+        "bytes": 62247,
+        "sha256": "51a18717a5d5ba7dd731eb607617100b0308765b38646294105d8fdaeab6eed9"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: english-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox\\video.webm",
+        "bytes": 69496,
+        "sha256": "5207523c8883608a8d63e13c4a6e85e83767e5ab449d514ee94af77b5b6c4dd0"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: combining-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-74890-ting-combining-inside-range-firefox\\video.webm",
+        "bytes": 69835,
+        "sha256": "860b4255fce71d588a0353fbee03aa54347cbd453f535f2f1476ce19e0d721ef"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: zwj-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox\\video.webm",
+        "bytes": 79668,
+        "sha256": "1e841c557181efd9f188ed892d9be025923151324266bc8e78340da3b80ab61f"
+      },
+      {
+        "project": "firefox",
+        "name": "matches native visual/grapheme navigation and editing: surrogate-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox\\video.webm",
+        "bytes": 72099,
+        "sha256": "b8346e62c0265e6b9d37995a69a9c8f62e93fb4b7b758b7b3791722636e8d4ac"
+      },
+      {
+        "project": "firefox",
+        "name": "shows a passive remote caret at a mounted empty anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox\\video.webm",
+        "bytes": 43865,
+        "sha256": "4ff2daae2d0438feace132662994326a437aa60d094c2af5e78dca188fc6c325"
+      },
+      {
+        "project": "firefox",
+        "name": "shows a passive remote caret at a mounted block-gap anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox\\video.webm",
+        "bytes": 44572,
+        "sha256": "44f9f79838c3e0cd865941f8e349829969648f3e5f0a7c0dcb303d56be0d2e5a"
+      },
+      {
+        "project": "firefox",
+        "name": "shows a passive remote caret at a mounted atomic-image anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox\\video.webm",
+        "bytes": 57254,
+        "sha256": "b913d6e7ea111cd74990301fe13983e5199a889c90f7e51edcc521734c82f0bb"
+      },
+      {
+        "project": "firefox",
+        "name": "shows a passive remote caret at a mounted table anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox\\video.webm",
+        "bytes": 48701,
+        "sha256": "ff863cf04da5b36e7f42c7246997d73a99aec7558042e69c33c6197181604544"
+      },
+      {
+        "project": "firefox",
+        "name": "paints remote carets through scrolling, transforms and resize without remounting text or taking focus",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox\\video.webm",
+        "bytes": 64710,
+        "sha256": "2ad814a3e33a6806a776358c83ec57efbb33a47dac017cee175470053562e777"
+      },
+      {
+        "project": "firefox",
+        "name": "keeps remote name labels inside clipped editors without moving their anchor (ltr)",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox\\video.webm",
+        "bytes": 115965,
+        "sha256": "471bbeaca744677da65893570a61541b05dd4356218c15db346aae2905568130"
+      },
+      {
+        "project": "firefox",
+        "name": "keeps remote name labels inside clipped editors without moving their anchor (rtl)",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox\\video.webm",
+        "bytes": 130689,
+        "sha256": "71815114cc13d164bca388858c808cc74083b63b4935f5d3b25b560090c8e2df"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: english",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit\\video.webm",
+        "bytes": 79117,
+        "sha256": "142a5a2c10bebc948e84246f4ac9d17538440de56250680bddc2c0218349f3ff"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: rtl",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit\\video.webm",
+        "bytes": 77302,
+        "sha256": "fb7d66f0a0032a7962fbfc8917d015c2df8aee5df9d94fb56f8b1fd232a87fd8"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: mixed",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit\\video.webm",
+        "bytes": 85936,
+        "sha256": "9595519a0615892f7dfa63022343ed8abeef6311283add5236d2ba49fbf14142"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: emoji",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit\\video.webm",
+        "bytes": 79438,
+        "sha256": "f8f66d7901227b69210954c048a5464d34549d627c105792f515c9ac0c5b3659"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: combining-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit\\video.webm",
+        "bytes": 80922,
+        "sha256": "02b54eb8b1f82fc90e23997eea7b3dab664e975528a6c5db4d05dd055e0562ae"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: zwj-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit\\video.webm",
+        "bytes": 84168,
+        "sha256": "e0cabadb0857120c4323ac4217b314363c15c1f279bd9914fd49980f32527098"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: surrogate-inside",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit\\video.webm",
+        "bytes": 79229,
+        "sha256": "d5720e9bba409fbd1a893ceae1d15ba5486fa9d88de424c8ea94da1c72e1ba67"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: code",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit\\video.webm",
+        "bytes": 93624,
+        "sha256": "1d02497325857e6c06d9370b23e366c54117d5fbf5c0ccb3411113b3dbb7658e"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: empty",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit\\video.webm",
+        "bytes": 68842,
+        "sha256": "5658c4d8c26f357c53b6cd15e4f8ea939eb251bd2784c799e976d6cb1135177f"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: english-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit\\video.webm",
+        "bytes": 80394,
+        "sha256": "c987d60a29fed4b8c7d975ac70ef04bbdcbd4d3cb5bb7335d357996feb0c6e6c"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: combining-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-74890-ting-combining-inside-range-webkit\\video.webm",
+        "bytes": 103272,
+        "sha256": "9eb3bc411046da098f348051caaa900a589a8fc99807e676d4fe8980612cacc5"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: zwj-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit\\video.webm",
+        "bytes": 83461,
+        "sha256": "846347853910165d66720debd90e36041b22874b9868b17fee5d1853a32347f8"
+      },
+      {
+        "project": "webkit",
+        "name": "matches native visual/grapheme navigation and editing: surrogate-inside-range",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit\\video.webm",
+        "bytes": 82972,
+        "sha256": "0794965b6a3719c69a2d6bd1129a702c9f93a81dfc67478d28a95f901d4ff7b3"
+      },
+      {
+        "project": "webkit",
+        "name": "shows a passive remote caret at a mounted empty anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit\\video.webm",
+        "bytes": 36689,
+        "sha256": "82a878786ad37290e8e285f04682d698fa75908b08f9e8b3b8092341348b1a84"
+      },
+      {
+        "project": "webkit",
+        "name": "shows a passive remote caret at a mounted block-gap anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit\\video.webm",
+        "bytes": 38349,
+        "sha256": "80cca3fec00d806ea57675eceaa221c84559e9ded6b1ba5359ce78bb4fe7525e"
+      },
+      {
+        "project": "webkit",
+        "name": "shows a passive remote caret at a mounted atomic-image anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit\\video.webm",
+        "bytes": 52836,
+        "sha256": "f3921a9479cba746f5829bded5592ddb862a62b64bb49aca2681cd721e272296"
+      },
+      {
+        "project": "webkit",
+        "name": "shows a passive remote caret at a mounted table anchor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit\\video.webm",
+        "bytes": 38561,
+        "sha256": "2c8b12e2f19b28d2a90d5d0982d42cf155277c1572e9810c27cdabba99895572"
+      },
+      {
+        "project": "webkit",
+        "name": "paints remote carets through scrolling, transforms and resize without remounting text or taking focus",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit\\video.webm",
+        "bytes": 64792,
+        "sha256": "05f57b7390562dd8aac523c6b866bcf04d917c69760b1bfeb99a5be460177107"
+      },
+      {
+        "project": "webkit",
+        "name": "keeps remote name labels inside clipped editors without moving their anchor (ltr)",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit\\video.webm",
+        "bytes": 96880,
+        "sha256": "c6e979fa700d1d4f071a1475b4acf1a83eee538beddcf62ed1c956c13d2a5969"
+      },
+      {
+        "project": "webkit",
+        "name": "keeps remote name labels inside clipped editors without moving their anchor (rtl)",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit\\video.webm",
+        "bytes": 106329,
+        "sha256": "f58ffc5b8208a6ca7c05db1c6c6aa1a053d76cf2d320fdd629339a6829d76c16"
+      },
+      {
+        "project": "chromium",
+        "name": "native offline typing survives Quote, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium\\video.webm",
+        "bytes": 98142,
+        "sha256": "32c00232983fa5741cd5ec236912eef33edac205a0ea2ae38bbba05a0b79ac6e"
+      },
+      {
+        "project": "chromium",
+        "name": "native offline typing survives Bullet, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium\\video.webm",
+        "bytes": 99231,
+        "sha256": "87b20da73a95d305d49618f406313e92b8db94ef8486acf1bda23b80fc9b38c1"
+      },
+      {
+        "project": "chromium",
+        "name": "native offline typing survives Ordered, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium\\video.webm",
+        "bytes": 89888,
+        "sha256": "b6391b660833c75741834724051acbd234c0ca370fc146cf970a5dd6c10ddfae"
+      },
+      {
+        "project": "chromium",
+        "name": "native offline typing survives Task, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium\\video.webm",
+        "bytes": 95756,
+        "sha256": "4f1ac062b0d2066dd3b60602eb918553549e314df8adefbbb6679cf60cc15b19"
+      },
+      {
+        "project": "chromium",
+        "name": "native offline typing survives Bold, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium\\video.webm",
+        "bytes": 100397,
+        "sha256": "069645d9038aed1e84d13fe75da0440e1d579e83742ef1a7d6b98bdd283da347"
+      },
+      {
+        "project": "chromium",
+        "name": "native offline typing survives Enter, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium\\video.webm",
+        "bytes": 112319,
+        "sha256": "37b5e45d5f5b16f821a485e15f11c4002b98f2547b7afc3f2adf0dcdec7926a2"
+      },
+      {
+        "project": "chromium",
+        "name": "replaces marked text and deletes natively while preserving peer edits through keyboard history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-repl-6cea4-ts-through-keyboard-history-chromium\\video.webm",
+        "bytes": 132534,
+        "sha256": "667ecb9fac551f6c477aeaef12b14d3464ae1e8fe076768430a4db0dd52b01d7"
+      },
+      {
+        "project": "chromium",
+        "name": "edits a thousand-paragraph shared document with native input and independent author history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\video.webm",
+        "bytes": 286097,
+        "sha256": "e5913aa85548948231649d0261f2f06387a2a8b3a47d688272efa403b97b3a05"
+      },
+      {
+        "project": "chromium",
+        "name": "native edits in separate paragraphs preserve untouched rich content and author-only history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium\\video.webm",
+        "bytes": 77076,
+        "sha256": "22905de3c0141d35bb827e2a4627f96ad619f4897f879b9cd7404c50d1a6b5c6"
+      },
+      {
+        "project": "chromium",
+        "name": "native typing retains host observer annotations through synchronization and author undo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium\\video.webm",
+        "bytes": 85522,
+        "sha256": "8509a2a8ac812b0e740ba3e5173b4df999b66a1b8d1225126320c9d0eaa38888"
+      },
+      {
+        "project": "chromium",
+        "name": "continues native typing and Enter after an observer update without moving the caret",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium\\video.webm",
+        "bytes": 101580,
+        "sha256": "b5ab2d24a7f67f47015c4ab2a293bea70f60af485d33b9930f7ca03bdf8973c6"
+      },
+      {
+        "project": "chromium",
+        "name": "right-arrow navigation crosses a remote presence without consuming a character step",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium\\video.webm",
+        "bytes": 83232,
+        "sha256": "dc535c3ef296703d71bac403997e73ba1848ee8e09e9ca764a536a46a9646fe9"
+      },
+      {
+        "project": "chromium",
+        "name": "native blank lines, backward selection, mounted room replacement, download and reopen",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium\\video.webm",
+        "bytes": 132822,
+        "sha256": "c0c85884bfcca0d3682c9467c8265db4b0d442fdf0e5b6e34e79747605e432d3"
+      },
+      {
+        "project": "firefox",
+        "name": "native offline typing survives Quote, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox\\video.webm",
+        "bytes": 109316,
+        "sha256": "031d4b179acf7f7ab4c3e320ab6c787706635d3c5ab270498eac5bb904043f05"
+      },
+      {
+        "project": "firefox",
+        "name": "native offline typing survives Bullet, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox\\video.webm",
+        "bytes": 102623,
+        "sha256": "e72e0bf450e51be29060c742419f3bf66833a7c927a253263e4798cd5c861ee2"
+      },
+      {
+        "project": "firefox",
+        "name": "native offline typing survives Ordered, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox\\video.webm",
+        "bytes": 104281,
+        "sha256": "b832e4b07c2f93391c0e920cc5ac6163c518cbccf69d85d1e0b517ac252b6f88"
+      },
+      {
+        "project": "firefox",
+        "name": "native offline typing survives Task, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox\\video.webm",
+        "bytes": 108180,
+        "sha256": "454da45aa357d93c3965abc2f25b8a77096d580ea47dfa44b4601e6eeca932f4"
+      },
+      {
+        "project": "firefox",
+        "name": "native offline typing survives Bold, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox\\video.webm",
+        "bytes": 105077,
+        "sha256": "d004745ab898a9423d30c0eacb4edebcd8cfef898c02fd50d8e346878d72bc80"
+      },
+      {
+        "project": "firefox",
+        "name": "native offline typing survives Enter, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox\\video.webm",
+        "bytes": 116138,
+        "sha256": "a485c916e14d5e4942884beac7a7d1395788a01c223606624ba4f0a59c2c33ae"
+      },
+      {
+        "project": "firefox",
+        "name": "replaces marked text and deletes natively while preserving peer edits through keyboard history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-repl-6cea4-ts-through-keyboard-history-firefox\\video.webm",
+        "bytes": 128520,
+        "sha256": "1a4fc964801098b81687b9f7168bc1e2a3316de487b42bc05474f9b3c89ab2a3"
+      },
+      {
+        "project": "firefox",
+        "name": "edits a thousand-paragraph shared document with native input and independent author history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\video.webm",
+        "bytes": 335238,
+        "sha256": "66ccbc2dbb91886ff3ab6b7ff9dee545e20e7ea800da06279e5122d807a73cf4"
+      },
+      {
+        "project": "firefox",
+        "name": "native edits in separate paragraphs preserve untouched rich content and author-only history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox\\video.webm",
+        "bytes": 82093,
+        "sha256": "978a9fe7b7034e29a97b5304bf7a7e68994c670b3c51b523a77de10cc888841c"
+      },
+      {
+        "project": "firefox",
+        "name": "native typing retains host observer annotations through synchronization and author undo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox\\video.webm",
+        "bytes": 107136,
+        "sha256": "2d17750bf5eb8e2e2d38b7c996be1369c9db8a54dbd602a127f6c8325570c04d"
+      },
+      {
+        "project": "firefox",
+        "name": "continues native typing and Enter after an observer update without moving the caret",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox\\video.webm",
+        "bytes": 120067,
+        "sha256": "430f28de5de3bc630ff2d7fcb0c30356f5cf0a85c1d36b84f17dda09bda8f114"
+      },
+      {
+        "project": "firefox",
+        "name": "right-arrow navigation crosses a remote presence without consuming a character step",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox\\video.webm",
+        "bytes": 97703,
+        "sha256": "fb9258a9705463c2c4d9a4360a1dcfb7d6dd2cd9eeed5b3f92826947fcf516f2"
+      },
+      {
+        "project": "firefox",
+        "name": "native blank lines, backward selection, mounted room replacement, download and reopen",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox\\video.webm",
+        "bytes": 136602,
+        "sha256": "526ebed3631d186521aaa0ea1ac0d1df6b85868480181a0fd69aa0b187b44442"
+      },
+      {
+        "project": "webkit",
+        "name": "native offline typing survives Quote, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit\\video.webm",
+        "bytes": 112174,
+        "sha256": "a50a573d4506d060ff2d4ea0a5dbc32dfb3bba89c52fd636e3ec3184bf5ea635"
+      },
+      {
+        "project": "webkit",
+        "name": "native offline typing survives Bullet, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit\\video.webm",
+        "bytes": 92536,
+        "sha256": "af110cd8a8279aceb9bee621ce081af42cc5ce671053ff255dfccb0d6f7e7c5b"
+      },
+      {
+        "project": "webkit",
+        "name": "native offline typing survives Ordered, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit\\video.webm",
+        "bytes": 93222,
+        "sha256": "132c567f71e5fb35b6936f9c9228bebd1ef619d41c948ccef4c1abc4b9b0467b"
+      },
+      {
+        "project": "webkit",
+        "name": "native offline typing survives Task, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit\\video.webm",
+        "bytes": 97849,
+        "sha256": "f51c7162294fd45016cd8d64bd7bb1624372341e44836f0d19b3e2998feb47e2"
+      },
+      {
+        "project": "webkit",
+        "name": "native offline typing survives Bold, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit\\video.webm",
+        "bytes": 111830,
+        "sha256": "490c8a844cb9fe3f5daff55d4721326343268f82c8865ce7ce3383c9e4b6c5f2"
+      },
+      {
+        "project": "webkit",
+        "name": "native offline typing survives Enter, author undo and redo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit\\video.webm",
+        "bytes": 172752,
+        "sha256": "d720552f51e31c7b9875c02f6f71433df0d021e1c906760cd9a0c767a60f8445"
+      },
+      {
+        "project": "webkit",
+        "name": "replaces marked text and deletes natively while preserving peer edits through keyboard history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-repl-6cea4-ts-through-keyboard-history-webkit\\video.webm",
+        "bytes": 118797,
+        "sha256": "7c864a8c35c98ca149974358182973de8457a06bddb021de87ba8f69e9a7b92b"
+      },
+      {
+        "project": "webkit",
+        "name": "edits a thousand-paragraph shared document with native input and independent author history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\video.webm",
+        "bytes": 395297,
+        "sha256": "6ab59a6efd9dee77ef5643f7f81671deedfe2a33328cb7b9a9ad39295e312f04"
+      },
+      {
+        "project": "webkit",
+        "name": "native edits in separate paragraphs preserve untouched rich content and author-only history",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit\\video.webm",
+        "bytes": 81715,
+        "sha256": "0849d255de6c1b0aa6b464bff1ee92f8cc17a058e72e95f443b3ae17a6a7cd93"
+      },
+      {
+        "project": "webkit",
+        "name": "native typing retains host observer annotations through synchronization and author undo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit\\video.webm",
+        "bytes": 82601,
+        "sha256": "4fe776aa9fc04a14333ad33c7d14aa64e9810aea632d133893a66c9a5243ecf2"
+      },
+      {
+        "project": "webkit",
+        "name": "continues native typing and Enter after an observer update without moving the caret",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit\\video.webm",
+        "bytes": 133086,
+        "sha256": "1d78c4b3e28fcd7577639fd8c79d13eee921602bb44c30b711ee091c3be2e354"
+      },
+      {
+        "project": "webkit",
+        "name": "right-arrow navigation crosses a remote presence without consuming a character step",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit\\video.webm",
+        "bytes": 78471,
+        "sha256": "653c6b4c28304f94287c8a181e811ffe32f1897f02d246bfc1e9d8ee726cea01"
+      },
+      {
+        "project": "webkit",
+        "name": "native blank lines, backward selection, mounted room replacement, download and reopen",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit\\video.webm",
+        "bytes": 131757,
+        "sha256": "4c935e581d5fff8330a898778366d19311cc4cc338aa03033e349502fa54ed78"
+      },
+      {
+        "project": "chromium",
+        "name": "restores an isolated snapshot with media and opaque state then merges later same-room typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-d3cae-rges-later-same-room-typing-chromium\\video.webm",
+        "bytes": 106476,
+        "sha256": "1c8b04d613c7be0d550aab75e3823550101d9bf93504be30fc1b2298f90bf7ae"
+      },
+      {
+        "project": "chromium",
+        "name": "rejects a concurrent source write and allows a later clean capture",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-61079-llows-a-later-clean-capture-chromium\\video.webm",
+        "bytes": 57130,
+        "sha256": "3099b921a8efed15900f559a64685dd2891080d1ada37a20ff78b6b5351f27ca"
+      },
+      {
+        "project": "chromium",
+        "name": "rejects damaged bytes without replacing either live editor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-15d84-eplacing-either-live-editor-chromium\\video.webm",
+        "bytes": 73910,
+        "sha256": "bd481a883ce63a99030c5d3ae464af962a22c36a3a8de5671c5cde15a7bcef37"
+      },
+      {
+        "project": "firefox",
+        "name": "restores an isolated snapshot with media and opaque state then merges later same-room typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-d3cae-rges-later-same-room-typing-firefox\\video.webm",
+        "bytes": 125555,
+        "sha256": "c488e8f81072b8d593564eb1adec3efa1e3cb47816a82fde406467c05b3d29d5"
+      },
+      {
+        "project": "firefox",
+        "name": "rejects a concurrent source write and allows a later clean capture",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-61079-llows-a-later-clean-capture-firefox\\video.webm",
+        "bytes": 80850,
+        "sha256": "5902c757dae7e2aae7afce6d8e00738ad26ada6a3b6da774e145bc57de01f2ab"
+      },
+      {
+        "project": "firefox",
+        "name": "rejects damaged bytes without replacing either live editor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-15d84-eplacing-either-live-editor-firefox\\video.webm",
+        "bytes": 77711,
+        "sha256": "59dc2486835f4bc6e5aeed07cff761c338d9c2f50197cf63fe70048603dbede8"
+      },
+      {
+        "project": "webkit",
+        "name": "restores an isolated snapshot with media and opaque state then merges later same-room typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-d3cae-rges-later-same-room-typing-webkit\\video.webm",
+        "bytes": 160811,
+        "sha256": "6d99c9374d16f776b2a7d938b1d7bc5c1677d33f15e17945481a37501296da22"
+      },
+      {
+        "project": "webkit",
+        "name": "rejects a concurrent source write and allows a later clean capture",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-61079-llows-a-later-clean-capture-webkit\\video.webm",
+        "bytes": 90720,
+        "sha256": "89f79e87a9d3f1db75aff79c1d0264057667e6bc2fca9e865ae07df3b129eb2f"
+      },
+      {
+        "project": "webkit",
+        "name": "rejects damaged bytes without replacing either live editor",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checkpoint-final-browser-20261106\\retained-checkpoint-real-r-15d84-eplacing-either-live-editor-webkit\\video.webm",
+        "bytes": 91180,
+        "sha256": "8adbf26ce47d140b15223b52be49513df84cfdd3063d1ad9642bf4020b294e62"
+      }
+    ]
+  },
+  "compiledSource": {
+    "modules": 193,
+    "unchangedParentModules": [
+      "src/core/schema/content-expression.ts",
+      "src/core/transaction/replace-document-step.ts",
+      "src/core/transaction/replace-node-step.ts",
+      "src/core/transaction/insert-text-step.ts",
+      "src/core/transaction/nested-range-replacement.ts",
+      "src/core/transaction/replace-text-range-step.ts",
+      "src/core/transaction/replace-range-step.ts",
+      "src/core/transaction/add-mark-step.ts",
+      "src/core/transaction/remove-mark-step.ts",
+      "src/core/transaction/mark-range-step.ts",
+      "src/core/transaction/set-node-attrs-step.ts",
+      "src/core/transaction/transform.ts",
+      "src/core/transaction/transaction.ts",
+      "src/core/plugin.ts",
+      "src/core/decoration.ts",
+      "src/core/state.ts",
+      "src/core/url.ts",
+      "src/core/text-direction.ts",
+      "src/core/bidi-strong-data.ts",
+      "src/core/first-strong-direction.ts",
+      "src/core/shared-direction-index.ts",
+      "src/core/shared-direction.ts",
+      "src/extensions/extension.ts",
+      "src/extensions/collaboration-core.ts",
+      "src/extensions/collaboration.ts",
+      "src/core/schema/schema.ts",
+      "src/core/editor.ts",
+      "src/core/text-replacement-selection.ts",
+      "src/core/image.ts",
+      "src/core/block-range.ts",
+      "src/core/transaction/restructure-children-step.ts",
+      "src/text-style/values.ts",
+      "src/core/list-layout.ts",
+      "src/core/table-column-width.ts",
+      "src/core/paragraph-layout.ts",
+      "src/core/paragraph-spacing.ts",
+      "src/core/table-background.ts",
+      "src/core/explicit-emphasis.ts",
+      "src/core/math-expression.ts",
+      "src/core/image-caption.ts",
+      "src/core/table-width.ts",
+      "src/core/table-appearance.ts",
+      "src/core/table-layout.ts",
+      "src/core/page-settings.ts",
+      "src/core/html-comment.ts",
+      "src/core/importers/html-link-url.ts",
+      "src/core/link-destination.ts",
+      "src/core/code-theme.ts",
+      "src/core/html-document-envelope.ts",
+      "src/core/exporters/html-exporter.ts",
+      "src/core/table-commands.ts",
+      "src/core/structure-commands.ts",
+      "src/core/transaction/set-block-type-step.ts",
+      "src/core/transaction/split-node-step.ts",
+      "src/core/commands.ts",
+      "src/core/search.ts",
+      "src/extensions/command-manager.ts",
+      "src/view/shared-direction.ts",
+      "src/view/paragraph-spacing.ts",
+      "src/view/dom-renderer.ts",
+      "src/core/importers/html-marks.ts",
+      "src/core/html-flow.ts",
+      "src/core/importers/html-preformatted.ts",
+      "src/core/importers/html-table.ts",
+      "src/core/importers/html-list.ts",
+      "src/core/importers/html-definition-list.ts",
+      "src/core/importers/html-page-settings.ts",
+      "src/core/importers/html-importer.ts",
+      "src/core/transaction/document-fragment.ts",
+      "src/core/transaction/rebase-insertion.ts",
+      "src/core/transaction/rebase-deletion.ts",
+      "src/extensions/plugins/history.ts",
+      "src/extensions/media.ts",
+      "src/view/media.ts",
+      "src/view/block-handles.ts",
+      "src/view/paste.ts",
+      "src/view/input.ts",
+      "src/view/drop-cursor.ts",
+      "src/view/widget-overlays.ts",
+      "src/view/selection-handler.ts",
+      "src/view/table-direction.ts",
+      "src/view/virtual-layout.ts",
+      "src/view/view.ts",
+      "src/core/exporters/json-exporter.ts",
+      "src/core/editing-provenance.ts",
+      "src/core/markdown-source-boundary.ts",
+      "src/core/markdown-nested-source.ts",
+      "src/core/markdown-entities.ts",
+      "src/core/unicode-case-fold-data.ts",
+      "src/core/unicode-case-fold.ts",
+      "src/core/markdown-tex.ts",
+      "src/core/tex-table.ts",
+      "src/core/markdown-html.ts",
+      "src/core/importers/markdown-importer.ts",
+      "src/core/exporters/markdown-exporter.ts",
+      "src/core/exporters/text-exporter.ts",
+      "src/extensions/nodes/blockquote.ts",
+      "src/extensions/nodes/bullet-list.ts",
+      "src/extensions/nodes/code-block.ts",
+      "src/extensions/nodes/doc.ts",
+      "src/extensions/nodes/direction-scope.ts",
+      "src/extensions/nodes/definition-list.ts",
+      "src/extensions/nodes/figcaption.ts",
+      "src/extensions/nodes/hard-break.ts",
+      "src/extensions/nodes/heading.ts",
+      "src/extensions/nodes/horizontal-rule.ts",
+      "src/extensions/nodes/image-attributes.ts",
+      "src/extensions/nodes/image-node-view.ts",
+      "src/extensions/nodes/image-super.ts",
+      "src/extensions/nodes/inline-image.ts",
+      "src/extensions/nodes/list-item.ts",
+      "src/extensions/nodes/ordered-list.ts",
+      "src/extensions/nodes/paragraph.ts",
+      "src/extensions/nodes/table.ts",
+      "src/extensions/nodes/table-cell-view.ts",
+      "src/extensions/nodes/table-cell.ts",
+      "src/extensions/nodes/table-header.ts",
+      "src/extensions/nodes/table-row.ts",
+      "src/extensions/nodes/task-item.ts",
+      "src/extensions/nodes/task-list.ts",
+      "src/extensions/nodes/text.ts",
+      "src/extensions/marks/code.ts",
+      "src/extensions/marks/em.ts",
+      "src/extensions/marks/link.ts",
+      "src/extensions/marks/strike.ts",
+      "src/extensions/marks/strong.ts",
+      "src/extensions/marks/subscript.ts",
+      "src/extensions/marks/superscript.ts",
+      "src/extensions/marks/underline.ts",
+      "src/extensions/plugins/input-rules.ts",
+      "src/extensions/plugins/markdown-shortcuts.ts",
+      "src/extensions/plugins/syntax-highlight.ts",
+      "src/extensions/plugins/table-editing.ts",
+      "src/extensions/trailing-editable-block.ts",
+      "src/extensions/link-behavior.ts",
+      "src/extensions/marks/font-family.ts",
+      "src/extensions/marks/font-size.ts",
+      "src/extensions/marks/highlight.ts",
+      "src/extensions/marks/line-height.ts",
+      "src/extensions/marks/letter-spacing.ts",
+      "src/extensions/marks/text-color.ts",
+      "src/text-style/commands.ts",
+      "src/text-style/index.ts",
+      "src/extensions/html-containers.ts",
+      "src/extensions/html-comments.ts",
+      "src/extensions/html-flow.ts",
+      "src/extensions/html-anchors.ts",
+      "src/extensions/plugins/paste-rules.ts",
+      "src/extensions/math.ts",
+      "src/lean/diagnostics.ts",
+      "src/lean/controller.ts",
+      "src/lean/info-view.ts",
+      "src/lean/loopback-provider.ts",
+      "src/extensions/lean.ts",
+      "src/extensions/clipboard-history.ts",
+      "src/extensions/floating-menu.ts",
+      "src/extensions/plugins/mcp-integration.ts",
+      "src/extensions/index.ts",
+      "src/view/web-component.ts",
+      "src/view/generated-media.ts",
+      "src/view/menu-position.ts",
+      "src/ai/controller.ts",
+      "src/ai/mcp-adapter.ts",
+      "src/ai/document-tools.ts",
+      "src/ai/conversation.ts",
+      "src/ai/generated-media.ts",
+      "src/migrations/index.ts",
+      "src/core/schema/node-spec.ts",
+      "src/core/schema/mark.ts",
+      "src/core/schema/child-offset.ts",
+      "src/core/schema/copy-validation.ts",
+      "src/core/schema/block-lineage.ts",
+      "src/core/schema/node.ts",
+      "src/core/schema/attributes.ts",
+      "src/core/table-map.ts",
+      "src/core/transaction/path.ts",
+      "src/core/transaction/document-point.ts",
+      "src/core/selection.ts",
+      "src/core/transaction/mapping.ts",
+      "src/core/transaction/step.ts",
+      "src/core/transaction/replace-step.ts",
+      "src/core/transaction/replace-text-step.ts",
+      "src/yjs/retained-selection.ts",
+      "src/node-ids/index.ts",
+      "src/structured-attributes/index.ts",
+      "src/yjs/structured-attributes.ts",
+      "src/yjs/retained-adapter.ts",
+      "src/yjs/retained-nodes.ts",
+      "src/yjs/retained-text.ts",
+      "src/yjs/retained-mapping.ts"
+    ],
+    "newModules": [
+      "src/yjs/retained-checkpoint.ts",
+      "src/yjs/retained-wire.ts"
+    ],
+    "changedExistingModule": "src/yjs/retained-document.ts"
+  },
+  "compiledNode": {
+    "passed": 16,
+    "cases": [
+      {
+        "mode": "es",
+        "domRequired": false,
+        "passed": 7,
+        "cases": [
+          "capture preserves source and declares room/schema metadata",
+          "isolated restore retains model, exact wire state and GUID",
+          "auxiliary binary map and empty root survive",
+          "archive and asynchronous restore inputs are owned",
+          "later same-room typing merges into restored snapshot",
+          "deletion-only capture races and corrupt payloads are rejected",
+          "math, Lean source, tables, custom widget metadata and auxiliary review record survive"
+        ],
+        "onlyInterop": false,
+        "incoming": null
+      },
+      {
+        "mode": "cjs",
+        "domRequired": false,
+        "passed": 8,
+        "cases": [
+          "capture preserves source and declares room/schema metadata",
+          "isolated restore retains model, exact wire state and GUID",
+          "auxiliary binary map and empty root survive",
+          "archive and asynchronous restore inputs are owned",
+          "later same-room typing merges into restored snapshot",
+          "deletion-only capture races and corrupt payloads are rejected",
+          "math, Lean source, tables, custom widget metadata and auxiliary review record survive",
+          "other module-format packet restores with own schema and Yjs runtime"
+        ],
+        "onlyInterop": false,
+        "incoming": "artifacts/retained-checkpoint-es-packet-20261106.json"
+      },
+      {
+        "mode": "es",
+        "domRequired": false,
+        "passed": 1,
+        "cases": [
+          "other module-format packet restores with own schema and Yjs runtime"
+        ],
+        "onlyInterop": true,
+        "incoming": "artifacts/retained-checkpoint-cjs-packet-20261106.json"
+      }
+    ]
+  },
+  "largeDiagnostic": {
+    "runtime": "v24.22.1",
+    "blocks": 1000,
+    "trials": 1,
+    "captureMs": 341.8714,
+    "restoreMs": 235.7591,
+    "wireBytes": 1927624,
+    "documentSha256": "d07feacc3784e478cf8ec3ba8585a9ede34c66933868f83e31fd5a6c7328f661",
+    "updateSha256": "adace91c247904b1d6de6716f4ad311816d9e6ea468ce375adb30e38ee061f5b",
+    "exactDocument": true,
+    "exactWire": true,
+    "domRequired": false,
+    "memory": {
+      "before": {
+        "heap": 26474440,
+        "buffers": 197785,
+        "total": 26672225
+      },
+      "captured": {
+        "heap": 26415160,
+        "buffers": 2125409,
+        "total": 28540569
+      },
+      "reopened": {
+        "heap": 41201472,
+        "buffers": 2125409,
+        "total": 43326881
+      }
+    },
+    "sourceSha256": "b5cdcace90537654407663d839a34607878b2d61d7e3bbec9347212842d6513b",
+    "note": "One reduced-priority two-logical-processor diagnostic with explicit GC between stages. Not peak memory, a latency gate, hostile-input certification, or a bounded-memory guarantee."
+  },
+  "ownershipDiagnostic": {
+    "runtime": "v24.22.1",
+    "domRequired": false,
+    "checkpointRemainsHeld": true,
+    "sourceReleased": {
+      "document": true,
+      "editor": true,
+      "schema": true
+    },
+    "restoreWithFreshSchema": true,
+    "note": "Explicit four-turn GC ownership diagnostic, not a general bounded-memory certificate."
+  },
+  "visualArtifacts": [
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-damage-filmstrip.png",
+      "sha256": "4edefe3c4871d83110fefd9bbd631cf189ab4f244230caa7489564daabe56f88"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-damage-final.png",
+      "sha256": "2e2d9ef24b8b022b5183b1fd40b1ea6abaa5061df10e180bc87d20a71249b816"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-damage.webm",
+      "sha256": "bd481a883ce63a99030c5d3ae464af962a22c36a3a8de5671c5cde15a7bcef37"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-race-filmstrip.png",
+      "sha256": "b6a7d149c4fbbb81d48a4793c92c4a075102119e2e7793fb3fa052dd156d1e37"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-race-final.png",
+      "sha256": "f33d7f25fbbb950f4b998925d2e5f43535760221337d6e0dd64db9fdfae44520"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-race.webm",
+      "sha256": "3099b921a8efed15900f559a64685dd2891080d1ada37a20ff78b6b5351f27ca"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-restore-filmstrip.png",
+      "sha256": "5c0f8079ce5bbffa6150a8bfd9a3da740b74a132288214018dab4dde0866f34d"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-restore-final.png",
+      "sha256": "a8efda113fff0de196e9b1d595808fa10b446cb52aff9009d69073c0409aff08"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-restore-isolated.png",
+      "sha256": "ed2b1341590ce000e56b5d8f6355837160c498efbd26e9a010a92378da5b1ae6"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/chromium-restore.webm",
+      "sha256": "1c8b04d613c7be0d550aab75e3823550101d9bf93504be30fc1b2298f90bf7ae"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-damage-filmstrip.png",
+      "sha256": "fea373372b6409eed48731c1bf665744eca1b9c0e49b97588618a123ab769670"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-damage-final.png",
+      "sha256": "77ed81b02db7f12dcf6745af8ea751ad65c5ba85040bf53916ae7e95c4b913cf"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-damage.webm",
+      "sha256": "59dc2486835f4bc6e5aeed07cff761c338d9c2f50197cf63fe70048603dbede8"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-race-filmstrip.png",
+      "sha256": "2264be74d2e646c7cb2384730ba2f52163bac8fa96e7ad13b75c0f70f4c918e2"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-race-final.png",
+      "sha256": "5042485c6b4bc7841e71897af1f9055e115c17c6f609531631ec27183bbb6aa3"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-race.webm",
+      "sha256": "5902c757dae7e2aae7afce6d8e00738ad26ada6a3b6da774e145bc57de01f2ab"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-restore-filmstrip.png",
+      "sha256": "a4acc57517bc4ccdae1ba74ca4c67cd1332426e288d72a7a1c94109014bfe171"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-restore-final.png",
+      "sha256": "57460140fb68cf751c04069e6a5120f37f7c0e69306a20c533588a21756a64e3"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-restore-isolated.png",
+      "sha256": "ed7b0fcef8bafc5b4ea17cdea9ac350a3b7903be73465e1ae249e64ca5a61315"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/firefox-restore.webm",
+      "sha256": "c488e8f81072b8d593564eb1adec3efa1e3cb47816a82fde406467c05b3d29d5"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-damage-filmstrip.png",
+      "sha256": "d9d693e5fc4d79839a2807cc9b18b7f9e270395804b2b03868d937157b4b93ec"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-damage-final.png",
+      "sha256": "5b5fc927f6e3f0e36b01ebe09225a6e1add34d3391ad167dce78e66fab7d01bc"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-damage.webm",
+      "sha256": "8adbf26ce47d140b15223b52be49513df84cfdd3063d1ad9642bf4020b294e62"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-race-filmstrip.png",
+      "sha256": "a7036fd00791a226c6dfe757c850ba8567375c4d8885caab036c0acd88206f80"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-race-final.png",
+      "sha256": "77ba202fe615a2cb88ca2ac5294c03b57e85d097794551338b7b3e654b6bbb0b"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-race.webm",
+      "sha256": "89f79e87a9d3f1db75aff79c1d0264057667e6bc2fca9e865ae07df3b129eb2f"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-restore-filmstrip.png",
+      "sha256": "27f28d5ba6de906810cbe24e33507169b577f792c3b5a18267be4b9dd7751a17"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-restore-final.png",
+      "sha256": "b0ac40a5e937e53482ada9b846b277f1e65fbd681b82c9054b7e68b047c25177"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-restore-isolated.png",
+      "sha256": "e71cf5a19cb45fb69e7aa358376c61aee9dc89d8ffed5dcf0aca1ea8c1c274f2"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-20261106/webkit-restore.webm",
+      "sha256": "6d99c9374d16f776b2a7d938b1d7bc5c1677d33f15e17945481a37501296da22"
+    }
+  ],
+  "visualReview": "Three-engine isolated source/restored captures and nine sampled recording filmstrips reviewed. Not full playback, physical-device testing, or self-contained media packaging.",
+  "invariants": {
+    "publicRuntimeAndCssByteIdentical": 171,
+    "apiUnchanged": true,
+    "defaultAdapterUnchanged": true,
+    "limitsUnchanged": true,
+    "ciUnchanged": true,
+    "defaultFailuresUnchanged": true
+  },
+  "evidence": [
+    {
+      "path": "artifacts/retained-checkpoint-node-es-20261106.json",
+      "sha256": "6bfdc0b63df37edbf0dcd515c5fb60ef87283fe5e68a6458db8337b9ae0eaa49"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-node-cjs-20261106.json",
+      "sha256": "b03870675f799c4cd164ae0175329e23145496bbb1460db650a8f9ed9f1cc65c"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-node-es-interop-20261106.json",
+      "sha256": "30798681ec27a7337f4562a5af1017aaee73bef96b5887023be534f540eabde5"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-es-packet-20261106.json",
+      "sha256": "030faf276bbd92b591f6f06034923fce106ab9c68331cf524c53729765159d7b"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-cjs-packet-20261106.json",
+      "sha256": "d12e3a15aa849b3ac7b691d11ea3663fe67092f7ec6c9928b42242cf769397db"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-large-20261106.json",
+      "sha256": "c87591319c3cab9ad56a24618957d47eedb659227bfa82d872dad08249acbf77"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-release-20261106.json",
+      "sha256": "f82a35faafd81196e3767036bfcd11d1bce9c4829a6e8c29c5494d0b29ba598e"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-visual-sources-20261106.json",
+      "sha256": "c3ad5afc9afee6a2320abefd72aa8fee659d1b9f5a95d23a14dba73d2577f389"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-unicode-reproduction-20261106.json",
+      "sha256": "a081d7abebf0a7111bb8ecbca9cb368dec8d8000c695c1254ccb14f7837bcbfb"
+    },
+    {
+      "path": "artifacts/retained-checkpoint-yjs-utf16-oracle-20261106.json",
+      "sha256": "b2f30e29ce55246f36d26de09e92b94b32d715a228c5c6158bdc5b053d2f952f"
+    }
+  ],
+  "documents": [
+    {
+      "path": "docs/YJS_RETAINED_CHECKPOINT_AUDIT.md",
+      "sha256": "6e3d86d5a9c4e022ff48763ad5b0550c254bc21d5fada988f7fcfae64495ee2a"
+    },
+    {
+      "path": "docs/YJS_RETAINED_COMPACTION_DIAGNOSTIC.md",
+      "sha256": "c58f416905e654c17ea8a07c55810d946cdaf874ed28d3313b73bb8e8c6e3cfd"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "e7f9b3d564100cabac9a78aff90dc9c7d0abdf7471f7b9016776efb14c084360"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "51aa0fbc82e61a9ab2373fb104e1537d803e86ad38544aafff3fcd598006f30d"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "7cc037802e76a78caa3e93eb0d2b8ca583753484de79ac0213f82c4498cd9d6a"
+    }
+  ],
+  "open": [
+    "Default adapter six concurrent-typing failures",
+    "Full projection/large-document costs",
+    "History/storage growth and compaction",
+    "Explicit epoch/destination/writer fencing and offline reconciliation",
+    "Auxiliary-state translation and legacy migration/adoption",
+    "Three raw-size overruns",
+    "Complete fresh release CI",
+    "Overall editor parity remains incomplete"
+  ]
+}

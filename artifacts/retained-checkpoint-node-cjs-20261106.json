@@ -1,0 +1,17 @@
+{
+  "mode": "cjs",
+  "domRequired": false,
+  "passed": 8,
+  "cases": [
+    "capture preserves source and declares room/schema metadata",
+    "isolated restore retains model, exact wire state and GUID",
+    "auxiliary binary map and empty root survive",
+    "archive and asynchronous restore inputs are owned",
+    "later same-room typing merges into restored snapshot",
+    "deletion-only capture races and corrupt payloads are rejected",
+    "math, Lean source, tables, custom widget metadata and auxiliary review record survive",
+    "other module-format packet restores with own schema and Yjs runtime"
+  ],
+  "onlyInterop": false,
+  "incoming": "artifacts/retained-checkpoint-es-packet-20261106.json"
+}

@@ -1,0 +1,32 @@
+{
+  "runtime": "v24.22.1",
+  "blocks": 1000,
+  "trials": 1,
+  "captureMs": 341.8714,
+  "restoreMs": 235.7591,
+  "wireBytes": 1927624,
+  "documentSha256": "d07feacc3784e478cf8ec3ba8585a9ede34c66933868f83e31fd5a6c7328f661",
+  "updateSha256": "adace91c247904b1d6de6716f4ad311816d9e6ea468ce375adb30e38ee061f5b",
+  "exactDocument": true,
+  "exactWire": true,
+  "domRequired": false,
+  "memory": {
+    "before": {
+      "heap": 26474440,
+      "buffers": 197785,
+      "total": 26672225
+    },
+    "captured": {
+      "heap": 26415160,
+      "buffers": 2125409,
+      "total": 28540569
+    },
+    "reopened": {
+      "heap": 41201472,
+      "buffers": 2125409,
+      "total": 43326881
+    }
+  },
+  "sourceSha256": "b5cdcace90537654407663d839a34607878b2d61d7e3bbec9347212842d6513b",
+  "note": "One reduced-priority two-logical-processor diagnostic with explicit GC between stages. Not peak memory, a latency gate, hostile-input certification, or a bounded-memory guarantee."
+}

@@ -13,6 +13,7 @@ import { getNodeAtPath } from '../core/transaction/path';
 import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection, type RetainedNodeSeed } from './retained-nodes';
 import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun, type RetainedTextPartition } from './retained-text';
 import { planRetainedNodeStarts, planRetainedText, type RetainedTextPlan } from './retained-mapping';
+import { assertRetainedWireString } from './retained-wire';
 
 const VERSION = 'fountain-retained-document/3';
 const LEAF = 'fountain_leaf', ORDER = 'fountain_marks';
@@ -125,6 +126,8 @@ export function validateRetainedDocument(document: Node, schema: Schema): void {
     if (++nodes > 100_000 || depth > 100 || (characters += node.text?.length ?? 0) > 10_000_000) throw new RangeError('Retained document is too large.');
     validateRetainedMetadata(node.attrs); validateRetainedMetadata(node.marks.map(mark => mark.toJSON()));
     if (node.type.name.length > 200 || Object.keys(node.attrs).length > 1_000 || Object.keys(node.attrs).some(name => name.length > 200)) throw new RangeError('Retained node metadata exceeds the candidate storage bounds.');
+    assertRetainedWireString(node.type.name);
+    if (typeof node.text === 'string') assertRetainedWireString(node.text);
     if (node.isText) validateRetainedTextFormat(format(node, 'preflight'));
     let count = 1, text = node.text?.length ?? 0, height = 0;
     let cacheable = reusable && standardSerialization() && names.get(node.type) === node.type.name && Object.getPrototypeOf(node) === Node.prototype && Object.isFrozen(node)

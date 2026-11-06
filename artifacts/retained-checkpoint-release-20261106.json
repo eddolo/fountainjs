@@ -1,0 +1,12 @@
+{
+  "runtime": "v24.22.1",
+  "domRequired": false,
+  "checkpointRemainsHeld": true,
+  "sourceReleased": {
+    "document": true,
+    "editor": true,
+    "schema": true
+  },
+  "restoreWithFreshSchema": true,
+  "note": "Explicit four-turn GC ownership diagnostic, not a general bounded-memory certificate."
+}

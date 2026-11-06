@@ -1,0 +1,16 @@
+{
+  "mode": "es",
+  "domRequired": false,
+  "passed": 7,
+  "cases": [
+    "capture preserves source and declares room/schema metadata",
+    "isolated restore retains model, exact wire state and GUID",
+    "auxiliary binary map and empty root survive",
+    "archive and asynchronous restore inputs are owned",
+    "later same-room typing merges into restored snapshot",
+    "deletion-only capture races and corrupt payloads are rejected",
+    "math, Lean source, tables, custom widget metadata and auxiliary review record survive"
+  ],
+  "onlyInterop": false,
+  "incoming": null
+}

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add internal retained-room checkpoint capture and isolated restore, preserving
+  full wire/auxiliary state and empty roots with schema, room and integrity
+  checks. Refuse source races, retain stored relative anchors and own binary
+  inputs. Repair a discovered UTF-8 fidelity gap by rejecting unpaired UTF-16
+  text before retained writes/capture; preserve escaped metadata without Unicode
+  cleanup. This is not a public entry, .fjs format, history restoration,
+  compaction, migration or replacement-adapter adoption.
+
 - Build retained projection identity, text and partition bindings in one pass,
   retain frozen numeric paths, and use private delimiter-separated tuple keys
   instead of JSON-encoding each text binding. Avoid empty scratch attributes

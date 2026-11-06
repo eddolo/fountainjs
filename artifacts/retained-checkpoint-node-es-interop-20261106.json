@@ -1,0 +1,10 @@
+{
+  "mode": "es",
+  "domRequired": false,
+  "passed": 1,
+  "cases": [
+    "other module-format packet restores with own schema and Yjs runtime"
+  ],
+  "onlyInterop": true,
+  "incoming": "artifacts/retained-checkpoint-cjs-packet-20261106.json"
+}

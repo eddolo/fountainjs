@@ -43,8 +43,9 @@ writer fence. Old updates must never be sent to the new authoritative room.
 
 ## Required design before adoption
 
-- Define an explicit checkpoint/epoch record with source format/schema version,
-  document digest, destination identity and a retained rollback source.
+- The [internal same-room recovery checkpoint](YJS_RETAINED_CHECKPOINT_AUDIT.md)
+  now retains source state, version, identity and integrity digests. A migration
+  epoch/destination record and authoritative rollback/handoff policy remain.
 - Fence old writers at the provider/server boundary before authoritative
   handoff. Presence counts or the client-side format gate are insufficient.
 - Translate or preserve every supported auxiliary map and anchor: comments,
