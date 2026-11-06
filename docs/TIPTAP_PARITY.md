@@ -1,5 +1,18 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local shape-check follow-up, 2026-11-06: use model equality on the complete fresh
+validated projection, retaining portable JSON comparison when necessary.
+All 265 candidate source cases pass; six required default failures remain.
+All 99 recorded browser, 36 compiled Node and 28 compatibility journeys pass;
+171 public runtime/CSS files remain byte-identical.
+The 10,000-paragraph allocation probe falls from 40,002 model-to-JSON calls to
+zero with exact document/shared-state hashes, but timing changes are mixed.
+The parent full-source result is 4,409 passes/six failures; this follow-up does
+not claim a new complete source run. Full projection, history growth, migration,
+size acceptance and complete fresh release CI remain open. COLLAB-01 stays
+Partial; no default switch, release or overall parity claim.
+[Audit](YJS_RETAINED_SHAPE_EQUALITY_AUDIT.md).
+
 Local immutable-model follow-up, 2026-11-06: retain unchanged privately owned
 model nodes only after fresh shared decoding and validation, exact normalized
 value/child/binding checks and per-read ownership checks. All 263 candidate cases

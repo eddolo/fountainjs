@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid two complete JSON document allocations when an already fresh, validated
+  private retained-Yjs projection equals its native target model. Retain the
+  portable comparison for equivalent reordered attributes and keep unexpected
+  shared changes as errors. Allocation diagnostics improve; typing timings are
+  mixed, and full projection/history/adoption remain unfinished.
+
 - Reuse unchanged immutable model nodes in the private retained-Yjs projection
   after fresh decoding, validation and exact ownership/binding checks. Preserve
   mutable defaults, custom per-run text validation and factory normalization;

@@ -1,0 +1,72 @@
+[
+  {
+    "log": "artifacts/retained-shape-equality-typecheck-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 17.8199613,
+    "check": "typecheck",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-focused-20261106.log",
+    "expectedExitCode": 1,
+    "seconds": 7.7544896,
+    "check": "focused",
+    "exitCode": 1
+  },
+  {
+    "log": "artifacts/retained-shape-equality-build-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 11.8561331,
+    "check": "build",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-test-api-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 0.7412469,
+    "check": "test:api",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-test-headless-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 1.1094252,
+    "check": "test:headless",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-test-package-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 4.6029505,
+    "check": "test:package",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-test-server-runtimes-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 2.6874277,
+    "check": "test:server-runtimes",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-test-budget-20261106.log",
+    "expectedExitCode": 1,
+    "seconds": 0.6306684,
+    "check": "test:budget",
+    "exitCode": 1
+  },
+  {
+    "log": "artifacts/retained-shape-equality-test-performance-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 14.8499121,
+    "check": "test:performance",
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-shape-equality-browser-20261106.log",
+    "expectedExitCode": 0,
+    "seconds": 242.0741798,
+    "check": "browser",
+    "exitCode": 0
+  }
+]

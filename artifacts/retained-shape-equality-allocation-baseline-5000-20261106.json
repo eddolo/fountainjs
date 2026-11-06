@@ -1,0 +1,14 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "retained-shape-equality-baseline-20261106-build",
+  "blocks": 5000,
+  "warmups": 2,
+  "instrumentedEdits": 1,
+  "nodeJSONCallsDuringEdit": 20002,
+  "documentMatchesPlain": true,
+  "documentSha256": "3a01d5cc438c81a34950ef6569374e85dc4dd73adc24d21b39c7bddc0c88c070",
+  "sharedBytes": 9308207,
+  "sharedSha256": "d2eb63ceb3f6e07bf70c115164187e615bbd5a9cf229b58ddc930805cfd3d723",
+  "domRequired": false,
+  "note": "Counts actual model Node.toJSON invocations during one real adapter edit. Restores the prototype before correctness checks. Instrumented counts are separate from uninstrumented latency measurements."
+}

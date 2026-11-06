@@ -1,0 +1,264 @@
+{
+  "runtime": "v24.22.1",
+  "directories": [
+    "retained-shape-equality-baseline-20261106-build",
+    "cursor-overlay-build-20261106"
+  ],
+  "domRequired": false,
+  "passed": 28,
+  "cases": [
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "quote",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "bullet",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "ordered",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "task",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "mark",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "split",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": false,
+      "kind": "move",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "quote",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "bullet",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "ordered",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "task",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "mark",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "split",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "retained-shape-equality-baseline-20261106-build",
+      "peer": "cursor-overlay-build-20261106",
+      "reverse": true,
+      "kind": "move",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "quote",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "bullet",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "ordered",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "task",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "mark",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "split",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": false,
+      "kind": "move",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "quote",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "bullet",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "ordered",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "task",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "mark",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "split",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    },
+    {
+      "seeder": "cursor-overlay-build-20261106",
+      "peer": "retained-shape-equality-baseline-20261106-build",
+      "reverse": true,
+      "kind": "move",
+      "exactConvergence": true,
+      "authorHistoryPreserved": true,
+      "rootAndImagePreserved": true
+    }
+  ],
+  "note": "Both seed directions and exchange orders, separate compiled engine graphs, unchanged retained representation. This does not migrate the public legacy adapter."
+}

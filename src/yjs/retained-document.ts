@@ -400,7 +400,10 @@ export class RetainedDocumentStore {
 
   private finishChange(after: Node): Node {
     const projected = this.read(false);
-    if (!same(projected.toJSON(), after.toJSON())) throw new Error('Retained transaction changed the native document shape.');
+    // Fresh projection has already checked shared values and factory rules.
+    // Equal immutable branches need not allocate two complete JSON trees;
+    // retain portable equality for equivalent, differently ordered metadata.
+    if (!projected.eq(after) && !same(projected.toJSON(), after.toJSON())) throw new Error('Retained transaction changed the native document shape.');
     this.model = after;
     return projected;
   }

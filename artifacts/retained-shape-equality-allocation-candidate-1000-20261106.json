@@ -1,0 +1,14 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "cursor-overlay-build-20261106",
+  "blocks": 1000,
+  "warmups": 2,
+  "instrumentedEdits": 1,
+  "nodeJSONCallsDuringEdit": 0,
+  "documentMatchesPlain": true,
+  "documentSha256": "a2cf909eda66efe334e57f0129277813cf87611b146346e093b981a0eefbcec2",
+  "sharedBytes": 1833461,
+  "sharedSha256": "e560b62fbb3da68b7685c72b7ecb4fa0af9106234412d33fe87d157533d47bf7",
+  "domRequired": false,
+  "note": "Counts actual model Node.toJSON invocations during one real adapter edit. Restores the prototype before correctness checks. Instrumented counts are separate from uninstrumented latency measurements."
+}

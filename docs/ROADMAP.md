@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Final retained shape comparison (2026-11-06, local): compare the fully fresh
+validated projection with model equality before allocating complete JSON trees;
+retain portable equality for equivalent reordered metadata and reject actual
+unexpected changes. All 265 candidate source cases pass; the focused suite
+retains six unchanged default failures. All 99 recorded browser, 36 compiled
+Node and 28 compatibility journeys pass; 171 public runtime/CSS files stay
+byte-identical. A 10,000-paragraph measured edit avoids
+40,002 model-to-JSON calls with identical document/shared state. Timings are
+mixed, and full projection/history growth/migration remain adoption blockers.
+The parent full suite has 4,409 passes/six failures; no fresh full source run or
+overall parity/release promotion is claimed for this follow-up.
+[Audit](YJS_RETAINED_SHAPE_EQUALITY_AUDIT.md).
+
 Validated retained model reuse (2026-11-06, local): freshly decoded and validated
 shared values can retain already-owned immutable model branches, without a
 persistent shared projection cache or identity aliasing. Custom text invariants,

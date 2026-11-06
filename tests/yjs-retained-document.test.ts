@@ -54,6 +54,30 @@ it('reuses unchanged immutable model branches after fresh projection and retains
   } finally { pair.destroy(); }
 });
 
+it('accepts equivalent reordered metadata through native editing and exact save/reopen', () => {
+  const pair = fixture({ ...source, attrs: { zeta: { second: 2, first: 1 }, alpha: true } });
+  const reopenedDoc = new Y.Doc();
+  try {
+    const transaction = pair.editor.createTransaction().insertText([0, 0], 2, 'X');
+    const result = pair.store.apply(transaction);
+    expect(result.eq(transaction.doc)).toBe(false); // The factories retain different key orders.
+    expect(result.toJSON()).toEqual(transaction.doc.toJSON());
+    Y.applyUpdate(reopenedDoc, Y.encodeStateAsUpdate(pair.doc));
+    const reopened = new RetainedDocumentStore(reopenedDoc, 'candidate', pair.editor.state.schema, factory('reordered'));
+    try { expect(reopened.read().toJSON()).toEqual(transaction.doc.toJSON()); } finally { reopened.destroy(); }
+  } finally { reopenedDoc.destroy(); pair.destroy(); }
+});
+
+it('rejects unexpected shared metadata written during a native text operation', () => {
+  const pair = fixture(), insert = pair.store.text.insert.bind(pair.store.text);
+  try {
+    pair.store.text.insert = (...args) => { insert(...args); pair.store.nodes.setAttribute('root', 'unexpected', true); };
+    const transaction = pair.editor.createTransaction().insertText([0, 0], 2, 'X');
+    expect(() => pair.store.apply(transaction)).toThrow('Retained transaction changed the native document shape.');
+    expect(pair.store.read().attrs.unexpected).toBe(true);
+  } finally { pair.destroy(); }
+});
+
 it('does not introduce duplicate model identity when the input reuses the same immutable node twice', () => {
   const pair = fixture(), document = new Y.Doc(), store = new RetainedDocumentStore(document, 'duplicate', pair.editor.state.schema, factory('duplicate'));
   try {
