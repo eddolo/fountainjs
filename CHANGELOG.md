@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Prove native single-step retained text provenance without constructing a
+  whole-document text plan. Capture validated operation fields before Yjs
+  transaction hooks, preserve complete preflight for custom/multi-step cases,
+  and retain generic reconciliation for ineligible shared partitions. Add
+  metadata, sibling-copy, dishonest-map and transaction-hook regressions.
+  This is private experimental work; normalization, history/storage growth,
+  migration and safe adoption remain unfinished.
+
 - Reuse weakly owned immutable retained-document portability and subtree bounds.
   Count every repeated occurrence and its actual depth; retain current schema
   validation, type-name inventory checks and live host serializer/mutable-value

@@ -1,5 +1,48 @@
 # FountainJS opportunity roadmap
 
+## Current programme status — 2026-11-06
+
+The capability ledger has 61 Delivered rows, eight Partial rows and two Host
+boundary rows. These count bounded capability contracts, not percentage
+completion, general production readiness, or full ProseMirror + Tiptap parity.
+Earlier checkpoints below are historical evidence; their passing gates apply to
+those revisions and scopes.
+
+The active priority is COLLAB-01. Six ordinary default-adapter tests still fail
+for offline typing versus concurrent quote/list wrapping, partial marks and
+paragraph splitting. The retained replacement is private and experimental;
+performance improvements do not constitute safe adoption or a public fix.
+
+Other unfinished areas are native document interchange/layout fidelity,
+Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
+confidence, accessibility, RTL/localization, and practical onboarding. Complete
+CommonMark is also unfinished: the default semantic profile is 563/652 and the
+strongest explicit body profile is 635/652; source retention is a separate
+promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
+
+The current source suite has 4,444 passes and six failures, with no skips. Three
+raw-size limits are exceeded. Complete fresh release CI, retained history/storage
+growth and compaction, legacy migration and safe adapter adoption remain open.
+Recent retained-adapter work is local, with no GitHub/npm/site publication.
+Native UI renderers, transcription, full forms and notebook/terminal/workspace
+products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
+[latest native-plan audit](YJS_RETAINED_NATIVE_PLAN_AUDIT.md).
+
+Native retained provenance preflight (2026-11-06, local): prove a single native
+text replacement from its actual map, ancestor metadata/marks, untouched sibling
+identities and exact resulting text. Snapshot the operation before transaction
+hooks; keep full preflight for custom/multi-step cases and generic fallback
+before shared writes. All 298 candidate cases pass; full source has 4,444 passes
+and six unchanged default failures across 289 files without skips. All 99
+recorded browser, 36 compiled Node and 28 compatibility journeys pass; 171 public
+runtime/CSS files stay identical. Three-trial local edit medians change from
+8.39/50.02/96.76 to 7.99/38.60/78.40 ms at 1k/5k/10k paragraphs with matching
+model/shared hashes; a separate 5k edit reduces string-slice calls 10,006 to 6.
+Initialization and receiver timings are mixed. Normalization, storage/history
+growth, compaction, migration, three size overruns and fresh complete release CI
+remain open. COLLAB-01 stays Partial; no default switch or publication.
+[Audit](YJS_RETAINED_NATIVE_PLAN_AUDIT.md).
+
 Retained portability preflight (2026-11-06, local): weakly certify immutable
 subtree portability and aggregate bounds, while checking the current schema's
 type inventory and retaining live schema/factory checks. Every occurrence still

@@ -70,6 +70,31 @@ function format(node: Node, leaf: string): Record<string, string> {
   result[ORDER] = JSON.stringify(order); return result;
 }
 
+interface NativeTextProof {
+  readonly path: readonly number[]; readonly from: number; readonly to: number; readonly text: string;
+  readonly original: Node; readonly target: Node;
+}
+function proveNativeText(before: Node, after: Node, mapping: Mapping, step: Step): NativeTextProof | undefined {
+  if (!(step instanceof ReplaceTextStep) || step.apply !== ReplaceTextStep.prototype.apply) return;
+  const { from, to, text } = step, path = Object.freeze([...step.path]);
+  if (typeof text !== 'string') return;
+  const expected = new ReplaceTextStep(path, from, to, text).getMap(before);
+  if (mapping.maps.length !== 1 || !same(mapping.maps[0]!.ranges, expected.ranges)) return;
+  let original = before, target = after;
+  for (let depth = 0; depth <= path.length; depth++) {
+    if (original.type !== target.type || !sameOrdered(original.attrs, target.attrs) || original.marks.length !== target.marks.length
+      || original.marks.some((mark, index) => mark !== target.marks[index])) return;
+    if (depth === path.length) {
+      if (original.isText && target.isText && target.text === original.text!.slice(0, from) + text + original.text!.slice(to)) return { path, from, to, text, original, target };
+      return;
+    }
+    if (original.isText || target.isText || original.childCount !== target.childCount) return;
+    const index = path[depth]!;
+    for (let sibling = 0; sibling < original.childCount; sibling++) if (sibling !== index && original.content[sibling] !== target.content[sibling]) return;
+    original = original.child(index); target = target.child(index);
+  }
+}
+
 export function validateRetainedDocument(document: Node, schema: Schema): void {
   if (document.type.schema !== schema) throw new Error('Retained document belongs to another schema.');
   let nodes = 0, characters = 0;
@@ -442,10 +467,11 @@ export class RetainedDocumentStore {
     // invalid custom step must not leave an earlier valid step half-applied.
     const changes = transaction.steps.map(step => {
       const after = step.apply(before), mapping = new Mapping(step.getMaps?.(before) ?? [step.getMap(before)]);
-      const checked = planRetainedText(before, after, mapping, step instanceof ReplaceStep);
-      // Keep one proven plan for a normal keystroke. Do not retain every full
-      // plan in a potentially long multi-step transaction.
-      const change = { before, after, mapping, step, plan: transaction.steps.length === 1 ? checked : undefined }; before = after; return change;
+      const native = transaction.steps.length === 1 ? proveNativeText(before, after, mapping, step) : undefined;
+      const checked = native ? undefined : planRetainedText(before, after, mapping, step instanceof ReplaceStep);
+      // A native single-step proof needs no whole-tree plan. All other steps
+      // are preflighted in full; retain a plan only for a single fallback.
+      const change = { before, after, mapping, step, native, plan: transaction.steps.length === 1 ? checked : undefined }; before = after; return change;
     });
     let writer: Y.Transaction | undefined, changedAfterProjection = false;
     const observed = (event: Y.Transaction): void => {
@@ -458,7 +484,7 @@ export class RetainedDocumentStore {
       const projected = this.document.transact(event => {
         writer = event;
         let result: Node | undefined;
-        for (const change of changes) result = (changes.length === 1 ? this.changeText(change.before, change.after, change.mapping, change.step, event) : undefined)
+        for (const change of changes) result = (change.native ? this.changeText(change.after, change.native, event) : undefined)
           ?? this.change(change.before, change.after, change.mapping, change.step, change.plan, event);
         return result;
       }, this.origin);
@@ -470,14 +496,11 @@ export class RetainedDocumentStore {
     } finally { this.document.off('afterTransaction', observed); }
   }
 
-  private changeText(before: Node, after: Node, mapping: Mapping, step: Step, shared: Y.Transaction): Node | undefined {
+  private changeText(after: Node, { path, from, to, text, original, target }: NativeTextProof, shared: Y.Transaction): Node | undefined {
     // The native text step changes one existing leaf without structural or
     // formatting intent. Custom apply implementations use the general path.
-    if (!(step instanceof ReplaceTextStep) || step.apply !== ReplaceTextStep.prototype.apply || shared.changed.size) return;
-    const { path, from, to, text } = step, original = getNodeAtPath(before, path), target = getNodeAtPath(after, path);
+    if (shared.changed.size) return;
     if (!original.isText || !target.isText || !original.nodeSize || !target.nodeSize || to - from === original.nodeSize) return;
-    const expected = new ReplaceTextStep(path, from, to, text).getMap(before);
-    if (mapping.maps.length !== 1 || !same(mapping.maps[0]!.ranges, expected.ranges)) return;
     const bindings = this.textPaths.get(pathKey(path)), binding = bindings?.length === 1 ? bindings[0] : undefined;
     if (!binding || binding.from || binding.modelFrom || binding.length !== original.nodeSize
       || this.groups.get(binding.id)?.value.textLayout?.empty !== false) return;

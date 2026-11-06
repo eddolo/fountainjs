@@ -5,6 +5,7 @@ import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Schema,
   type NodeJSON, type Transaction } from '../src';
 import { RetainedDocumentStore, validateRetainedDocument } from '../src/yjs/retained-document';
 import { Mark as ModelMark } from '../src/core/schema/mark';
+import { Node as ModelNode } from '../src/core/schema/node';
 import { ReplaceTextStep } from '../src/core/transaction/replace-text-step';
 import { StepMap, textPointToPosition } from '../src/core/transaction/mapping';
 import { getNodeAtPath } from '../src/core/transaction/path';
@@ -431,6 +432,84 @@ it('preserves additional metadata intent from a custom text transformation', () 
     const transaction = pair.editor.createTransaction().step(new AnnotatedTextStep([0, 0], 2, 2, 'X'));
     expect(pair.store.apply(transaction).toJSON()).toEqual(transaction.doc.toJSON()); expect(pair.store.read().attrs.annotated).toBe(true);
   } finally { pair.destroy(); }
+});
+
+it('falls back when an inherited native text primitive changes leaf metadata', () => {
+  const pair = fixture(), withText = ModelNode.prototype.withText;
+  try {
+    ModelNode.prototype.withText = function (text) { return withText.call(this, text).withAttrs({ ...this.attrs, annotation: true }); };
+    const transaction = pair.editor.createTransaction().insertText([0, 0], 2, 'X'), result = pair.store.apply(transaction);
+    expect(result.toJSON()).toEqual(transaction.doc.toJSON()); expect(result.child(0).child(0).attrs.annotation).toBe(true);
+  } finally { ModelNode.prototype.withText = withText; pair.destroy(); }
+});
+
+it('falls back when native ancestor copying changes an otherwise unedited sibling', () => {
+  const pair = fixture(), copy = ModelNode.prototype.copy;
+  try {
+    ModelNode.prototype.copy = function (this: ModelNode, content = this.content) {
+      const result = copy.call(this, content);
+      return this.type.name === 'doc' && result.childCount > 1
+        ? copy.call(result, [result.child(0), result.child(1).withAttrs({ ...result.child(1).attrs, annotation: true })]) : result;
+    };
+    const transaction = pair.editor.createTransaction().insertText([0, 0], 2, 'X'), result = pair.store.apply(transaction);
+    expect(result.toJSON()).toEqual(transaction.doc.toJSON()); expect(result.child(1).attrs.annotation).toBe(true);
+  } finally { ModelNode.prototype.copy = copy; pair.destroy(); }
+});
+
+it('retains generic composed-map semantics and author history for an otherwise native text operation', () => {
+  const direct = fixture(), composed = fixture();
+  class ComposedTextStep extends ReplaceTextStep { override getMaps(document: Parameters<ReplaceTextStep['apply']>[0]) { return [super.getMap(document), StepMap.empty]; } }
+  const histories = [direct, composed].map(pair => new Y.UndoManager([...pair.store.scope], { captureTimeout: 0 }));
+  try {
+    const target = direct.editor.createTransaction().insertText([0, 0], 2, 'X');
+    expect(direct.store.apply(target).toJSON()).toEqual(target.doc.toJSON());
+    const other = composed.editor.createTransaction().step(new ComposedTextStep([0, 0], 2, 2, 'X'));
+    expect(composed.store.apply(other).toJSON()).toEqual(other.doc.toJSON()); expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(Y.encodeStateAsUpdate(composed.doc));
+    for (const history of histories) expect(history.undo()).toBeTruthy();
+    expect(direct.store.read().toJSON()).toEqual(direct.editor.getJSON()); expect(composed.store.read().toJSON()).toEqual(composed.editor.getJSON());
+    for (const history of histories) expect(history.redo()).toBeTruthy();
+    expect(direct.store.read().toJSON()).toEqual(target.doc.toJSON()); expect(composed.store.read().toJSON()).toEqual(other.doc.toJSON());
+    expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(Y.encodeStateAsUpdate(composed.doc));
+  } finally { histories.forEach(history => history.destroy()); direct.destroy(); composed.destroy(); }
+});
+
+it.each(['identity', 'outside'] as const)('rejects a single native text operation with an untruthful %s map before opening a shared transaction', kind => {
+  const pair = fixture(), changed = vi.fn();
+  class InvalidTextStep extends ReplaceTextStep { override getMaps() { return kind === 'identity' ? [] : [new StepMap([1000, 0, 1])]; } }
+  try {
+    const transaction = pair.editor.createTransaction().step(new InvalidTextStep([0, 0], 1, 2, 'X')), before = Y.encodeStateAsUpdate(pair.doc);
+    pair.doc.on('afterTransaction', changed);
+    expect(() => pair.store.apply(transaction)).toThrow(kind === 'identity' ? 'claim changed text was retained' : 'Retained mapping exceeds its source document.');
+    expect(Y.encodeStateAsUpdate(pair.doc)).toEqual(before); expect(changed).not.toHaveBeenCalled();
+  } finally { pair.doc.off('afterTransaction', changed); pair.destroy(); }
+});
+
+it('preflights a later native map failure before writing an earlier native text step', () => {
+  const pair = fixture(), changed = vi.fn();
+  class InvalidTextStep extends ReplaceTextStep { override getMaps() { return []; } }
+  try {
+    const transaction = pair.editor.createTransaction().insertText([0, 0], 2, 'X').step(new InvalidTextStep([0, 0], 0, 1, 'Z'));
+    const before = Y.encodeStateAsUpdate(pair.doc); pair.doc.on('afterTransaction', changed);
+    expect(() => pair.store.apply(transaction)).toThrow('claim changed text was retained');
+    expect(Y.encodeStateAsUpdate(pair.doc)).toEqual(before); expect(changed).not.toHaveBeenCalled();
+  } finally { pair.doc.off('afterTransaction', changed); pair.destroy(); }
+});
+
+it.each(['range', 'path'] as const)('pins the validated native %s when a transaction-start hook mutates the original step', kind => {
+  const pair = fixture({ ...source, content: [source.content![0], source.content![0], source.content![1]] });
+  const step = new ReplaceTextStep([0, 0], 2, 2, 'X'), transaction = pair.editor.createTransaction().step(step);
+  let changed = false;
+  const hook = () => {
+    if (changed) return; changed = true;
+    if (kind === 'path') (step.path as number[])[0] = 1;
+    else { const mutable = step as { from: number; to: number; text: string }; mutable.from = 0; mutable.to = 1; mutable.text = 'Y'; }
+  };
+  try {
+    pair.doc.on('beforeTransaction', hook);
+    const result = pair.store.apply(transaction); expect(changed).toBe(true);
+    expect(result.toJSON()).toEqual(transaction.doc.toJSON()); expect(pair.store.read().toJSON()).toEqual(transaction.doc.toJSON());
+    expect(result.child(0).textContent).toBe('AlXpha'); expect(result.child(1).textContent).toBe('Alpha');
+  } finally { pair.doc.off('beforeTransaction', hook); pair.destroy(); }
 });
 
 it('matches general reconciliation when shared layout was changed earlier in the outer transaction', () => {

@@ -1,0 +1,79 @@
+[
+  {
+    "expectedExitCode": 0,
+    "seconds": 18.4790066,
+    "log": "artifacts/retained-native-plan-typecheck-20261106.log",
+    "check": "typecheck",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 1,
+    "seconds": 8.2375649,
+    "log": "artifacts/retained-native-plan-focused-20261106.log",
+    "check": "focused",
+    "exitCode": 1
+  },
+  {
+    "expectedExitCode": 1,
+    "seconds": 284.4615235,
+    "log": "artifacts/retained-native-plan-full-source-20261106.log",
+    "check": "full-source",
+    "exitCode": 1
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 13.4945645,
+    "log": "artifacts/retained-native-plan-build-20261106.log",
+    "check": "build",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 0.8274408,
+    "log": "artifacts/retained-native-plan-test-api-20261106.log",
+    "check": "test:api",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 1.1753383,
+    "log": "artifacts/retained-native-plan-test-headless-20261106.log",
+    "check": "test:headless",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 4.5487265,
+    "log": "artifacts/retained-native-plan-test-package-20261106.log",
+    "check": "test:package",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 3.0701724,
+    "log": "artifacts/retained-native-plan-test-server-runtimes-20261106.log",
+    "check": "test:server-runtimes",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 1,
+    "seconds": 0.6289081,
+    "log": "artifacts/retained-native-plan-test-budget-20261106.log",
+    "check": "test:budget",
+    "exitCode": 1
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 16.1951265,
+    "log": "artifacts/retained-native-plan-test-performance-20261106.log",
+    "check": "test:performance",
+    "exitCode": 0
+  },
+  {
+    "expectedExitCode": 0,
+    "seconds": 252.0961563,
+    "log": "artifacts/retained-native-plan-browser-20261106.log",
+    "check": "browser",
+    "exitCode": 0
+  }
+]

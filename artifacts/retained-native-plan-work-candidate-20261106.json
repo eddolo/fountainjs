@@ -1,0 +1,14 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "cursor-overlay-build-20261106",
+  "blocks": 5000,
+  "warmups": 2,
+  "instrumentedEdits": 1,
+  "stringSliceCallsDuringEdit": 6,
+  "documentMatchesPlain": true,
+  "documentSha256": "ee4d527d71dd724f2af94206e50a63e974dcf3c0d41a27acff216e8f36fe4a3d",
+  "sharedBytes": 9308207,
+  "sharedSha256": "1a0a4b2af314a31e6c170886c109299158ee772c585fbbcc1f920e934d1e4908",
+  "domRequired": false,
+  "note": "Counts actual String.slice invocations during one real adapter edit. Restores the prototype before correctness checks. Instrumented counts are separate from uninstrumented latency measurements."
+}
