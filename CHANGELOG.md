@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse unchanged immutable model nodes in the private retained-Yjs projection
+  after fresh decoding, validation and exact ownership/binding checks. Preserve
+  mutable defaults, custom per-run text validation and factory normalization;
+  share unchanged attribute-processing functions through an internal module.
+  Add snapshot-retention diagnostics without claiming a general typing speedup.
+  Full projection, history growth and safe adoption remain unfinished.
+
 - Apply eligible single-step native text edits directly to an existing private
   retained-Yjs partition after full document/map preflight. Keep the general
   path for pending shared writes, custom transformations, mixed partitions,

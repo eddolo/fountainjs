@@ -1,5 +1,18 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local immutable-model follow-up, 2026-11-06: retain unchanged privately owned
+model nodes only after fresh shared decoding and validation, exact normalized
+value/child/binding checks and per-read ownership checks. All 263 candidate cases
+and 99 recorded browser journeys pass; the complete source suite has 4,409 passes
+and six unchanged default-adapter failures. Three snapshot trials retain 2,193
+nodes / 0.54 MiB extra versus 130,065 / 24.44 MiB for 65 exact saved versions;
+this does not certify bounded live-editor memory or a general typing speedup.
+All 36 compiled Node and 28 interoperability journeys pass. Public runtime grows
+53 raw bytes; API, CSS and limits stay unchanged. Full projection, history growth,
+compaction, migration, three size overruns and complete fresh release CI remain
+open. COLLAB-01 stays Partial; no default switch, parity promotion or publication.
+[Audit](YJS_RETAINED_MODEL_REUSE_AUDIT.md).
+
 Local direct-text follow-up, 2026-11-06: eligible native text steps write their
 existing partition after full preflight, retaining general reconciliation for
 pending shared writes and complex edits. All 253 candidate cases, 36 compiled

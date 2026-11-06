@@ -1,0 +1,79 @@
+[
+  {
+    "log": "artifacts/retained-model-reuse-typecheck-20261106.log",
+    "seconds": 17.7329701,
+    "check": "typecheck",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-focused-20261106.log",
+    "seconds": 7.8795926,
+    "check": "focused",
+    "expectedExitCode": 1,
+    "exitCode": 1
+  },
+  {
+    "log": "artifacts/retained-model-reuse-full-source-20261106.log",
+    "seconds": 249.9648902,
+    "check": "full-source",
+    "expectedExitCode": 1,
+    "exitCode": 1
+  },
+  {
+    "log": "artifacts/retained-model-reuse-build-20261106.log",
+    "seconds": 12.0783296,
+    "check": "build",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-test-api-20261106.log",
+    "seconds": 0.7275968,
+    "check": "test:api",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-test-headless-20261106.log",
+    "seconds": 1.1383021,
+    "check": "test:headless",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-test-package-20261106.log",
+    "seconds": 4.6556423,
+    "check": "test:package",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-test-server-runtimes-20261106.log",
+    "seconds": 2.7197432,
+    "check": "test:server-runtimes",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-test-budget-20261106.log",
+    "seconds": 0.5841441,
+    "check": "test:budget",
+    "expectedExitCode": 1,
+    "exitCode": 1
+  },
+  {
+    "log": "artifacts/retained-model-reuse-test-performance-20261106.log",
+    "seconds": 15.6989295,
+    "check": "test:performance",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  },
+  {
+    "log": "artifacts/retained-model-reuse-browser-20261106.log",
+    "seconds": 244.8032818,
+    "check": "browser",
+    "expectedExitCode": 0,
+    "exitCode": 0
+  }
+]

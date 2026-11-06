@@ -1,5 +1,21 @@
 # FountainJS opportunity roadmap
 
+Validated retained model reuse (2026-11-06, local): freshly decoded and validated
+shared values can retain already-owned immutable model branches, without a
+persistent shared projection cache or identity aliasing. Custom text invariants,
+mutable defaults, normalized attributes, marks and bindings keep their checks.
+All 263 candidate cases and 99 recorded three-engine browser journeys pass;
+the full source run has 4,409 passes and the same six required default failures.
+Three isolated trials retain 65 exact receiving-editor snapshots with 2,193
+model nodes and 0.54 MiB extra memory versus 130,065 nodes and 24.44 MiB before.
+Local/receiver timings are separate diagnostics, not a general speedup claim.
+All 36 compiled Node and 28 interoperability journeys pass; public runtime
+grows 53 raw bytes after an internal unchanged-function extraction, with CSS
+and API unchanged.
+Full projection, history growth, compaction, migration, three size overruns and
+complete fresh release CI remain open. No default switch or publication.
+[Audit and evidence](YJS_RETAINED_MODEL_REUSE_AUDIT.md).
+
 Direct retained text edits (2026-11-06, local): validated single-step native
 edits in one complete, nonempty uniform partition avoid rebuilding unchanged
 group bookkeeping; pending shared writes and complex cases use the general

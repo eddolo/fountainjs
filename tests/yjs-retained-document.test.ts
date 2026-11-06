@@ -1,12 +1,13 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
+import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Schema, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
   type NodeJSON, type Transaction } from '../src';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
 import { ReplaceTextStep } from '../src/core/transaction/replace-text-step';
 import { StepMap, textPointToPosition } from '../src/core/transaction/mapping';
 import { getNodeAtPath } from '../src/core/transaction/path';
+import { retainedNameKey } from '../src/yjs/retained-nodes';
 
 const factory = (prefix: string) => { let index = 0; return () => `${prefix}-${index++}`; };
 const source: NodeJSON = { type: 'doc', attrs: { audit: { keep: true } }, content: [
@@ -41,6 +42,129 @@ function peers(content = source, reverseIDs = false) {
     else { Y.applyUpdate(left.doc, b, 'peer'); Y.applyUpdate(doc, a, 'peer'); }
   }, destroy: () => { left.destroy(); editor.destroy(); store.destroy(); doc.destroy(); } };
 }
+
+it('reuses unchanged immutable model branches after fresh projection and retains changed bindings', () => {
+  const pair = fixture({ ...source, content: [source.content![0], { type: 'paragraph', content: [{ type: 'text', text: 'Beta', marks: [{ type: 'strong' }] }] }, source.content![1]] });
+  try {
+    const first = pair.store.read(); expect(pair.store.read()).toBe(first);
+    const transaction = pair.editor.createTransaction().insertText([0, 0], 2, 'X'), second = pair.store.apply(transaction);
+    expect(second.toJSON()).toEqual(transaction.doc.toJSON()); expect(second.child(0)).not.toBe(first.child(0));
+    expect(second.child(1)).toBe(first.child(1)); expect(second.child(1).child(0)).toBe(first.child(1).child(0)); expect(second.child(2)).toBe(first.child(2));
+    const anchor = pair.store.textAnchor([0, 0], 3, 1); expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path: [0, 0], offset: 3 });
+  } finally { pair.destroy(); }
+});
+
+it('does not introduce duplicate model identity when the input reuses the same immutable node twice', () => {
+  const pair = fixture(), document = new Y.Doc(), store = new RetainedDocumentStore(document, 'duplicate', pair.editor.state.schema, factory('duplicate'));
+  try {
+    const paragraph = pair.editor.state.doc.child(0), original = pair.editor.state.doc.copy([paragraph, paragraph]); store.seed(original);
+    const result = store.read(); expect(result.toJSON()).toEqual(original.toJSON());
+    expect(result.child(0)).not.toBe(result.child(1)); expect(result.child(0).child(0)).not.toBe(result.child(1).child(0));
+    for (const path of [[0, 0], [1, 0]]) expect(store.resolveTextAnchor(store.textAnchor(path, 2, 1))).toEqual({ path, offset: 2 });
+  } finally { store.destroy(); document.destroy(); pair.destroy(); }
+});
+
+it('keeps equal text in independently owned blocks distinct through a pending move', () => {
+  const pair = fixture({ ...source, content: [source.content![0], source.content![0], source.content![1]] });
+  try {
+    const before = pair.store.read(), moved = pair.store.identity([1])!;
+    pair.doc.transact(() => {
+      pair.store.nodes.move(moved, 'root', 0); const after = pair.store.read();
+      expect(after.child(0)).toBe(before.child(1)); expect(after.child(1)).toBe(before.child(0));
+      expect(after.child(0)).not.toBe(after.child(1)); expect(after.child(0).child(0)).not.toBe(after.child(1).child(0));
+      expect(pair.store.resolveTextAnchor(pair.store.textAnchor([0, 0], 2, 1))).toEqual({ path: [0, 0], offset: 2 });
+    });
+  } finally { pair.destroy(); }
+});
+
+it('runs attribute and whole-node factory validators again before reusing an immutable value', () => {
+  let attribute = true, invariant = true;
+  const extension = defineExtension({ name: 'reuse-guard', nodes: { guarded: { group: 'block', atom: true,
+    attrs: { token: { default: 'ok', validate: value => attribute && value === 'ok' } }, validate: () => invariant } } });
+  const pair = fixture({ type: 'doc', content: [{ type: 'guarded' }] }, 101, [CoreExtension, extension]);
+  try {
+    const first = pair.store.read(); attribute = false; expect(() => pair.store.read()).toThrow('Invalid value for attribute: token');
+    attribute = true; invariant = false; expect(() => pair.store.read()).toThrow('Invalid node invariant: guarded');
+    invariant = true; expect(pair.store.read().toJSON()).toEqual(first.toJSON());
+  } finally { pair.destroy(); }
+});
+
+it('does not reuse a model containing a mutable host default or hide its later invariant failure', () => {
+  class HostValue { valid = true; }
+  const value = new HostValue(), extension = defineExtension({ name: 'host-default', nodes: { hosted: { group: 'block', atom: true,
+    attrs: { host: { default: value } }, validate: node => node.attrs.host === 0 || (node.attrs.host as HostValue).valid } } });
+  const pair = fixture({ type: 'doc', content: [{ type: 'hosted', attrs: { host: 0 } }] }, 101, [CoreExtension, extension]);
+  try {
+    pair.store.nodes.setAttribute(pair.store.identity([0])!, 'host', undefined);
+    const first = pair.store.read(), second = pair.store.read(); expect(first.child(0).attrs.host).toBe(value); expect(second.child(0)).not.toBe(first.child(0));
+    value.valid = false; expect(() => pair.store.read()).toThrow('Invalid node invariant: hosted');
+    value.valid = true; expect(pair.store.read().child(0).attrs.host).toBe(value);
+  } finally { pair.destroy(); }
+});
+
+it('matches uncached factory normalization and JSON key order after reordered model metadata', () => {
+  const extension = defineExtension({ name: 'ordered-defaults', nodes: { ordered_defaults: { group: 'block', atom: true,
+    attrs: { zeta: { default: 1 }, alpha: { default: 2 } } } } });
+  const pair = fixture({ type: 'doc', attrs: { zeta: 1, alpha: 2 }, content: [{ type: 'ordered_defaults' },
+    { type: 'paragraph', attrs: { zeta: 1, alpha: 2 }, content: [{ type: 'text', text: 'Alpha', attrs: { zeta: 1, alpha: 2 } }] }] }, 101, [CoreExtension, extension]);
+  const control = new RetainedDocumentStore(pair.doc, 'candidate', pair.editor.state.schema, factory('control'));
+  try {
+    const before = pair.store.read(), fresh = control.read(); expect(JSON.stringify(before.toJSON())).toBe(JSON.stringify(fresh.toJSON()));
+    pair.store.nodes.setAttribute(pair.store.identity([0])!, 'zeta', undefined);
+    expect(JSON.stringify(pair.store.read().toJSON())).toBe(JSON.stringify(control.read().toJSON()));
+  } finally { control.destroy(); pair.destroy(); }
+});
+
+it('does not preserve an input array subclass in place of the freshly decoded portable array', () => {
+  class HostArray extends Array<number> {}
+  const extension = defineExtension({ name: 'portable-array', nodes: { array_item: { group: 'block', atom: true, attrs: { tags: { default: [] } } } } });
+  const pair = fixture({ type: 'doc', content: [{ type: 'array_item', attrs: { tags: new HostArray(1, 2) } }] }, 101, [CoreExtension, extension]);
+  try {
+    expect(pair.editor.state.doc.child(0).attrs.tags).toBeInstanceOf(HostArray);
+    const result = pair.store.read(); expect(result.child(0).attrs.tags).toEqual([1, 2]);
+    expect(Object.getPrototypeOf(result.child(0).attrs.tags)).toBe(Array.prototype);
+    expect(result.child(0)).not.toBe(pair.editor.state.doc.child(0));
+  } finally { pair.destroy(); }
+});
+
+it('still validates each custom text run before merging split partitions with the same logical leaf', () => {
+  const kit = composeExtensions([CoreExtension]), schema = new Schema({ ...kit.schema, nodes: { ...kit.schema.nodes,
+    text: { ...kit.schema.nodes.text, validate: node => node.text === 'Alpha' } } });
+  const document = new Y.Doc(), store = new RetainedDocumentStore(document, 'runs', schema, factory('runs')), original = schema.nodeFromJSON(source);
+  try {
+    store.seed(original); const parent = store.identity([0])!, field = store.nodes.project().root.content[0].content[0].id;
+    const second = store.nodes.create({ type: 'text', textLayout: { field, empty: false } }, parent, 1); store.text.split(field, second, 2);
+    const before = Y.encodeStateAsUpdate(document); expect(() => store.read(false)).toThrow('Invalid node invariant: text'); expect(Y.encodeStateAsUpdate(document)).toEqual(before);
+    store.text.join(field, second); store.nodes.remove(second); expect(store.read().toJSON()).toEqual(original.toJSON());
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it('snapshots text defaults before a later mark validator changes a mutable default source', () => {
+  const value = { version: 1 }; let calls = 0;
+  const kit = composeExtensions([CoreExtension]), schema = new Schema({ ...kit.schema, nodes: { ...kit.schema.nodes,
+    text: { ...kit.schema.nodes.text, attrs: { snapshot: { default: value } } } }, marks: { ...kit.schema.marks,
+    source_mark: { attrs: { token: { default: 0, validate: () => { if (++calls === 2) value.version = 2; return true; } } } } } });
+  const document = new Y.Doc(), store = new RetainedDocumentStore(document, 'snapshots', schema, factory('snapshots'));
+  const original = schema.nodeFromJSON({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Alpha', marks: [{ type: 'source_mark' }] }] }] });
+  try {
+    store.seed(original); const parent = store.identity([0])!, field = store.nodes.project().root.content[0].content[0].id;
+    const second = store.nodes.create({ type: 'text', textLayout: { field, empty: false } }, parent, 1); store.text.split(field, second, 2);
+    for (const [id, length] of [[field, 2], [second, 3]] as const) store.text.format(id, 0, length, { ['a_' + retainedNameKey('snapshot')]: null });
+    calls = 0; value.version = 1;
+    const result = store.read(false); expect(result.child(0).content.map(node => ({ text: node.text, snapshot: node.attrs.snapshot }))).toEqual([
+      { text: 'Al', snapshot: { version: 1 } }, { text: 'pha', snapshot: { version: 2 } },
+    ]);
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it('rejects newly malformed shared metadata after a successful reused read and recovers without repair writes', () => {
+  const pair = fixture();
+  try {
+    const first = pair.store.read(), root = pair.doc.getMap('candidate-nodes:root'), key = 'attr:' + retainedNameKey('audit'), original = root.get(key);
+    root.set(key, '{'); const before = Y.encodeStateAsUpdate(pair.doc); expect(() => pair.store.read()).toThrow(); expect(Y.encodeStateAsUpdate(pair.doc)).toEqual(before);
+    root.set(key, original); expect(pair.store.read().toJSON()).toEqual(first.toJSON());
+  } finally { pair.destroy(); }
+});
 
 it.each([
   { name: 'prefix insertion', from: 0, to: 0, text: 'X' },

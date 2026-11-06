@@ -1,5 +1,8 @@
 import type * as Y from 'yjs';
-import type { Attributes, MarkJSON, Node, Schema } from '../core/schema';
+import type { Attributes, Mark, MarkJSON, NodeType, Schema } from '../core/schema';
+import { Node } from '../core/schema/node';
+import { computeAttrs, isDeeplyImmutable } from '../core/schema/attributes';
+import { freezeAttributes } from '../core/schema/node-spec';
 import { Mapping } from '../core/transaction/mapping';
 import type { Step } from '../core/transaction/step';
 import type { Transaction } from '../core/transaction/transaction';
@@ -12,6 +15,7 @@ import { planRetainedNodeStarts, planRetainedText, type RetainedTextPlan } from 
 
 const VERSION = 'fountain-retained-document/3';
 const LEAF = 'fountain_leaf', ORDER = 'fountain_marks';
+const EMPTY_ATTRS: Attributes = Object.freeze({});
 const pathKey = (path: readonly number[]) => path.join('.');
 // Callers compare validated portable metadata/documents, or missing fields.
 // Object-key order is immaterial; avoid sorted copies of entire documents.
@@ -23,6 +27,18 @@ const same = (left: unknown, right: unknown): boolean => {
   const a = left as Record<string, unknown>, b = right as Record<string, unknown>, keys = Object.keys(a);
   return keys.length === Object.keys(b).length && keys.every(key => Object.hasOwn(b, key) && same(a[key], b[key]));
 };
+// Reused model values must also retain the factory's deterministic key order.
+// Compare data directly rather than invoking host-defined toJSON methods.
+const sameOrdered = (left: unknown, right: unknown): boolean => {
+  if (left === right) return true;
+  if (!left || !right || typeof left !== 'object' || typeof right !== 'object'
+    || Array.isArray(left) !== Array.isArray(right)) return false;
+  if (Array.isArray(left)) {
+    if (left.length !== (right as unknown[]).length || Object.getPrototypeOf(left) !== Array.prototype || Object.getPrototypeOf(right) !== Array.prototype) return false;
+  } else if (![null, Object.prototype].includes(Object.getPrototypeOf(right))) return false;
+  const a = left as Record<string, unknown>, b = right as Record<string, unknown>, keys = Object.keys(a), next = Object.keys(b);
+  return keys.length === next.length && keys.every((key, index) => key === next[index] && sameOrdered(a[key], b[key]));
+};
 interface Binding { id: string; from: number; length: number; modelFrom: number; leaf: string }
 interface GroupState { id: string; parent: string; value: RetainedNodeProjection }
 interface Leaf { node: Node; path: number[]; at: number; leaf: string }
@@ -30,7 +46,13 @@ interface Group { parent: string; leaves: Leaf[]; ids: string[]; field: string; 
 interface Piece { original: string; from: number; to: number; at: number; group: Group; start?: unknown; end?: unknown; id?: string; leaf: Leaf }
 interface Segment { original: string; id: string; from: number; to: number; group: Group }
 interface Fragment { node: Node; id?: string; leaf?: string; bindings?: Binding[]; children?: Fragment[] }
+interface TextFragment { text: string; attrs: Attributes; marks: readonly Mark[]; leaf: string; bindings: Binding[] }
 interface SplitPlacement { root: string; rootToken: string; token: string; partition: string }
+const bindingKey = (bindings: readonly Binding[], leaf: string): string => JSON.stringify([bindings[0]?.id, bindings[0]?.from, leaf]);
+const sameBindings = (left: readonly Binding[], right: readonly Binding[]): boolean => left.length === right.length && left.every((entry, index) => {
+  const other = right[index]!;
+  return entry.id === other.id && entry.from === other.from && entry.length === other.length && entry.modelFrom === other.modelFrom && entry.leaf === other.leaf;
+});
 
 function format(node: Node, leaf: string): Record<string, string> {
   const result: Record<string, string> = { [LEAF]: leaf }, order: string[] = [], counts = new Map<string, number>();
@@ -175,8 +197,17 @@ export class RetainedDocumentStore {
     this.model = source; return projected;
   }
 
-  private textNode(text: string, attrs: Attributes, marks: readonly MarkJSON[]): Node {
-    return this.schema.nodes.text.create(attrs, [], text, marks.map(mark => this.schema.markFromJSON(mark)));
+  private projectionNode(type: NodeType, attrs: Attributes, content: readonly Node[], text: string | undefined, marks: readonly Mark[], used: Set<Node>, previous?: Node): Node {
+    const reuse = previous?.type === type && previous.text === text && previous.content.length === content.length
+      && !used.has(previous)
+      && previous.content.every((child, index) => child === content[index]) && previous.marks.length === marks.length
+      && isDeeplyImmutable(previous.attrs) && previous.marks.every(mark => isDeeplyImmutable(mark.attrs))
+      && sameOrdered(previous.attrs, attrs) && previous.marks.every((mark, index) => mark.type === marks[index]!.type && sameOrdered(mark.attrs, marks[index]!.attrs));
+    const node = reuse ? previous! : new Node(type, attrs, content, text, marks);
+    if (reuse) used.add(node);
+    // Match NodeType.create: fresh attribute and whole-node rules still run.
+    if (type.spec.validate && !type.spec.validate(node)) throw new Error(`Invalid node invariant: ${type.name}`);
+    return node;
   }
 
   private decode(run: RetainedTextRun): { leaf: string; attrs: Attributes; marks: MarkJSON[] } {
@@ -198,6 +229,20 @@ export class RetainedDocumentStore {
 
   read(validate = true): Node {
     if (this.metadata.get('version') !== VERSION || this.metadata.get('seeded') !== true) throw new Error('Retained document is not initialized.');
+    // Candidates come only from this store's existing model/bindings. Shared
+    // data is read and checked below; no shared projection is cached.
+    const previousNodes = new Map<string, Node>();
+    const previousTexts = new Map<string, { node: Node; bindings: readonly Binding[] } | null>();
+    const used = new Set<Node>();
+    if (this.model) {
+      for (const [id, path] of this.identityPaths) previousNodes.set(id, getNodeAtPath(this.model, path));
+      for (const [path, bindings] of this.textPaths) {
+        const leaf = this.leafPaths.get(path);
+        if (!leaf || !bindings.length) continue;
+        const key = bindingKey(bindings, leaf), node = getNodeAtPath(this.model, path.split('.').map(Number));
+        previousTexts.set(key, previousTexts.has(key) ? null : { node, bindings });
+      }
+    }
     const projection = this.nodes.project();
     if (projection.issues.some(issue => issue.kind === 'unattached')) throw new Error('Retained document has unattached records.');
     const fields = new Set<string>(), placements = new Map<string, SplitPlacement>();
@@ -222,15 +267,29 @@ export class RetainedDocumentStore {
       for (const child of ordered) if (child.type === 'text') {
         if (partitions.get(child.id)!.runs.some(run => run.text.length)) activeFields.add(child.textLayout!.field);
       }
-      const emittedEmpty = new Set<string>(), children: Fragment[] = [];
-      const append = (next: Fragment) => {
+      const emittedEmpty = new Set<string>(), children: (Fragment | TextFragment)[] = [];
+      const append = (next: Fragment | TextFragment) => {
         const previous = children.at(-1);
-        if (previous?.leaf && previous.leaf === next.leaf && previous.node.isText && next.node.isText
-          && same(previous.node.attrs, next.node.attrs) && same(previous.node.marks.map(mark => mark.toJSON()), next.node.marks.map(mark => mark.toJSON()))) {
+        if (previous && 'text' in previous && 'text' in next && previous.leaf === next.leaf
+          && same(previous.attrs, next.attrs) && same(previous.marks.map(mark => mark.toJSON()), next.marks.map(mark => mark.toJSON()))) {
+          const length = previous.text.length;
+          previous.text += next.text;
+          previous.bindings.push(...next.bindings.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
+        } else if (previous && 'node' in previous && 'node' in next && previous.leaf && previous.leaf === next.leaf
+          && previous.node.isText && next.node.isText && same(previous.node.attrs, next.node.attrs)
+          && same(previous.node.marks.map(mark => mark.toJSON()), next.node.marks.map(mark => mark.toJSON()))) {
           const length = previous.node.nodeSize;
           previous.node = previous.node.withText(previous.node.text! + next.node.text!);
           previous.bindings!.push(...next.bindings!.map(binding => ({ ...binding, modelFrom: binding.modelFrom + length })));
         } else children.push(next);
+      };
+      const appendText = (text: string, attrs: Attributes, markJSON: readonly MarkJSON[], leaf: string, bindings: Binding[]) => {
+        const type = this.schema.nodes.text, marks = markJSON.map(mark => this.schema.markFromJSON(mark));
+        // Preserve factory validation on every source run before merging when
+        // a custom text invariant exists, rather than checking only the result.
+        if (type.spec.validate) { append({ node: type.create(attrs, [], text, marks), leaf, bindings }); return; }
+        const prepared = computeAttrs(type.spec.attrs, attrs);
+        append({ text, attrs: Object.keys(prepared).length ? freezeAttributes(prepared) : EMPTY_ATTRS, marks, leaf, bindings });
       };
       for (const child of ordered) {
         if (child.type !== 'text') { append(visit(child)); continue; }
@@ -239,20 +298,26 @@ export class RetainedDocumentStore {
         let offset = 0;
         for (const run of partition.runs) {
           const decoded = this.decode(run);
-          append({ node: this.textNode(run.text, decoded.attrs, decoded.marks), leaf: decoded.leaf,
-            bindings: [{ id: child.id, from: offset, length: run.text.length, modelFrom: 0, leaf: decoded.leaf }] });
+          appendText(run.text, decoded.attrs, decoded.marks, decoded.leaf,
+            [{ id: child.id, from: offset, length: run.text.length, modelFrom: 0, leaf: decoded.leaf }]);
           offset += run.text.length;
         }
         const layout = child.textLayout!;
         if (!offset && layout.empty && !activeFields.has(layout.field) && !emittedEmpty.has(layout.field)) {
           emittedEmpty.add(layout.field);
-          append({ node: this.textNode('', child.attrs ?? {}, child.marks ?? []), leaf: child.id,
-            bindings: [{ id: child.id, from: 0, length: 0, modelFrom: 0, leaf: child.id }] });
+          appendText('', child.attrs ?? {}, child.marks ?? [], child.id,
+            [{ id: child.id, from: 0, length: 0, modelFrom: 0, leaf: child.id }]);
         }
       }
-      const node = this.schema.nodes[raw.type].create(raw.attrs ?? {}, children.map(child => child.node), undefined,
-        (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)));
-      return { node, id: raw.id, children };
+      const fragments: Fragment[] = children.map(child => {
+        if ('node' in child) return child;
+        const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
+        const candidate = previous && sameBindings(previous.bindings, child.bindings) ? previous.node : undefined;
+        return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
+      });
+      const type = this.schema.nodes[raw.type], marks = (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)), attrs = computeAttrs(type.spec.attrs, raw.attrs ?? {});
+      const node = this.projectionNode(type, attrs, fragments.map(child => child.node), undefined, marks, used, previousNodes.get(raw.id));
+      return { node, id: raw.id, children: fragments };
     };
     const result = visit(projection.root);
     if (validate) this.schema.validate(result.node);
