@@ -1,0 +1,669 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "44e2565d",
+  "goalComplete": false,
+  "publication": "Local only; no authoritative activation or publication.",
+  "source": [
+    {
+      "path": "src/yjs/retained-migration.ts",
+      "bytes": 13827,
+      "sha256": "6f58227a8c1f8cc95bb0b4ead1fb1efabc6336da7d4141ac57a5e6508637b8b4"
+    },
+    {
+      "path": "src/yjs/retained-checkpoint.ts",
+      "bytes": 12051,
+      "sha256": "612a0eba77edcdd4a9363b1bc541c63e0d0f7dc9e1df6e808cd3c275a4eaf442"
+    },
+    {
+      "path": "tests/yjs-retained-migration.test.ts",
+      "bytes": 20743,
+      "sha256": "17d58178e0ce895fe1c76ca50794d5bc9dfe7f8b98811511777688d84f804fc2"
+    },
+    {
+      "path": "tests/manual/retained-migration-real.spec.ts",
+      "bytes": 6044,
+      "sha256": "6ac64da8313673ff293ce3162465b8ce582b3d778e67d0b25bc4181fec2eb46b"
+    },
+    {
+      "path": "artifacts/build-retained-migration-20261106.mjs",
+      "bytes": 1680,
+      "sha256": "44456bd6b8206693be09d169968b4a0165507fb4bbeffc6f220b2ac3f2c6195f"
+    },
+    {
+      "path": "artifacts/retained-migration-fixture-20261106.html",
+      "bytes": 7164,
+      "sha256": "08f6b85de781a1b3f91473e6923e96ccd3bea2e49badfa70da8eaaa53b5c37fc"
+    },
+    {
+      "path": "artifacts/retained-migration-browser-20261106.config.ts",
+      "bytes": 742,
+      "sha256": "69bda066950f9a98c34f16f98eadf092343f667bd8775dd038e64ada358f0f0a"
+    },
+    {
+      "path": "artifacts/retained-migration-node-20261106.mjs",
+      "bytes": 7073,
+      "sha256": "27645a0777d03121d0980dbeae2c55ce53c9f11462ed3f9dcec0f6898baf9f99"
+    },
+    {
+      "path": "artifacts/curate-retained-migration-20261106.mjs",
+      "bytes": 1950,
+      "sha256": "62d08419fbba6ccf1837bafa9623a91a8c21b45a8e852630478c2d91d94d74d8"
+    },
+    {
+      "path": "artifacts/run-retained-migration-checks-20261106.ps1",
+      "bytes": 1765,
+      "sha256": "3a34372e1d1906c8866047a7de173742de219202159248b795c25ac9e1a67a67"
+    },
+    {
+      "path": "artifacts/verify-retained-migration-20261106.mjs",
+      "bytes": 8499,
+      "sha256": "11fc7516447f084ba4a85cde137576a087b12dc206df7b16b00ea9d391556746"
+    },
+    {
+      "path": "artifacts/retained-capture-reference-20261106.mjs",
+      "bytes": 2586,
+      "sha256": "2406f242c207b99af737d47ba7b49d652118c125a78a824af6f1df171faded6d"
+    }
+  ],
+  "fullSource": {
+    "path": "artifacts/retained-migration-full-source-20261106.json",
+    "bytes": 1759436,
+    "sha256": "e9e6c7bf2d48f84a78ea4e97443af91910963d2a9490992df1a488bd6f39563f",
+    "total": 4575,
+    "passed": 4569,
+    "failed": 6,
+    "skipped": 0,
+    "files": 293,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "passed": 117,
+    "newMigrationCases": 30
+  },
+  "checks": [
+    {
+      "log": "artifacts/retained-migration-types-20261106.log",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 5.3562249,
+      "check": "types"
+    },
+    {
+      "log": "artifacts/retained-migration-focused-20261106.log",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 10.2314967,
+      "check": "focused"
+    },
+    {
+      "log": "artifacts/retained-migration-full-source-20261106.log",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "seconds": 310.2657837,
+      "check": "full-source"
+    },
+    {
+      "log": "artifacts/retained-migration-build-20261106.log",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 14.7862941,
+      "check": "build"
+    },
+    {
+      "log": "artifacts/retained-migration-api-20261106.log",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 1.0404782,
+      "check": "api"
+    },
+    {
+      "log": "artifacts/retained-migration-headless-20261106.log",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 1.5882396,
+      "check": "headless"
+    },
+    {
+      "log": "artifacts/retained-migration-budget-20261106.log",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "seconds": 0.9833486,
+      "check": "budget"
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/retained-migration-types-20261106.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/retained-migration-focused-20261106.log",
+      "bytes": 131,
+      "sha256": "93683af72cb4e6defe18573b1fa66e7ae612daa664bdf85762f0590ea2c2ee39"
+    },
+    {
+      "path": "artifacts/retained-migration-full-source-20261106.log",
+      "bytes": 135,
+      "sha256": "5b71fd88cef95c50c2543011ca1a6d9d6845860471e40da710b0fa5f66436991"
+    },
+    {
+      "path": "artifacts/retained-migration-build-20261106.log",
+      "bytes": 15898,
+      "sha256": "bc7fcbb46dc6a92f44f31dad4b2cbab9183f2d3e109186759bdebc661ab4e105"
+    },
+    {
+      "path": "artifacts/retained-migration-api-20261106.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-migration-headless-20261106.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/retained-migration-budget-20261106.log",
+      "bytes": 3896,
+      "sha256": "be518a88e3b034933718340d61c20f2ce596eb03945b941bccc1705249c2ad42"
+    }
+  ],
+  "compiled": {
+    "sourceModules": 195,
+    "nodeCases": 18,
+    "nodes": [
+      {
+        "mode": "es",
+        "passed": 9,
+        "cases": [
+          "fresh isolated room and explicit non-activation policy",
+          "source wire and complete recovery checkpoint unchanged",
+          "technical text, LaTeX, Lean, image and document metadata exact",
+          "nested text anchor reattached with original logical offset and association",
+          "node identity, binary host data and backward selection preserved",
+          "tested accumulated history produces smaller candidate while retaining source archive",
+          "old-room update rejected in isolation without corrupting candidate",
+          "unclaimed root refuses conversion instead of disappearing",
+          "fresh-room history starts empty and later native typing/undo retains model"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "report": {
+          "sourceRoomId": "r-d056f585-b338-439f-9f56-a5d2352d0b2e",
+          "destinationRoomId": "r-21c74697-b090-42d9-8e0b-6f7415427a74",
+          "sourceBytes": 13876,
+          "destinationBytes": 8691,
+          "auxiliaryRoots": [
+            {
+              "name": "references",
+              "migrator": "host-references"
+            },
+            {
+              "name": "saved-selections",
+              "migrator": "retained-selections:saved-selections"
+            }
+          ],
+          "translated": {
+            "textAnchors": 1,
+            "selections": 1,
+            "nodeIdentities": 1
+          },
+          "history": "reset-with-source-checkpoint",
+          "offline": "reconcile-before-activation",
+          "externalState": "host-coordinated",
+          "activation": "not-implemented"
+        }
+      },
+      {
+        "mode": "cjs",
+        "passed": 9,
+        "cases": [
+          "fresh isolated room and explicit non-activation policy",
+          "source wire and complete recovery checkpoint unchanged",
+          "technical text, LaTeX, Lean, image and document metadata exact",
+          "nested text anchor reattached with original logical offset and association",
+          "node identity, binary host data and backward selection preserved",
+          "tested accumulated history produces smaller candidate while retaining source archive",
+          "old-room update rejected in isolation without corrupting candidate",
+          "unclaimed root refuses conversion instead of disappearing",
+          "fresh-room history starts empty and later native typing/undo retains model"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "report": {
+          "sourceRoomId": "r-cdeaaf4f-cfb8-4db5-8e21-be1ba0e54ded",
+          "destinationRoomId": "r-75bda39f-141e-4659-949d-5e9c7c68fc9c",
+          "sourceBytes": 14638,
+          "destinationBytes": 8691,
+          "auxiliaryRoots": [
+            {
+              "name": "references",
+              "migrator": "host-references"
+            },
+            {
+              "name": "saved-selections",
+              "migrator": "retained-selections:saved-selections"
+            }
+          ],
+          "translated": {
+            "textAnchors": 1,
+            "selections": 1,
+            "nodeIdentities": 1
+          },
+          "history": "reset-with-source-checkpoint",
+          "offline": "reconcile-before-activation",
+          "externalState": "host-coordinated",
+          "activation": "not-implemented"
+        }
+      }
+    ]
+  },
+  "browser": {
+    "passed": 9,
+    "scope": "Isolated fresh candidate previews, not authoritative migration or offline reconciliation.",
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-4abb4-and-undoes-it-independently-chromium\\video.webm",
+        "bytes": 177521,
+        "sha256": "f2fe09180b0d81dc811362b03921d0517719b4dde408b2a853ff8b0ac5da3768"
+      },
+      {
+        "project": "chromium",
+        "name": "refuses an unclaimed host root without replacing the existing preview",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-6a06d-lacing-the-existing-preview-chromium\\video.webm",
+        "bytes": 86770,
+        "sha256": "50a5fb2a06f635c036a87f1e2d95bf28c7eda9e8d383aa6553d46bb81fa9f57b"
+      },
+      {
+        "project": "chromium",
+        "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-24068-r-source-and-preview-usable-chromium\\video.webm",
+        "bytes": 84190,
+        "sha256": "73756de1e063f9aa96cae19b8d102d2998636c0efd99e46a6e6b2ada38ec89a0"
+      },
+      {
+        "project": "firefox",
+        "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-4abb4-and-undoes-it-independently-firefox\\video.webm",
+        "bytes": 243911,
+        "sha256": "74e315940f4ab19b50ca2794c5f99234038f83b7fadc4a3dc59c5121156a219e"
+      },
+      {
+        "project": "firefox",
+        "name": "refuses an unclaimed host root without replacing the existing preview",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-6a06d-lacing-the-existing-preview-firefox\\video.webm",
+        "bytes": 129872,
+        "sha256": "a05544c1837f0c3dc76fd54dff46f67a394132ae37e155f5c79e9cd1ec51984f"
+      },
+      {
+        "project": "firefox",
+        "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-24068-r-source-and-preview-usable-firefox\\video.webm",
+        "bytes": 128215,
+        "sha256": "b153e87c2659f741599d11210d2f7720868aebde482b7280f7dfc74dbe7ec9aa"
+      },
+      {
+        "project": "webkit",
+        "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-4abb4-and-undoes-it-independently-webkit\\video.webm",
+        "bytes": 352479,
+        "sha256": "86d6cab6d7b52778792cd27d19d47ce0035b910dd2efcfb24d95be614a8dbd38"
+      },
+      {
+        "project": "webkit",
+        "name": "refuses an unclaimed host root without replacing the existing preview",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-6a06d-lacing-the-existing-preview-webkit\\video.webm",
+        "bytes": 132638,
+        "sha256": "31af4a18a35b000f2388cbe3f50b3af900484cc8ca00a6ef6eb6017e53051a6f"
+      },
+      {
+        "project": "webkit",
+        "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-24068-r-source-and-preview-usable-webkit\\video.webm",
+        "bytes": 122788,
+        "sha256": "451ebef46d6786a02c7595d2a34e9d04f6dc7fb18329e7d7660e0078d375f6be"
+      }
+    ],
+    "layouts": [
+      {
+        "project": "chromium",
+        "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+        "frames": 97,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "refuses an unclaimed host root without replacing the existing preview",
+        "frames": 23,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+        "frames": 30,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+        "frames": 157,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "refuses an unclaimed host root without replacing the existing preview",
+        "frames": 40,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+        "frames": 34,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+        "frames": 155,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "refuses an unclaimed host root without replacing the existing preview",
+        "frames": 60,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+        "frames": 66,
+        "minViewport": 1440,
+        "minPane": 686,
+        "maxOverflow": 0,
+        "invalid": []
+      }
+    ]
+  },
+  "captureReference": {
+    "path": "artifacts/retained-capture-reference-20261106.json",
+    "bytes": 435,
+    "sha256": "8e2a10204487417fa0fd8776fe750c22014171b0acc488efd5909504c78a3e6f",
+    "browser": "151.0.7922.34",
+    "fountainImported": false,
+    "results": [
+      {
+        "fullPage": true,
+        "frames": 242,
+        "minViewport": 1,
+        "narrow": [
+          {
+            "width": 1,
+            "panes": [
+              34,
+              34
+            ],
+            "at": 986.2999999523163
+          }
+        ]
+      },
+      {
+        "fullPage": false,
+        "frames": 168,
+        "minViewport": 1280,
+        "narrow": []
+      }
+    ]
+  },
+  "visualArtifacts": [
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-candidate-filmstrip.png",
+      "bytes": 278731,
+      "sha256": "9f63e897cb31df0a1de1ce5a73acb055a31ce74bf165eb4ca707f28851adfcea"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-candidate-final.png",
+      "bytes": 74083,
+      "sha256": "7c1d14f21780c5da4e88777ce7cbdf43d5dedefb5cdc3fc553bd028e28185ff0"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-candidate-selected.png",
+      "bytes": 74476,
+      "sha256": "dcc94fd7dd1f6e7e15400acfa44075c58a61d21c74774ce40fb057ef2bde026d"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-candidate.webm",
+      "bytes": 177521,
+      "sha256": "f2fe09180b0d81dc811362b03921d0517719b4dde408b2a853ff8b0ac5da3768"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-unclaimed-filmstrip.png",
+      "bytes": 336609,
+      "sha256": "9390aa9dbeb2382a9d11eda519b8a6b5e84577e924ecebea8349aa5819dbfd79"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-unclaimed-final.png",
+      "bytes": 74467,
+      "sha256": "5c30782f705ed3f27040ff567455cc5a0515cb92dcc40de7b044693c4d2cd530"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-unclaimed.webm",
+      "bytes": 86770,
+      "sha256": "50a5fb2a06f635c036a87f1e2d95bf28c7eda9e8d383aa6553d46bb81fa9f57b"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-verifier-filmstrip.png",
+      "bytes": 287924,
+      "sha256": "9b73bef8cff82e1260feb0b1c989db4800ce7d9581e341ca36dafaeee4611aad"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-verifier-final.png",
+      "bytes": 74267,
+      "sha256": "942e0ace716c21a84156c30400e3b816dc6c7f92cff98dac2bef61f56f298f18"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/chromium-verifier.webm",
+      "bytes": 84190,
+      "sha256": "73756de1e063f9aa96cae19b8d102d2998636c0efd99e46a6e6b2ada38ec89a0"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-candidate-filmstrip.png",
+      "bytes": 229599,
+      "sha256": "f1d83e259a6a448612696ba6262b8e7fe28488b0c5ddc280dabdf4924e8a08e9"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-candidate-final.png",
+      "bytes": 74943,
+      "sha256": "1da6c6c6e02624d0693d4f3beb4848ad08d2a09eefcddf5cbdf6f32c3b8271c9"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-candidate-selected.png",
+      "bytes": 73157,
+      "sha256": "cad0133db06e455548c0aa9e9ddba150232c7cc9a08bac7eda5a2e11496c591a"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-candidate.webm",
+      "bytes": 243911,
+      "sha256": "74e315940f4ab19b50ca2794c5f99234038f83b7fadc4a3dc59c5121156a219e"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-unclaimed-filmstrip.png",
+      "bytes": 261027,
+      "sha256": "0abb3a8ea76a347506e31d38bed00a7fa9699030c3cc9f3fcc6996c983b46897"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-unclaimed-final.png",
+      "bytes": 74214,
+      "sha256": "b1d2cce33ac0a3f4b7833f6a9e1b60e1101fa452f8132005f408e506cb6ceb81"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-unclaimed.webm",
+      "bytes": 129872,
+      "sha256": "a05544c1837f0c3dc76fd54dff46f67a394132ae37e155f5c79e9cd1ec51984f"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-verifier-filmstrip.png",
+      "bytes": 235955,
+      "sha256": "aeef7b061bf7e672359c1e6c128b9ced9a89521fc3832a26fb8ca43eced74937"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-verifier-final.png",
+      "bytes": 73978,
+      "sha256": "d80f590eae91989a7ba618c18812d96740b71b4c1fa741017f069a2e53932b01"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/firefox-verifier.webm",
+      "bytes": 128215,
+      "sha256": "b153e87c2659f741599d11210d2f7720868aebde482b7280f7dfc74dbe7ec9aa"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-candidate-filmstrip.png",
+      "bytes": 215278,
+      "sha256": "11f7cd6a67e24db0be8a53a36259804ba1968ba061509d2b874494bfc46d7630"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-candidate-final.png",
+      "bytes": 64901,
+      "sha256": "007dc2f750bbc88ef24cffcf13744734f8be4d358e11dc15dc6e538987121658"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-candidate-selected.png",
+      "bytes": 64482,
+      "sha256": "ef91145fc6df371095cc866d6f357f5bf2705fe6291d0894c24ec97154ddcbda"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-candidate.webm",
+      "bytes": 352479,
+      "sha256": "86d6cab6d7b52778792cd27d19d47ce0035b910dd2efcfb24d95be614a8dbd38"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-unclaimed-filmstrip.png",
+      "bytes": 224938,
+      "sha256": "69391f0b57430ac5bcbfafeae070494787976d905485717f0926aad90efb2b5e"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-unclaimed-final.png",
+      "bytes": 64038,
+      "sha256": "bf778c785dd917e2e579c1dbb428727d4846cf11637dd076e9ab89e94e42b9b7"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-unclaimed.webm",
+      "bytes": 132638,
+      "sha256": "31af4a18a35b000f2388cbe3f50b3af900484cc8ca00a6ef6eb6017e53051a6f"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-verifier-filmstrip.png",
+      "bytes": 237462,
+      "sha256": "b70ad300fa186c8143951c056dc7ab8ded9552f2d3229514293de5984b46bf8b"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-verifier-final.png",
+      "bytes": 63920,
+      "sha256": "67d775b393236c376a339d09b6c4e949c3a6929697332e4dae10b1d2e69f9911"
+    },
+    {
+      "path": "artifacts/retained-migration-visual-20261106/webkit-verifier.webm",
+      "bytes": 122788,
+      "sha256": "451ebef46d6786a02c7595d2a34e9d04f6dc7fb18329e7d7660e0078d375f6be"
+    }
+  ],
+  "invariants": {
+    "publicRuntimeAndCssByteIdentical": 171,
+    "unchanged": [
+      "src/yjs/index.ts",
+      "package.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md",
+      "bytes": 11736,
+      "sha256": "70826a91ca58faa58205c91e63da4624f7c74bcf08613fa597e4d6be6ce86ce6"
+    },
+    {
+      "path": "docs/YJS_RETAINED_PERSISTENCE_AUDIT.md",
+      "bytes": 10278,
+      "sha256": "2d275db5c15110a5bf16d049fc8a89996e683c701781fe081319fa0b5efd4c53"
+    },
+    {
+      "path": "docs/YJS_RETAINED_COMPACTION_DIAGNOSTIC.md",
+      "bytes": 4918,
+      "sha256": "b7cbb68d9cf7eb330734fc86505340f11af9a16caa9897b56ba40ccf9eeb718a"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 303965,
+      "sha256": "016833f9d0bd733723a998ce52ae8e44673be3baa014599312238f16dfa37d10"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 166659,
+      "sha256": "59a228bf72269f94ed5381cb6375af64e83b962ac2eb94e82d3af5128f705bfc"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 191143,
+      "sha256": "d28cf0d4d6182c1c7e82719a36e419695568e716ae4bef152c08b142ea28d612"
+    }
+  ],
+  "open": [
+    "Six default-adapter failures",
+    "Authoritative fresh-room install/rollback and crash-safe handoff",
+    "Actual offline-edit and external-provider coordination",
+    "History approval/policy",
+    "Legacy adoption and large-room costs",
+    "Three size overruns and fresh release CI",
+    "Overall parity"
+  ]
+}

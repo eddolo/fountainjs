@@ -1,0 +1,42 @@
+{
+  "mode": "cjs",
+  "passed": 9,
+  "cases": [
+    "fresh isolated room and explicit non-activation policy",
+    "source wire and complete recovery checkpoint unchanged",
+    "technical text, LaTeX, Lean, image and document metadata exact",
+    "nested text anchor reattached with original logical offset and association",
+    "node identity, binary host data and backward selection preserved",
+    "tested accumulated history produces smaller candidate while retaining source archive",
+    "old-room update rejected in isolation without corrupting candidate",
+    "unclaimed root refuses conversion instead of disappearing",
+    "fresh-room history starts empty and later native typing/undo retains model"
+  ],
+  "node": "v24.22.1",
+  "dom": false,
+  "report": {
+    "sourceRoomId": "r-cdeaaf4f-cfb8-4db5-8e21-be1ba0e54ded",
+    "destinationRoomId": "r-75bda39f-141e-4659-949d-5e9c7c68fc9c",
+    "sourceBytes": 14638,
+    "destinationBytes": 8691,
+    "auxiliaryRoots": [
+      {
+        "name": "references",
+        "migrator": "host-references"
+      },
+      {
+        "name": "saved-selections",
+        "migrator": "retained-selections:saved-selections"
+      }
+    ],
+    "translated": {
+      "textAnchors": 1,
+      "selections": 1,
+      "nodeIdentities": 1
+    },
+    "history": "reset-with-source-checkpoint",
+    "offline": "reconcile-before-activation",
+    "externalState": "host-coordinated",
+    "activation": "not-implemented"
+  }
+}

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add private fresh retained-room candidate construction with explicit history,
+  offline and external-state policies, full source recovery, declared auxiliary
+  root ownership, relative-anchor/selection/node-ID translation and structured
+  attribute migration. Require read-only semantic verifiers and refuse unknown
+  roots, detached references and source/content mutations. Exercise actual
+  candidate preview editing, selection and undo. Authoritative activation,
+  offline reconciliation, compaction deployment and adapter adoption remain open.
+
 - Add a private persistent retained-room coordinator and Node/SQLite reference.
   Atomically persist revision/epoch/generation, frozen barriers, preparation and
   latest completion receipts; reject post-validation CAS races and replay a

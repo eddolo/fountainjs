@@ -20,13 +20,27 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,539 passes and six failures, with no skips. Three
+The current source suite has 4,569 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest persistence audit](YJS_RETAINED_PERSISTENCE_AUDIT.md).
+[latest migration-candidate audit](YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md).
+
+Fresh retained-room candidates (2026-11-06, local): preserve the complete source
+checkpoint and exact current document/application IDs while reseeding internal
+room/CRDT identities. Require explicit root ownership and history/offline/external
+policies; translate text/node references and all stored selection variants,
+preserve granular structured attributes, and enforce read-only semantic verifiers.
+All 30 new cases / 117 focused cases, 18 compiled Node checks and nine recorded
+three-engine preview journeys pass. Complete source has 4,569 passes and the same
+six default failures across 293 files, without skips. A plain Chromium control
+reproduces a full-page-capture resize; the final audit uses complete fixed-viewport
+captures with strict layout measurements. Authoritative activation, external and
+offline coordination, rollback/legacy adoption and production compaction remain
+unfinished. COLLAB-01 stays Partial; no publication.
+[Audit](YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md).
 
 Persistent retained-room coordination (2026-11-06, local): a private platform-
 neutral repository contract and Node/SQLite example atomically persist full

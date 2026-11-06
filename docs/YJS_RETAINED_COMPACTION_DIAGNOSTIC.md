@@ -57,6 +57,10 @@ writer fence. Old updates must never be sent to the new authoritative room.
 - Translate or preserve every supported auxiliary map and anchor: comments,
   structured attributes, versions and extension-owned state. Report unsupported
   state explicitly. Application node IDs alone do not preserve all anchors.
+  The [isolated candidate builder](YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md) now
+  translates declared relative selections/references and structured maps, refuses
+  unclaimed roots and verifies host-provider continuity on the identical model.
+  It does not activate a destination or coordinate external/offline state.
 - Reconcile pending offline edits, or obtain an explicit policy for their
   disposal; never silently drop them.
 - Make history retention/reset a declared host/user policy. Do not periodically

@@ -98,6 +98,12 @@ function assertUnchanged(document: Y.Doc, update: Uint8Array, entries: readonly 
   if (!sameBytes(Y.encodeStateAsUpdate(document), update) || stableJSON(roots(document)) !== stableJSON(entries)) throw new Error('Checkpoint validation changed shared state.');
 }
 
+/** Internal synchronous guard for an already verified/captured checkpoint. */
+export function assertRetainedCheckpointState(document: Y.Doc, checkpoint: RetainedCheckpoint): void {
+  assertUnchanged(document, checkpoint.update, checkpoint.manifest.roots);
+  if (document.guid !== checkpoint.manifest.guid || document.gc !== checkpoint.manifest.gc) throw new Error('Checkpoint document options changed.');
+}
+
 /** Capture a stable full-wire rollback point. The source is never repaired. */
 export async function captureRetainedCheckpoint(document: Y.Doc, schema: Schema, schemaVersion: string, room = 'fountain'): Promise<RetainedCheckpoint> {
   version(schemaVersion); assertIdle(document);

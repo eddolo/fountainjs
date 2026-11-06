@@ -1,0 +1,74 @@
+[
+  {
+    "engine": "chromium",
+    "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+    "kind": "candidate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-4abb4-and-undoes-it-independently-chromium\\video.webm",
+    "durationSeconds": 3.2,
+    "target": "artifacts\\retained-migration-visual-20261106\\chromium-candidate"
+  },
+  {
+    "engine": "chromium",
+    "name": "refuses an unclaimed host root without replacing the existing preview",
+    "kind": "unclaimed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-6a06d-lacing-the-existing-preview-chromium\\video.webm",
+    "durationSeconds": 1.84,
+    "target": "artifacts\\retained-migration-visual-20261106\\chromium-unclaimed"
+  },
+  {
+    "engine": "chromium",
+    "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+    "kind": "verifier",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-24068-r-source-and-preview-usable-chromium\\video.webm",
+    "durationSeconds": 1.92,
+    "target": "artifacts\\retained-migration-visual-20261106\\chromium-verifier"
+  },
+  {
+    "engine": "firefox",
+    "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+    "kind": "candidate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-4abb4-and-undoes-it-independently-firefox\\video.webm",
+    "durationSeconds": 4.72,
+    "target": "artifacts\\retained-migration-visual-20261106\\firefox-candidate"
+  },
+  {
+    "engine": "firefox",
+    "name": "refuses an unclaimed host root without replacing the existing preview",
+    "kind": "unclaimed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-6a06d-lacing-the-existing-preview-firefox\\video.webm",
+    "durationSeconds": 2.52,
+    "target": "artifacts\\retained-migration-visual-20261106\\firefox-unclaimed"
+  },
+  {
+    "engine": "firefox",
+    "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+    "kind": "verifier",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-24068-r-source-and-preview-usable-firefox\\video.webm",
+    "durationSeconds": 2.48,
+    "target": "artifacts\\retained-migration-visual-20261106\\firefox-verifier"
+  },
+  {
+    "engine": "webkit",
+    "name": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+    "kind": "candidate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-4abb4-and-undoes-it-independently-webkit\\video.webm",
+    "durationSeconds": 9.6,
+    "target": "artifacts\\retained-migration-visual-20261106\\webkit-candidate"
+  },
+  {
+    "engine": "webkit",
+    "name": "refuses an unclaimed host root without replacing the existing preview",
+    "kind": "unclaimed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-6a06d-lacing-the-existing-preview-webkit\\video.webm",
+    "durationSeconds": 3.48,
+    "target": "artifacts\\retained-migration-visual-20261106\\webkit-unclaimed"
+  },
+  {
+    "engine": "webkit",
+    "name": "rejects a verifier mutation and keeps the prior source and preview usable",
+    "kind": "verifier",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-migration-browser-20261106\\retained-migration-real-re-24068-r-source-and-preview-usable-webkit\\video.webm",
+    "durationSeconds": 2.88,
+    "target": "artifacts\\retained-migration-visual-20261106\\webkit-verifier"
+  }
+]

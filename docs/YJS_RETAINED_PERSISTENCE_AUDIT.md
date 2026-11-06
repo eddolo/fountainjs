@@ -166,3 +166,7 @@ supported auxiliary maps and relative anchors, explicit pending-offline and
 history policies, rollback/reconciliation across old and new rooms, legacy
 migration and safe replacement-adapter adoption. It does not fix the six
 ordinary default-adapter failures or complete ProseMirror + Tiptap parity.
+The later [candidate builder](YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md) now seeds
+and verifies an isolated fresh room with explicit auxiliary-root ownership and
+anchor translation. This coordinator still has no authoritative candidate
+installation, offline reconciliation or fresh-room rollback operation.

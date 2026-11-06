@@ -1,0 +1,27 @@
+{
+  "browser": "151.0.7922.34",
+  "fountainImported": false,
+  "results": [
+    {
+      "fullPage": true,
+      "frames": 242,
+      "minViewport": 1,
+      "narrow": [
+        {
+          "width": 1,
+          "panes": [
+            34,
+            34
+          ],
+          "at": 986.2999999523163
+        }
+      ]
+    },
+    {
+      "fullPage": false,
+      "frames": 168,
+      "minViewport": 1280,
+      "narrow": []
+    }
+  ]
+}
