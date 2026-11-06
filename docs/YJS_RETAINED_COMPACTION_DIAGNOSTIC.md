@@ -48,6 +48,9 @@ writer fence. Old updates must never be sent to the new authoritative room.
   epoch/destination record and authoritative rollback/handoff policy remain.
 - Fence old writers at the provider/server boundary before authoritative
   handoff. Presence counts or the client-side format gate are insufficient.
+  The [single-authority reference](YJS_RETAINED_ROOM_FENCING_AUDIT.md) now rejects
+  stale/frozen writes before reading bytes and verifies exact-revision same-room
+  recovery. Distributed/durable enforcement and fresh-room migration remain open.
 - Translate or preserve every supported auxiliary map and anchor: comments,
   structured attributes, versions and extension-owned state. Report unsupported
   state explicitly. Application node IDs alone do not preserve all anchors.

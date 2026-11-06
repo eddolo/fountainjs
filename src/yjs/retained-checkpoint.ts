@@ -151,7 +151,7 @@ function manifestCopy(raw: RetainedCheckpointManifest, expected: string): Retain
 }
 
 /** Restore into an isolated document only. Never merges into a live room. */
-export async function restoreRetainedCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<{ document: Y.Doc; baseDocument: Node }> {
+export async function restoreRetainedCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<{ document: Y.Doc; baseDocument: Node; manifest: RetainedCheckpointManifest }> {
   const manifest = manifestCopy(checkpoint.manifest, schemaVersion), supplied = checkpoint.update;
   if (!(supplied instanceof Uint8Array) || supplied.length !== manifest.bytes) throw new Error('Invalid checkpoint update length.');
   const update = Uint8Array.from(supplied);
@@ -166,6 +166,6 @@ export async function restoreRetainedCheckpoint(checkpoint: RetainedCheckpoint, 
     assertUnchanged(document, update, manifest.roots);
     if (await digest(encoded) !== manifest.documentSha256) throw new Error('Checkpoint document projection mismatch.');
     assertUnchanged(document, update, manifest.roots); document.gc = manifest.gc;
-    return { document, baseDocument };
+    return { document, baseDocument, manifest };
   } catch (error) { document.destroy(); throw error; }
 }

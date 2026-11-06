@@ -20,13 +20,25 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,487 passes and six failures, with no skips. Three
+The current source suite has 4,513 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest checkpoint audit](YJS_RETAINED_CHECKPOINT_AUDIT.md).
+[latest writer-fencing audit](YJS_RETAINED_ROOM_FENCING_AUDIT.md).
+
+Single-authority retained writer fencing (2026-11-06, local): a private in-memory
+reference owns validated checkpoints, checks epochs/phase before reading update
+bytes, stages writes in isolation and commits with revision/generation CAS.
+Exact-revision freeze, verified same-room resume, abort, close/reopen and explicit
+offline retry preserve the frozen state and reject stale work. All 26 new Node
+cases and nine recorded Chromium/Firefox/WebKit journeys pass; complete source
+has 4,513 passes and the same six default failures across 291 files, without
+skips. This is not a deployed provider or fresh-room compaction. Durable and
+distributed fencing, auxiliary-anchor translation, legacy migration, adoption
+and production batch costs remain open. COLLAB-01 stays Partial; no publication.
+[Audit](YJS_RETAINED_ROOM_FENCING_AUDIT.md).
 
 Internal retained recovery checkpoints (2026-11-06, local): preserve full Yjs
 wire state, empty/shared roots, GUID and original room/CRDT identity with explicit

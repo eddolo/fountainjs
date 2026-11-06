@@ -1,0 +1,74 @@
+[
+  {
+    "engine": "chromium",
+    "name": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+    "kind": "handoff",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-25595--reconciles-after-reconnect-chromium\\video.webm",
+    "durationSeconds": 2.72,
+    "target": "artifacts\\retained-room-store-visual-20261106\\chromium-handoff"
+  },
+  {
+    "engine": "chromium",
+    "name": "aborts a prepared freeze and sends retained human edits on the original epoch",
+    "kind": "abort",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-a-75181-edits-on-the-original-epoch-chromium\\video.webm",
+    "durationSeconds": 1.88,
+    "target": "artifacts\\retained-room-store-visual-20261106\\chromium-abort"
+  },
+  {
+    "engine": "chromium",
+    "name": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+    "kind": "malformed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-d98ea-thout-replacing-the-editors-chromium\\video.webm",
+    "durationSeconds": 1.84,
+    "target": "artifacts\\retained-room-store-visual-20261106\\chromium-malformed"
+  },
+  {
+    "engine": "firefox",
+    "name": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+    "kind": "handoff",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-25595--reconciles-after-reconnect-firefox\\video.webm",
+    "durationSeconds": 3.8,
+    "target": "artifacts\\retained-room-store-visual-20261106\\firefox-handoff"
+  },
+  {
+    "engine": "firefox",
+    "name": "aborts a prepared freeze and sends retained human edits on the original epoch",
+    "kind": "abort",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-a-75181-edits-on-the-original-epoch-firefox\\video.webm",
+    "durationSeconds": 2.64,
+    "target": "artifacts\\retained-room-store-visual-20261106\\firefox-abort"
+  },
+  {
+    "engine": "firefox",
+    "name": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+    "kind": "malformed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-d98ea-thout-replacing-the-editors-firefox\\video.webm",
+    "durationSeconds": 2.44,
+    "target": "artifacts\\retained-room-store-visual-20261106\\firefox-malformed"
+  },
+  {
+    "engine": "webkit",
+    "name": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+    "kind": "handoff",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-25595--reconciles-after-reconnect-webkit\\video.webm",
+    "durationSeconds": 7.08,
+    "target": "artifacts\\retained-room-store-visual-20261106\\webkit-handoff"
+  },
+  {
+    "engine": "webkit",
+    "name": "aborts a prepared freeze and sends retained human edits on the original epoch",
+    "kind": "abort",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-a-75181-edits-on-the-original-epoch-webkit\\video.webm",
+    "durationSeconds": 3.92,
+    "target": "artifacts\\retained-room-store-visual-20261106\\webkit-abort"
+  },
+  {
+    "engine": "webkit",
+    "name": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+    "kind": "malformed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-d98ea-thout-replacing-the-editors-webkit\\video.webm",
+    "durationSeconds": 2.84,
+    "target": "artifacts\\retained-room-store-visual-20261106\\webkit-malformed"
+  }
+]

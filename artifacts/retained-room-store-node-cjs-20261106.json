@@ -1,0 +1,18 @@
+{
+  "mode": "cjs",
+  "passed": 8,
+  "cases": [
+    "pure Node opening with owned checkpoint",
+    "frozen writer rejected before reading bytes",
+    "same-room epoch handoff rejects stale writer before reading bytes",
+    "explicit reconnect retry retains editor text and opaque state",
+    "malformed wire leaves authority intact",
+    "abort preserves source epoch revision and checkpoint",
+    "reopen preserves data and rotates writer epoch",
+    "freeze and abort invalidate already-running write CAS"
+  ],
+  "node": "v24.22.1",
+  "dom": false,
+  "sourceCheckpoint": "f873c8f758dfc9cdef44e2fde59f59e4ec846cd05b0a97c628e02cc6b5aaf86f",
+  "finalCheckpoint": "f491f278c45341f323d91cadc212939201134d83913966c4ba7413cbd5b8a037"
+}

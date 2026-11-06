@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Fenced room recovery audit</title>
+<link rel="stylesheet" href="/src/styles.css">
+<style>body{margin:24px;background:#f5f3ff;color:#19152f;font:16px system-ui}h1{margin-bottom:8px}button{font:inherit;padding:8px 12px;border:1px solid #c5bce6;border-radius:6px;background:white;cursor:pointer}header{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.panes{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:18px}section{min-width:0;background:white;border:1px solid #c5bce6;border-radius:12px;overflow:hidden}h2,pre{padding:16px;margin:0}pre{max-height:150px;overflow:auto;font:13px monospace;background:#efecfa;white-space:pre-wrap}.fountain-editor{min-height:220px;padding:24px}.fountain-editor img{max-width:100%;max-height:130px;object-fit:contain}#message{min-height:28px;margin:18px 0}</style>
+<h1>Writer fencing and recovery — internal audit</h1>
+<p>Browser-local reference authority. Explicit batched writes; no deployed server, durable migration or compaction.</p>
+<header><button id="send">Send writer edits</button><button id="freeze">Freeze revision</button><button id="prepare">Prepare recovery</button><button id="commit">Commit new epoch</button><button id="abort">Abort freeze</button><button id="reconnect">Reconnect writer</button><button id="damage">Send malformed update</button></header>
+<div id="message" role="status">Opening reference room…</div><pre id="state"></pre>
+<div class="panes"><section id="writer"><h2>Writer · pending edits stay here</h2></section><section id="peer"><h2>Peer · accepted state only</h2></section></div>
+<script type="module">
+import * as Y from 'yjs';
+import {CoreExtension,Plugin,EditorView,composeExtensions,createEditor,getCollaborationState,undoCollaboration,redoCollaboration} from '/src/index.ts';
+import {createRetainedYjsCollaborationExtension} from '/src/yjs/retained-adapter.ts';
+import {captureRetainedCheckpoint,restoreRetainedCheckpoint} from '/src/yjs/retained-checkpoint.ts';
+import {FencedRetainedRoom} from '/src/yjs/retained-room-store.ts';
+const content={type:'doc',content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha'}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}}]};
+const shortcuts=new Plugin({props:{handleKeyDown:(editor,event)=>{if(event.altKey||event.isComposing||!(event.ctrlKey||event.metaKey)||!['z','y'].includes(event.key.toLowerCase()))return false;return event.key.toLowerCase()==='y'||event.shiftKey?redoCollaboration(editor):undoCollaboration(editor)}}});
+function mount(doc,id){const section=document.querySelector('#'+id),host=document.createElement('div');section.append(host);const kit=composeExtensions([CoreExtension,createRetainedYjsCollaborationExtension({document:doc,captureTimeout:0,user:{id,name:id,color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:[...kit.plugins,shortcuts],content}),view=new EditorView(host,editor,{ariaLabel:id==='writer'?'Writer editor':'Peer editor'});return {doc,editor,view}}
+const writer=mount(new Y.Doc(),'writer');writer.doc.getMap('host-review').set('owner','Grace');writer.doc.getMap('host-review').set('bytes',new Uint8Array([0,128,255]));
+const checkpoint=await captureRetainedCheckpoint(writer.doc,writer.editor.state.schema,'audit-schema-1'),authority=await FencedRetainedRoom.open(checkpoint,writer.editor.state.schema,'audit-schema-1'),restored=await restoreRetainedCheckpoint(checkpoint,writer.editor.state.schema,'audit-schema-1'),peer=mount(restored.document,'peer');
+let writerEpoch=authority.snapshot().epoch,ticket,prepared,lastError=null,byteReads=0;
+const message=document.querySelector('#message');
+function show(text){const s=authority.snapshot();document.querySelector('#state').textContent=JSON.stringify({phase:s.phase,revision:s.revision,writerIsCurrent:s.epoch===writerEpoch,lastError,byteReads},null,2);if(text)message.textContent=text}
+function action(id,run){document.querySelector('#'+id).onclick=async()=>{try{await run();lastError=null;show()}catch(error){lastError=error.code??error.message;show('Rejected: '+lastError+' · pending writer edits retained')}}}
+action('send',async()=>{const accepted=await authority.write({epoch:writerEpoch,get update(){byteReads++;return Y.encodeStateAsUpdate(writer.doc)}});Y.applyUpdate(writer.doc,accepted.checkpoint.update);Y.applyUpdate(peer.doc,accepted.checkpoint.update);show('Writer edits accepted and shared')});
+action('freeze',()=>{ticket=authority.freeze(authority.snapshot());prepared=undefined;show('Revision frozen')});
+action('prepare',async()=>{prepared=await authority.prepareResume(ticket);show('Recovery prepared; room remains frozen')});
+action('commit',()=>{authority.commitResume(ticket,prepared);show('New epoch committed; writer must reconnect')});
+action('abort',()=>{authority.abort(ticket);show('Freeze aborted; original epoch resumed')});
+action('reconnect',()=>{writerEpoch=authority.snapshot().epoch;show('Writer reconnected; pending edits are available to send')});
+action('damage',async()=>{await authority.write({epoch:writerEpoch,update:new Uint8Array([255])});show('Unexpected malformed-update acceptance')});
+window.audit={snapshot:async()=>{const s=authority.snapshot(),read=await restoreRetainedCheckpoint(s.checkpoint,writer.editor.state.schema,'audit-schema-1');try{return {phase:s.phase,revision:s.revision,epoch:s.epoch,writerEpoch,lastError,byteReads,checkpointSha256:s.checkpoint.manifest.checkpointSha256,roomId:s.checkpoint.manifest.roomId,stored:read.baseDocument.toJSON(),owner:read.document.getMap('host-review').get('owner'),bytes:[...read.document.getMap('host-review').get('bytes')],writer:writer.editor.getJSON(),peer:peer.editor.getJSON(),writerStatus:getCollaborationState(writer.editor)?.status,peerStatus:getCollaborationState(peer.editor)?.status}}finally{read.document.destroy()}}};
+show('Ready · writer and peer share the opening checkpoint');
+</script></html>

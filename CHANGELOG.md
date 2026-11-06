@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a private in-memory retained-room authority with writer epochs, exact
+  revision freeze, isolated update validation, concurrent-write CAS, abort and
+  verified same-room resume. Reject stale/frozen writers before reading update
+  bytes; retain explicit retry paths for offline or incomplete updates. Cover
+  real editor handoff/abort/failure journeys. This is reference boundary work,
+  not a public provider, durable migration, compaction or default-adapter fix.
+
 - Add internal retained-room checkpoint capture and isolated restore, preserving
   full wire/auxiliary state and empty roots with schema, room and integrity
   checks. Refuse source races, retain stored relative anchors and own binary

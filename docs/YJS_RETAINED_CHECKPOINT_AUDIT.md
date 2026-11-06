@@ -149,8 +149,11 @@ checks archive ownership. `artifacts/run-retained-checkpoint-probes-20261106.ps1
 runs the compiled/diagnostic/visual probes sequentially. The verifier records source/module/runtime identity,
 required failures, actual recordings, and public byte/limit invariants.
 
-Next work remains an explicit migration epoch, destination identity, operational
-writer fencing, auxiliary-anchor translation, offline-edit reconciliation,
+The subsequent [single-authority reference](YJS_RETAINED_ROOM_FENCING_AUDIT.md)
+implements writer epochs and same-room freeze/resume with isolated update
+validation. It is not durable/distributed provider enforcement or fresh-room
+migration. Next work remains a persistent migration epoch/destination record,
+operational fencing, auxiliary-anchor translation, offline-edit reconciliation,
 declared history retention/reset, and crash/retry/rollback proof. Full
 compaction, legacy migration and replacement-adapter adoption are unfinished.
 There is no GitHub/npm/site publication or overall editor-parity promotion.
