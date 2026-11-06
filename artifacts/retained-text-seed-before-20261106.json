@@ -1,0 +1,13 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "retained-text-seed-baseline-20261106-build",
+  "blocks": 5000,
+  "profiledMs": 2825.2489,
+  "mapSizeCalls": 65038,
+  "mapSizeEntries": 62697505,
+  "arrayReads": 20003,
+  "arrayEntries": 20000,
+  "exactDocument": true,
+  "domRequired": false,
+  "note": "Initialization-only CPU sample and a separate instrumented initialization. Counts are diagnostic, not acceptance gates."
+}

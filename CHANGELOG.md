@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Initialize fresh private retained-Yjs text pools with validated run snapshots
+  and pre-reserved style capacity, avoiding repeated scans of growing pools.
+  Keep ordinary live checks, insertion-owned provenance and encoded state
+  unchanged. Add recorded 1,000-paragraph native collaboration/history coverage;
+  large-document editing and history growth remain adoption concerns.
+  Bind the plain-core audit host's keyboard history to the collaboration
+  commands, and document the host-owned shortcut recipe without installing
+  snapshot history on a shared room.
+
 - Seed fresh private retained-Yjs node trees in one validated pass, preserving
   identity, metadata, text layout and ordering while avoiding repeated scans of
   growing pools/sibling lists. Reject malformed or intervening shared input

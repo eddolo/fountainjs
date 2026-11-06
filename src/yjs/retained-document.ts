@@ -160,7 +160,7 @@ export class RetainedDocumentStore {
     const content = visit(source);
     this.document.transact(() => {
       this.metadataFor('root', root, source); this.nodes.seed(content);
-      for (const entry of texts) this.text.create(entry.stream, entry.id, entry.runs);
+      this.text.seed(texts);
       this.metadata.set('seeded', true);
     }, this.origin);
     const projected = this.read();

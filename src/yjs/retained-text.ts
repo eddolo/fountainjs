@@ -26,6 +26,13 @@ export interface RetainedTextPartition {
   readonly to: number;
   readonly runs: readonly RetainedTextRun[];
 }
+export interface RetainedTextSeed {
+  readonly stream: string;
+  readonly id: string;
+  readonly runs: readonly RetainedTextRun[];
+}
+
+const styleEncoding = (value: Readonly<Record<string, string>>) => JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)));
 
 interface StreamRead {
   readonly text: Y.Text;
@@ -129,12 +136,14 @@ export class RetainedTextStore {
 
   private clock(): number { return Y.decodeStateVector(Y.encodeStateVector(this.document)).get(this.document.clientID) ?? 0; }
 
-  private provenance(value: Readonly<Record<string, string>>): readonly number[] {
-    const encoded = JSON.stringify(Object.fromEntries(Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)));
+  private provenance(value: Readonly<Record<string, string>>, seedStyles?: Set<string>): readonly number[] {
+    const encoded = styleEncoding(value);
     const client = this.document.clientID, key = `${client}:${encoded}`;
     let style = this.localStyles.get(key);
     if (style === undefined) {
-      if (this.styles.size >= MAX_PARTITIONS) throw new RangeError('Retained style definitions need compaction.');
+      if (seedStyles) {
+        if (!seedStyles.delete(encoded)) throw new Error('Retained seed style was not reserved.');
+      } else if (this.styles.size >= MAX_PARTITIONS) throw new RangeError('Retained style definitions need compaction.');
       style = this.clock(); this.styles.set(`${client}:${style}`, encoded); this.localStyles.set(key, style);
     } else if (this.styles.get(`${client}:${style}`) !== encoded) throw new Error('Retained style definition was changed.');
     return [client, this.clock(), style];
@@ -219,15 +228,52 @@ export class RetainedTextStore {
     if (this.owners.size >= MAX_PARTITIONS) throw new RangeError('Too many retained text partitions.');
   }
 
+  private prepareRuns(runs: readonly RetainedTextRun[]) {
+    if (!Array.isArray(runs) || Object.keys(runs).length !== runs.length || Object.getOwnPropertySymbols(runs).length) throw new TypeError('Invalid retained text runs.');
+    let length = 0;
+    return Array.from(runs, run => {
+      const text = run.text, format = attributes(run.attributes) as Record<string, string>;
+      if (typeof text !== 'string' || (length += text.length) > MAX_TEXT) throw new RangeError('Invalid retained text length.');
+      validateRetainedTextFormat(format);
+      return { text, attributes: format };
+    });
+  }
+
+  /** Fresh-pool initialization with capacity reserved before any shared write. */
+  seed(entries: readonly RetainedTextSeed[]): void {
+    const empty = () => {
+      this.assertLive();
+      if (this.texts.size || this.owners.size || this.styles.size || this.localStyles.size || this.decodedStyles.size) throw new Error('Retained text seed requires fresh pools.');
+    };
+    empty();
+    if (!Array.isArray(entries) || entries.length > MAX_PARTITIONS || Object.keys(entries).length !== entries.length || Object.getOwnPropertySymbols(entries).length) throw new RangeError('Invalid retained text seed.');
+    const streams = new Set<string>(), partitions = new Set<string>(), styles = new Set<string>();
+    const prepared = Array.from(entries, entry => {
+      const stream = entry.stream, id = entry.id;
+      if (!validId(stream) || !validId(id) || streams.has(stream) || partitions.has(id)) throw new Error('Invalid or duplicate retained seed identity.');
+      streams.add(stream); partitions.add(id);
+      const runs = this.prepareRuns(entry.runs);
+      for (const run of runs) if (run.text) styles.add(styleEncoding(run.attributes));
+      if (styles.size > MAX_PARTITIONS) throw new RangeError('Too many retained seed style definitions.');
+      return { stream, id, runs };
+    });
+    // Getters may write into the pools during preflight. Preserve those writes.
+    empty();
+    this.document.transact(() => {
+      for (const entry of prepared) {
+        const text = new Y.Text(); this.texts.set(entry.stream, text); this.owners.set(entry.id, entry.stream);
+        text.insertEmbed(0, { [MARKER]: entry.id }, {});
+        for (const run of entry.runs) if (run.text) {
+          text.insert(text.length, run.text, { ...encodeAttributes(run.attributes), [PROVENANCE]: this.provenance(run.attributes, styles) });
+        }
+      }
+    }, this.origin);
+  }
+
   create(streamId: string, id: string, runs: readonly RetainedTextRun[]): void {
     this.freshId(id);
     if (!validId(streamId) || this.texts.has(streamId)) throw new Error('Invalid or duplicate retained text stream ID.');
-    let length = 0;
-    const safeRuns = runs.map(run => {
-      if (typeof run.text !== 'string' || (length += run.text.length) > MAX_TEXT) throw new RangeError('Invalid retained text length.');
-      validateRetainedTextFormat(run.attributes ?? {});
-      return { text: run.text, attributes: attributes(run.attributes) };
-    });
+    const safeRuns = this.prepareRuns(runs);
     this.document.transact(() => {
       const text = new Y.Text(); this.texts.set(streamId, text); this.owners.set(id, streamId);
       text.insertEmbed(0, { [MARKER]: id }, {});

@@ -1,0 +1,380 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\cappu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "artifacts/retained-text-seed-keyboard-20261106.config.ts"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-text-seed-keyboard-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts",
+          "**/cursor-native-reference.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-text-seed-keyboard-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts",
+          "**/cursor-native-reference.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-text-seed-keyboard-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts",
+          "**/cursor-native-reference.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "retained-text-seed-keyboard-20261106.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "cwd": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\",
+      "command": "node artifacts/build-cursor-overlay-canary-20261106.mjs && pnpm exec vite --config artifacts/cursor-overlay-vite-20261106.config.ts",
+      "url": "http://127.0.0.1:4195/artifacts/retained-adapter-fixture-compiled-20261106.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "retained-adapter-real.spec.ts",
+      "file": "retained-adapter-real.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "edits a thousand-paragraph shared document with native input and independent author history",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 10205,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:49:75",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                      "column": 75,
+                      "line": 49
+                    },
+                    "snippet": "  47 |  // Native typing has one history item per character with this audit's zero capture timeout.\n  48 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');\n> 49 |  await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);\n     |                                                                           ^\n  50 |  expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');\n  51 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');\n  52 |  await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                        "column": 75,
+                        "line": 49
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  47 |  // Native typing has one history item per character with this audit's zero capture timeout.\n  48 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');\n> 49 |  await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);\n     |                                                                           ^\n  50 |  expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');\n  51 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');\n  52 |  await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:49:75"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T04:47:10.692Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WwogICIvbm9kZV9tb2R1bGVzLy52aXRlLWN1cnNvci1vdmVybGF5LWNvbXBpbGVkL2RlcHMveWpzLmpzIiwKICAiL2FydGlmYWN0cy9jdXJzb3Itb3ZlcmxheS1idWlsZC0yMDI2MTEwNi9lbmdpbmUuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L3JldGFpbmVkLWFkYXB0ZXIuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L2NvbGxhYm9yYXRpb24tR1RIU3c5SWcuanMiCl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                    "column": 75,
+                    "line": 49
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-f4a4d075060f64317323",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "edits a thousand-paragraph shared document with native input and independent author history",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13183,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:49:75",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                      "column": 75,
+                      "line": 49
+                    },
+                    "snippet": "  47 |  // Native typing has one history item per character with this audit's zero capture timeout.\n  48 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');\n> 49 |  await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);\n     |                                                                           ^\n  50 |  expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');\n  51 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');\n  52 |  await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                        "column": 75,
+                        "line": 49
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  47 |  // Native typing has one history item per character with this audit's zero capture timeout.\n  48 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');\n> 49 |  await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);\n     |                                                                           ^\n  50 |  expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');\n  51 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');\n  52 |  await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:49:75"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T04:47:21.829Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\test-failed-1.png"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WwogICIvbm9kZV9tb2R1bGVzLy52aXRlLWN1cnNvci1vdmVybGF5LWNvbXBpbGVkL2RlcHMveWpzLmpzIiwKICAiL2FydGlmYWN0cy9jdXJzb3Itb3ZlcmxheS1idWlsZC0yMDI2MTEwNi9lbmdpbmUuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L3JldGFpbmVkLWFkYXB0ZXIuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L2NvbGxhYm9yYXRpb24tR1RIU3c5SWcuanMiCl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                    "column": 75,
+                    "line": 49
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-1262e5613d302f36283f",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "edits a thousand-paragraph shared document with native input and independent author history",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13910,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:49:75",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                      "column": 75,
+                      "line": 49
+                    },
+                    "snippet": "  47 |  // Native typing has one history item per character with this audit's zero capture timeout.\n  48 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');\n> 49 |  await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);\n     |                                                                           ^\n  50 |  expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');\n  51 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');\n  52 |  await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                        "column": 75,
+                        "line": 49
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -7,11 +7,11 @@\u001b[39m\n\u001b[2m        \"marks\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"type\": \"strong\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[32m-       \"text\": \"Paragraph 0500\",\u001b[39m\n\u001b[31m+       \"text\": \"Paragraph 0500 left\",\u001b[39m\n\u001b[2m        \"type\": \"text\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    \"type\": \"paragraph\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  47 |  // Native typing has one history item per character with this audit's zero capture timeout.\n  48 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');\n> 49 |  await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);\n     |                                                                           ^\n  50 |  expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');\n  51 |  for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');\n  52 |  await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:49:75"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T04:47:37.068Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\test-failed-1.png"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WwogICIvbm9kZV9tb2R1bGVzLy52aXRlLWN1cnNvci1vdmVybGF5LWNvbXBpbGVkL2RlcHMveWpzLmpzIiwKICAiL2FydGlmYWN0cy9jdXJzb3Itb3ZlcmxheS1idWlsZC0yMDI2MTEwNi9lbmdpbmUuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L3JldGFpbmVkLWFkYXB0ZXIuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L2NvbGxhYm9yYXRpb24tR1RIU3c5SWcuanMiCl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-text-seed-keyboard-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                    "column": 75,
+                    "line": 49
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-c02822d9fb399c575634",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 27,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-06T04:47:07.004Z",
+    "duration": 44636.102,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

@@ -24,6 +24,43 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}
 
+test('edits a thousand-paragraph shared document with native input and independent author history',async({page},testInfo)=>{
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
+ const content={type:'doc',attrs:{audit:{source:'bulk-seed',paragraphs:1000}},content:[
+  ...Array.from({length:1000},(_,index)=>({type:'paragraph',content:[{type:'text',text:`Paragraph ${String(index).padStart(4,'0')}`,...index%10===0?{marks:[{type:'strong'}]}:{}}]})),
+  {type:'image_super',attrs:{src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}},
+ ]};
+ await page.locator('#open').setInputFiles({name:'large-shared-document.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(content))});
+ await expect.poll(async()=> (await snapshot(page))[0].json.content.length).toBe(1001);
+ const initial=(await snapshot(page))[0].json;await page.getByRole('button',{name:'Pause sync',exact:true}).click();
+ await page.locator('#ada').getByText('Paragraph 0500',{exact:true}).click();await page.keyboard.press('End');await page.keyboard.type(' left');
+ await expect.poll(async()=>text((await snapshot(page))[0].json.content[500])).toBe('Paragraph 0500 left');
+ await page.locator('#grace').getByText('Paragraph 0600',{exact:true}).click();await page.keyboard.press('End');await page.keyboard.type(' right');
+ await expect.poll(async()=>text((await snapshot(page))[1].json.content[600])).toBe('Paragraph 0600 right');
+ await page.getByRole('button',{name:'Synchronize',exact:true}).click();
+ await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>[p.status,text(p.json.content[500]),text(p.json.content[600])])}).toEqual([
+  ['connected','Paragraph 0500 left','Paragraph 0600 right'],['connected','Paragraph 0500 left','Paragraph 0600 right'],
+ ]);
+ const peers=await snapshot(page),final=peers[0].json;expect(final).toEqual(peers[1].json);expect(final.attrs).toEqual(initial.attrs);
+ for(let index=0;index<initial.content.length;index++)if(index!==500&&index!==600)expect(final.content[index]).toEqual(initial.content[index]);
+ await page.locator('#ada').getByText('Paragraph 0500 left',{exact:true}).click();await page.keyboard.press('End');
+ // Native typing has one history item per character with this audit's zero capture timeout.
+ for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+z');
+ await expect.poll(async()=> (await snapshot(page))[0].json.content[500]).toEqual(initial.content[500]);
+ expect(text((await snapshot(page))[0].json.content[600])).toBe('Paragraph 0600 right');
+ for(let index=0;index<' left'.length;index++)await page.keyboard.press('Control+Shift+z');
+ await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(final);
+ await page.locator('#grace').getByText('Paragraph 0600 right',{exact:true}).click();await page.keyboard.press('End');
+ for(let index=0;index<' right'.length;index++)await page.keyboard.press('Control+z');
+ await expect.poll(async()=> (await snapshot(page))[1].json.content[600]).toEqual(initial.content[600]);
+ expect(text((await snapshot(page))[1].json.content[500])).toBe('Paragraph 0500 left');
+ for(let index=0;index<' right'.length;index++)await page.keyboard.press('Control+Shift+z');
+ await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(final);
+ await page.locator('#ada').getByText('Paragraph 0500 left',{exact:true}).scrollIntoViewIfNeeded();
+ await page.screenshot({path:testInfo.outputPath('bulk-document-middle.png')});
+ await testInfo.attach('bulk-document-result',{body:JSON.stringify({paragraphs:1000,peers:await snapshot(page)},null,2),contentType:'application/json'});expect(errors).toEqual([]);
+});
+
 test('native edits in separate paragraphs preserve untouched rich content and author-only history',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
  const content={type:'doc',attrs:{audit:'root'},content:[

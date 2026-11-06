@@ -1,5 +1,10 @@
 # Retained document initialization
 
+The later [text-pool initialization audit](YJS_RETAINED_TEXT_SEED_AUDIT.md)
+extends the fresh-seed work, measures through 10,000 paragraphs and adds a
+recorded native 1,000-paragraph workflow. Results below belong to this earlier
+node-seeding checkpoint.
+
 2026-11-06, local follow-up to `77eb75a5` and the
 [text-operation/session audit](YJS_RETAINED_TEXT_SESSION_AUDIT.md). The default
 public adapter is not switched, and overall collaboration parity stays partial.

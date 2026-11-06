@@ -1,0 +1,2912 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "744c2731",
+  "goalComplete": false,
+  "publication": "Local only; no GitHub/npm/website update.",
+  "defaultAdapterSwitched": false,
+  "source": [
+    {
+      "path": "src/yjs/retained-text.ts",
+      "sha256": "19ef9e6c11f6321d37ba0752595b9df71a2e052329d6948ee548925ee53b3b0d"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "0b0fd97eb32d0c8c0b5efc9fe33ec199402761ddc065d51124f689d891d3c80a"
+    },
+    {
+      "path": "tests/yjs-retained-text.test.ts",
+      "sha256": "c27ef13ce6fdd33b4e7b854ddfdea30c7ac8991f1e7cadcdefee996c5301e13b"
+    },
+    {
+      "path": "artifacts/profile-retained-seed-20261106.mjs",
+      "sha256": "ad1fd17c4257102f2edf40f6996b535fa4e2ec432339b5cc6ad97106705a2bf6"
+    },
+    {
+      "path": "artifacts/retained-seed-interop-20261106.mjs",
+      "sha256": "63fb8be55eddf1006313e05234cd39ec05bb1764a86f30b18aef6b70c1e13f30"
+    },
+    {
+      "path": "artifacts/retained-session-20261106.mjs",
+      "sha256": "8b87f404b36eeb83abd7a4fe3d5f2ce7f2792273cbaa6d3b27b2ef50355a735e"
+    },
+    {
+      "path": "artifacts/build-retained-baseline.mjs",
+      "sha256": "e7bcd0b5d7ebcfe980ef290f4988d87498b21c953ae04c4bc1917953ab3b28a7"
+    },
+    {
+      "path": "artifacts/build-cursor-overlay-canary-20261106.mjs",
+      "sha256": "558719e99f881a9319c62ced4f94042e0f5c2b9358970c5a77d7aedd85244b9f"
+    },
+    {
+      "path": "artifacts/retained-adapter-node-20261106.mjs",
+      "sha256": "4cde16c11531812846fc14335aa9b1cb2bf0750f39f5ff21bc43b7511e1d9f05"
+    },
+    {
+      "path": "artifacts/retained-read-controlled-cost-20261106.mjs",
+      "sha256": "e6c9d9ec2a4f48db9cf0c6fbfd0f765c9dde57eabe0b0ed108ffdfbe89aeb31a"
+    },
+    {
+      "path": "artifacts/compare-retained-text-seed-20261106.mjs",
+      "sha256": "eb4beb6f8124ee1482b38df95a9d358fb018e9db92051ede592fbc1173303c61"
+    },
+    {
+      "path": "artifacts/verify-retained-text-seed-20261106.mjs",
+      "sha256": "9f3e63a6b4a6c2b11af5f2b96f5936f6abb7e812b93b8e3392da9722f3b36fd1"
+    },
+    {
+      "path": "artifacts/retained-text-seed-browser-20261106.config.ts",
+      "sha256": "69608d9e50b7b40576ef36e9f045b81328bb1e3279aace80779e3ae5d5acd06d"
+    },
+    {
+      "path": "tests/manual/retained-adapter-real.spec.ts",
+      "sha256": "bd9c07e9cd52fdfb0f3b017b79122ca28ec85c0c1b2247e57571b739fc46ed11"
+    },
+    {
+      "path": "tests/manual/cursor-native-reference.spec.ts",
+      "sha256": "3ef12b5e8ed7c349cf83cf4aca492a5a96d71c76d368b4a4f2cd15be376cedbf"
+    },
+    {
+      "path": "artifacts/retained-adapter-fixture-20261106.html",
+      "sha256": "1870b451a3417257429a1052813398abd1134c748118785cc19aa782f86c4d39"
+    },
+    {
+      "path": "docs/COLLABORATION.md",
+      "sha256": "f146b0f68613ce478c15464e76c097672ec47f6e0e1734070ce8ebef36043272"
+    }
+  ],
+  "focused": {
+    "path": "artifacts/retained-text-seed-focused-20261106.json",
+    "sha256": "11dfb09d0c6b8294082cb02c38552c32b4cc154ef81adccdfa2982f02e487380",
+    "total": 247,
+    "passed": 241,
+    "failed": 6,
+    "candidatePassed": 225,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ],
+    "fullSourceSuiteRerun": false
+  },
+  "browser": {
+    "path": "artifacts/retained-text-seed-browser-20261106.json",
+    "sha256": "f4e838118a510509a03485a843460b93552554356f7fab62d224b46bfdaef27c",
+    "distinctPassed": 96,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "workers": 1,
+    "perProject": {
+      "chromium": 32,
+      "firefox": 32,
+      "webkit": 32
+    },
+    "compiledRuntimeVerifiedInEveryJourney": true,
+    "currentSourceMapModules": 190,
+    "recordings": 96,
+    "evidence": [
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/.last-run.json",
+        "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/narrow-label.png",
+        "sha256": "fb6e6433fe1b82df8dde3887909bcf85f80bf4d6262626853efba57b41a8cae2"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/top-edge-label.png",
+        "sha256": "2a33a19f7b30af3cdc083ead9a6323f45a63f151df94faa72be43d1662f7ffc6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/trace.zip",
+        "sha256": "390ea6a7b4cedcdcee81442fc85147efba5eab632df6cb4530c88bf5b691d7a7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/video.webm",
+        "sha256": "836aa16bbc47d60d2d04d8919ba055eb3b7dd30188fd4e57e4e30e3a27745132"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/narrow-label.png",
+        "sha256": "4860d33da955575e1b5d2ba75151337e2242b466b4069d2b7c93345efd058f92"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/top-edge-label.png",
+        "sha256": "4f167979afeea89eb664abaab2b2b6063a95d12bfaef3c0ad59d452a8fb0d276"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/trace.zip",
+        "sha256": "4680cfac381792515d7b8783f58052e8bd6a888f3a352fa0035ea3e46dd9d2da"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/video.webm",
+        "sha256": "89035120d40c96e5cf164121f0c8515744b325199507eca18aa19a096cd81dcc"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/narrow-label.png",
+        "sha256": "5069a08d4293b2a8c6f041f7f8ac0c4d01ee024abad521ba946ccfeb8752eb42"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/top-edge-label.png",
+        "sha256": "322037d8e3ce110c966bb2b6c77a5e0fa6a0ca8a3eac16e04b1b290ebbc3b1d6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/trace.zip",
+        "sha256": "b3d00d4c3b981afc73dfd941fd39c83989ccba35df6667840fa40eb298f80f3e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/video.webm",
+        "sha256": "a5c1c5dee584b0d7caf3fb918365b906e89391c72f1eeeec80016f58b0210c7d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/narrow-label.png",
+        "sha256": "5bfef94fd0d59554fed67521e06f3b55a2b98a64707a3b7af91d899810aba086"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/top-edge-label.png",
+        "sha256": "fa9f6385dcc032384dd068e6f1cb2808a49510cd3ba29f3e99e709db208369d6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/trace.zip",
+        "sha256": "b1afaa9f8a8f45881fd32a83a027196ae4c311d7b9dd6b83559329e2a57aad60"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/video.webm",
+        "sha256": "e0c40f5abdf31bf377fbf3453b6510612333770b885422da8f54cb54239dd289"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/narrow-label.png",
+        "sha256": "10d9534f32dda53ad560b6f41ef1c587fb0c75c4a79f79c6588c2bbfa5bbe807"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/top-edge-label.png",
+        "sha256": "2185d902d279a3a25995748aeed62d9b7cdbc965f573be71b30960facb36c178"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/trace.zip",
+        "sha256": "ad13a67e93056c3e50c5a9856c8bb804d7f2542c21d87c6681aec195f3646cef"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/video.webm",
+        "sha256": "aa65ceccd8a8a4d293bf1ee4d3be1887dc82c0843da3f044b7d580b9ecc33457"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/narrow-label.png",
+        "sha256": "7dd31b9c8979e1e71847fb5cea5de6759e7ac0147ffc8c4bf6dba19f32578939"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/top-edge-label.png",
+        "sha256": "967ea30d376118c65f21778984902e8a496e1610263f82c255af8bd1640b42cb"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/trace.zip",
+        "sha256": "85a1ceecf02bb1ede5ea87f037d0391cd4e3b8508b202779c224bbc231ad201b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/video.webm",
+        "sha256": "fba0da2e3d273f9913650344d8d00aa556d398e503b0628e6fd50a124fa43b04"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/comparison.png",
+        "sha256": "88f789a87242d448747f4178ea0c421739aa232b70af26190acef7c94461c894"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/trace.zip",
+        "sha256": "6322954c005923ae057424ad4b5d64ded1b1aa7f2d6da8eb9bb411aa9e88f45b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/video.webm",
+        "sha256": "e2dfb4042b60fa3f1bfe67051534f1cd3b089d5a4162d045fef19013965ae4a0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/comparison.png",
+        "sha256": "3464e0626071786a56c78220dbe39a0ccd6700089b5af03c9c10a4b8c8b2d15b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/trace.zip",
+        "sha256": "bc0382baf6533f440ba3add327c44270328499bb326f73b7716c4f2368414998"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/video.webm",
+        "sha256": "4422bc8930cdd1fec17aa875be34288fb560f993041119fe73a69dfe11d059b4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/comparison.png",
+        "sha256": "932e21a476a3f6dbcda5e72c6289687839d587f12174d07655d412ba6d51eef7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/trace.zip",
+        "sha256": "36321d9ed6b6e9be81b39e41ab34b3ac1e4c0b86356fb8d2033992e9c9ee8986"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/video.webm",
+        "sha256": "100bbe7b3bd4cdc543c08c63e76b421b41c5b9234ff0153e30962889e6ca7b62"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/comparison.png",
+        "sha256": "7e77314d719abfa9d56e2ef501f3ec0fdacc305dff814fe24c54aa57a001ce8c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/trace.zip",
+        "sha256": "a305a7939ce0a88469540783001d7d5b42e3caa740acf768a61c3de8e275fdf0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/video.webm",
+        "sha256": "203858b6b2cec5760bd256ac5701105d7ec2ae0a6c50d0ba1ff717380918a372"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/comparison.png",
+        "sha256": "3b5ca6ec58e5e36c30034427d777b5386033d69c3a3b6406147c1ed70330e039"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/trace.zip",
+        "sha256": "05765783591adebc31f0e6693579911ba494f3f21b13de67024fd732f3f06830"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/video.webm",
+        "sha256": "aa73a92a93668ff7e648cd16c1ba79b74588b10fbe6ac635d270f5bf5b2ed7e5"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/comparison.png",
+        "sha256": "191e881e9376dcc3ef4d3152e4bddf5fee131be04f3a1628e4f02f9e00951fa7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/trace.zip",
+        "sha256": "4232e2da4746bc584cc30bde2d18c0c9d0198d57bc52f7fa24a016c88107f199"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/video.webm",
+        "sha256": "3a0dc1df2d0a20caee041c36f18c01d9eae56af200c01055ed2d82da3c4d5613"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/comparison.png",
+        "sha256": "a43e2c6d91a3d0174601f26c57258dc7b225fb57ff9016d5d558ebca4bb3ab73"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/trace.zip",
+        "sha256": "09fc1129e348c5060f2680d140c1bd950e30fc445ca589e9cf891fc502098486"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/video.webm",
+        "sha256": "147290b46fef4d118b7d73719c9b834ee89d553c87846e83559b3e4166210161"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/comparison.png",
+        "sha256": "f23fd216d7afc23f361187b4e0baa20bdd8aea942910529a685dc42a1a36ba44"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/trace.zip",
+        "sha256": "61e1ea07384bf6db80a775afb7a989284d487fcb5d6c9f46fa62aafc9144d958"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/video.webm",
+        "sha256": "a5fc8ba0be1907e954d7f30271569cb5535be06698dcd99a648ca24e79781fc7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/comparison.png",
+        "sha256": "a73b4900d9752d8e554606ab119fd417320f3cfe476107a5d617342a753eebf7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/trace.zip",
+        "sha256": "55e83d9865b735f9f2156388d373802864166e4b9a66139b80c8bd3acf771d95"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/video.webm",
+        "sha256": "6a88755c64c1bb3fcf133e4b8484e1ebe65e0851c6bf52c071156a8f47333372"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/comparison.png",
+        "sha256": "16333d042574240bbd981a16d652a63b95626a131e55fdccc706b42ee19e7c38"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/trace.zip",
+        "sha256": "5d3a844b30cab19d2c279ad2be3f0745fe387e5fbe1dad5e327ce89883d6496d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/video.webm",
+        "sha256": "1d1c95b140be6785b50abcb144cea56fedfb141ed502410dc5edc8acdb19a9e4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/comparison.png",
+        "sha256": "bca57f8379f5e447320cbd7507d64afc98f1204e8ed09b180ac685a3fc7249d6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/trace.zip",
+        "sha256": "62d201b0430714d61126767f799dee6f9af1aff2ec6111e11d79238c97b4735a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/video.webm",
+        "sha256": "033690ed2b27ba9d34efb864191a36aca68a2b08738c9a7acfb98f8c65195d47"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/comparison.png",
+        "sha256": "ee4468567dbe445a0b132ee311881b0f556dac9e52ada78c3269d2b1e3200e03"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/trace.zip",
+        "sha256": "a06d6987a8eec1957b18e71ce77c3dc61cca7474b090120da4c0d9aefde5304d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/video.webm",
+        "sha256": "70726d74cbdffdc498675e3d2cac50449672b81486cc167ce4eb8cf017bf0d88"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/comparison.png",
+        "sha256": "3cbdf98b3859793da29ef4057240f814bf26d79eb171b7faf3229a513be089ed"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/trace.zip",
+        "sha256": "712bb89d8c4fb4b0ff083e86e30cd700bfbd47c1a829965b4ade0fb083b72c09"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/video.webm",
+        "sha256": "4883d975555e84c8fc9fd628491a65ca0c1e4242bb3c7050eaeea08116223d2f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/comparison.png",
+        "sha256": "c171a6cadc7ab61b92df9ece860c4ab05310b0e81eab347dd73d899aa3b8e3e6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/trace.zip",
+        "sha256": "2da0ee57c85b4e2172a839b419c60a608d3e535ebd18f719ab9fbd46b8a58642"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/video.webm",
+        "sha256": "8ddc313203ff6bddf7bd1cf3059b19c85fd02fbccfdb389fc46e8bc49eb27987"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/comparison.png",
+        "sha256": "41539bdd00badb2af9c7aad00c73089a8161598b946af45f014b187c0744d99f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/trace.zip",
+        "sha256": "dd69411e58d9a980b82913ee1bdd06466d4052f49dc21eb23a941a638989343a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/video.webm",
+        "sha256": "18406281cc39020f7f3b88a6f6474265e201a8d92725574cb9406e973abe8b04"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/comparison.png",
+        "sha256": "f6fba97c740d0600e181c58994b7e263bd4eaf72977ca7626078dba22304043a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/trace.zip",
+        "sha256": "f87afd1656d04fead2201f062769c41834628dfaefc9fbbdff8ba2a76e074c3f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/video.webm",
+        "sha256": "557c1c5f10527dd5d8f86900f508b657dc02fcb6b5bd4386de00c7b4c431c64a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/comparison.png",
+        "sha256": "52d8fe519a96f3b0749208903955569a09ece4060eeb93b84450bcf56d869bbe"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/trace.zip",
+        "sha256": "6f294b4dc404c675e3a4d796814eaa24688444fa3539984039faa07f9abf768d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/video.webm",
+        "sha256": "53610282fb9a710e15617003b7f1b9ac4421ef334d0e0d70d9d1c399e81ebb2d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/comparison.png",
+        "sha256": "6c9578a63b41bc1263f0c93475770107ce73e206b0bfc825410431e8590e1676"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/trace.zip",
+        "sha256": "aaa885b0f9b77029574685fd6a0ae1e29d0cabd4bb54ce2297fca661b03f0cb4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/video.webm",
+        "sha256": "a2d2776fc35e50c9ca20a2df9be3089c6d347687935d216cfcde841c79be5d11"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/comparison.png",
+        "sha256": "64aa55f72b972c331553011b4600e129084389de6b0f6b2807d419fc51d2fa72"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/trace.zip",
+        "sha256": "6c646ab2b02481b39a4f24fdd201d9676fb3f164acb93c9fedc893b3f559f16d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/video.webm",
+        "sha256": "57c41b47d74dd286106c61d2019575ee9ce4dd5fd04c28a6636b926160f1ef14"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/comparison.png",
+        "sha256": "5509f5101db5d9e42de81b0fd2438e85da41ea62b05b07ef89f3c1b77527e01a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/trace.zip",
+        "sha256": "234de7bc112bdc859df0db1e3d26910b00382c2f95e8fc9e196bb5dfca804aba"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/video.webm",
+        "sha256": "de5254c4dd78f93da0a10261b6063b53614725a9ed0a42b2eda1f948306bf6ac"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/comparison.png",
+        "sha256": "092e15d1b03acee6df3af19ab8afe7bc3547569697fdab9897a05ad9499b356c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/trace.zip",
+        "sha256": "ac1d82feec7002a8805f0875946b9bf61b293b6b50d05ab9e12ff8282c432442"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/video.webm",
+        "sha256": "a1d6d4bd16bba073dcfe9523320e9508dafcdabb844985b470f08a5bf83d878a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/comparison.png",
+        "sha256": "63fe7fa8546f0484593050ad5eebdf2893a3662d896462a665556b983b735cd8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/trace.zip",
+        "sha256": "81dc6996234ca68437395867e5e5c4de8b8f1b94b5a116ec7760fd568fc6b294"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/video.webm",
+        "sha256": "06647445298d45c1596ec03597ea63e4b32a6dbb34aeab8bd45911b7a802f156"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/comparison.png",
+        "sha256": "531754a2a0443a9528e570030b05e8c49645474d2f7ba7a48fc5f545597810a8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/trace.zip",
+        "sha256": "8c321d22230d35ae1b71123c4e7ec79d26f8692f3fc62a292ee299a55716c70a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/video.webm",
+        "sha256": "6e203987dc9de675fe41c2246ac0d737a10052e9068762fc8dfccfe9126f6450"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/comparison.png",
+        "sha256": "839c39ade03329cd598ea65b99f9bea70b080cd2db9d39d00155566bd87c71a2"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/trace.zip",
+        "sha256": "adb948f17cb5c43d94f908daefbcc75549dc825409d82f2ced9919b663410276"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/video.webm",
+        "sha256": "9c7008917138d5a26a35819d869b1b9df1aba425472766bf4d5d02a4ec0ebb62"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/comparison.png",
+        "sha256": "a589efd0e64f122e759fd41b485d8a2afdd165cf91586996223ea5de7b8a14f0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/trace.zip",
+        "sha256": "dfa0aa7312913088333f77f46fbcfb9d99bb7991aa9ddd2c1efc950a5809185b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/video.webm",
+        "sha256": "d7e70f37c22d5fbbf67a74a87e2bc5a1d45bd0dddd63bf0660fb8254995ffe94"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/comparison.png",
+        "sha256": "bee295a641c2c1fd030030d2e61a8559a3ec364e471219c3d58c328157aa9723"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/trace.zip",
+        "sha256": "f4462d027c4a26212af4cd8ddebe87b1b832e868d7d0ad0a8611104dd1d5d7ff"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/video.webm",
+        "sha256": "fd96616e69209bf28afbc1db1228e8b0dba474a072391df95777adff4abb13e0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/comparison.png",
+        "sha256": "e3b216ce79fbf1c6b5e047179def0081035600124e7027456276841e7fa965e0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/trace.zip",
+        "sha256": "b9a665fabc78e059070949cd56406a5c59ea999da6362a9f02913db5b1e5149e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/video.webm",
+        "sha256": "2fd77e8647895f1ae2487f1ec938505c484bf87e28a31d3f23425dd56af5deaa"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/comparison.png",
+        "sha256": "33d477c3ce1b3b965401b1fcbf7811e6f634e31be8437c470fec76e009a4a398"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/trace.zip",
+        "sha256": "66122837934aed3d74c6e8874c42ff4c0164499d5d2b79ca09fbcc91cd755379"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/video.webm",
+        "sha256": "263ca473b72965f3863ea7542ab05b7c40234104585e213a540edfdf308e99a8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/comparison.png",
+        "sha256": "d2f996c2a668c658e3f08c9745aacce6f30c531bd5ff4167a40edd535db07b53"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/trace.zip",
+        "sha256": "dd0ba31371924ede71052c11a2f228f8fd8f8201c6cb5e4997c7c35fb71564bd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/video.webm",
+        "sha256": "873c818124565ae8284459829f6da842069d5d258f025fc5e16e3d8265bd5da6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/comparison.png",
+        "sha256": "0f72de607926eb54de7f77be3106dbb0ca86d62ae261ec7812c784cdfe50e2bb"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/trace.zip",
+        "sha256": "ba6802bb3b6d5232968780dc78aca80b2f9a351c01f800649f5fe413927358a8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/video.webm",
+        "sha256": "307f7803a27485a369d895cd097decf181ce804d0f5ef520c27609efd458c1a7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/comparison.png",
+        "sha256": "01874af555f09b0e978717809f0bbdee5710dac1371775ecdbb1c74927db74f7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/trace.zip",
+        "sha256": "59220828c96d47e45b23c56ecf14462960af9839a5adfa0a72ba3da4a206239d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/video.webm",
+        "sha256": "7fa57a0f1f2a3ee8d0beacb1159f1d7c46d45ad235534abb6e0c9e79d8be33cf"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/comparison.png",
+        "sha256": "51b4d782f608ebc376dce5c3d754dcd767899687fee252b11c48ed1e2eabe9b7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/trace.zip",
+        "sha256": "2ccbfa639e77b5970e37ae0502cc39aa63dc5cfd93902eb0ccb1ac30cc0f6cf7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/video.webm",
+        "sha256": "40f6fbc79c515f701bc810a78ae517c4deb8113e40b97c1025e4c3658debad37"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/comparison.png",
+        "sha256": "8bd82fb2bdc2c99bca68aca29aeb890b7d9fd6e65cca9a49f762afdbca74e883"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/trace.zip",
+        "sha256": "f531d44013852ffd2e56a8fd888dd3b21738a52645bc267435527e0ea1f9e906"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/video.webm",
+        "sha256": "14261a1d52d9a2971a9323e59f854b1f95265973b2134760f1dc8f9171355243"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/comparison.png",
+        "sha256": "9e8317a499fb9eee509edbc4830615229241f2ac295c1774ac4511f27a0ca298"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/trace.zip",
+        "sha256": "4ac935b985a1bbacf6f4873d14af4084701da242c208a5ab3ef334084ead7a60"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/video.webm",
+        "sha256": "71a87ea1c9020e4dfb9ec3bf2ddae11cdf50bea6107ab2596ed491ce8aac4bb6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/comparison.png",
+        "sha256": "14288cf6eec3112cc9b45775cab2d46066121d6220c42d3281e8a66426279d33"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/trace.zip",
+        "sha256": "591f7443134004d467da18d4d894f3ec79f07cffc98a522130fd02973f3cf31e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/video.webm",
+        "sha256": "b56113cf0daa94aba55d0f73dfb1cd332fbb49167ebab3688f5be47054bdceba"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/comparison.png",
+        "sha256": "a94f789f4ac7e5dfc496b969175b32801b113bd679ae52ab6039f77ec523e473"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/trace.zip",
+        "sha256": "d7efe29edd00f7e3434a5f1c04a0072e190fecc1b9ac4071f16ac55636f56b5b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/video.webm",
+        "sha256": "8f5e3340028ae06cce5b1d7c7046bcac880aaf242f5a2bc7cd97e7f832de820e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/comparison.png",
+        "sha256": "e09617925103647673a6e3c0322bc56909756a493d3be605f5cd7c26799fa1a5"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/trace.zip",
+        "sha256": "5740529db8fc9c7bfa05483bf8975d3cce1e17ae6e99c3db5c4b26ace6cbbd2b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/video.webm",
+        "sha256": "1a5efdcb3ad3f980cf1127b04f1f2f3348041c19956608b02006adafa1992c07"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/comparison.png",
+        "sha256": "56f9f7b1a6909beb0686b036042a63562a8dde2f1aef95575d50771d2d3b758f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/trace.zip",
+        "sha256": "22fc7c62ed1ecb7be9272949f61f567be72689e547e287b9ece32500361b2a40"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/video.webm",
+        "sha256": "c8c4e4f8ba16db36e654040b34024ae3d9e0ef34e3d92bfe14fda94e254f80b6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/comparison.png",
+        "sha256": "27cdb8c567a1980dc82ccb1fef2311d2a77539df5e0cdd0345fe9202040c4ff7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/trace.zip",
+        "sha256": "7fedabf3b43b7a161eccad0c05df19d17e5e4edbb4289334978868768d4b09f5"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/video.webm",
+        "sha256": "3afd83c3b293ec135fc073959acee1aa28edfc48d3ed7a7d88f57f21f161790a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/restored-overlay.png",
+        "sha256": "9550c5a93463a086ec4c877aec218a05362b65e2f9ed0a1e539543830055c2c0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/scrolled-overlay.png",
+        "sha256": "d73c215c13d395f56d35fb484a1d5ff06d0fb8c3116f7ce68ab352b8b8190391"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/trace.zip",
+        "sha256": "ff775f1c772d6baf7d1ff85fd592813de82cfac62c0110b2d5a7ae1c835a56c0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/video.webm",
+        "sha256": "e0168a905e066c43f8861f1d35e49dca484e72e07225ce8a745c2ea9243fda49"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/restored-overlay.png",
+        "sha256": "baefe5e3f0258a21c7539e6d56bfef1efcb96144de748742d094cd3f9b8f9be3"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/scrolled-overlay.png",
+        "sha256": "3e146ca57ff5d098cf15c5502676f1864532b41093a49e94625e5a9b8a00376b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/trace.zip",
+        "sha256": "622bab6aa0afc13d83467b746b28e4719813a2da9bac7e100534c8ae822cb85d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/video.webm",
+        "sha256": "adacbbe07e439cc6dc13f8999913c4fa70d5efa1ebbbc2bfae10369576bf842a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/restored-overlay.png",
+        "sha256": "56b230371bb6772545060d03a48734069d38cbd39f9fe73a1774f7683ad2eebc"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/scrolled-overlay.png",
+        "sha256": "3b43d9b50ad1be352ddc9efb3c2ade08220c9d846d04b7ea8cf1a2b6fd31a789"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/trace.zip",
+        "sha256": "9b4ca277b88c1a8688323370f02cc1d6ddd95e07fa040881b5024f6a4df29a7c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/video.webm",
+        "sha256": "27d89eafe8544ade2ebe77ae705958930fd216990d6aa2b7b248ebbd42e6a21d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/anchor.png",
+        "sha256": "fbf62163b9087e3af7f4465837b751d3adc23f6dab369c0f877f8af5fcada867"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/trace.zip",
+        "sha256": "1151a5150c6f077de57dd1521fff882c6a9b1524c2e59d6be874e8b6a9ea40ce"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/video.webm",
+        "sha256": "41841b64eebd4e51b53b6ae9ecf7ac2fdc2973d1352ef577590c13817ad8b2db"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/anchor.png",
+        "sha256": "12847b526f714c84fc602a5117a9d6a502475c5ce7afe05bdf938bb9edca6241"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/trace.zip",
+        "sha256": "93322cf9253d2f6d7fdd273a4e121c013e27bef27a4d5f552c46465d491f54bc"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/video.webm",
+        "sha256": "fd5c1c4ddb2112f923e406163ec362fe6183e0eef485a4eeb6a748e4f4aa8377"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/anchor.png",
+        "sha256": "1a95a5440054e0adab2a7a5a8c38fb86ebfe862e5d3b187a3b295cdcf583c4cc"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/trace.zip",
+        "sha256": "5d1e420bcfe236e6d390bee3da3d8ecde5cda8e2e78a6bb5246b948ebfaf7402"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/video.webm",
+        "sha256": "097970699b36c89453b279fbae87b1e27ab07e13d932cb55168ab99a824f276c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/anchor.png",
+        "sha256": "4d7327fe7276a37394a65e631f57754f8024dfbddbb2370e78134ea679598ba3"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/trace.zip",
+        "sha256": "21fdf912fc6078ee742d5efb0541d04117e135d2107df4b5ff28ceee6b7d0d3f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/video.webm",
+        "sha256": "62cf93d5d1ff9570ffd7714075d65498577098b8dd4e22de147721a5bf21ab66"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/anchor.png",
+        "sha256": "01a3b2762cb0015982f1ee4e6873df8c9b2686af986c1ccccbc211df87a0329a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/trace.zip",
+        "sha256": "e1f41aa429db967a8fcc0e4680cd5e40c99f0ec48b60f110f00282c30cef95d7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/video.webm",
+        "sha256": "32fc06be9150ac066f7f88d35a16b89eb70d999ec99aa99b56b552c2e84f89ec"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/anchor.png",
+        "sha256": "3c04d076619128c7e393e7ae0359560b7bc9eb5ba76741b6f6a7f26a06bd52e0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/trace.zip",
+        "sha256": "13386a6adfc7bf3e23ef54886a158b95d399c8a545ea87ce1e602f81fd867b21"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/video.webm",
+        "sha256": "1d6916bb62e5fefd88d8bf1178c64bc6cc3a46a15b8c2c370fe7324bd1c634b5"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/anchor.png",
+        "sha256": "f6d4c922ef420a3d4914e140ddf3bb3fc9affffbb7db1303e3f1a35beb43b8bd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/trace.zip",
+        "sha256": "7680c4ec786b7558ee44e2d1712c8b7085348ccddc0399ed30c8357faffaafe6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/video.webm",
+        "sha256": "1ed86bf487f511f436f72469058ef36fa25005f1fcbbcb3a0ebc3868173f8520"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/anchor.png",
+        "sha256": "f92a456739539cb5bdb201b4a42ec7029395ff4a27d5e36ba20467606cd63007"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/trace.zip",
+        "sha256": "ebdb69807064635f6dfb7f2e97907f7591a3ecd0958d628a7564f7a933dd7d64"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/video.webm",
+        "sha256": "28c274446a6a7378678934e5d834267aa29c9e992167c23da2a96fd5babc5b22"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/anchor.png",
+        "sha256": "ac85148954a84b178c30904b790d955103141bbe28106dc33469b9e2c6cc2f56"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/trace.zip",
+        "sha256": "99384d8c99f045356e98ecb36d0481e18ea28cb4a15cd90a89f7427633a8c7fe"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/video.webm",
+        "sha256": "2f8c3d1835d4418a8db0e7b1989e4cf10b9f900c82b817900d1dbdc611c46bd7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/anchor.png",
+        "sha256": "47684e6941d8b1a3c973966121b9f51f3667ebf97847e74e5123415505fce858"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/trace.zip",
+        "sha256": "7cdf6030239cc18db3b8c648123ab4c9325d998604542379e636beb3446ad180"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/video.webm",
+        "sha256": "20b4c2a781b2f17f56036b166dfef3414f406c7d53db2d0ccd25f992b74f2634"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/anchor.png",
+        "sha256": "96c1f916da191b9fd47bd9448b5017292bb3cd83d8082b257309a82ea8224b21"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/trace.zip",
+        "sha256": "5e62660f770da543731cb128ecdfc242b0c6af8f4cbda35ee69813e6e7a6a901"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/video.webm",
+        "sha256": "0eed51b8e6f634b13fbc66426c51cc8b91355c297a2adb8925345f68b26b46a8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/anchor.png",
+        "sha256": "a81c8f0ccfaa5236d9c3388884ee645a678d67ff2f6d1065c25ad55117543399"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/trace.zip",
+        "sha256": "ff5b42df8bafa67c104304ccc58895a733edd8ec1204ba4bc4b9154e16460c24"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/video.webm",
+        "sha256": "cc350deb0777ad7a748619ccf178ef01209ecefea2c35eb34b1fb5891a7608b4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/observer-continued-typing.png",
+        "sha256": "7886fb48de27aac12d0a134a9f7d28b7ba2580e89f0bc8d2ed80a51d72a570b8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/trace.zip",
+        "sha256": "ea1ce49a7d184aecf4724ee5b299b8c914f2919c78cc8314b79b96a403949632"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/video.webm",
+        "sha256": "0f5093e5a6b640134419f302e60dbc9c9cd8c9fea805c9cd070b05dafd5affc1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/observer-continued-typing.png",
+        "sha256": "c2b03f3f56409fdc2546a0fa4954b3eb083781e79850b8f5458c3d5a7714ddaf"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/trace.zip",
+        "sha256": "5b15fcad2e5a6c95377bb49f832a28a795b30673032088a39e58661c643c35d1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/video.webm",
+        "sha256": "2709b6ba1d280f427882948aa7b6115e65c0483f4994e305d634d8aa36f95a64"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/observer-continued-typing.png",
+        "sha256": "673a30dbd8155a9f9f4cee595786dd244d58ebc1f42446d7b1d0bffd3fe5d979"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/trace.zip",
+        "sha256": "58b33c648b8d307f1aae2a73781c6bb5d1957844b6f11627f1b2413e5c7b596b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/video.webm",
+        "sha256": "599c89a66ace7f2d01f1e97c7b657dff6a0cde416f176d84454510b9075a57b2"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-chromium/bulk-document-middle.png",
+        "sha256": "d713d7a75aeaec3a807790b5cf6bb0935f0ca145df4eb3b476920997114272bf"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-chromium/trace.zip",
+        "sha256": "4ee6a1c1c01c87ee439d068848f6b769ac140898d06c184cacde1359ed32b9bf"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-chromium/video.webm",
+        "sha256": "e5de08605e9e912e2dfc8a83886d03380ebbd562b80d3e3901a5d7db00347f35"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-firefox/bulk-document-middle.png",
+        "sha256": "7762ee729d4241961668b471490eafabfacaf277e18fc71bcaa6ba460ff3b34d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-firefox/trace.zip",
+        "sha256": "f10684576516771e64204b84f0afac37753c271a720abb8b73e83af314c44fd6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-firefox/video.webm",
+        "sha256": "39f47cf3de5e91070be28b3f862f6e1e9c8574e6b23000961594e256b0be850d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-webkit/bulk-document-middle.png",
+        "sha256": "41b89d2fcd21fcca1b9dcf5e239f3a0ab221208e2e765d915e01a16a13add95f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-webkit/trace.zip",
+        "sha256": "72cd6e7ad37e22fce1884bb95b7314b9397e1dd9b6da7c7ddcf3e6284384b6dd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-webkit/video.webm",
+        "sha256": "80ef11ab1c93ec7aae51ab13975857dfca16635809b0f30ca279d05543762ced"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/backward-selection.png",
+        "sha256": "2da45cff164c35ad91096c5ce0d4394f01221136f3d677f3e7cb3b6831c5490f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/reopened.png",
+        "sha256": "eef5e175d2661c74400c8e1057c3497eb0282d042920fb75dd44926603d1c951"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/trace.zip",
+        "sha256": "ba16b74d0356aefb1339022ddec47096a659c5d90431c81f209835b2e5284b1a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/video.webm",
+        "sha256": "96cced8a1b87d04367ba8ca21b5cecf71d5990a7e3239a5b85d6f418853d3cb9"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/backward-selection.png",
+        "sha256": "4e5347534807d82349de2f439cc88a3330cd2080256c67b3b6e19b89663a99ba"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/reopened.png",
+        "sha256": "cea4a8a24d886deb4629873e6bdb198eecc9761795e8f86bf14d9bde2a386c62"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/trace.zip",
+        "sha256": "7a5711079599152f3fb2f1c03f3ca0a1fcf87c545ab91fdfe58b3a7ea4c144b4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/video.webm",
+        "sha256": "48b1b575f70e0952b34af3677482e3cd9a73f7ff7ae225a76812b8e59949700a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/backward-selection.png",
+        "sha256": "7257d152eb4d7a8d996070216ff557d62816f4caec8516fe9993473096c23f40"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/reopened.png",
+        "sha256": "c57b8bdcc8a0d656fd86a5aafcb0e03c8ed613c8a8cbc899dcb63e179eb5a42a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/trace.zip",
+        "sha256": "bf9c4c0d7065caad053952f6d89c3906c6d048342e8b173fb2647ac73b0f81f1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/video.webm",
+        "sha256": "a31e554e871f1fa01b4d0e557e516aad177f68fcd502ffe0c99f030f45954a23"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/converged.png",
+        "sha256": "768c6f69a3bf65489e516808c8b11e15301f2eeb6f64bfdc36839fa7858cc2fd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "2a6b78a34f79310bc4727cc541ef09e1589ca02449f306e27201067b6ef1fafb"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/video.webm",
+        "sha256": "3b9b96c9afda884a88d03d4abd34bb6de7d7a9ba8b4d896bd306a9f88cff21f1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/converged.png",
+        "sha256": "acb69923a7d67cc1d171637d5689721541ca50eea17521e56883f87c9b32205a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "631f068425276c406ade6aa0e9fe649555440b95649e2f4434d29a7769ac4255"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/video.webm",
+        "sha256": "1e61c53f0f40ae3e06c6d25077e6b5e287c56235ca138d92ed4a7315c69d96a0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/converged.png",
+        "sha256": "64e09f2cbb3740ebdda7d8e557a63d75484993ec2dd2667d66b8f69b60203fa1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "f81ebb09e463b5ae17dcd272e2b0f1befe1131bfeea1db8ccc6c62590fbdb087"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/video.webm",
+        "sha256": "5576681296228bea47b041c14c8e63adb5b5833767095cd7d4f04730eaf12ab6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/converged.png",
+        "sha256": "80f6efbecc38ee901e1cb040e7a40622946a1855dfc5bce170c8a6c66c01ea99"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "b5d7b562b2b671b93e736e34b72b014382355d4ca797417741962c8de9ee2e01"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/video.webm",
+        "sha256": "c7373fafef22f74fb33234377cb02c361869b716ab45477d2acf1a5e3cd5fe5a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/converged.png",
+        "sha256": "4c4f430c9e86ff533242ed1a860d1ff8a707185c03054c9d816264d756a5ddc4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "4e2c458b386aa4b5b1d011b243512ada4e1fa404fcaa8a36413c7516be05e4ad"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/video.webm",
+        "sha256": "8244c9f8cf3ae4ed02f0b34207f2c8bd509e7033724ae339da5ca874bf66a15e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/converged.png",
+        "sha256": "091e0c5b2207b8e972025f180334997f06ea351bdfe50885626d336ec77ee6d8"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "201bc4a28fd761f0b48a5ff0229818f6a7572ffb19c8adb8d9712d119d8128b4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/video.webm",
+        "sha256": "62d2e2b5a4128ab09fd6e2d1dd1bb91a903e804e5651fd8a1be5c6086f3ccd37"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/multi-paragraph-converged.png",
+        "sha256": "9b9a8a9abc0ee0f4d57b3f4d1db87fef5667690d24ee85fc4a01f059efbfc8d1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/trace.zip",
+        "sha256": "e75a6991ffd863a57452c85565f111ed2f794cb9d54ed7532e49f9cc04b44c77"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/video.webm",
+        "sha256": "412092681444b74a59bfdea1f526ef642db8458a72779f2198785405a64013e3"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/multi-paragraph-converged.png",
+        "sha256": "b3c116bfe7e462e04af6b852170070c92378ab2f06b9588e3dc7e0df001be64f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/trace.zip",
+        "sha256": "55edb2c39eba9ed83b0621e78c8783f13135936c4c4a811ce637176cf6cd4965"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/video.webm",
+        "sha256": "fa51f0e8d7f73008a8bd4a1be52a26c68331a2157c226a9630bc49b80a1b85d2"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/multi-paragraph-converged.png",
+        "sha256": "50981067d8a78308c05ace590b7fa3947bb7f78fba523ad926942c2adde7066a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/trace.zip",
+        "sha256": "075a497d943380488316d2031d06baab2737736c9fb403b0916662014472ed54"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/video.webm",
+        "sha256": "0edd4cc7545c6612ea86ce4acd62f0227ecfe8b29279c59c48a5e833379f9add"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/converged.png",
+        "sha256": "49a9a16e67f673d1c89cec362b944a7f11ddba11719d3baedbd080b10dff3a96"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "edddebc93b48d44819ba6fe78f56711306482759857eafd128a9c4fbfa9dca85"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/video.webm",
+        "sha256": "8a0a73f942f8f22c80ba2afb9be02fafac0150a8378b7b1e81052d403326c71a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/converged.png",
+        "sha256": "4c7ab7cf586e4a0b6f545c0a4feee349f5f073600824f7ed3650411d9aff6bae"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "198b80b8452a343baa29c383c39e36efcb7f7fa64a2354f2da96d4cbb9ac2a9a"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/video.webm",
+        "sha256": "c8bdbadfa44aa23aa9b56020cc5dec344b01955235c923d26a4c274f8dd488a5"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/converged.png",
+        "sha256": "683bcdbea966d39b42850b8cdc3036892dc8d414a16ba5a95978d7432bedb7d5"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "e917d47ee0191c66d05fcd8e2f3ad66bbb016b3a42101e80454981fa6e526646"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/video.webm",
+        "sha256": "4f146a5262987fcce3ef81d05b77e4d6427134504275c737408506193f418ed4"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/observer-annotation.png",
+        "sha256": "af967eb0fe044441d5cd98ee526fa224af67f9d64f48b9036bca5bf68a1bdf83"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/trace.zip",
+        "sha256": "568780ac03d57e44afe8eb69ba6bd50de982bc54809ec30c4cc18dcd52e3dbe2"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/video.webm",
+        "sha256": "c7915dfd16800ed4c0069ef22c65b8c1e7aa8cfc3a4a7b82ba7fc0fd07013d7b"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/observer-annotation.png",
+        "sha256": "7fcaa945b05ac63e28e2bda35edf16508df025fe46dbc6b8263f6266e031963d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/trace.zip",
+        "sha256": "6e987dcf87ca895110f27e37f129a713588d1051ac5df01b74fb9cf16e466646"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/video.webm",
+        "sha256": "6ef6eea25c353658bac3acdc293398803f92b95283e61bad899364f1a55dfc27"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/observer-annotation.png",
+        "sha256": "b437390bfcfcacee31f71a9e5be9f909e9e14e6a988365438cc6b8ec734abefb"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/trace.zip",
+        "sha256": "a8c0d1cd66c0b1fa8b416bec032d6e0fa34d1cb8fbee151eb73401980255ad2e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/video.webm",
+        "sha256": "754549f152d4ac4fc62d1a47f9d22bd6ddfcb1856a00e4d75ce05c22f7b15c8c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/converged.png",
+        "sha256": "b28c038e6fef1a13b660228e29b8496f5ca8151111df22f688f6da26479d92fd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "ae6228870ea2e50b8ed1fbf0557282ae256300715e15b6584608ae383e0970e9"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/video.webm",
+        "sha256": "ff3c7ff7f0922f1028937bb558f4529a5fd2cdc2738f083f2de615ff22b571e9"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/converged.png",
+        "sha256": "75ee29dea0a2045e63215f202da82bf1d6ca9a0c41f7b51edcf1fc7deedc473c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "7f5f1591605e3408d083dd45d718cbe4f78c45ff29d6db2007c7d3a61400cd22"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/video.webm",
+        "sha256": "71c9120e8620c11b75f74a42be6c0193d406894d3ae731550a172f74faa2e8e0"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/converged.png",
+        "sha256": "2bb3d972b1e9c3cc856b21887e7f0fc33ce8af3cfef79988ec2d939e241d27b1"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "46d4841cf83217d6dc374f44ae642b272ac24e3b173895ab5d448aef27b7bfc6"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/video.webm",
+        "sha256": "a961ccf16dcb700fb2aa68e2c11d84e240b6f735f40e6d13973cebccbc105d03"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/converged.png",
+        "sha256": "202903c621aa214ccfdefe0f0e010a53e829ff62f011328e2b3f3380c071ae5e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "c67a46aacd877c1b09288cbb775a810d509ca84b7ff08745cf529daa40b196fa"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/video.webm",
+        "sha256": "1f79929c57c3009da44b9d652fbdcf1fd60526d77a1f16985ab1da1bd7f145cd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/converged.png",
+        "sha256": "52007f2f8d9b72c60e1cf76b1fb4d16ee69844717cc204c7ac873ceaa8191578"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "e5a1b5d153b60f85cf899c13530da0d90224c92da433218459e79961e0f87be3"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/video.webm",
+        "sha256": "46029da6ba06bd6a2cea554e255b56de77e01da230916992f254b85dc6a16d15"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/converged.png",
+        "sha256": "f02359805e38a3b5447e490c59861ea328fac1f11f96a02fdf26f23903c84205"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "0efca5de9310607b4a61698f76f042a11c0f51da1a502273596b09de1b03b98c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/video.webm",
+        "sha256": "17b1d0678a80efb94d352883cfd3737d7c11d4dded65c86f669bb23d65c8d51c"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/converged.png",
+        "sha256": "70237e3f4120ac37018a444a27fe6fa54bbfe043d008dcc7daa26983bf4d6c6e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "76836a315a3b034007b74fd944131427a7bf1d9cecb97c4e60c3a26a0e0cf27e"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/video.webm",
+        "sha256": "207306ba129d76af288cbd2b050dba2ef1246f992d2ffcd632e76f5d96855ec3"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/converged.png",
+        "sha256": "b8791f9d6b88082e52f874d1689643160d9b53639a6634327b0ef6d7b2a3a3eb"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "e3d225b4fdb2bb2689ea0e959ff77b59817275e97b75b694e3d8fc1fb6e57b16"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/video.webm",
+        "sha256": "981938b22e0fe5e47331a51390116897b84a7bbcf4237c60f26cf658e5cbb7d7"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/converged.png",
+        "sha256": "3a522527d2ac382b1148de92dd98fb75562d201ab31548f68afc70d34339ea1d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "2eeb12a06105e0598db9d1ef3ab88b1dff1fdb3ba361296f3d64a2c4bdcda26d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/video.webm",
+        "sha256": "7af9dea5a406abe6719f70aaaa3e1933fc6e93191eb822812d45a57df146946d"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/trace.zip",
+        "sha256": "ac8299dd37a9eb425a1fd8977ad776b1be61c052ebdcf33062d72581199d4c57"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/video.webm",
+        "sha256": "48ab772b99f237f481241eb68e70a0a70a8f82260180dc76f6a7fd95d3c18d0f"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/trace.zip",
+        "sha256": "c6da025ee618c3040c1a4d1f644f70790ace8e3ae2e171f5072c8af6675cc0be"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/video.webm",
+        "sha256": "b2fdca24b4c75e149e8c75694348493e6285f1899599310077a3cf73c278c9dd"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/trace.zip",
+        "sha256": "8037d180768697cc7b517d6245702ebecf5259b6667d981eee6ff17c1ececebc"
+      },
+      {
+        "path": "artifacts/retained-text-seed-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/video.webm",
+        "sha256": "43d71bb3d3d855d5580e92704bfe9b1345fd4d6bd33f7f15cde04f95e4b87fa3"
+      }
+    ],
+    "visualReview": "Large-document native editing and continued-typing captures and sampled video frames reviewed in all three desktop engines. Not physical mobile/IME certification."
+  },
+  "compiledNode": {
+    "journeys": 36,
+    "formats": [
+      {
+        "format": "es",
+        "passed": 18,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup."
+      },
+      {
+        "format": "cjs",
+        "passed": 18,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup."
+      }
+    ]
+  },
+  "checks": [
+    {
+      "exitCode": 0,
+      "check": "typecheck"
+    },
+    {
+      "exitCode": 1,
+      "check": "focused"
+    },
+    {
+      "exitCode": 0,
+      "check": "build"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:api"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:headless"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:package"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:server-runtimes"
+    },
+    {
+      "exitCode": 1,
+      "check": "test:budget"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:performance"
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/retained-text-seed-typecheck-20261106.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/retained-text-seed-focused-20261106.log",
+      "sha256": "926c6dcf7f5461578e24510a8e43febab65df65a0da0bbbb59fbb4524636dec9"
+    },
+    {
+      "path": "artifacts/retained-text-seed-build-20261106.log",
+      "sha256": "3bc13c3094799f6ef29e7193dc96630dfb9c43e82b6f4039a133b053aba2cabe"
+    },
+    {
+      "path": "artifacts/retained-text-seed-test-api-20261106.log",
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-text-seed-test-headless-20261106.log",
+      "sha256": "a3a5f9c587bf5e9de1afc23ac1b4594956680c621894d464f115cba355011534"
+    },
+    {
+      "path": "artifacts/retained-text-seed-test-package-20261106.log",
+      "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a"
+    },
+    {
+      "path": "artifacts/retained-text-seed-test-server-runtimes-20261106.log",
+      "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96"
+    },
+    {
+      "path": "artifacts/retained-text-seed-test-budget-20261106.log",
+      "sha256": "7993139dcabf160c51fadb4121fa7af30f3d14411f8bf4313d8ac9e5a8fe978a"
+    },
+    {
+      "path": "artifacts/retained-text-seed-test-performance-20261106.log",
+      "sha256": "48776a8bf9973530deb3ff0c087436a6fbf2062bfb1b8bce971d6574f477bf0b"
+    }
+  ],
+  "compiledArtifacts": [
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-DGpirzUe.cjs",
+      "sha256": "005757220b830271cf64b51a8e451e61632f19a2aafbec29c6e847c37d7603ba"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-DGpirzUe.cjs.map",
+      "sha256": "dd2e044cdb0b976902ca5ab1f706d8f332c0d344f036939bd7b06d4f91a74f03"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-GTHSw9Ig.js",
+      "sha256": "f9f01fb05774ce839c2ddb7cc98c0a528c55b013e848ba3933bdb7f759b2ad3c"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-GTHSw9Ig.js.map",
+      "sha256": "496903f1a5162079dbcaee06f6b90234d03c43241fcd1e31ca678ffeddbb7278"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.cjs",
+      "sha256": "62009b3e71b59bf1d15538991d24793ba9d7075d8f4f300af28c38de7154b91d"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.cjs.map",
+      "sha256": "f3b88f307df0c272911d9b9661b090e072f35b269db0381a4d6047a3635adfa3"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.js",
+      "sha256": "7bffffed4b1a21349993ec02cce8b85fff69cef3bd9111ccfee15214cc7d5898"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.js.map",
+      "sha256": "d420515a67478c0efde216ad69f329c45e96b327bd49cd232268312a928de02a"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.cjs",
+      "sha256": "de65ae2fd65e2abff6b04ea9b6d82af9f7c1f9667d80309ce6162dc5a3f8dfa6"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.cjs.map",
+      "sha256": "ee37243601df054e64bd440ac3e06b609c38091d695a34cda557d6c09159a9ab"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.js",
+      "sha256": "61002959752c4fda16c2d504cc667a7ccc866a45dd88d46ca1ca264a5f86e543"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.js.map",
+      "sha256": "36d79e265791f0f8edf8bcf10c37e5deafac824385e884939d56c58d020b94a8"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/styles.css",
+      "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7"
+    }
+  ],
+  "measurements": [
+    {
+      "path": "artifacts/retained-text-seed-cost-baseline-20261106.json",
+      "sha256": "e525074be7f01294f7141b3ffcaef371b8aa2993b54bd9df0c15562e2c108d40"
+    },
+    {
+      "path": "artifacts/retained-text-seed-cost-candidate-20261106.json",
+      "sha256": "7083e54d605b2470b7881d9eb4b5d2ffe7ac3ecb915a6c66454a5218e072066d"
+    },
+    {
+      "path": "artifacts/retained-text-seed-before-20261106.json",
+      "sha256": "d687a03861b3b5f917921679985554b160c3532886b334c0d38e29dc14f268de"
+    },
+    {
+      "path": "artifacts/retained-text-seed-after-20261106.json",
+      "sha256": "bf7c2b967666c1354a1883f8d1aec1e7951020ae1cc2f8e16a8d726d648ba9df"
+    },
+    {
+      "path": "artifacts/retained-text-seed-session-baseline-20261106.json",
+      "sha256": "2049c83fe3be5aa257d5284321a180cb8aa69f93e65f09120ba05e330376a91f"
+    },
+    {
+      "path": "artifacts/retained-text-seed-session-candidate-20261106.json",
+      "sha256": "f324bc4a454ee15df91a83c40b28059871cfeea22f8247cc35863ce3169d56eb"
+    },
+    {
+      "path": "artifacts/retained-text-seed-interop-20261106.json",
+      "sha256": "7783394b4c338b2c2de30be716298796bcea6939b1b79e08bb73214453c6e3bf"
+    },
+    {
+      "path": "artifacts/retained-text-seed-comparison-20261106.json",
+      "sha256": "d9b8b454dc651c3c126784bf5fc8bc4b28fe8bf42e6e31a2448c7a6dbce314c9"
+    }
+  ],
+  "comparison": {
+    "baselineCommit": "744c2731",
+    "runtime": "v24.22.1",
+    "summary": [
+      {
+        "blocks": 1000,
+        "documentsAndEncodedBytesIdentical": true,
+        "before": {
+          "medianInitializationMs": 208.8811999999998,
+          "medianOfEditMediansMs": 75.81060000000434,
+          "maximumTimedEditMs": 167.11539999999513,
+          "sharedBytes": 1834539,
+          "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 368.5354,
+              "p50Ms": 87.63109999999995,
+              "p95Ms": 116.60069999999996,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 208.8811999999998,
+              "p50Ms": 52.52470000000176,
+              "p95Ms": 67.54639999999927,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 191.6229999999996,
+              "p50Ms": 75.81060000000434,
+              "p95Ms": 167.11539999999513,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianInitializationMs": 144.10219999999936,
+          "medianOfEditMediansMs": 52.35410000000047,
+          "maximumTimedEditMs": 126.2552,
+          "sharedBytes": 1834539,
+          "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 324.7939,
+              "p50Ms": 78.45820000000003,
+              "p95Ms": 126.2552,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 144.10219999999936,
+              "p50Ms": 52.35410000000047,
+              "p95Ms": 73.1966999999986,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 141.9536999999982,
+              "p50Ms": 49.29729999999836,
+              "p95Ms": 81.77929999999833,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "blocks": 5000,
+        "documentsAndEncodedBytesIdentical": true,
+        "before": {
+          "medianInitializationMs": 2287.2298999999985,
+          "medianOfEditMediansMs": 267.3506000000052,
+          "maximumTimedEditMs": 405.375,
+          "sharedBytes": 9309325,
+          "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 2514.8388999999997,
+              "p50Ms": 297.02049999999963,
+              "p95Ms": 405.375,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 2258.6708,
+              "p50Ms": 257.45250000000306,
+              "p95Ms": 306.2416000000012,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 2287.2298999999985,
+              "p50Ms": 267.3506000000052,
+              "p95Ms": 349.97909999999683,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianInitializationMs": 638.4621999999999,
+          "medianOfEditMediansMs": 251.79929999999877,
+          "maximumTimedEditMs": 450.6671000000006,
+          "sharedBytes": 9309325,
+          "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 854.4044999999999,
+              "p50Ms": 254.85799999999972,
+              "p95Ms": 335.56370000000015,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 638.4621999999999,
+              "p50Ms": 246.27160000000003,
+              "p95Ms": 450.6671000000006,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 621.1677999999993,
+              "p50Ms": 251.79929999999877,
+              "p95Ms": 265.2583999999988,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "blocks": 10000,
+        "documentsAndEncodedBytesIdentical": true,
+        "before": {
+          "medianInitializationMs": 8462.0716,
+          "medianOfEditMediansMs": 546.9011000000028,
+          "maximumTimedEditMs": 829.2948000000033,
+          "sharedBytes": 18670921,
+          "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 9029.748599999999,
+              "p50Ms": 563.6901999999973,
+              "p95Ms": 801.3268000000025,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 8462.0716,
+              "p50Ms": 530.7983999999997,
+              "p95Ms": 664.5821999999971,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 8362.966099999998,
+              "p50Ms": 546.9011000000028,
+              "p95Ms": 829.2948000000033,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianInitializationMs": 1321.4775000000009,
+          "medianOfEditMediansMs": 520.3810000000012,
+          "maximumTimedEditMs": 796.0985999999975,
+          "sharedBytes": 18670921,
+          "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1259.7790000000005,
+              "p50Ms": 519.2191000000003,
+              "p95Ms": 682.2588999999998,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1430.2044999999998,
+              "p50Ms": 524.6669999999976,
+              "p95Ms": 651.1813999999977,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1321.4775000000009,
+              "p50Ms": 520.3810000000012,
+              "p95Ms": 796.0985999999975,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "profiles": {
+      "before": {
+        "runtime": "v24.22.1",
+        "directory": "retained-text-seed-baseline-20261106-build",
+        "blocks": 5000,
+        "profiledMs": 2825.2489,
+        "mapSizeCalls": 65038,
+        "mapSizeEntries": 62697505,
+        "arrayReads": 20003,
+        "arrayEntries": 20000,
+        "exactDocument": true,
+        "domRequired": false,
+        "note": "Initialization-only CPU sample and a separate instrumented initialization. Counts are diagnostic, not acceptance gates."
+      },
+      "after": {
+        "runtime": "v24.22.1",
+        "directory": "cursor-overlay-build-20261106",
+        "blocks": 5000,
+        "profiledMs": 1167.7953,
+        "mapSizeCalls": 40050,
+        "mapSizeEntries": 210005,
+        "arrayReads": 20003,
+        "arrayEntries": 20000,
+        "exactDocument": true,
+        "domRequired": false,
+        "note": "Initialization-only CPU sample and a separate instrumented initialization. Counts are diagnostic, not acceptance gates."
+      }
+    },
+    "sessions": {
+      "trialsPerBuild": 3,
+      "editsPerTrial": 1024,
+      "documentsAndEncodedBytesIdentical": true,
+      "allEditorsAndDocumentsReleased": true,
+      "stages": [
+        {
+          "stage": "seed",
+          "sharedBytes": 3058,
+          "sharedV2Bytes": 2944,
+          "textDeltaOperations": 2,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-128",
+          "sharedBytes": 9935,
+          "sharedV2Bytes": 7814,
+          "textDeltaOperations": 130,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-256",
+          "sharedBytes": 16975,
+          "sharedV2Bytes": 12678,
+          "textDeltaOperations": 258,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-384",
+          "sharedBytes": 24156,
+          "sharedV2Bytes": 17542,
+          "textDeltaOperations": 386,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-512",
+          "sharedBytes": 31452,
+          "sharedV2Bytes": 22406,
+          "textDeltaOperations": 514,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-640",
+          "sharedBytes": 38748,
+          "sharedV2Bytes": 27270,
+          "textDeltaOperations": 642,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-768",
+          "sharedBytes": 46044,
+          "sharedV2Bytes": 32134,
+          "textDeltaOperations": 770,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-896",
+          "sharedBytes": 53340,
+          "sharedV2Bytes": 36998,
+          "textDeltaOperations": 898,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-1024",
+          "sharedBytes": 60636,
+          "sharedV2Bytes": 41862,
+          "textDeltaOperations": 1026,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "converged",
+          "sharedBytes": 60805,
+          "sharedV2Bytes": 42030,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "all-undone",
+          "sharedBytes": 60810,
+          "sharedV2Bytes": 42035,
+          "textDeltaOperations": 4,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "all-redone",
+          "sharedBytes": 118390,
+          "sharedV2Bytes": 77879,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        }
+      ]
+    },
+    "interopJourneys": 28,
+    "interpretation": "Fresh text capacity is validated/reserved before writes; ordinary operations keep fresh validation and per-insertion provenance. Encoded state matches the prior node-seeding candidate. Timing is diagnostic, not an adoption gate. Full projection/editing cost and history growth remain; no compaction, public adapter switch, version/limit increase or publication."
+  },
+  "invariants": {
+    "publicRuntimeAndCssFilesByteIdentical": 171,
+    "apiSnapshotUnchanged": true,
+    "limitsUnchanged": true,
+    "defaultRequiredFailuresUnchanged": true,
+    "defaultAdapterUnchanged": true,
+    "ciWorkflowUnchanged": true
+  },
+  "open": [
+    "Six default-adapter retention failures",
+    "History/wire state grows through author undo/redo",
+    "Large-document initialization and full projection remain expensive",
+    "Compaction, migration and safe adoption remain open",
+    "Three existing size overruns",
+    "Fresh full source and complete CI required for release",
+    "Overall editor parity remains incomplete"
+  ],
+  "visualArtifacts": [
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/chromium-bulk-document-middle.png",
+      "sha256": "d713d7a75aeaec3a807790b5cf6bb0935f0ca145df4eb3b476920997114272bf"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/chromium-keyboard-before.png",
+      "sha256": "3fa03703ea6b9d5e8859c4314fd7dffa1213f3e03297ea8f40e54f50f36f7f5a"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/chromium-large-document.webm",
+      "sha256": "e5de08605e9e912e2dfc8a83886d03380ebbd562b80d3e3901a5d7db00347f35"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/chromium-large-filmstrip.png",
+      "sha256": "70d4770a6f136c805cdcddfd02298d876aef3f48848ef25c348d6a82958a63e6"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/chromium-observer-continued-typing.png",
+      "sha256": "7886fb48de27aac12d0a134a9f7d28b7ba2580e89f0bc8d2ed80a51d72a570b8"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/firefox-bulk-document-middle.png",
+      "sha256": "7762ee729d4241961668b471490eafabfacaf277e18fc71bcaa6ba460ff3b34d"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/firefox-keyboard-before.png",
+      "sha256": "ad6685db7e152d6ebfcfccb9b5d0f7c87df66d18e6587df746af482c0e0342e1"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/firefox-large-document.webm",
+      "sha256": "39f47cf3de5e91070be28b3f862f6e1e9c8574e6b23000961594e256b0be850d"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/firefox-large-filmstrip.png",
+      "sha256": "ef1e09bd0bc2bdfa170a9536bd05b32ce4660c0e3df2d70944ed4c8198f6f46e"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/firefox-observer-continued-typing.png",
+      "sha256": "c2b03f3f56409fdc2546a0fa4954b3eb083781e79850b8f5458c3d5a7714ddaf"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/webkit-bulk-document-middle.png",
+      "sha256": "41b89d2fcd21fcca1b9dcf5e239f3a0ab221208e2e765d915e01a16a13add95f"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/webkit-keyboard-before.png",
+      "sha256": "c193bb85fb236064b133acb5b5c287452c50b16a74b0ff6636e1518c0e865cd5"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/webkit-large-document.webm",
+      "sha256": "80ef11ab1c93ec7aae51ab13975857dfca16635809b0f30ca279d05543762ced"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/webkit-large-filmstrip.png",
+      "sha256": "68544ecc5f1a594ac17787f5a2f40996bf2381775a251873b8af1a71f6933955"
+    },
+    {
+      "path": "artifacts/retained-text-seed-visual-20261106/webkit-observer-continued-typing.png",
+      "sha256": "673a30dbd8155a9f9f4cee595786dd244d58ebc1f42446d7b1d0bffd3fe5d979"
+    }
+  ],
+  "baselineCompiledSourceProof": {
+    "commit": "744c273191cbaf49327c006c92c4b698f2023a81",
+    "verifiedGitBlobModules": 190,
+    "sourceSetMatchesCurrent": true
+  },
+  "largeDocumentBrowserJourneys": 3,
+  "interop": {
+    "path": "artifacts/retained-text-seed-interop-20261106.json",
+    "sha256": "7783394b4c338b2c2de30be716298796bcea6939b1b79e08bb73214453c6e3bf",
+    "journeys": 28
+  },
+  "keyboardHostRepair": {
+    "before": {
+      "path": "artifacts/retained-text-seed-keyboard-before-20261106.json",
+      "sha256": "6e07f9d56bc0430716f31d1369838d7420f79aa7c679e4cf5b5cfcd97bf93eae"
+    },
+    "failedBefore": 3,
+    "fixtureBefore": {
+      "path": "artifacts/retained-text-seed-keyboard-before-fixture-20261106.txt",
+      "sha256": "0f0873aec60581913bbee46434126e83162937ff01a20fda2eb6ad7a21cc1995"
+    },
+    "currentNativeKeyboardJourneysPassed": 3,
+    "note": "The plain-core audit host omitted the documented origin-aware keyboard binding. Current full 96-case run uses the binding. No library-default keyboard or history policy changed."
+  },
+  "compressedProfiles": [
+    {
+      "path": "artifacts/retained-text-seed-before-20261106.cpuprofile.gz",
+      "sha256": "d9b93a0b4c243dd38852bbdd372ebe25b1ae802bf6722ca646d5e9cee9691042"
+    },
+    {
+      "path": "artifacts/retained-text-seed-after-20261106.cpuprofile.gz",
+      "sha256": "ce3ff2bfca13d8507620e4bf63189d832116f74610b31af780114d4ff4758acc"
+    }
+  ]
+}

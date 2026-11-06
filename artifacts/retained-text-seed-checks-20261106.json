@@ -1,0 +1,38 @@
+[
+  {
+    "exitCode": 0,
+    "check": "typecheck"
+  },
+  {
+    "exitCode": 1,
+    "check": "focused"
+  },
+  {
+    "exitCode": 0,
+    "check": "build"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:api"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:headless"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:package"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:server-runtimes"
+  },
+  {
+    "exitCode": 1,
+    "check": "test:budget"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:performance"
+  }
+]

@@ -1,9 +1,86 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
-import { RetainedTextStore } from '../src/yjs/retained-text';
+import { RetainedTextStore, type RetainedTextSeed, type RetainedTextRun } from '../src/yjs/retained-text';
 
 const plain = (store: RetainedTextStore, id: string) => store.project(id).runs.map(run => run.text).join('');
+
+it('seeds identical wire provenance to sequential creation and reuses those definitions on later insertion', () => {
+  const a = new Y.Doc(), b = new Y.Doc(); a.clientID = 101; b.clientID = 101;
+  const left = new RetainedTextStore(a, 'seed'), right = new RetainedTextStore(b, 'seed');
+  const entries: RetainedTextSeed[] = [{ stream: 'a', id: 'first', runs: [{ text: 'Al', attributes: { strong: '{}' } }, { text: 'pha', attributes: { em: '{}', strong: '{}' } }] },
+    { stream: 'b', id: 'second', runs: [{ text: 'Beta', attributes: { strong: '{}', em: '{}' } }] }, { stream: 'c', id: 'empty', runs: [] }];
+  try {
+    left.seed(entries); b.transact(() => { for (const entry of entries) right.create(entry.stream, entry.id, entry.runs); });
+    expect(Y.encodeStateAsUpdate(a)).toEqual(Y.encodeStateAsUpdate(b));
+    expect(a.getMap('seed:styles').size).toBe(2); expect(plain(left, 'first')).toBe('Alpha'); expect(left.project('empty').runs).toEqual([]);
+    left.insert('second', 2, 'X', { strong: '{}', em: '{}' }); right.insert('second', 2, 'X', { em: '{}', strong: '{}' });
+    expect(left.project('second')).toEqual(right.project('second')); expect(a.getMap('seed:styles').size).toBe(2);
+  } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
+});
+
+it.each([false, true])('retains styled offline insertion after all seeded source text is deleted (reverse exchange: %s)', reverse => {
+  const a = new Y.Doc(), b = new Y.Doc(), left = new RetainedTextStore(a, 'seed');
+  left.seed([{ stream: 'a', id: 'first', runs: [{ text: 'Alpha', attributes: { strong: '{}' } }] }, { stream: 'b', id: 'empty', runs: [] }]);
+  Y.applyUpdate(b, Y.encodeStateAsUpdate(a)); const right = new RetainedTextStore(b, 'seed');
+  try {
+    left.delete('first', 0, 5); right.insert('first', 2, 'X', { strong: '{}', em: '{}' });
+    const aa = Y.encodeStateAsUpdate(a), bb = Y.encodeStateAsUpdate(b);
+    if (reverse) { Y.applyUpdate(b, aa); Y.applyUpdate(a, bb); } else { Y.applyUpdate(a, bb); Y.applyUpdate(b, aa); }
+    expect(left.project('first')).toEqual(right.project('first')); expect(left.project('first').runs).toEqual([{ text: 'X', attributes: { strong: '{}', em: '{}' } }]);
+    expect(left.project('empty').runs).toEqual([]); expect(right.project('empty').runs).toEqual([]);
+  } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
+});
+
+it.each(['text', 'attributes', 'stream', 'partition', 'sparse-runs', 'sparse-entries', 'extended-runs', 'text-limit', 'entry-limit', 'style-limit'] as const)(
+  'rejects a malformed %s seed before any shared write', kind => {
+    const document = new Y.Doc(), store = new RetainedTextStore(document, 'seed');
+    let entries: readonly RetainedTextSeed[] = [{ stream: 'a', id: 'first', runs: [{ text: 'Alpha' }] }, { stream: 'b', id: 'second', runs: [{ text: 'Beta' }] }];
+    if (kind === 'text') entries = [entries[0], { ...entries[1], runs: [{ text: 4 } as never] }];
+    if (kind === 'attributes') entries = [entries[0], { ...entries[1], runs: [{ text: 'Beta', attributes: { invalid: 4 } as never }] }];
+    if (kind === 'stream') entries = [entries[0], { ...entries[1], stream: 'a' }];
+    if (kind === 'partition') entries = [entries[0], { ...entries[1], id: 'first' }];
+    if (kind === 'sparse-runs') entries = [entries[0], { ...entries[1], runs: [{ text: 'B' }, , { text: 'eta' }] as RetainedTextRun[] }];
+    if (kind === 'sparse-entries') entries = [entries[0], , entries[1]] as RetainedTextSeed[];
+    if (kind === 'extended-runs') entries = [{ ...entries[0], runs: Object.assign([{ text: 'Alpha' }], { extra: true }) }];
+    if (kind === 'text-limit') entries = [entries[0], { ...entries[1], runs: [{ text: 'x'.repeat(10_000_001) }] }];
+    if (kind === 'entry-limit') entries = new Array(100_001) as RetainedTextSeed[];
+    if (kind === 'style-limit') entries = [{ ...entries[0], runs: Array.from({ length: 100_001 }, (_, index) => ({ text: 'x', attributes: { value: String(index) } })) }];
+    try { const before = Y.encodeStateAsUpdate(document); expect(() => store.seed(entries)).toThrow(); expect(Y.encodeStateAsUpdate(document)).toEqual(before); }
+    finally { store.destroy(); document.destroy(); }
+  },
+);
+
+it.each(['texts', 'owners', 'styles'] as const)('refuses text seeding over existing %s data', kind => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'seed');
+  try {
+    document.getMap(`seed:${kind}`).set('foreign', kind === 'texts' ? new Y.Text('foreign') : '{}');
+    const before = Y.encodeStateAsUpdate(document); expect(() => store.seed([{ stream: 'a', id: 'first', runs: [] }])).toThrow('fresh pools'); expect(Y.encodeStateAsUpdate(document)).toEqual(before);
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it('preserves foreign style writes from an input getter and refuses text seeding', () => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'seed'), run: RetainedTextRun = { text: 'Alpha' };
+  Object.defineProperty(run, 'attributes', { get: () => { document.getMap('seed:styles').set('foreign', '{}'); return {}; } });
+  try {
+    expect(() => store.seed([{ stream: 'a', id: 'first', runs: [run] }])).toThrow('fresh pools'); expect(document.getMap('seed:styles').get('foreign')).toBe('{}');
+    expect(document.getMap('seed:texts').size).toBe(0); expect(document.getMap('seed:owners').size).toBe(0);
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it.each([false, true])('snapshots run text and attributes once before writing (bulk: %s)', bulk => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'seed'); let textReads = 0, attributeReads = 0;
+  const run = { get text() { return ++textReads === 1 ? 'Alpha' : 'changed'; }, get attributes() { attributeReads++; return { strong: '{}' }; } };
+  try {
+    if (bulk) store.seed([{ stream: 'a', id: 'first', runs: [run] }]); else store.create('a', 'first', [run]);
+    expect(plain(store, 'first')).toBe('Alpha'); expect(textReads).toBe(1); expect(attributeReads).toBe(1);
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it('refuses a fresh seed after text-store destruction', () => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'seed');
+  try { store.destroy(); expect(() => store.seed([])).toThrow('destroyed'); } finally { document.destroy(); }
+});
 
 it('merges concurrently initialized pools without replacing either shared container', () => {
   const a = new Y.Doc(), b = new Y.Doc();

@@ -1,5 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local text-initialization follow-up, 2026-11-06: fresh text/style capacity is
+reserved before writing, with unchanged insertion provenance and public adapter.
+All 225 candidate cases, 36 compiled Node journeys, 28 old/new compatibility
+journeys and 96 recorded browser journeys pass, including actual native edits
+and both authors' history on 1,000 paragraphs in each engine. The focused run
+has 241 passes and six unchanged default failures. Controlled 10,000-paragraph
+initialization improves from 8,462.07 to 1,321.48 ms with exact shared-state and
+document hashes; about 520 ms editing, history growth, compaction, migration,
+three size overruns and fresh full source/complete CI remain open. COLLAB-01
+stays Partial; no adoption or release claim. [Current audit](YJS_RETAINED_TEXT_SEED_AUDIT.md).
+
 Local initialization follow-up, 2026-11-06: bulk fresh-tree seeding passes 205
 candidate cases, 36 compiled Node journeys, 28 old/new interoperability/history
 journeys and 93 recorded browser journeys. The full source suite reports 4,351

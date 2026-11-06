@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+Fresh text-pool seeding (2026-11-06, local): validate run snapshots, ownership
+and complete style capacity before writing; retain per-insertion provenance
+and live checks for ordinary operations. All 225 candidate cases, 36 compiled
+Node journeys, 28 old/new interoperability/history journeys and 96 recorded
+browser journeys pass. The new native 1,000-paragraph workflow verifies distant
+edits, both authors' undo/redo and untouched content in all three engines.
+The focused run has 241 passes/six unchanged default failures; no new full
+source run is claimed. Three-trial 10,000-paragraph initialization improves
+from 8,462.07 to 1,321.48 ms with identical documents/shared bytes. Editing is
+still about 520 ms at that size, and history growth, full projection, compaction,
+migration, existing size overruns and fresh CI remain open. No default switch,
+acceptance-limit increase or publication.
+[Audit and evidence](YJS_RETAINED_TEXT_SEED_AUDIT.md).
+
 Fresh node seeding (2026-11-06, local follow-up): validate and snapshot a whole
 new retained node tree before writing instead of repeatedly scanning growing
 pools and sibling arrays. All 205 candidate cases, 36 compiled Node journeys,

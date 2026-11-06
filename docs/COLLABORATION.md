@@ -236,6 +236,38 @@ Do not route collaborative keystrokes through the snapshot-based local
 `HistoryExtension` at the same time. Keep local history for non-collaborative
 editors and use the origin-aware commands for a shared Yjs room.
 
+For a plain-core DOM host, bind keyboard history explicitly to those same
+commands. The collaboration extension exposes commands; it does not install
+the local-history plugin or assume the host's shortcuts:
+
+```ts
+import { Plugin, undoCollaboration, redoCollaboration } from 'fountainjs-editor'
+
+const collaborativeShortcuts = new Plugin({
+  props: {
+    handleKeyDown(editor, event) {
+      const key = event.key.toLowerCase()
+      if (!editor.editable || event.isComposing || event.altKey
+        || !(event.ctrlKey || event.metaKey) || (key !== 'z' && key !== 'y')) {
+        return false
+      }
+      if (key === 'y' || event.shiftKey) redoCollaboration(editor)
+      else undoCollaboration(editor)
+      return true // Consume even an empty stack; avoid native DOM history.
+    },
+  },
+})
+
+// Add to the shared surface's createEditor configuration:
+// plugins: [...kit.plugins, collaborativeShortcuts]
+```
+
+This enables Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z and Ctrl/Cmd+Y while preserving each
+author's history. Install it only on the surface whose active adapter owns
+history; remove or replace the binding when switching to a non-collaborative
+editing mode. Hosts can choose different shortcuts or expose the commands
+through their own UI.
+
 ## Generic adapter contract
 
 Products using another CRDT or synchronization engine implement

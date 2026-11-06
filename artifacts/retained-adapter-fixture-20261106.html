@@ -8,11 +8,18 @@ body{margin:24px;background:#f5f3ff;color:#19152f;font:16px system-ui}h1{margin:
 <div id="panes"></div>
 <script type="module">
 import * as Y from 'yjs';
-import {CoreExtension,EditorView,composeExtensions,createEditor,createCollaborationExtension,getCollaborationState,replaceCollaborationAdapter,toggleQuote,toggleList,setMark,undoCollaboration,redoCollaboration} from '/src/index.ts';
+import {CoreExtension,Plugin,EditorView,composeExtensions,createEditor,createCollaborationExtension,getCollaborationState,replaceCollaborationAdapter,toggleQuote,toggleList,setMark,undoCollaboration,redoCollaboration} from '/src/index.ts';
 import {RetainedYjsCollaborationAdapter} from '/src/yjs/retained-adapter.ts';
 const panes=document.querySelector('#panes'),message=document.querySelector('#message');
 let peers=[],linked=true,unbind=[],states=new Map(),listeners=new Set();
 const original=text=>({type:'doc',attrs:{audit:'root'},content:[{type:'paragraph',content:[{type:'text',text}]},{type:'image_super',attrs:{src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}}]});
+// This plain-core host deliberately omits snapshot HistoryExtension. Route its
+// keyboard shortcuts to the same origin-aware commands used by the buttons.
+const shortcuts=new Plugin({props:{handleKeyDown:(editor,event)=>{
+ const key=event.key.toLowerCase();if(!editor.editable||event.isComposing||event.altKey||!(event.ctrlKey||event.metaKey)||(key!=='z'&&key!=='y'))return false;
+ if(key==='y'||event.shiftKey)redoCollaboration(editor);else undoCollaboration(editor);
+ return true;
+}}});
 function awareness(doc){return {clientID:doc.clientID,getStates:()=>states,getLocalState:()=>states.get(doc.clientID)??null,setLocalStateField:(key,value)=>{states.set(doc.clientID,{...states.get(doc.clientID),[key]:value});for(const listener of [...listeners])listener()},on:(_,fn)=>listeners.add(fn),off:(_,fn)=>listeners.delete(fn)}}
 function adapter(doc,id){return new RetainedYjsCollaborationAdapter({document:doc,awareness:awareness(doc),captureTimeout:0,presenceThrottleMs:0,user:{id,name:id,color:id==='Ada'?'#7048e8':'#d63384'}})}
 function status(){for(const p of peers){const state=getCollaborationState(p.editor);p.output.textContent=`${state?.status} · ${p.editor.state.doc.textContent} · ${state?.presences.length??0} peers${p.editor.state.doc.attrs.hostAnnotation?' · host annotation retained':''}`;if(state?.error)message.textContent=state.error.message}}
@@ -22,7 +29,7 @@ function bind(){for(const stop of unbind)stop();unbind=[];for(const [from,to] of
 }
 function sync(){const a=Y.encodeStateAsUpdate(peers[0].doc),b=Y.encodeStateAsUpdate(peers[1].doc);Y.applyUpdate(peers[0].doc,b,'peer');Y.applyUpdate(peers[1].doc,a,'peer');linked=true;message.textContent='Synchronized';status()}
 function reset(content=original('Alpha')){for(const stop of unbind)stop();unbind=[];for(const p of peers){p.view.destroy();p.editor.destroy();p.doc.destroy()}peers=[];states=new Map();listeners=new Set();panes.replaceChildren();linked=true;
- for(const id of ['Ada','Grace']){const doc=new Y.Doc();if(peers.length)Y.applyUpdate(doc,Y.encodeStateAsUpdate(peers[0].doc),'seed');const a=adapter(doc,id),kit=composeExtensions([CoreExtension,createCollaborationExtension({adapter:()=>a})]);const editor=createEditor({schema:kit.schema,plugins:kit.plugins,content});const section=document.createElement('section');section.id=id.toLowerCase();const heading=document.createElement('h2');heading.textContent=id;const tools=document.createElement('div');tools.className='tools';const mount=document.createElement('div'),output=document.createElement('output');section.append(heading,tools,mount,output);panes.append(section);const view=new EditorView(mount,editor,{ariaLabel:`${id} editor`});const p={doc,editor,view,output};peers.push(p);
+ for(const id of ['Ada','Grace']){const doc=new Y.Doc();if(peers.length)Y.applyUpdate(doc,Y.encodeStateAsUpdate(peers[0].doc),'seed');const a=adapter(doc,id),kit=composeExtensions([CoreExtension,createCollaborationExtension({adapter:()=>a})]);const editor=createEditor({schema:kit.schema,plugins:[...kit.plugins,shortcuts],content});const section=document.createElement('section');section.id=id.toLowerCase();const heading=document.createElement('h2');heading.textContent=id;const tools=document.createElement('div');tools.className='tools';const mount=document.createElement('div'),output=document.createElement('output');section.append(heading,tools,mount,output);panes.append(section);const view=new EditorView(mount,editor,{ariaLabel:`${id} editor`});const p={doc,editor,view,output};peers.push(p);
  for(const [title,run] of [['Quote',()=>toggleQuote(editor)],['Bullet',()=>toggleList(editor,'bullet')],['Ordered',()=>toggleList(editor,'ordered')],['Task',()=>toggleList(editor,'task')],['Bold',()=>setMark(editor,'strong')],['Undo',()=>undoCollaboration(editor)],['Redo',()=>redoCollaboration(editor)],['Download JSON',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(editor.getJSON(),null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='retained-document.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}]]){const button=document.createElement('button');button.textContent=title;button.onmousedown=e=>e.preventDefault();button.onclick=()=>{run();view.focus();status()};tools.append(button)}editor.subscribe(status)
  }bind();message.textContent='Launch room';status()}
 document.querySelector('#reset').onclick=()=>reset();document.querySelector('#pause').onclick=()=>{linked=false;message.textContent='Sync paused — edit independently'};document.querySelector('#sync').onclick=sync;
