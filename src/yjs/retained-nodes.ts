@@ -20,6 +20,12 @@ export interface RetainedNodeProjection extends RetainedNodeValue {
   readonly id: string;
   readonly content: readonly RetainedNodeProjection[];
 }
+/** Preallocated candidate identities for one fresh document seed. */
+export interface RetainedNodeSeed extends RetainedNodeValue {
+  readonly id: string;
+  readonly token: string;
+  readonly content: readonly RetainedNodeSeed[];
+}
 export interface RetainedNodeIssue { readonly kind: 'cycle-lifted' | 'duplicate-reference' | 'unattached'; readonly id: string }
 
 function id(value: unknown): value is string { return typeof value === 'string' && SAFE_ID.test(value) && !UNSAFE.has(value); }
@@ -175,11 +181,9 @@ export class RetainedNodeStore {
     this.placements.set(nodeId, { parent, token });
   }
 
-  create(value: RetainedNodeValue, parent = ROOT, index = this.liveChildren(parent).length): string {
-    const nodeId = this.fresh(), token = this.fresh();
-    if (nodeId === token) throw new Error('ID factory must supply distinct retained identities.');
-    if (this.nodes.size >= MAX_NODES || this.identities.size + 2 > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
-    if (!key(value.type) || !value.type.length) throw new TypeError('Invalid retained node type.');
+  private prepare(value: RetainedNodeValue) {
+    const type = value.type;
+    if (!key(type) || !type.length) throw new TypeError('Invalid retained node type.');
     encode(value.attrs ?? {});
     const attrs = Object.entries(value.attrs ?? {}).map(([name, entry]) => {
       if (!key(name)) throw new TypeError('Invalid retained attribute name.');
@@ -187,10 +191,61 @@ export class RetainedNodeStore {
     });
     if (attrs.length > 1_000 || value.marks !== undefined && !Array.isArray(value.marks)) throw new TypeError('Invalid retained node metadata.');
     const marks = value.marks === undefined ? undefined : encode(value.marks);
-    const layout = value.textLayout === undefined ? undefined : this.layout(value.type, value.textLayout);
+    const layout = value.textLayout === undefined ? undefined : this.layout(type, value.textLayout);
+    return { type, attrs, marks, layout };
+  }
+
+  /** Validate a complete fresh tree before writing; never reuse a live-tree cache. */
+  seed(content: readonly RetainedNodeSeed[]): void {
+    const empty = () => {
+      this.valid();
+      if (this.nodes.size || this.placements.size || this.identities.size || this.rootChildren.length) throw new Error('Retained node seed requires empty pools.');
+    };
+    empty();
+    const identities = new Set<string>(); let count = 0;
+    type Prepared = ReturnType<RetainedNodeStore['prepare']> & { id: string; token: string; content: Prepared[] };
+    const prepare = (values: readonly RetainedNodeSeed[], depth: number): Prepared[] => {
+      if (!Array.isArray(values) || depth > 100 || values.length > MAX_NODES - count) throw new RangeError('Retained node seed is too large.');
+      if (Object.keys(values).length !== values.length || Object.getOwnPropertySymbols(values).length) throw new TypeError('Invalid retained seed children.');
+      return Array.from(values, value => {
+        if (++count > MAX_NODES) throw new RangeError('Retained node seed is too large.');
+        const nodeId = value.id, token = value.token;
+        for (const identity of [nodeId, token]) {
+          if (!id(identity) || identity === ROOT || identities.has(identity)) throw new Error('Retained seed identities must be distinct and fresh.');
+          identities.add(identity);
+        }
+        const prepared = this.prepare(value);
+        return { ...prepared, id: nodeId, token, content: prepare(value.content, depth + 1) };
+      });
+    };
+    const prepared = prepare(content, 0);
+    // Input getters can run during preflight; refuse intervening pool writes.
+    empty();
+    this.document.transact(() => {
+      const visit = (values: readonly Prepared[], parent: string, array: Y.Array<unknown>) => {
+        for (const value of values) {
+          const record = new Y.Map<unknown>(), children = new Y.Array<unknown>();
+          record.set('type', value.type); record.set('children', children);
+          value.attrs.forEach(([name, entry]) => record.set(name, entry));
+          if (value.marks !== undefined) record.set('marks', value.marks);
+          if (value.layout !== undefined) record.set('textLayout', value.layout);
+          this.nodes.set(value.id, record); this.identities.set(value.id, true);
+          this.place(value.id, parent, value.token, { array, index: array.length });
+          visit(value.content, value.id, children);
+        }
+      };
+      visit(prepared, ROOT, this.rootChildren);
+    }, this.origin);
+  }
+
+  create(value: RetainedNodeValue, parent = ROOT, index = this.liveChildren(parent).length): string {
+    const nodeId = this.fresh(), token = this.fresh();
+    if (nodeId === token) throw new Error('ID factory must supply distinct retained identities.');
+    if (this.nodes.size >= MAX_NODES || this.identities.size + 2 > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
+    const { type, attrs, marks, layout } = this.prepare(value);
     const target = this.placementTarget(nodeId, parent, index);
     this.document.transact(() => {
-      const record = new Y.Map<unknown>(); record.set('type', value.type); record.set('children', new Y.Array());
+      const record = new Y.Map<unknown>(); record.set('type', type); record.set('children', new Y.Array());
       attrs.forEach(([name, entry]) => record.set(name, entry)); if (marks !== undefined) record.set('marks', marks);
       if (layout !== undefined) record.set('textLayout', layout);
       this.nodes.set(nodeId, record); this.identities.set(nodeId, true); this.place(nodeId, parent, token, target);

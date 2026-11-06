@@ -1,0 +1,475 @@
+[
+  {
+    "source": "",
+    "line": 0,
+    "name": "(garbage collector)",
+    "selfMs": 120.32
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 45,
+    "name": "",
+    "selfMs": 43.94
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 144,
+    "name": "get size",
+    "snippet": "get size () {",
+    "selfMs": 41.72
+  },
+  {
+    "source": "node:inspector",
+    "line": 115,
+    "name": "post",
+    "selfMs": 28.98
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 256,
+    "name": "",
+    "snippet": "fragment.children?.forEach((child, index) => bind(child, [...path, index]));",
+    "selfMs": 16.58
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 262,
+    "name": "AbstractType",
+    "snippet": "constructor () {",
+    "selfMs": 16.39
+  },
+  {
+    "source": "../../src/core/schema/schema.ts",
+    "line": 14,
+    "name": "computeAttrs",
+    "snippet": "function computeAttrs(",
+    "selfMs": 16.09
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 14,
+    "name": "same",
+    "snippet": "const same = (left: unknown, right: unknown): boolean => {",
+    "selfMs": 10.43
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 336,
+    "name": "project",
+    "snippet": "project(): { readonly root: RetainedNodeProjection; readonly issues: readonly RetainedNodeIssue[] } {",
+    "selfMs": 10.33
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 173,
+    "name": "scan",
+    "snippet": "private scan(streamId: string, text: Y.Text): readonly RetainedTextPartition[] {",
+    "selfMs": 7.29
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 359,
+    "name": "visit",
+    "snippet": "const visit = (nodeId: string, depth = 0): RetainedNodeProjection => {",
+    "selfMs": 7.05
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 249,
+    "name": "readFrame",
+    "snippet": "private readFrame(ids: readonly string[]): TextRead {",
+    "selfMs": 5.94
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 711,
+    "name": "typeListInsertGenerics",
+    "snippet": "export const typeListInsertGenerics = (transaction, parent, index, content) => {",
+    "selfMs": 5.41
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 128,
+    "name": "placement",
+    "snippet": "private placement(nodeId: string): Placement | undefined {",
+    "selfMs": 5.13
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 29,
+    "name": "createIterator",
+    "selfMs": 4.77
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 93,
+    "name": "eq",
+    "snippet": "eq(other: Node): boolean {",
+    "selfMs": 4.67
+  },
+  {
+    "source": "../src/types/YText.js",
+    "line": 1019,
+    "name": "packStr",
+    "snippet": "function packStr () {",
+    "selfMs": 3.77
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 123,
+    "name": "fromJSON",
+    "snippet": "static fromJSON(schema: Schema, json: NodeJSON): Node {",
+    "selfMs": 3.6
+  },
+  {
+    "source": "../../src/core/schema/schema.ts",
+    "line": 130,
+    "name": "visit",
+    "snippet": "const visit = (current: Node, path: readonly number[]): boolean => {",
+    "selfMs": 3.38
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 889,
+    "name": "typeMapGet",
+    "snippet": "export const typeMapGet = (parent, key) => {",
+    "selfMs": 3.18
+  },
+  {
+    "source": "../../src/core/schema/copy-validation.ts",
+    "line": 57,
+    "name": "markWideValidated",
+    "snippet": "export function markWideValidated(node: Node, schema: Schema, grammar?: CopyGrammar): void {",
+    "selfMs": 3
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 43,
+    "name": "validate",
+    "snippet": "const validate = (item: unknown, depth = 0): void => {",
+    "selfMs": 2.91
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 28,
+    "name": "format",
+    "snippet": "function format(node: Node, leaf: string): Record<string, string> {",
+    "selfMs": 2.83
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 81,
+    "name": "decodeAttributes",
+    "snippet": "function decodeAttributes(value: unknown, lookup: (client: number, clock: number) => Readonly<Record<string, string>>, cache?: DecodedFormatCache): Record<string, string> {",
+    "selfMs": 2.76
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 75,
+    "name": "",
+    "snippet": "return attributes(Object.fromEntries(Object.entries(raw).filter(([key]) => key !== PROVENANCE).map(([key, entry]) => {",
+    "selfMs": 2.43
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+    "selfMs": 2.14
+  },
+  {
+    "source": "../src/structs/Item.js",
+    "line": 351,
+    "name": "get deleted",
+    "snippet": "get deleted () {",
+    "selfMs": 1.9
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 48,
+    "name": "attributes",
+    "snippet": "function attributes(value: unknown, remove = false): Record<string, string | null> {",
+    "selfMs": 1.89
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 35,
+    "name": "",
+    "snippet": "export const retainedNameKey = (name: string): string => Array.from({ length: name.length }, (_, index) => name.charCodeAt(index).toString(16).padStart(4, '0')).join('');",
+    "selfMs": 1.89
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 31,
+    "name": "id",
+    "snippet": "function id(value: unknown): value is string { return typeof value === 'string' && SAFE_ID.test(value) && !UNSAFE.has(value); }",
+    "selfMs": 1.74
+  },
+  {
+    "source": "node:internal/util/comparisons",
+    "line": 240,
+    "name": "innerDeepEqual",
+    "selfMs": 1.64
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 188,
+    "name": "",
+    "snippet": "const attrs = Object.entries(value.attrs ?? {}).map(([name, entry]) => {",
+    "selfMs": 1.6
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 453,
+    "name": "typeListToArray",
+    "snippet": "export const typeListToArray = type => {",
+    "selfMs": 1.6
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 259,
+    "name": "",
+    "snippet": "this.identityPaths = new Map([...nodePaths].map(([path, id]) => [id, Object.freeze(path ? path.split('.').map(Number) : [])]));",
+    "selfMs": 1.6
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 114,
+    "name": "toJSON",
+    "snippet": "toJSON(): NodeJSON {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 197,
+    "name": "collect",
+    "snippet": "const collect = (node: RetainedNodeProjection) => {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 15,
+    "name": "canonical",
+    "snippet": "const canonical = (value: unknown): unknown => Array.isArray(value) ? value.map(canonical)",
+    "selfMs": 1.57
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 317,
+    "name": "value",
+    "snippet": "private value(record: Y.Map<unknown>): RetainedNodeValue {",
+    "selfMs": 1.57
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 35,
+    "name": "retainedNameKey",
+    "snippet": "export const retainedNameKey = (name: string): string => Array.from({ length: name.length }, (_, index) => name.charCodeAt(index).toString(16).padStart(4, '0')).join('');",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 246,
+    "name": "",
+    "snippet": "const node = this.schema.nodes[raw.type].create(raw.attrs ?? {}, children.map(child => child.node), undefined,",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../src/structs/Item.js",
+    "line": 419,
+    "name": "integrate",
+    "snippet": "integrate (transaction, offset) {",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 222,
+    "name": "create",
+    "snippet": "create(streamId: string, id: string, runs: readonly RetainedTextRun[]): void {",
+    "selfMs": 1.53
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "dispatch",
+    "selfMs": 1.53
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 143,
+    "name": "style",
+    "snippet": "private readonly style = (client: number, clock: number): Readonly<Record<string, string>> => {",
+    "selfMs": 1.51
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 98,
+    "name": "splitPlacement",
+    "snippet": "private splitPlacement(id: string): SplitPlacement | undefined {",
+    "selfMs": 1.5
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 102,
+    "name": "readRecord",
+    "snippet": "private readRecord(nodeId: string): Y.Map<unknown> {",
+    "selfMs": 1.33
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 210,
+    "name": "",
+    "snippet": "return Array.from(values, value => {",
+    "selfMs": 1.29
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 211,
+    "name": "visit",
+    "snippet": "const visit = (raw: RetainedNodeProjection): Fragment => {",
+    "selfMs": 1.22
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "(program)",
+    "selfMs": 1.19
+  },
+  {
+    "source": "node:internal/util/comparisons",
+    "line": 284,
+    "name": "objectComparisonStart",
+    "selfMs": 1.19
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 13,
+    "name": "pathKey",
+    "snippet": "const pathKey = (path: readonly number[]) => path.join('.');",
+    "selfMs": 1.17
+  },
+  {
+    "source": "../src/structs/Item.js",
+    "line": 560,
+    "name": "get lastId",
+    "snippet": "get lastId () {",
+    "selfMs": 1.09
+  },
+  {
+    "source": "../../src/core/schema/schema.ts",
+    "line": 58,
+    "name": "create",
+    "snippet": "create(attrs: Attributes = {}, content: readonly Node[] = [], text?: string, marks: readonly Mark[] = []): Node {",
+    "selfMs": 1.04
+  },
+  {
+    "source": "../../src/yjs/retained-nodes.ts",
+    "line": 375,
+    "name": "",
+    "snippet": "return { id: nodeId, ...this.value(record), content: children.map(child => visit(child, depth + 1)) };",
+    "selfMs": 0.69
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 238,
+    "name": "get",
+    "snippet": "get (key) {",
+    "selfMs": 0.66
+  },
+  {
+    "source": "../src/structs/Item.js",
+    "line": 261,
+    "name": "Item",
+    "snippet": "constructor (id, left, origin, right, rightOrigin, parent, parentSub, content) {",
+    "selfMs": 0.41
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 248,
+    "name": "has",
+    "snippet": "has (key) {",
+    "selfMs": 0.35
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 58,
+    "name": "",
+    "selfMs": 0.27
+  },
+  {
+    "source": "../../src/yjs/retained-adapter.ts",
+    "line": 138,
+    "name": "connect",
+    "snippet": "connect(context: CollaborationAdapterContext): void | Promise<void> {",
+    "selfMs": 0.21
+  },
+  {
+    "source": "../../src/core/schema/schema.ts",
+    "line": 35,
+    "name": "isDeeplyImmutable",
+    "snippet": "function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {",
+    "selfMs": 0.17
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 924,
+    "name": "typeMapHas",
+    "snippet": "export const typeMapHas = (parent, key) => {",
+    "selfMs": 0.1
+  },
+  {
+    "source": "../src/structs/ContentType.js",
+    "line": 98,
+    "name": "integrate",
+    "snippet": "integrate (transaction, item) {",
+    "selfMs": 0.1
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 846,
+    "name": "typeMapSet",
+    "snippet": "export const typeMapSet = (transaction, parent, key, value) => {",
+    "selfMs": 0.08
+  },
+  {
+    "source": "../src/utils/Transaction.js",
+    "line": 159,
+    "name": "addChangedTypeToTransaction",
+    "snippet": "export const addChangedTypeToTransaction = (transaction, type, parentSub) => {",
+    "selfMs": 0.08
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 313,
+    "name": "_integrate",
+    "snippet": "_integrate (y, item) {",
+    "selfMs": 0.07
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 88,
+    "name": "descendants",
+    "snippet": "descendants(visitor: DescendantVisitor, path: number[] = [], parent: Node | null = null): void {",
+    "selfMs": 0.06
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 108,
+    "name": "orderedChildren",
+    "snippet": "private orderedChildren(raw: RetainedNodeProjection, partitions: ReadonlyMap<string, RetainedTextPartition>, placements: ReadonlyMap<string, SplitPlacement>): readonly RetainedNodeProjection[] {",
+    "selfMs": 0.06
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 90,
+    "name": "",
+    "snippet": "this.content.forEach((child, index) => child.descendants(visitor, [...path, index], this));",
+    "selfMs": 0.05
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 645,
+    "name": "typeListInsertGenericsAfter",
+    "snippet": "export const typeListInsertGenericsAfter = (transaction, parent, referenceItem, content) => {",
+    "selfMs": 0.02
+  }
+]

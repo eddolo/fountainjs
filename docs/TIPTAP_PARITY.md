@@ -1,5 +1,16 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local initialization follow-up, 2026-11-06: bulk fresh-tree seeding passes 205
+candidate cases, 36 compiled Node journeys, 28 old/new interoperability/history
+journeys and 93 recorded browser journeys. The full source suite reports 4,351
+passes / six required default failures / zero skips across all 289 discovered
+source files. Controlled 1,000-paragraph initialization improves from 2,298.88
+to 267.62 ms, with mixed typing timings. Encoded bytes change with seed write
+order; representation versions and public adapter stay unchanged. History
+growth, larger scaling, compaction, migration, three size overruns and fresh
+complete CI remain open. COLLAB-01 remains Partial; no overall parity or release
+promotion. [Current audit](YJS_RETAINED_SEED_AUDIT.md).
+
 Local text/session follow-up, 2026-11-06: operation-local retained text reads
 pass 191 candidate cases, 36 compiled Node journeys and 93 recorded browser
 journeys. Three paired 1,024-edit sessions per build preserve exact documents

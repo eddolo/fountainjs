@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+Fresh node seeding (2026-11-06, local follow-up): validate and snapshot a whole
+new retained node tree before writing instead of repeatedly scanning growing
+pools and sibling arrays. All 205 candidate cases, 36 compiled Node journeys,
+28 old/new candidate interoperability/history journeys and 93 recorded browser
+journeys pass. The fresh full source run has 4,351 passes and the same six
+required default failures across 289 files. Controlled 1,000-paragraph median
+initialization improves from 2,298.88 to 267.62 ms; typing changes are mixed.
+New seed write order changes encoded bytes, with unchanged representation
+versions and explicit cross-build proof. Three 1,024-edit sessions still expose
+history growth. Text-pool initialization, larger projection/editing, compaction,
+migration, existing size overruns and fresh complete CI remain open. No default
+adapter switch, limit increase or publication.
+[Audit and evidence](YJS_RETAINED_SEED_AUDIT.md).
+
 Text operation/session follow-up (2026-11-06, local): avoid repeated retained
 stream reads within insert/delete/format/join while keeping every separate call
 fresh. All 191 candidate tests, 36 compiled Node journeys and 93 recorded browser

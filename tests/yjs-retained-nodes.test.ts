@@ -1,10 +1,67 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
-import { RetainedNodeStore, type RetainedNodeProjection } from '../src/yjs/retained-nodes';
+import { RetainedNodeStore, type RetainedNodeProjection, type RetainedNodeSeed } from '../src/yjs/retained-nodes';
 
 const factory = (prefix: string) => { let value = 0; return () => `${prefix}-${value++}`; };
 const flatten = (node: RetainedNodeProjection): readonly RetainedNodeProjection[] => [node, ...node.content.flatMap(flatten)];
+const seedNode = (id: string, content: readonly RetainedNodeSeed[] = []): RetainedNodeSeed => ({ id, token: `${id}-placement`, type: 'paragraph', content });
+
+it('seeds nested identities, opaque metadata and text layouts that reopen and remain editable by a peer', () => {
+  const document = new Y.Doc(), remote = new Y.Doc(), origin = {};
+  const store = new RetainedNodeStore(document, 'seed', factory('local'), origin);
+  const content: RetainedNodeSeed[] = [{ ...seedNode('quote', [{ ...seedNode('text'), type: 'text', textLayout: { field: 'text', empty: true } }]), type: 'blockquote',
+    attrs: { owner: 'Ada', source: { exact: '\\alpha + β', nested: [1, true] } }, marks: [{ type: 'custom', attrs: { keep: true } }] }, seedNode('last')];
+  try {
+    store.setAttribute('root', 'source', { retained: true }); store.seed(content);
+    const projected = store.project(); expect(projected.issues).toEqual([]);
+    expect(projected.root).toMatchObject({ attrs: { source: { retained: true } }, content: [
+      { id: 'quote', type: 'blockquote', attrs: content[0].attrs, marks: content[0].marks, content: [{ id: 'text', type: 'text', textLayout: { field: 'text', empty: true } }] }, { id: 'last' },
+    ] });
+    Y.applyUpdate(remote, Y.encodeStateAsUpdate(document));
+    const peer = new RetainedNodeStore(remote, 'seed', factory('peer'));
+    expect(peer.project()).toEqual(projected); store.move('text', 'last', 0); peer.setAttribute('text', 'annotation', 'remote');
+    const before = Y.encodeStateAsUpdate(document), after = Y.encodeStateAsUpdate(remote); Y.applyUpdate(remote, before); Y.applyUpdate(document, after);
+    expect(store.project()).toEqual(peer.project());
+    expect(store.project().root.content[1].content[0]).toMatchObject({ id: 'text', attrs: { annotation: 'remote' }, textLayout: { field: 'text', empty: true } });
+  } finally { document.destroy(); remote.destroy(); }
+});
+
+it.each(['duplicate', 'token', 'metadata', 'layout', 'sparse', 'extended', 'depth', 'count'] as const)('refuses an invalid %s seed before any shared write', kind => {
+  const document = new Y.Doc(), store = new RetainedNodeStore(document, 'seed', factory('local'));
+  let content: readonly RetainedNodeSeed[] = [seedNode('first'), seedNode('second')];
+  if (kind === 'duplicate') content = [seedNode('first'), seedNode('first')];
+  if (kind === 'token') content = [seedNode('first'), { ...seedNode('second'), token: 'first' }];
+  if (kind === 'metadata') content = [seedNode('first'), { ...seedNode('second'), attrs: { invalid: undefined } }];
+  if (kind === 'layout') content = [seedNode('first'), { ...seedNode('second'), textLayout: { field: 'second', empty: true } }];
+  if (kind === 'sparse') content = [seedNode('first'), , seedNode('third')] as RetainedNodeSeed[];
+  if (kind === 'extended') content = Object.assign([seedNode('first')], { extra: true });
+  if (kind === 'depth') { let nested = seedNode('leaf'); for (let index = 0; index < 101; index++) nested = seedNode(`parent-${index}`, [nested]); content = [nested]; }
+  if (kind === 'count') content = Array.from({ length: 100_001 }, (_, index) => seedNode(`node-${index}`));
+  try {
+    const before = Y.encodeStateAsUpdate(document); expect(() => store.seed(content)).toThrow(); expect(Y.encodeStateAsUpdate(document)).toEqual(before);
+    expect(store.project().root.content).toEqual([]);
+  } finally { document.destroy(); }
+});
+
+it.each(['nodes', 'placements', 'identities', 'root-children'] as const)('refuses fresh seeding over existing %s data', kind => {
+  const document = new Y.Doc(), store = new RetainedNodeStore(document, 'seed', factory('local'));
+  try {
+    if (kind === 'root-children') document.getArray('seed:root-children').push([{ id: 'foreign', token: 'foreign-placement' }]);
+    else document.getMap(`seed:${kind}`).set('foreign', kind === 'nodes' ? new Y.Map() : true);
+    const before = Y.encodeStateAsUpdate(document); expect(() => store.seed([seedNode('first')])).toThrow('empty pools'); expect(Y.encodeStateAsUpdate(document)).toEqual(before);
+  } finally { document.destroy(); }
+});
+
+it('preserves foreign writes made by a seed input getter and refuses to continue seeding', () => {
+  const document = new Y.Doc(), store = new RetainedNodeStore(document, 'seed', factory('local')), content = seedNode('first');
+  Object.defineProperty(content, 'type', { get: () => { document.getMap('seed:identities').set('foreign', true); return 'paragraph'; } });
+  try {
+    expect(() => store.seed([content])).toThrow('empty pools'); expect(document.getMap('seed:identities').get('foreign')).toBe(true);
+    expect(document.getMap('seed:nodes').size).toBe(0); expect(document.getArray('seed:root-children').length).toBe(0);
+  } finally { document.destroy(); }
+});
+
 function peers() {
   const leftDoc = new Y.Doc(), rightDoc = new Y.Doc(), leftOrigin = {}, rightOrigin = {};
   const left = new RetainedNodeStore(leftDoc, 'candidate-nodes', factory('left'), leftOrigin);

@@ -1,0 +1,13 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "cursor-overlay-build-20261106",
+  "blocks": 1000,
+  "profiledMs": 388.1011,
+  "mapSizeCalls": 13038,
+  "mapSizeEntries": 2539505,
+  "arrayReads": 4003,
+  "arrayEntries": 4000,
+  "exactDocument": true,
+  "domRequired": false,
+  "note": "Initialization-only CPU sample and a separate instrumented initialization. Counts are diagnostic, not acceptance gates."
+}

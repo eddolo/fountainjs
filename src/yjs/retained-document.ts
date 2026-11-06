@@ -4,7 +4,7 @@ import { Mapping } from '../core/transaction/mapping';
 import type { Step } from '../core/transaction/step';
 import type { Transaction } from '../core/transaction/transaction';
 import { ReplaceStep } from '../core/transaction/replace-step';
-import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection } from './retained-nodes';
+import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection, type RetainedNodeSeed } from './retained-nodes';
 import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun, type RetainedTextPartition } from './retained-text';
 import { planRetainedNodeStarts, planRetainedText } from './retained-mapping';
 
@@ -138,24 +138,30 @@ export class RetainedDocumentStore {
 
   seed(source: Node): Node {
     this.validate(source);
-    if (this.metadata.get('seeded') === true || this.nodes.project().root.content.length) throw new Error('Retained document is already initialized.');
-    this.document.transact(() => {
-      this.metadataFor('root', this.nodes.project().root, source);
-      const visit = (node: Node, parent: string): void => {
+    const root = this.nodes.project().root;
+    if (this.metadata.get('seeded') === true || root.content.length) throw new Error('Retained document is already initialized.');
+    const texts: { stream: string; id: string; runs: RetainedTextRun[] }[] = [];
+    const visit = (node: Node): RetainedNodeSeed[] => {
+        const result: RetainedNodeSeed[] = [];
         for (let index = 0; index < node.childCount;) {
           const child = node.child(index);
+          const id = this.createId(), token = this.createId();
           if (!child.isText) {
-            const id = this.nodes.create({ type: child.type.name, attrs: { ...child.attrs }, marks: child.marks.map(mark => mark.toJSON()) }, parent);
-            visit(child, id); index++; continue;
+            result.push({ id, token, type: child.type.name, attrs: { ...child.attrs }, marks: child.marks.map(mark => mark.toJSON()), content: visit(child) });
+            index++; continue;
           }
           const content: Node[] = [child]; index++;
           if (child.nodeSize) while (index < node.childCount && node.child(index).isText && node.child(index).nodeSize) content.push(node.child(index++));
-          const id = this.nodes.create({ type: 'text', attrs: { ...child.attrs }, marks: child.marks.map(mark => mark.toJSON()) }, parent);
-          this.nodes.setTextLayout(id, { field: id, empty: child.nodeSize === 0 });
-          this.text.create(this.createId(), id, content.filter(text => text.nodeSize).map(text => ({ text: text.text!, attributes: format(text, this.createId()) })));
+          result.push({ id, token, type: 'text', attrs: { ...child.attrs }, marks: child.marks.map(mark => mark.toJSON()), textLayout: { field: id, empty: child.nodeSize === 0 }, content: [] });
+          texts.push({ stream: this.createId(), id, runs: content.filter(text => text.nodeSize).map(text => ({ text: text.text!, attributes: format(text, this.createId()) })) });
         }
-      };
-      visit(source, 'root'); this.metadata.set('seeded', true);
+        return result;
+    };
+    const content = visit(source);
+    this.document.transact(() => {
+      this.metadataFor('root', root, source); this.nodes.seed(content);
+      for (const entry of texts) this.text.create(entry.stream, entry.id, entry.runs);
+      this.metadata.set('seeded', true);
     }, this.origin);
     const projected = this.read();
     if (!same(projected.toJSON(), source.toJSON())) throw new Error('Retained seed changed source content.');

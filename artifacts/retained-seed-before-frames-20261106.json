@@ -1,0 +1,829 @@
+[
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 45,
+    "name": "",
+    "selfMs": 771.47
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 144,
+    "name": "get size",
+    "snippet": "get size () {",
+    "selfMs": 665.33
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "RegExp: ^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+    "selfMs": 324.85
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "(garbage collector)",
+    "selfMs": 198.85
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 146,
+    "name": "",
+    "snippet": "return this.readReferences(this.readChildren(parent)).filter(reference => {",
+    "selfMs": 176.7
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 889,
+    "name": "typeMapGet",
+    "snippet": "export const typeMapGet = (parent, key) => {",
+    "selfMs": 83.81
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 25,
+    "name": "id",
+    "snippet": "function id(value: unknown): value is string { return typeof value === 'string' && SAFE_ID.test(value) && !UNSAFE.has(value); }",
+    "selfMs": 82.83
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 453,
+    "name": "typeListToArray",
+    "snippet": "export const typeListToArray = type => {",
+    "selfMs": 75.56
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 29,
+    "name": "createIterator",
+    "selfMs": 42.13
+  },
+  {
+    "source": "node:inspector",
+    "line": 115,
+    "name": "post",
+    "selfMs": 36.97
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 137,
+    "name": "",
+    "snippet": "return array.toArray().map(value => {",
+    "selfMs": 34.29
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 145,
+    "name": "readLiveChildren",
+    "snippet": "private readLiveChildren(parent: string): readonly string[] {",
+    "selfMs": 33.18
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 281,
+    "name": "project",
+    "snippet": "project(): { readonly root: RetainedNodeProjection; readonly issues: readonly RetainedNodeIssue[] } {",
+    "selfMs": 25.52
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 846,
+    "name": "typeMapSet",
+    "snippet": "export const typeMapSet = (transaction, parent, key, value) => {",
+    "selfMs": 19.46
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "(program)",
+    "selfMs": 18.82
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 178,
+    "name": "create",
+    "snippet": "create(value: RetainedNodeValue, parent = ROOT, index = this.liveChildren(parent).length): string {",
+    "selfMs": 16.46
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 135,
+    "name": "readReferences",
+    "snippet": "private readReferences(array: Y.Array<unknown>): readonly Reference[] {",
+    "selfMs": 16.07
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/schema.ts",
+    "line": 130,
+    "name": "visit",
+    "snippet": "const visit = (current: Node, path: readonly number[]): boolean => {",
+    "selfMs": 13.58
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 924,
+    "name": "typeMapHas",
+    "snippet": "export const typeMapHas = (parent, key) => {",
+    "selfMs": 11.09
+  },
+  {
+    "source": "../src/utils/encoding.js",
+    "line": 601,
+    "name": "writeStateVector",
+    "snippet": "export const writeStateVector = (encoder, sv) => {",
+    "selfMs": 10.89
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 240,
+    "name": "",
+    "snippet": "const node = this.schema.nodes[raw.type].create(raw.attrs ?? {}, children.map(child => child.node), undefined,",
+    "selfMs": 10.5
+  },
+  {
+    "source": "../src/utils/Transaction.js",
+    "line": 412,
+    "name": "transact",
+    "snippet": "export const transact = (doc, f, origin = null, local = true) => {",
+    "selfMs": 10.48
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 81,
+    "name": "decodeAttributes",
+    "snippet": "function decodeAttributes(value: unknown, lookup: (client: number, clock: number) => Readonly<Record<string, string>>, cache?: DecodedFormatCache): Record<string, string> {",
+    "selfMs": 10.23
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 37,
+    "name": "validate",
+    "snippet": "const validate = (item: unknown, depth = 0): void => {",
+    "selfMs": 9.94
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 44,
+    "name": "validId$1",
+    "snippet": "function validId(value: unknown): value is string {",
+    "selfMs": 9.46
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 62,
+    "name": "decode",
+    "snippet": "function decode(value: unknown): unknown {",
+    "selfMs": 8.06
+  },
+  {
+    "source": "../src/types/YArray.js",
+    "line": 139,
+    "name": "insert",
+    "snippet": "insert (index, content) {",
+    "selfMs": 7.76
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 304,
+    "name": "visit",
+    "snippet": "const visit = (nodeId: string, depth = 0): RetainedNodeProjection => {",
+    "selfMs": 7.51
+  },
+  {
+    "source": "../src/structs/Item.js",
+    "line": 419,
+    "name": "integrate",
+    "snippet": "integrate (transaction, offset) {",
+    "selfMs": 7.36
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 28,
+    "name": "format",
+    "snippet": "function format(node: Node, leaf: string): Record<string, string> {",
+    "selfMs": 6.85
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 711,
+    "name": "typeListInsertGenerics",
+    "snippet": "export const typeListInsertGenerics = (transaction, parent, index, content) => {",
+    "selfMs": 6.79
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/schema.ts",
+    "line": 14,
+    "name": "computeAttrs",
+    "snippet": "function computeAttrs(",
+    "selfMs": 6.4
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 231,
+    "name": "",
+    "snippet": "this.document.transact(() => {",
+    "selfMs": 6.2
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 34,
+    "name": "encode",
+    "snippet": "function encode(value: unknown): string {",
+    "selfMs": 5.85
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 262,
+    "name": "value",
+    "snippet": "private value(record: Y.Map<unknown>): RetainedNodeValue {",
+    "selfMs": 5.55
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 655,
+    "name": "packJsonContent",
+    "snippet": "const packJsonContent = () => {",
+    "selfMs": 5.13
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 48,
+    "name": "attributes",
+    "snippet": "function attributes(value: unknown, remove = false): Record<string, string | null> {",
+    "selfMs": 5
+  },
+  {
+    "source": "../src/structs/ContentAny.js",
+    "line": 32,
+    "name": "getContent",
+    "snippet": "getContent () {",
+    "selfMs": 4.76
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 162,
+    "name": "placementTarget",
+    "snippet": "private placementTarget(nodeId: string, parent: string, index: number): { array: Y.Array<unknown>; index: number } {",
+    "selfMs": 4.16
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/encoding.js",
+    "line": 39,
+    "name": "Encoder",
+    "selfMs": 3.95
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 191,
+    "name": "collect",
+    "snippet": "const collect = (node: RetainedNodeProjection) => {",
+    "selfMs": 3.83
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 32,
+    "name": "",
+    "snippet": "return (value.match(/..../g) ?? []).map(entry => String.fromCharCode(Number.parseInt(entry, 16))).join('');",
+    "selfMs": 3.39
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 149,
+    "name": "",
+    "snippet": "}).map(reference => reference.id);",
+    "selfMs": 3.38
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 132,
+    "name": "provenance",
+    "snippet": "private provenance(value: Readonly<Record<string, string>>): readonly number[] {",
+    "selfMs": 3.19
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 142,
+    "name": "",
+    "snippet": "this.document.transact(() => {",
+    "selfMs": 3.15
+  },
+  {
+    "source": "../src/types/YArray.js",
+    "line": 206,
+    "name": "toArray",
+    "snippet": "toArray () {",
+    "selfMs": 3.14
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 144,
+    "name": "visit",
+    "snippet": "const visit = (node: Node, parent: string): void => {",
+    "selfMs": 3.12
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 58,
+    "name": "",
+    "selfMs": 3.1
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 184,
+    "name": "",
+    "snippet": "const attrs = Object.entries(value.attrs ?? {}).map(([name, entry]) => {",
+    "selfMs": 3.09
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 228,
+    "name": "layout",
+    "snippet": "private layout(type: unknown, value: unknown): RetainedTextLayout {",
+    "selfMs": 3.04
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 249,
+    "name": "readFrame",
+    "snippet": "private readFrame(ids: readonly string[]): TextRead {",
+    "selfMs": 3
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 262,
+    "name": "AbstractType",
+    "snippet": "constructor () {",
+    "selfMs": 2.76
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/copy-validation.ts",
+    "line": 44,
+    "name": "captureWideGrammar",
+    "snippet": "export function captureWideGrammar(node: Node, expression: string): CopyGrammar | undefined {",
+    "selfMs": 2.67
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 172,
+    "name": "place",
+    "snippet": "private place(nodeId: string, parent: string, token: string, target: { array: Y.Array<unknown>; index: number }): void {",
+    "selfMs": 2.66
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 108,
+    "name": "orderedChildren",
+    "snippet": "private orderedChildren(raw: RetainedNodeProjection, partitions: ReadonlyMap<string, RetainedTextPartition>, placements: ReadonlyMap<string, SplitPlacement>): readonly RetainedNodeProjection[] {",
+    "selfMs": 2.65
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 16,
+    "name": "",
+    "snippet": ": value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([key, entry]) => [key, canonical(entry)])) : value;",
+    "selfMs": 2.5
+  },
+  {
+    "source": "node:internal/util/comparisons",
+    "line": 284,
+    "name": "objectComparisonStart",
+    "selfMs": 2.42
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 320,
+    "name": "",
+    "snippet": "return { id: nodeId, ...this.value(record), content: children.map(child => visit(child, depth + 1)) };",
+    "selfMs": 2.41
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 982,
+    "name": "createMapIterator",
+    "snippet": "export const createMapIterator = type => {",
+    "selfMs": 2.37
+  },
+  {
+    "source": "../src/types/YText.js",
+    "line": 1042,
+    "name": "computeDelta",
+    "snippet": "const computeDelta = () => {",
+    "selfMs": 2.14
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 114,
+    "name": "fresh",
+    "snippet": "private fresh(): string {",
+    "selfMs": 1.96
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 247,
+    "name": "bind",
+    "snippet": "const bind = (fragment: Fragment, path: number[]) => {",
+    "selfMs": 1.86
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 221,
+    "name": "set",
+    "snippet": "set (key, value) {",
+    "selfMs": 1.8
+  },
+  {
+    "source": "../src/types/YText.js",
+    "line": 1009,
+    "name": "toDelta",
+    "snippet": "toDelta (snapshot, prevSnapshot, computeYChange) {",
+    "selfMs": 1.74
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "dispatch",
+    "selfMs": 1.73
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 122,
+    "name": "placement",
+    "snippet": "private placement(nodeId: string): Placement | undefined {",
+    "selfMs": 1.72
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-adapter.ts",
+    "line": 138,
+    "name": "connect",
+    "snippet": "connect(context: CollaborationAdapterContext): void | Promise<void> {",
+    "selfMs": 1.7
+  },
+  {
+    "source": "../src/utils/Transaction.js",
+    "line": 159,
+    "name": "addChangedTypeToTransaction",
+    "snippet": "export const addChangedTypeToTransaction = (transaction, type, parentSub) => {",
+    "selfMs": 1.68
+  },
+  {
+    "source": "../src/structs/Item.js",
+    "line": 351,
+    "name": "get deleted",
+    "snippet": "get deleted () {",
+    "selfMs": 1.65
+  },
+  {
+    "source": "../src/utils/UpdateEncoder.js",
+    "line": 13,
+    "name": "toUint8Array",
+    "snippet": "toUint8Array () {",
+    "selfMs": 1.63
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 152,
+    "name": "liveChildren",
+    "snippet": "private liveChildren(parent: string): readonly string[] { this.valid(); return this.readLiveChildren(parent); }",
+    "selfMs": 1.62
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/node.ts",
+    "line": 88,
+    "name": "descendants",
+    "snippet": "descendants(visitor: DescendantVisitor, path: number[] = [], parent: Node | null = null): void {",
+    "selfMs": 1.61
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 173,
+    "name": "scan",
+    "snippet": "private scan(streamId: string, text: Y.Text): readonly RetainedTextPartition[] {",
+    "selfMs": 1.61
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 223,
+    "name": "",
+    "snippet": "transact(this.doc, transaction => {",
+    "selfMs": 1.61
+  },
+  {
+    "source": "../src/types/YText.js",
+    "line": 184,
+    "name": "updateCurrentAttributes",
+    "snippet": "const updateCurrentAttributes = (currentAttributes, format) => {",
+    "selfMs": 1.6
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-adapter.ts",
+    "line": 63,
+    "name": "RetainedYjsCollaborationAdapter",
+    "snippet": "constructor(private readonly options: YjsCollaborationExtensionOptions) {",
+    "selfMs": 1.6
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 175,
+    "name": "",
+    "snippet": "for (const [key, value] of Object.entries(fields).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)) {",
+    "selfMs": 1.6
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 102,
+    "name": "findMarker",
+    "snippet": "export const findMarker = (yarray, index) => {",
+    "selfMs": 1.59
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 86,
+    "name": "",
+    "snippet": "if (!Array.isArray(provenance) || provenance.length !== 3 || provenance.some(entry => !Number.isSafeInteger(entry) || entry < 0)) throw new Error('Invalid retained format provenance.');",
+    "selfMs": 1.59
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 213,
+    "name": "append",
+    "snippet": "const append = (next: Fragment) => {",
+    "selfMs": 1.59
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 45,
+    "name": "iteratorFilter",
+    "selfMs": 1.59
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-adapter.ts",
+    "line": 145,
+    "name": "",
+    "snippet": "this.options.document.transact(() => {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 192,
+    "name": "",
+    "snippet": "this.document.transact(() => {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 29,
+    "name": "",
+    "snippet": "export const retainedNameKey = (name: string): string => Array.from({ length: name.length }, (_, index) => name.charCodeAt(index).toString(16).padStart(4, '0')).join('');",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../src/types/YArray.js",
+    "line": 107,
+    "name": "get length",
+    "snippet": "get length () {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../src/structs/ContentAny.js",
+    "line": 73,
+    "name": "integrate",
+    "snippet": "integrate (transaction, item) {}",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../src/types/YText.js",
+    "line": 150,
+    "name": "insertNegatedAttributes",
+    "snippet": "const insertNegatedAttributes = (transaction, parent, currPos, negatedAttributes) => {",
+    "selfMs": 1.58
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 61,
+    "name": "validateRetainedTextFormat",
+    "snippet": "export function validateRetainedTextFormat(value: Readonly<Record<string, string>>): void {",
+    "selfMs": 1.57
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-adapter.ts",
+    "line": 100,
+    "name": "canonical",
+    "snippet": "private canonical(): Node {",
+    "selfMs": 1.57
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-nodes.ts",
+    "line": 29,
+    "name": "retainedNameKey",
+    "snippet": "export const retainedNameKey = (name: string): string => Array.from({ length: name.length }, (_, index) => name.charCodeAt(index).toString(16).padStart(4, '0')).join('');",
+    "selfMs": 1.57
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/node.ts",
+    "line": 93,
+    "name": "eq",
+    "snippet": "eq(other: Node): boolean {",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 222,
+    "name": "create",
+    "snippet": "create(streamId: string, id: string, runs: readonly RetainedTextRun[]): void {",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 250,
+    "name": "",
+    "snippet": "fragment.children?.forEach((child, index) => bind(child, [...path, index]));",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 41,
+    "name": "",
+    "snippet": "document.descendants((node, path) => {",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../src/types/YArray.js",
+    "line": 141,
+    "name": "",
+    "snippet": "transact(this.doc, transaction => {",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/node.ts",
+    "line": 52,
+    "name": "get nodeSize",
+    "snippet": "get nodeSize(): number {",
+    "selfMs": 1.55
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/decoding.js",
+    "line": 245,
+    "name": "readVarUint",
+    "selfMs": 1.55
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-text.ts",
+    "line": 226,
+    "name": "",
+    "snippet": "const safeRuns = runs.map(run => {",
+    "selfMs": 1.55
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 54,
+    "name": "refreshMarkerTimestamp",
+    "snippet": "const refreshMarkerTimestamp = marker => { marker.timestamp = globalSearchMarkerTimestamp++ }",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../src/types/YText.js",
+    "line": 224,
+    "name": "insertAttributes",
+    "snippet": "const insertAttributes = (transaction, parent, currPos, attributes) => {",
+    "selfMs": 1.53
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 169,
+    "name": "decode",
+    "snippet": "private decode(run: RetainedTextRun): { leaf: string; attrs: Attributes; marks: MarkJSON[] } {",
+    "selfMs": 1.52
+  },
+  {
+    "source": "../src/structs/ContentEmbed.js",
+    "line": 14,
+    "name": "ContentEmbed",
+    "snippet": "constructor (embed) {",
+    "selfMs": 1.52
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/node.ts",
+    "line": 123,
+    "name": "fromJSON",
+    "snippet": "static fromJSON(schema: Schema, json: NodeJSON): Node {",
+    "selfMs": 1.26
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 205,
+    "name": "visit",
+    "snippet": "const visit = (raw: RetainedNodeProjection): Fragment => {",
+    "selfMs": 1.25
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/editor.ts",
+    "line": 141,
+    "name": "",
+    "snippet": "this.currentState.plugins.forEach((plugin) => plugin.spec.props?.onDestroy?.(this));",
+    "selfMs": 1.14
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 13,
+    "name": "pathKey",
+    "snippet": "const pathKey = (path: readonly number[]) => path.join('.');",
+    "selfMs": 1.14
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 186,
+    "name": "read",
+    "snippet": "read(validate = true): Node {",
+    "selfMs": 1.13
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/node-spec.ts",
+    "line": 27,
+    "name": "freezeAttributes",
+    "snippet": "export function freezeAttributes(attrs: Attributes): Readonly<Attributes> {",
+    "selfMs": 1.09
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 139,
+    "name": "seed",
+    "snippet": "seed(source: Node): Node {",
+    "selfMs": 1.09
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/yjs/retained-document.ts",
+    "line": 14,
+    "name": "same",
+    "snippet": "const same = (left: unknown, right: unknown): boolean => {",
+    "selfMs": 1.08
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/copy-validation.ts",
+    "line": 57,
+    "name": "markWideValidated",
+    "snippet": "export function markWideValidated(node: Node, schema: Schema, grammar?: CopyGrammar): void {",
+    "selfMs": 0.88
+  },
+  {
+    "source": "node:internal/util/comparisons",
+    "line": 1,
+    "name": "",
+    "selfMs": 0.83
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/extensions/collaboration-core.ts",
+    "line": 313,
+    "name": "adapterFrom",
+    "snippet": "function adapterFrom(",
+    "selfMs": 0.6
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/text-direction.ts",
+    "line": 5,
+    "name": "validate",
+    "snippet": "validate: (value: unknown) => ['left', 'center', 'right', 'justify', 'start', 'end'].includes(String(value)),",
+    "selfMs": 0.31
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/schema.ts",
+    "line": 35,
+    "name": "isDeeplyImmutable",
+    "snippet": "function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {",
+    "selfMs": 0.18
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 248,
+    "name": "has",
+    "snippet": "has (key) {",
+    "selfMs": 0.1
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 313,
+    "name": "_integrate",
+    "snippet": "_integrate (y, item) {",
+    "selfMs": 0.04
+  },
+  {
+    "source": "../src/structs/ContentType.js",
+    "line": 98,
+    "name": "integrate",
+    "snippet": "integrate (transaction, item) {",
+    "selfMs": 0.03
+  },
+  {
+    "source": "../retained-seed-baseline-20261106-source-77eb75a56d8cb152bc68bc5ad7083841f8d41c7c/src/core/schema/node.ts",
+    "line": 90,
+    "name": "",
+    "snippet": "this.content.forEach((child, index) => child.descendants(visitor, [...path, index], this));",
+    "selfMs": 0.02
+  },
+  {
+    "source": "../src/types/AbstractType.js",
+    "line": 645,
+    "name": "typeListInsertGenericsAfter",
+    "snippet": "export const typeListInsertGenericsAfter = (transaction, parent, referenceItem, content) => {",
+    "selfMs": 0.02
+  }
+]

@@ -1,5 +1,9 @@
 # Retained text operation reads and long sessions
 
+The later [initialization audit](YJS_RETAINED_SEED_AUDIT.md) adds validated fresh
+node-tree seeding, a full source refresh and explicit old/new interoperability.
+The measurements below belong to this earlier text-operation checkpoint.
+
 2026-11-06, local follow-up to `29f8e6ea` and the
 [projection audit](YJS_RETAINED_PROJECTION_AUDIT.md). This is experimental
 collaboration work, not adoption of the candidate or a release.

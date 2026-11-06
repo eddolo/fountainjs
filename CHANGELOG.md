@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Seed fresh private retained-Yjs node trees in one validated pass, preserving
+  identity, metadata, text layout and ordering while avoiding repeated scans of
+  growing pools/sibling lists. Reject malformed or intervening shared input
+  before node writes. Keep ordinary editing validation and the public adapter
+  unchanged; verify old/new candidate convergence and both authors' history.
+
 - Reuse validated stream/partition reads within individual private retained-Yjs
   text operations while preserving fresh reads between calls, including inside
   an outer transaction. Add compiled long-session evidence for offline edits,
