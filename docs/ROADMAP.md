@@ -1,5 +1,16 @@
 # FountainJS opportunity roadmap
 
+Retained adapter integration (2026-11-06, local work in progress): connect the
+experimental pools to the actual collaboration lifecycle, directional and
+structural selections, author undo, awareness, provider replacement and granular
+attributes. The full source run has 4,298 passes and the same six default-adapter
+failures; all 165 focused candidate/mapping cases pass. Recorded three-engine
+testing also exposes an extra native arrow stop at a remote cursor decoration;
+that remains a required regression. Existing-engine repairs preserve copied-owner
+position maps and refuse legacy writes into unfamiliar shared roots. No public
+adapter switch, migration, size-ceiling increase, push or release.
+[Work in progress](YJS_RETAINED_ADAPTER_WORK_IN_PROGRESS.md).
+
 Compact retained formats (2026-11-05, local work in progress): replace repeated
 source-format payloads with insertion-owned references to shared definitions and
 reuse exact validated format decodes. All 129 candidate checks and 48 compiled

@@ -1,0 +1,497 @@
+{
+  "date": "2026-11-06",
+  "publication": "Local only, user preference; no push/npm/site update.",
+  "adoptionReady": false,
+  "defaultAdapterSwitched": false,
+  "publicPackageExportsUnchanged": true,
+  "source": [
+    {
+      "path": "src/core/transaction/replace-node-step.ts",
+      "sha256": "e3e8a79384911e9a72cbd078880febac283bc503f44243af07e0ba2fd1fa3599"
+    },
+    {
+      "path": "src/yjs/index.ts",
+      "sha256": "e4714091addc015086ed5adfa1268cd8e4ebb4cba3be1fce7772d3588db9a9e0"
+    },
+    {
+      "path": "src/yjs/retained-adapter.ts",
+      "sha256": "20ef9f65cbd4edd9b9e004be2899d5c0e9421e90dcc9b57332950a83d125b920"
+    },
+    {
+      "path": "src/yjs/retained-selection.ts",
+      "sha256": "7663a8080d564f229f561b53e05a6f253eb301376486ba00dcd7e019196cc657"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "f1a05baae101f4d00dccd7f1a68427f8241beefa461ace691fde6cdd1d963a3e"
+    },
+    {
+      "path": "src/yjs/retained-text.ts",
+      "sha256": "a59f088f5e7da4673af8ece0099a46b00ace44f0923d2a632a74953ada1fa473"
+    },
+    {
+      "path": "tests/yjs-retained-adapter.test.ts",
+      "sha256": "63157199319b9e268fa6bde5e32244d1d61dce4b49fa91daad4fffb15b05b11f"
+    },
+    {
+      "path": "tests/replace-node-provenance.test.ts",
+      "sha256": "c4225e55130798bca15a520eb1267817ca93507dd572726cdf01721ea6bbdcfa"
+    },
+    {
+      "path": "tests/manual/retained-adapter-real.spec.ts",
+      "sha256": "e4d32a9c3b2ffb1fd17551ef1471cc057c104bf1d8cad1e23c100dd11fdc122f"
+    }
+  ],
+  "unit": {
+    "path": "artifacts/retained-adapter-unit-20261106.json",
+    "sha256": "1b7293afe018e1c7008d29d974d766c81e561293453404c88e207c10ee3acf81",
+    "total": 4304,
+    "passed": 4298,
+    "failed": 6,
+    "pending": 0,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ],
+    "focusedCandidatePassed": 165
+  },
+  "browser": {
+    "path": "artifacts/retained-adapter-browser-final-20261106.json",
+    "sha256": "072001045e15948ee599289e697d4e561dd19d8fec415f7d0521bc519c9183b4",
+    "passed": 21,
+    "failed": 3,
+    "skipped": 0,
+    "requiredFailures": [
+      {
+        "name": "right-arrow navigation crosses a remote presence without consuming a character step",
+        "project": "chromium",
+        "status": "unexpected"
+      },
+      {
+        "name": "right-arrow navigation crosses a remote presence without consuming a character step",
+        "project": "firefox",
+        "status": "unexpected"
+      },
+      {
+        "name": "right-arrow navigation crosses a remote presence without consuming a character step",
+        "project": "webkit",
+        "status": "unexpected"
+      }
+    ],
+    "headless": true,
+    "workers": 1,
+    "nativeInput": true,
+    "splitCaret": "Approached using native End/Left and verified offset 3; separate required Right-arrow regression remains failing.",
+    "visualReview": [
+      "Chromium converged quote and retained figure",
+      "Firefox converged split and retained figure",
+      "Chromium and WebKit reopened Planning content",
+      "Chromium saved-video frame at 1.7 seconds"
+    ],
+    "videos": 24,
+    "evidence": [
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/.last-run.json",
+        "sha256": "f0e28e8b36c38fefa41f744b94e868109964eff0aefebec25fd662ce2c022d03"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/backward-selection.png",
+        "sha256": "27f79130e77c3f2d596543cc2d07dfdcf74ef83e53dcd71b63206c06b84f937b"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/reopened.png",
+        "sha256": "2bf76b69c710d5c92695031b77fb81e5ec7deb940fac63d3b0aad5adcbf33aca"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/trace.zip",
+        "sha256": "cc3ed9d42cb373fd000bc77f45638c8706bd6bd25fb21e7a5feef79326a20202"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/video.webm",
+        "sha256": "f1e324d40168e2b5e1c2ca069e724e6758ccbdbc2d70409f31c6cd2f6f9cd9f4"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/backward-selection.png",
+        "sha256": "96fa20cf60d57ee340f304355aa4810bd12996cf1095a9f791e47dee180f04d3"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/reopened.png",
+        "sha256": "0d1de05d3081af23338db712bb96738dbda61b8fe6b9bafcdc32a384e3f21e1d"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/trace.zip",
+        "sha256": "c79a7ab3d56b1f9b6bd1728f9919f5a51a0ca8469e27f03b51da4102cc1cfa47"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/video.webm",
+        "sha256": "91cbcbfa87392c3f89cfde6fa79fed5cf5a41a40d90d874d57155ca9cd412f71"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/backward-selection.png",
+        "sha256": "23cf5e4c0dfe50d6cb570e0c62c80547b628586594b9b54440bfa07add3d2adb"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/reopened.png",
+        "sha256": "bf3686821aecf2649995738f9910c8db5c74980e30dae050a08168ecac7c48e1"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/trace.zip",
+        "sha256": "0a0ef6faba3c0157ee77513abeaad503d10d0f5753d928ef45d5cb3d75841f7e"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/video.webm",
+        "sha256": "6a5fe8d1e6a8714e16319d3725fc1fa4a685d63b29deebab02fee481a75ab116"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/converged.png",
+        "sha256": "6cb9304e53e4939d9d92cec240b9c5a028f58383511d215aa3c6dc93c11e826c"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "acecd43923f89b807d5a3845f77de630dce948d67ef8cd496cb7078bd7656718"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/video.webm",
+        "sha256": "acb24d65e32791ce97dfe9693924013b7858bcaed78bd3b4a042975beb23b8b5"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/converged.png",
+        "sha256": "d98c07c41a5bcd89b15b180c392d032eaf20805bdefc046d273f5c85137edd80"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "4109a9259406b8dda262caaf9cf1af790eb2271f6a5a0cffbffce66e90cb4854"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/video.webm",
+        "sha256": "1284d6c93814113e1b86b9a27e0e6c56fb5d94f81d0108d388e53e6e265fa9bd"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/converged.png",
+        "sha256": "32430975f1d80b17d5a3c3b8b4bfe522cb11460cae576e6c1caee7cd9d7eda5f"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "dd8ba9077d55c26939dbc0732b3cafaeeec19934f562319ffcb8eb592ca692bb"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/video.webm",
+        "sha256": "93cbda1afa753d2065d60c3df00681daea25474bd444eea3b7c3fd12d92b8817"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/converged.png",
+        "sha256": "49f648b3c51c26c7f956de2e01624bfd11167c973f1cdcd7ca1b01a27d1bb77f"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "62a37fadfddcf6b9cfbc5d7ccd3767e70d523426b1fdc23c386d1ee5c495bed1"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/video.webm",
+        "sha256": "8c565f0f8c16e63d23e54047881849a19e6056bfabe3daa8deed487a2f2690c7"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/converged.png",
+        "sha256": "e881b5a8aa07331f78b89a0706fdc2377fb7c7f9270447e15c21b2ad9ed40ea8"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "1b6f0562658bcef5906fbfcf49020a602e55d67be7629b451f6264f76f81f840"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/video.webm",
+        "sha256": "34ffbb5df711200516667e69612a4770849e2934ea0ee73d20a08804225d2ad9"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/converged.png",
+        "sha256": "3d264fe0b64fccf082ad6530d32da0800c7bdf251277025808f40d57aa2c6c2a"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "1c25bb5c6bec410cde9757652d802fa47084bb1db40e9f46f668ac6f58d3421f"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/video.webm",
+        "sha256": "90c19afe926f2c5beb62f2588074ff304faaa5808653b5a80a03aec3ae51a205"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/converged.png",
+        "sha256": "4a2745cea3500d4387d43ba0090c5e2a368e42b87bcb0a10ee03ce11ae25c2b5"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "16867cb5c9f68cf5c0022e8e8e896574009fd26dd799b8f5b6cc8be01fa04fc6"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/video.webm",
+        "sha256": "9ba76e4fab01fd6ba040ec3722fc6b9d669d824cf1b36b683e74888c4fae1f45"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/converged.png",
+        "sha256": "ca76da01434eeaf697359ba4f83c93e51c733fb11a9ecee37de93dcae7ede6cb"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "48237f617203a609c2ad077de71aaed68c58814b2651fd3fe23686d7d5e277db"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/video.webm",
+        "sha256": "e728deab3b22576c6ba4c224c20bf147d519388c443dbbf58068f5dc608ae0fc"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/converged.png",
+        "sha256": "0be2856a2d467cbd6b4a5e84870487b7d1ebb354f5f6e4c4e447b5b75d9ddfa6"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "d8cd42f1d38f609f430f9df4b8f73d671a2caa1e91d1fffa33cb205307129099"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/video.webm",
+        "sha256": "701c6f0f42ce398e6d5ef6247b05e022fd562848b9fd1fe45c0060acac4b51ca"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/converged.png",
+        "sha256": "8e00ada587dd5c9b9dc40d6b5df0033174fddd33e3f8856b5f25ce106a3cd7b5"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "ef426492bfe03de55de6082bda3b4351b0b3cd9ffe0d768bc3a68f2e8ae78f61"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/video.webm",
+        "sha256": "3e3ea0be065edfbe05edda9873b8672ab2b6031535f4c252d1b3255c70473c0c"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/converged.png",
+        "sha256": "3a62ce85f6079266bdae2d69e85277808b60429b06ac21e31a263d6ad18b2817"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "7830d111eac342d103adc5ba045b3c8440af5aa2ff8a564e867100d1605959c9"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/video.webm",
+        "sha256": "75b54018085287e407b274e222d17e53c408e4877ac282166846c0a3bc2bbcd6"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/converged.png",
+        "sha256": "0903d05f2ca38fa36b549ab293bfb4e233f9e5c54483b0e627220035dc0127c4"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "f71d7add366f38f51306e70338a8f6ad1c825d8a73670e51b6d90d7fa3cc0709"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/video.webm",
+        "sha256": "ee14505ad64aa095604b376e7cb15840e6ce498a21668ef0a46589af97535739"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/converged.png",
+        "sha256": "26a94c7cbdeea33c54e423c144dbf8e53ba0c348756a3f2c887f7e9d20f21e34"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "8bd7b165497c0c903cdeea5ee5f095faebcf276d030c8568a7ee69d69e20d1b5"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/video.webm",
+        "sha256": "88aa88b99c44baa58c913791b29e60acdf0a79f2b29211593c93a942176e9509"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/converged.png",
+        "sha256": "e91fd48a6d0401172b557cddf91eb81e378e39ff6838e0e562afa23de6f52eaa"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "7a0869596227ef5ae6c70c62cc9beb132d17fed74ba07fda0be021d6dc9ee04f"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/video.webm",
+        "sha256": "e69f49f267a5bdbf973ef3112291e4cf7e3bfb2ff916f9a725739f441bad0a64"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/converged.png",
+        "sha256": "6752598f32b69e84af2c6d535cfef0754cc98b6720ff6abab44c5900e0d32aca"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "64dc896ab7b59e4298f9cc7309c02329c1324de66e978270465dd0d5ff8b0e29"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/video.webm",
+        "sha256": "5d5f3989e5fdb492ad8d5423969fffcf37d9a5247c8557b67a1d631386a8aabb"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/converged.png",
+        "sha256": "75593a45cff6c694052cfc10027c69072f387a6e5760a0fed7dea77063f9c168"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "a37536f11493f16fd4453f0d43e4a46c4051265695ef21a4f529c2a7823fd219"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/video.webm",
+        "sha256": "77ecc5699ff2210f7f7e1c160a60aa6cd3aebc51efa1d4d51c76c7d688bfcd81"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/converged.png",
+        "sha256": "995c48d227edad08c9160709a07556fdc0eab025bb2954d37fd8de4e470fabd5"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "a7aeb5eafeeeeb7cfe97a80d89a5fea1fe0f922f12f1785e1a86ca735f019cc7"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/video.webm",
+        "sha256": "76ec2591647cfa997ed2de64761ed90af668c834e6cad788054da079b013fdbb"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/converged.png",
+        "sha256": "b036496c0f69dfa7f658e18caf37894df8a77dc699e4d2eb97f078f775cb36c2"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "53c0d2e1490329ce9874581d09be071cbbdcff0d4dd00a6030b6730d1055f3cf"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/video.webm",
+        "sha256": "6afc305e0c3cfcdaa3986651be455fd44d6e970654d51a41df199fac6f602f0b"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/error-context.md",
+        "sha256": "99fad28d89810dd9a36204f343b3c8cb1a2f3eddfab5ef46a91ecad4db5c2bf8"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/test-failed-1.png",
+        "sha256": "b592333f3f5fafb982b0ac9758c8cb0e255ce387c874b44e343e855c46f5ac6b"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/trace.zip",
+        "sha256": "0f89253558b249b8ea7f90e5590bb70d216533d954f963a421c6b981453c5bca"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/video.webm",
+        "sha256": "758b45c092ba769be15aa731806d0586359cf3812c0d02c6cde927b748014546"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/error-context.md",
+        "sha256": "99fad28d89810dd9a36204f343b3c8cb1a2f3eddfab5ef46a91ecad4db5c2bf8"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/test-failed-1.png",
+        "sha256": "cfdb2c712bdf5bc4ae5838712bc8a0b0a97d2747348e4e7d746856b2876cfc55"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/trace.zip",
+        "sha256": "5113361a99ba6ed636a6b642204dd419f0be4c7fcc42081010f25bdceb39a20c"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/video.webm",
+        "sha256": "a5b40e44652633d4f4f95005adc2fd524ee20366c02a180ee197510bfde05f86"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/error-context.md",
+        "sha256": "99fad28d89810dd9a36204f343b3c8cb1a2f3eddfab5ef46a91ecad4db5c2bf8"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/test-failed-1.png",
+        "sha256": "37d7e96eaa9f9e1a8b5c27414960f902ba9cec09fd6edf3c66f1bf13cba51344"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/trace.zip",
+        "sha256": "5a8395c12f1bd3eba70639bd394f67e052e6076c729dda2326fa3c3bb2940886"
+      },
+      {
+        "path": "artifacts/retained-adapter-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/video.webm",
+        "sha256": "5a842622e47d933f8f4e3826038e8285d1deef5113e21bccddd8366128de1ac5"
+      }
+    ]
+  },
+  "compiledNode": {
+    "journeys": 24,
+    "formats": [
+      {
+        "format": "es",
+        "passed": 12,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls."
+      },
+      {
+        "format": "cjs",
+        "passed": 12,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls."
+      }
+    ],
+    "currentSourceMapModules": 189
+  },
+  "checks": [
+    {
+      "check": "test:api",
+      "exitCode": 0
+    },
+    {
+      "check": "test:headless",
+      "exitCode": 0
+    },
+    {
+      "check": "test:package",
+      "exitCode": 0
+    },
+    {
+      "check": "test:server-runtimes",
+      "exitCode": 0
+    },
+    {
+      "check": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "check": "test:budget",
+      "exitCode": 1
+    },
+    {
+      "check": "test:performance",
+      "exitCode": 0
+    }
+  ],
+  "limits": "Unchanged. Public-build gate remains red for core ESM and aggregate ESM/CJS. Existing performance/heap checks pass; these do not certify experimental adapter performance.",
+  "next": "Fix native arrow navigation around remote caret widgets; then incremental candidate projection, large-document bounds/compaction and protocol adoption work."
+}

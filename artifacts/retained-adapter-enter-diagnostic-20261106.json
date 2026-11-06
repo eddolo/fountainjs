@@ -1,0 +1,396 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\cappu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "artifacts/retained-adapter-browser-20261106.config.ts",
+      "--grep",
+      "survives Enter",
+      "--output",
+      "artifacts/retained-adapter-enter-diagnostic-20261106"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-browser-20261106.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-adapter-enter-diagnostic-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-adapter-enter-diagnostic-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-adapter-enter-diagnostic-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/retained-adapter-browser-20261106.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "cwd": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\",
+      "command": "pnpm exec vite --config artifacts/retained-adapter-vite-20261106.config.ts",
+      "url": "http://127.0.0.1:4195/artifacts/retained-adapter-fixture-20261106.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "retained-adapter-real.spec.ts",
+      "file": "retained-adapter-real.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "native offline typing survives Enter, author undo and redo",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6600,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:14:170",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                      "column": 170,
+                      "line": 14
+                    },
+                    "snippet": "  12 |  await page.getByRole('button',{name:'Synchronize',exact:true}).click();\n  13 |  const expected=operation==='Enter'?['AlXp','ha']:['AlXpha'];\n> 14 |  await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>p.json.content.filter((n:any)=>n.type!=='image_super').map((n:any)=>text(n)));}).toEqual([expected,expected]);\n     |                                                                                                                                                                          ^\n  15 |  let peers=await snapshot(page);expect(peers[0].json).toEqual(peers[1].json);expect(peers[0].status).toBe('connected');expect(peers[0].json.attrs).toEqual({audit:'root'});expect(peers[0].json.content.at(-1).type).toBe('image_super');\n  16 |  await expect(page.locator('#ada img')).toBeVisible();expect(await page.locator('#ada img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);\n  17 |  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                        "column": 170,
+                        "line": 14
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  12 |  await page.getByRole('button',{name:'Synchronize',exact:true}).click();\n  13 |  const expected=operation==='Enter'?['AlXp','ha']:['AlXpha'];\n> 14 |  await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>p.json.content.filter((n:any)=>n.type!=='image_super').map((n:any)=>text(n)));}).toEqual([expected,expected]);\n     |                                                                                                                                                                          ^\n  15 |  let peers=await snapshot(page);expect(peers[0].json).toEqual(peers[1].json);expect(peers[0].status).toBe('connected');expect(peers[0].json.attrs).toEqual({audit:'root'});expect(peers[0].json.content.at(-1).type).toBe('image_super');\n  16 |  await expect(page.locator('#ada img')).toBeVisible();expect(await page.locator('#ada img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);\n  17 |  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:14:170"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T00:20:28.774Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "before-operation",
+                      "contentType": "application/json",
+                      "body": "ewogICJwZWVycyI6IFsKICAgIHsKICAgICAgImpzb24iOiB7CiAgICAgICAgInR5cGUiOiAiZG9jIiwKICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAiYXVkaXQiOiAicm9vdCIKICAgICAgICB9LAogICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgewogICAgICAgICAgICAidHlwZSI6ICJwYXJhZ3JhcGgiLAogICAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAgICAgICAgICAgInRleHQiOiAiQWxYcGhhIgogICAgICAgICAgICAgIH0KICAgICAgICAgICAgXQogICAgICAgICAgfSwKICAgICAgICAgIHsKICAgICAgICAgICAgInR5cGUiOiAiaW1hZ2Vfc3VwZXIiLAogICAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICAgInNyYyI6ICIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLAogICAgICAgICAgICAgICJhbHQiOiAiUmV0YWluZWQgZmlndXJlIiwKICAgICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgICAid2lkdGgiOiAiMTAwJSIsCiAgICAgICAgICAgICAgImhlaWdodCI6ICJhdXRvIiwKICAgICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgICAic3Jjc2V0IjogIiIsCiAgICAgICAgICAgICAgInNpemVzIjogIiIsCiAgICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICAgImRlY29kaW5nIjogImFzeW5jIiwKICAgICAgICAgICAgICAiY2FwdGlvbiI6ICIiCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICBdCiAgICAgIH0sCiAgICAgICJzZWxlY3Rpb24iOiB7CiAgICAgICAgInBhdGgiOiBbCiAgICAgICAgICAwLAogICAgICAgICAgMAogICAgICAgIF0sCiAgICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgICAwLAogICAgICAgICAgMAogICAgICAgIF0sCiAgICAgICAgImZyb20iOiAzLAogICAgICAgICJ0byI6IDMsCiAgICAgICAgImtpbmQiOiAidGV4dCIKICAgICAgfSwKICAgICAgInN0YXR1cyI6ICJjb25uZWN0ZWQiCiAgICB9LAogICAgewogICAgICAianNvbiI6IHsKICAgICAgICAidHlwZSI6ICJkb2MiLAogICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICJhdWRpdCI6ICJyb290IgogICAgICAgIH0sCiAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgICAiYWxpZ24iOiAibGVmdCIKICAgICAgICAgICAgfSwKICAgICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgICAidGV4dCI6ICJBbHBoYSIKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIF0KICAgICAgICAgIH0sCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0eXBlIjogImltYWdlX3N1cGVyIiwKICAgICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgICAiYWx0IjogIlJldGFpbmVkIGZpZ3VyZSIsCiAgICAgICAgICAgICAgInRpdGxlIjogIiIsCiAgICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAgICJoZWlnaHQiOiAiYXV0byIsCiAgICAgICAgICAgICAgImFsaWduIjogImNlbnRlciIsCiAgICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAgICJzaXplcyI6ICIiLAogICAgICAgICAgICAgICJsb2FkaW5nIjogImxhenkiLAogICAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICAgImNhcHRpb24iOiAiIgogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgXQogICAgICB9LAogICAgICAic2VsZWN0aW9uIjogewogICAgICAgICJwYXRoIjogWwogICAgICAgICAgMCwKICAgICAgICAgIDAKICAgICAgICBdLAogICAgICAgICJlbmRQYXRoIjogWwogICAgICAgICAgMCwKICAgICAgICAgIDAKICAgICAgICBdLAogICAgICAgICJmcm9tIjogMiwKICAgICAgICAidG8iOiAyLAogICAgICAgICJraW5kIjogInRleHQiCiAgICAgIH0sCiAgICAgICJzdGF0dXMiOiAiY29ubmVjdGVkIgogICAgfQogIF0sCiAgIm5hdGl2ZSI6IHsKICAgICJhbmNob3IiOiAicGhhIiwKICAgICJvZmZzZXQiOiAwLAogICAgImZvY3VzIjogInBoYSIsCiAgICAiZm9jdXNPZmZzZXQiOiAwCiAgfQp9"
+                    },
+                    {
+                      "name": "after-operation",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWxYcGhhIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJpbWFnZV9zdXBlciIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgImFsdCI6ICJSZXRhaW5lZCBmaWd1cmUiLAogICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAiaGVpZ2h0IjogImF1dG8iLAogICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAic2l6ZXMiOiAiIiwKICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICJjYXB0aW9uIjogIiIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIF0KICAgIH0sCiAgICAic2VsZWN0aW9uIjogewogICAgICAicGF0aCI6IFsKICAgICAgICAwLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgMCwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJmcm9tIjogMywKICAgICAgInRvIjogMywKICAgICAgImtpbmQiOiAidGV4dCIKICAgIH0sCiAgICAic3RhdHVzIjogImNvbm5lY3RlZCIKICB9LAogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWwiCiAgICAgICAgICAgIH0KICAgICAgICAgIF0KICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAicGhhIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJpbWFnZV9zdXBlciIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgImFsdCI6ICJSZXRhaW5lZCBmaWd1cmUiLAogICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAiaGVpZ2h0IjogImF1dG8iLAogICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAic2l6ZXMiOiAiIiwKICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICJjYXB0aW9uIjogIiIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIF0KICAgIH0sCiAgICAic2VsZWN0aW9uIjogewogICAgICAicGF0aCI6IFsKICAgICAgICAxLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgMSwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJmcm9tIjogMCwKICAgICAgInRvIjogMCwKICAgICAgImtpbmQiOiAidGV4dCIKICAgIH0sCiAgICAic3RhdHVzIjogImNvbm5lY3RlZCIKICB9Cl0="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                    "column": 170,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-e355a32c5ad6b5add10f",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 5,
+          "column": 75
+        },
+        {
+          "title": "native offline typing survives Enter, author undo and redo",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 9077,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:14:170",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                      "column": 170,
+                      "line": 14
+                    },
+                    "snippet": "  12 |  await page.getByRole('button',{name:'Synchronize',exact:true}).click();\n  13 |  const expected=operation==='Enter'?['AlXp','ha']:['AlXpha'];\n> 14 |  await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>p.json.content.filter((n:any)=>n.type!=='image_super').map((n:any)=>text(n)));}).toEqual([expected,expected]);\n     |                                                                                                                                                                          ^\n  15 |  let peers=await snapshot(page);expect(peers[0].json).toEqual(peers[1].json);expect(peers[0].status).toBe('connected');expect(peers[0].json.attrs).toEqual({audit:'root'});expect(peers[0].json.content.at(-1).type).toBe('image_super');\n  16 |  await expect(page.locator('#ada img')).toBeVisible();expect(await page.locator('#ada img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);\n  17 |  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                        "column": 170,
+                        "line": 14
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  12 |  await page.getByRole('button',{name:'Synchronize',exact:true}).click();\n  13 |  const expected=operation==='Enter'?['AlXp','ha']:['AlXpha'];\n> 14 |  await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>p.json.content.filter((n:any)=>n.type!=='image_super').map((n:any)=>text(n)));}).toEqual([expected,expected]);\n     |                                                                                                                                                                          ^\n  15 |  let peers=await snapshot(page);expect(peers[0].json).toEqual(peers[1].json);expect(peers[0].status).toBe('connected');expect(peers[0].json.attrs).toEqual({audit:'root'});expect(peers[0].json.content.at(-1).type).toBe('image_super');\n  16 |  await expect(page.locator('#ada img')).toBeVisible();expect(await page.locator('#ada img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);\n  17 |  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:14:170"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T00:20:36.123Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "before-operation",
+                      "contentType": "application/json",
+                      "body": "ewogICJwZWVycyI6IFsKICAgIHsKICAgICAgImpzb24iOiB7CiAgICAgICAgInR5cGUiOiAiZG9jIiwKICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAiYXVkaXQiOiAicm9vdCIKICAgICAgICB9LAogICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgewogICAgICAgICAgICAidHlwZSI6ICJwYXJhZ3JhcGgiLAogICAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAgICAgICAgICAgInRleHQiOiAiQWxYcGhhIgogICAgICAgICAgICAgIH0KICAgICAgICAgICAgXQogICAgICAgICAgfSwKICAgICAgICAgIHsKICAgICAgICAgICAgInR5cGUiOiAiaW1hZ2Vfc3VwZXIiLAogICAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICAgInNyYyI6ICIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLAogICAgICAgICAgICAgICJhbHQiOiAiUmV0YWluZWQgZmlndXJlIiwKICAgICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgICAid2lkdGgiOiAiMTAwJSIsCiAgICAgICAgICAgICAgImhlaWdodCI6ICJhdXRvIiwKICAgICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgICAic3Jjc2V0IjogIiIsCiAgICAgICAgICAgICAgInNpemVzIjogIiIsCiAgICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICAgImRlY29kaW5nIjogImFzeW5jIiwKICAgICAgICAgICAgICAiY2FwdGlvbiI6ICIiCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICBdCiAgICAgIH0sCiAgICAgICJzZWxlY3Rpb24iOiB7CiAgICAgICAgInBhdGgiOiBbCiAgICAgICAgICAwLAogICAgICAgICAgMAogICAgICAgIF0sCiAgICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgICAwLAogICAgICAgICAgMAogICAgICAgIF0sCiAgICAgICAgImZyb20iOiAzLAogICAgICAgICJ0byI6IDMsCiAgICAgICAgImtpbmQiOiAidGV4dCIKICAgICAgfSwKICAgICAgInN0YXR1cyI6ICJjb25uZWN0ZWQiCiAgICB9LAogICAgewogICAgICAianNvbiI6IHsKICAgICAgICAidHlwZSI6ICJkb2MiLAogICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICJhdWRpdCI6ICJyb290IgogICAgICAgIH0sCiAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgICAiYWxpZ24iOiAibGVmdCIKICAgICAgICAgICAgfSwKICAgICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgICAidGV4dCI6ICJBbHBoYSIKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIF0KICAgICAgICAgIH0sCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0eXBlIjogImltYWdlX3N1cGVyIiwKICAgICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgICAiYWx0IjogIlJldGFpbmVkIGZpZ3VyZSIsCiAgICAgICAgICAgICAgInRpdGxlIjogIiIsCiAgICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAgICJoZWlnaHQiOiAiYXV0byIsCiAgICAgICAgICAgICAgImFsaWduIjogImNlbnRlciIsCiAgICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAgICJzaXplcyI6ICIiLAogICAgICAgICAgICAgICJsb2FkaW5nIjogImxhenkiLAogICAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICAgImNhcHRpb24iOiAiIgogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgXQogICAgICB9LAogICAgICAic2VsZWN0aW9uIjogewogICAgICAgICJwYXRoIjogWwogICAgICAgICAgMCwKICAgICAgICAgIDAKICAgICAgICBdLAogICAgICAgICJlbmRQYXRoIjogWwogICAgICAgICAgMCwKICAgICAgICAgIDAKICAgICAgICBdLAogICAgICAgICJmcm9tIjogMiwKICAgICAgICAidG8iOiAyLAogICAgICAgICJraW5kIjogInRleHQiCiAgICAgIH0sCiAgICAgICJzdGF0dXMiOiAiY29ubmVjdGVkIgogICAgfQogIF0sCiAgIm5hdGl2ZSI6IHsKICAgICJhbmNob3IiOiAicGhhIiwKICAgICJvZmZzZXQiOiAwLAogICAgImZvY3VzIjogInBoYSIsCiAgICAiZm9jdXNPZmZzZXQiOiAwCiAgfQp9"
+                    },
+                    {
+                      "name": "after-operation",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWxYcGhhIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJpbWFnZV9zdXBlciIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgImFsdCI6ICJSZXRhaW5lZCBmaWd1cmUiLAogICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAiaGVpZ2h0IjogImF1dG8iLAogICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAic2l6ZXMiOiAiIiwKICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICJjYXB0aW9uIjogIiIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIF0KICAgIH0sCiAgICAic2VsZWN0aW9uIjogewogICAgICAicGF0aCI6IFsKICAgICAgICAwLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgMCwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJmcm9tIjogMywKICAgICAgInRvIjogMywKICAgICAgImtpbmQiOiAidGV4dCIKICAgIH0sCiAgICAic3RhdHVzIjogImNvbm5lY3RlZCIKICB9LAogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWwiCiAgICAgICAgICAgIH0KICAgICAgICAgIF0KICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAicGhhIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJpbWFnZV9zdXBlciIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgImFsdCI6ICJSZXRhaW5lZCBmaWd1cmUiLAogICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAiaGVpZ2h0IjogImF1dG8iLAogICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAic2l6ZXMiOiAiIiwKICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICJjYXB0aW9uIjogIiIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIF0KICAgIH0sCiAgICAic2VsZWN0aW9uIjogewogICAgICAicGF0aCI6IFsKICAgICAgICAxLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgMSwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJmcm9tIjogMCwKICAgICAgInRvIjogMCwKICAgICAgImtpbmQiOiAidGV4dCIKICAgIH0sCiAgICAic3RhdHVzIjogImNvbm5lY3RlZCIKICB9Cl0="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                    "column": 170,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-fa65cf709df31c73bc8b",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 5,
+          "column": 75
+        },
+        {
+          "title": "native offline typing survives Enter, author undo and redo",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 7620,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:14:170",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                      "column": 170,
+                      "line": 14
+                    },
+                    "snippet": "  12 |  await page.getByRole('button',{name:'Synchronize',exact:true}).click();\n  13 |  const expected=operation==='Enter'?['AlXp','ha']:['AlXpha'];\n> 14 |  await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>p.json.content.filter((n:any)=>n.type!=='image_super').map((n:any)=>text(n)));}).toEqual([expected,expected]);\n     |                                                                                                                                                                          ^\n  15 |  let peers=await snapshot(page);expect(peers[0].json).toEqual(peers[1].json);expect(peers[0].status).toBe('connected');expect(peers[0].json.attrs).toEqual({audit:'root'});expect(peers[0].json.content.at(-1).type).toBe('image_super');\n  16 |  await expect(page.locator('#ada img')).toBeVisible();expect(await page.locator('#ada img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);\n  17 |  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                        "column": 170,
+                        "line": 14
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m    Array [\u001b[22m\n\u001b[32m-     \"AlXp\",\u001b[39m\n\u001b[32m-     \"ha\",\u001b[39m\n\u001b[31m+     \"Al\",\u001b[39m\n\u001b[31m+     \"Xpha\",\u001b[39m\n\u001b[2m    ],\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  12 |  await page.getByRole('button',{name:'Synchronize',exact:true}).click();\n  13 |  const expected=operation==='Enter'?['AlXp','ha']:['AlXpha'];\n> 14 |  await expect.poll(async()=>{const peers=await snapshot(page);return peers.map((p:any)=>p.json.content.filter((n:any)=>n.type!=='image_super').map((n:any)=>text(n)));}).toEqual([expected,expected]);\n     |                                                                                                                                                                          ^\n  15 |  let peers=await snapshot(page);expect(peers[0].json).toEqual(peers[1].json);expect(peers[0].status).toBe('connected');expect(peers[0].json.attrs).toEqual({audit:'root'});expect(peers[0].json.content.at(-1).type).toBe('image_super');\n  16 |  await expect(page.locator('#ada img')).toBeVisible();expect(await page.locator('#ada img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);\n  17 |  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts:14:170"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T00:20:46.860Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "before-operation",
+                      "contentType": "application/json",
+                      "body": "ewogICJwZWVycyI6IFsKICAgIHsKICAgICAgImpzb24iOiB7CiAgICAgICAgInR5cGUiOiAiZG9jIiwKICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAiYXVkaXQiOiAicm9vdCIKICAgICAgICB9LAogICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgewogICAgICAgICAgICAidHlwZSI6ICJwYXJhZ3JhcGgiLAogICAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAgICAgICAgICAgInRleHQiOiAiQWxYcGhhIgogICAgICAgICAgICAgIH0KICAgICAgICAgICAgXQogICAgICAgICAgfSwKICAgICAgICAgIHsKICAgICAgICAgICAgInR5cGUiOiAiaW1hZ2Vfc3VwZXIiLAogICAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICAgInNyYyI6ICIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLAogICAgICAgICAgICAgICJhbHQiOiAiUmV0YWluZWQgZmlndXJlIiwKICAgICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgICAid2lkdGgiOiAiMTAwJSIsCiAgICAgICAgICAgICAgImhlaWdodCI6ICJhdXRvIiwKICAgICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgICAic3Jjc2V0IjogIiIsCiAgICAgICAgICAgICAgInNpemVzIjogIiIsCiAgICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICAgImRlY29kaW5nIjogImFzeW5jIiwKICAgICAgICAgICAgICAiY2FwdGlvbiI6ICIiCiAgICAgICAgICAgIH0KICAgICAgICAgIH0KICAgICAgICBdCiAgICAgIH0sCiAgICAgICJzZWxlY3Rpb24iOiB7CiAgICAgICAgInBhdGgiOiBbCiAgICAgICAgICAwLAogICAgICAgICAgMAogICAgICAgIF0sCiAgICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgICAwLAogICAgICAgICAgMAogICAgICAgIF0sCiAgICAgICAgImZyb20iOiAzLAogICAgICAgICJ0byI6IDMsCiAgICAgICAgImtpbmQiOiAidGV4dCIKICAgICAgfSwKICAgICAgInN0YXR1cyI6ICJjb25uZWN0ZWQiCiAgICB9LAogICAgewogICAgICAianNvbiI6IHsKICAgICAgICAidHlwZSI6ICJkb2MiLAogICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICJhdWRpdCI6ICJyb290IgogICAgICAgIH0sCiAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgICAiYWxpZ24iOiAibGVmdCIKICAgICAgICAgICAgfSwKICAgICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgICAidGV4dCI6ICJBbHBoYSIKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIF0KICAgICAgICAgIH0sCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0eXBlIjogImltYWdlX3N1cGVyIiwKICAgICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgICAiYWx0IjogIlJldGFpbmVkIGZpZ3VyZSIsCiAgICAgICAgICAgICAgInRpdGxlIjogIiIsCiAgICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAgICJoZWlnaHQiOiAiYXV0byIsCiAgICAgICAgICAgICAgImFsaWduIjogImNlbnRlciIsCiAgICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAgICJzaXplcyI6ICIiLAogICAgICAgICAgICAgICJsb2FkaW5nIjogImxhenkiLAogICAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICAgImNhcHRpb24iOiAiIgogICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICAgXQogICAgICB9LAogICAgICAic2VsZWN0aW9uIjogewogICAgICAgICJwYXRoIjogWwogICAgICAgICAgMCwKICAgICAgICAgIDAKICAgICAgICBdLAogICAgICAgICJlbmRQYXRoIjogWwogICAgICAgICAgMCwKICAgICAgICAgIDAKICAgICAgICBdLAogICAgICAgICJmcm9tIjogMiwKICAgICAgICAidG8iOiAyLAogICAgICAgICJraW5kIjogInRleHQiCiAgICAgIH0sCiAgICAgICJzdGF0dXMiOiAiY29ubmVjdGVkIgogICAgfQogIF0sCiAgIm5hdGl2ZSI6IHsKICAgICJhbmNob3IiOiAicGhhIiwKICAgICJvZmZzZXQiOiAwLAogICAgImZvY3VzIjogInBoYSIsCiAgICAiZm9jdXNPZmZzZXQiOiAwCiAgfQp9"
+                    },
+                    {
+                      "name": "after-operation",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWxYcGhhIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJpbWFnZV9zdXBlciIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgImFsdCI6ICJSZXRhaW5lZCBmaWd1cmUiLAogICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAiaGVpZ2h0IjogImF1dG8iLAogICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAic2l6ZXMiOiAiIiwKICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICJjYXB0aW9uIjogIiIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIF0KICAgIH0sCiAgICAic2VsZWN0aW9uIjogewogICAgICAicGF0aCI6IFsKICAgICAgICAwLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgMCwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJmcm9tIjogMywKICAgICAgInRvIjogMywKICAgICAgImtpbmQiOiAidGV4dCIKICAgIH0sCiAgICAic3RhdHVzIjogImNvbm5lY3RlZCIKICB9LAogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWwiCiAgICAgICAgICAgIH0KICAgICAgICAgIF0KICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAicGhhIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJpbWFnZV9zdXBlciIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwKICAgICAgICAgICAgImFsdCI6ICJSZXRhaW5lZCBmaWd1cmUiLAogICAgICAgICAgICAidGl0bGUiOiAiIiwKICAgICAgICAgICAgIndpZHRoIjogIjEwMCUiLAogICAgICAgICAgICAiaGVpZ2h0IjogImF1dG8iLAogICAgICAgICAgICAiYWxpZ24iOiAiY2VudGVyIiwKICAgICAgICAgICAgInNyY3NldCI6ICIiLAogICAgICAgICAgICAic2l6ZXMiOiAiIiwKICAgICAgICAgICAgImxvYWRpbmciOiAibGF6eSIsCiAgICAgICAgICAgICJkZWNvZGluZyI6ICJhc3luYyIsCiAgICAgICAgICAgICJjYXB0aW9uIjogIiIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIF0KICAgIH0sCiAgICAic2VsZWN0aW9uIjogewogICAgICAicGF0aCI6IFsKICAgICAgICAxLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImVuZFBhdGgiOiBbCiAgICAgICAgMSwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJmcm9tIjogMCwKICAgICAgInRvIjogMCwKICAgICAgImtpbmQiOiAidGV4dCIKICAgIH0sCiAgICAic3RhdHVzIjogImNvbm5lY3RlZCIKICB9Cl0="
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-adapter-enter-diagnostic-20261106\\retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\retained-adapter-real.spec.ts",
+                    "column": 170,
+                    "line": 14
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-aed9c44584c596b13b05",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 5,
+          "column": 75
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-06T00:20:26.864Z",
+    "duration": 28038.68,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { writeFile } from 'node:fs/promises';
+const mode=process.argv[2]??'es',require=createRequire(import.meta.url);
+const Y=mode==='cjs'?require('yjs'):await import('yjs');
+const load=name=>mode==='cjs'?require(`./retained-adapter-build-20261106/${name}.cjs`):import(`./retained-adapter-build-20261106/${name}.js`);
+const engine=await load('engine'),{createRetainedYjsCollaborationExtension}=await load('retained-adapter');
+assert.equal(typeof globalThis.document,'undefined');assert.equal(typeof globalThis.window,'undefined');
+const {CoreExtension,composeExtensions,createEditor,Selection,insertText,toggleQuote,toggleList,setMark,splitBlock,undoCollaboration,redoCollaboration,getCollaborationState}=engine;
+const source={type:'doc',attrs:{audit:'root'},content:[{type:'paragraph',content:[{type:'text',text:'Alpha'}]},{type:'image_super',attrs:{src:'/figure.png',alt:'Figure'}}]};
+let passed=0;
+for(const reverse of [false,true])for(const kind of ['quote','bullet','ordered','task','mark','split']){
+ const a=new Y.Doc(),b=new Y.Doc();const create=(document,id)=>{const kit=composeExtensions([CoreExtension,createRetainedYjsCollaborationExtension({document,captureTimeout:0,user:{id,name:id,color:'#7048e8'}})]);return createEditor({schema:kit.schema,plugins:kit.plugins,content:source})};
+ const left=create(a,'left');Y.applyUpdate(b,Y.encodeStateAsUpdate(a));const right=create(b,'right');
+ const sync=()=>{const aa=Y.encodeStateAsUpdate(a),bb=Y.encodeStateAsUpdate(b);if(reverse){Y.applyUpdate(b,aa);Y.applyUpdate(a,bb)}else{Y.applyUpdate(a,bb);Y.applyUpdate(b,aa)}assert.deepEqual(left.getJSON(),right.getJSON());for(const editor of [left,right])assert.equal(getCollaborationState(editor)?.status,'connected')};
+ try{left.dispatch(left.createTransaction().setSelection(Selection.cursor([0,0],2)));assert.equal(insertText(left,'X'),true);right.dispatch(right.createTransaction().setSelection(kind==='mark'?Selection.range([0,0],1,[0,0],4):Selection.cursor([0,0],3)));
+ assert.equal(kind==='quote'?toggleQuote(right):kind==='mark'?setMark(right,'strong'):kind==='split'?splitBlock(right):toggleList(right,kind),true);sync();
+ if(kind==='split')assert.deepEqual(left.state.doc.content.slice(0,2).map(n=>n.textContent),['AlXp','ha']);else assert.equal(left.state.doc.child(0).textContent,'AlXpha');
+ const final=left.getJSON();assert.deepEqual(final.attrs,{audit:'root'});assert.equal(final.content.at(-1).type,'image_super');assert.equal(JSON.stringify(final).includes('"$f"'),false);
+ assert.equal(undoCollaboration(right),true);sync();assert.equal(left.state.doc.child(0).textContent,'AlXpha');assert.equal(left.state.doc.child(0).type.name,'paragraph');assert.equal(redoCollaboration(right),true);sync();assert.deepEqual(left.getJSON(),final);passed++;
+ }finally{left.destroy();right.destroy();a.destroy();b.destroy()}
+}
+const receipt={format:mode,passed,domRequired:false,runtime:'Node '+process.version,note:'Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls.'};
+await writeFile(new URL(`./retained-adapter-node-${mode}-20261106.json`,import.meta.url),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));

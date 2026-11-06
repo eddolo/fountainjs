@@ -94,6 +94,7 @@ function decodeAttributes(value: unknown, lookup: (client: number, clock: number
 export class RetainedTextStore {
   readonly metadata: Y.Map<unknown>;
   readonly scope: readonly Y.Map<unknown>[];
+  readonly observed: readonly Y.Map<unknown>[];
   private readonly texts: Y.Map<unknown>;
   private readonly owners: Y.Map<unknown>;
   private readonly styles: Y.Map<unknown>;
@@ -117,6 +118,7 @@ export class RetainedTextStore {
     // Immutable style definitions are metadata. Undoing the insertion that
     // first introduced a style must not strand another insertion's reference.
     this.scope = Object.freeze([this.texts, this.owners]);
+    this.observed = Object.freeze([...this.scope, this.metadata, this.styles]);
     this.metadata.observeDeep(this.invalidate);
     this.scope.forEach(type => type.observeDeep(this.invalidate));
     this.styles.observeDeep(this.invalidate);

@@ -700,6 +700,9 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
+    if (this.fragment.toArray().some(root => !isSharedElement(root))) {
+      throw new Error('Incompatible shared root; refusing legacy writes without overwriting shared data.');
+    }
     this.structuredAttributes?.overlay(update.before);
     this.structuredAttributes?.validate(update.document);
     const root = this.fragment.get(0);

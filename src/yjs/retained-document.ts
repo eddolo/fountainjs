@@ -34,16 +34,31 @@ function format(node: Node, leaf: string): Record<string, string> {
   result[ORDER] = JSON.stringify(order); return result;
 }
 
+export function validateRetainedDocument(document: Node, schema: Schema): void {
+  if (document.type.schema !== schema) throw new Error('Retained document belongs to another schema.');
+  let nodes = 0, characters = 0;
+  document.descendants((node, path) => {
+    if (++nodes > 100_000 || path.length > 100 || (characters += node.text?.length ?? 0) > 10_000_000) throw new RangeError('Retained document is too large.');
+    validateRetainedMetadata(node.attrs); validateRetainedMetadata(node.marks.map(mark => mark.toJSON()));
+    if (node.type.name.length > 200 || Object.keys(node.attrs).length > 1_000 || Object.keys(node.attrs).some(name => name.length > 200)) throw new RangeError('Retained node metadata exceeds the candidate storage bounds.');
+    if (node.isText) validateRetainedTextFormat(format(node, 'preflight'));
+  });
+  schema.validate(document);
+}
+
 /** Candidate model/CRDT bridge. Not registered with the public Yjs adapter yet. */
 export class RetainedDocumentStore {
   readonly nodes: RetainedNodeStore;
   readonly text: RetainedTextStore;
   readonly scope: readonly (Y.Map<unknown> | Y.Array<unknown>)[];
+  readonly observed: readonly (Y.Map<unknown> | Y.Array<unknown>)[];
   private readonly metadata: Y.Map<unknown>;
   private readonly splits: Y.Map<unknown>;
   private model?: Node;
   private nodePaths = new Map<string, string>();
   private textPaths = new Map<string, Binding[]>();
+  private identityPaths = new Map<string, readonly number[]>();
+  private partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
   private leafPaths = new Map<string, string>();
   private groups = new Map<string, GroupState>();
   private graph?: RetainedNodeProjection;
@@ -56,6 +71,27 @@ export class RetainedDocumentStore {
     this.text = new RetainedTextStore(document, `${name}-text`, origin);
     this.splits = document.getMap(`${name}:splits`);
     this.scope = [...this.nodes.scope, ...this.text.scope, this.splits];
+    this.observed = [...new Set([...this.scope, this.metadata, this.nodes.metadata, ...this.text.observed])];
+  }
+
+  get initialized(): boolean { return this.metadata.get('seeded') === true; }
+  identity(path: readonly number[]): string | undefined { return this.nodePaths.get(pathKey(path)); }
+  path(identity: string): readonly number[] | undefined { return this.identityPaths.get(identity); }
+
+  textAnchor(path: readonly number[], offset: number, association: -1 | 1): unknown {
+    const entries = this.textPaths.get(pathKey(path));
+    const ordered = association < 0 ? entries : entries && [...entries].reverse();
+    const binding = ordered?.find(entry => offset >= entry.modelFrom && offset <= entry.modelFrom + entry.length);
+    if (!binding) throw new Error('Text selection is outside the retained document.');
+    return this.text.relative(binding.id, binding.from + offset - binding.modelFrom, association);
+  }
+
+  resolveTextAnchor(value: unknown): { path: readonly number[]; offset: number } | undefined {
+    const point = this.text.resolve(value);
+    if (!point) return undefined;
+    const entries = this.partitionPaths.get(point.id), ordered = point.association < 0 ? entries : entries && [...entries].reverse();
+    const match = ordered?.find(({ binding }) => point.offset >= binding.from && point.offset <= binding.from + binding.length);
+    return match ? { path: match.path, offset: match.binding.modelFrom + point.offset - match.binding.from } : undefined;
   }
 
   private splitPlacement(id: string): SplitPlacement | undefined {
@@ -86,15 +122,7 @@ export class RetainedDocumentStore {
   }
 
   private validate(document: Node): void {
-    if (document.type.schema !== this.schema) throw new Error('Retained document belongs to another schema.');
-    let nodes = 0, characters = 0;
-    document.descendants((node, path) => {
-      if (++nodes > 100_000 || path.length > 100 || (characters += node.text?.length ?? 0) > 10_000_000) throw new RangeError('Retained document is too large.');
-      validateRetainedMetadata(node.attrs); validateRetainedMetadata(node.marks.map(mark => mark.toJSON()));
-      if (node.type.name.length > 200 || Object.keys(node.attrs).length > 1_000 || Object.keys(node.attrs).some(name => name.length > 200)) throw new RangeError('Retained node metadata exceeds the candidate storage bounds.');
-      if (node.isText) validateRetainedTextFormat(format(node, 'preflight'));
-    });
-    this.schema.validate(document);
+    validateRetainedDocument(document, this.schema);
   }
 
   private metadataFor(id: string, before: { type: string; attrs?: Attributes; marks?: readonly MarkJSON[] } | undefined, after: Node): void {
@@ -208,6 +236,15 @@ export class RetainedDocumentStore {
       fragment.children?.forEach((child, index) => bind(child, [...path, index]));
     };
     bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.leafPaths = leafPaths;
+    this.identityPaths = new Map([...nodePaths].map(([path, id]) => [id, Object.freeze(path ? path.split('.').map(Number) : [])]));
+    const partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
+    for (const [key, bindings] of textPaths) {
+      const path = Object.freeze(key.split('.').map(Number));
+      for (const binding of bindings) {
+        const entries = partitionPaths.get(binding.id) ?? []; entries.push({ path, binding }); partitionPaths.set(binding.id, entries);
+      }
+    }
+    this.partitionPaths = partitionPaths;
     this.groups = groupStates; this.graph = projection.root; this.model = result.node;
     return result.node;
   }
@@ -419,5 +456,5 @@ export class RetainedDocumentStore {
     this.model = after;
   }
 
-  destroy(): void { this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); }
+  destroy(): void { this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
 }

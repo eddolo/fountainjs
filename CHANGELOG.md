@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Integrate the unexported retained-Yjs candidate with the real collaboration
+  lifecycle, selection bookmarks, author history, awareness and granular
+  attributes. Preserve copied-container position maps and refuse legacy writes
+  into unfamiliar shared roots. Full source tests retain six default-adapter
+  failures; native browser testing preserves a newly found remote-cursor arrow
+  regression. No default switch or release. See the
+  [adapter work](docs/YJS_RETAINED_ADAPTER_WORK_IN_PROGRESS.md).
+
 - Reduce storage and repeated format-decoding cost in the isolated retained-Yjs
   candidate using shared style definitions and exact wire-match caching. Keep
   deletion/undo checks, validate missing references and saved state, and record
