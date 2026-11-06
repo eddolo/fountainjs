@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse weakly owned immutable retained-document portability and subtree bounds.
+  Count every repeated occurrence and its actual depth; retain current schema
+  validation, type-name inventory checks and live host serializer/mutable-value
+  handling. Inspect serializer eligibility without invoking prototype getters.
+  Add bound, mutation and schema-delegation regressions. Normalization, planning,
+  storage/history growth and safe adoption remain unfinished.
+
 - Reuse a privately checked retained-Yjs shared frame only across eligible clean
   native text edits. Reread the entire changed stream, check unchanged outside
   types/styles, retain fresh factory/model rules, track insertion and deletion

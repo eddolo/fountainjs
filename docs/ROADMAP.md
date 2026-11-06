@@ -1,5 +1,22 @@
 # FountainJS opportunity roadmap
 
+Retained portability preflight (2026-11-06, local): weakly certify immutable
+subtree portability and aggregate bounds, while checking the current schema's
+type inventory and retaining live schema/factory checks. Every occurrence still
+contributes nodes, characters and actual depth. Host serializers and mutable
+values retain live evaluation; eligibility inspection does not invoke getters.
+All 290 candidate cases pass; refreshed full source has 4,436 passes and the
+same six required default failures across 289 files without skips. All 99 recorded browser, 36 compiled Node
+and 28 compatibility journeys pass; 171 public runtime/CSS files stay identical.
+Three-trial local edit medians improve from 9.79/51.65/106.44 to
+7.38/43.70/89.49 ms at 1k/5k/10k paragraphs with matching document/shared hashes.
+JSON serializations fall from 40,037 to 10,043 in the separate 5k work probe.
+Initialization is mixed, receiver timings unchanged and the memory diagnostic
+adds about 0.25 MiB for the tested pair. Normalization, planning, remote
+acquisition, storage/history growth, migration, size acceptance
+and complete fresh release CI remain open. No public adapter switch or release.
+[Audit](YJS_RETAINED_PORTABLE_BOUNDS_AUDIT.md).
+
 Checked retained shared projection (2026-11-06, local): separate acquisition
 from normalization and retain a private checked shared frame only across proven
 local native text edits. Reread the complete affected stream, preserve every

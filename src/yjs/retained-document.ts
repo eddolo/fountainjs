@@ -1,6 +1,7 @@
 import type * as Y from 'yjs';
 import type { Attributes, Mark, MarkJSON, NodeType, Schema } from '../core/schema';
 import { Node } from '../core/schema/node';
+import { Mark as ModelMark } from '../core/schema/mark';
 import { computeAttrs, isDeeplyImmutable } from '../core/schema/attributes';
 import { freezeAttributes } from '../core/schema/node-spec';
 import { Mapping } from '../core/transaction/mapping';
@@ -72,13 +73,69 @@ function format(node: Node, leaf: string): Record<string, string> {
 export function validateRetainedDocument(document: Node, schema: Schema): void {
   if (document.type.schema !== schema) throw new Error('Retained document belongs to another schema.');
   let nodes = 0, characters = 0;
-  document.descendants((node, path) => {
-    if (++nodes > 100_000 || path.length > 100 || (characters += node.text?.length ?? 0) > 10_000_000) throw new RangeError('Retained document is too large.');
+  const names = new Map<NamedType, string>();
+  let reusable = true;
+  for (const type of [...Object.values(schema.nodes), ...Object.values(schema.marks)]) {
+    const descriptor = Object.getOwnPropertyDescriptor(type, 'name');
+    if (!descriptor || !Object.hasOwn(descriptor, 'value') || typeof descriptor.value !== 'string') reusable = false;
+    else names.set(type, descriptor.value);
+  }
+  let certified = portableSchemas.get(schema);
+  if (!certified || certified.names.size !== names.size || [...names].some(([type, name]) => certified!.names.get(type) !== name)) {
+    certified = { names, bounds: new WeakMap() }; portableSchemas.set(schema, certified);
+  }
+  const standardSerialization = (): boolean => {
+    const serializer = Object.getOwnPropertyDescriptor(ModelMark.prototype, 'toJSON');
+    return !('toJSON' in Object.prototype) && !('toJSON' in Array.prototype) && !!serializer
+      && Object.hasOwn(serializer, 'value') && serializer.value === nativeMarkJSON;
+  };
+  const visit = (node: Node, depth: number): PortableBounds => {
+    const cached = reusable && standardSerialization() ? certified.bounds.get(node) : undefined;
+    if (cached) {
+      if ((nodes += cached.nodes) > 100_000 || depth + cached.height > 100 || (characters += cached.characters) > 10_000_000) throw new RangeError('Retained document is too large.');
+      return cached;
+    }
+    if (++nodes > 100_000 || depth > 100 || (characters += node.text?.length ?? 0) > 10_000_000) throw new RangeError('Retained document is too large.');
     validateRetainedMetadata(node.attrs); validateRetainedMetadata(node.marks.map(mark => mark.toJSON()));
     if (node.type.name.length > 200 || Object.keys(node.attrs).length > 1_000 || Object.keys(node.attrs).some(name => name.length > 200)) throw new RangeError('Retained node metadata exceeds the candidate storage bounds.');
     if (node.isText) validateRetainedTextFormat(format(node, 'preflight'));
-  });
+    let count = 1, text = node.text?.length ?? 0, height = 0;
+    let cacheable = reusable && standardSerialization() && names.get(node.type) === node.type.name && Object.getPrototypeOf(node) === Node.prototype && Object.isFrozen(node)
+      && (node.text === undefined || typeof node.text === 'string')
+      && frozenJSON(node.attrs) && node.marks.every(mark => names.get(mark.type) === mark.type.name
+        && Object.getPrototypeOf(mark) === ModelMark.prototype && Object.isFrozen(mark) && frozenJSON(mark.attrs));
+    // Host serializers may mutate type names or global serialization behavior.
+    // After one uncacheable value, keep the rest of this evaluation fully live.
+    if (!cacheable) reusable = false;
+    for (const child of node.content) {
+      const bounds = visit(child, depth + 1); count += bounds.nodes; text += bounds.characters; height = Math.max(height, bounds.height + 1);
+      cacheable &&= bounds.cacheable;
+    }
+    cacheable &&= reusable;
+    const bounds = { nodes: count, characters: text, height, cacheable };
+    if (cacheable) certified.bounds.set(node, bounds);
+    return bounds;
+  };
+  visit(document, 0);
   schema.validate(document);
+}
+
+type NamedType = { readonly name: string };
+interface PortableBounds {
+  readonly nodes: number;
+  readonly characters: number;
+  readonly height: number;
+  readonly cacheable: boolean;
+}
+// Weak keys retain no document snapshots. This certifies only immutable data
+// portability and aggregate bounds; live schema/factory rules remain separate.
+const portableSchemas = new WeakMap<Schema, { names: ReadonlyMap<NamedType, string>; bounds: WeakMap<Node, PortableBounds> }>();
+const nativeMarkJSON = Object.getOwnPropertyDescriptor(ModelMark.prototype, 'toJSON')?.value;
+function frozenJSON(value: unknown): boolean {
+  if (value === null || typeof value !== 'object') return true;
+  const prototype = Object.getPrototypeOf(value);
+  return Object.isFrozen(value) && (Array.isArray(value) ? prototype === Array.prototype : prototype === null || prototype === Object.prototype)
+    && Object.values(value).every(frozenJSON);
 }
 
 /** Candidate model/CRDT bridge. Not registered with the public Yjs adapter yet. */

@@ -1,5 +1,22 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local portability-bound follow-up, 2026-11-06: reuse weakly owned immutable
+metadata/bounds facts while retaining current schema delegation, type-name
+inventory checks and live handling of host serializers/mutable values. Reused
+subtrees count at every occurrence and their actual new depth. All 290 candidate
+cases pass; refreshed full source has 4,436 passes and the same six required
+default failures across 289 files without skips. All 99 recorded browser,
+36 compiled Node and 28 compatibility journeys pass; public runtime/CSS stays
+byte-identical. Controlled local medians improve from 9.79/51.65/106.44 to
+7.38/43.70/89.49 ms at 1k/5k/10k paragraphs, with identical document/shared hashes.
+JSON serializations fall 40,037→10,043 in a separate 5k edit; receiver timings
+are unchanged and the paired memory diagnostic adds about 0.25 MiB.
+Model normalization/planning,
+remote acquisition, storage/history growth, compaction, migration, size acceptance
+and complete fresh release CI remain open. COLLAB-01 stays Partial; no default
+switch, publication or overall parity claim.
+[Audit](YJS_RETAINED_PORTABLE_BOUNDS_AUDIT.md).
+
 Local checked-frame follow-up, 2026-11-06: reuse previously checked shared
 records only for a clean eligible native text transaction, with a fresh complete
 edited-stream read, unchanged-outside proof, fresh model rules, deletion-aware

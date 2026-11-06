@@ -1,0 +1,14 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "retained-portable-bounds-baseline-20261106-build",
+  "blocks": 5000,
+  "warmups": 2,
+  "instrumentedEdits": 1,
+  "jsonStringifyCallsDuringEdit": 40037,
+  "documentMatchesPlain": true,
+  "documentSha256": "bbbe6e1ce6380ab886699bae6aed35ad6afb12e5376e85e0e1c09ebc4b53b59e",
+  "sharedBytes": 9308204,
+  "sharedSha256": "d26db182bfa34a66b08093d11736b48e21f5ec7e3c4f5f5942af8350aa698067",
+  "domRequired": false,
+  "note": "Counts actual JSON.stringify invocations during one real adapter edit. Restores JSON.stringify before correctness checks. Instrumented counts are separate from uninstrumented latency measurements."
+}

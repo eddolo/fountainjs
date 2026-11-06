@@ -3,7 +3,8 @@ import { expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Schema, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
   type NodeJSON, type Transaction } from '../src';
-import { RetainedDocumentStore } from '../src/yjs/retained-document';
+import { RetainedDocumentStore, validateRetainedDocument } from '../src/yjs/retained-document';
+import { Mark as ModelMark } from '../src/core/schema/mark';
 import { ReplaceTextStep } from '../src/core/transaction/replace-text-step';
 import { StepMap, textPointToPosition } from '../src/core/transaction/mapping';
 import { getNodeAtPath } from '../src/core/transaction/path';
@@ -42,6 +43,112 @@ function peers(content = source, reverseIDs = false) {
     else { Y.applyUpdate(left.doc, b, 'peer'); Y.applyUpdate(doc, a, 'peer'); }
   }, destroy: () => { left.destroy(); editor.destroy(); store.destroy(); doc.destroy(); } };
 }
+
+function boundsSchema() {
+  return new Schema({ nodes: { doc: { content: 'block*' }, text: { group: 'inline' },
+    paragraph: { group: 'block', content: 'inline*' }, box: { group: 'block', content: 'block*' }, leaf: { group: 'block', atom: true } },
+    marks: { strong: {} } });
+}
+
+it('counts a reused portable subtree at its actual new depth', () => {
+  const schema = boundsSchema(); let branch = schema.node('leaf');
+  for (let index = 0; index < 99; index++) branch = schema.node('box', {}, [branch]);
+  const original = schema.node('doc', {}, [branch]); validateRetainedDocument(original, schema);
+  expect(() => validateRetainedDocument(original.copy([schema.node('box', {}, [branch])]), schema)).toThrow('Retained document is too large.');
+});
+
+it('counts every occurrence of a reused portable subtree toward the node limit', () => {
+  const schema = boundsSchema(), leaf = schema.node('leaf'), branch = schema.node('box', {}, Array(9999).fill(leaf));
+  validateRetainedDocument(schema.node('doc', {}, [branch]), schema);
+  validateRetainedDocument(schema.node('doc', {}, Array(9).fill(branch)), schema);
+  expect(() => validateRetainedDocument(schema.node('doc', {}, Array(10).fill(branch)), schema)).toThrow('Retained document is too large.');
+});
+
+it('counts cached text occurrences and new text against the unchanged character limit', () => {
+  const schema = boundsSchema(), text = schema.text('x'.repeat(1_000_000)), paragraph = schema.node('paragraph', {}, Array(10).fill(text));
+  validateRetainedDocument(schema.node('doc', {}, [paragraph]), schema);
+  expect(() => validateRetainedDocument(schema.node('doc', {}, [paragraph, schema.node('paragraph', {}, [schema.text('x')])]), schema)).toThrow('Retained document is too large.');
+});
+
+it('invalidates portable summaries when a retained node type name changes', () => {
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('leaf')]), type = schema.nodes.leaf as { name: string }, name = type.name;
+  validateRetainedDocument(document, schema);
+  try { type.name = 'x'.repeat(201); expect(() => validateRetainedDocument(document, schema)).toThrow('Retained node metadata exceeds the candidate storage bounds.'); }
+  finally { type.name = name; }
+  validateRetainedDocument(document, schema);
+});
+
+it('invalidates portable text summaries when a mark name exceeds the wire key limit', () => {
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Alpha', [schema.mark('strong')])])]);
+  const type = schema.marks.strong as { name: string }, name = type.name; validateRetainedDocument(document, schema);
+  try { type.name = 'm'.repeat(600); expect(() => validateRetainedDocument(document, schema)).toThrow('Invalid retained text attribute.'); }
+  finally { type.name = name; }
+  validateRetainedDocument(document, schema);
+});
+
+it('keeps live host-array serialization outside the portable summary cache', () => {
+  let oversized = false;
+  class HostArray extends Array<number> { toJSON() { return oversized ? 'x'.repeat(1_000_001) : [1, 2]; } }
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('leaf', { values: new HostArray(1, 2) })]);
+  validateRetainedDocument(document, schema); oversized = true;
+  expect(() => validateRetainedDocument(document, schema)).toThrow('Retained node value is too large.');
+});
+
+it('keeps later cached nodes live when a host serializer changes their type name', () => {
+  const schema = boundsSchema(), type = schema.nodes.leaf as { name: string }, originalName = type.name;
+  let armed = false;
+  class HostArray extends Array<number> { toJSON() { if (armed) type.name = 'x'.repeat(201); return [1, 2]; } }
+  const leaf = schema.node('leaf'); validateRetainedDocument(schema.node('doc', {}, [leaf]), schema);
+  const changed = schema.node('doc', {}, [schema.node('box', { values: new HostArray(1, 2) }), leaf]);
+  try { armed = true; expect(() => validateRetainedDocument(changed, schema)).toThrow('Retained node metadata exceeds the candidate storage bounds.'); }
+  finally { type.name = originalName; }
+});
+
+it('keeps custom mark serializers outside the portable summary cache', () => {
+  let oversized = false;
+  class HostMark extends ModelMark { override toJSON() { return oversized ? { type: this.type.name, attrs: { payload: 'x'.repeat(1_000_001) } } : super.toJSON(); } }
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Alpha', [new HostMark(schema.marks.strong)])])]);
+  validateRetainedDocument(document, schema); oversized = true;
+  expect(() => validateRetainedDocument(document, schema)).toThrow('Retained node value is too large.');
+});
+
+it('does not certify mutable untyped text payloads as immutable character bounds', () => {
+  const schema = boundsSchema(), payload = { length: 4 }, text = schema.nodes.text.create({}, [], payload as unknown as string);
+  const document = schema.node('doc', {}, [schema.node('paragraph', {}, [text])]);
+  validateRetainedDocument(document, schema); payload.length = 10_000_001;
+  expect(() => validateRetainedDocument(document, schema)).toThrow('Retained document is too large.');
+});
+
+it('rechecks live mark serialization after a prototype serializer changes', () => {
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('paragraph', {}, [schema.text('Alpha', [schema.mark('strong')])])]);
+  validateRetainedDocument(document, schema); const serialize = ModelMark.prototype.toJSON;
+  try {
+    ModelMark.prototype.toJSON = function () { return { type: this.type.name, attrs: { payload: 'x'.repeat(1_000_001) } }; };
+    expect(() => validateRetainedDocument(document, schema)).toThrow('Retained node value is too large.');
+  } finally { ModelMark.prototype.toJSON = serialize; }
+});
+
+it('inspects serializer eligibility without invoking a prototype getter', () => {
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('leaf')]); validateRetainedDocument(document, schema);
+  const descriptor = Object.getOwnPropertyDescriptor(ModelMark.prototype, 'toJSON')!; let calls = 0;
+  try {
+    Object.defineProperty(ModelMark.prototype, 'toJSON', { configurable: true, get: () => { calls++; return descriptor.value; } });
+    validateRetainedDocument(document, schema); expect(calls).toBe(0);
+  } finally { Object.defineProperty(ModelMark.prototype, 'toJSON', descriptor); }
+});
+
+it('always invokes the supplied schema after portable metadata has been certified', () => {
+  const schema = boundsSchema(), document = schema.node('doc', {}, [schema.node('leaf')]); validateRetainedDocument(document, schema);
+  const policy = vi.spyOn(schema, 'validate').mockImplementation(() => { throw new Error('Host validation policy'); });
+  try { expect(() => validateRetainedDocument(document, schema)).toThrow('Host validation policy'); }
+  finally { policy.mockRestore(); }
+});
+
+it('validates newly introduced metadata even when sibling portable subtrees are certified', () => {
+  const schema = boundsSchema(), sibling = schema.node('leaf'), document = schema.node('doc', {}, [sibling]); validateRetainedDocument(document, schema);
+  const changed = document.copy([sibling, schema.node('leaf', { unsupported: () => true })]);
+  expect(() => validateRetainedDocument(changed, schema)).toThrow('Retained metadata must be portable JSON.');
+});
 
 it('reuses unchanged immutable model branches after fresh projection and retains changed bindings', () => {
   const pair = fixture({ ...source, content: [source.content![0], { type: 'paragraph', content: [{ type: 'text', text: 'Beta', marks: [{ type: 'strong' }] }] }, source.content![1]] });
