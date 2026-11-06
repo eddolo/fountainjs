@@ -1,5 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local node-read follow-up, 2026-11-06: operation-local records/placements avoid
+duplicate reads without retaining a cache between projections. All 239 candidate
+cases, 36 compiled Node journeys, 28 compatibility journeys and 96 recorded
+browser journeys pass. The fresh complete source suite has 4,385 passes and
+the same six default-adapter failures across 289 files, with no skips. Controlled
+editing timings are mixed; full projection, history growth, compaction, migration,
+three size overruns and complete fresh CI remain open. COLLAB-01 stays Partial;
+no adoption, release or overall parity claim. [Audit](YJS_RETAINED_NODE_READ_AUDIT.md).
+
 Local comparison/planning follow-up, 2026-11-06: portable equality avoids sorted
 document copies and a single-step edit reuses its preflight plan. All 230
 candidate cases, 36 compiled Node journeys, 28 compatibility/history journeys

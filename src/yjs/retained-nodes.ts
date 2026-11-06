@@ -335,12 +335,33 @@ export class RetainedNodeStore {
 
   project(): { readonly root: RetainedNodeProjection; readonly issues: readonly RetainedNodeIssue[] } {
     this.valid();
-    const issues: RetainedNodeIssue[] = [], parents = new Map<string, string>(), lifted = new Set<string>();
-    const alive = [...this.nodes.keys()].filter(nodeId => {
+    // One synchronous projection repeatedly encounters the same records and
+    // placements while resolving ownership and then walking the visible tree.
+    // Share those reads only within this call; the next call must see pending
+    // writes even before a caller-owned Yjs transaction has finished.
+    const records = new Map<string, Y.Map<unknown>>(), placements = new Map<string, Placement | undefined>(), alive: string[] = [];
+    for (const [nodeId, record] of this.nodes) {
       if (!id(nodeId) || nodeId === ROOT) throw new Error('Invalid retained node identity.');
-      return this.readRecord(nodeId).get('deleted') !== true;
-    }).sort();
-    for (const nodeId of alive) { const placement = this.placement(nodeId); if (placement) parents.set(nodeId, placement.parent); }
+      if (!(record instanceof Y.Map)) throw new Error('Unknown retained node.');
+      records.set(nodeId, record);
+      if (record.get('deleted') !== true) alive.push(nodeId);
+    }
+    records.set(ROOT, this.root); alive.sort();
+    const recordFor = (nodeId: string): Y.Map<unknown> => {
+      const record = records.get(nodeId);
+      if (!record) throw new Error('Unknown retained node.');
+      return record;
+    };
+    const placementFor = (nodeId: string): Placement | undefined => {
+      if (placements.has(nodeId)) return placements.get(nodeId);
+      const placement = this.placement(nodeId);
+      // Stale/unknown references still need validation, but must not grow this
+      // temporary map beyond the bounded node pool.
+      if (records.has(nodeId)) placements.set(nodeId, placement);
+      return placement;
+    };
+    const issues: RetainedNodeIssue[] = [], parents = new Map<string, string>(), lifted = new Set<string>();
+    for (const nodeId of alive) { const placement = placementFor(nodeId); if (placement) parents.set(nodeId, placement.parent); }
     const completed = new Set<string>();
     for (const nodeId of alive) {
       const path: string[] = [], local = new Map<string, number>();
@@ -360,14 +381,14 @@ export class RetainedNodeStore {
       if (depth > 100 || visited.has(nodeId)) throw new Error('Invalid retained node depth or duplicate ownership.');
       visited.add(nodeId);
       const children: string[] = [], seen = new Set<string>();
-      const record = this.readRecord(nodeId), array = nodeId === ROOT ? this.rootChildren : record.get('children');
+      const record = recordFor(nodeId), array = nodeId === ROOT ? this.rootChildren : record.get('children');
       if (!(array instanceof Y.Array)) throw new Error('Invalid retained children.');
       // Projection is a synchronous read. Pool bounds were checked at entry;
       // validate every reference/record without rescanning global map sizes.
       for (const reference of this.readReferences(array)) {
-        const child = reference.id, placement = this.placement(child);
+        const child = reference.id, placement = placementFor(child);
         if (placement?.parent !== nodeId || placement.token !== reference.token
-          || this.readRecord(child).get('deleted') === true || parents.get(child) !== nodeId) continue;
+          || recordFor(child).get('deleted') === true || parents.get(child) !== nodeId) continue;
         if (seen.has(child)) issues.push({ kind: 'duplicate-reference', id: child });
         else { children.push(child); seen.add(child); }
       }

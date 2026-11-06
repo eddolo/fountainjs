@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Read private retained-Yjs node records once per projection and reuse checked
+  placements during ownership resolution and tree traversal. Preserve fresh
+  reads between calls, including pending outer transactions, and retain all
+  malformed-input, deletion, duplicate and cycle handling. Full projection,
+  large-document latency and history growth still require further work.
+
 - Avoid canonical sorted document copies in private retained-Yjs comparisons,
   preserving order-independent object metadata, ordered arrays and explicit
   null/missing distinctions. Reuse preflight text planning for single-step

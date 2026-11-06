@@ -1,0 +1,20 @@
+[
+  {
+    "engine": "chromium",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-reads-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\video.webm",
+    "continuedVideo": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-reads-browser-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium\\video.webm",
+    "durationSeconds": 9.08
+  },
+  {
+    "engine": "firefox",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-reads-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\video.webm",
+    "continuedVideo": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-reads-browser-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox\\video.webm",
+    "durationSeconds": 13.56
+  },
+  {
+    "engine": "webkit",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-reads-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\video.webm",
+    "continuedVideo": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-reads-browser-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit\\video.webm",
+    "durationSeconds": 15.24
+  }
+]

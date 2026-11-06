@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Operation-local node reads (2026-11-06, local): one node-pool iteration and
+per-projection placement reuse reduce duplicate reads without a cross-call
+cache. All 239 candidate cases, 36 compiled Node journeys, 28 old/new
+compatibility/history journeys and 96 recorded browser journeys pass. The
+fresh full source run has 4,385 passes and six unchanged default failures
+across all 289 files. A 5,000-paragraph edit reduces node-pool gets from
+45,001 to 15,001 and placement gets from 30,000 to 20,000; controlled editing
+timings remain mixed despite fewer lookups. Full projection, history
+growth, compaction, migration, three size overruns and complete fresh CI remain
+open. No default switch, acceptance-limit increase or publication.
+[Audit and evidence](YJS_RETAINED_NODE_READ_AUDIT.md).
+
 Retained comparison/planning follow-up (2026-11-06, local): avoid sorted
 document copies for portable equality and reuse a preflighted text plan only
 for single-step transactions. All 230 candidate cases, 36 compiled Node

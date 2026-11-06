@@ -250,6 +250,82 @@ it('reads pending metadata on every projection without shared repair or stale re
   } finally { pair.destroy(); }
 });
 
+it('projects pending moves, deletion and restoration without changing earlier ownership snapshots', () => {
+  const pair = peers();
+  try {
+    const first = pair.left.project();
+    pair.leftDoc.transact(() => {
+      pair.left.move(pair.paragraph, pair.a, 0);
+      const moved = pair.left.project();
+      expect(moved.root.content.find(node => node.id === pair.a)!.content[0].id).toBe(pair.paragraph);
+      pair.left.remove(pair.paragraph);
+      expect(flatten(pair.left.project().root).some(node => node.id === pair.paragraph)).toBe(false);
+      const record = pair.leftDoc.getMap('candidate-nodes:nodes').get(pair.paragraph) as Y.Map<unknown>;
+      record.set('deleted', false); pair.left.move(pair.paragraph, pair.b, 0);
+      const beforeRead = Y.encodeStateAsUpdate(pair.leftDoc), restored = pair.left.project();
+      expect(restored.root.content.find(node => node.id === pair.b)!.content[0].id).toBe(pair.paragraph);
+      expect(Y.encodeStateAsUpdate(pair.leftDoc)).toEqual(beforeRead);
+      expect(first.root.content[0].id).toBe(pair.paragraph);
+      expect(moved.root.content.find(node => node.id === pair.a)!.content[0].id).toBe(pair.paragraph);
+    });
+  } finally { pair.destroy(); }
+});
+
+it.each(['parent', 'token', 'extra'] as const)('refuses a newly malformed %s placement and recovers within the same outer transaction', field => {
+  const pair = peers();
+  try {
+    const valid = pair.left.project(), placements = pair.leftDoc.getMap('candidate-nodes:placements'), original = placements.get(pair.paragraph) as Record<string, unknown>;
+    pair.leftDoc.transact(() => {
+      placements.set(pair.paragraph, { ...original, [field]: field === 'extra' ? true : 'bad identity!' });
+      const before = Y.encodeStateAsUpdate(pair.leftDoc);
+      expect(() => pair.left.project()).toThrow('Invalid retained placement');
+      expect(Y.encodeStateAsUpdate(pair.leftDoc)).toEqual(before);
+      placements.set(pair.paragraph, original);
+      expect(pair.left.project()).toEqual(valid);
+    });
+  } finally { pair.destroy(); }
+});
+
+it('still validates a deleted node placement referenced by the visible parent', () => {
+  const pair = peers();
+  try {
+    pair.left.project(); pair.left.remove(pair.paragraph);
+    pair.leftDoc.getMap('candidate-nodes:placements').set(pair.paragraph, { parent: 'root', token: null });
+    const before = Y.encodeStateAsUpdate(pair.leftDoc);
+    expect(() => pair.left.project()).toThrow('Invalid retained placement');
+    expect(Y.encodeStateAsUpdate(pair.leftDoc)).toEqual(before);
+  } finally { pair.destroy(); }
+});
+
+it.each(['unplaced', 'claimed', 'malformed'] as const)('checks %s references outside the node pool without changing the shared data', kind => {
+  const pair = peers();
+  try {
+    const valid = pair.left.project(), references = pair.leftDoc.getArray('candidate-nodes:root-children');
+    references.push(Array.from({ length: 128 }, (_, index) => ({ id: `absent-${index}`, token: `absent-token-${index}` })));
+    const placements = pair.leftDoc.getMap('candidate-nodes:placements');
+    if (kind !== 'unplaced') placements.set('absent-0', { parent: 'root', token: kind === 'claimed' ? 'absent-token-0' : null });
+    const before = Y.encodeStateAsUpdate(pair.leftDoc);
+    if (kind === 'unplaced') expect(pair.left.project()).toEqual(valid);
+    else expect(() => pair.left.project()).toThrow(kind === 'claimed' ? 'Unknown retained node' : 'Invalid retained placement');
+    expect(Y.encodeStateAsUpdate(pair.leftDoc)).toEqual(before);
+    placements.delete('absent-0'); expect(pair.left.project()).toEqual(valid);
+  } finally { pair.destroy(); }
+});
+
+it('reads a replacement record at the same identity within a pending transaction', () => {
+  const pair = peers();
+  try {
+    const nodes = pair.leftDoc.getMap('candidate-nodes:nodes'), original = nodes.get(pair.paragraph) as Y.Map<unknown>;
+    const first = pair.left.project();
+    pair.leftDoc.transact(() => {
+      const replacement = original.clone(); nodes.set(pair.paragraph, replacement); replacement.set('type', 'heading');
+      const projected = pair.left.project();
+      expect(projected.root.content[0]).toMatchObject({ id: pair.paragraph, type: 'heading', attrs: { owner: 'Ada' } });
+      expect(first.root.content[0].type).toBe('paragraph');
+    });
+  } finally { pair.destroy(); }
+});
+
 it('checks node-pool capacity before traversing even during a caller-owned transaction', () => {
   const document = new Y.Doc(), store = new RetainedNodeStore(document, 'bounds', factory('bound'));
   try {
