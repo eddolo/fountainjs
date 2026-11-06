@@ -16,6 +16,9 @@ export interface DecorationSpec {
   inclusiveEnd?: boolean;
   /** Controls which side of inserted content retains a widget. */
   side?: MapAssociation;
+  /** Noninteractive visual widget painted outside the editable document by
+   * EditorView. It cannot split text, participate in selection, or be copied. */
+  overlay?: boolean;
 }
 
 export interface PositionMapping {
@@ -90,6 +93,7 @@ export class Decoration {
       && this.toDOM === other.toDOM
       && this.spec.key === other.spec.key
       && this.spec.side === other.spec.side
+      && this.spec.overlay === other.spec.overlay
       && this.spec.inclusiveStart === other.spec.inclusiveStart
       && this.spec.inclusiveEnd === other.spec.inclusiveEnd
       && sameAttributes(this.attrs, other.attrs);

@@ -1,0 +1,1161 @@
+{
+  "date": "2026-11-06",
+  "publication": "Local only; no push/npm/site update.",
+  "goalComplete": false,
+  "defaultStorageAdapterSwitched": false,
+  "source": [
+    {
+      "path": "src/core/decoration.ts",
+      "sha256": "9a3f31eb206724f2c186669e69afd97b9c4ca2804864bc50bdcff42439d100de"
+    },
+    {
+      "path": "src/extensions/collaboration.ts",
+      "sha256": "65317ec54ebb48bb9bcee9d41e38ca9dfd1a26b706dcbf781df260f7d3900694"
+    },
+    {
+      "path": "src/view/dom-renderer.ts",
+      "sha256": "cd603d536026acf5447b034753a15b80ea0006738b9198508e8355919004ef1c"
+    },
+    {
+      "path": "src/view/view.ts",
+      "sha256": "2d8c87536359bd34e0f3c9ec72ab2d88637f625a2da75e9ef73c022a5f161523"
+    },
+    {
+      "path": "src/view/widget-overlays.ts",
+      "sha256": "085f4e11578add026977053546085a6c7c4070fea49093742a96f8bb75518c48"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "b2d81cef6be34d27994ace2c9906c4bb13600a142e29c2637b23dea0fd6731fc"
+    },
+    {
+      "path": "tests/collaboration.test.ts",
+      "sha256": "825c4533952fae5d1cb45d8b3c7fd4e1bb8413310df024c24eb56a2d896b7f82"
+    },
+    {
+      "path": "tests/widget-overlays.test.ts",
+      "sha256": "017c07bac60c4257f163e6cca466db8b93fadcf0efde3462299e52b430de437f"
+    },
+    {
+      "path": "tests/manual/compiled-runtime-audit.ts",
+      "sha256": "e8d83bdd78ce0c701085ce96de6c52568c8ee31387ca4f8807912d67f4a4e60e"
+    },
+    {
+      "path": "tests/manual/cursor-native-reference.spec.ts",
+      "sha256": "bd54483a57c929e1fd948a5303185343059de141abe8fbf7256b411a1937d2ef"
+    },
+    {
+      "path": "tests/manual/retained-adapter-real.spec.ts",
+      "sha256": "43f220cef8c1ac0b4a96cf6f0b85d671b7560e912da8a95f59e6d21f19a10ec7"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "3eb63e5d707b50980152a32bc25d6fb8f76af74a4102540ac0a82579fe5aa6e6"
+    }
+  ],
+  "unit": {
+    "path": "artifacts/cursor-overlay-unit-20261106.json",
+    "sha256": "b9dcfd0e132e2fca4b0063be11ff6480a04fe370d954a2430166ba328825a099",
+    "total": 4313,
+    "passed": 4307,
+    "failed": 6,
+    "skipped": 0,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ],
+    "focusedPassed": 58
+  },
+  "browser": {
+    "path": "artifacts/cursor-overlay-browser-final-20261106.json",
+    "sha256": "c90e13a61bc5aa9ebf578d736d242b8168987eca270def9efced4f7b8fab2484",
+    "passed": 78,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "workers": 1,
+    "perProject": {
+      "chromium": 26,
+      "firefox": 26,
+      "webkit": 26
+    },
+    "compiledRuntimeVerifiedInEveryJourney": true,
+    "sourceMapModules": 190,
+    "currentSourceMapContentsVerified": true,
+    "cssMatchesSourceAndPublicBuild": true,
+    "recordedVideos": 78,
+    "evidence": [
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/.last-run.json",
+        "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/comparison.png",
+        "sha256": "f687d48a6c8547afd0b598b5afcfdd8335a7d071548926d7ff379e0bc3995b54"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/trace.zip",
+        "sha256": "ecdbaeb672457d654b57f01ec8a17c7ba1b50d1e44b5f3f8e8ca6ffcfe252bec"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/video.webm",
+        "sha256": "cfea4cbc15cf1c2c78413c9f076009746088a95a1961ba33d68a599a352f18ac"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/comparison.png",
+        "sha256": "5773d73df225f5a57a2c78ae1c6277e8c64c701c7a20e049ae920e25990a5986"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/trace.zip",
+        "sha256": "dff41a1c8d5db4fb7a5984f9f2bd2036504565c0f9699682908fad04c5e6c7d1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/video.webm",
+        "sha256": "34c117d893dbb7c5165e96dd1c7bd0115e69b4732b0c6716facc38a8539a8396"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/comparison.png",
+        "sha256": "e15bde80913f3e0410ffe67e302e282c87323adfbc79dc7b2605759c0eea1368"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/trace.zip",
+        "sha256": "7e373d35c8e2a6023b1b5bba1a61e9f9f4fd86f028dbde81ff681065440db9de"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/video.webm",
+        "sha256": "2c2c5db72bafb784ac8d456adb1d80f693a1967edcbd2ae415326dc2ace36e74"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/comparison.png",
+        "sha256": "143b16a85229f290418eb05efa8604722c24d3ff50d2d114ab9af28c586b7206"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/trace.zip",
+        "sha256": "64680e2c136d9a277918d979b7b50faa2f748bbd0bf7a647e79f329209b6ad39"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/video.webm",
+        "sha256": "1fb4e3372a567a7a3a001eaa4bca7307533639950dbb037c1bf50961676ca561"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/comparison.png",
+        "sha256": "327239ae20df5042a9c2da86f1ba48e8b2d0880b7d4c13b833bf49afc3609a70"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/trace.zip",
+        "sha256": "eb3e1e6675f0a84d5859601d2c12e08af9b3c2a87e9c1d0441cf5c9a7408f810"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/video.webm",
+        "sha256": "5ab6b64ed02601707ec5ea4e8053b46dba9101169c1b92e8777fafc3adaa7f77"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/comparison.png",
+        "sha256": "b14c1be9631ab192f55643b1493b6c333b563bc0d161679f814ddf786e57caff"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/trace.zip",
+        "sha256": "1435c169305cc9e07090933780212cd7caec2b2bc8c1dfdd6b7289d47ccf1d9e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/video.webm",
+        "sha256": "2470eb4ad01a0a957f5624f8bd28ca567c57ea2cb252c03d2065343fdce908e6"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/comparison.png",
+        "sha256": "5c5db712e3c6cc3d20fbd98b986f99259499298d301abe4bd085845b82146e89"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/trace.zip",
+        "sha256": "dd795e2dd0dd98181ce8942ab1def212cb006170b6007b17dfba11ad0ff7af39"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/video.webm",
+        "sha256": "1991733ac9ab7c6aaf658e82082011d0ad5dca16864a324bb7500c243e9a2f6b"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/comparison.png",
+        "sha256": "b59e7efae12b5f20a6aad27da6b5ea16b644942b79b22e8ddd0e865a6aafe0de"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/trace.zip",
+        "sha256": "6bcbcfde2264551c044b14b05c8569e33fbd4f3bb4ed1272a3ad9b8ce594de4e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/video.webm",
+        "sha256": "2bfa377e42053ec5a64396531a70d33a4745b787f5609c1b252922e1b74ac44d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/comparison.png",
+        "sha256": "8b9b89994c822886b577a8216351700e7bdf85ff41a2a4b9c87dd9d6a88102e0"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/trace.zip",
+        "sha256": "d54ff247416c45b84e2c5e08dbe6c82add214823d2a70d3c1fdd30197b068487"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/video.webm",
+        "sha256": "cb0231a097f676533e61279decbc48560c53d57886a3f67d5814892350e7e229"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/comparison.png",
+        "sha256": "5a6356df606879b1c095b522a369eac715984de98ed8bc45dd0ea64e92e1eaa3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/trace.zip",
+        "sha256": "8e8aebfdc525cabf24060d3c2069da020087612c97ea8063316070c5df592e21"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/video.webm",
+        "sha256": "6b0882a72aa3b1d88c9b77ad18daff006963ed1cef76fee586f6fa89916711fc"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/comparison.png",
+        "sha256": "b6e11b17093f21954c407ccd65ee10b62af3182fa7a489496067d8f29f8d4363"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/trace.zip",
+        "sha256": "092f49772a8e87310192f72890f34c380cfacbdc28ff0c7f8e3a64a54b6cfc54"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/video.webm",
+        "sha256": "54fc84c96b5cbac312b3659c77407ebad555a2bd01300ed16b977b7001d22eda"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/comparison.png",
+        "sha256": "65ca10c380ec5bf7027d20eb0d2bcff103347004ac717a53ba060b14643a1185"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/trace.zip",
+        "sha256": "e55034ebf45c5cd07ac165e1923bae83eb5003ab0b4f7f73dc5a2b58f7e9a94d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/video.webm",
+        "sha256": "e071a99144d3f1a3181536e8f1427e9fa283f08d18d99144199178bca7a4a2e6"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/comparison.png",
+        "sha256": "f865307888ea534b9fb894b102b70f52e4193813576acb9904498ac3e1e99424"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/trace.zip",
+        "sha256": "13ec481aab2827d7dbf80fbcf574646df6113a78c880882d71bbb65b6e0a505b"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/video.webm",
+        "sha256": "f67138179831d79f77fd258bd1057a8b2781af76204eaf9993a79aeb3f829049"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/comparison.png",
+        "sha256": "8fb16eff6675ce919d3c43efb6ba48ba78f732a9bcec45aaa0feadb0676c046c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/trace.zip",
+        "sha256": "f507e15b35498192512e78be43e7c9dcd394b0cb443f64ecd8b94de86314f512"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/video.webm",
+        "sha256": "c1ef10132ac90fa79533593f6808508479ba8c74f29fdfdbf68a75f97c12fb53"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/comparison.png",
+        "sha256": "3a42cc4e4116f1e877f13e941b43dac9b2d84081e74b87a716b1ffbfb62d91fb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/trace.zip",
+        "sha256": "a7f3c99bd3bffab96beb398c7357926f5fa0d8ec051007e322cfa9cd984ddbd5"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/video.webm",
+        "sha256": "70768050e0d6dbd313a0df5ed9a41e14860b56292cf27f86f6a58b59407acd48"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/comparison.png",
+        "sha256": "be2a1721b8e9c0d9f02f88c4b52b3af34c62fedd07e49931d2698e304f4b72e1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/trace.zip",
+        "sha256": "dac2eda06432119675543d5fd31886fc860f9f1918ed851eb68c601837b21c2c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/video.webm",
+        "sha256": "a79b9c85d042241bf5a3a70a62ddd8607a9b14a11246f5260808b412ee42ba63"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/comparison.png",
+        "sha256": "c705959ad8884fe2e42423afce2a674b15cb1436db81463e9e33d21c4e22f8e9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/trace.zip",
+        "sha256": "1354296024fe9f1b2dd06aaa0bf2b3e1dcc69918a06cf39652b15d95f5881c9a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/video.webm",
+        "sha256": "e9ff4dcb7f91b4b47835172b3fcc4f51f4fa0b608ad86b198030c59f373ae7fa"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/comparison.png",
+        "sha256": "4dde9529305ed6e7370ea7846a3d34731f91681e47d3f3007b03d058eefaaf70"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/trace.zip",
+        "sha256": "ebf20a1d1126c2f128b09dee0db5600b0d64d01b011524df4eda563ac44ed770"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/video.webm",
+        "sha256": "520f946193e41a522f0eef875b7056496773a6d08eb98b9eccee218da8b07581"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/comparison.png",
+        "sha256": "a7ae6027122ea1fa05bc88bf393bc8fcda78b83b38e86aa8162831c2dd1f8206"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/trace.zip",
+        "sha256": "44e47ba5f4d264cd8f5bbd95aed11da4cc8ff5823e87c9fa594f31c9aee5e9b9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/video.webm",
+        "sha256": "97ea1a645794f076cfcbf27da31a8849beec4e709a124d09a9c76faf9f637b15"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/comparison.png",
+        "sha256": "9c7eafdd4e5cd9123aac99aae849d7f2fd6e1675770fab9294d3641a773e6d30"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/trace.zip",
+        "sha256": "bf7a5fccc7c3d0904c492df20feaa0fba907872cdd154b5d70cabff1b1df9d89"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/video.webm",
+        "sha256": "c8ad0ed68ce5bbeb4d96d95f7dac32eb47125482b1b13a85321c1c51067b7bca"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/comparison.png",
+        "sha256": "86aed60451fcee3d78508ccfa01059c8706291e7899a4bec4e61997f0300d55c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/trace.zip",
+        "sha256": "e1d76f0e76a8c4d6b3f82ba5d7c906ea6b7ae6deedcd876cf70ff8519563baba"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/video.webm",
+        "sha256": "60393ca6c48db5db937787e7db5ea8d4c27399166bbacf5fde0f8d25065b92a3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/comparison.png",
+        "sha256": "944b3cc4f87cd6dfcd6f2eb7b3c43b1c71447bf697d92d74b3ec41b123fd6c62"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/trace.zip",
+        "sha256": "f9451cfa391fb2aa98faaa00b33bb1318348141ef0973b2f87ed4d223afccd96"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/video.webm",
+        "sha256": "276ab0e1bd31c45066e62c995c1ec4b60fc903d64459f3e942526ae39ff308d9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/comparison.png",
+        "sha256": "38da9c9f043fa8fbc9cb1b06823cecbee2e1572a1312acbcbc24d832a93d6d8d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/trace.zip",
+        "sha256": "d646cb5b0bea0bb6cb0e846958fda3be9341f7986d8c707dca28778f83727eb3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/video.webm",
+        "sha256": "cf022a4d6403151843a5c14d6741c96d1cb51190875a32682ab3c4f0ea4ed111"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/comparison.png",
+        "sha256": "7ef25e6590add91de4da7711ede23736647962720d015c74bd7244cf28f8f0b5"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/trace.zip",
+        "sha256": "309fd04d7db9103338658bc44ac69537bdbf0d9f8ff6951a245d88d6953bd4ab"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/video.webm",
+        "sha256": "e557d370554f347d6fd0c843c5c76e204c7cfa146234722d85ef53bfb0d44b7d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/comparison.png",
+        "sha256": "332e06aff7ffa486887513b64ee7885f0c41da750ae08c4e3a9533922b79afe1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/trace.zip",
+        "sha256": "4d0e8d3ebcd9ca1c19e4a0fc46e4e4b43fa530c84900e348a340fd14665acf3f"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/video.webm",
+        "sha256": "5dfa09536c52c4603a671f63e7d8e5b7e2c31e76c5a62e6fb3c990802255a543"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/comparison.png",
+        "sha256": "48aba03e744eee8b4274bbd5ccaf8f16758bf2f09e109c275ac193c5529dde30"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/trace.zip",
+        "sha256": "0adbb4721fbf8e3ed9134a455be7f86f8e3d8fe34ec0d93c90c4b6df28e5c884"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/video.webm",
+        "sha256": "4403dc857123c19d6abc2ee66c3a52c61b7575ffae69e7c182ce712a4703a147"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/comparison.png",
+        "sha256": "61e50381fd45d2aea25d815b5c434cf4bb67485592742bcf2c8a97655bfc9c41"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/trace.zip",
+        "sha256": "41e5fe087c560e2a75cf6068f2cf7c05cd02701661683a0db4028f75abc8e945"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/video.webm",
+        "sha256": "d82b1ff5bdec64ea079060f206919375d9e4eb22bb88341324dd9ccad72eca02"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/comparison.png",
+        "sha256": "32afb9bdfa015e4cfea11bac21fe40f7688ebee7a644d07f4bd92bf9c3235fd2"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/trace.zip",
+        "sha256": "44b729dac570423737ba57d110b04baadd151daa6770470116cd9f41e015e873"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/video.webm",
+        "sha256": "1e9e8024e35c59ec0ac711ae0a6de0f06f54deb3bae5ecfac44e83df92e36540"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/comparison.png",
+        "sha256": "cfdd56814e187c8110b11a78bbc00aef1f2938009be0e1bf435f0cf9768c9a56"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/trace.zip",
+        "sha256": "ece602ad56c1929141bfdb9dc2949c9d804d1481dc9624692f1ad5d1aadcf99c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/video.webm",
+        "sha256": "30fc26ed9f2ffaf28a76f1bb8b2d66df07836d654cf4b4e0c9701f65cee811a9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/comparison.png",
+        "sha256": "e2814ed7b0d2a9091636ff2675c1f968891efa5f21725980ad0497e953059a3d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/trace.zip",
+        "sha256": "70ec1e652a768c029b207b76ce1fb396e3699a4e59c995c8d48955dbdc7bf177"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/video.webm",
+        "sha256": "05b16e1ca1d6b53d4148bee8fba510333983d12bbf1b3d4f64fa550e75619c64"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/comparison.png",
+        "sha256": "47cf298b810101c215e0d294f67342d03d897c22d81cbbaffa21ad675d4e1fd3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/trace.zip",
+        "sha256": "2bae48cb978341ea7d0a78e08a9ecbd5c478735f15b24837912953e952cab6c7"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/video.webm",
+        "sha256": "eca67d5e4882ab68033542b3e171a7a3365afb50edd1e1eb28a2044c75b85a30"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/comparison.png",
+        "sha256": "c9b50d48de89f79308c9363e60be43089ba11cfe0952eeadcd3f394e15ebd083"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/trace.zip",
+        "sha256": "2233dd9e5123b90893a3d3019626763d3183ebcf4895182d3df5702c299a4c41"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/video.webm",
+        "sha256": "f8393ba1f698fbe859c401a05d81849f191284e1c7893485093cc741b858bc4f"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/comparison.png",
+        "sha256": "ce2a4f8c154eeeca235d6dee367adb9b7f36911cc36a29eb248e9678a82fdb42"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/trace.zip",
+        "sha256": "9ac5754e7e6c7441d540ae7fd657cb79b6e42554e5a8373193cd334105ca42ca"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/video.webm",
+        "sha256": "348eb18237c2ca3a9e6ece160d76dbda01905561a7c2739665934b10ee57cc5a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/comparison.png",
+        "sha256": "d03603c4fca7ae1535ac95edb1f5c509414ee91290c93bb7751347f9254f75c6"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/trace.zip",
+        "sha256": "45c9e1ae5c5c9dea4fba0f741bea7e0c368a70334aa831f59035c0c299357859"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/video.webm",
+        "sha256": "64d3698b0532e806b17ffe74d33eb1b5e212a9ca1fc2ef69ba822d089cbd1d22"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/comparison.png",
+        "sha256": "7225264cc9a7a1c4336e6adcce4358d4647e23e6c22f7b65e097cede436d1a5c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/trace.zip",
+        "sha256": "6d5f236f54e9c5a07af47f2f27d2614fc2e1753b5d6aac07ff029f80d76bf416"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/video.webm",
+        "sha256": "54173de93d0f5201f08e72c5916363d55f21ab470c7e399f94a152527b701aef"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/comparison.png",
+        "sha256": "72832a270de34de07adf1f67fb37ba0f1dfb5655e6cc2c87b6a86334a46a7e79"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/trace.zip",
+        "sha256": "36cb5338eb5127f0bafe5f5c8d7632f5979496fc5aa692eb2c240528033004c2"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/video.webm",
+        "sha256": "0cd18fb1a1a4b97676c9f92d07ff7d89e1b48a71f6883f5bda4f7caefb272d4d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/comparison.png",
+        "sha256": "6b15b6c702c5b41c2d1278920b1a5d3c8e6ef2bafe28cb101b6e0bbfed1cf41b"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/trace.zip",
+        "sha256": "41c6a8a74979c4b66792911633919e7c5ff52ef152a5ddbd39906d9dd3748334"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/video.webm",
+        "sha256": "ed487193c058537cef964132d68f7cda3efe7bec579940b0ef121de79c7b130a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/comparison.png",
+        "sha256": "45681a648cde72ed6679b17f688f782aaf83275d9b893a9a529ab159d8deb4d1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/trace.zip",
+        "sha256": "f4e6774fd2dbe8cad2514f13de507b83c8b00a0e08ff413cffa79cd80ab52cad"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/video.webm",
+        "sha256": "9274faca9bc43e12c0ecb08c613254fa8592eb6620c97ee92e41d753785f32b7"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/comparison.png",
+        "sha256": "4cc9c7d5c2429adbd2ef682a865793e1983c3609485bf87140896fb453567f4e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/trace.zip",
+        "sha256": "d9b088561590ce0722e3dccec692612bebbad7a3335d01397ae772f3bbccedeb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/video.webm",
+        "sha256": "7b09182dbfa1882d2ec8f2a770514f9e4f097290d389145cedcad4f873cb9918"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/restored-overlay.png",
+        "sha256": "655ba0a57ff4e26d059f4c2f04fdb7da5cfee11d989ebbedb28f87478598ac9e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/scrolled-overlay.png",
+        "sha256": "1112ebbb53b7c38aba44b1fcb1ba0e620a2a2f74f247a06a0bc82497de934b3f"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/trace.zip",
+        "sha256": "459dc136303db048159ec05837b0b76e43c979b87290a6b1d92e325879edecd5"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/video.webm",
+        "sha256": "d5f0bb8f8e74387fb1e4678bf6791561689d008342f770e8797e5fef18423f2a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/restored-overlay.png",
+        "sha256": "d2fe8257b47200af3e8914d08530444d81762b091470e7862a3bbd4dd7029f9a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/scrolled-overlay.png",
+        "sha256": "a276f01e3b3306129ba17232fbf57aea6c34969daf08e0ede7e3cd433f57e23f"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/trace.zip",
+        "sha256": "915f012471d669edac65f326ccf2a0d9893e50ffa65c9f7a853367ea7d248320"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/video.webm",
+        "sha256": "9f9f6ec2e7a542a74c1d497e1c85d38c7534ecf07552fe48a95f106fce2f6686"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/restored-overlay.png",
+        "sha256": "d61e2985d2003b51f96cbbe3bbc925d181f5cad7ab6383ce3cc3337171c0f07c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/scrolled-overlay.png",
+        "sha256": "829a1b4a481fc0daa1b051549302394ab55254a470e681241608f2d68bc44656"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/trace.zip",
+        "sha256": "5554457df42bcc99f175d1bfded90db0d8597b9bc00d1062dff16c367c0f2a8a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/video.webm",
+        "sha256": "46033cc932ce867c172c79288401dafdb1fa8375d0fb61c75447ed389823068b"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/anchor.png",
+        "sha256": "79c8bdbd356e04f0ceed372dc9ca855a28c82b6f52969b92be4d3e7841fbf3d2"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/trace.zip",
+        "sha256": "fbb322f6f2aae0d45999ad807436d965ac2fd72e8a05ab7fc68f78151928146e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/video.webm",
+        "sha256": "cea4b7c9778700110d073b62bb798c673607c1d4174007d36d80ae811c56dfc4"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/anchor.png",
+        "sha256": "64dc7127f72a3b359309c7be2c65f3ddeac8b3a3bf7ae146001bac7ed0eb46f9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/trace.zip",
+        "sha256": "8c140ab1dd98aa451cfda7942554369b725e08df33ae8b4cb608e6817b47370e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/video.webm",
+        "sha256": "400c443930d1547b2e0bd22ac9c703924e3887f54260b7a2e570c3cbf630e2e1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/anchor.png",
+        "sha256": "a8ddeaa0f51e4768ca5df43246e23317ef2ebd9de5cd7af1aaebb5ff28dad6db"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/trace.zip",
+        "sha256": "fd712de667c4196a138cf40d8683de635c75a9de7a7bc18a40d29c569246647a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/video.webm",
+        "sha256": "ad4a2f6327a9dd609c9a0a5d87be4a154b3bf29223c5c60136888632d41a96f9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/anchor.png",
+        "sha256": "a28fc8d6be75333c33393952a284cea6f4911174eed1ab0068bbd204d4c0b546"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/trace.zip",
+        "sha256": "cd17f93d1692b7b912eb027a5e7f2e70fe30067fd9167e40840c6ff35fd51bbb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/video.webm",
+        "sha256": "921dff7562334c8580fece6b7c766dc6b3c68a79960082da36634b755e226307"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/anchor.png",
+        "sha256": "23a78b40513bfafcd0fb03b48e1489b8c2bf4a11d0f49578c4f1acdc8564cec8"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/trace.zip",
+        "sha256": "12e2db55874c527fe687a6419defde121175f511e53cac4473ee159012b239d2"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/video.webm",
+        "sha256": "efe64021c0ed992ed780858ae049dac8e2c70db98749accb66dac7d617835204"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/anchor.png",
+        "sha256": "508e242ce42bef2516e903e812fe7f242bfa106f770b7c457a162b741bfdda95"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/trace.zip",
+        "sha256": "1f143a57ef051d3b4b865ca3ca0ce7eb650ab92f440bf0666b5cf43aca54cd5b"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/video.webm",
+        "sha256": "5130eecc304df5bccad3cac2e8bbbe30340b28d988808985c25ab2336a7af1e1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/anchor.png",
+        "sha256": "b56fe5c46da8d62de047053c9691b4785cf6658d531bd34d2d183e31271b7991"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/trace.zip",
+        "sha256": "6e9b869f66b0e8d030d8845e8e1edeff118b59ae384188984fe445c923fa3949"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/video.webm",
+        "sha256": "f240ee2bcc879e2a0f01cde97583f7f7232040c56ffe114fc342db01b20e7ec7"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/anchor.png",
+        "sha256": "0e74c396ba10023bd455e9cf9623c04d5a72df0e6f51dbf03ccb7104d23eca87"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/trace.zip",
+        "sha256": "80ac689922f447c287c87c2deb475986eebe123a6efff81012e0ce8d998c4302"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/video.webm",
+        "sha256": "2e59091bfe47f48905c63c5ba4615160d3998a501a112900ac4242fda50e57e8"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/anchor.png",
+        "sha256": "3372002b4f15962927a4b96025af326ecdb3902436eb96d7d4c17e44c0c8db09"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/trace.zip",
+        "sha256": "47708c8a54f300e872938a619d76bdafece8704edbf809e7597ca17fb1b43e0e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/video.webm",
+        "sha256": "cdb62829c31c8efd4e3e2509ce6e8ab7b09e73edf5b90117f1b83f756a6e0d96"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/anchor.png",
+        "sha256": "8db7ac4d3a251e77a310f53e6ec6fcffd2370548ee624af657d6445f9619b12a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/trace.zip",
+        "sha256": "43d87d30a31f696a2f6c1cbab981542182da61e67d0ff2ce2adda996656b1822"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/video.webm",
+        "sha256": "3f4585830f7bc37783a7396b77729201ca433c919b779c79e6829c5a8c84cde7"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/anchor.png",
+        "sha256": "60ecc46f12eeedd4a6582c2e318cec99c41d430c7dd01e4012f809c63a6a89ea"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/trace.zip",
+        "sha256": "d02bd3a8b388f01f8cdea3ae4a0e423d890b594e730b65147d6bd406df673aac"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/video.webm",
+        "sha256": "78fd9be2130773ed60af2f81b03ed646ed92b7f8bb18a1b20f54f47b3bcec9fe"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/anchor.png",
+        "sha256": "81ca225de5b98abc71f3cfdd34eb921ef39c0ee28bfe3ae3ae6be07dae716587"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/trace.zip",
+        "sha256": "0a23539e66dcaf4cb6eb6d43724a745c3a5922564df50fb7915495bfc77fb5eb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/video.webm",
+        "sha256": "e0a881cdc3ab43040fa7d9f8ce08cfa2299d8f22628ea70150fffb78f6d2b6a3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/backward-selection.png",
+        "sha256": "271a0bf00cd177b0d2d484f2163d7c445dae3abf1fcc90cbc5f6e70bc5737ef7"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/reopened.png",
+        "sha256": "efa604f75b0cd228d56741287438f17552428e22b91e54d115e1ec1d2c2e0861"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/trace.zip",
+        "sha256": "99a1dca3ccc1e012b620a35616587dda4b6ea7afa4eed801b571a70dc73317b4"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/video.webm",
+        "sha256": "a6e6f7b73443cc5c961bb1454bb46fc5ee39a20376bfee592fdb47bfa75dfa03"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/backward-selection.png",
+        "sha256": "c3a6dbb5e255b7b3282e75affc85d1f3caf65b299d302a645b9ad5995613543e"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/reopened.png",
+        "sha256": "682df2ee7b09f53843b0232178018ee4b7bae828e442ed5b49fa7cd36434c1da"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/trace.zip",
+        "sha256": "c79970851a65019ebfc86fe4aec2c0ecd45fc36ade4904c4619cbfce76f21565"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/video.webm",
+        "sha256": "2a9d215d146e6ec1a64db93dbdd32f4c22ce1786e0b79f28279e19626aa7c2ea"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/backward-selection.png",
+        "sha256": "882368930966e118ad9ba675303d8c67b9a58efed1beeca14834e9be9373d035"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/reopened.png",
+        "sha256": "adf8e0d6d39113a7325d3f9e7ab823d3bb20ed316876406e1116cb9de05953f6"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/trace.zip",
+        "sha256": "db9a0598a5f1cafed3c999ea85a2e3d30062892398d180ab5623501855a1d312"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/video.webm",
+        "sha256": "3362a55b85eee90f364de3431fe510debe7678407c7bf3d68f412d9e4c055dc5"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/converged.png",
+        "sha256": "50ddaaf6d46ffbe9abc1ef360c98754065dce337c3449eae414e77b8620fe519"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "62164f346f17e963ed0c532f662b309ff7ade3c1bac4353123cdadd52c2b6a10"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/video.webm",
+        "sha256": "a1a5016f5c39e49e26ac9950c6edb49618aa583d7f6fed0f2b2818f83352287a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/converged.png",
+        "sha256": "6d2858647de74b176429c5ab7bb4829f4546715839493ced4bd1c232b5a8f4cb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "3086d37d6a3d58079ec6891c5363b6ac6427bc340882ab22531848d3b7ef4cde"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/video.webm",
+        "sha256": "efd56c237a91f074fa30a5a92d57629505382ca1d943bdf60ff3adf42a70e3a4"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/converged.png",
+        "sha256": "3120b54100f85dc9a0655cbeb13c96954e37df2c001707bda2000cf2b4a6dda4"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "dd5e00298f10fe02758eef00b36a4cece9936b560f7d6589bce52ece708992dc"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/video.webm",
+        "sha256": "9f4f1d09eb2b0e9e761a9a39e27ad83d30dfe1aa4506ed3cc7bd07e8ae0bd065"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/converged.png",
+        "sha256": "e147988a11a68211f163021c1138d5cbd6ecf64f2f64f7e1afdf6ee173b96164"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "d11e65a4988811f3cb7dc4da88711c817d9a3e9f9d6bccb39c89f9355ebdab71"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/video.webm",
+        "sha256": "45d6b73a1dd6c56890a27b53febfccde834b85f938f8274996edf037957915ec"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/converged.png",
+        "sha256": "a3bfbf84638cc52512f4dc537fa5c2311d09b6c28d95b4cc3b2989da5735f31c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "1f223847f726287e46d9292729c089a5c3311987155551455ebaed81a7877740"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/video.webm",
+        "sha256": "be14304013814c683b2ac73b32e48fcdfdb4685e9b42ff4b94b8d0b047ecc559"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/converged.png",
+        "sha256": "5437476013769b4a68312dcb03e81061c4f8cc7975c7a136519fe67e4547ddc1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "21ea38391afb22bc1880c57a2be156606bde19c8333dbe053bff4bfa1ac2f5ff"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/video.webm",
+        "sha256": "1bb4771a74fa37eeb1fdb2779ab582b568f42315e0efd26856968a07e8c079a1"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/converged.png",
+        "sha256": "18e9f038b1b27ea8346f1d3570b9b22a10f93d5537b54a9025be03c9aeebdfd8"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "19b98eb6b1252d511443fc24f02018fbf1e62e8c383dd0a7a58ad22ce5bb3399"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/video.webm",
+        "sha256": "26cbd41cffb88c02d975b44530c25891d59efbf4da1216c85f8d1aba94b81b27"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/converged.png",
+        "sha256": "510098a8303dec631ad4df7c5b6d5d292623c2f8086ed36f76ebbc4bd114a199"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "3d9b3681b1547386c8f6925df178d25ebbf516aeffc8bf87d669c16be42c6224"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/video.webm",
+        "sha256": "423bab9e0a57ba575578b62a0567644157ad8010e9f7791bd2860bed825e0eeb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/converged.png",
+        "sha256": "91d8da23cfc32ac6cbf2a58ae0af05b1367580cfa197075a97dc0ec2750300eb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "607f5632a500c7d16c188bb7da5e766e74ff9d3da0482bdc8f957c49c5e1c442"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/video.webm",
+        "sha256": "5d255e37409ab20ed0bafa78ef25fc5bebc33c5589921169a6a71f5edc965a94"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/converged.png",
+        "sha256": "e40f2973a5c72a24f47bba52c022c96511e64a1262cee8d404c9dc4a539f2e3b"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "72a1bb60f40be727e9ac5e159f5df33fa03a6cf38b00452719d989480580e841"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/video.webm",
+        "sha256": "f3f8b65ecdfce17c625aa7d8c6fcf626e563b51a94ffa7f71f6886b6cf750904"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/converged.png",
+        "sha256": "cda63f5d17c155ad3dc4d2af2cfe6b23bf57bfda3eb320c289a3cd79ca8ab2cb"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "c093daee3322bb80a52ff55c620079863bd595ecc95ff04eb428e3e461d4efde"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/video.webm",
+        "sha256": "3bf73aed5b945582dd53397e361684341eb77a53de3ab61df1c5f93a98b19a8a"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/converged.png",
+        "sha256": "31cadbe76e23670bd6e2539683f419647cb5d99458713aea607390b4f9a63c17"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "e0054cf392200d7252730ab99ccb6fa01b25b3bd20758a4f4b5a3d7263941245"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/video.webm",
+        "sha256": "aacec1d5286b153422ea4ba7252507e4a2c678c9bb507173283afac142666e68"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/converged.png",
+        "sha256": "ca37be21f9d45b4008b35b1f59bacb7a66b9a85bfb0a31e6727d318fce629ca4"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "73aeb0f5bb0e7ce409647f109e76326de012ecf4cac9735c89fc1270e0f3c4d3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/video.webm",
+        "sha256": "3861692d79b4c7531a15dc18c95eb8bb7cd3c5b1c33813021b57cc5dc5a502d5"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/converged.png",
+        "sha256": "64e7ba91acbcdb65e64d134e8839bbb951eb4dcaa1e6c5d49201bc1649f068d3"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "10e93c8c9ef7b98085feba91a57e2da72651bc22c5415be69aca87761ef85ff2"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/video.webm",
+        "sha256": "82c2d75dae85aa86629a0f101b4b9a869c95cc9903f6a4129e9431424d0a5ef8"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/converged.png",
+        "sha256": "44ea768988c5938252c7957b683ef5b8190e96d8cd5ac5157e21066223f974c9"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "c626d722653775ace0340bc9a3ec9abefb400930c407c0b79f8a511410f1d112"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/video.webm",
+        "sha256": "9796b1c3cf49b7e0503d9ca60778730325c531f8524fa59f7d8e17dca31cbf38"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/converged.png",
+        "sha256": "8413e3f46d660a46f63b20b64c39b0f52141728dff50334fb66ad3d56b45bab2"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "5a3a4314b23dd8ef4427c7eabf1bbd41525edabb70890e808daa383e4e575044"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/video.webm",
+        "sha256": "8524c518128d32b410f4b2064aa5997a285efd3f826732c05f29e7c8e31f2e38"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/converged.png",
+        "sha256": "a7417b0d91e7d30d49c68a3bf4fd18277edc5aa2180c8ccb925b3c32c93a0838"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "1b154a85ae08419b6c4a8da2607aa361d7de887eaa1e0fb3f84b0cb35712ca5d"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/video.webm",
+        "sha256": "4ea9acf6a959a40ae36d9a34ee1e361ecaa57a96ad41fcb229c2f41e05f70c25"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/converged.png",
+        "sha256": "ee6b364eb44e359232e1531b2485f14e3a7f850e7d173b8f31e9ca439f796f63"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "1fb9aba016ea42aa5944de12994603bd85fb0bac434b0fdae0f18287298ce119"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/video.webm",
+        "sha256": "e9e1ac8cb6aede9285181528ade68c54e2698cb8e98d437e9212b865ace91245"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/trace.zip",
+        "sha256": "a0d0b4a49c00b7d1765ed10f2c4d3999b9c8ab1dfbd590b3cd3d8a02b1bd9585"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/video.webm",
+        "sha256": "486187ea2216c8a41d004fd1c200dbef2fd30f19874f3cfb0fa27cc53f057470"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/trace.zip",
+        "sha256": "9033889d4548aa484eba8e9e239d4ebb9f75f27e086cd7b50faa26fd711d4437"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/video.webm",
+        "sha256": "7dfd9e16e321a79b7502809916654db522e3deb0a24da0c0b194a11e61dac98c"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/trace.zip",
+        "sha256": "70ec1c9b89f530ef9e0c49f91e78aa97fbc675840e4188532ed66af28045e9a0"
+      },
+      {
+        "path": "artifacts/cursor-overlay-browser-final-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/video.webm",
+        "sha256": "57e59689c8563eeaea0c349617e79d9ced79960c291bf848228cf9c7edb9749a"
+      }
+    ],
+    "visualReview": [
+      "Firefox Unicode/surrogate comparison and sampled video",
+      "WebKit transformed/scrolling overlay and sampled video",
+      "Chromium table anchor",
+      "Firefox atomic-image anchor; clipped name identified"
+    ],
+    "physicalMobileOrIME": false
+  },
+  "compiledNode": {
+    "journeys": 24,
+    "formats": [
+      {
+        "format": "es",
+        "passed": 12,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls."
+      },
+      {
+        "format": "cjs",
+        "passed": 12,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls."
+      }
+    ]
+  },
+  "checks": [
+    {
+      "check": "test:api",
+      "exitCode": 0
+    },
+    {
+      "check": "test:headless",
+      "exitCode": 0
+    },
+    {
+      "check": "test:package",
+      "exitCode": 0
+    },
+    {
+      "check": "test:server-runtimes",
+      "exitCode": 0
+    },
+    {
+      "check": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "check": "test:budget",
+      "exitCode": 1
+    },
+    {
+      "check": "test:performance",
+      "exitCode": 0
+    }
+  ],
+  "api": {
+    "declarations": 423,
+    "changed": [
+      "dist/core/decoration.d.cts",
+      "dist/core/decoration.d.ts",
+      "dist/view/view.d.cts",
+      "dist/view/view.d.ts"
+    ],
+    "addition": "Optional DecorationSpec.overlay; other changes are private view fields."
+  },
+  "cssConsolidation": {
+    "publicRuntimeFilesByteIdentical": 170,
+    "unitAndOtherRuntimeGatesRemainApplicable": true,
+    "cssGatePasses": true
+  },
+  "ci": {
+    "workflowYAMLVerified": true,
+    "requiredRegressionStep": true,
+    "githubExecution": "Not run; publishing remains on hold."
+  },
+  "openFindings": [
+    {
+      "kind": "label-collision",
+      "status": "open",
+      "detail": "At a far-right atomic-media anchor the cursor name can clip against the editor boundary; collision placement needs follow-up.",
+      "evidence": "artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/anchor.png"
+    }
+  ],
+  "limits": "Unchanged. Size gate remains red for core ESM and aggregate ESM/CJS; public performance/heap gates pass. Experimental adapter large-document adoption remains unverified."
+}

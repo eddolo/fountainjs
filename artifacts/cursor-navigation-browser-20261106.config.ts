@@ -1,0 +1,3 @@
+import {defineConfig} from '@playwright/test';
+import base from './retained-adapter-browser-20261106.config';
+export default defineConfig({...base,testMatch:['**/retained-adapter-real.spec.ts','**/cursor-native-reference.spec.ts'],outputDir:'./cursor-overlay-browser-final-20261106',reporter:[['list'],['json',{outputFile:'cursor-overlay-browser-final-20261106.json'}]],webServer:{...base.webServer,command:'node artifacts/build-cursor-overlay-canary-20261106.mjs && pnpm exec vite --config artifacts/cursor-overlay-vite-20261106.config.ts',url:'http://127.0.0.1:4195/artifacts/retained-adapter-fixture-compiled-20261106.html'}});

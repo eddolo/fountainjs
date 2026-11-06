@@ -25,6 +25,25 @@ function paragraph(text: string) {
   return { type: 'paragraph', content: [{ type: 'text', text }] } as const;
 }
 
+it.each([2, 3, 7].flatMap(offset => [true, false].map(segmentation => ({ offset, segmentation }))))(
+  'paints safe peer ranges without changing exact source positions ($offset, Segmenter: $segmentation)', ({ offset, segmentation }) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Intl, 'Segmenter')!;
+    if (!segmentation) Object.defineProperty(Intl, 'Segmenter', { ...descriptor, value: undefined });
+    let context!: CollaborationAdapterContext;
+    const kit = composeExtensions([CoreExtension, createCollaborationExtension({ adapter: () => ({ connect: value => { context = value; } }) })]);
+    const text = 'A👩‍🔬éZ', editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: { type: 'doc', content: [paragraph(text)] } });
+    const original = editor.getJSON(), mount = document.createElement('div'); document.body.append(mount);
+    let view: EditorView | undefined;
+    try {
+      context.setPresences([{ clientId: 'peer', user: { id: 'peer', name: 'Grace', color: '#d63384' }, selection: { anchor: 1, head: offset + 1 } }]);
+      view = new EditorView(mount, editor);
+      expect(getCollaborationState(editor)?.presences[0].selection).toEqual({ anchor: 1, head: offset + 1 });
+      expect(mount.querySelector('.fountain-collaboration-selection')?.textContent).toBe(segmentation ? offset < 6 ? 'A👩‍🔬' : 'A👩‍🔬é' : text);
+      expect(editor.getJSON()).toEqual(original); expect(mount.textContent).toBe(text);
+    } finally { view?.destroy(); editor.destroy(); mount.remove(); Object.defineProperty(Intl, 'Segmenter', descriptor); }
+  },
+);
+
 describe('provider-independent collaboration boundary', () => {
   it('connects one adapter per editor, publishes local updates, and applies remote documents without echo', () => {
     let context!: CollaborationAdapterContext;
@@ -113,7 +132,7 @@ describe('provider-independent collaboration boundary', () => {
     expect(getCollaborationState(editor)).toMatchObject({ status: 'error', error: { recoverable: true } });
   });
 
-  it('normalizes untrusted presence and renders accessible range and caret decorations', () => {
+  it('normalizes untrusted presence and keeps decorative carets outside selectable document text', () => {
     let context!: CollaborationAdapterContext;
     const extension = createCollaborationExtension({
       adapter: () => ({ connect: (value) => { context = value; } }),
@@ -146,13 +165,18 @@ describe('provider-independent collaboration boundary', () => {
     const mount = document.createElement('div');
     const view = new EditorView(mount, editor);
     const range = mount.querySelector<HTMLElement>('[data-fountain-collaborator="peer-b"]:not(.fountain-collaboration-caret)');
-    const caret = mount.querySelector<HTMLElement>('.fountain-collaboration-caret');
+    const overlay = document.querySelector<HTMLElement>('[data-fountain-overlay-widgets]');
+    const caret = overlay?.querySelector<HTMLElement>('.fountain-collaboration-caret');
     expect(range?.textContent).toBe('Alpha');
     expect(range?.style.getPropertyValue('--fountain-collaborator-color')).toBe('#a855f7');
     expect(caret?.getAttribute('aria-label')).toBe("<Ada & team>'s cursor");
     expect(caret?.textContent).toBe('<Ada & team>');
+    expect(mount.querySelector('.fountain-collaboration-caret')).toBeNull();
+    expect(overlay?.getAttribute('aria-hidden')).toBe('true');
+    expect(overlay?.querySelector('script')).toBeNull();
     expect(mount.querySelector('script')).toBeNull();
     view.destroy();
+    expect(document.querySelector('[data-fountain-overlay-widgets]')).toBeNull();
   });
 
   it('respects transaction filters for remote updates and can start disconnected', () => {

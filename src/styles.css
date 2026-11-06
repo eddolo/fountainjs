@@ -396,8 +396,9 @@
 .fountain-character-count.is-over-limit { color: #b42318; }
 
 .fountain-collaboration-selection { background: color-mix(in srgb, var(--fountain-collaborator-color) 22%, transparent); border-radius: 2px; }
-.fountain-collaboration-caret { position: relative; display: inline-block; width: 0; height: 1.25em; margin-inline: -1px 0; vertical-align: text-bottom; border-inline-start: 2px solid var(--fountain-collaborator-color); pointer-events: none; }
+.fountain-collaboration-caret { position: relative; display: block; width: 0; height: 100%; margin: 0; border-inline-start: 2px solid var(--fountain-collaborator-color); pointer-events: none; }
 .fountain-collaboration-caret > span { position: absolute; inset-block-end: 100%; inset-inline-start: -2px; z-index: 5; max-width: 180px; padding: 2px 5px; overflow: hidden; color: #fff; background: var(--fountain-collaborator-color); border-radius: 4px 4px 4px 0; font: 700 10px/1.3 system-ui, sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+@media print { .fountain-widget-overlay { display: none !important; } }
 
 .fountain-comment-thread--inline { background: color-mix(in srgb, #f6c344 34%, transparent); border-block-end: 2px solid #c18800; border-radius: 2px; }
 .fountain-comment-thread--block { outline: 2px solid #d4a72c; outline-offset: 3px; }

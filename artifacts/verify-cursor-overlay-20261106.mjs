@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {readFile,readdir,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {resolve,dirname,relative,join} from 'node:path';
+const read=async path=>JSON.parse(await readFile(path,'utf8')),hash=async path=>createHash('sha256').update(await readFile(path)).digest('hex');
+const unitPath='artifacts/cursor-overlay-unit-20261106.json',browserPath='artifacts/cursor-overlay-browser-final-20261106.json';
+const unit=await read(unitPath),browser=await read(browserPath),checks=await read('artifacts/cursor-overlay-checks-20261106.json');
+assert.equal(unit.numTotalTests,4313);assert.equal(unit.numPassedTests,4307);assert.equal(unit.numFailedTests,6);assert.equal(unit.numPendingTests,0);
+const failures=unit.testResults.flatMap(s=>s.assertionResults.filter(t=>t.status==='failed').map(t=>({file:relative('.',s.name).replaceAll('\\','/'),name:t.fullName})));
+const old=await read('artifacts/retained-adapter-verification-20261106.json');assert.deepEqual(failures,old.unit.requiredFailures);
+const focusedFiles=['widget-overlays.test.ts','collaboration.test.ts','view-native-selection.test.ts','selection-view.test.ts'];
+const focused=unit.testResults.filter(s=>focusedFiles.some(name=>s.name.replaceAll('\\','/').endsWith('/'+name))).flatMap(s=>s.assertionResults);assert.equal(focused.length,58);assert(focused.every(t=>t.status==='passed'));
+assert.equal(browser.stats.expected,78);assert.equal(browser.stats.unexpected,0);assert.equal(browser.stats.flaky,0);assert.equal(browser.stats.skipped,0);assert.equal(browser.config.workers,1);
+const tests=[];function visit(suites){for(const suite of suites){visit(suite.suites??[]);for(const spec of suite.specs??[])for(const test of spec.tests??[])tests.push({name:spec.title,...test})}}visit(browser.suites);
+assert.equal(tests.length,78);const perProject={};for(const test of tests){assert.equal(test.status,'expected');assert.equal(test.results.length,1);perProject[test.projectName]=(perProject[test.projectName]??0)+1;const runtime=test.results[0].attachments.find(a=>a.name==='runtime-modules');assert(runtime?.body);const urls=JSON.parse(Buffer.from(runtime.body,'base64').toString('utf8'));assert(urls.includes('/artifacts/cursor-overlay-build-20261106/engine.js'));assert(!urls.some(url=>url.startsWith('/src/')))}
+assert.deepEqual(perProject,{chromium:26,firefox:26,webkit:26});
+for(const check of checks)assert.equal(check.exitCode,check.check==='test:budget'?1:0);
+const budget=await readFile('artifacts/cursor-overlay-test-budget-20261106.log','utf8');assert(!budget.includes('- dist/styles.css exceeds'));assert.equal((budget.match(/^- .*exceeds its budget/gm)??[]).length,3);
+const runtime=await read('artifacts/cursor-overlay-runtime-before-css-20261106.json');for(const [path,digest] of Object.entries(runtime))assert.equal(await hash(resolve('dist',path)),digest);assert.equal(Object.keys(runtime).length,170);
+const nodes=await Promise.all(['es','cjs'].map(mode=>read(`artifacts/cursor-overlay-node-${mode}-20261106.json`)));assert(nodes.every(n=>n.passed===12&&n.domRequired===false));
+const mapped=new Set(),canary='artifacts/cursor-overlay-build-20261106';for(const file of await readdir(canary))if(file.endsWith('.map')){const path=resolve(canary,file),map=await read(path);for(let i=0;i<map.sources.length;i++){const source=resolve(dirname(path),map.sources[i]);if(source.startsWith(resolve('src')+'/')||source.startsWith(resolve('src')+'\\')){assert.equal(map.sourcesContent[i],await readFile(source,'utf8'));mapped.add(relative('.',source).replaceAll('\\','/'))}}}
+assert(mapped.has('src/view/widget-overlays.ts'));assert(mapped.has('src/yjs/retained-adapter.ts'));assert.equal(await hash(`${canary}/styles.css`),await hash('src/styles.css'));assert.equal(await hash('dist/styles.css'),await hash('src/styles.css'));
+const apiBefore=await read('artifacts/cursor-overlay-api-before-20261106.json'),apiAfter=await read('api-surface.json');assert.deepEqual(Object.keys(apiBefore.files),Object.keys(apiAfter.files));const changed=Object.keys(apiAfter.files).filter(path=>apiBefore.files[path]!==apiAfter.files[path]);assert.deepEqual(changed,['dist/core/decoration.d.cts','dist/core/decoration.d.ts','dist/view/view.d.cts','dist/view/view.d.ts']);
+for(const path of ['scripts/check-build-budgets.mjs','scripts/check-performance-budgets.mjs','tests/yjs-document-range.test.ts','src/yjs/index.ts','src/view/input.ts','src/view/selection-handler.ts'])assert.equal((await readFile(path,'utf8')).replaceAll('\r\n','\n'),execFileSync('git',['show',`HEAD:${path}`],{encoding:'utf8'}).replaceAll('\r\n','\n'));
+const require=createRequire(import.meta.url),p=createRequire(require.resolve('@playwright/test')),q=createRequire(p.resolve('playwright')),root=dirname(q.resolve('playwright-core/package.json')),{yaml}=q(join(root,'lib/utilsBundle.js'));
+const workflow=yaml.parse(await readFile('.github/workflows/ci.yml','utf8')),guard=workflow.jobs.browser.steps.find(step=>step.name==='Compiled native presence and retained-document regressions');assert(guard&&!guard['continue-on-error']);
+const evidence=[];async function walk(folder){for(const file of await readdir(folder,{withFileTypes:true})){const path=`${folder}/${file.name}`;if(file.isDirectory())await walk(path);else evidence.push({path,sha256:await hash(path)})}}await walk('artifacts/cursor-overlay-browser-final-20261106');
+const sources=['src/core/decoration.ts','src/extensions/collaboration.ts','src/view/dom-renderer.ts','src/view/view.ts','src/view/widget-overlays.ts','src/styles.css','tests/collaboration.test.ts','tests/widget-overlays.test.ts','tests/manual/compiled-runtime-audit.ts','tests/manual/cursor-native-reference.spec.ts','tests/manual/retained-adapter-real.spec.ts','.github/workflows/ci.yml'];
+const receipt={date:'2026-11-06',publication:'Local only; no push/npm/site update.',goalComplete:false,defaultStorageAdapterSwitched:false,
+ source:await Promise.all(sources.map(async path=>({path,sha256:await hash(path)}))),
+ unit:{path:unitPath,sha256:await hash(unitPath),total:4313,passed:4307,failed:6,skipped:0,requiredFailures:failures,focusedPassed:focused.length},
+ browser:{path:browserPath,sha256:await hash(browserPath),passed:78,failed:0,skipped:0,retries:0,workers:1,perProject,compiledRuntimeVerifiedInEveryJourney:true,sourceMapModules:mapped.size,currentSourceMapContentsVerified:true,cssMatchesSourceAndPublicBuild:true,recordedVideos:evidence.filter(f=>f.path.endsWith('.webm')).length,evidence,
+ visualReview:['Firefox Unicode/surrogate comparison and sampled video','WebKit transformed/scrolling overlay and sampled video','Chromium table anchor','Firefox atomic-image anchor; clipped name identified'],physicalMobileOrIME:false},
+ compiledNode:{journeys:24,formats:nodes},checks,api:{declarations:423,changed,addition:'Optional DecorationSpec.overlay; other changes are private view fields.'},
+ cssConsolidation:{publicRuntimeFilesByteIdentical:170,unitAndOtherRuntimeGatesRemainApplicable:true,cssGatePasses:true},ci:{workflowYAMLVerified:true,requiredRegressionStep:true,githubExecution:'Not run; publishing remains on hold.'},
+ openFindings:[{kind:'label-collision',status:'open',detail:'At a far-right atomic-media anchor the cursor name can clip against the editor boundary; collision placement needs follow-up.',evidence:'artifacts/cursor-overlay-browser-final-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/anchor.png'}],
+ limits:'Unchanged. Size gate remains red for core ESM and aggregate ESM/CJS; public performance/heap gates pass. Experimental adapter large-document adoption remains unverified.'};
+await writeFile('artifacts/cursor-overlay-verification-20261106.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify({unitPassed:4307,knownUnitFailures:6,browserPassed:78,compiledNodeJourneys:24,mappedSources:mapped.size,recordings:receipt.browser.recordedVideos,focusedPassed:focused.length,cssBudgetPasses:true,goalComplete:false}));

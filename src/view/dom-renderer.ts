@@ -161,7 +161,7 @@ function renderWidget(decoration: Decoration): globalThis.Node {
 }
 
 function widgetsAt(position: number, context: DOMRenderContext): readonly Decoration[] {
-  return context.decorations?.find(position, position, (decoration) => decoration.type === 'widget' && decoration.from === position) ?? [];
+  return context.decorations?.find(position, position, (decoration) => decoration.type === 'widget' && !decoration.spec.overlay && decoration.from === position) ?? [];
 }
 
 function appendWidgets(target: globalThis.Node, position: number, context: DOMRenderContext): void {
@@ -197,6 +197,7 @@ function renderText(node: Node, path: readonly number[], position: number, conte
   const inline = context.decorations?.find(position, end, (decoration) => decoration.type === 'inline') ?? [];
   const widgets = context.decorations?.find(position, end, (decoration) => (
     decoration.type === 'widget'
+      && !decoration.spec.overlay
       && decoration.from >= position
       && (value.length === 0 ? decoration.from === position : decoration.from < end)
   )) ?? [];
@@ -300,7 +301,7 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   let linkedRun: { mark: Mark; dom: HTMLElement; target: HTMLElement } | undefined;
   node.content.forEach((child, index) => {
     const hasWidget = context.decorations?.find(childPosition, childPosition + child.nodeSize,
-      decoration => decoration.type === 'widget').length;
+      decoration => decoration.type === 'widget' && !decoration.spec.overlay).length;
     const link = child.isText && !hasWidget ? child.marks.find(mark => mark.type.name === 'link') : undefined;
     const linkSpec = link?.type.spec.toDOM?.(link);
     // Keep one actionable link across adjacent differently marked text runs,

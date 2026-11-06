@@ -117,6 +117,17 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps
+      - name: Compiled native presence and retained-document regressions
+        run: pnpm exec playwright test --config artifacts/cursor-navigation-browser-20261106.config.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-presence-and-retained-document-evidence
+          path: |
+            artifacts/cursor-overlay-browser-final-20261106.json
+            artifacts/cursor-overlay-browser-final-20261106/**
+          if-no-files-found: warn
+          retention-days: 7
       # Independent clipboard diagnosis does not turn failures into passes or
       # skip Fountain restoration assertions. Include source replacement, since
       # an unchanged selected document cannot prove an internal paste occurred.

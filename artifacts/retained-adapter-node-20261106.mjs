@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { writeFile } from 'node:fs/promises';
 const mode=process.argv[2]??'es',require=createRequire(import.meta.url);
+const directory=process.argv[3]??'retained-adapter-build-20261106',prefix=process.argv[4]??'retained-adapter-node';
 const Y=mode==='cjs'?require('yjs'):await import('yjs');
-const load=name=>mode==='cjs'?require(`./retained-adapter-build-20261106/${name}.cjs`):import(`./retained-adapter-build-20261106/${name}.js`);
+const load=name=>mode==='cjs'?require(`./${directory}/${name}.cjs`):import(`./${directory}/${name}.js`);
 const engine=await load('engine'),{createRetainedYjsCollaborationExtension}=await load('retained-adapter');
 assert.equal(typeof globalThis.document,'undefined');assert.equal(typeof globalThis.window,'undefined');
 const {CoreExtension,composeExtensions,createEditor,Selection,insertText,toggleQuote,toggleList,setMark,splitBlock,undoCollaboration,redoCollaboration,getCollaborationState}=engine;
@@ -21,4 +22,4 @@ for(const reverse of [false,true])for(const kind of ['quote','bullet','ordered',
  }finally{left.destroy();right.destroy();a.destroy();b.destroy()}
 }
 const receipt={format:mode,passed,domRequired:false,runtime:'Node '+process.version,note:'Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls.'};
-await writeFile(new URL(`./retained-adapter-node-${mode}-20261106.json`,import.meta.url),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));
+await writeFile(new URL(`./${prefix}-${mode}-20261106.json`,import.meta.url),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));

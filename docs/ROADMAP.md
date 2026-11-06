@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Native collaboration cursor rendering (2026-11-06, local checkpoint): paint
+passive carets outside editable text and paint peer ranges at safe grapheme
+boundaries without changing stored positions. All 78 compiled three-engine
+journeys pass, with 78 recordings and no skips/retries; all 24 compiled Node
+journeys pass. The full source run has 4,307 passes and the same six required
+default-storage failures. API, framework, headless/server, package and existing
+performance gates pass; CSS is within budget after consolidating styles. Known
+JavaScript size overruns remain. CI now includes a strict regression step, but
+GitHub execution/publication is on hold. Far-edge name-label collision placement
+is still open from visual review. No storage-adapter switch or parity promotion.
+[Audit and evidence](COLLABORATION_CURSOR_OVERLAY_AUDIT.md).
+
 Retained adapter integration (2026-11-06, local work in progress): connect the
 experimental pools to the actual collaboration lifecycle, directional and
 structural selections, author undo, awareness, provider replacement and granular

@@ -6,6 +6,11 @@ adapter, add a package export, migrate a room, or update the website. All work
 remains local at the user's request. The six required failures in
 `tests/yjs-document-range.test.ts` remain visible and unchanged.
 
+Follow-up: the cursor-navigation regression recorded at this checkpoint is
+addressed in the [cursor overlay audit](COLLABORATION_CURSOR_OVERLAY_AUDIT.md).
+The historical 21-pass/three-failure browser receipt below is not the follow-up
+result. Storage adoption and the six default-adapter failures remain open.
+
 ## Implementation and boundaries
 
 `src/yjs/retained-adapter.ts` implements `CollaborationAdapter` using the existing

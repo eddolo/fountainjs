@@ -255,7 +255,14 @@ non-editable DOM node at a mapped position. Decorations never enter the schema
 or persisted JSON. Their immutable sets map through the same transaction maps
 used by selections, which makes them suitable for search results, comments,
 remote carets, diagnostics, and pending review UI.
-The renderer segments text at every inline-range and widget boundary, then nests
+Passive widget decorations can opt into `overlay: true`. The view measures their
+mapped anchor and paints them in an inert layer outside the editable document;
+remote carets use this path. Presence-only updates retain the existing text DOM.
+This keeps cursor labels, extra navigation stops, and grapheme-breaking elements
+out of native text selection. Scroll/resize, font/image load and editor updates
+refresh geometry; virtualized anchors without mounted DOM stay hidden. Overlay
+state is view-owned and is removed with the view, never saved in the document.
+The renderer segments text at every inline-range and in-flow widget boundary, then nests
 all active decorations for that segment. This supports crossing ranges without
 duplicating or persisting text, including after transaction mapping.
 

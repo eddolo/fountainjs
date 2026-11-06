@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Paint remote carets outside editable text, preserving native character
+  navigation, backward selections, emoji/combining sequences and selected text.
+  Add optional `DecorationSpec.overlay` for passive widgets; refresh their
+  measured geometry on layout/scroll changes and remove resources on teardown.
+  Paint peer range edges at safe grapheme boundaries while retaining exact
+  presence coordinates. In-flow widget behavior remains available. No storage
+  protocol or default collaboration-adapter switch.
+
 - Integrate the unexported retained-Yjs candidate with the real collaboration
   lifecycle, selection bookmarks, author history, awareness and granular
   attributes. Preserve copied-container position maps and refuse legacy writes

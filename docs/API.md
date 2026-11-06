@@ -1307,7 +1307,7 @@ const reviewDecorations = DecorationSet.create(editor.state.doc, [
     caret.className = 'remote-caret';
     caret.setAttribute('aria-label', 'Ada\'s cursor');
     return caret;
-  }, { key: 'ada', side: 1 }),
+  }, { key: 'ada', side: 1, overlay: true }),
 ]);
 ```
 
@@ -1316,6 +1316,21 @@ const reviewDecorations = DecorationSet.create(editor.state.doc, [
 `transaction.mapping` and returns it from `props.decorations`. Inline and node
 decoration attributes pass through the DOM renderer's attribute safety rules.
 Widget contents are non-editable and ignored by selection-offset calculation.
+Use `overlay: true` for passive visuals such as remote carets. `EditorView`
+paints these in an inert layer outside the editable document, using DOM ranges
+only to measure their position. They cannot split a grapheme, add a keyboard
+navigation stop, enter native selected text, or become clipboard/export content.
+Their geometry follows scrolling, resize, font/image load and editor updates;
+unmounted virtualized anchors stay hidden. Inline widgets remain available for
+content that belongs in the editing flow. Overlay widgets are noninteractive;
+use a NodeView or product controls for interactive content. The global
+`.fountain-widget-overlay` class and `--fountain-widget-overlay-z-index` variable
+allow product styling; the supplied overlay is hidden for print. Presence
+identity remains available through `getCollaborationState` for accessible host UI.
+Remote range highlights expand painted endpoints to grapheme boundaries using
+`Intl.Segmenter`; their exact UTF-16 presence coordinates remain unchanged.
+Without that capability, painting conservatively expands to the containing text
+leaf. Neither path normalizes, splits or rewrites source characters.
 Partially overlapping inline ranges are split at deterministic boundaries and
 nested only for the shared segment; mapping preserves both ranges across edits.
 

@@ -39,6 +39,7 @@ import { refreshParagraphSpacingDOM } from './paragraph-spacing';
 import { InputManager } from './input';
 import { BlockHandleManager, type BlockHandleOptions } from './block-handles';
 import { DropCursorManager, type DropCursorOptions } from './drop-cursor';
+import { WidgetOverlayLayer } from './widget-overlays';
 import type { AssetUploadHandler, ImageUploadHandler } from './media';
 import type { ExternalPasteOptions } from './paste';
 import { SelectionHandler } from './selection-handler';
@@ -114,6 +115,8 @@ export class EditorView {
   private readonly input: InputManager;
   private readonly blockHandles?: BlockHandleManager;
   private readonly dropCursor?: DropCursorManager;
+  private overlayWidgets?: WidgetOverlayLayer;
+  private renderedDecorations = DecorationSet.empty;
   private readonly unsubscribe: () => void;
   private readonly unregisterTableDirectionRoot: () => void;
   private nodeViews: MountedNodeView[] = [];
@@ -255,6 +258,7 @@ export class EditorView {
     this.selections.destroy();
     this.blockHandles?.destroy();
     this.dropCursor?.destroy();
+    this.overlayWidgets?.destroy();
     this.destroyNodeViews();
     this.dom.remove();
   }
@@ -270,9 +274,12 @@ export class EditorView {
       || this.dom === document.activeElement
       || (transaction.selectionSet && transaction.getMeta('fountain$collaborationRemote') !== true);
     const decorations = this.collectDecorations(state);
-    if (transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout)) || !decorations.eq(this.decorations)) {
+    const content = decorations.decorations.filter(decoration => !(decoration.type === 'widget' && decoration.spec.overlay));
+    if (transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout))
+      || content.length !== this.renderedDecorations.decorations.length
+      || content.some((decoration, index) => !decoration.eq(this.renderedDecorations.decorations[index]!))) {
       this.render(state.doc, decorations, transaction);
-    }
+    } else this.syncOverlayWidgets(state.doc, decorations);
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
@@ -311,6 +318,8 @@ export class EditorView {
     allowReuse = true,
     viewportOnly = false,
   ): void {
+    this.syncOverlayWidgets(document, decorations);
+    const contentDecorations = DecorationSet.create(document, decorations.decorations.filter(decoration => !(decoration.type === 'widget' && decoration.spec.overlay)));
     const wasVirtualized = this.virtualized;
     const previous = this.nodeViews;
     const activeElement = this.dom.ownerDocument.activeElement;
@@ -323,7 +332,7 @@ export class EditorView {
     const reusableNodeViews = allowReuse ? this.reusableNodeViewMap(document, transaction) : new Map<string, MountedNodeView>();
     this.mutationObserver?.disconnect();
     const mounted: MountedNodeView[] = [];
-    const context = { view: this, nodeViews: mounted, reusableNodeViews, decorations };
+    const context = { view: this, nodeViews: mounted, reusableNodeViews, decorations: contentDecorations };
     const virtualPlan = this.virtualPlan(document);
     const virtualPlanKey = virtualPlan
       ? `${virtualPlan.totalHeight}:${virtualPlan.ranges.map(({ from, to }) => `${from}-${to}`).join(',')}`
@@ -338,8 +347,8 @@ export class EditorView {
     const canReconcile = allowReuse
       && !wasVirtualized
       && this.documentNodes.length > 0
-      && this.decorations.decorations.length === 0
-      && decorations.decorations.length === 0;
+      && this.renderedDecorations.decorations.length === 0
+      && contentDecorations.decorations.length === 0;
     const mappedNodeViewsByTopLevel = new Map<number, MountedNodeView[]>();
     reusableNodeViews.forEach((entry, key) => {
       const path = key.split('.').map(Number);
@@ -358,7 +367,7 @@ export class EditorView {
     if (virtualPlan && this.virtualLayout) {
       const canReuseVirtualDOM = allowReuse && this.documentNodes.length > 0 && (
         (this.decorations.decorations.length === 0 && decorations.decorations.length === 0)
-        || (!transaction?.docChanged && decorations.eq(this.decorations))
+        || (!transaction?.docChanged && contentDecorations.eq(this.renderedDecorations))
       );
       this.documentNodes = renderVirtualDocument(
         this.dom,
@@ -377,6 +386,7 @@ export class EditorView {
       this.documentNodes = renderDocument(this.dom, document, context);
     }
     refreshSharedDirectionDOM(this.dom, document);
+    this.renderedDecorations = contentDecorations;
     const retained = new Set(mounted.map((entry) => entry.nodeView));
     previous.forEach((entry) => {
       if (retained.has(entry.nodeView)) return;
@@ -480,6 +490,12 @@ export class EditorView {
       offset: Math.max(0, visibleTop - rootRect.top),
       height: Math.max(0, Math.min(containerRect.bottom, documentBottom) - visibleTop),
     };
+  }
+
+  private syncOverlayWidgets(document: Node, decorations: DecorationSet): void {
+    const overlays = decorations.decorations.filter(decoration => decoration.type === 'widget' && decoration.spec.overlay);
+    if (overlays.length) this.overlayWidgets ??= new WidgetOverlayLayer(this.dom);
+    this.overlayWidgets?.update(document, overlays);
   }
 
   private startVirtualization(): void {
