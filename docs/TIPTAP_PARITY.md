@@ -1,5 +1,22 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local checked-frame follow-up, 2026-11-06: reuse previously checked shared
+records only for a clean eligible native text transaction, with a fresh complete
+edited-stream read, unchanged-outside proof, fresh model rules, deletion-aware
+write stamps and lifetime invalidation/cleanup. Explicit reads and uncertain
+cases retain full acquisition. All 277 candidate cases pass; complete source has
+4,423 passes and six unchanged default failures across 289 files without skips.
+All 99 recorded browser, 36 compiled Node and 28 compatibility journeys pass.
+Controlled local editing medians improve from 31.68/130.88/270.91 to
+10.39/51.49/108.69 ms at 1k/5k/10k paragraphs; full shared/model hashes agree.
+Initialization/receiver results are mixed. The live cache adds about 0.68 MiB
+for the tested pair while preserving snapshot retention. All 171 public
+runtime/CSS files remain byte-identical; limits and default adapter stay fixed.
+Normalization/preflight, remote projection, history/storage growth, compaction,
+migration, size acceptance and complete fresh release CI remain unfinished.
+COLLAB-01 stays Partial; no default switch, release or overall parity claim.
+[Audit](YJS_RETAINED_CHECKED_PROJECTION_AUDIT.md).
+
 Local shape-check follow-up, 2026-11-06: use model equality on the complete fresh
 validated projection, retaining portable JSON comparison when necessary.
 All 265 candidate source cases pass; six required default failures remain.

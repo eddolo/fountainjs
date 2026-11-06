@@ -47,6 +47,11 @@ interface Piece { original: string; from: number; to: number; at: number; group:
 interface Segment { original: string; id: string; from: number; to: number; group: Group }
 interface Fragment { node: Node; id?: string; leaf?: string; bindings?: Binding[]; children?: Fragment[] }
 interface TextFragment { text: string; attrs: Attributes; marks: readonly Mark[]; leaf: string; bindings: Binding[] }
+interface ProjectionFrame {
+  readonly projection: ReturnType<RetainedNodeStore['project']>;
+  readonly partitions: ReadonlyMap<string, RetainedTextPartition>;
+  readonly placements: ReadonlyMap<string, SplitPlacement>;
+}
 interface SplitPlacement { root: string; rootToken: string; token: string; partition: string }
 const bindingKey = (bindings: readonly Binding[], leaf: string): string => JSON.stringify([bindings[0]?.id, bindings[0]?.from, leaf]);
 const sameBindings = (left: readonly Binding[], right: readonly Binding[]): boolean => left.length === right.length && left.every((entry, index) => {
@@ -85,6 +90,24 @@ export class RetainedDocumentStore {
   private readonly metadata: Y.Map<unknown>;
   private readonly splits: Y.Map<unknown>;
   private model?: Node;
+  private frame?: ProjectionFrame;
+  private frameCurrent = false;
+  private sharedRevision: object = {};
+  private frameTransaction?: Y.Transaction;
+  private frameStamp?: string;
+  private frameGuard?: () => boolean;
+  private readonly sharedFrameChanged = (transaction: Y.Transaction): void => {
+    this.sharedRevision = {};
+    try {
+      this.frameCurrent = this.frameTransaction === transaction && this.frameStamp === this.text.writeVersion(transaction) && this.frameGuard?.() === true;
+    } catch { this.frameCurrent = false; }
+    this.frameTransaction = undefined; this.frameStamp = undefined; this.frameGuard = undefined;
+  };
+
+  private clearFrame(): void {
+    this.frame = undefined; this.frameCurrent = false;
+    this.frameTransaction = undefined; this.frameStamp = undefined; this.frameGuard = undefined;
+  }
   private nodePaths = new Map<string, string>();
   private textPaths = new Map<string, Binding[]>();
   private identityPaths = new Map<string, readonly number[]>();
@@ -102,6 +125,7 @@ export class RetainedDocumentStore {
     this.splits = document.getMap(`${name}:splits`);
     this.scope = [...this.nodes.scope, ...this.text.scope, this.splits];
     this.observed = [...new Set([...this.scope, this.metadata, this.nodes.metadata, ...this.text.observed])];
+    this.document.on('afterTransaction', this.sharedFrameChanged);
   }
 
   get initialized(): boolean { return this.metadata.get('seeded') === true; }
@@ -227,22 +251,7 @@ export class RetainedDocumentStore {
     return { leaf, attrs, marks: [...new Set([...order as string[], ...marks.keys()])].filter(key => marks.has(key)).map(key => marks.get(key)!) };
   }
 
-  read(validate = true): Node {
-    if (this.metadata.get('version') !== VERSION || this.metadata.get('seeded') !== true) throw new Error('Retained document is not initialized.');
-    // Candidates come only from this store's existing model/bindings. Shared
-    // data is read and checked below; no shared projection is cached.
-    const previousNodes = new Map<string, Node>();
-    const previousTexts = new Map<string, { node: Node; bindings: readonly Binding[] } | null>();
-    const used = new Set<Node>();
-    if (this.model) {
-      for (const [id, path] of this.identityPaths) previousNodes.set(id, getNodeAtPath(this.model, path));
-      for (const [path, bindings] of this.textPaths) {
-        const leaf = this.leafPaths.get(path);
-        if (!leaf || !bindings.length) continue;
-        const key = bindingKey(bindings, leaf), node = getNodeAtPath(this.model, path.split('.').map(Number));
-        previousTexts.set(key, previousTexts.has(key) ? null : { node, bindings });
-      }
-    }
+  private acquireFrame(): ProjectionFrame {
     const projection = this.nodes.project();
     if (projection.issues.some(issue => issue.kind === 'unattached')) throw new Error('Retained document has unattached records.');
     const fields = new Set<string>(), placements = new Map<string, SplitPlacement>();
@@ -259,6 +268,33 @@ export class RetainedDocumentStore {
     };
     collect(projection.root);
     const partitions = this.text.projectMany([...fields]);
+    return { projection, partitions, placements };
+  }
+
+  read(validate = true): Node {
+    this.clearFrame();
+    const revision = this.sharedRevision;
+    if (this.metadata.get('version') !== VERSION || this.metadata.get('seeded') !== true) throw new Error('Retained document is not initialized.');
+    const frame = this.acquireFrame(), result = this.normalizeFrame(frame, validate);
+    this.frame = frame; this.frameCurrent = revision === this.sharedRevision;
+    return result;
+  }
+
+  private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean): Node {
+    // Candidates come only from this store's existing model/bindings. Shared
+    // data was checked by acquisition or the guarded native-write proof.
+    const previousNodes = new Map<string, Node>();
+    const previousTexts = new Map<string, { node: Node; bindings: readonly Binding[] } | null>();
+    const used = new Set<Node>();
+    if (this.model) {
+      for (const [id, path] of this.identityPaths) previousNodes.set(id, getNodeAtPath(this.model, path));
+      for (const [path, bindings] of this.textPaths) {
+        const leaf = this.leafPaths.get(path);
+        if (!leaf || !bindings.length) continue;
+        const key = bindingKey(bindings, leaf), node = getNodeAtPath(this.model, path.split('.').map(Number));
+        previousTexts.set(key, previousTexts.has(key) ? null : { node, bindings });
+      }
+    }
     const groupStates = new Map<string, GroupState>();
     const visit = (raw: RetainedNodeProjection): Fragment => {
       if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
@@ -366,7 +402,7 @@ export class RetainedDocumentStore {
         writer = event;
         let result: Node | undefined;
         for (const change of changes) result = (changes.length === 1 ? this.changeText(change.before, change.after, change.mapping, change.step, event) : undefined)
-          ?? this.change(change.before, change.after, change.mapping, change.step, change.plan);
+          ?? this.change(change.before, change.after, change.mapping, change.step, change.plan, event);
         return result;
       }, this.origin);
       // Reuse only this call's checked projection. Observer/cleanup writes can
@@ -388,27 +424,47 @@ export class RetainedDocumentStore {
     const bindings = this.textPaths.get(pathKey(path)), binding = bindings?.length === 1 ? bindings[0] : undefined;
     if (!binding || binding.from || binding.modelFrom || binding.length !== original.nodeSize
       || this.groups.get(binding.id)?.value.textLayout?.empty !== false) return;
-    const desired = format(original, binding.leaf), partition = this.text.project(binding.id);
+    const frame = this.frameCurrent ? this.frame : undefined;
+    const proof = frame ? this.text.prepareNativeProjection(binding.id, shared) : undefined;
+    const desired = format(original, binding.leaf), partition = proof?.partition ?? this.text.project(binding.id);
     // Read the actual partition before writing. Incomplete bindings, mixed
     // formats or pending foreign text must not be treated as one native leaf.
     if (partition.runs.map(run => run.text).join('') !== original.text
       || partition.runs.some(run => !same(run.attributes ?? {}, desired))) return;
     if (to > from) this.text.delete(binding.id, from, to);
     if (text) this.text.insert(binding.id, from, text, desired);
-    return this.finishChange(after);
+    const current = proof?.partitions();
+    let next: ProjectionFrame | undefined;
+    if (frame && current) {
+      const partitions = new Map(frame.partitions);
+      for (const entry of current) if (partitions.has(entry.id)) partitions.set(entry.id, entry);
+      next = { ...frame, partitions };
+    }
+    return this.finishChange(after, next, shared, proof?.unchangedOutside);
   }
 
-  private finishChange(after: Node): Node {
-    const projected = this.read(false);
+  private finishChange(after: Node, frame?: ProjectionFrame, shared?: Y.Transaction, guard?: () => boolean): Node {
+    this.clearFrame();
+    const stamp = shared ? this.text.writeVersion(shared) : undefined;
+    let projected: Node;
+    if (frame && shared && guard) {
+      projected = this.normalizeFrame(frame, false);
+      if (stamp !== this.text.writeVersion(shared) || !guard()) projected = this.read(false);
+      else this.frame = frame;
+    } else projected = this.read(false);
     // Fresh projection has already checked shared values and factory rules.
     // Equal immutable branches need not allocate two complete JSON trees;
     // retain portable equality for equivalent, differently ordered metadata.
     if (!projected.eq(after) && !same(projected.toJSON(), after.toJSON())) throw new Error('Retained transaction changed the native document shape.');
+    if (shared && this.frame && stamp === this.text.writeVersion(shared)) {
+      this.frameCurrent = false; this.frameTransaction = shared; this.frameStamp = stamp;
+      this.frameGuard = frame && guard ? guard : () => true;
+    }
     this.model = after;
     return projected;
   }
 
-  private change(before: Node, after: Node, mapping: Mapping, step: Step, checked?: RetainedTextPlan): Node {
+  private change(before: Node, after: Node, mapping: Mapping, step: Step, checked?: RetainedTextPlan, shared?: Y.Transaction): Node {
     const plan = checked ?? planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
     const intent = (step as Step & { getRetainedSplit?: () => { textPath: readonly number[]; rightTextPath: readonly number[]; offset: number } }).getRetainedSplit?.();
     const nextNodes = new Map<string, string>([['', 'root']]), values = new Map<string, RetainedNodeProjection>();
@@ -620,8 +676,8 @@ export class RetainedDocumentStore {
       const previous = this.splitPlacement(leftId), root = previous?.root ?? leftId;
       this.splits.set(rightId, { root, rootToken: this.nodes.placementIdentity(root)!, token: this.nodes.placementIdentity(rightId)!, partition: group.ids[0] } satisfies SplitPlacement);
     }
-    return this.finishChange(after);
+    return this.finishChange(after, undefined, shared);
   }
 
-  destroy(): void { this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
+  destroy(): void { this.document.off('afterTransaction', this.sharedFrameChanged); this.clearFrame(); this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
 }

@@ -1,0 +1,264 @@
+[
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 88,
+    "name": "descendants",
+    "snippet": "descendants(visitor: DescendantVisitor, path: number[] = [], parent: Node | null = null): void {",
+    "selfMs": 94.7
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 283,
+    "name": "normalizeFrame",
+    "snippet": "private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean): Node {",
+    "selfMs": 91.54
+  },
+  {
+    "source": "node:inspector",
+    "line": 115,
+    "name": "post",
+    "selfMs": 83.06
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "(garbage collector)",
+    "selfMs": 77.63
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 299,
+    "name": "visit",
+    "snippet": "const visit = (raw: RetainedNodeProjection): Fragment => {",
+    "selfMs": 54.96
+  },
+  {
+    "source": "../../src/core/schema/attributes.ts",
+    "line": 4,
+    "name": "computeAttrs",
+    "snippet": "export function computeAttrs(",
+    "selfMs": 42.75
+  },
+  {
+    "source": "../../src/yjs/retained-mapping.ts",
+    "line": 55,
+    "name": "gaps",
+    "snippet": "function gaps(all: readonly Leaf[], retained: readonly TextSlice[]): readonly TextSlice[] {",
+    "selfMs": 35.06
+  },
+  {
+    "source": "../../src/yjs/retained-mapping.ts",
+    "line": 20,
+    "name": "visit",
+    "snippet": "const visit = (node: Node, path: readonly number[], position: number, root = false): void => {",
+    "selfMs": 27.73
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 237,
+    "name": "decode",
+    "snippet": "private decode(run: RetainedTextRun): { leaf: string; attrs: Attributes; marks: MarkJSON[] } {",
+    "selfMs": 25.95
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 32,
+    "name": "sameOrdered",
+    "snippet": "const sameOrdered = (left: unknown, right: unknown): boolean => {",
+    "selfMs": 20.69
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 224,
+    "name": "projectionNode",
+    "snippet": "private projectionNode(type: NodeType, attrs: Attributes, content: readonly Node[], text: string | undefined, marks: readonly Mark[], used: Set<Node>, previous?: Node): Node {",
+    "selfMs": 18.2
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 361,
+    "name": "bind",
+    "snippet": "const bind = (fragment: Fragment, path: number[]) => {",
+    "selfMs": 17.49
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 348,
+    "name": "",
+    "snippet": "const fragments: Fragment[] = children.map(child => {",
+    "selfMs": 16.81
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 56,
+    "name": "bindingKey",
+    "snippet": "const bindingKey = (bindings: readonly Binding[], leaf: string): string => JSON.stringify([bindings[0]?.id, bindings[0]?.from, leaf]);",
+    "selfMs": 15.31
+  },
+  {
+    "source": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js",
+    "line": 45,
+    "name": "",
+    "selfMs": 13.11
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 55,
+    "name": "attributes",
+    "snippet": "function attributes(value: unknown, remove = false): Record<string, string | null> {",
+    "selfMs": 12.71
+  },
+  {
+    "source": "../src/types/YMap.js",
+    "line": 144,
+    "name": "get size",
+    "snippet": "get size () {",
+    "selfMs": 10.07
+  },
+  {
+    "source": "../../src/core/schema/attributes.ts",
+    "line": 25,
+    "name": "isDeeplyImmutable",
+    "snippet": "export function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {",
+    "selfMs": 7.72
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 52,
+    "name": "get nodeSize",
+    "snippet": "get nodeSize(): number {",
+    "selfMs": 6.75
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 416,
+    "name": "changeText",
+    "snippet": "private changeText(before: Node, after: Node, mapping: Mapping, step: Step, shared: Y.Transaction): Node | undefined {",
+    "selfMs": 6.41
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 62,
+    "name": "format",
+    "snippet": "function format(node: Node, leaf: string): Record<string, string> {",
+    "selfMs": 6.25
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 367,
+    "name": "",
+    "snippet": "this.identityPaths = new Map([...nodePaths].map(([path, id]) => [id, Object.freeze(path ? path.split('.').map(Number) : [])]));",
+    "selfMs": 5.82
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 161,
+    "name": "orderedChildren",
+    "snippet": "private orderedChildren(raw: RetainedNodeProjection, partitions: ReadonlyMap<string, RetainedTextPartition>, placements: ReadonlyMap<string, SplitPlacement>): readonly RetainedNodeProjection[] {",
+    "selfMs": 4.71
+  },
+  {
+    "source": "../../src/core/transaction/document-point.ts",
+    "line": 22,
+    "name": "resolveDocumentPoint",
+    "snippet": "export function resolveDocumentPoint(doc: Node, position: number, association: -1 | 1 = 1): DocumentPoint {",
+    "selfMs": 4.66
+  },
+  {
+    "source": "../../src/yjs/retained-mapping.ts",
+    "line": 104,
+    "name": "planRetainedText",
+    "snippet": "export function planRetainedText(before: Node, after: Node, mapping: Mapping, retainReusedNodes = false): RetainedTextPlan {",
+    "selfMs": 4.17
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 88,
+    "name": "decodeAttributes",
+    "snippet": "function decodeAttributes(value: unknown, lookup: (client: number, clock: number) => Readonly<Record<string, string>>, cache?: DecodedFormatCache): Record<string, string> {",
+    "selfMs": 3.23
+  },
+  {
+    "source": "../../src/core/commands.ts",
+    "line": 382,
+    "name": "insertText",
+    "snippet": "export function insertText(editor: Editor, text: string): boolean {",
+    "selfMs": 3.2
+  },
+  {
+    "source": "../../src/core/schema/schema.ts",
+    "line": 100,
+    "name": "visit",
+    "snippet": "const visit = (current: Node, path: readonly number[]): boolean => {",
+    "selfMs": 3.16
+  },
+  {
+    "source": "../../src/core/text-direction.ts",
+    "line": 5,
+    "name": "validate",
+    "snippet": "validate: (value: unknown) => ['left', 'center', 'right', 'justify', 'start', 'end'].includes(String(value)),",
+    "selfMs": 3.1
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 322,
+    "name": "appendText",
+    "snippet": "const appendText = (text: string, attrs: Attributes, markJSON: readonly MarkJSON[], leaf: string, bindings: Binding[]) => {",
+    "selfMs": 3.08
+  },
+  {
+    "source": "",
+    "line": 0,
+    "name": "dispatch",
+    "selfMs": 1.62
+  },
+  {
+    "source": "../../src/core/schema/node.ts",
+    "line": 93,
+    "name": "eq",
+    "snippet": "eq(other: Node): boolean {",
+    "selfMs": 1.57
+  },
+  {
+    "source": "../../src/core/schema/child-offset.ts",
+    "line": 17,
+    "name": "inheritChildOffset",
+    "snippet": "export function inheritChildOffset(before: Node, after: Node): number | undefined {",
+    "selfMs": 1.56
+  },
+  {
+    "source": "../../src/yjs/retained-adapter.ts",
+    "line": 186,
+    "name": "onLocalUpdate",
+    "snippet": "onLocalUpdate(update: CollaborationLocalUpdate): void {",
+    "selfMs": 1.55
+  },
+  {
+    "source": "../../src/yjs/retained-text.ts",
+    "line": 324,
+    "name": "readFrame",
+    "snippet": "private readFrame(ids: readonly string[]): TextRead {",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../../src/yjs/retained-document.ts",
+    "line": 19,
+    "name": "pathKey",
+    "snippet": "const pathKey = (path: readonly number[]) => path.join('.');",
+    "selfMs": 1.54
+  },
+  {
+    "source": "../../src/core/transaction/mapping.ts",
+    "line": 285,
+    "name": "findTextPoint",
+    "snippet": "function findTextPoint(doc: Node, position: number, association: MapAssociation): TextPoint | null {",
+    "selfMs": 1.2
+  },
+  {
+    "source": "../../src/core/transaction/path.ts",
+    "line": 23,
+    "name": "getNodeAtPath",
+    "snippet": "export function getNodeAtPath(doc: Node, path: readonly number[]): Node {",
+    "selfMs": 1.08
+  }
+]

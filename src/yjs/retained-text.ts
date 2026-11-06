@@ -287,6 +287,35 @@ export class RetainedTextStore {
     return this.projectMany([id]).get(id)!;
   }
 
+  /** Internal proof for one native edit in an otherwise untouched transaction.
+   * New format definitions may be added, but old definitions, ownership and
+   * other streams must not change. The complete edited stream is read again. */
+  prepareNativeProjection(id: string, transaction: Y.Transaction): {
+    partition: RetainedTextPartition;
+    unchangedOutside: () => boolean;
+    partitions: () => readonly RetainedTextPartition[] | undefined;
+  } {
+    if (transaction.doc !== this.document || transaction.changed.size) throw new Error('Native projection needs a clean owning transaction.');
+    const frame = this.readFrame([id]), partition = frame.partitions.get(id)!, stream = frame.streams.get(partition.streamId)!;
+    const nextStyle = `${this.document.clientID}:${this.clock()}`, unusedStyle = !this.styles.has(nextStyle);
+    const unchangedOutside = (): boolean => [...transaction.changed].every(([type, keys]) =>
+      Object.is(type, stream.text) && keys.size === 1 && keys.has(null)
+      || Object.is(type, this.styles) && unusedStyle && keys.size === 1 && keys.has(nextStyle));
+    return { partition, unchangedOutside, partitions: () => {
+      if (!unchangedOutside()) return;
+      const current = this.partitions(partition.streamId);
+      if (current.length !== stream.entries.length || current.some((entry, index) => entry.id !== stream.entries[index]!.id)) return;
+      return current;
+    } };
+  }
+
+  /** Insert clocks alone miss deletions. Compare both public transaction facts. */
+  writeVersion(transaction: Y.Transaction): string {
+    let deleted = 0;
+    for (const ranges of transaction.deleteSet.clients.values()) for (const range of ranges) deleted += range.len;
+    return `${[...Y.encodeStateVector(this.document)].join(',')}/${deleted}`;
+  }
+
   /** One synchronous read, not a cache that can outlive pending Yjs edits. */
   projectMany(ids: readonly string[]): ReadonlyMap<string, RetainedTextPartition> {
     return this.readFrame(ids).partitions;

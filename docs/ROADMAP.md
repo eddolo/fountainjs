@@ -1,5 +1,24 @@
 # FountainJS opportunity roadmap
 
+Checked retained shared projection (2026-11-06, local): separate acquisition
+from normalization and retain a private checked shared frame only across proven
+local native text edits. Reread the complete affected stream, preserve every
+factory/schema check, invalidate on other transactions, and include deletions
+in the freshness stamp. Explicit reads and uncertain/remote/structural edits
+retain full acquisition. All 277 candidate cases pass; full source has 4,423
+passes and the same six required default failures across 289 files, no skips.
+All 99 recorded browser, 36 compiled Node and 28 compatibility journeys pass.
+Three-trial local editing improves from 31.68/130.88/270.91 to
+10.39/51.49/108.69 ms at 1k/5k/10k paragraphs, with identical documents/shared
+bytes. Initialization and receiver timings are mixed. The snapshot diagnostic
+preserves 2,193 nodes / 0.54 MiB extra for 65 exact versions, with about 0.68 MiB
+more live cache memory for the tested pair. All 171 public runtime/CSS files
+remain byte-identical; no limits change.
+Whole-model normalization/preflight, remote acquisition, storage/history growth,
+compaction, migration, size acceptance and fresh complete release CI remain
+open. COLLAB-01 stays Partial; no public adapter switch or publication.
+[Audit](YJS_RETAINED_CHECKED_PROJECTION_AUDIT.md).
+
 Final retained shape comparison (2026-11-06, local): compare the fully fresh
 validated projection with model equality before allocating complete JSON trees;
 retain portable equality for equivalent reordered metadata and reject actual

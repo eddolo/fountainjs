@@ -1,0 +1,23 @@
+[
+  {
+    "engine": "chromium",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checked-projection-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-chromium\\video.webm",
+    "replacementVideo": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checked-projection-browser-20261106\\retained-adapter-real-repl-6cea4-ts-through-keyboard-history-chromium\\video.webm",
+    "durationSeconds": 7.52,
+    "replacementDurationSeconds": 2.16
+  },
+  {
+    "engine": "firefox",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checked-projection-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-firefox\\video.webm",
+    "replacementVideo": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checked-projection-browser-20261106\\retained-adapter-real-repl-6cea4-ts-through-keyboard-history-firefox\\video.webm",
+    "durationSeconds": 10.28,
+    "replacementDurationSeconds": 2.64
+  },
+  {
+    "engine": "webkit",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checked-projection-browser-20261106\\retained-adapter-real-edit-06a69--independent-author-history-webkit\\video.webm",
+    "replacementVideo": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-checked-projection-browser-20261106\\retained-adapter-real-repl-6cea4-ts-through-keyboard-history-webkit\\video.webm",
+    "durationSeconds": 12.56,
+    "replacementDurationSeconds": 4.36
+  }
+]

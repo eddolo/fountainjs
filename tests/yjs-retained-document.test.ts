@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Schema, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
   type NodeJSON, type Transaction } from '../src';
@@ -76,6 +76,84 @@ it('rejects unexpected shared metadata written during a native text operation', 
     expect(() => pair.store.apply(transaction)).toThrow('Retained transaction changed the native document shape.');
     expect(pair.store.read().attrs.unexpected).toBe(true);
   } finally { pair.destroy(); }
+});
+
+it('invalidates checked shared frames after a committed malformed metadata edit', () => {
+  const pair = fixture();
+  try {
+    pair.doc.getMap('candidate-nodes:root').set('attr:' + retainedNameKey('malformed'), '{');
+    expect(() => pair.store.apply(pair.editor.createTransaction().insertText([0, 0], 2, 'X'))).toThrow();
+    expect(pair.doc.getMap('candidate-nodes:root').get('attr:' + retainedNameKey('malformed'))).toBe('{');
+  } finally { pair.destroy(); }
+});
+
+it('does not hide deletion-only changes in an unedited shared stream', () => {
+  const pair = fixture({ ...source, content: [source.content![0], { type: 'paragraph', content: [{ type: 'text', text: 'Beta' }] }] });
+  try {
+    const field = pair.store.nodes.project().root.content[1].content[0].id, vector = Y.encodeStateVector(pair.doc);
+    pair.store.text.delete(field, 0, 1); expect(Y.encodeStateVector(pair.doc)).toEqual(vector);
+    expect(() => pair.store.apply(pair.editor.createTransaction().insertText([0, 0], 2, 'X'))).toThrow('Retained transaction changed the native document shape.');
+    expect(pair.store.read().child(1).textContent).toBe('eta');
+  } finally { pair.destroy(); }
+});
+
+it('refreshes all shared-stream partition coordinates after an eligible local edit', () => {
+  const pair = fixture(), control = new RetainedDocumentStore(pair.doc, 'candidate', pair.editor.state.schema, factory('coordinates'));
+  try {
+    pair.editor.dispatch(pair.editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(splitBlock(pair.editor)).toBe(true); pair.apply();
+    const first = pair.store.apply(pair.editor.createTransaction().insertText([0, 0], 1, 'X'));
+    expect(first.toJSON()).toEqual(control.read().toJSON()); expect(first.content.slice(0, 2).map(node => node.textContent)).toEqual(['AXl', 'pha']);
+    const state = EditorState.create({ schema: pair.editor.state.schema, doc: first });
+    const second = pair.store.apply(state.createTransaction().insertText([1, 0], 1, 'Y'));
+    expect(second.toJSON()).toEqual(control.read().toJSON()); expect(second.child(1).textContent).toBe('pYha');
+    expect(pair.store.resolveTextAnchor(pair.store.textAnchor([1, 0], 2, 1))).toEqual({ path: [1, 0], offset: 2 });
+  } finally { control.destroy(); pair.destroy(); }
+});
+
+it.each(['insert', 'delete'] as const)('detects an extra same-stream %s during cached normalization', kind => {
+  const kit = composeExtensions([CoreExtension]), document = new Y.Doc();
+  let armed = false, written = false, field = '';
+  let store: RetainedDocumentStore;
+  const schema = new Schema({ ...kit.schema, nodes: { ...kit.schema.nodes, text: { ...kit.schema.nodes.text,
+    validate: node => {
+      if (armed && !written && node.text === 'AlXpha') {
+        written = true; const vector = Y.encodeStateVector(document);
+        if (kind === 'delete') { store.text.delete(field, 5, 6); expect(Y.encodeStateVector(document)).toEqual(vector); }
+        else store.text.insert(field, 6, 'Y', store.text.project(field).runs[0].attributes);
+      }
+      return true;
+    } } } });
+  const original = schema.nodeFromJSON(source); store = new RetainedDocumentStore(document, 'versions', schema, factory('versions'));
+  try {
+    store.seed(original); field = store.nodes.project().root.content[0].content[0].id;
+    const insert = store.text.insert.bind(store.text); store.text.insert = (...args) => { insert(...args); armed = true; };
+    const transaction = EditorState.create({ schema, doc: original }).createTransaction().insertText([0, 0], 2, 'X');
+    expect(() => store.apply(transaction)).toThrow('Retained transaction changed the native document shape.');
+    expect(written).toBe(true); expect(store.read().child(0).textContent).toBe(kind === 'delete' ? 'AlXph' : 'AlXphaY');
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it('reruns off-path factory validators during checked frame normalization', () => {
+  let valid = true;
+  const extension = defineExtension({ name: 'frame-guarded', nodes: { guarded: { group: 'block', atom: true,
+    attrs: { token: { default: 'ok', validate: () => valid } } } } });
+  const pair = fixture({ ...source, content: [source.content![0], { type: 'guarded' }] }, 101, [CoreExtension, extension]);
+  try {
+    const insert = pair.store.text.insert.bind(pair.store.text); pair.store.text.insert = (...args) => { insert(...args); valid = false; };
+    expect(() => pair.store.apply(pair.editor.createTransaction().insertText([0, 0], 2, 'X'))).toThrow('Invalid value for attribute: token');
+  } finally { pair.destroy(); }
+});
+
+it('releases its shared-frame listener while the caller retains the Yjs document', () => {
+  const kit = composeExtensions([CoreExtension]), document = new Y.Doc(), on = vi.spyOn(document, 'on'), off = vi.spyOn(document, 'off');
+  const editor = createEditor({ schema: kit.schema, content: source }), store = new RetainedDocumentStore(document, 'release', editor.state.schema, factory('release'));
+  try {
+    const added = on.mock.calls.filter(([name]) => name === 'afterTransaction').map(([, listener]) => listener);
+    expect(added).toHaveLength(1); store.seed(editor.state.doc); store.destroy();
+    expect(off.mock.calls.some(([name, listener]) => name === 'afterTransaction' && listener === added[0])).toBe(true);
+    document.getMap('host-data').set('alive', true); expect(document.getMap('host-data').get('alive')).toBe(true);
+  } finally { store.destroy(); editor.destroy(); document.destroy(); }
 });
 
 it('does not introduce duplicate model identity when the input reuses the same immutable node twice', () => {

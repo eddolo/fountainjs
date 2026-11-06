@@ -1,0 +1,25 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "cursor-overlay-build-20261106",
+  "blocks": 5000,
+  "warmupEdits": 8,
+  "profiledEdits": 12,
+  "samples": [
+    59.61590000000001,
+    54.13740000000007,
+    48.4858999999999,
+    52.7465000000002,
+    61.55459999999994,
+    54.03469999999993,
+    59.67410000000018,
+    53.41769999999997,
+    49.265499999999975,
+    52.93910000000005,
+    51.1572000000001,
+    50.15549999999985
+  ],
+  "documentMatchesPlain": true,
+  "sharedBytes": 9310124,
+  "sharedSha256": "c972e0e9035134ae7dd966c95f0147e36c4388c69e35f2ff458ccfbbde5ab7fe",
+  "note": "Initialization excluded; twelve actual candidate edits after eight warmups. CPU sampling affects timing. No acceptance limit changed."
+}

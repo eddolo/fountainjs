@@ -5,6 +5,36 @@ import { RetainedTextStore, type RetainedTextSeed, type RetainedTextRun } from '
 
 const plain = (store: RetainedTextStore, id: string) => store.project(id).runs.map(run => run.text).join('');
 
+it.each(['metadata', 'existing style', 'other stream', 'partition marker'] as const)('refuses native projection reuse after an unexpected %s change', kind => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'proof');
+  try {
+    store.seed([{ stream: 'a', id: 'first', runs: [{ text: 'Alpha', attributes: { mark: '1' } }] },
+      { stream: 'b', id: 'second', runs: [{ text: 'Beta', attributes: { mark: '1' } }] }]);
+    document.transact(transaction => {
+      const proof = store.prepareNativeProjection('first', transaction); store.insert('first', 2, 'X', { mark: '1' });
+      if (kind === 'metadata') document.getMap('proof:metadata').set('extra', true);
+      if (kind === 'existing style') { const styles = document.getMap('proof:styles'), key = [...styles.keys()][0]; styles.set(key, String(styles.get(key)) + ' '); }
+      if (kind === 'other stream') store.insert('second', 1, 'Y', { mark: '1' });
+      if (kind === 'partition marker') store.split('first', 'third', 1);
+      expect(proof.unchangedOutside()).toBe(false); expect(proof.partitions()).toBeUndefined();
+    });
+  } finally { store.destroy(); document.destroy(); }
+});
+
+it('reads all shifted partitions after an eligible native edit and detects delete-only write versions', () => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'proof');
+  try {
+    store.create('a', 'first', [{ text: 'Alpha', attributes: { mark: '1' } }]); store.split('first', 'second', 2);
+    document.transact(transaction => {
+      const proof = store.prepareNativeProjection('first', transaction); store.insert('first', 1, 'X', { mark: '1' });
+      expect(proof.unchangedOutside()).toBe(true);
+      expect(proof.partitions()).toEqual(store.partitions('a')); expect(plain(store, 'second')).toBe('pha');
+      const vector = Y.encodeStateVector(document), stamp = store.writeVersion(transaction);
+      store.delete('first', 1, 2); expect(Y.encodeStateVector(document)).toEqual(vector); expect(store.writeVersion(transaction)).not.toBe(stamp);
+    });
+  } finally { store.destroy(); document.destroy(); }
+});
+
 it('seeds identical wire provenance to sequential creation and reuses those definitions on later insertion', () => {
   const a = new Y.Doc(), b = new Y.Doc(); a.clientID = 101; b.clientID = 101;
   const left = new RetainedTextStore(a, 'seed'), right = new RetainedTextStore(b, 'seed');

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse a privately checked retained-Yjs shared frame only across eligible clean
+  native text edits. Reread the entire changed stream, check unchanged outside
+  types/styles, retain fresh factory/model rules, track insertion and deletion
+  writes, and invalidate/release the frame through the Yjs lifecycle. Explicit
+  reads and uncertain/structural/remote edits retain full shared acquisition.
+  Add adversarial freshness, shifted-partition and listener-release contracts;
+  whole-model work, storage/history growth and safe adoption remain unfinished.
+
 - Avoid two complete JSON document allocations when an already fresh, validated
   private retained-Yjs projection equals its native target model. Retain the
   portable comparison for equivalent reordered attributes and keep unexpected

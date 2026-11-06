@@ -1,0 +1,79 @@
+[
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 17.3264774,
+    "log": "artifacts/retained-checked-projection-typecheck-20261106.log",
+    "check": "typecheck"
+  },
+  {
+    "expectedExitCode": 1,
+    "exitCode": 1,
+    "seconds": 7.8648055,
+    "log": "artifacts/retained-checked-projection-focused-20261106.log",
+    "check": "focused"
+  },
+  {
+    "expectedExitCode": 1,
+    "exitCode": 1,
+    "seconds": 256.2180879,
+    "log": "artifacts/retained-checked-projection-full-source-20261106.log",
+    "check": "full-source"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 12.0138398,
+    "log": "artifacts/retained-checked-projection-build-20261106.log",
+    "check": "build"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 0.7561686,
+    "log": "artifacts/retained-checked-projection-test-api-20261106.log",
+    "check": "test:api"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 1.0914979,
+    "log": "artifacts/retained-checked-projection-test-headless-20261106.log",
+    "check": "test:headless"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 4.4423975,
+    "log": "artifacts/retained-checked-projection-test-package-20261106.log",
+    "check": "test:package"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 2.6989247,
+    "log": "artifacts/retained-checked-projection-test-server-runtimes-20261106.log",
+    "check": "test:server-runtimes"
+  },
+  {
+    "expectedExitCode": 1,
+    "exitCode": 1,
+    "seconds": 0.6178154,
+    "log": "artifacts/retained-checked-projection-test-budget-20261106.log",
+    "check": "test:budget"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 15.4584834,
+    "log": "artifacts/retained-checked-projection-test-performance-20261106.log",
+    "check": "test:performance"
+  },
+  {
+    "expectedExitCode": 0,
+    "exitCode": 0,
+    "seconds": 238.1438539,
+    "log": "artifacts/retained-checked-projection-browser-20261106.log",
+    "check": "browser"
+  }
+]
