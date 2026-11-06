@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep remote name labels within clipped editors, including long/RTL names and
+  top-edge scrolling, without moving carets or changing document content. In the
+  private retained-Yjs candidate, retain unique unchanged text ownership through
+  block moves and avoid repeated sibling-list validation between actual moves.
+  The candidate still needs substantial performance work before adoption.
+
 - Paint remote carets outside editable text, preserving native character
   navigation, backward selections, emoji/combining sequences and selected text.
   Add optional `DecorationSpec.overlay` for passive widgets; refresh their

@@ -1,6 +1,6 @@
 import { resolveDocumentPoint, type Decoration, type Node } from '../core';
 
-interface Entry { decoration: Decoration; dom: HTMLElement }
+interface Entry { decoration: Decoration; dom: HTMLElement; labels: { dom: HTMLElement; transform: string }[] }
 
 /** A passive DOM projection. No editable DOM anchors or native selection writes. */
 export class WidgetOverlayLayer {
@@ -44,7 +44,8 @@ export class WidgetOverlayLayer {
       Object.assign(dom.style, { position: 'absolute', width: '0', pointerEvents: 'none' });
       dom.append(produced);
       dom.hidden = true;
-      return { decoration, dom };
+      const labels = [...dom.querySelectorAll<HTMLElement>('[data-fountain-overlay-label]')].map(label => ({ dom: label, transform: label.style.transform }));
+      return { decoration, dom, labels };
     });
     this.layer.replaceChildren(...this.entries.map(entry => entry.dom));
     this.schedule();
@@ -93,6 +94,8 @@ export class WidgetOverlayLayer {
       if (/(auto|scroll|hidden|clip)/.test(style.overflowY)) { top = Math.max(top, box.top); bottom = Math.min(bottom, box.bottom); }
     }
     layer.style.clipPath = `inset(${top}px ${Math.max(0, view.innerWidth - right)}px ${Math.max(0, view.innerHeight - bottom)}px ${left}px)`;
+    layer.style.setProperty('--fountain-overlay-label-width', `${Math.max(0, right - left - 2)}px`);
+    for (const entry of this.entries) for (const label of entry.labels) { label.dom.style.transform = label.transform; label.dom.hidden = false; }
     for (const entry of this.entries) {
       const range = this.range(entry.decoration.from, entry.decoration.spec.side ?? 1);
       let rect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom' | 'height'> | undefined = range && typeof range.getBoundingClientRect === 'function' ? range.getBoundingClientRect() : undefined;
@@ -113,6 +116,19 @@ export class WidgetOverlayLayer {
       entry.dom.hidden = !rect || rect.height <= 0 || right <= left || bottom <= top || rect.right < left || rect.left > right || rect.bottom < top || rect.top > bottom;
       if (!entry.dom.hidden && rect) Object.assign(entry.dom.style, { left: `${rect.left}px`, top: `${rect.top}px`, height: `${rect.height}px` });
     }
+    // Measure all labels before applying translations. The caret and editable
+    // DOM never move; a label near the top can flip below its caret instead.
+    const placements: { dom: HTMLElement; transform?: string; hidden: boolean }[] = [];
+    for (const entry of this.entries) if (!entry.dom.hidden) for (const label of entry.labels) {
+      const box = label.dom.getBoundingClientRect(), anchor = entry.dom.getBoundingClientRect();
+      if (box.width > right - left || box.height > bottom - top) { placements.push({ dom: label.dom, hidden: true }); continue; }
+      const x = Math.max(left + 1, Math.min(box.left, right - box.width - 1));
+      const y = box.top < top && anchor.bottom + box.height <= bottom ? anchor.bottom
+        : Math.max(top, Math.min(box.top, bottom - box.height));
+      const original = view.getComputedStyle(label.dom).transform;
+      placements.push({ dom: label.dom, hidden: false, transform: `translate(${x - box.left}px, ${y - box.top}px)${original === 'none' ? '' : ` ${original}`}` });
+    }
+    for (const placement of placements) { placement.dom.hidden = placement.hidden; if (placement.transform) placement.dom.style.transform = placement.transform; }
   }
 
   private clear(): void {

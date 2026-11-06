@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { CoreExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin,
+import { CoreExtension, ReplaceDocumentStep, Selection, Mapping, StepMap, composeExtensions, createEditor, createHistoryPlugin,
   setMark, splitBlock, toggleList, toggleQuote, undo, type Transaction } from '../src';
 import { planRetainedText } from '../src/yjs/retained-mapping';
 
@@ -15,6 +15,27 @@ function fixture(text = 'Alpha') {
   };
   return { editor, transactions, plan };
 }
+
+it('retains unique unchanged text identities in an opted-in child splice, but not an explicit document replacement', () => {
+  const {editor}=fixture();try{const before=editor.state.doc,after=before.copy([...before.content].reverse()),mapping=new Mapping([new StepMap([0,before.nodeSize-2,after.nodeSize-2])]);
+    const plan=planRetainedText(before,after,mapping,true);expect(plan).toEqual({retained:[{before:{path:[0,0],from:0,to:5},after:{path:[1,0],from:0,to:5}}],removed:[],inserted:[]});
+    expect(planRetainedText(before,after,mapping).retained).toEqual([]);
+  }finally{editor.destroy()}
+});
+
+it('does not infer retained ownership from equal-looking newly constructed nodes', () => {
+  const {editor}=fixture();try{const before=editor.state.doc,after=editor.state.schema.nodeFromJSON(before.toJSON()),mapping=new Mapping([new StepMap([0,before.nodeSize-2,after.nodeSize-2])]);expect(planRetainedText(before,after,mapping,true).retained).toEqual([])}finally{editor.destroy()}
+});
+
+it('refuses ambiguous repeated text-object occurrences rather than guessing an owner', () => {
+  const {editor}=fixture();try{const schema=editor.state.schema,text=schema.text('Same'),before=schema.node('doc',{},[schema.node('paragraph',{},[text]),schema.node('paragraph',{},[text])]),after=before.copy([...before.content].reverse());
+    expect(before.child(0).child(0)).toBe(before.child(1).child(0));const mapping=new Mapping([new StepMap([0,before.nodeSize-2,after.nodeSize-2])]);expect(planRetainedText(before,after,mapping,true).retained).toEqual([]);
+  }finally{editor.destroy()}
+});
+
+it('does not override an explicit partial character replacement using a reused text object', () => {
+  const {editor}=fixture();try{const before=editor.state.doc,plan=planRetainedText(before,before,new Mapping([new StepMap([2,2,2])]),true);expect(plan.removed).toEqual([{path:[0,0],from:1,to:3}]);expect(plan.inserted).toEqual([{path:[0,0],from:1,to:3}]);expect(plan.retained).toHaveLength(2)}finally{editor.destroy()}
+});
 
 it.each(['quote', 'bullet', 'ordered', 'task'] as const)('maps actual retained characters through %s wrapping without inferring identity from text', kind => {
   const { editor, plan } = fixture();

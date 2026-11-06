@@ -11,6 +11,11 @@ addressed in the [cursor overlay audit](COLLABORATION_CURSOR_OVERLAY_AUDIT.md).
 The historical 21-pass/three-failure browser receipt below is not the follow-up
 result. Storage adoption and the six default-adapter failures remain open.
 
+The subsequent [move, cost and label audit](YJS_RETAINED_MOVE_AND_LABEL_AUDIT.md)
+fixes a newly exposed move/peer-insertion ownership defect and redundant sibling
+validation. Its actual-adapter diagnostic still measures roughly 1.24 seconds
+per edit at 500 paragraphs, so the candidate remains unsuitable for adoption.
+
 ## Implementation and boundaries
 
 `src/yjs/retained-adapter.ts` implements `CollaborationAdapter` using the existing

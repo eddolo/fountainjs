@@ -3,6 +3,7 @@ import type { Attributes, MarkJSON, Node, Schema } from '../core/schema';
 import { Mapping } from '../core/transaction/mapping';
 import type { Step } from '../core/transaction/step';
 import type { Transaction } from '../core/transaction/transaction';
+import { ReplaceStep } from '../core/transaction/replace-step';
 import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection } from './retained-nodes';
 import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun } from './retained-text';
 import { planRetainedNodeStarts, planRetainedText } from './retained-mapping';
@@ -257,7 +258,7 @@ export class RetainedDocumentStore {
     // invalid custom step must not leave an earlier valid step half-applied.
     const changes = transaction.steps.map(step => {
       const after = step.apply(before), mapping = new Mapping(step.getMaps?.(before) ?? [step.getMap(before)]);
-      planRetainedText(before, after, mapping);
+      planRetainedText(before, after, mapping, step instanceof ReplaceStep);
       const change = { before, after, mapping, step }; before = after; return change;
     });
     this.document.transact(() => {
@@ -267,7 +268,7 @@ export class RetainedDocumentStore {
   }
 
   private change(before: Node, after: Node, mapping: Mapping, step: Step): void {
-    const plan = planRetainedText(before, after, mapping), oldNodes = this.nodePaths, oldBindings = this.textPaths;
+    const plan = planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
     const nextNodes = new Map<string, string>([['', 'root']]), values = new Map<string, RetainedNodeProjection>();
     const collect = (raw: RetainedNodeProjection) => { values.set(raw.id, raw); raw.content.forEach(collect); };
     collect(this.graph!);
@@ -440,7 +441,13 @@ export class RetainedDocumentStore {
     for (const [id] of values) if (id !== 'root' && !usedNodes.has(id) && !assigned.has(id)) this.nodes.remove(id);
     for (const [parent, children] of expected) {
       const ids = children.flatMap(child => typeof child === 'string' ? [child] : child.ids);
-      for (let index = 0; index < ids.length; index++) if (this.nodes.childrenOf(parent)[index] !== ids[index]) this.nodes.move(ids[index], parent, index);
+      // A plain edit does not change the sibling order. Revalidate that list
+      // once; a move can change later positions, so refresh after each move.
+      let current = this.nodes.childrenOf(parent);
+      for (let index = 0; index < ids.length; index++) if (current[index] !== ids[index]) {
+        this.nodes.move(ids[index], parent, index);
+        current = this.nodes.childrenOf(parent);
+      }
     }
     if (intent) {
       let divergence = 0;

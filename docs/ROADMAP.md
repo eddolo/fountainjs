@@ -1,5 +1,19 @@
 # FountainJS opportunity roadmap
 
+Collaboration moves and cursor labels (2026-11-06, local follow-up): preserve
+peer insertion ownership when unchanged blocks move, without matching equal
+strings or changing explicit document replacement semantics. Keep long/RTL
+presence labels inside clipped editors while preserving caret geometry and
+external focus. All 187 focused source tests, 32 compiled Node journeys and
+84 recorded browser journeys pass. Remove redundant sibling-list validation;
+the final diagnostic still measures about 1.24 seconds per edit at 500
+paragraphs, so incremental projection and validation remain adoption blockers.
+No public adapter switch, capacity increase or publication.
+The full source run also exposed an outdated CI-evidence count, corrected and
+verified separately. The same six default-storage failures and three size
+overruns remain; public package/type/server/performance gates pass.
+[Audit and evidence](YJS_RETAINED_MOVE_AND_LABEL_AUDIT.md).
+
 Native collaboration cursor rendering (2026-11-06, local checkpoint): paint
 passive carets outside editable text and paint peer ranges at safe grapheme
 boundaries without changing stored positions. All 78 compiled three-engine
@@ -9,7 +23,7 @@ default-storage failures. API, framework, headless/server, package and existing
 performance gates pass; CSS is within budget after consolidating styles. Known
 JavaScript size overruns remain. CI now includes a strict regression step, but
 GitHub execution/publication is on hold. Far-edge name-label collision placement
-is still open from visual review. No storage-adapter switch or parity promotion.
+was open at this checkpoint; the follow-up above addresses it. No storage-adapter switch or parity promotion.
 [Audit and evidence](COLLABORATION_CURSOR_OVERLAY_AUDIT.md).
 
 Retained adapter integration (2026-11-06, local work in progress): connect the

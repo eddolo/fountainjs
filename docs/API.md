@@ -1327,6 +1327,12 @@ use a NodeView or product controls for interactive content. The global
 `.fountain-widget-overlay` class and `--fountain-widget-overlay-z-index` variable
 allow product styling; the supplied overlay is hidden for print. Presence
 identity remains available through `getCollaborationState` for accessible host UI.
+  An overlay's noninteractive name label can opt into clipped-editor placement
+  with `data-fountain-overlay-label`. Labels move independently of their caret,
+  retain their original transform, and may flip below a top-edge anchor. The
+  `--fountain-overlay-label-width` variable gives the available clipped width;
+  the supplied collaboration label uses it to constrain long names. A label that
+  cannot fit is hidden. This DOM convention does not modify document content.
 Remote range highlights expand painted endpoints to grapheme boundaries using
 `Intl.Segmenter`; their exact UTF-16 presence coordinates remain unchanged.
 Without that capability, painting conservatively expands to the containing text

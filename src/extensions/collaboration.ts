@@ -50,6 +50,8 @@ function collaboratorDecorations(state: CollaborationState, document: Node): Dec
       caret.setAttribute('aria-label', `${presence.user.name}'s cursor`);
       caret.title = `${presence.user.name}'s cursor`;
       const label = globalThis.document.createElement('span');
+      label.dataset.fountainOverlayLabel = '';
+      label.dir = 'auto';
       label.textContent = presence.user.name;
       label.setAttribute('aria-hidden', 'true');
       caret.appendChild(label);

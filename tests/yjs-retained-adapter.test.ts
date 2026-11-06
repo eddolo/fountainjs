@@ -3,7 +3,7 @@ import { expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection, RangeSelection, Selection, composeExtensions, createEditor,
   createCollaborationExtension, defineExtension, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
-  redoCollaboration, replaceCollaborationAdapter, splitBlock, setMark, toggleList, toggleQuote, undoCollaboration,
+  redoCollaboration, replaceCollaborationAdapter, splitBlock, setMark, toggleList, toggleQuote, undoCollaboration, moveBlock,
   type NodeJSON } from '../src';
 import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborationExtensionOptions, type YjsProvider } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter } from '../src/yjs/retained-adapter';
@@ -36,6 +36,22 @@ function peers(content = source, extensions: Parameters<typeof composeExtensions
     expect(left.getJSON()).toEqual(right.getJSON());
   }, destroy: () => { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); } };
 }
+
+for (const reverse of [false, true]) it.each([false, true])(`retains a reordered sibling list, peer typing and author history (concurrent: %s, reverse exchange: ${reverse})`, concurrent => {
+  const content: NodeJSON = { ...source, content: [...['Alpha','Beta','Gamma','Delta'].map(text => ({ type: 'paragraph', content: [{ type: 'text', text }] })), source.content![1]] };
+  const pair = peers(content);
+  try {
+    expect(moveBlock(pair.left, 0, 3)).toBe(true);
+    if (concurrent) { pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 2))); expect(insertText(pair.right, 'X')).toBe(true); }
+    pair.sync(reverse);
+    expect(pair.left.state.doc.content.slice(0,4).map(node=>node.textContent)).toEqual(['Beta','Gamma','Delta',concurrent?'AlXpha':'Alpha']);
+    expect(pair.left.state.doc.attrs).toEqual({audit:'root'}); expect(pair.left.state.doc.child(4).type.name).toBe('image_super');
+    expect(undoCollaboration(pair.left)).toBe(true); pair.sync(reverse);
+    expect(pair.left.state.doc.content.slice(0,4).map(node=>node.textContent)).toEqual([concurrent?'AlXpha':'Alpha','Beta','Gamma','Delta']);
+    expect(redoCollaboration(pair.left)).toBe(true); pair.sync(reverse);
+    expect(pair.left.state.doc.content.slice(0,4).map(node=>node.textContent)).toEqual(['Beta','Gamma','Delta',concurrent?'AlXpha':'Alpha']);
+  } finally {pair.destroy();}
+});
 
 for (const reverse of [false, true]) it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(
   `retains offline typing through the actual collaboration lifecycle and %s (reverse exchange: ${reverse})`, kind => {

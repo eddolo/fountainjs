@@ -1,0 +1,73 @@
+{
+  "runtime": "v24.22.1",
+  "domRequired": false,
+  "trials": 1,
+  "note": "Diagnostic, not a budget or competitive benchmark. Timed edits exclude getter instrumentation; one additional edit counts public Y.Map.size calls.",
+  "rows": [
+    {
+      "blocks": 100,
+      "retained": false,
+      "initializationMs": 4.375400000000013,
+      "p50Ms": 0.17880000000002383,
+      "p95Ms": 2.3011000000000195,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 0,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "blocks": 100,
+      "retained": true,
+      "initializationMs": 323.88739999999996,
+      "p50Ms": 64.04639999999995,
+      "p95Ms": 93.72230000000002,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 181389,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 9894,
+        "sumReportedMapEntries": 1713604,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 2439,
+            "reportedEntries": 243900
+          },
+          "fountain-text:texts": {
+            "calls": 2439,
+            "reportedEntries": 243900
+          },
+          "fountain-text:styles": {
+            "calls": 200,
+            "reportedEntries": 20000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 2007,
+            "reportedEntries": 401400
+          },
+          "fountain-nodes:identities": {
+            "calls": 2007,
+            "reportedEntries": 802800
+          },
+          "fountain-nodes:root": {
+            "calls": 2,
+            "reportedEntries": 4
+          },
+          "nested map": {
+            "calls": 400,
+            "reportedEntries": 1600
+          },
+          "fountain:splits": {
+            "calls": 400,
+            "reportedEntries": 0
+          }
+        }
+      }
+    }
+  ]
+}

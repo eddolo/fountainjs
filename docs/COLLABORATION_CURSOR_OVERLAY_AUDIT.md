@@ -5,6 +5,11 @@ addresses native input and presence rendering, separately from the six known
 retention failures in the default Yjs storage adapter. It does not adopt the
 experimental retained storage or claim complete editor parity.
 
+Follow-up: the far-edge name-label collision found below is addressed in the
+[move, cost and label audit](YJS_RETAINED_MOVE_AND_LABEL_AUDIT.md). Its later
+84-journey browser run supplements this historical 78-journey checkpoint;
+the earlier receipt and its findings remain unchanged.
+
 ## Problem and evidence
 
 The recorded two-editor journey found that three right-arrow presses reached

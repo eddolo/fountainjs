@@ -31,3 +31,18 @@ test('paints remote carets through scrolling, transforms and resize without remo
  await page.screenshot({path:testInfo.outputPath('restored-overlay.png'),fullPage:true});
  await page.emulateMedia({media:'print'});await expect(page.locator('[data-fountain-overlay-widgets]')).toBeHidden();await page.emulateMedia({media:'screen'});await expect(page.locator('.fountain-collaboration-caret')).toBeVisible();
 });
+
+for(const direction of ['ltr','rtl'])test(`keeps remote name labels inside clipped editors without moving their anchor (${direction})`,async({page},testInfo)=>{
+ await page.goto(url);await page.evaluate(dir=>{document.documentElement.dir=dir},direction);await page.locator('#case').selectOption('atomic-image');
+ const editor=page.getByRole('textbox',{name:'Presence editor',exact:true}),label=page.locator('.fountain-collaboration-caret > span'),caret=page.locator('.fountain-collaboration-caret');
+ await expect.poll(()=>editor.locator('img').evaluate((image:HTMLImageElement)=>image.complete&&image.naturalWidth>0)).toBe(true);
+ await expect.poll(async()=>{const figure=await editor.locator('figure').boundingBox(),cursor=await caret.boundingBox();return Boolean(figure&&cursor&&Math.abs(cursor.y+cursor.height-figure.y-figure.height)<1)}).toBe(true);
+ const documentBefore=await page.evaluate(()=> (window as any).referenceAudit.snapshot()[1].json);
+ const bounds=()=>page.evaluate(()=>{const host=document.querySelectorAll<HTMLElement>('[role=textbox]')[1],panel=document.querySelectorAll('section')[1],label=document.querySelector('.fountain-collaboration-caret > span')!,box=host.getBoundingClientRect(),clip=panel.getBoundingClientRect(),name=label.getBoundingClientRect();return {inside:name.left>=Math.max(0,box.left,clip.left)-.5&&name.right<=Math.min(innerWidth,box.right,clip.right)+.5&&name.top>=Math.max(0,box.top,clip.top)-.5&&name.bottom<=Math.min(innerHeight,box.bottom,clip.bottom)+.5,label:{x:name.x,y:name.y,width:name.width,height:name.height}}});
+ for(const name of ['Grace','Grace researcher '.repeat(10),'باحثة '.repeat(25)]){const before=await caret.boundingBox();await page.getByRole('textbox',{name:'Peer name',exact:true}).fill(name);await expect(label).toHaveText(name.trim());await expect.poll(async()=> (await bounds()).inside).toBe(true);const after=await caret.boundingBox();expect(after?.x).toBeCloseTo(before!.x,1);expect(after?.y).toBeCloseTo(before!.y,1);await expect(page.getByRole('textbox',{name:'Peer name',exact:true})).toBeFocused();}
+ expect(await page.evaluate(()=> (window as any).referenceAudit.snapshot()[1].json)).toEqual(documentBefore);
+ await page.setViewportSize({width:360,height:800});await expect.poll(async()=> (await bounds()).inside).toBe(true);await page.screenshot({path:testInfo.outputPath('narrow-label.png'),fullPage:true});
+ await page.setViewportSize({width:1100,height:800});await page.locator('#case').selectOption('english');const paragraphBefore=await page.evaluate(()=> (window as any).referenceAudit.snapshot()[1].json);await page.addStyleTag({content:'section{height:180px;overflow:auto}'});await page.locator('section').nth(1).hover();await page.mouse.wheel(0,140);await expect(label).toBeVisible();await expect.poll(async()=> (await bounds()).inside).toBe(true);
+ expect(await page.evaluate(()=> (window as any).referenceAudit.snapshot()[1].json)).toEqual(paragraphBefore);
+ await page.screenshot({path:testInfo.outputPath('top-edge-label.png'),fullPage:true});await testInfo.attach('label-bounds',{body:JSON.stringify(await bounds(),null,2),contentType:'application/json'});expect(await editor.locator('[data-fountain-widget]').count()).toBe(0);
+});

@@ -97,10 +97,11 @@ export function planRetainedNodeStarts(before: Node, after: Node, mapping: Mappi
   return result;
 }
 
-/** Derive character provenance from exact transaction maps, never text matching.
+/** Derive character provenance from exact transaction maps or unambiguous
+ * unchanged text-node identity, never equal-content matching.
  * The adapter can use these slices to retain shared text through new model
  * paths, mark-leaf splits and structural boundaries. No document roots are cached. */
-export function planRetainedText(before: Node, after: Node, mapping: Mapping): RetainedTextPlan {
+export function planRetainedText(before: Node, after: Node, mapping: Mapping, retainReusedNodes = false): RetainedTextPlan {
   const oldLeaves = leaves(before), newLeaves = leaves(after), retained: RetainedTextSlice[] = [];
   const { spans, size } = retainedUnits(before.nodeSize - 2, mapping.maps);
   if (size !== after.nodeSize - 2) throw new Error('Transaction maps do not describe the target document size.');
@@ -124,6 +125,23 @@ export function planRetainedText(before: Node, after: Node, mapping: Mapping): R
         covered += length;
       }
       if (covered !== to - from) throw new Error('Transaction maps move retained text into a structural token.');
+    }
+  }
+  // Whole-node moves can use a root replacement map while explicitly reusing
+  // immutable nodes. Keep their characters only when both occurrences are
+  // unique and neither side is already owned by a map-derived slice.
+  if (retainReusedNodes) {
+    const unique = (all: readonly Leaf[]) => {
+      const result = new Map<Node, Leaf | null>();
+      for (const leaf of all) result.set(leaf.node, result.has(leaf.node) ? null : leaf);
+      return result;
+    };
+    const previous = unique(oldLeaves), next = unique(newLeaves);
+    const sourceOwned = new Set(retained.map(slice => slice.before.path.join('.'))), targetOwned = new Set(retained.map(slice => slice.after.path.join('.')));
+    for (const [node, source] of previous) {
+      const target = next.get(node);
+      if (!source || !target || sourceOwned.has(source.path.join('.')) || targetOwned.has(target.path.join('.'))) continue;
+      retained.push({ before: { path: source.path, from: 0, to: node.nodeSize }, after: { path: target.path, from: 0, to: node.nodeSize } });
     }
   }
   return { retained, removed: gaps(oldLeaves, retained.map(slice => slice.before)), inserted: gaps(newLeaves, retained.map(slice => slice.after)) };
