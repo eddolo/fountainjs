@@ -1,0 +1,293 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\cappu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "artifacts/retained-projection-followup-20261106.config.ts"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-projection-followup-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts",
+          "**/cursor-native-reference.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-projection-followup-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts",
+          "**/cursor-native-reference.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/retained-projection-followup-20261106",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/retained-adapter-real.spec.ts",
+          "**/cursor-native-reference.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "retained-projection-followup-20261106.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "cwd": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\",
+      "command": "node artifacts/build-cursor-overlay-canary-20261106.mjs && pnpm exec vite --config artifacts/cursor-overlay-vite-20261106.config.ts",
+      "url": "http://127.0.0.1:4195/artifacts/retained-adapter-fixture-compiled-20261106.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "retained-adapter-real.spec.ts",
+      "file": "retained-adapter-real.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "continues native typing and Enter after an observer update without moving the caret",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1747,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T03:20:06.833Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "observer-continued-json",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiLAogICAgICAgICJob3N0QW5ub3RhdGlvbiI6IHRydWUKICAgICAgfSwKICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAicGFyYWdyYXBoIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgICAgICAgICAidGV4dCI6ICJBbFhZIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJwYXJhZ3JhcGgiLAogICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAiYWxpZ24iOiAibGVmdCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29udGVudCI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAgICAgICAgICJ0ZXh0IjogInBoYSIKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAiaW1hZ2Vfc3VwZXIiLAogICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAic3JjIjogIi90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsCiAgICAgICAgICAgICJhbHQiOiAiUmV0YWluZWQgZmlndXJlIiwKICAgICAgICAgICAgInRpdGxlIjogIiIsCiAgICAgICAgICAgICJ3aWR0aCI6ICIxMDAlIiwKICAgICAgICAgICAgImhlaWdodCI6ICJhdXRvIiwKICAgICAgICAgICAgImFsaWduIjogImNlbnRlciIsCiAgICAgICAgICAgICJzcmNzZXQiOiAiIiwKICAgICAgICAgICAgInNpemVzIjogIiIsCiAgICAgICAgICAgICJsb2FkaW5nIjogImxhenkiLAogICAgICAgICAgICAiZGVjb2RpbmciOiAiYXN5bmMiLAogICAgICAgICAgICAiY2FwdGlvbiI6ICIiCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICBdCiAgICB9LAogICAgInNlbGVjdGlvbiI6IHsKICAgICAgInBhdGgiOiBbCiAgICAgICAgMSwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJlbmRQYXRoIjogWwogICAgICAgIDEsCiAgICAgICAgMAogICAgICBdLAogICAgICAiZnJvbSI6IDAsCiAgICAgICJ0byI6IDAsCiAgICAgICJraW5kIjogInRleHQiCiAgICB9LAogICAgInN0YXR1cyI6ICJjb25uZWN0ZWQiCiAgfSwKICB7CiAgICAianNvbiI6IHsKICAgICAgInR5cGUiOiAiZG9jIiwKICAgICAgImF0dHJzIjogewogICAgICAgICJhdWRpdCI6ICJyb290IiwKICAgICAgICAiaG9zdEFubm90YXRpb24iOiB0cnVlCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWxYWSIKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAicGFyYWdyYXBoIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgICAgICAgICAidGV4dCI6ICJwaGEiCiAgICAgICAgICAgIH0KICAgICAgICAgIF0KICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogImltYWdlX3N1cGVyIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgInNyYyI6ICIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLAogICAgICAgICAgICAiYWx0IjogIlJldGFpbmVkIGZpZ3VyZSIsCiAgICAgICAgICAgICJ0aXRsZSI6ICIiLAogICAgICAgICAgICAid2lkdGgiOiAiMTAwJSIsCiAgICAgICAgICAgICJoZWlnaHQiOiAiYXV0byIsCiAgICAgICAgICAgICJhbGlnbiI6ICJjZW50ZXIiLAogICAgICAgICAgICAic3Jjc2V0IjogIiIsCiAgICAgICAgICAgICJzaXplcyI6ICIiLAogICAgICAgICAgICAibG9hZGluZyI6ICJsYXp5IiwKICAgICAgICAgICAgImRlY29kaW5nIjogImFzeW5jIiwKICAgICAgICAgICAgImNhcHRpb24iOiAiIgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgXQogICAgfSwKICAgICJzZWxlY3Rpb24iOiB7CiAgICAgICJwYXRoIjogWwogICAgICAgIDAsCiAgICAgICAgMAogICAgICBdLAogICAgICAiZW5kUGF0aCI6IFsKICAgICAgICAwLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImZyb20iOiAwLAogICAgICAidG8iOiAwLAogICAgICAia2luZCI6ICJ0ZXh0IgogICAgfSwKICAgICJzdGF0dXMiOiAiY29ubmVjdGVkIgogIH0KXQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WwogICIvbm9kZV9tb2R1bGVzLy52aXRlLWN1cnNvci1vdmVybGF5LWNvbXBpbGVkL2RlcHMveWpzLmpzIiwKICAiL2FydGlmYWN0cy9jdXJzb3Itb3ZlcmxheS1idWlsZC0yMDI2MTEwNi9lbmdpbmUuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L3JldGFpbmVkLWFkYXB0ZXIuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L2NvbGxhYm9yYXRpb24tR1RIU3c5SWcuanMiCl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-33ea8c138684e50f1267",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 71,
+          "column": 1
+        },
+        {
+          "title": "continues native typing and Enter after an observer update without moving the caret",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4370,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T03:20:09.356Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "observer-continued-json",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiLAogICAgICAgICJob3N0QW5ub3RhdGlvbiI6IHRydWUKICAgICAgfSwKICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAicGFyYWdyYXBoIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgICAgICAgICAidGV4dCI6ICJBbFhZIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJwYXJhZ3JhcGgiLAogICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAiYWxpZ24iOiAibGVmdCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29udGVudCI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAgICAgICAgICJ0ZXh0IjogInBoYSIKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAiaW1hZ2Vfc3VwZXIiLAogICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAic3JjIjogIi90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsCiAgICAgICAgICAgICJhbHQiOiAiUmV0YWluZWQgZmlndXJlIiwKICAgICAgICAgICAgInRpdGxlIjogIiIsCiAgICAgICAgICAgICJ3aWR0aCI6ICIxMDAlIiwKICAgICAgICAgICAgImhlaWdodCI6ICJhdXRvIiwKICAgICAgICAgICAgImFsaWduIjogImNlbnRlciIsCiAgICAgICAgICAgICJzcmNzZXQiOiAiIiwKICAgICAgICAgICAgInNpemVzIjogIiIsCiAgICAgICAgICAgICJsb2FkaW5nIjogImxhenkiLAogICAgICAgICAgICAiZGVjb2RpbmciOiAiYXN5bmMiLAogICAgICAgICAgICAiY2FwdGlvbiI6ICIiCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICBdCiAgICB9LAogICAgInNlbGVjdGlvbiI6IHsKICAgICAgInBhdGgiOiBbCiAgICAgICAgMSwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJlbmRQYXRoIjogWwogICAgICAgIDEsCiAgICAgICAgMAogICAgICBdLAogICAgICAiZnJvbSI6IDAsCiAgICAgICJ0byI6IDAsCiAgICAgICJraW5kIjogInRleHQiCiAgICB9LAogICAgInN0YXR1cyI6ICJjb25uZWN0ZWQiCiAgfSwKICB7CiAgICAianNvbiI6IHsKICAgICAgInR5cGUiOiAiZG9jIiwKICAgICAgImF0dHJzIjogewogICAgICAgICJhdWRpdCI6ICJyb290IiwKICAgICAgICAiaG9zdEFubm90YXRpb24iOiB0cnVlCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWxYWSIKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAicGFyYWdyYXBoIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgICAgICAgICAidGV4dCI6ICJwaGEiCiAgICAgICAgICAgIH0KICAgICAgICAgIF0KICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogImltYWdlX3N1cGVyIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgInNyYyI6ICIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLAogICAgICAgICAgICAiYWx0IjogIlJldGFpbmVkIGZpZ3VyZSIsCiAgICAgICAgICAgICJ0aXRsZSI6ICIiLAogICAgICAgICAgICAid2lkdGgiOiAiMTAwJSIsCiAgICAgICAgICAgICJoZWlnaHQiOiAiYXV0byIsCiAgICAgICAgICAgICJhbGlnbiI6ICJjZW50ZXIiLAogICAgICAgICAgICAic3Jjc2V0IjogIiIsCiAgICAgICAgICAgICJzaXplcyI6ICIiLAogICAgICAgICAgICAibG9hZGluZyI6ICJsYXp5IiwKICAgICAgICAgICAgImRlY29kaW5nIjogImFzeW5jIiwKICAgICAgICAgICAgImNhcHRpb24iOiAiIgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgXQogICAgfSwKICAgICJzZWxlY3Rpb24iOiB7CiAgICAgICJwYXRoIjogWwogICAgICAgIDAsCiAgICAgICAgMAogICAgICBdLAogICAgICAiZW5kUGF0aCI6IFsKICAgICAgICAwLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImZyb20iOiAwLAogICAgICAidG8iOiAwLAogICAgICAia2luZCI6ICJ0ZXh0IgogICAgfSwKICAgICJzdGF0dXMiOiAiY29ubmVjdGVkIgogIH0KXQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WwogICIvbm9kZV9tb2R1bGVzLy52aXRlLWN1cnNvci1vdmVybGF5LWNvbXBpbGVkL2RlcHMveWpzLmpzIiwKICAiL2FydGlmYWN0cy9jdXJzb3Itb3ZlcmxheS1idWlsZC0yMDI2MTEwNi9lbmdpbmUuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L3JldGFpbmVkLWFkYXB0ZXIuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L2NvbGxhYm9yYXRpb24tR1RIU3c5SWcuanMiCl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-4d4dd393d7c4da77407f",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 71,
+          "column": 1
+        },
+        {
+          "title": "continues native typing and Enter after an observer update without moving the caret",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4018,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-06T03:20:15.473Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "observer-continued-json",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJqc29uIjogewogICAgICAidHlwZSI6ICJkb2MiLAogICAgICAiYXR0cnMiOiB7CiAgICAgICAgImF1ZGl0IjogInJvb3QiLAogICAgICAgICJob3N0QW5ub3RhdGlvbiI6IHRydWUKICAgICAgfSwKICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAicGFyYWdyYXBoIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgICAgICAgICAidGV4dCI6ICJBbFhZIgogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAidHlwZSI6ICJwYXJhZ3JhcGgiLAogICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAiYWxpZ24iOiAibGVmdCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29udGVudCI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAgICAgICAgICJ0ZXh0IjogInBoYSIKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAiaW1hZ2Vfc3VwZXIiLAogICAgICAgICAgImF0dHJzIjogewogICAgICAgICAgICAic3JjIjogIi90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsCiAgICAgICAgICAgICJhbHQiOiAiUmV0YWluZWQgZmlndXJlIiwKICAgICAgICAgICAgInRpdGxlIjogIiIsCiAgICAgICAgICAgICJ3aWR0aCI6ICIxMDAlIiwKICAgICAgICAgICAgImhlaWdodCI6ICJhdXRvIiwKICAgICAgICAgICAgImFsaWduIjogImNlbnRlciIsCiAgICAgICAgICAgICJzcmNzZXQiOiAiIiwKICAgICAgICAgICAgInNpemVzIjogIiIsCiAgICAgICAgICAgICJsb2FkaW5nIjogImxhenkiLAogICAgICAgICAgICAiZGVjb2RpbmciOiAiYXN5bmMiLAogICAgICAgICAgICAiY2FwdGlvbiI6ICIiCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICBdCiAgICB9LAogICAgInNlbGVjdGlvbiI6IHsKICAgICAgInBhdGgiOiBbCiAgICAgICAgMSwKICAgICAgICAwCiAgICAgIF0sCiAgICAgICJlbmRQYXRoIjogWwogICAgICAgIDEsCiAgICAgICAgMAogICAgICBdLAogICAgICAiZnJvbSI6IDAsCiAgICAgICJ0byI6IDAsCiAgICAgICJraW5kIjogInRleHQiCiAgICB9LAogICAgInN0YXR1cyI6ICJjb25uZWN0ZWQiCiAgfSwKICB7CiAgICAianNvbiI6IHsKICAgICAgInR5cGUiOiAiZG9jIiwKICAgICAgImF0dHJzIjogewogICAgICAgICJhdWRpdCI6ICJyb290IiwKICAgICAgICAiaG9zdEFubm90YXRpb24iOiB0cnVlCiAgICAgIH0sCiAgICAgICJjb250ZW50IjogWwogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogInBhcmFncmFwaCIsCiAgICAgICAgICAiYXR0cnMiOiB7CiAgICAgICAgICAgICJhbGlnbiI6ICJsZWZ0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb250ZW50IjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAidGV4dCIsCiAgICAgICAgICAgICAgInRleHQiOiAiQWxYWSIKICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAicGFyYWdyYXBoIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgImFsaWduIjogImxlZnQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbnRlbnQiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgICAgICAgICAidGV4dCI6ICJwaGEiCiAgICAgICAgICAgIH0KICAgICAgICAgIF0KICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICJ0eXBlIjogImltYWdlX3N1cGVyIiwKICAgICAgICAgICJhdHRycyI6IHsKICAgICAgICAgICAgInNyYyI6ICIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLAogICAgICAgICAgICAiYWx0IjogIlJldGFpbmVkIGZpZ3VyZSIsCiAgICAgICAgICAgICJ0aXRsZSI6ICIiLAogICAgICAgICAgICAid2lkdGgiOiAiMTAwJSIsCiAgICAgICAgICAgICJoZWlnaHQiOiAiYXV0byIsCiAgICAgICAgICAgICJhbGlnbiI6ICJjZW50ZXIiLAogICAgICAgICAgICAic3Jjc2V0IjogIiIsCiAgICAgICAgICAgICJzaXplcyI6ICIiLAogICAgICAgICAgICAibG9hZGluZyI6ICJsYXp5IiwKICAgICAgICAgICAgImRlY29kaW5nIjogImFzeW5jIiwKICAgICAgICAgICAgImNhcHRpb24iOiAiIgogICAgICAgICAgfQogICAgICAgIH0KICAgICAgXQogICAgfSwKICAgICJzZWxlY3Rpb24iOiB7CiAgICAgICJwYXRoIjogWwogICAgICAgIDAsCiAgICAgICAgMAogICAgICBdLAogICAgICAiZW5kUGF0aCI6IFsKICAgICAgICAwLAogICAgICAgIDAKICAgICAgXSwKICAgICAgImZyb20iOiAwLAogICAgICAidG8iOiAwLAogICAgICAia2luZCI6ICJ0ZXh0IgogICAgfSwKICAgICJzdGF0dXMiOiAiY29ubmVjdGVkIgogIH0KXQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WwogICIvbm9kZV9tb2R1bGVzLy52aXRlLWN1cnNvci1vdmVybGF5LWNvbXBpbGVkL2RlcHMveWpzLmpzIiwKICAiL2FydGlmYWN0cy9jdXJzb3Itb3ZlcmxheS1idWlsZC0yMDI2MTEwNi9lbmdpbmUuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L3JldGFpbmVkLWFkYXB0ZXIuanMiLAogICIvYXJ0aWZhY3RzL2N1cnNvci1vdmVybGF5LWJ1aWxkLTIwMjYxMTA2L2NvbGxhYm9yYXRpb24tR1RIU3c5SWcuanMiCl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-projection-followup-20261106\\retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cf8000b60dadabd0aa84-c958273d083a757dec46",
+          "file": "retained-adapter-real.spec.ts",
+          "line": 71,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-06T03:20:03.186Z",
+    "duration": 16818.106,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

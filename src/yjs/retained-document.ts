@@ -274,13 +274,29 @@ export class RetainedDocumentStore {
       planRetainedText(before, after, mapping, step instanceof ReplaceStep);
       const change = { before, after, mapping, step }; before = after; return change;
     });
-    this.document.transact(() => {
-      for (const change of changes) this.change(change.before, change.after, change.mapping, change.step);
-    }, this.origin);
-    return this.read();
+    let writer: Y.Transaction | undefined, changedAfterProjection = false;
+    const observed = (event: Y.Transaction): void => {
+      if (event === writer) return;
+      const changed = new Set<unknown>(event.changedParentTypes.keys());
+      if (this.observed.some(type => changed.has(type))) changedAfterProjection = true;
+    };
+    this.document.on('afterTransaction', observed);
+    try {
+      const projected = this.document.transact(event => {
+        writer = event;
+        let result: Node | undefined;
+        for (const change of changes) result = this.change(change.before, change.after, change.mapping, change.step);
+        return result;
+      }, this.origin);
+      // Reuse only this call's checked projection. Observer/cleanup writes can
+      // share our origin, so freshness follows transaction identity, not origin.
+      if (!projected || changedAfterProjection) return this.read();
+      this.schema.validate(projected);
+      return projected;
+    } finally { this.document.off('afterTransaction', observed); }
   }
 
-  private change(before: Node, after: Node, mapping: Mapping, step: Step): void {
+  private change(before: Node, after: Node, mapping: Mapping, step: Step): Node {
     const plan = planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
     const intent = (step as Step & { getRetainedSplit?: () => { textPath: readonly number[]; rightTextPath: readonly number[]; offset: number } }).getRetainedSplit?.();
     const nextNodes = new Map<string, string>([['', 'root']]), values = new Map<string, RetainedNodeProjection>();
@@ -495,6 +511,7 @@ export class RetainedDocumentStore {
     const projected = this.read(false);
     if (!same(projected.toJSON(), after.toJSON())) throw new Error('Retained transaction changed the native document shape.');
     this.model = after;
+    return projected;
   }
 
   destroy(): void { this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }

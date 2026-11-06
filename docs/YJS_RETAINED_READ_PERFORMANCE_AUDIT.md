@@ -5,6 +5,11 @@
 adapter remains private. This checkpoint does not adopt its protocol, migrate
 existing rooms, change acceptance ceilings, or publish a release.
 
+Follow-up: [projection reuse with observer checks](YJS_RETAINED_PROJECTION_AUDIT.md)
+addresses the duplicate-read target identified below. Its scoped checks and
+diagnostics supplement this historical full-source checkpoint; adoption remains
+open.
+
 ## Correctness before caching
 
 The new direct-edit regression first failed: after warming a text projection,

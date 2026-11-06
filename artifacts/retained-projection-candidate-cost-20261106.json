@@ -1,0 +1,635 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "cursor-overlay-build-20261106",
+  "domRequired": false,
+  "trials": 3,
+  "identity": {
+    "clientID": 1234567890,
+    "controllerUUID": "11111111-2222-4333-8444-555555555555",
+    "scope": "Diagnostic process only, one isolated document per case."
+  },
+  "note": "Twelve timed edits; one extra edit counts public Y.Map.size calls. No acceptance limit changed. Not a competitive benchmark.",
+  "rows": [
+    {
+      "trial": 1,
+      "blocks": 100,
+      "retained": false,
+      "initializationMs": 2.742699999999985,
+      "p50Ms": 0.17189999999999372,
+      "p95Ms": 1.2432999999999765,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 1,
+      "blocks": 100,
+      "retained": true,
+      "initializationMs": 74.4256,
+      "p50Ms": 12.30970000000002,
+      "p95Ms": 19.770100000000014,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 181389,
+      "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 527,
+        "sumReportedMapEntries": 14602,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 600
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 1200
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 200,
+            "reportedEntries": 800
+          },
+          "fountain:splits": {
+            "calls": 200,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "blocks": 500,
+      "retained": false,
+      "initializationMs": 3.596400000000017,
+      "p50Ms": 0.11520000000001573,
+      "p95Ms": 0.4290999999999485,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 1,
+      "blocks": 500,
+      "retained": true,
+      "initializationMs": 707.0260000000001,
+      "p50Ms": 39.04899999999998,
+      "p95Ms": 44.39440000000013,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "sharedBytes": 911676,
+      "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 2127,
+        "sumReportedMapEntries": 73002,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 3000
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 6000
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 1000,
+            "reportedEntries": 4000
+          },
+          "fountain:splits": {
+            "calls": 1000,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "blocks": 1000,
+      "retained": false,
+      "initializationMs": 3.7971999999999753,
+      "p50Ms": 0.18450000000007094,
+      "p95Ms": 0.7904000000000906,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 1,
+      "blocks": 1000,
+      "retained": true,
+      "initializationMs": 2358.6532,
+      "p50Ms": 59.78060000000005,
+      "p95Ms": 86.04790000000003,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "sharedBytes": 1834709,
+      "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 4127,
+        "sumReportedMapEntries": 146002,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 6000
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 12000
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 2000,
+            "reportedEntries": 8000
+          },
+          "fountain:splits": {
+            "calls": 2000,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "blocks": 100,
+      "retained": false,
+      "initializationMs": 0.5118000000002212,
+      "p50Ms": 0.024800000000141154,
+      "p95Ms": 0.09679999999934807,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 2,
+      "blocks": 100,
+      "retained": true,
+      "initializationMs": 54.44239999999991,
+      "p50Ms": 6.320800000000418,
+      "p95Ms": 10.885400000000118,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 181389,
+      "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 527,
+        "sumReportedMapEntries": 14602,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 600
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 1200
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 200,
+            "reportedEntries": 800
+          },
+          "fountain:splits": {
+            "calls": 200,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "blocks": 500,
+      "retained": false,
+      "initializationMs": 1.4292999999997846,
+      "p50Ms": 0.044699999999465945,
+      "p95Ms": 0.25640000000021246,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 2,
+      "blocks": 500,
+      "retained": true,
+      "initializationMs": 590.6385,
+      "p50Ms": 30.77599999999984,
+      "p95Ms": 52.055599999999686,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "sharedBytes": 911676,
+      "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 2127,
+        "sumReportedMapEntries": 73002,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 3000
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 6000
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 1000,
+            "reportedEntries": 4000
+          },
+          "fountain:splits": {
+            "calls": 1000,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "blocks": 1000,
+      "retained": false,
+      "initializationMs": 5.367199999999684,
+      "p50Ms": 0.4003999999995358,
+      "p95Ms": 1.6009000000003653,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 2,
+      "blocks": 1000,
+      "retained": true,
+      "initializationMs": 2334.6602000000003,
+      "p50Ms": 55.72739999999976,
+      "p95Ms": 72.4984999999997,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "sharedBytes": 1834709,
+      "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 4127,
+        "sumReportedMapEntries": 146002,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 6000
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 12000
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 2000,
+            "reportedEntries": 8000
+          },
+          "fountain:splits": {
+            "calls": 2000,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "blocks": 100,
+      "retained": false,
+      "initializationMs": 0.559000000001106,
+      "p50Ms": 0.036099999999350985,
+      "p95Ms": 0.13110000000051514,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 3,
+      "blocks": 100,
+      "retained": true,
+      "initializationMs": 73.29950000000099,
+      "p50Ms": 7.920600000001286,
+      "p95Ms": 14.679299999999785,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "sharedBytes": 181389,
+      "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 527,
+        "sumReportedMapEntries": 14602,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 4000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 600
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 1200
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 200,
+            "reportedEntries": 800
+          },
+          "fountain:splits": {
+            "calls": 200,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "blocks": 500,
+      "retained": false,
+      "initializationMs": 2.0645999999997002,
+      "p50Ms": 0.08059999999932188,
+      "p95Ms": 0.36120000000119035,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 3,
+      "blocks": 500,
+      "retained": true,
+      "initializationMs": 584.0937999999987,
+      "p50Ms": 26.638100000000122,
+      "p95Ms": 37.35009999999966,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "sharedBytes": 911676,
+      "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 2127,
+        "sumReportedMapEntries": 73002,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 20000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 3000
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 6000
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 1000,
+            "reportedEntries": 4000
+          },
+          "fountain:splits": {
+            "calls": 1000,
+            "reportedEntries": 0
+          }
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "blocks": 1000,
+      "retained": false,
+      "initializationMs": 6.012400000001435,
+      "p50Ms": 0.1297999999987951,
+      "p95Ms": 0.9645999999993364,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "sharedBytes": 0,
+      "sharedSha256": null,
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 0,
+        "sumReportedMapEntries": 0,
+        "byContainer": {}
+      }
+    },
+    {
+      "trial": 3,
+      "blocks": 1000,
+      "retained": true,
+      "initializationMs": 2363.5571999999993,
+      "p50Ms": 53.70650000000023,
+      "p95Ms": 102.99070000000029,
+      "edits": 12,
+      "documentMatchesPlain": true,
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "sharedBytes": 1834709,
+      "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+      "diagnosticExtraEdit": {
+        "sizeGetterCalls": 4127,
+        "sumReportedMapEntries": 146002,
+        "byContainer": {
+          "fountain-text:owners": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-text:texts": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-text:styles": {
+            "calls": 40,
+            "reportedEntries": 40000
+          },
+          "fountain-nodes:nodes": {
+            "calls": 3,
+            "reportedEntries": 6000
+          },
+          "fountain-nodes:identities": {
+            "calls": 3,
+            "reportedEntries": 12000
+          },
+          "fountain-nodes:root": {
+            "calls": 1,
+            "reportedEntries": 2
+          },
+          "nested map": {
+            "calls": 2000,
+            "reportedEntries": 8000
+          },
+          "fountain:splits": {
+            "calls": 2000,
+            "reportedEntries": 0
+          }
+        }
+      }
+    }
+  ]
+}

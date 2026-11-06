@@ -34,5 +34,14 @@ for(const reverse of [false,true])for(const concurrent of [false,true]){
  assert.equal(redoCollaboration(left),true);sync();assert.deepEqual(left.getJSON(),final);passed++;
  }finally{left.destroy();right.destroy();a.destroy();b.destroy()}
 }
-const receipt={format:mode,passed,domRequired:false,runtime:'Node '+process.version,note:'Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls; includes sibling reordering against peer typing in both update exchange orders.'};
+for(const reverse of [false,true]){
+ const a=new Y.Doc(),b=new Y.Doc(),create=(document,id)=>{const kit=composeExtensions([CoreExtension,createRetainedYjsCollaborationExtension({document,captureTimeout:0,user:{id,name:id,color:'#7048e8'}})]);return createEditor({schema:kit.schema,plugins:kit.plugins,content:source})};
+ const left=create(a,'left');Y.applyUpdate(b,Y.encodeStateAsUpdate(a));const right=create(b,'right');let written=false;
+ const observer=()=>{if(!written){written=true;a.getMap('fountain-nodes:root').set('attr:006f0062007300650072007600650072','true')}};a.on('afterTransaction',observer);
+ const sync=()=>{const aa=Y.encodeStateAsUpdate(a),bb=Y.encodeStateAsUpdate(b);if(reverse){Y.applyUpdate(b,aa);Y.applyUpdate(a,bb)}else{Y.applyUpdate(a,bb);Y.applyUpdate(b,aa)}assert.deepEqual(left.getJSON(),right.getJSON());for(const editor of [left,right])assert.equal(getCollaborationState(editor)?.status,'connected')};
+ try{left.dispatch(left.createTransaction().setSelection(Selection.cursor([0,0],2)));assert.equal(insertText(left,'X'),true);sync();assert.equal(left.state.doc.attrs.observer,true);assert.equal(left.state.doc.child(0).textContent,'AlXpha');
+ assert.equal(undoCollaboration(left),true);sync();assert.equal(left.state.doc.attrs.observer,true);assert.equal(left.state.doc.child(0).textContent,'Alpha');assert.equal(redoCollaboration(left),true);sync();assert.equal(left.state.doc.child(0).textContent,'AlXpha');assert.equal(left.state.doc.attrs.observer,true);passed++;
+ }finally{a.off('afterTransaction',observer);left.destroy();right.destroy();a.destroy();b.destroy()}
+}
+const receipt={format:mode,passed,domRequired:false,runtime:'Node '+process.version,note:'Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup.'};
 await writeFile(new URL(`./${prefix}-${mode}-20261106.json`,import.meta.url),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));

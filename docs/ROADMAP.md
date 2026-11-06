@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Projection reuse with observer checks (2026-11-06, local follow-up): reuse the
+final checked projection within a store apply only when no relevant follow-up
+Yjs transaction occurs; otherwise read again, including matching-origin observer
+writes. All 191 candidate cases and 36 compiled Node journeys pass. The combined
+213-case focused run retains six default failures; 93 distinct recorded browser
+journeys pass across a main run and continued-typing/Enter follow-up. Controlled
+1,000-paragraph median editing improves from 78.84 to 55.73 ms with identical
+shared bytes. Public runtime/API/limits/default adapter stay unchanged. Larger
+scaling, growth, migration, full CI and three size overruns remain open; no
+adoption or publication.
+[Audit and evidence](YJS_RETAINED_PROJECTION_AUDIT.md).
+
 Fresh retained reads and affected text work (2026-11-06, local checkpoint): fix
 stale projections during caller-owned Yjs transactions, batch validated reads,
 and avoid text reconciliation for provably unchanged groups. All 182 focused

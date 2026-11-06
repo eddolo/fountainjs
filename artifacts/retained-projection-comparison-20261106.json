@@ -1,0 +1,103 @@
+{
+  "baselineCommit": "168707c6",
+  "trials": 3,
+  "scope": "Actual compiled adapter; fixed isolated identities; instrumentation excluded from timing. Diagnostic only, not an adoption certificate.",
+  "summary": [
+    {
+      "blocks": 100,
+      "before": {
+        "medianOfEditMediansMs": 9.863099999999577,
+        "editMediansMs": [
+          16.54340000000002,
+          9.863099999999577,
+          9.330900000000838
+        ],
+        "maximumSampleMs": 41.80359999999999,
+        "medianInitializationMs": 47.27049999999963,
+        "getterCalls": 933,
+        "sumReportedCardinalities": 16304
+      },
+      "after": {
+        "medianOfEditMediansMs": 7.920600000001286,
+        "editMediansMs": [
+          12.30970000000002,
+          6.320800000000418,
+          7.920600000001286
+        ],
+        "maximumSampleMs": 19.770100000000014,
+        "medianInitializationMs": 73.29950000000099,
+        "getterCalls": 527,
+        "sumReportedCardinalities": 14602
+      },
+      "medianEditSpeedup": 1.2452465722291208,
+      "sharedBytes": 181389,
+      "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "identicalSharedBytesAcrossAllTrials": true
+    },
+    {
+      "blocks": 500,
+      "before": {
+        "medianOfEditMediansMs": 40.64770000000044,
+        "editMediansMs": [
+          56.02909999999997,
+          40.64770000000044,
+          35.14459999999963
+        ],
+        "maximumSampleMs": 74.22829999999999,
+        "medianInitializationMs": 620.5144,
+        "getterCalls": 4133,
+        "sumReportedCardinalities": 81504
+      },
+      "after": {
+        "medianOfEditMediansMs": 30.77599999999984,
+        "editMediansMs": [
+          39.04899999999998,
+          30.77599999999984,
+          26.638100000000122
+        ],
+        "maximumSampleMs": 52.055599999999686,
+        "medianInitializationMs": 590.6385,
+        "getterCalls": 2127,
+        "sumReportedCardinalities": 73002
+      },
+      "medianEditSpeedup": 1.3207596828697898,
+      "sharedBytes": 911676,
+      "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "identicalSharedBytesAcrossAllTrials": true
+    },
+    {
+      "blocks": 1000,
+      "before": {
+        "medianOfEditMediansMs": 78.84369999999944,
+        "editMediansMs": [
+          89.2430000000004,
+          78.84369999999944,
+          78.60230000000047
+        ],
+        "maximumSampleMs": 111.72839999999997,
+        "medianInitializationMs": 2398.5395,
+        "getterCalls": 8133,
+        "sumReportedCardinalities": 163004
+      },
+      "after": {
+        "medianOfEditMediansMs": 55.72739999999976,
+        "editMediansMs": [
+          59.78060000000005,
+          55.72739999999976,
+          53.70650000000023
+        ],
+        "maximumSampleMs": 102.99070000000029,
+        "medianInitializationMs": 2358.6532,
+        "getterCalls": 4127,
+        "sumReportedCardinalities": 146002
+      },
+      "medianEditSpeedup": 1.4148103087529613,
+      "sharedBytes": 1834709,
+      "sharedSha256": "1c8785f20e0ca352c716fbefcfcea787d203a625ae3d739edfc7df1880ede3dc",
+      "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+      "identicalSharedBytesAcrossAllTrials": true
+    }
+  ]
+}

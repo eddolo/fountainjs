@@ -8,6 +8,7 @@ import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection
 import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborationExtensionOptions, type YjsProvider } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter } from '../src/yjs/retained-adapter';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
+import { retainedNameKey } from '../src/yjs/retained-nodes';
 
 const source: NodeJSON = { type: 'doc', attrs: { audit: 'root' }, content: [
   { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] }, { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } },
@@ -36,6 +37,26 @@ function peers(content = source, extensions: Parameters<typeof composeExtensions
     expect(left.getJSON()).toEqual(right.getJSON());
   }, destroy: () => { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); } };
 }
+
+for (const reverse of [false, true]) it('reflects observer metadata without undoing it with the author edit (reverse exchange: ' + reverse + ')', () => {
+  const pair = peers();
+  try {
+    let written = false;
+    const observer = () => {
+      if (!written) { written = true; pair.leftDoc.getMap('fountain-nodes:root').set('attr:' + retainedNameKey('observer'), 'true'); }
+    };
+    pair.leftDoc.on('afterTransaction', observer);
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    expect(pair.left.state.doc.attrs.observer).toBe(true);
+    pair.sync(reverse); expect(pair.right.state.doc.attrs.observer).toBe(true);
+    expect(undoCollaboration(pair.left)).toBe(true); pair.sync(reverse);
+    expect(pair.left.state.doc.child(0).textContent).toBe('Alpha'); expect(pair.left.state.doc.attrs.observer).toBe(true);
+    expect(redoCollaboration(pair.left)).toBe(true); pair.sync(reverse);
+    expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha'); expect(pair.left.state.doc.attrs.observer).toBe(true);
+    pair.leftDoc.off('afterTransaction', observer);
+  } finally { pair.destroy(); }
+});
 
 for (const reverse of [false, true]) it.each([false, true])(`retains a reordered sibling list, peer typing and author history (concurrent: %s, reverse exchange: ${reverse})`, concurrent => {
   const content: NodeJSON = { ...source, content: [...['Alpha','Beta','Gamma','Delta'].map(text => ({ type: 'paragraph', content: [{ type: 'text', text }] })), source.content![1]] };

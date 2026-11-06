@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, MathExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
+import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
   type NodeJSON, type Transaction } from '../src';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
 
@@ -38,6 +38,97 @@ function peers(content = source, reverseIDs = false) {
     else { Y.applyUpdate(left.doc, b, 'peer'); Y.applyUpdate(doc, a, 'peer'); }
   }, destroy: () => { left.destroy(); editor.destroy(); store.destroy(); doc.destroy(); } };
 }
+
+it.each(['map', 'transaction'] as const)('returns relevant writes made by a %s observer, including matching-origin follow-up transactions', kind => {
+  const pair = fixture();
+  try {
+    const field = pair.store.nodes.project().root.content[0].content[0].id;
+    const stream = pair.store.text.project(field).streamId;
+    const text = pair.doc.getMap('candidate-text:texts').get(stream) as Y.Text;
+    let written = false;
+    const observer = () => { if (!written) { written = true; pair.store.nodes.setAttribute('root', 'observer', kind); } };
+    if (kind === 'map') text.observe(observer); else pair.doc.on('afterTransaction', observer);
+    pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 2, 'X'));
+    const value = pair.apply();
+    expect(value.attrs.observer).toBe(kind); expect(value.child(0).textContent).toBe('AlXpha');
+    expect(value.toJSON()).toEqual(pair.store.read().toJSON());
+    if (kind === 'map') text.unobserve(observer); else pair.doc.off('afterTransaction', observer);
+  } finally { pair.destroy(); }
+});
+
+it('returns text inserted by a matching-origin observer after the local projection', () => {
+  const pair = fixture();
+  try {
+    const field = pair.store.nodes.project().root.content[0].content[0].id;
+    const format = pair.store.text.project(field).runs[0].attributes;
+    let written = false;
+    const observer = () => { if (!written) { written = true; pair.store.text.insert(field, 0, 'Y', format); } };
+    pair.doc.on('afterTransaction', observer);
+    pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 2, 'X'));
+    const value = pair.apply();
+    expect(value.child(0).textContent).toBe('YAlXpha');
+    expect(value.toJSON()).toEqual(pair.store.read().toJSON());
+    pair.doc.off('afterTransaction', observer);
+  } finally { pair.destroy(); }
+});
+
+it('returns each point-in-time result inside an outer transaction and exposes later observer state afterward', () => {
+  const pair = fixture();
+  try {
+    let written = false;
+    const observer = () => { if (!written) { written = true; pair.store.nodes.setAttribute('root', 'afterOuter', true); } };
+    pair.doc.on('afterTransaction', observer);
+    pair.doc.transact(() => {
+      const first = pair.store.apply(EditorState.create({ schema: pair.editor.state.schema, doc: pair.store.read() }).createTransaction().insertText([0, 0], 2, 'X'));
+      expect(first.child(0).textContent).toBe('AlXpha'); expect(first.attrs.afterOuter).toBeUndefined();
+      pair.store.nodes.setAttribute('root', 'pending', true);
+      const second = pair.store.apply(EditorState.create({ schema: pair.editor.state.schema, doc: pair.store.read() }).createTransaction().insertText([0, 0], 3, 'Y'));
+      expect(second.child(0).textContent).toBe('AlXYpha'); expect(second.attrs.pending).toBe(true);
+      expect(first.attrs.pending).toBeUndefined(); expect(second.attrs.afterOuter).toBeUndefined();
+    });
+    expect(pair.store.read().attrs).toMatchObject({ pending: true, afterOuter: true });
+    pair.doc.off('afterTransaction', observer);
+  } finally { pair.destroy(); }
+});
+
+it('reads observer writes even when a transaction has no document steps', () => {
+  const pair = fixture();
+  try {
+    let written = false;
+    const observer = () => { if (!written) { written = true; pair.store.nodes.setAttribute('root', 'emptyObserver', true); } };
+    pair.doc.on('afterTransaction', observer);
+    const value = pair.store.apply(pair.editor.createTransaction());
+    expect(value.attrs.emptyObserver).toBe(true); expect(value.child(0).textContent).toBe('Alpha');
+    pair.doc.off('afterTransaction', observer);
+  } finally { pair.destroy(); }
+});
+
+it('rejects malformed observer output and can read again after the host repairs the shared record', () => {
+  const pair = fixture();
+  try {
+    let written = false;
+    const observer = () => { if (!written) { written = true; pair.store.nodes.setType('root', 'future-node'); } };
+    pair.doc.on('afterTransaction', observer);
+    pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 2, 'X'));
+    expect(() => pair.apply()).toThrow('Unknown retained node type');
+    pair.doc.off('afterTransaction', observer);
+    pair.store.nodes.setType('root', 'doc');
+    expect(pair.store.read().child(0).textContent).toBe('AlXpha');
+  } finally { pair.destroy(); }
+});
+
+it('keeps unrelated observer namespaces separate from the returned document', () => {
+  const pair = fixture();
+  try {
+    let written = false;
+    const observer = () => { if (!written) { written = true; pair.doc.getMap('outside').set('counter', 1); } };
+    pair.doc.on('afterTransaction', observer);
+    pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 2, 'X'));
+    const value = pair.apply();
+    expect(value.toJSON()).toEqual(pair.editor.getJSON()); expect(pair.doc.getMap('outside').get('counter')).toBe(1);
+    pair.doc.off('afterTransaction', observer);
+  } finally { pair.destroy(); }
+});
 
 it.each([false, true])('distinguishes retained block movement from explicit replacement despite reused parent objects (replace: %s)', replace => {
   const pair = fixture({ ...source, content: [

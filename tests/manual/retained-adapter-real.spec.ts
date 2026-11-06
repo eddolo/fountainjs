@@ -51,6 +51,35 @@ test('native edits in separate paragraphs preserve untouched rich content and au
  await page.locator('#ada').getByRole('button',{name:'Redo',exact:true}).click();await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(final);
  await testInfo.attach('multi-paragraph-final',{body:JSON.stringify(await snapshot(page),null,2),contentType:'application/json'});expect(errors).toEqual([]);
 });
+test('native typing retains host observer annotations through synchronization and author undo',async({page},testInfo)=>{
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
+ await page.getByRole('checkbox',{name:'Annotate edits from host',exact:true}).check();
+ await caret(page,'Ada',2);await page.keyboard.type('X');
+ await expect.poll(async()=> (await snapshot(page)).map((p:any)=>({text:text(p.json.content[0]),annotation:p.json.attrs.hostAnnotation,status:p.status}))).toEqual([
+  {text:'AlXpha',annotation:true,status:'connected'},{text:'AlXpha',annotation:true,status:'connected'},
+ ]);
+ await expect(page.locator('#ada output')).toContainText('host annotation retained');await expect(page.locator('#grace output')).toContainText('host annotation retained');
+ await page.screenshot({path:testInfo.outputPath('observer-annotation.png'),fullPage:true});
+ await page.locator('#ada').getByRole('button',{name:'Undo',exact:true}).click();
+ await expect.poll(async()=> (await snapshot(page)).map((p:any)=>({text:text(p.json.content[0]),annotation:p.json.attrs.hostAnnotation}))).toEqual([
+  {text:'Alpha',annotation:true},{text:'Alpha',annotation:true},
+ ]);
+ await page.locator('#ada').getByRole('button',{name:'Redo',exact:true}).click();await expect.poll(async()=>text((await snapshot(page))[1].json.content[0])).toBe('AlXpha');
+ expect((await snapshot(page))[1].json.attrs.hostAnnotation).toBe(true);await testInfo.attach('host-annotation-json',{body:JSON.stringify(await snapshot(page),null,2),contentType:'application/json'});expect(errors).toEqual([]);
+});
+
+test('continues native typing and Enter after an observer update without moving the caret',async({page},testInfo)=>{
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);await page.getByRole('checkbox',{name:'Annotate edits from host',exact:true}).check();
+ const editor=await caret(page,'Ada',2);await page.keyboard.type('XY');
+ await expect.poll(async()=> (await snapshot(page)).map((p:any)=>text(p.json.content[0]))).toEqual(['AlXYpha','AlXYpha']);await expect(editor).toBeFocused();
+ await page.keyboard.press('Enter');
+ await expect.poll(async()=> (await snapshot(page)).map((p:any)=>p.json.content.filter((n:any)=>n.type==='paragraph').map(text))).toEqual([['AlXY','pha'],['AlXY','pha']]);
+ const final=(await snapshot(page))[0].json;expect(final.attrs.hostAnnotation).toBe(true);await page.screenshot({path:testInfo.outputPath('observer-continued-typing.png'),fullPage:true});
+ for(const expected of ['AlXYpha','AlXpha','Alpha']){await page.locator('#ada').getByRole('button',{name:'Undo',exact:true}).click();await expect.poll(async()=>text((await snapshot(page))[1].json.content[0])).toBe(expected);expect((await snapshot(page))[1].json.attrs.hostAnnotation).toBe(true)}
+ for(let i=0;i<3;i++)await page.locator('#ada').getByRole('button',{name:'Redo',exact:true}).click();await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(final);
+ await testInfo.attach('observer-continued-json',{body:JSON.stringify(await snapshot(page),null,2),contentType:'application/json'});expect(errors).toEqual([]);
+});
+
 test('right-arrow navigation crosses a remote presence without consuming a character step',async({page},testInfo)=>{
  await page.goto(url);await page.getByRole('button',{name:'Pause sync',exact:true}).click();await caret(page,'Ada',2);await page.keyboard.type('X');await caret(page,'Grace',3);
  await testInfo.attach('native-caret',{body:JSON.stringify({peers:await snapshot(page),native:await page.evaluate(()=>{const s=document.getSelection();return {text:s?.anchorNode?.textContent,offset:s?.anchorOffset}})},null,2),contentType:'application/json'});

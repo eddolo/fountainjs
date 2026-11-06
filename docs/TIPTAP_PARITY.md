@@ -1,6 +1,14 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-Current local status, 2026-11-06 (`33ae43bb`): feature breadth is substantial,
+Local follow-up, 2026-11-06: observer-checked projection reuse passes 191 focused
+candidate cases, 36 compiled Node journeys and 93 distinct recorded browser
+journeys. The combined retention run still has six default failures. Controlled
+1,000-paragraph editing improves from 78.84 to 55.73 ms with identical shared
+bytes; public runtime/API/limits/default adapter stay unchanged. This scoped
+checkpoint does not claim a fresh full source run, complete CI, adoption or
+publication. [Current follow-up](YJS_RETAINED_PROJECTION_AUDIT.md).
+
+Full-source checkpoint, 2026-11-06 (`33ae43bb`): feature breadth is substantial,
 but overall parity and production readiness remain incomplete. Deeper structural
 audits reopened COLLAB-01: the default adapter still fails six required offline
 typing versus wrapping/mark/split cases. The experimental retained adapter has

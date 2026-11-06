@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid duplicate projection in the private retained-Yjs candidate while
+  preserving fresh reads after relevant observer/cleanup writes, including
+  matching-origin transactions. Validate the returned model and release the
+  temporary listener on all paths. Public runtime entries/default adapter stay
+  unchanged; no protocol adoption is implied.
+
 - In the private retained-Yjs candidate, read pending shared edits without a
   stale stream cache, batch validated node/text reads, and preserve unchanged
   text groups only with exact parent identity and full character provenance.
