@@ -3,6 +3,11 @@
 Local follow-up to the [cursor overlay audit](COLLABORATION_CURSOR_OVERLAY_AUDIT.md),
 2026-11-06. This work does not switch the default adapter or publish a release.
 
+Follow-up: [fresh reads and affected text work](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md)
+fixes a pending-transaction cache defect and substantially reduces the measured
+adapter cost. The diagnostic numbers below remain this historical checkpoint's
+results; the candidate has not been adopted.
+
 ## Moving content without moving a peer's insertion
 
 A new actual-adapter test exposed a provenance defect: moving `Alpha` after

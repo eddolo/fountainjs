@@ -27,7 +27,6 @@ export interface RetainedTextPartition {
   readonly runs: readonly RetainedTextRun[];
 }
 
-interface StreamIndex { readonly epoch: number; readonly entries: readonly RetainedTextPartition[] }
 interface DecodedFormatCache {
   previous?: { client: number; style: number; raw: Record<string, unknown>; value: Record<string, string> };
 }
@@ -100,10 +99,7 @@ export class RetainedTextStore {
   private readonly styles: Y.Map<unknown>;
   private localStyles = new Map<string, number>();
   private decodedStyles = new Map<string, { encoded: string; value: Readonly<Record<string, string>> }>();
-  private epoch = 0;
   private destroyed = false;
-  private cache = new WeakMap<Y.Text, StreamIndex>();
-  private readonly invalidate = (): void => { this.epoch++; };
 
   constructor(readonly document: Y.Doc, name: string, private readonly origin?: unknown) {
     if (!(document instanceof Y.Doc) || !validId(name)) throw new TypeError('Invalid retained text namespace.');
@@ -119,9 +115,6 @@ export class RetainedTextStore {
     // first introduced a style must not strand another insertion's reference.
     this.scope = Object.freeze([this.texts, this.owners]);
     this.observed = Object.freeze([...this.scope, this.metadata, this.styles]);
-    this.metadata.observeDeep(this.invalidate);
-    this.scope.forEach(type => type.observeDeep(this.invalidate));
-    this.styles.observeDeep(this.invalidate);
   }
 
   private clock(): number { return Y.decodeStateVector(Y.encodeStateVector(this.document)).get(this.document.clientID) ?? 0; }
@@ -138,7 +131,6 @@ export class RetainedTextStore {
   }
 
   private readonly style = (client: number, clock: number): Readonly<Record<string, string>> => {
-    if (this.styles.size > MAX_PARTITIONS) throw new RangeError('Too many retained style definitions.');
     const key = `${client}:${clock}`, encoded = this.styles.get(key), cached = this.decodedStyles.get(key);
     if (typeof encoded !== 'string' || encoded.length > MAX_PROVENANCE) throw new Error('Missing retained format provenance definition.');
     if (cached?.encoded === encoded) return cached.value;
@@ -151,19 +143,24 @@ export class RetainedTextStore {
     if (this.destroyed) throw new Error('Retained text store is destroyed.');
     if (this.metadata.get('version') !== VERSION) throw new Error('Unsupported retained text representation.');
     if (this.owners.size > MAX_PARTITIONS || this.texts.size > MAX_PARTITIONS) throw new RangeError('Retained text pool is too large.');
+    if (this.styles.size > MAX_PARTITIONS) throw new RangeError('Too many retained style definitions.');
   }
 
-  private stream(id: string): Y.Text {
-    this.assertLive();
+  private readStream(id: string): Y.Text {
     const text = this.texts.get(id);
     if (!validId(id) || !(text instanceof Y.Text)) throw new Error('Unknown retained text stream.');
     if (text.length > MAX_TEXT + MAX_PARTITIONS) throw new RangeError('Retained text stream is too large.');
     return text;
   }
 
+  private stream(id: string): Y.Text { this.assertLive(); return this.readStream(id); }
+
   private index(streamId: string): readonly RetainedTextPartition[] {
-    const text = this.stream(streamId), cached = this.cache.get(text);
-    if (cached?.epoch === this.epoch) return cached.entries;
+    this.assertLive();
+    return this.scan(streamId, this.readStream(streamId));
+  }
+
+  private scan(streamId: string, text: Y.Text): readonly RetainedTextPartition[] {
     const entries: RetainedTextPartition[] = [], ids = new Set<string>();
     // The insertion nonce changes every keystroke, but its style and explicit
     // field values commonly do not. Reuse only a validated exact wire match.
@@ -203,9 +200,7 @@ export class RetainedTextStore {
       if (characters > MAX_TEXT || entries.length > MAX_PARTITIONS) throw new RangeError('Retained text stream is too large.');
     }
     if (current) { current.to = position; Object.freeze(current.runs); Object.freeze(current); }
-    const result = Object.freeze(entries);
-    this.cache.set(text, { epoch: this.epoch, entries: result });
-    return result;
+    return Object.freeze(entries);
   }
 
   private freshId(id: string): void {
@@ -229,17 +224,31 @@ export class RetainedTextStore {
       for (const run of safeRuns) if (run.text) {
         text.insert(text.length, run.text, { ...encodeAttributes(run.attributes), [PROVENANCE]: this.provenance(run.attributes as Record<string, string>) });
       }
-      this.invalidate();
     }, this.origin);
   }
 
   project(id: string): RetainedTextPartition {
+    return this.projectMany([id]).get(id)!;
+  }
+
+  /** One synchronous read, not a cache that can outlive pending Yjs edits. */
+  projectMany(ids: readonly string[]): ReadonlyMap<string, RetainedTextPartition> {
     this.assertLive();
-    const streamId = this.owners.get(id);
-    if (!validId(id) || !validId(streamId)) throw new Error('Unknown retained text partition.');
-    const entry = this.index(streamId).find(partition => partition.id === id);
-    if (!entry) throw new Error('Retained text partition boundary is missing.');
-    return entry;
+    if (ids.length > MAX_PARTITIONS) throw new RangeError('Too many retained text partitions.');
+    const streams = new Map<string, ReadonlyMap<string, RetainedTextPartition>>(), result = new Map<string, RetainedTextPartition>();
+    for (const id of ids) {
+      const streamId = this.owners.get(id);
+      if (!validId(id) || !validId(streamId)) throw new Error('Unknown retained text partition.');
+      let entries = streams.get(streamId);
+      if (!entries) {
+        entries = new Map(this.scan(streamId, this.readStream(streamId)).map(entry => [entry.id, entry]));
+        streams.set(streamId, entries);
+      }
+      const entry = entries.get(id);
+      if (!entry) throw new Error('Retained text partition boundary is missing.');
+      result.set(id, entry);
+    }
+    return result;
   }
 
   has(id: string): boolean { this.assertLive(); return validId(id) && this.owners.has(id); }
@@ -272,7 +281,6 @@ export class RetainedTextStore {
       // A hidden boundary must not introduce a formatting reset through a
       // visible run. That reset could outlive concurrent replacement markers.
       text.insertEmbed(position, { [MARKER]: newId }, format);
-      this.invalidate();
     }, this.origin);
   }
 
@@ -282,14 +290,13 @@ export class RetainedTextStore {
     validateRetainedTextFormat(safeFormat as Record<string, string>);
     this.document.transact(() => {
       if (value) text.insert(position, value, { ...encodeAttributes(safeFormat), [PROVENANCE]: this.provenance(safeFormat as Record<string, string>) });
-      this.invalidate();
     }, this.origin);
   }
 
   delete(id: string, from: number, to: number): void {
     const start = this.point(id, from), end = this.point(id, to);
     if (to < from) throw new RangeError('Retained text deletion must be ordered.');
-    this.document.transact(() => { start.text.delete(start.position, end.position - start.position); this.invalidate(); }, this.origin);
+    this.document.transact(() => { start.text.delete(start.position, end.position - start.position); }, this.origin);
   }
 
   format(id: string, from: number, to: number, value: Readonly<Record<string, string | null>>): void {
@@ -299,15 +306,14 @@ export class RetainedTextStore {
       // Keep the insertion-owned provenance immutable. Replacing that marker
       // for an observed range can detach unseen splits from their source.
       start.text.format(start.position, end.position - start.position, encodeAttributes(safeFormat));
-      this.invalidate();
     }, this.origin);
   }
 
   /** Merge adjacent partitions in one stream without deleting any characters. */
   join(leftId: string, rightId: string): void {
-    const left = this.project(leftId), right = this.project(rightId), entries = this.index(left.streamId);
-    if (left.streamId !== right.streamId || entries[entries.indexOf(left) + 1]?.id !== rightId) throw new Error('Only adjacent retained partitions can join.');
-    this.document.transact(() => { this.stream(left.streamId).delete(right.from - 1, 1); this.owners.delete(rightId); this.invalidate(); }, this.origin);
+    const partitions = this.projectMany([leftId, rightId]), left = partitions.get(leftId)!, right = partitions.get(rightId)!, entries = this.index(left.streamId);
+    if (left.streamId !== right.streamId || entries[entries.findIndex(entry => entry.id === leftId) + 1]?.id !== rightId) throw new Error('Only adjacent retained partitions can join.');
+    this.document.transact(() => { this.stream(left.streamId).delete(right.from - 1, 1); this.owners.delete(rightId); }, this.origin);
   }
 
   relative(id: string, offset: number, association: -1 | 1 = 1): unknown {
@@ -332,8 +338,6 @@ export class RetainedTextStore {
 
   destroy(): void {
     if (this.destroyed) return;
-    this.metadata.unobserveDeep(this.invalidate); this.scope.forEach(type => type.unobserveDeep(this.invalidate));
-    this.styles.unobserveDeep(this.invalidate); this.localStyles.clear(); this.decodedStyles.clear();
-    this.cache = new WeakMap(); this.destroyed = true;
+    this.localStyles.clear(); this.decodedStyles.clear(); this.destroyed = true;
   }
 }

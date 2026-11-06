@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- In the private retained-Yjs candidate, read pending shared edits without a
+  stale stream cache, batch validated node/text reads, and preserve unchanged
+  text groups only with exact parent identity and full character provenance.
+  Keep capacity checks and refresh child orders after moves. Public runtime
+  entry points and the default adapter remain unchanged.
+
 - Keep remote name labels within clipped editors, including long/RTL names and
   top-edge scrolling, without moving carets or changing document content. In the
   private retained-Yjs candidate, retain unique unchanged text ownership through

@@ -1,0 +1,38 @@
+[
+  {
+    "check": "build",
+    "exitCode": 0
+  },
+  {
+    "check": "unit",
+    "exitCode": 1
+  },
+  {
+    "check": "test:api",
+    "exitCode": 0
+  },
+  {
+    "check": "test:headless",
+    "exitCode": 0
+  },
+  {
+    "check": "test:package",
+    "exitCode": 0
+  },
+  {
+    "check": "test:server-runtimes",
+    "exitCode": 0
+  },
+  {
+    "check": "typecheck",
+    "exitCode": 0
+  },
+  {
+    "check": "test:budget",
+    "exitCode": 1
+  },
+  {
+    "check": "test:performance",
+    "exitCode": 0
+  }
+]

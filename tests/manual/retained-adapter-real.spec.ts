@@ -23,6 +23,34 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
  await testInfo.attach('converged-json',{body:JSON.stringify(peers,null,2),contentType:'application/json'});expect(errors).toEqual([]);
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}
+
+test('native edits in separate paragraphs preserve untouched rich content and author-only history',async({page},testInfo)=>{
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
+ const content={type:'doc',attrs:{audit:'root'},content:[
+  {type:'paragraph',content:[{type:'text',text:'Alpha'}]},
+  {type:'paragraph',content:[{type:'text',text:'Beta'}]},
+  {type:'paragraph',content:[{type:'text',text:'Gam',marks:[{type:'strong'}]},{type:'text',text:'ma'}]},
+  {type:'paragraph',content:[{type:'text',text:'Delta'}]},
+  {type:'image_super',attrs:{src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}},
+ ]};
+ await page.locator('#open').setInputFiles({name:'research-notes.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(content))});
+ await expect(page.locator('#message')).toHaveText('Reopened portable document');
+ const initial=(await snapshot(page))[0].json;
+ await page.getByRole('button',{name:'Pause sync',exact:true}).click();
+ const edit=async(name:string,paragraph:number,offset:number,value:string)=>{await page.getByRole('textbox',{name:name+' editor',exact:true}).locator('p').nth(paragraph).click();await page.keyboard.press('Home');for(let i=0;i<offset;i++)await page.keyboard.press('ArrowRight');await page.keyboard.type(value)};
+ await edit('Ada',1,2,'X');await edit('Grace',0,2,'Z');await edit('Grace',3,3,'Y');
+ await page.getByRole('button',{name:'Synchronize',exact:true}).click();
+ await expect.poll(async()=> (await snapshot(page)).map((p:any)=>p.json.content.slice(0,4).map(text))).toEqual([
+  ['AlZpha','BeXta','Gamma','DelYta'],['AlZpha','BeXta','Gamma','DelYta'],
+ ]);
+ const peers=await snapshot(page),final=peers[0].json;expect(final).toEqual(peers[1].json);expect(final.content[2]).toEqual(initial.content[2]);expect(final.content[4]).toEqual(initial.content[4]);expect(final.attrs).toEqual(initial.attrs);
+ await expect.poll(()=>page.locator('#ada img').evaluate((image:HTMLImageElement)=>image.complete&&image.naturalWidth>0)).toBe(true);
+ await page.screenshot({path:testInfo.outputPath('multi-paragraph-converged.png'),fullPage:true});
+ await page.locator('#ada').getByRole('button',{name:'Undo',exact:true}).click();
+ await expect.poll(async()=> (await snapshot(page))[1].json.content.slice(0,4).map(text)).toEqual(['AlZpha','Beta','Gamma','DelYta']);
+ await page.locator('#ada').getByRole('button',{name:'Redo',exact:true}).click();await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(final);
+ await testInfo.attach('multi-paragraph-final',{body:JSON.stringify(await snapshot(page),null,2),contentType:'application/json'});expect(errors).toEqual([]);
+});
 test('right-arrow navigation crosses a remote presence without consuming a character step',async({page},testInfo)=>{
  await page.goto(url);await page.getByRole('button',{name:'Pause sync',exact:true}).click();await caret(page,'Ada',2);await page.keyboard.type('X');await caret(page,'Grace',3);
  await testInfo.attach('native-caret',{body:JSON.stringify({peers:await snapshot(page),native:await page.evaluate(()=>{const s=document.getSelection();return {text:s?.anchorNode?.textContent,offset:s?.anchorOffset}})},null,2),contentType:'application/json'});

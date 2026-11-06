@@ -16,6 +16,12 @@ fixes a newly exposed move/peer-insertion ownership defect and redundant sibling
 validation. Its actual-adapter diagnostic still measures roughly 1.24 seconds
 per edit at 500 paragraphs, so the candidate remains unsuitable for adoption.
 
+The later [fresh-read performance audit](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md)
+addresses repeated global scans and unchanged-group work, and fixes a pending
+transaction cache defect. Its controlled 500-paragraph diagnostic is 42.84 ms
+median per edit. Adoption, larger-document and long-session requirements remain
+open; the earlier timings above describe their historical checkpoint.
+
 ## Implementation and boundaries
 
 `src/yjs/retained-adapter.ts` implements `CollaborationAdapter` using the existing

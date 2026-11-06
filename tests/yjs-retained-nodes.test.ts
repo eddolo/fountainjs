@@ -174,3 +174,51 @@ it('projects concurrent attribute fields in a deterministic order for document e
     expect(JSON.stringify(pair.left.project().root)).toBe(JSON.stringify(pair.right.project().root));
   } finally { pair.destroy(); }
 });
+
+it('reads pending metadata on every projection without shared repair or stale results after a rejected read', () => {
+  const pair = peers();
+  try {
+    const first = pair.left.project(), record = pair.leftDoc.getMap('candidate-nodes:nodes').get(pair.paragraph) as Y.Map<unknown>;
+    pair.leftDoc.transact(() => {
+      record.set('type', 'heading');
+      expect(pair.left.project().root.content[0].type).toBe('heading');
+      expect(first.root.content[0].type).toBe('paragraph');
+      record.set('unknown-field', 'preserve');
+      const state = Y.encodeStateVector(pair.leftDoc);
+      expect(() => pair.left.project()).toThrow('Unknown retained node metadata');
+      expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state);
+      record.delete('unknown-field');
+      expect(pair.left.project().root.content[0].type).toBe('heading');
+    });
+  } finally { pair.destroy(); }
+});
+
+it('checks node-pool capacity before traversing even during a caller-owned transaction', () => {
+  const document = new Y.Doc(), store = new RetainedNodeStore(document, 'bounds', factory('bound'));
+  try {
+    const nodes = document.getMap('bounds:nodes');
+    document.transact(() => {
+      for (let index = 0; index <= 100_000; index++) nodes.set(`entry-${index}`, true);
+      const state = Y.encodeStateVector(document);
+      expect(() => store.project()).toThrow('Retained node pool is too large');
+      expect(Y.encodeStateVector(document)).toEqual(state);
+    });
+    expect(() => store.project()).toThrow('Retained node pool is too large');
+  } finally { document.destroy(); }
+});
+
+it('returns fresh child-order batches after a move inside the same outer transaction', () => {
+  const pair = peers();
+  try {
+    const first = pair.left.childrenOfMany(['root', pair.a, pair.b]);
+    pair.leftDoc.transact(() => {
+      pair.left.move(pair.paragraph, pair.a, 0);
+      const second = pair.left.childrenOfMany(['root', pair.a, pair.b]);
+      expect(second.get(pair.a)).toEqual([pair.paragraph]);
+      expect(first.get(pair.a)).toEqual([]);
+      pair.left.move(pair.paragraph, pair.b, 0);
+      expect(pair.left.childrenOfMany([pair.a, pair.b]).get(pair.b)).toEqual([pair.paragraph]);
+      expect(second.get(pair.a)).toEqual([pair.paragraph]);
+    });
+  } finally { pair.destroy(); }
+});

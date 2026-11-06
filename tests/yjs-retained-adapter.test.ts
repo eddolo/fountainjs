@@ -53,6 +53,32 @@ for (const reverse of [false, true]) it.each([false, true])(`retains a reordered
   } finally {pair.destroy();}
 });
 
+for (const reverse of [false, true]) it('retains peer edits in other immutable paragraphs and untouched rich content (reverse exchange: ' + reverse + ')', () => {
+  const content: NodeJSON = { ...source, content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Beta' }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Gam', marks: [{ type: 'strong' }] }, { type: 'text', text: 'ma' }] },
+    { type: 'paragraph', content: [{ type: 'text', text: 'Delta' }] }, source.content![1],
+  ] };
+  const pair = peers(content);
+  try {
+    const rich = pair.left.getJSON().content![2], image = pair.left.getJSON().content![4];
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([1, 0], 2)));
+    expect(insertText(pair.left, 'X')).toBe(true);
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(insertText(pair.right, 'Z')).toBe(true);
+    pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([3, 0], 3)));
+    expect(insertText(pair.right, 'Y')).toBe(true);
+    pair.sync(reverse);
+    const final = pair.left.getJSON();
+    expect(pair.left.state.doc.content.slice(0, 4).map(node => node.textContent)).toEqual(['AlZpha', 'BeXta', 'Gamma', 'DelYta']);
+    expect(final.content![2]).toEqual(rich); expect(final.content![4]).toEqual(image);
+    expect(undoCollaboration(pair.left)).toBe(true); pair.sync(reverse);
+    expect(pair.left.state.doc.content.slice(0, 4).map(node => node.textContent)).toEqual(['AlZpha', 'Beta', 'Gamma', 'DelYta']);
+    expect(redoCollaboration(pair.left)).toBe(true); pair.sync(reverse); expect(pair.left.getJSON()).toEqual(final);
+  } finally { pair.destroy(); }
+});
+
 for (const reverse of [false, true]) it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(
   `retains offline typing through the actual collaboration lifecycle and %s (reverse exchange: ${reverse})`, kind => {
     const pair = peers();

@@ -331,6 +331,77 @@ it('updates indexes inside a single transaction and releases observation on dest
   } finally { pair.destroy(); }
 });
 
+it('reads direct shared edits made between projections inside a caller-owned transaction', () => {
+  const pair = peers();
+  try {
+    expect(plain(pair.left, 'first')).toBe('Alpha');
+    const text = pair.leftDoc.getMap('candidate-text:texts').get('stream') as Y.Text;
+    const format = text.toDelta().find((operation: { insert?: unknown }) => typeof operation.insert === 'string')!.attributes;
+    pair.leftDoc.transact(() => {
+      text.insert(3, 'X', format);
+      expect(plain(pair.left, 'first')).toBe('AlXpha');
+      text.delete(3, 1);
+      expect(plain(pair.left, 'first')).toBe('Alpha');
+    });
+  } finally { pair.destroy(); }
+});
+
+it('projects requested partitions across streams without emitting shared transactions or retaining a stale batch', () => {
+  const pair = peers();
+  try {
+    pair.left.split('first', 'second', 2);
+    pair.left.create('other-stream', 'other', [{ text: 'Ω', attributes: { strong: '{}' } }]);
+    const transactions: Y.Transaction[] = [];
+    const record = (transaction: Y.Transaction) => transactions.push(transaction);
+    pair.leftDoc.on('afterTransaction', record);
+    const first = pair.left.projectMany(['second', 'other', 'first', 'second']);
+    expect([...first].map(([id, value]) => [id, value.runs.map(run => run.text).join('')])).toEqual([
+      ['second', 'pha'], ['other', 'Ω'], ['first', 'Al'],
+    ]);
+    expect(transactions).toEqual([]);
+    pair.leftDoc.off('afterTransaction', record);
+    const text = pair.leftDoc.getMap('candidate-text:texts').get('stream') as Y.Text;
+    const format = text.toDelta().find((operation: { insert?: unknown }) => typeof operation.insert === 'string')!.attributes;
+    pair.leftDoc.transact(() => {
+      text.insert(2, 'X', format);
+      expect(pair.left.projectMany(['first']).get('first')!.runs.map(run => run.text).join('')).toBe('AXl');
+      expect(first.get('first')!.runs.map(run => run.text).join('')).toBe('Al');
+      expect(() => pair.left.projectMany(['missing'])).toThrow('Unknown');
+    });
+  } finally { pair.destroy(); }
+});
+
+it('refuses a pending malformed style definition without repairing it or poisoning later batch reads', () => {
+  const pair = peers();
+  try {
+    pair.left.projectMany(['first']);
+    const styles = pair.leftDoc.getMap('candidate-text:styles'), key = [...styles.keys()][0], original = styles.get(key);
+    pair.leftDoc.transact(() => {
+      styles.set(key, '"invalid format"');
+      const state = Y.encodeStateVector(pair.leftDoc);
+      expect(() => pair.left.projectMany(['first'])).toThrow();
+      expect(Y.encodeStateVector(pair.leftDoc)).toEqual(state);
+      expect(styles.get(key)).toBe('"invalid format"');
+      styles.set(key, original);
+      expect(plain(pair.left, 'first')).toBe('Alpha');
+    });
+  } finally { pair.destroy(); }
+});
+
+it.each(['owners', 'texts', 'styles'])('retains the global %s bound during an open transaction and a subsequent read', container => {
+  const document = new Y.Doc(), store = new RetainedTextStore(document, 'bounds');
+  try {
+    const map = document.getMap(`bounds:${container}`);
+    document.transact(() => {
+      for (let index = 0; index <= 100_000; index++) map.set(`entry-${index}`, true);
+      const state = Y.encodeStateVector(document);
+      expect(() => store.projectMany([])).toThrow(container === 'styles' ? 'Too many retained style definitions' : 'Retained text pool is too large');
+      expect(Y.encodeStateVector(document)).toEqual(state);
+    });
+    expect(() => store.projectMany([])).toThrow();
+  } finally { store.destroy(); document.destroy(); }
+});
+
 it('rejects malformed or incompatible shared values without repairing over them', () => {
   const pair = peers();
   try {

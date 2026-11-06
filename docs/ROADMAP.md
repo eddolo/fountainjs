@@ -1,5 +1,20 @@
 # FountainJS opportunity roadmap
 
+Fresh retained reads and affected text work (2026-11-06, local checkpoint): fix
+stale projections during caller-owned Yjs transactions, batch validated reads,
+and avoid text reconciliation for provably unchanged groups. All 182 focused
+tests, 32 compiled Node journeys and 87 recorded browser journeys pass. With
+fixed isolated identities, three-trial diagnostics reduce the 500-paragraph
+median edit from 1,370.19 to 42.84 ms and initialization from 16,184.53 to
+701.45 ms, with identical encoded shared state. Candidate-only 1,000-paragraph
+editing is 88.19 ms median; full projection, larger scaling, history growth,
+compaction, migration and adoption remain open. Public runtime/CSS bytes are
+unchanged. No default switch, limit increase or publication.
+The full source run has 4,328 passes and the same six required failures; API,
+package, headless/server, framework types and public performance gates pass.
+Existing size overruns remain.
+[Audit and evidence](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md).
+
 Collaboration moves and cursor labels (2026-11-06, local follow-up): preserve
 peer insertion ownership when unchanged blocks move, without matching equal
 strings or changing explicit document replacement semantics. Keep long/RTL

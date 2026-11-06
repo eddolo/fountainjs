@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/yjs-retained-text.test.ts (51 tests | 1 failed) 242ms
+   × reads direct shared edits made between projections inside a caller-owned transaction 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/yjs-retained-text.test.ts > reads direct shared edits made between projections inside a caller-owned transaction
+AssertionError: expected 'Alpha' to be 'AlXpha' // Object.is equality
+
+Expected: "AlXpha"
+Received: "Alpha"
+
+ ❯ tests/yjs-retained-text.test.ts:342:41
+    340|     pair.leftDoc.transact(() => {
+    341|       text.insert(3, 'X', format);
+    342|       expect(plain(pair.left, 'first')).toBe('AlXpha');
+       |                                         ^
+    343|       text.delete(3, 1);
+    344|       expect(plain(pair.left, 'first')).toBe('Alpha');
+ ❯ transact node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/src/utils/Transaction.js:429:14
+ ❯ Doc.transact node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/src/utils/Doc.js:185:12
+ ❯ tests/yjs-retained-text.test.ts:340:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 71 passed (72)
+   Start at  02:20:02
+   Duration  1.18s (tests 45%, import 30%, transform 23%, worker 2%)

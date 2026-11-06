@@ -93,20 +93,23 @@ export class RetainedNodeStore {
     if (this.nodes.size > MAX_NODES || this.identities.size > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
   }
 
-  private record(nodeId: string): Y.Map<unknown> {
-    this.valid();
+  private readRecord(nodeId: string): Y.Map<unknown> {
     if (nodeId === ROOT) return this.root;
     const value = this.nodes.get(nodeId);
     if (!id(nodeId) || !(value instanceof Y.Map)) throw new Error('Unknown retained node.');
     return value;
   }
 
-  private children(nodeId: string): Y.Array<unknown> {
-    if (nodeId === ROOT) { this.valid(); return this.rootChildren; }
-    const value = this.record(nodeId).get('children');
+  private record(nodeId: string): Y.Map<unknown> { this.valid(); return this.readRecord(nodeId); }
+
+  private readChildren(nodeId: string): Y.Array<unknown> {
+    if (nodeId === ROOT) return this.rootChildren;
+    const value = this.readRecord(nodeId).get('children');
     if (!(value instanceof Y.Array)) throw new Error('Invalid retained children.');
     return value;
   }
+
+  private children(nodeId: string): Y.Array<unknown> { this.valid(); return this.readChildren(nodeId); }
 
   private fresh(): string {
     this.valid();
@@ -126,7 +129,10 @@ export class RetainedNodeStore {
   }
 
   private references(parent: string): readonly Reference[] {
-    const array = this.children(parent);
+    return this.readReferences(this.children(parent));
+  }
+
+  private readReferences(array: Y.Array<unknown>): readonly Reference[] {
     if (array.length > MAX_REFERENCES) throw new RangeError('Too many retained child references.');
     return array.toArray().map(value => {
       if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid retained child reference.');
@@ -136,14 +142,21 @@ export class RetainedNodeStore {
     });
   }
 
-  private liveChildren(parent: string): readonly string[] {
-    return this.references(parent).filter(reference => {
+  private readLiveChildren(parent: string): readonly string[] {
+    return this.readReferences(this.readChildren(parent)).filter(reference => {
       const placement = this.placement(reference.id);
-      return placement?.parent === parent && placement.token === reference.token && this.record(reference.id).get('deleted') !== true;
+      return placement?.parent === parent && placement.token === reference.token && this.readRecord(reference.id).get('deleted') !== true;
     }).map(reference => reference.id);
   }
 
+  private liveChildren(parent: string): readonly string[] { this.valid(); return this.readLiveChildren(parent); }
+
   childrenOf(parent: string): readonly string[] { return this.liveChildren(parent); }
+  childrenOfMany(parents: readonly string[]): ReadonlyMap<string, readonly string[]> {
+    this.valid();
+    if (parents.length > MAX_NODES + 1) throw new RangeError('Too many retained parents.');
+    return new Map(parents.map(parent => [parent, this.readLiveChildren(parent)]));
+  }
   placementIdentity(nodeId: string): string | undefined { this.valid(); return this.placement(nodeId)?.token; }
 
   private placementTarget(nodeId: string, parent: string, index: number): { array: Y.Array<unknown>; index: number } {
@@ -246,8 +259,8 @@ export class RetainedNodeStore {
     this.document.transact(() => record.set('deleted', true), this.origin);
   }
 
-  private value(nodeId: string): RetainedNodeValue {
-    const record = this.record(nodeId), type = record.get('type'), attrs: Attributes = Object.create(null);
+  private value(record: Y.Map<unknown>): RetainedNodeValue {
+    const type = record.get('type'), attrs: Attributes = Object.create(null);
     if (typeof type !== 'string' || !type.length || !key(type) || record.size > 1_005
       || record.has('deleted') && typeof record.get('deleted') !== 'boolean') throw new Error('Invalid retained node metadata.');
     // Y.Map key iteration can reflect each peer's arrival order. Metadata
@@ -270,7 +283,7 @@ export class RetainedNodeStore {
     const issues: RetainedNodeIssue[] = [], parents = new Map<string, string>(), lifted = new Set<string>();
     const alive = [...this.nodes.keys()].filter(nodeId => {
       if (!id(nodeId) || nodeId === ROOT) throw new Error('Invalid retained node identity.');
-      return this.record(nodeId).get('deleted') !== true;
+      return this.readRecord(nodeId).get('deleted') !== true;
     }).sort();
     for (const nodeId of alive) { const placement = this.placement(nodeId); if (placement) parents.set(nodeId, placement.parent); }
     const completed = new Set<string>();
@@ -292,12 +305,19 @@ export class RetainedNodeStore {
       if (depth > 100 || visited.has(nodeId)) throw new Error('Invalid retained node depth or duplicate ownership.');
       visited.add(nodeId);
       const children: string[] = [], seen = new Set<string>();
-      for (const child of this.liveChildren(nodeId)) if (parents.get(child) === nodeId) {
+      const record = this.readRecord(nodeId), array = nodeId === ROOT ? this.rootChildren : record.get('children');
+      if (!(array instanceof Y.Array)) throw new Error('Invalid retained children.');
+      // Projection is a synchronous read. Pool bounds were checked at entry;
+      // validate every reference/record without rescanning global map sizes.
+      for (const reference of this.readReferences(array)) {
+        const child = reference.id, placement = this.placement(child);
+        if (placement?.parent !== nodeId || placement.token !== reference.token
+          || this.readRecord(child).get('deleted') === true || parents.get(child) !== nodeId) continue;
         if (seen.has(child)) issues.push({ kind: 'duplicate-reference', id: child });
         else { children.push(child); seen.add(child); }
       }
       if (nodeId === ROOT) for (const child of [...lifted].sort()) if (!seen.has(child)) children.push(child);
-      return { id: nodeId, ...this.value(nodeId), content: children.map(child => visit(child, depth + 1)) };
+      return { id: nodeId, ...this.value(record), content: children.map(child => visit(child, depth + 1)) };
     };
     const root = visit(ROOT);
     for (const nodeId of alive) if (!visited.has(nodeId)) issues.push({ kind: 'unattached', id: nodeId });

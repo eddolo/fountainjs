@@ -1,0 +1,4 @@
+$ tsc --noEmit && pnpm test:svelte-types && pnpm test:angular-types
+tests/yjs-retained-text.test.ts(339,40): error TS7006: Parameter 'operation' implicitly has an 'any' type.
+tests/yjs-retained-text.test.ts(364,40): error TS7006: Parameter 'operation' implicitly has an 'any' type.
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, MathExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
+import { CoreExtension, MathExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
   type NodeJSON, type Transaction } from '../src';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
 
@@ -38,6 +38,27 @@ function peers(content = source, reverseIDs = false) {
     else { Y.applyUpdate(left.doc, b, 'peer'); Y.applyUpdate(doc, a, 'peer'); }
   }, destroy: () => { left.destroy(); editor.destroy(); store.destroy(); doc.destroy(); } };
 }
+
+it.each([false, true])('distinguishes retained block movement from explicit replacement despite reused parent objects (replace: %s)', replace => {
+  const pair = fixture({ ...source, content: [
+    ...['Alpha', 'Beta', 'Gamma'].map(text => ({ type: 'paragraph', content: [{ type: 'text', text }] })), source.content![1],
+  ] });
+  const active = () => pair.store.nodes.project().root.content.flatMap(parent => parent.content
+    .filter(child => child.type === 'text' && pair.store.text.project(child.id).runs.some(run => run.text.length)).map(child => child.id));
+  try {
+    const before = active(), document = pair.editor.state.doc;
+    if (replace) pair.editor.dispatch(pair.editor.createTransaction().replaceDocument(document.copy([
+      document.child(1), document.child(2), document.child(0), document.child(3),
+    ])));
+    else expect(moveBlock(pair.editor, 0, 2)).toBe(true);
+    pair.apply();
+    expect(pair.store.read().toJSON()).toEqual(pair.editor.getJSON());
+    expect(pair.editor.state.doc.content.slice(0, 3).map(node => node.textContent)).toEqual(['Beta', 'Gamma', 'Alpha']);
+    const after = active();
+    if (replace) expect(after.some(id => before.includes(id))).toBe(false);
+    else expect([...after].sort()).toEqual([...before].sort());
+  } finally { pair.destroy(); }
+});
 
 it('round-trips the exact native model, including adjacent identical leaves, empty leaves and inert metadata keys', () => {
   const attrs = JSON.parse('{"__proto__":{"preserved":true},"constructor":"data","":"empty-name","\\ud800":"unpaired-key"}');

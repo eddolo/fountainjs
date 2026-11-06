@@ -1,0 +1,71 @@
+{
+  "baselineCommit": "10170139",
+  "trials": 3,
+  "scope": "Actual compiled adapter; fixed isolated identities. Instrumentation is excluded from edit samples. This is not a competitive benchmark or full adoption certification.",
+  "summary": [
+    {
+      "blocks": 100,
+      "before": {
+        "medianOfEditMediansMs": 63.27350000000297,
+        "editMediansMs": [
+          77.75540000000012,
+          63.27350000000297,
+          62.30079999999725
+        ],
+        "maximumSampleMs": 101.39600000000007,
+        "medianInitializationMs": 227.98159999999916,
+        "getterCalls": 9894,
+        "sumReportedCardinalities": 1713604
+      },
+      "after": {
+        "medianOfEditMediansMs": 10.870300000000043,
+        "editMediansMs": [
+          16.142800000000022,
+          10.26989999999978,
+          10.870300000000043
+        ],
+        "maximumSampleMs": 34.4153,
+        "medianInitializationMs": 74.58169999999973,
+        "getterCalls": 933,
+        "sumReportedCardinalities": 16304
+      },
+      "medianEditSpeedup": 5.820768516048565,
+      "sharedBytes": 181389,
+      "sharedSha256": "a63a54a96c9ff1b09892a4668b5f7745e3dbfa12a3285ba90deffa72e197c049",
+      "documentSha256": "fc0bea274240f5d24c5f9090689a107231b9fe82e216fc20344946f1c921f2fc",
+      "identicalSharedBytesAcrossAllTrials": true
+    },
+    {
+      "blocks": 500,
+      "before": {
+        "medianOfEditMediansMs": 1370.1870999999992,
+        "editMediansMs": [
+          1370.1870999999992,
+          1374.367900000012,
+          1363.4809000000096
+        ],
+        "maximumSampleMs": 1599.4051999999938,
+        "medianInitializationMs": 16184.526800000001,
+        "getterCalls": 49094,
+        "sumReportedCardinalities": 42568004
+      },
+      "after": {
+        "medianOfEditMediansMs": 42.838300000000345,
+        "editMediansMs": [
+          63.91540000000009,
+          42.68209999999999,
+          42.838300000000345
+        ],
+        "maximumSampleMs": 78.32619999999997,
+        "medianInitializationMs": 701.4488999999994,
+        "getterCalls": 4133,
+        "sumReportedCardinalities": 81504
+      },
+      "medianEditSpeedup": 31.98509511348462,
+      "sharedBytes": 911676,
+      "sharedSha256": "a48ff6f7b258292c1f27d82f0e977a611d2da48a0e7b8381716552a3288e9d9c",
+      "documentSha256": "a8fb1c36b2e587015082ddb04d0ee204fa66d30bd7022d074fdbad6dc612071f",
+      "identicalSharedBytesAcrossAllTrials": true
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "format": "es",
+  "passed": 16,
+  "domRequired": false,
+  "runtime": "Node v24.22.1",
+  "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle and author history, not manual pool calls; includes sibling reordering against peer typing in both update exchange orders."
+}

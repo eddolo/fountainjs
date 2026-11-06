@@ -5,7 +5,7 @@ import type { Step } from '../core/transaction/step';
 import type { Transaction } from '../core/transaction/transaction';
 import { ReplaceStep } from '../core/transaction/replace-step';
 import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection } from './retained-nodes';
-import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun } from './retained-text';
+import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun, type RetainedTextPartition } from './retained-text';
 import { planRetainedNodeStarts, planRetainedText } from './retained-mapping';
 
 const VERSION = 'fountain-retained-document/3';
@@ -19,7 +19,7 @@ const same = (left: unknown, right: unknown): boolean => {
 interface Binding { id: string; from: number; length: number; modelFrom: number; leaf: string }
 interface GroupState { id: string; parent: string; value: RetainedNodeProjection }
 interface Leaf { node: Node; path: number[]; at: number; leaf: string }
-interface Group { parent: string; leaves: Leaf[]; ids: string[]; field: string; pieces: Piece[]; empty: boolean }
+interface Group { parent: string; leaves: Leaf[]; ids: string[]; field: string; pieces: Piece[]; empty: boolean; preserved?: boolean }
 interface Piece { original: string; from: number; to: number; at: number; group: Group; start?: unknown; end?: unknown; id?: string; leaf: Leaf }
 interface Segment { original: string; id: string; from: number; to: number; group: Group }
 interface Fragment { node: Node; id?: string; leaf?: string; bindings?: Binding[]; children?: Fragment[] }
@@ -105,12 +105,12 @@ export class RetainedDocumentStore {
     return value.token === this.nodes.placementIdentity(id) && value.rootToken === this.nodes.placementIdentity(value.root) ? value : undefined;
   }
 
-  private orderedChildren(raw: RetainedNodeProjection): readonly RetainedNodeProjection[] {
+  private orderedChildren(raw: RetainedNodeProjection, partitions: ReadonlyMap<string, RetainedTextPartition>, placements: ReadonlyMap<string, SplitPlacement>): readonly RetainedNodeProjection[] {
     const result = [...raw.content], families = new Map<string, { index: number; node: RetainedNodeProjection; rank: number; stream: string }[]>();
     for (let index = 0; index < result.length; index++) {
-      const node = result[index], placement = this.splitPlacement(node.id);
+      const node = result[index], placement = placements.get(node.id);
       if (!placement || !result.some(child => child.id === placement.root)) continue;
-      const partition = this.text.project(placement.partition), entries = families.get(placement.root) ?? [];
+      const partition = partitions.get(placement.partition)!, entries = families.get(placement.root) ?? [];
       entries.push({ index, node, rank: partition.from, stream: partition.streamId }); families.set(placement.root, entries);
     }
     for (const [root, entries] of families) {
@@ -187,14 +187,27 @@ export class RetainedDocumentStore {
     if (this.metadata.get('version') !== VERSION || this.metadata.get('seeded') !== true) throw new Error('Retained document is not initialized.');
     const projection = this.nodes.project();
     if (projection.issues.some(issue => issue.kind === 'unattached')) throw new Error('Retained document has unattached records.');
+    const fields = new Set<string>(), placements = new Map<string, SplitPlacement>();
+    const collect = (node: RetainedNodeProjection) => {
+      if (node.type === 'text') {
+        if (!node.textLayout) throw new Error(`Missing retained text layout for ${node.id}.`);
+        fields.add(node.id);
+      }
+      for (const child of node.content) {
+        const placement = this.splitPlacement(child.id);
+        if (placement) { placements.set(child.id, placement); fields.add(placement.partition); }
+        collect(child);
+      }
+    };
+    collect(projection.root);
+    const partitions = this.text.projectMany([...fields]);
     const groupStates = new Map<string, GroupState>();
     const visit = (raw: RetainedNodeProjection): Fragment => {
       if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
       const activeFields = new Set<string>();
-      const ordered = this.orderedChildren(raw);
+      const ordered = this.orderedChildren(raw, partitions, placements);
       for (const child of ordered) if (child.type === 'text') {
-        if (!child.textLayout || !this.text.has(child.id)) throw new Error(`Missing retained text layout for ${child.id} (layout: ${!!child.textLayout}, stream: ${this.text.has(child.id)}).`);
-        if (this.text.project(child.id).runs.some(run => run.text.length)) activeFields.add(child.textLayout.field);
+        if (partitions.get(child.id)!.runs.some(run => run.text.length)) activeFields.add(child.textLayout!.field);
       }
       const emittedEmpty = new Set<string>(), children: Fragment[] = [];
       const append = (next: Fragment) => {
@@ -209,7 +222,7 @@ export class RetainedDocumentStore {
       for (const child of ordered) {
         if (child.type !== 'text') { append(visit(child)); continue; }
         groupStates.set(child.id, { id: child.id, parent: raw.id, value: child });
-        const partition = this.text.project(child.id);
+        const partition = partitions.get(child.id)!;
         let offset = 0;
         for (const run of partition.runs) {
           const decoded = this.decode(run);
@@ -269,6 +282,7 @@ export class RetainedDocumentStore {
 
   private change(before: Node, after: Node, mapping: Mapping, step: Step): void {
     const plan = planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
+    const intent = (step as Step & { getRetainedSplit?: () => { textPath: readonly number[]; rightTextPath: readonly number[]; offset: number } }).getRetainedSplit?.();
     const nextNodes = new Map<string, string>([['', 'root']]), values = new Map<string, RetainedNodeProjection>();
     const collect = (raw: RetainedNodeProjection) => { values.set(raw.id, raw); raw.content.forEach(collect); };
     collect(this.graph!);
@@ -285,8 +299,10 @@ export class RetainedDocumentStore {
     const usedNodes = new Set(nextNodes.values()), expected = new Map<string, (string | Group)[]>(), groups: Group[] = [];
     const leaves = new Map<string, Leaf>(), usedLeaves = new Set<string>();
     const candidates = new Map<string, string[]>();
+    const provenance = new Map<string, typeof plan.retained[number][]>();
     for (const retained of plan.retained) {
       const key = pathKey(retained.after.path), ids = candidates.get(key) ?? [];
+      const slices = provenance.get(key) ?? []; slices.push(retained); provenance.set(key, slices);
       for (const binding of oldBindings.get(pathKey(retained.before.path)) ?? []) {
         if (binding.modelFrom < retained.before.to && binding.modelFrom + binding.length > retained.before.from) ids.push(binding.leaf);
       }
@@ -314,6 +330,20 @@ export class RetainedDocumentStore {
           const entry = { node: text, path: textPath, at, leaf }; leaves.set(textKey, entry); group.leaves.push(entry);
           at += text.nodeSize; index++;
         } while (!group.empty && index < node.childCount && node.child(index).isText && node.child(index).nodeSize > 0);
+        // Reused parent identity alone is insufficient: an explicit replacement
+        // can reuse objects while deleting/reinserting their characters. Require
+        // full, offset-preserving provenance for every original text leaf too.
+        const oldParent = identity === id ? this.identityPaths.get(id) : undefined;
+        if (!intent && oldParent && !group.empty && group.leaves.every(leaf => {
+          const oldKey = pathKey([...oldParent, leaf.path.at(-1)!]), bindings = oldBindings.get(oldKey);
+          return bindings?.length && bindings.every(binding => this.groups.get(binding.id)?.parent === id)
+            && (provenance.get(pathKey(leaf.path)) ?? []).filter(slice => pathKey(slice.before.path) === oldKey
+              && slice.before.from === slice.after.from && slice.before.to === slice.after.to)
+              .reduce((length, slice) => length + slice.after.to - slice.after.from, 0) === leaf.node.nodeSize;
+        })) {
+          group.ids = [...new Set(group.leaves.flatMap(leaf => oldBindings.get(pathKey([...oldParent, leaf.path.at(-1)!]))!.map(binding => binding.id)))];
+          group.preserved = true;
+        }
         groups.push(group); children.push(group);
       }
     };
@@ -321,6 +351,7 @@ export class RetainedDocumentStore {
     const groupFor = new Map<Leaf, Group>(); groups.forEach(group => group.leaves.forEach(leaf => groupFor.set(leaf, group)));
     for (const retained of plan.retained) {
       const leaf = leaves.get(pathKey(retained.after.path))!, group = groupFor.get(leaf)!;
+      if (group.preserved) continue;
       for (const binding of oldBindings.get(pathKey(retained.before.path)) ?? []) {
         const from = Math.max(binding.modelFrom, retained.before.from), to = Math.min(binding.modelFrom + binding.length, retained.before.to);
         if (from < to) group.pieces.push({ original: binding.id, from: binding.from + from - binding.modelFrom,
@@ -329,7 +360,6 @@ export class RetainedDocumentStore {
     }
     // Splitting an empty block, or at either edge, still needs a shared marker:
     // there may be no retained character on one side to imply the boundary.
-    const intent = (step as Step & { getRetainedSplit?: () => { textPath: readonly number[]; rightTextPath: readonly number[]; offset: number } }).getRetainedSplit?.();
     if (intent) {
       const bindings = oldBindings.get(pathKey(intent.textPath)) ?? [];
       const binding = bindings.find(entry => entry.modelFrom <= intent.offset && entry.modelFrom + entry.length >= intent.offset);
@@ -404,6 +434,7 @@ export class RetainedDocumentStore {
     }
     for (const group of groups) {
       group.field = this.groups.get(group.ids[0])?.value.textLayout?.field ?? group.ids[0];
+      if (group.preserved) continue;
       group.pieces.sort((a, b) => a.at - b.at);
       group.ids = [...new Set([...group.pieces.map(piece => piece.id!), ...group.ids])];
       for (const id of group.ids) this.nodes.setTextLayout(id, { field: group.field, empty: group.empty });
@@ -439,13 +470,16 @@ export class RetainedDocumentStore {
       if (length) this.text.delete(state.id, 0, length);
     }
     for (const [id] of values) if (id !== 'root' && !usedNodes.has(id) && !assigned.has(id)) this.nodes.remove(id);
+    const orders = this.nodes.childrenOfMany([...expected.keys()]);
+    let reordered = false;
     for (const [parent, children] of expected) {
       const ids = children.flatMap(child => typeof child === 'string' ? [child] : child.ids);
       // A plain edit does not change the sibling order. Revalidate that list
       // once; a move can change later positions, so refresh after each move.
-      let current = this.nodes.childrenOf(parent);
+      let current = reordered ? this.nodes.childrenOf(parent) : orders.get(parent)!;
       for (let index = 0; index < ids.length; index++) if (current[index] !== ids[index]) {
         this.nodes.move(ids[index], parent, index);
+        reordered = true;
         current = this.nodes.childrenOf(parent);
       }
     }
