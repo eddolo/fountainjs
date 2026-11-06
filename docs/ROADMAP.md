@@ -20,13 +20,26 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,600 passes and six failures, with no skips. Three
+The current source suite has 4,648 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest persistent-handoff audit](YJS_RETAINED_HANDOFF_AUDIT.md).
+[latest legacy-conversion audit](YJS_LEGACY_MIGRATION_AUDIT.md).
+
+Existing XML-room conversion (2026-11-06, local): a strict read-only decoder
+archives full old-format wire/root state without connecting or repairing the
+public adapter. A separate retained candidate preserves the projected document,
+application IDs and explicit auxiliary state, translating native text/node
+references and actual legacy selections. All 48 new cases / 196 focused cases,
+16 compiled ESM/CommonJS Node checks and nine recorded three-engine conversion
+journeys pass. Complete source has 4,648 passes and the same six default failures
+across 295 files, no skips. A declaration-only repair retains identical private
+runtime bytes. Compatible named XML rooms are covered; cross-format authority,
+pending old-format batches, general fragment mapping, large-room/storage costs
+and safe default-adapter adoption remain unfinished. No limits change,
+publication or COLLAB-01 promotion. [Audit](YJS_LEGACY_MIGRATION_AUDIT.md).
 
 Atomic retained-room handoff (2026-11-06, local): install a verified fresh room
 and archive the frozen source in one SQLite transaction. Retain late old-room

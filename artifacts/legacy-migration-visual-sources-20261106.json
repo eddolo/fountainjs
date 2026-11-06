@@ -1,0 +1,74 @@
+[
+  {
+    "engine": "chromium",
+    "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+    "kind": "conversion",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-chromium\\video.webm",
+    "durationSeconds": 3.2,
+    "target": "artifacts\\legacy-migration-visual-20261106\\chromium-conversion"
+  },
+  {
+    "engine": "chromium",
+    "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+    "kind": "unclaimed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-chromium\\video.webm",
+    "durationSeconds": 2.24,
+    "target": "artifacts\\legacy-migration-visual-20261106\\chromium-unclaimed"
+  },
+  {
+    "engine": "chromium",
+    "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+    "kind": "verifier",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-chromium\\video.webm",
+    "durationSeconds": 2.48,
+    "target": "artifacts\\legacy-migration-visual-20261106\\chromium-verifier"
+  },
+  {
+    "engine": "firefox",
+    "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+    "kind": "conversion",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-firefox\\video.webm",
+    "durationSeconds": 5.52,
+    "target": "artifacts\\legacy-migration-visual-20261106\\firefox-conversion"
+  },
+  {
+    "engine": "firefox",
+    "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+    "kind": "unclaimed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-firefox\\video.webm",
+    "durationSeconds": 2.6,
+    "target": "artifacts\\legacy-migration-visual-20261106\\firefox-unclaimed"
+  },
+  {
+    "engine": "firefox",
+    "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+    "kind": "verifier",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-firefox\\video.webm",
+    "durationSeconds": 3,
+    "target": "artifacts\\legacy-migration-visual-20261106\\firefox-verifier"
+  },
+  {
+    "engine": "webkit",
+    "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+    "kind": "conversion",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-webkit\\video.webm",
+    "durationSeconds": 10.52,
+    "target": "artifacts\\legacy-migration-visual-20261106\\webkit-conversion"
+  },
+  {
+    "engine": "webkit",
+    "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+    "kind": "unclaimed",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-webkit\\video.webm",
+    "durationSeconds": 3.72,
+    "target": "artifacts\\legacy-migration-visual-20261106\\webkit-unclaimed"
+  },
+  {
+    "engine": "webkit",
+    "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+    "kind": "verifier",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-webkit\\video.webm",
+    "durationSeconds": 6.16,
+    "target": "artifacts\\legacy-migration-visual-20261106\\webkit-verifier"
+  }
+]

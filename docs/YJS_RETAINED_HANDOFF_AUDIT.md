@@ -6,6 +6,10 @@ old-room edits, and can roll back while archiving accepted destination edits.
 It is local and experimental. COLLAB-01 stays Partial: the public/default
 adapter still has six failing concurrent-edit counterexamples.
 
+The subsequent [legacy conversion audit](YJS_LEGACY_MIGRATION_AUDIT.md) adds
+old-format recovery and verified conversion candidates. This handoff still
+requires retained source records; it is not yet a cross-format installation API.
+
 ## Boundaries and code
 
 `src/yjs/retained-handoff.ts` imports schema types, retained checkpoint types,

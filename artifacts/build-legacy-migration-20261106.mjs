@@ -1,0 +1,5 @@
+import {build} from 'vite';
+import {resolve} from 'node:path';
+import {copyFile} from 'node:fs/promises';
+await build({configFile:false,build:{lib:{entry:{engine:resolve('src/index.ts'),'legacy-adapter':resolve('src/yjs/index.ts'),'retained-adapter':resolve('src/yjs/retained-adapter.ts'),'legacy-checkpoint':resolve('src/yjs/legacy-checkpoint.ts'),'legacy-migration':resolve('src/yjs/legacy-migration.ts'),checkpoint:resolve('src/yjs/retained-checkpoint.ts'),'room-store':resolve('src/yjs/retained-room-store.ts'),selection:resolve('src/yjs/retained-selection.ts'),'document-store':resolve('src/yjs/retained-document.ts'),migration:resolve('src/yjs/retained-migration.ts')},formats:['es','cjs'],fileName:(format,name)=>`${name}.${format==='es'?'js':'cjs'}`},rollupOptions:{external:['react','react-dom','react-dom/client','react/jsx-runtime','vue','svelte','svelte/store','yjs']},outDir:'artifacts/legacy-migration-build-20261106',sourcemap:true,minify:false,emptyOutDir:true}});
+await copyFile('src/styles.css','artifacts/legacy-migration-build-20261106/styles.css');

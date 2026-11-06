@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';
+import {readFile,mkdir,copyFile,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {dirname,join} from 'node:path';
+const report=JSON.parse(await readFile('artifacts/legacy-migration-browser-20261106.json','utf8'));assert.equal(report.stats.expected,9);for(const key of ['unexpected','flaky','skipped'])assert.equal(report.stats[key],0);
+const journeys=[];function visit(suites){for(const suite of suites){visit(suite.suites??[]);for(const spec of suite.specs??[])for(const test of spec.tests??[])journeys.push({name:spec.title,...test})}}visit(report.suites);
+const folder='artifacts/legacy-migration-visual-20261106';await mkdir(folder,{recursive:true});const sources=[];
+for(const journey of journeys){const kind=journey.name.startsWith('converts')?'conversion':journey.name.startsWith('refuses')?'unclaimed':'verifier',video=journey.results[0].attachments.find(a=>a.name==='video').path,target=join(folder,journey.projectName+'-'+kind);await copyFile(video,target+'.webm');await copyFile(join(dirname(video),'final.png'),target+'-final.png');if(kind==='conversion')await copyFile(join(dirname(video),'selected.png'),target+'-selected.png');const duration=Number(execFileSync('C:/ProgramData/chocolatey/bin/ffprobe.exe',['-v','error','-show_entries','format=duration','-of','default=noprint_wrappers=1:nokey=1',target+'.webm'],{encoding:'utf8'}).trim());assert(duration>0);execFileSync('C:/ProgramData/chocolatey/bin/ffmpeg.exe',['-v','error','-y','-i',target+'.webm','-vf',`fps=${6/duration},scale=480:-1,tile=3x2`,'-frames:v','1',target+'-filmstrip.png'],{stdio:'pipe'});sources.push({engine:journey.projectName,name:journey.name,kind,video,durationSeconds:duration,target})}
+await writeFile('artifacts/legacy-migration-visual-sources-20261106.json',JSON.stringify(sources,null,2)+'\n');console.log(JSON.stringify({recordings:9,stageImages:12,filmstrips:9}));

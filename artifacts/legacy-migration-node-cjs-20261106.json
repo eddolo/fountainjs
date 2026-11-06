@@ -1,0 +1,50 @@
+{
+  "mode": "cjs",
+  "passed": 8,
+  "cases": [
+    "full legacy wire archive preserves binary, empty roots and actual public-adapter content",
+    "verified conversion refuses activation and does not connect, normalize or mutate the old room",
+    "technical source, application IDs, model metadata and translated native text/node references survive",
+    "actual backward selection and complete granular widget state survive",
+    "converted retained editor starts a fresh undo stack and reverses later real typing",
+    "old XML wire is rejected in isolation instead of merged into the retained room",
+    "original checkpoint reopens as a functioning old room and receives later legacy batches without rewriting its archive",
+    "unknown empty auxiliary roots require explicit ownership rather than silently disappearing"
+  ],
+  "node": "v24.22.1",
+  "dom": false,
+  "report": {
+    "sourceFormat": "legacy-xml",
+    "sourceGuid": "ad8c7a86-7097-44f4-b03b-4c072b6e81c4",
+    "destinationRoomId": "r-e564b86f-0945-45a2-8ffb-4ea57508ed88",
+    "sourceBytes": 2108,
+    "destinationBytes": 9812,
+    "auxiliaryRoots": [
+      {
+        "name": "refs",
+        "migrator": "refs"
+      },
+      {
+        "name": "empty",
+        "migrator": "refs"
+      },
+      {
+        "name": "saved",
+        "migrator": "legacy-selections:saved"
+      },
+      {
+        "name": "fountain:structured-attributes",
+        "migrator": "structured-attributes:fountain:structured-attributes"
+      }
+    ],
+    "translated": {
+      "textAnchors": 1,
+      "selections": 1,
+      "nodeIdentities": 1
+    },
+    "history": "reset-with-source-checkpoint",
+    "offline": "reconcile-before-activation",
+    "externalState": "host-coordinated",
+    "activation": "not-implemented"
+  }
+}

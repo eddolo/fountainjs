@@ -1,0 +1,1143 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "82c5028f",
+  "goalComplete": false,
+  "publication": "Local private named-room conversion candidate only; no authoritative cross-format activation, adapter switch or publication.",
+  "source": [
+    {
+      "path": "src/yjs/legacy-document.ts",
+      "bytes": 8858,
+      "sha256": "64a15da191803e21a1aeb85f63617eef0def13d2ac795f5e249a51239a2d279c"
+    },
+    {
+      "path": "src/yjs/legacy-checkpoint.ts",
+      "bytes": 7434,
+      "sha256": "047471ffe6053ba8338b1c8899681d36bda2ffb47a79b51ab16c3a828b19bbf4"
+    },
+    {
+      "path": "src/yjs/legacy-migration.ts",
+      "bytes": 8922,
+      "sha256": "fc37f7ea0ecf0acaab80600a2e413f5505ad8da0cbed1e79fc47a78f941eb6de"
+    },
+    {
+      "path": "src/yjs/retained-checkpoint.ts",
+      "bytes": 13050,
+      "sha256": "e688fbf9588d4b0be3d8d5232506922472acf7e801ea78cda8e7b55a8f09c301"
+    },
+    {
+      "path": "tests/yjs-legacy-migration.test.ts",
+      "bytes": 21167,
+      "sha256": "e7a06beb24ccc2a0437c01ad89918abc6752c1fcbec38a3f82b6f86b0ab22f8d"
+    },
+    {
+      "path": "tests/manual/legacy-migration-real.spec.ts",
+      "bytes": 6392,
+      "sha256": "8b0f15df2895e4dae281c9d97f3faf9b1fd4629f680ca6130c99cb4169f793dd"
+    },
+    {
+      "path": "artifacts/build-legacy-migration-20261106.mjs",
+      "bytes": 1070,
+      "sha256": "1cda4d8981264b9009b7e0e43f04c59e1e1a4db34ba8804e047e62e494d4d0e9"
+    },
+    {
+      "path": "artifacts/legacy-migration-fixture-20261106.html",
+      "bytes": 8121,
+      "sha256": "f3bd9357d914a0a171a872c02b5099a940192e3026efe1ef207f8f63b6c7f01b"
+    },
+    {
+      "path": "artifacts/legacy-migration-vite-20261106.config.ts",
+      "bytes": 371,
+      "sha256": "0ec14e35e0c0a75a42a83336eaba5b54c84657bbf10d2f902c42470a97d67e97"
+    },
+    {
+      "path": "artifacts/legacy-migration-browser-20261106.config.ts",
+      "bytes": 723,
+      "sha256": "070198a47628b70ab983271203db2d328f31986ade77dd2dbd4ac6763b1bcbe2"
+    },
+    {
+      "path": "artifacts/legacy-migration-node-20261106.mjs",
+      "bytes": 8588,
+      "sha256": "d49df5241c11b0d12b511ee2147f938fa7be965248d68058363586e2beb8d245"
+    },
+    {
+      "path": "artifacts/curate-legacy-migration-20261106.mjs",
+      "bytes": 1947,
+      "sha256": "9b175cc69630397dc20370df07bc3b877a1c05485fe6f09fc2a2821b56757b5d"
+    },
+    {
+      "path": "artifacts/run-legacy-migration-checks-20261106.ps1",
+      "bytes": 1699,
+      "sha256": "0cb12016b470ef4ac30636db81f0ce9f60d838dbc8cc79991c640dbc6a0feb61"
+    },
+    {
+      "path": "artifacts/verify-legacy-migration-20261106.mjs",
+      "bytes": 9310,
+      "sha256": "2c4010c3acae76a577c7424437949177821992b3d8d720c979b564ef1f9c6ae5"
+    }
+  ],
+  "fullSource": {
+    "path": "artifacts/legacy-migration-full-source-20261106.json",
+    "bytes": 1782976,
+    "sha256": "25baa1013f40c562882c09c543367c9c20b585e5b22a85329abf3e9c82c80fd1",
+    "total": 4654,
+    "passed": 4648,
+    "failed": 6,
+    "skipped": 0,
+    "files": 295,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "passed": 196,
+    "newLegacyCases": [
+      "archives and converts an actual public-adapter room without connecting, repairing or changing its source",
+      "preserves an empty auxiliary root and binary host data through an explicit root owner",
+      "restores a source checkpoint into a still-editable legacy room and preserves subsequent old-room batches",
+      "translates actual native text references and registered shared-node identities",
+      "translates the public adapter’s actual text selection encoding",
+      "translates the public adapter’s actual forward selection encoding",
+      "translates the public adapter’s actual backward selection encoding",
+      "translates the public adapter’s actual gap-before selection encoding",
+      "translates the public adapter’s actual gap-after selection encoding",
+      "migrates granular attributes with explicit definitions and preserves a stale canonical source plus its authoritative map",
+      "starts a retained editor from the candidate and supports new author-local undo without sharing old-room writes",
+      "requires the explicit history migration policy",
+      "requires the explicit offline migration policy",
+      "requires the explicit externalState migration policy",
+      "refuses an unclaimed unknown auxiliary root without touching the source",
+      "refuses an unclaimed empty auxiliary root without touching the source",
+      "refuses a duplicate root owner",
+      "refuses a reserved root owner",
+      "refuses a missing root owner",
+      "refuses extra-root without producing an accepted destination",
+      "refuses source-write without producing an accepted destination",
+      "refuses content-write without producing an accepted destination",
+      "refuses verifier-write without producing an accepted destination",
+      "refuses async-migrate without producing an accepted destination",
+      "refuses async-verify without producing an accepted destination",
+      "refuses unknown-node-data rather than normalizing or silently dropping source data",
+      "refuses text-attrs rather than normalizing or silently dropping source data",
+      "refuses xml-format rather than normalizing or silently dropping source data",
+      "refuses xml-embed rather than normalizing or silently dropping source data",
+      "refuses duplicate-document rather than normalizing or silently dropping source data",
+      "refuses subdocument rather than normalizing or silently dropping source data",
+      "refuses unpaired rather than normalizing or silently dropping source data",
+      "rejects tampered format on isolated legacy restore",
+      "rejects tampered schemaVersion on isolated legacy restore",
+      "rejects tampered checksum on isolated legacy restore",
+      "rejects tampered wire on isolated legacy restore",
+      "rejects tampered inventory on isolated legacy restore",
+      "rejects tampered projection on isolated legacy restore",
+      "owns checkpoint bytes and restore input before awaiting hashes",
+      "refuses source insert races during asynchronous legacy capture",
+      "refuses source delete races during asynchronous legacy capture",
+      "refuses source root races during asynchronous legacy capture",
+      "refuses source options races during asynchronous legacy capture",
+      "refuses a source with missing update dependencies",
+      "refuses a detached legacy text reference without guessing a replacement",
+      "refuses a detached legacy node reference without guessing a replacement",
+      "verifies the actual stored selection rather than accepting a translated value that was discarded",
+      "expires translation helpers and owns root declarations before asynchronous restore"
+    ]
+  },
+  "checks": [
+    {
+      "log": "artifacts/legacy-migration-types-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "check": "types",
+      "seconds": 6.1424861
+    },
+    {
+      "log": "artifacts/legacy-migration-focused-20261106.log",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "check": "focused",
+      "seconds": 16.8506718
+    },
+    {
+      "log": "artifacts/legacy-migration-full-source-20261106.log",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "check": "full-source",
+      "seconds": 325.2204018
+    },
+    {
+      "seconds": 14.735867,
+      "check": "build",
+      "expectedExitCode": 0,
+      "log": "artifacts/legacy-migration-build-20261106.log",
+      "exitCode": 0
+    },
+    {
+      "seconds": 1.0266162,
+      "check": "api",
+      "expectedExitCode": 0,
+      "log": "artifacts/legacy-migration-api-20261106.log",
+      "exitCode": 0
+    },
+    {
+      "seconds": 1.5226314,
+      "check": "headless",
+      "expectedExitCode": 0,
+      "log": "artifacts/legacy-migration-headless-20261106.log",
+      "exitCode": 0
+    },
+    {
+      "seconds": 0.7617062,
+      "check": "budget",
+      "expectedExitCode": 1,
+      "log": "artifacts/legacy-migration-budget-20261106.log",
+      "exitCode": 1
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/legacy-migration-types-20261106.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/legacy-migration-focused-20261106.log",
+      "bytes": 129,
+      "sha256": "30d9707e2e3ee9ec161b08c441cdd7ee2f78621211557877994132b2a02b257d"
+    },
+    {
+      "path": "artifacts/legacy-migration-full-source-20261106.log",
+      "bytes": 133,
+      "sha256": "8481e7de15fc9861e0a5aaf91d5f2b2bed2133728035e20565916f6c5c540082"
+    },
+    {
+      "path": "artifacts/legacy-migration-build-20261106.log",
+      "bytes": 15898,
+      "sha256": "9c5ecd20c2cfb72f70bdc4a81acfe49b45d7404a8732feb3bd58bb20abdb8358"
+    },
+    {
+      "path": "artifacts/legacy-migration-api-20261106.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/legacy-migration-headless-20261106.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/legacy-migration-budget-20261106.log",
+      "bytes": 3896,
+      "sha256": "be518a88e3b034933718340d61c20f2ce596eb03945b941bccc1705249c2ad42"
+    }
+  ],
+  "compiled": {
+    "sourceModules": 199,
+    "nodeCases": 16,
+    "nodes": [
+      {
+        "mode": "es",
+        "passed": 8,
+        "cases": [
+          "full legacy wire archive preserves binary, empty roots and actual public-adapter content",
+          "verified conversion refuses activation and does not connect, normalize or mutate the old room",
+          "technical source, application IDs, model metadata and translated native text/node references survive",
+          "actual backward selection and complete granular widget state survive",
+          "converted retained editor starts a fresh undo stack and reverses later real typing",
+          "old XML wire is rejected in isolation instead of merged into the retained room",
+          "original checkpoint reopens as a functioning old room and receives later legacy batches without rewriting its archive",
+          "unknown empty auxiliary roots require explicit ownership rather than silently disappearing"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "report": {
+          "sourceFormat": "legacy-xml",
+          "sourceGuid": "243191be-5968-4bea-a6ca-5516d7915e6d",
+          "destinationRoomId": "r-3e7e37c7-235f-44c5-bf0b-ed9f620f108b",
+          "sourceBytes": 2108,
+          "destinationBytes": 9713,
+          "auxiliaryRoots": [
+            {
+              "name": "refs",
+              "migrator": "refs"
+            },
+            {
+              "name": "empty",
+              "migrator": "refs"
+            },
+            {
+              "name": "saved",
+              "migrator": "legacy-selections:saved"
+            },
+            {
+              "name": "fountain:structured-attributes",
+              "migrator": "structured-attributes:fountain:structured-attributes"
+            }
+          ],
+          "translated": {
+            "textAnchors": 1,
+            "selections": 1,
+            "nodeIdentities": 1
+          },
+          "history": "reset-with-source-checkpoint",
+          "offline": "reconcile-before-activation",
+          "externalState": "host-coordinated",
+          "activation": "not-implemented"
+        }
+      },
+      {
+        "mode": "cjs",
+        "passed": 8,
+        "cases": [
+          "full legacy wire archive preserves binary, empty roots and actual public-adapter content",
+          "verified conversion refuses activation and does not connect, normalize or mutate the old room",
+          "technical source, application IDs, model metadata and translated native text/node references survive",
+          "actual backward selection and complete granular widget state survive",
+          "converted retained editor starts a fresh undo stack and reverses later real typing",
+          "old XML wire is rejected in isolation instead of merged into the retained room",
+          "original checkpoint reopens as a functioning old room and receives later legacy batches without rewriting its archive",
+          "unknown empty auxiliary roots require explicit ownership rather than silently disappearing"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "report": {
+          "sourceFormat": "legacy-xml",
+          "sourceGuid": "ad8c7a86-7097-44f4-b03b-4c072b6e81c4",
+          "destinationRoomId": "r-e564b86f-0945-45a2-8ffb-4ea57508ed88",
+          "sourceBytes": 2108,
+          "destinationBytes": 9812,
+          "auxiliaryRoots": [
+            {
+              "name": "refs",
+              "migrator": "refs"
+            },
+            {
+              "name": "empty",
+              "migrator": "refs"
+            },
+            {
+              "name": "saved",
+              "migrator": "legacy-selections:saved"
+            },
+            {
+              "name": "fountain:structured-attributes",
+              "migrator": "structured-attributes:fountain:structured-attributes"
+            }
+          ],
+          "translated": {
+            "textAnchors": 1,
+            "selections": 1,
+            "nodeIdentities": 1
+          },
+          "history": "reset-with-source-checkpoint",
+          "offline": "reconcile-before-activation",
+          "externalState": "host-coordinated",
+          "activation": "not-implemented"
+        }
+      }
+    ]
+  },
+  "browser": {
+    "passed": 9,
+    "scope": "Actual public XML editor, isolated retained conversion/edit/undo and read-only original-model archive; no provider handoff.",
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-chromium\\video.webm",
+        "bytes": 174200,
+        "sha256": "f2ee0780d8969463f16ce6202f24bd4eee5d8f2cef32d97c1078affe07abd9d4",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-chromium\\trace.zip",
+          "bytes": 1977477,
+          "sha256": "4094b62d2249488f70374c8e8f8365dcc2a3fc79aea744f0e63756c8c3e8a0d2"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-chromium\\video.webm",
+        "bytes": 95344,
+        "sha256": "d07c2c2cb95e2964e55c44d39ad14254ef45fa490f1c9b4a8a5124b68b0d6a75",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-chromium\\trace.zip",
+          "bytes": 527964,
+          "sha256": "9213a3099e71c5f3e76008b6771198c745621a78a2d1f8d8995a28fff5a30a99"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-chromium\\video.webm",
+        "bytes": 99910,
+        "sha256": "f2163f48fc64d0fd2bda0f646165782693a11f50306978abd01c1b10e6a7dd77",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-chromium\\trace.zip",
+          "bytes": 1012189,
+          "sha256": "61d39ab3ea3a6359371dd766a006869748d764059d1b0516e33e25653814e1f6"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-firefox\\video.webm",
+        "bytes": 240878,
+        "sha256": "29ff5b74705342c5fcbdfa08740597b68121d40ab0a3658e01fe120df3c4df4d",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-firefox\\trace.zip",
+          "bytes": 2382747,
+          "sha256": "0713599da9c5f7f6ccee0783defe97ecada1e684389be3879badc26499e708e4"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-firefox\\video.webm",
+        "bytes": 138067,
+        "sha256": "f900d13fcb073b205c01b69a549a8034f867af8e1ae5253cf5721ace900a1a7e",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-firefox\\trace.zip",
+          "bytes": 1047824,
+          "sha256": "a573570e2976b27d999b5b947283d6ecdfabbdb963320143e47cf7387f3f557d"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-firefox\\video.webm",
+        "bytes": 161516,
+        "sha256": "07d9a480c42b792f7e4ee0dbe5bfbe594a8f92226e62f5357042b34b0678e888",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-firefox\\trace.zip",
+          "bytes": 1619717,
+          "sha256": "5b343631112eef05a3f3fd05da1ce2211b38b5a8f96c58357a7dc26e840edaeb"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-webkit\\video.webm",
+        "bytes": 403607,
+        "sha256": "05a0780e97ede4f0e0295937a0f0c903bc241f97e43b68d64dd9e04dc03c171b",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-conv-1ba21-e-original-archive-readable-webkit\\trace.zip",
+          "bytes": 1621972,
+          "sha256": "7b86e246361dca0607fb63daacb7e7aef8b5ed0c294dd6d885ed8dfbde9cc3ab"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-webkit\\video.webm",
+        "bytes": 158230,
+        "sha256": "df96e459f1a0b5baa1cd5df071c75511d936a6a3828473c7adb3113870dbf547",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-refu-e3fc4-d-editor-and-source-archive-webkit\\trace.zip",
+          "bytes": 360339,
+          "sha256": "f73d61305cc62acfcb1a589fff04245ec6f0b60db12a020ede9a465cab69a1e0"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-webkit\\video.webm",
+        "bytes": 245302,
+        "sha256": "fc860ef40a6abdc7f421f1f3cf7267ea77265a9b352c5d70a5549ff6a5d071a8",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\legacy-migration-browser-20261106\\legacy-migration-real-reje-acb0e--real-edit-after-correction-webkit\\trace.zip",
+          "bytes": 1152445,
+          "sha256": "b90e42f71ede735a91920b266253615a4e7114b14bc91ee4c65e6ac02f546ebb"
+        }
+      }
+    ],
+    "layouts": [
+      {
+        "project": "chromium",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "frames": 95,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "frames": 36,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "frames": 48,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "frames": 125,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "frames": 35,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "frames": 68,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "frames": 180,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "frames": 64,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "frames": 116,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      }
+    ],
+    "reports": [
+      {
+        "project": "chromium",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "9e4ba3fa-2267-4fb2-b49d-7c682ea89ddc",
+        "destinationRoomId": "r-f72d075d-ed22-4568-be21-83155ed78da9",
+        "sourceBytes": 1788,
+        "destinationBytes": 8979,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 1,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "chromium",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "62fc29c4-e567-4dee-844f-e51f2c5e07ac",
+        "destinationRoomId": "r-8ed2e9c9-9b31-4ab2-bf01-bffedf290cf4",
+        "sourceBytes": 1595,
+        "destinationBytes": 8728,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 0,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "chromium",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "6e2cf628-0131-4b7e-ae41-da94391ea5e6",
+        "destinationRoomId": "r-e635ce92-2ede-4d04-896c-905163de926e",
+        "sourceBytes": 1570,
+        "destinationBytes": 8744,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 0,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "firefox",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "addeccf2-76a6-415c-8f2b-b94c3be56b5b",
+        "destinationRoomId": "r-2710d2de-ed8e-4df5-a296-066b5ec6c031",
+        "sourceBytes": 1800,
+        "destinationBytes": 8894,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 1,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "firefox",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "3d339508-3e45-40b4-bea5-2b3c31b30eaa",
+        "destinationRoomId": "r-731e34ea-fd49-4e99-8f62-428552aa0237",
+        "sourceBytes": 1595,
+        "destinationBytes": 8728,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 0,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "firefox",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "1374c5fa-ec84-4113-8c7c-d479d6bce09f",
+        "destinationRoomId": "r-a7bedeae-17ef-4785-9631-3fd377b00e32",
+        "sourceBytes": 1618,
+        "destinationBytes": 8744,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 0,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "webkit",
+        "name": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "191d7a08-7c91-4a62-95b7-266c1025363e",
+        "destinationRoomId": "r-7e2e3451-1aa8-456e-ad22-6a3484843b89",
+        "sourceBytes": 1788,
+        "destinationBytes": 8997,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 1,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "webkit",
+        "name": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "40ee6ccd-3e6b-4078-8d1e-fb9d04fe94ba",
+        "destinationRoomId": "r-ff4f37d5-ba2f-4235-b025-dd10a59eb620",
+        "sourceBytes": 1595,
+        "destinationBytes": 8637,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 0,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      },
+      {
+        "project": "webkit",
+        "name": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+        "sourceFormat": "legacy-xml",
+        "sourceGuid": "2c9ead27-bdad-4a7b-814b-616f6905165e",
+        "destinationRoomId": "r-8bcf26c5-9816-4a9e-98f6-2e679287ac46",
+        "sourceBytes": 1618,
+        "destinationBytes": 8744,
+        "auxiliaryRoots": [
+          {
+            "name": "saved-selections",
+            "migrator": "legacy-selections:saved-selections"
+          }
+        ],
+        "translated": {
+          "textAnchors": 0,
+          "selections": 0,
+          "nodeIdentities": 0
+        },
+        "history": "reset-with-source-checkpoint",
+        "offline": "reconcile-before-activation",
+        "externalState": "host-coordinated",
+        "activation": "not-implemented"
+      }
+    ]
+  },
+  "visualReview": {
+    "method": "Selected stage screenshots and sampled filmstrips, not full playback or physical-device certification.",
+    "artifacts": [
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-conversion-filmstrip.png",
+        "bytes": 306272,
+        "sha256": "50605deab5bd82ec31490c607418f2cfd0c7e3ad5fe9f707170c958da185d56d"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-conversion-final.png",
+        "bytes": 84579,
+        "sha256": "b3b8ed0567fa35b550b3ff97073396f0e5f2168bb3aa80c32aae2f0a55b75098"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-conversion-selected.png",
+        "bytes": 83482,
+        "sha256": "f2f465fb11f49d03cd1fa4f4af8f804ffbb7c6bb34520e9ea369b33799c6a7f0"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-conversion.webm",
+        "bytes": 174200,
+        "sha256": "f2ee0780d8969463f16ce6202f24bd4eee5d8f2cef32d97c1078affe07abd9d4"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-unclaimed-filmstrip.png",
+        "bytes": 290252,
+        "sha256": "825903c9c9d6e73d13103a4766f0d07be681eeee2302e26ec1ff17aca04442af"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-unclaimed-final.png",
+        "bytes": 83554,
+        "sha256": "9ff43cab1feccb2b1beb00f6b9fa50e8c95f2cc70c1925f42efaf1fab4c8b8ec"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-unclaimed.webm",
+        "bytes": 95344,
+        "sha256": "d07c2c2cb95e2964e55c44d39ad14254ef45fa490f1c9b4a8a5124b68b0d6a75"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-verifier-filmstrip.png",
+        "bytes": 319226,
+        "sha256": "5a744d489181519ca0fd4fad0b919d74802c7280c0b13c2f946cec5fb570cf78"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-verifier-final.png",
+        "bytes": 84043,
+        "sha256": "4db076c2e18b8613d672c80eb46bf0421d1d9d808da63e7b18bc5ed89672a9ed"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/chromium-verifier.webm",
+        "bytes": 99910,
+        "sha256": "f2163f48fc64d0fd2bda0f646165782693a11f50306978abd01c1b10e6a7dd77"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-conversion-filmstrip.png",
+        "bytes": 205754,
+        "sha256": "98fe0df3dc8537db2ed57ff08442f52def60db9e82cb7764c3ad63ee65ea391d"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-conversion-final.png",
+        "bytes": 88971,
+        "sha256": "21e69f52f55f98238123af60f7555d070b2c8c43c1160668ce6f3a376abb576f"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-conversion-selected.png",
+        "bytes": 85406,
+        "sha256": "16a50f4c8725dbf5471106e4b8cfb427644573a51d88c295f740db765623defa"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-conversion.webm",
+        "bytes": 240878,
+        "sha256": "29ff5b74705342c5fcbdfa08740597b68121d40ab0a3658e01fe120df3c4df4d"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-unclaimed-filmstrip.png",
+        "bytes": 259104,
+        "sha256": "36317f5f64d6ea255dddbc262808a004b6e72ef9df897b87f60477564f8001c7"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-unclaimed-final.png",
+        "bytes": 84641,
+        "sha256": "08efd7324218cfa2b689f14a63c8ca575b3240cbc51584cafe47c7b36ca58aa6"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-unclaimed.webm",
+        "bytes": 138067,
+        "sha256": "f900d13fcb073b205c01b69a549a8034f867af8e1ae5253cf5721ace900a1a7e"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-verifier-filmstrip.png",
+        "bytes": 313450,
+        "sha256": "c8abe4fa74108a86352d1921c1ddcc88cfe8ca99615683138860a26be01e00bb"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-verifier-final.png",
+        "bytes": 85256,
+        "sha256": "53f10aad91755b0e0aac811222bb69c566eee232022caea6f68aba6ef3a5e174"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/firefox-verifier.webm",
+        "bytes": 161516,
+        "sha256": "07d9a480c42b792f7e4ee0dbe5bfbe594a8f92226e62f5357042b34b0678e888"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-conversion-filmstrip.png",
+        "bytes": 218190,
+        "sha256": "197d419a9882209a4a5d7850458b4d7c49183cd6c470f393dd9934999d346b96"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-conversion-final.png",
+        "bytes": 79802,
+        "sha256": "0c8bbee75123f4841ddcbb46cf22f8e870c7bc625ec41a46eb81c1e6f2613efe"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-conversion-selected.png",
+        "bytes": 78521,
+        "sha256": "5a1dac9fb9be66034ea03e958b7d494e06a3b84bbca576427e2e0e86ce97dbd3"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-conversion.webm",
+        "bytes": 403607,
+        "sha256": "05a0780e97ede4f0e0295937a0f0c903bc241f97e43b68d64dd9e04dc03c171b"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-unclaimed-filmstrip.png",
+        "bytes": 250267,
+        "sha256": "a93acc91b5137efdf0b7b74c6900181767ad7977fc5769eedaf8e932c60a4414"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-unclaimed-final.png",
+        "bytes": 78243,
+        "sha256": "137c58e10c5fd3f8b656f7c745bcee94339b685ce5496b03edf154f29b1175c0"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-unclaimed.webm",
+        "bytes": 158230,
+        "sha256": "df96e459f1a0b5baa1cd5df071c75511d936a6a3828473c7adb3113870dbf547"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-verifier-filmstrip.png",
+        "bytes": 266304,
+        "sha256": "731501aa0db57d54a5e091f52e1102e92e0f4bb2f5bebe4a8e0fe3debd67101e"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-verifier-final.png",
+        "bytes": 78984,
+        "sha256": "db3c63fd50f80cfb89afad3458652596a5e51fe9f56c357aa43f8fe31d4327c1"
+      },
+      {
+        "path": "artifacts/legacy-migration-visual-20261106/webkit-verifier.webm",
+        "bytes": 245302,
+        "sha256": "fc860ef40a6abdc7f421f1f3cf7267ea77265a9b352c5d70a5549ff6a5d071a8"
+      }
+    ]
+  },
+  "invariants": {
+    "publicRuntimeAndCssByteIdentical": 171,
+    "unchanged": [
+      "src/yjs/index.ts",
+      "package.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_LEGACY_MIGRATION_AUDIT.md",
+      "bytes": 9052,
+      "sha256": "1f5fe019c5b699257a27577cd0fbeaca9ff31415e85abd80555c80698fab64ab"
+    },
+    {
+      "path": "docs/YJS_RETAINED_HANDOFF_AUDIT.md",
+      "bytes": 8859,
+      "sha256": "d6f6aab235a687387645a865ad2d95b451c26d5c405e915ba72b3c56d6b08a26"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 301654,
+      "sha256": "f0ebcd32aac12b17f70171336be1c212b38ea157be28db4f331d98167674d58b"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 166848,
+      "sha256": "0dccb12533e6f623bc5ca3d4aefd1b1865a3a1cac97de011fe081263ba3281b0"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 189724,
+      "sha256": "3948e46dbb7b67a25beafc5e9e1f89edc220ccd72f37273a7514e626c4459f7b"
+    }
+  ],
+  "open": [
+    "Six default-adapter failures and safe adoption",
+    "Atomic cross-format authority and old-format pending-batch retention",
+    "Explicit fragment namespace/locator mapping beyond compatible named XML rooms",
+    "Semantic offline reconciliation and actual external/provider coordination",
+    "Production compaction, archive retention and large-room costs",
+    "Three size overruns and fresh complete release CI",
+    "Overall parity"
+  ],
+  "typeOnlyRepair": {
+    "file": "src/yjs/legacy-checkpoint.ts",
+    "change": "Explicit restore return interface; no runtime behavior change.",
+    "index": {
+      "path": "artifacts/legacy-migration-runtime-before-types-20261106.json",
+      "bytes": 6542,
+      "sha256": "afc9212fc12d0f43a8c4b14e3a73ddea906369f892f650b157aef5d0ff83c4eb"
+    },
+    "runtimeFilesUnchanged": 39,
+    "files": [
+      {
+        "sha256": "bd3346d6cc065486bfea1b220c6eedcacb103fc37b8b259eeda7ed1ff2ca5b49",
+        "path": "artifacts/legacy-migration-build-20261106/checkpoint.cjs"
+      },
+      {
+        "sha256": "edaca071a9d4879276931d1fa45970afa34073ca8f360124b62441bec44fdb71",
+        "path": "artifacts/legacy-migration-build-20261106/checkpoint.js"
+      },
+      {
+        "sha256": "83a85c1ba5b41ea652eb1cfdfc18767315645ffc343a265591ca0c40498ebf86",
+        "path": "artifacts/legacy-migration-build-20261106/collaboration-CChKfz51.js"
+      },
+      {
+        "sha256": "fdebbc11b800369dd4f1de315dcfb0f15fc39af312b0ffc2a41bf64a197319e2",
+        "path": "artifacts/legacy-migration-build-20261106/collaboration-z-q75v7d.cjs"
+      },
+      {
+        "sha256": "09ba7d00722fb88bc453905b7f2d84c53094697564572bad273e4b1d4d2709cb",
+        "path": "artifacts/legacy-migration-build-20261106/document-store.cjs"
+      },
+      {
+        "sha256": "86ea431a8a291b5de1b16f079f1ed7085bac9cd582501944a9adc8a64be3179c",
+        "path": "artifacts/legacy-migration-build-20261106/document-store.js"
+      },
+      {
+        "sha256": "18bbd72c69b604f00d2edd519b64fc78dc2a4cb922b778d50325eac8cd5b89b4",
+        "path": "artifacts/legacy-migration-build-20261106/engine.cjs"
+      },
+      {
+        "sha256": "01794c2301afbb25eea2f874f4a21952efde01534cc324b8336a73c4c334513c",
+        "path": "artifacts/legacy-migration-build-20261106/engine.js"
+      },
+      {
+        "sha256": "3befc5b57e1c19523cb7bc497b2a0b97885ee966b04feab59cf85ecaecb5573d",
+        "path": "artifacts/legacy-migration-build-20261106/extension-0dxcLtYV.js"
+      },
+      {
+        "sha256": "8fdf10dfaff0b48dfd1e48fe8f5c972e92485d5775d084360bab9866ac16a81e",
+        "path": "artifacts/legacy-migration-build-20261106/extension-CjiDmAbi.cjs"
+      },
+      {
+        "sha256": "f527e6aaa8a0e153e443c492f966d3aa91f467353996124b599c9b604d91276f",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-adapter.cjs"
+      },
+      {
+        "sha256": "d362b550125db5251a5d0fa07daeb31c4e45826ee17155d39c9c60a2d27c6f9a",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-adapter.js"
+      },
+      {
+        "sha256": "18f3dbbe8dab9382dd4ed151d23c749694b52e6ada609b62d48378c0168b1643",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint-BDonwEok.js"
+      },
+      {
+        "sha256": "6741f79fa6052602c99eea1fc356c1b8bef8338f88259899e0ecfa1ca00d60b4",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint-DbPxlxZm.cjs"
+      },
+      {
+        "sha256": "0486903018624e1871088a02856257c1b6fc9bc0838c4d2b39ece27fb8040eca",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint.cjs"
+      },
+      {
+        "sha256": "c0d7bf83fe76ae351c83049aacec9c4099e5d2c9dc5da5e9974b5d081dffc3c5",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint.js"
+      },
+      {
+        "sha256": "ea4135481333375c8ef21a89d3064f901559dfe16c2cfc969387c73337f9dc8a",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-migration.cjs"
+      },
+      {
+        "sha256": "26d6f0cb7f41a3e0f9327f5f143d396d006b3359a004f73d0fa401b1a60720a0",
+        "path": "artifacts/legacy-migration-build-20261106/legacy-migration.js"
+      },
+      {
+        "sha256": "817e6f780ec18b46ee43276b6edcafe0f6f698d5ca4da2a65360793764e03dc5",
+        "path": "artifacts/legacy-migration-build-20261106/mapping-ByBUxndb.js"
+      },
+      {
+        "sha256": "cfeb8d74dc4aaac2d3d2ee34f9fda2ae03dc62652b27ed48d43b38524d202e9f",
+        "path": "artifacts/legacy-migration-build-20261106/mapping-MtxuVyGS.cjs"
+      },
+      {
+        "sha256": "4531a3c8f4c600fa85df2e7e23a35518d6a33f771d4ee3d69b07714b0ce2272f",
+        "path": "artifacts/legacy-migration-build-20261106/migration.cjs"
+      },
+      {
+        "sha256": "d5b36d3c9251ff2d918f1084762a7d0e9ace8a0a773e4eac7c1f39511dcbb64f",
+        "path": "artifacts/legacy-migration-build-20261106/migration.js"
+      },
+      {
+        "sha256": "d70e93793b3bc95c6e701bb2148f660287a21a72605d15c7b1ca15f0a69f9ce1",
+        "path": "artifacts/legacy-migration-build-20261106/replace-text-step-DOnQSy1y.js"
+      },
+      {
+        "sha256": "e22ea993280e04e9ee80a3fac179478ceed3f2f79aec9ce345c55d510cdfcb83",
+        "path": "artifacts/legacy-migration-build-20261106/replace-text-step-xKb50hXZ.cjs"
+      },
+      {
+        "sha256": "6749d6e5e4efd192f877f25f73b5465ea2081715db1e62b4eb8ca7a6d1fc0312",
+        "path": "artifacts/legacy-migration-build-20261106/retained-adapter.cjs"
+      },
+      {
+        "sha256": "d554101303eed86c138e8c6e2ee4d551de6da3b9e66dc4846984ee98a3d31526",
+        "path": "artifacts/legacy-migration-build-20261106/retained-adapter.js"
+      },
+      {
+        "sha256": "8593deb5558eea6224ecb2ef8abd248cf2cf5a1252fcfda20adebd6d2b5c96a9",
+        "path": "artifacts/legacy-migration-build-20261106/retained-document-B08nHRkE.js"
+      },
+      {
+        "sha256": "f12f700a6d5f692a9d3b86fac0fc01ef0f692c71e37ca0116ba2cc71cb250d4a",
+        "path": "artifacts/legacy-migration-build-20261106/retained-document-DmW2hVvv.cjs"
+      },
+      {
+        "sha256": "2804a6c048dc606badf1cd1f53faa4b143635e40ebec79437fe3055388e66222",
+        "path": "artifacts/legacy-migration-build-20261106/room-store.cjs"
+      },
+      {
+        "sha256": "2df1fdf1c11f7bfca6367463cae122f8b57e94651578a44ac3a05ea6fc0c012b",
+        "path": "artifacts/legacy-migration-build-20261106/room-store.js"
+      },
+      {
+        "sha256": "e8bc6087d7bd665f19c197201d5de0eb012a96af9f3eca5d7336a88e9a123936",
+        "path": "artifacts/legacy-migration-build-20261106/selection.cjs"
+      },
+      {
+        "sha256": "d93ed77283d7fb3307cff9c331b81667aba52d1831dd671f1a84a3d1d9a738d9",
+        "path": "artifacts/legacy-migration-build-20261106/selection.js"
+      },
+      {
+        "sha256": "b50d48dba9db4b39bc6118119d9baf0ddd8a3cdffc96053a676447ae38acfb32",
+        "path": "artifacts/legacy-migration-build-20261106/state-BfRXvyXR.js"
+      },
+      {
+        "sha256": "e227f45b032fdd9e9b02bbdfe23e34489566f8851eb917dd87a7eebfdb6a9def",
+        "path": "artifacts/legacy-migration-build-20261106/state-BTrERWmg.cjs"
+      },
+      {
+        "sha256": "a635e296dd368a2e1011e6ac362c0f998f3e9ed5573c69c956e7549c93f26b29",
+        "path": "artifacts/legacy-migration-build-20261106/step-BvTKzZq1.cjs"
+      },
+      {
+        "sha256": "efeaac678ad7d4baf4bcfcb2087467661bfdaefa12e7b2c87b800f881cc8cecd",
+        "path": "artifacts/legacy-migration-build-20261106/step-qGohqmgZ.js"
+      },
+      {
+        "sha256": "424bde76e566f06476b12bb19af214452bed8676891f122969250ae16d568047",
+        "path": "artifacts/legacy-migration-build-20261106/structured-attributes-C2WYk7WF.js"
+      },
+      {
+        "sha256": "30da353c9444faed701c0cff13f2add5f47f7053c0db9bb88e8df4b74d4013ab",
+        "path": "artifacts/legacy-migration-build-20261106/structured-attributes-CYUhLJ7_.cjs"
+      },
+      {
+        "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7",
+        "path": "artifacts/legacy-migration-build-20261106/styles.css"
+      }
+    ]
+  }
+}

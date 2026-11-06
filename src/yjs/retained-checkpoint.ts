@@ -131,6 +131,22 @@ function fields<T extends object>(raw: T, keys: string): T {
   if (Object.keys(descriptors).sort().join(',') !== keys || Object.values(descriptors).some(entry => !entry.enumerable || !('value' in entry))) throw new Error('Invalid checkpoint manifest fields.');
   return Object.fromEntries(Object.entries(descriptors).map(([key, entry]) => [key, entry.value])) as T;
 }
+function copyRoots(raw: readonly Root[]): readonly Root[] {
+  if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype || raw.length > MAX_ROOTS
+    || Object.getOwnPropertySymbols(raw).length || Object.keys(raw).length !== raw.length
+    || Object.keys(raw).some((key, index) => key !== String(index))) throw new Error('Invalid checkpoint shared-root inventory.');
+  const seen = new Set<string>();
+  const inventory = Array.from({ length: raw.length }, (_, index) => {
+    const descriptor = Object.getOwnPropertyDescriptor(raw, String(index));
+    if (!descriptor || !('value' in descriptor)) throw new Error('Invalid checkpoint shared-root inventory.');
+    const entry: Root = fields(descriptor.value, 'kind,name');
+    if (typeof entry.name !== 'string' || entry.name.length > 1_000 || seen.has(entry.name)
+      || !['map', 'array', 'text', 'xml-fragment', 'xml-text', 'unresolved'].includes(entry.kind)) throw new Error('Invalid checkpoint shared-root inventory.');
+    seen.add(entry.name); return Object.freeze({ name: entry.name, kind: entry.kind });
+  });
+  inventory.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+  return Object.freeze(inventory);
+}
 function manifestCopy(raw: RetainedCheckpointManifest, expected: string): RetainedCheckpointManifest {
   version(expected);
   raw = fields(raw, 'bytes,checkpointSha256,documentSha256,format,gc,guid,room,roomId,roots,schemaVersion,updateSha256');
@@ -143,18 +159,15 @@ function manifestCopy(raw: RetainedCheckpointManifest, expected: string): Retain
     || !Array.isArray(raw.roots) || Object.getPrototypeOf(raw.roots) !== Array.prototype || raw.roots.length > MAX_ROOTS
     || Object.getOwnPropertySymbols(raw.roots).length || Object.keys(raw.roots).length !== raw.roots.length
     || Object.keys(raw.roots).some((key, index) => key !== String(index))) throw new Error('Invalid or incompatible checkpoint manifest.');
-  const seen = new Set<string>();
-  const inventory = Array.from({ length: raw.roots.length }, (_, index) => {
-    const descriptor = Object.getOwnPropertyDescriptor(raw.roots, String(index));
-    if (!descriptor || !('value' in descriptor)) throw new Error('Invalid checkpoint shared-root inventory.');
-    const entry: Root = fields(descriptor.value, 'kind,name');
-    if (typeof entry.name !== 'string' || entry.name.length > 1_000 || seen.has(entry.name)
-      || !['map', 'array', 'text', 'xml-fragment', 'xml-text', 'unresolved'].includes(entry.kind)) throw new Error('Invalid checkpoint shared-root inventory.');
-    seen.add(entry.name); return Object.freeze({ name: entry.name, kind: entry.kind });
-  });
-  inventory.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
-  return Object.freeze({ ...raw, roots: Object.freeze(inventory) });
+  return Object.freeze({ ...raw, roots: copyRoots(raw.roots) });
 }
+
+/** Private wire primitives shared with the legacy migration reader. These do
+ * not connect an adapter, normalize content, or make a legacy room retained. */
+export const checkpointWire: Readonly<{ roots: typeof roots; copyRoots: typeof copyRoots; load: typeof load; assertIdle: typeof assertIdle;
+  assertUnchanged: typeof assertUnchanged; stableJSON: typeof stableJSON; digest: typeof digest; version: typeof version; fields: typeof fields }>
+  = Object.freeze({ roots, copyRoots, load, assertIdle, assertUnchanged, stableJSON, digest, version, fields });
+export type CheckpointRoot = Root;
 
 /** Restore into an isolated document only. Never merges into a live room. */
 export async function restoreRetainedCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<{ document: Y.Doc; baseDocument: Node; manifest: RetainedCheckpointManifest }> {

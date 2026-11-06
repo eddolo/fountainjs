@@ -1,0 +1,158 @@
+[
+  {
+    "sha256": "bd3346d6cc065486bfea1b220c6eedcacb103fc37b8b259eeda7ed1ff2ca5b49",
+    "path": "artifacts/legacy-migration-build-20261106/checkpoint.cjs"
+  },
+  {
+    "sha256": "edaca071a9d4879276931d1fa45970afa34073ca8f360124b62441bec44fdb71",
+    "path": "artifacts/legacy-migration-build-20261106/checkpoint.js"
+  },
+  {
+    "sha256": "83a85c1ba5b41ea652eb1cfdfc18767315645ffc343a265591ca0c40498ebf86",
+    "path": "artifacts/legacy-migration-build-20261106/collaboration-CChKfz51.js"
+  },
+  {
+    "sha256": "fdebbc11b800369dd4f1de315dcfb0f15fc39af312b0ffc2a41bf64a197319e2",
+    "path": "artifacts/legacy-migration-build-20261106/collaboration-z-q75v7d.cjs"
+  },
+  {
+    "sha256": "09ba7d00722fb88bc453905b7f2d84c53094697564572bad273e4b1d4d2709cb",
+    "path": "artifacts/legacy-migration-build-20261106/document-store.cjs"
+  },
+  {
+    "sha256": "86ea431a8a291b5de1b16f079f1ed7085bac9cd582501944a9adc8a64be3179c",
+    "path": "artifacts/legacy-migration-build-20261106/document-store.js"
+  },
+  {
+    "sha256": "18bbd72c69b604f00d2edd519b64fc78dc2a4cb922b778d50325eac8cd5b89b4",
+    "path": "artifacts/legacy-migration-build-20261106/engine.cjs"
+  },
+  {
+    "sha256": "01794c2301afbb25eea2f874f4a21952efde01534cc324b8336a73c4c334513c",
+    "path": "artifacts/legacy-migration-build-20261106/engine.js"
+  },
+  {
+    "sha256": "3befc5b57e1c19523cb7bc497b2a0b97885ee966b04feab59cf85ecaecb5573d",
+    "path": "artifacts/legacy-migration-build-20261106/extension-0dxcLtYV.js"
+  },
+  {
+    "sha256": "8fdf10dfaff0b48dfd1e48fe8f5c972e92485d5775d084360bab9866ac16a81e",
+    "path": "artifacts/legacy-migration-build-20261106/extension-CjiDmAbi.cjs"
+  },
+  {
+    "sha256": "f527e6aaa8a0e153e443c492f966d3aa91f467353996124b599c9b604d91276f",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-adapter.cjs"
+  },
+  {
+    "sha256": "d362b550125db5251a5d0fa07daeb31c4e45826ee17155d39c9c60a2d27c6f9a",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-adapter.js"
+  },
+  {
+    "sha256": "18f3dbbe8dab9382dd4ed151d23c749694b52e6ada609b62d48378c0168b1643",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint-BDonwEok.js"
+  },
+  {
+    "sha256": "6741f79fa6052602c99eea1fc356c1b8bef8338f88259899e0ecfa1ca00d60b4",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint-DbPxlxZm.cjs"
+  },
+  {
+    "sha256": "0486903018624e1871088a02856257c1b6fc9bc0838c4d2b39ece27fb8040eca",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint.cjs"
+  },
+  {
+    "sha256": "c0d7bf83fe76ae351c83049aacec9c4099e5d2c9dc5da5e9974b5d081dffc3c5",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-checkpoint.js"
+  },
+  {
+    "sha256": "ea4135481333375c8ef21a89d3064f901559dfe16c2cfc969387c73337f9dc8a",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-migration.cjs"
+  },
+  {
+    "sha256": "26d6f0cb7f41a3e0f9327f5f143d396d006b3359a004f73d0fa401b1a60720a0",
+    "path": "artifacts/legacy-migration-build-20261106/legacy-migration.js"
+  },
+  {
+    "sha256": "817e6f780ec18b46ee43276b6edcafe0f6f698d5ca4da2a65360793764e03dc5",
+    "path": "artifacts/legacy-migration-build-20261106/mapping-ByBUxndb.js"
+  },
+  {
+    "sha256": "cfeb8d74dc4aaac2d3d2ee34f9fda2ae03dc62652b27ed48d43b38524d202e9f",
+    "path": "artifacts/legacy-migration-build-20261106/mapping-MtxuVyGS.cjs"
+  },
+  {
+    "sha256": "4531a3c8f4c600fa85df2e7e23a35518d6a33f771d4ee3d69b07714b0ce2272f",
+    "path": "artifacts/legacy-migration-build-20261106/migration.cjs"
+  },
+  {
+    "sha256": "d5b36d3c9251ff2d918f1084762a7d0e9ace8a0a773e4eac7c1f39511dcbb64f",
+    "path": "artifacts/legacy-migration-build-20261106/migration.js"
+  },
+  {
+    "sha256": "d70e93793b3bc95c6e701bb2148f660287a21a72605d15c7b1ca15f0a69f9ce1",
+    "path": "artifacts/legacy-migration-build-20261106/replace-text-step-DOnQSy1y.js"
+  },
+  {
+    "sha256": "e22ea993280e04e9ee80a3fac179478ceed3f2f79aec9ce345c55d510cdfcb83",
+    "path": "artifacts/legacy-migration-build-20261106/replace-text-step-xKb50hXZ.cjs"
+  },
+  {
+    "sha256": "6749d6e5e4efd192f877f25f73b5465ea2081715db1e62b4eb8ca7a6d1fc0312",
+    "path": "artifacts/legacy-migration-build-20261106/retained-adapter.cjs"
+  },
+  {
+    "sha256": "d554101303eed86c138e8c6e2ee4d551de6da3b9e66dc4846984ee98a3d31526",
+    "path": "artifacts/legacy-migration-build-20261106/retained-adapter.js"
+  },
+  {
+    "sha256": "8593deb5558eea6224ecb2ef8abd248cf2cf5a1252fcfda20adebd6d2b5c96a9",
+    "path": "artifacts/legacy-migration-build-20261106/retained-document-B08nHRkE.js"
+  },
+  {
+    "sha256": "f12f700a6d5f692a9d3b86fac0fc01ef0f692c71e37ca0116ba2cc71cb250d4a",
+    "path": "artifacts/legacy-migration-build-20261106/retained-document-DmW2hVvv.cjs"
+  },
+  {
+    "sha256": "2804a6c048dc606badf1cd1f53faa4b143635e40ebec79437fe3055388e66222",
+    "path": "artifacts/legacy-migration-build-20261106/room-store.cjs"
+  },
+  {
+    "sha256": "2df1fdf1c11f7bfca6367463cae122f8b57e94651578a44ac3a05ea6fc0c012b",
+    "path": "artifacts/legacy-migration-build-20261106/room-store.js"
+  },
+  {
+    "sha256": "e8bc6087d7bd665f19c197201d5de0eb012a96af9f3eca5d7336a88e9a123936",
+    "path": "artifacts/legacy-migration-build-20261106/selection.cjs"
+  },
+  {
+    "sha256": "d93ed77283d7fb3307cff9c331b81667aba52d1831dd671f1a84a3d1d9a738d9",
+    "path": "artifacts/legacy-migration-build-20261106/selection.js"
+  },
+  {
+    "sha256": "b50d48dba9db4b39bc6118119d9baf0ddd8a3cdffc96053a676447ae38acfb32",
+    "path": "artifacts/legacy-migration-build-20261106/state-BfRXvyXR.js"
+  },
+  {
+    "sha256": "e227f45b032fdd9e9b02bbdfe23e34489566f8851eb917dd87a7eebfdb6a9def",
+    "path": "artifacts/legacy-migration-build-20261106/state-BTrERWmg.cjs"
+  },
+  {
+    "sha256": "a635e296dd368a2e1011e6ac362c0f998f3e9ed5573c69c956e7549c93f26b29",
+    "path": "artifacts/legacy-migration-build-20261106/step-BvTKzZq1.cjs"
+  },
+  {
+    "sha256": "efeaac678ad7d4baf4bcfcb2087467661bfdaefa12e7b2c87b800f881cc8cecd",
+    "path": "artifacts/legacy-migration-build-20261106/step-qGohqmgZ.js"
+  },
+  {
+    "sha256": "424bde76e566f06476b12bb19af214452bed8676891f122969250ae16d568047",
+    "path": "artifacts/legacy-migration-build-20261106/structured-attributes-C2WYk7WF.js"
+  },
+  {
+    "sha256": "30da353c9444faed701c0cff13f2add5f47f7053c0db9bb88e8df4b74d4013ab",
+    "path": "artifacts/legacy-migration-build-20261106/structured-attributes-CYUhLJ7_.cjs"
+  },
+  {
+    "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7",
+    "path": "artifacts/legacy-migration-build-20261106/styles.css"
+  }
+]

@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add private read-only decoding and full-wire recovery archives for existing
+  public-adapter XML rooms, plus verified retained-engine conversion candidates.
+  Preserve technical source, metadata, application IDs, explicit auxiliary roots
+  and granular widget state; translate native text/node references and actual
+  legacy selections. Refuse ambiguous source data and verifier/source mutation
+  instead of repairing or dropping it. Authoritative cross-format activation,
+  general fragment mapping and default-adapter adoption remain open. See
+  [the legacy conversion audit](docs/YJS_LEGACY_MIGRATION_AUDIT.md).
+
 - Add private atomic fresh-room installation and durable recovery archives to
   the retained Node/SQLite reference. Retain late old-room edits in a separate
   validated branch; rollback archives accepted replacement-room edits before
