@@ -20,13 +20,27 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,513 passes and six failures, with no skips. Three
+The current source suite has 4,539 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest writer-fencing audit](YJS_RETAINED_ROOM_FENCING_AUDIT.md).
+[latest persistence audit](YJS_RETAINED_PERSISTENCE_AUDIT.md).
+
+Persistent retained-room coordination (2026-11-06, local): a private platform-
+neutral repository contract and Node/SQLite example atomically persist full
+checkpoints with epoch/revision/generation, freeze and preparation barriers and
+latest completion receipts. Separate processes compete at the same CAS boundary;
+exactly one commits, explicit retry preserves both editor changes, and process
+termination/reopen exercises rollback and recovery without silently unfreezing.
+Latest handoff replay does not rotate twice or overwrite later accepted edits.
+All 26 new source cases / 87 focused cases pass; complete source has 4,539 passes
+and the same six default failures across 292 files, without skips. Same-machine
+persistent coordination is not multi-host deployment or fresh-room compaction.
+Auxiliary/anchor translation, offline/history migration policy, large-room costs,
+legacy adoption and release gates remain open. No public adapter switch or
+publication. [Audit](YJS_RETAINED_PERSISTENCE_AUDIT.md).
 
 Single-authority retained writer fencing (2026-11-06, local): a private in-memory
 reference owns validated checkpoints, checks epochs/phase before reading update

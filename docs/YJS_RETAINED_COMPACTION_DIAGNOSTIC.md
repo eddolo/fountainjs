@@ -51,6 +51,9 @@ writer fence. Old updates must never be sent to the new authoritative room.
   The [single-authority reference](YJS_RETAINED_ROOM_FENCING_AUDIT.md) now rejects
   stale/frozen writes before reading bytes and verifies exact-revision same-room
   recovery. Distributed/durable enforcement and fresh-room migration remain open.
+  The later [SQLite coordinator](YJS_RETAINED_PERSISTENCE_AUDIT.md) persists these
+  barriers and uses cross-process CAS on a local file. Multi-host operations and
+  fresh-room candidate/anchor/offline migration are still unfinished.
 - Translate or preserve every supported auxiliary map and anchor: comments,
   structured attributes, versions and extension-owned state. Report unsupported
   state explicitly. Application node IDs alone do not preserve all anchors.

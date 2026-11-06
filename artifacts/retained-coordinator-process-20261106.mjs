@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import {fork} from 'node:child_process';
+import {mkdtemp,rm,writeFile} from 'node:fs/promises';
+import {basename,dirname,join,resolve} from 'node:path';
+import {tmpdir} from 'node:os';
+import * as Y from 'yjs';
+const directory='./retained-coordinator-build-20261106',load=name=>import(`${directory}/${name}.js`);
+const {CoreExtension,composeExtensions,createEditor,Selection,insertText}=await load('engine'),{createRetainedYjsCollaborationExtension}=await load('retained-adapter'),{captureRetainedCheckpoint,restoreRetainedCheckpoint}=await load('checkpoint'),{CoordinatedRetainedRoom}=await load('coordinator'),{SQLiteRetainedRoomRepository}=await load('sqlite');
+assert.equal(typeof globalThis.document,'undefined');assert.equal(typeof globalThis.window,'undefined');
+const sandbox=await mkdtemp(join(tmpdir(),'fountain-retained-process-')),path=join(sandbox,'rooms.sqlite'),processes=[],clients=[],cases=[];
+function client(document=new Y.Doc(),name='Ada'){const kit=composeExtensions([CoreExtension,createRetainedYjsCollaborationExtension({document,captureTimeout:0,user:{id:name,name,color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:{type:'doc',content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha'}]}]}});const value={document,editor};clients.push(value);return value}
+function child(mode){
+ const process=fork(new URL('./retained-coordinator-worker-20261106.mjs',import.meta.url),[mode,path],{windowsHide:true,stdio:['ignore','ignore','pipe','ipc']});processes.push(process);let stderr='';process.stderr.on('data',data=>stderr+=data);const messages=[],waiters=[];process.on('message',message=>{if(waiters.length)waiters.shift().resolve(message);else messages.push(message)});
+ const exited=new Promise((resolve,reject)=>{process.once('error',reject);process.once('exit',(code,signal)=>{for(const waiter of waiters.splice(0))waiter.reject(new Error(`worker exited ${code}/${signal}: ${stderr}`));resolve({code,signal})})});
+ const next=()=>messages.length?Promise.resolve(messages.shift()):new Promise((resolve,reject)=>{const waiter={resolve:message=>{clearTimeout(timer);resolve(message)},reject:error=>{clearTimeout(timer);reject(error)}};const timer=setTimeout(()=>{const index=waiters.indexOf(waiter);if(index>=0)waiters.splice(index,1);reject(new Error('Worker observation timeout; '+stderr))},30000);waiters.push(waiter)});
+ return {process,next,exited,stderr:()=>stderr};
+}
+const stop=async worker=>{worker.process.kill('SIGKILL');await worker.exited};
+let repository;
+try{
+ const source=client();source.document.getMap('host-notes').set('bytes',new Uint8Array([0,128,255]));source.document.getMap('host-notes').set('owner','Grace');const checkpoint=await captureRetainedCheckpoint(source.document,source.editor.state.schema,'node-schema-1');
+ repository=new SQLiteRetainedRoomRepository(path);const room=new CoordinatedRetainedRoom(repository,'project:launch',source.editor.state.schema,'node-schema-1'),initial=await room.initialize(checkpoint);
+ const restored=await restoreRetainedCheckpoint(checkpoint,source.editor.state.schema,'node-schema-1'),peer=client(restored.document,'Grace');
+ for(const [index,value]of clients.entries()){value.editor.dispatch(value.editor.createTransaction().setSelection(Selection.cursor([0,0],2)));assert(insertText(value.editor,index===0?'X':'Y'))}
+ const updates=clients.map(value=>Y.encodeStateAsUpdate(value.document)),a=child('write'),b=child('write'),workers=[a,b];
+ workers.forEach((worker,index)=>worker.process.send({epoch:initial.epoch,updateBase64:Buffer.from(updates[index]).toString('base64')}));
+ const ready=await Promise.all(workers.map(worker=>worker.next()));assert(ready.every(message=>message.kind==='validated'),JSON.stringify(ready));assert.equal(ready[0].generation,ready[1].generation);workers.forEach(worker=>worker.process.send({continue:true}));
+ const results=await Promise.all(workers.map(worker=>worker.next()));assert(results.every(message=>message.kind==='result'));assert.equal(results.filter(message=>message.accepted).length,1);assert.equal(results.filter(message=>message.code==='revision-conflict').length,1);await Promise.all(workers.map(worker=>worker.exited));cases.push('two separate writer processes validate the same generation; SQL admits exactly one');
+ const loser=results.findIndex(message=>!message.accepted),accepted=await room.write({epoch:initial.epoch,update:updates[loser]});for(const value of clients)Y.applyUpdate(value.document,accepted.checkpoint.update);assert.deepEqual(source.editor.getJSON(),peer.editor.getJSON());assert(source.editor.state.doc.textContent.includes('X')&&source.editor.state.doc.textContent.includes('Y'));cases.push('rejected process batch explicitly retries and both real editor changes survive');
+ const rollback=child('uncommitted');assert.equal((await rollback.next()).kind,'uncommitted');await stop(rollback);assert.equal((await room.snapshot()).checkpoint.manifest.checkpointSha256,accepted.checkpoint.manifest.checkpointSha256);cases.push('killing a process with an uncommitted SQLite transaction retains the prior row');
+ const freeze=child('freeze'),frozen=await freeze.next();assert.equal(frozen.kind,'persisted');await stop(freeze);assert.equal((await room.snapshot()).phase,'frozen');await assert.rejects(room.write({epoch:accepted.epoch,update:updates[0]}),{code:'frozen'});cases.push('process killed after durable freeze leaves writers frozen on restart');
+ const prepare=child('prepare'),prepared=await prepare.next();assert.equal(prepared.kind,'persisted');await stop(prepare);const recovered=await room.recoverFrozen(await room.snapshot());assert.deepEqual(recovered.prepared,prepared.prepared);cases.push('process killed after preparation retains a recoverable exact barrier and preparation');
+ const commit=child('commit'),committed=await commit.next();assert.equal(committed.kind,'persisted');await stop(commit);let reads=0;await assert.rejects(room.write({epoch:accepted.epoch,get update(){reads++;throw new Error('stale bytes read')}}),{code:'stale-epoch'});assert.equal(reads,0);cases.push('process killed after committed handoff still fences the old epoch before reading bytes');
+ const after=await room.snapshot(),replayed=await room.commitResume(recovered.ticket,recovered.prepared);assert.equal(replayed.epoch,committed.epoch);assert.equal(replayed.revision,committed.revision);assert.equal(replayed.checkpoint.manifest.checkpointSha256,after.checkpoint.manifest.checkpointSha256);cases.push('retry after lost handoff acknowledgement returns persisted completion without rotating twice');
+ repository.close();repository=new SQLiteRetainedRoomRepository(path);const reopened=new CoordinatedRetainedRoom(repository,'project:launch',source.editor.state.schema,'node-schema-1'),final=await reopened.snapshot(),read=await restoreRetainedCheckpoint(final.checkpoint,source.editor.state.schema,'node-schema-1');try{assert.deepEqual(read.baseDocument.toJSON(),source.editor.getJSON());assert.deepEqual(read.document.getMap('host-notes').get('bytes'),new Uint8Array([0,128,255]));assert.equal(read.document.getMap('host-notes').get('owner'),'Grace')}finally{read.document.destroy()}cases.push('reopened file retains converged editor content, binary host state and committed epoch');
+ await writeFile('artifacts/retained-coordinator-process-20261106.json',JSON.stringify({passed:cases.length,cases,node:process.version,dom:false,workers:processes.length,initialEpoch:initial.epoch,finalEpoch:final.epoch,finalRevision:final.revision,checkpointSha256:final.checkpoint.manifest.checkpointSha256},null,2)+'\n');console.log(JSON.stringify({passed:cases.length,workers:processes.length}));
+}finally{
+ for(const worker of processes)if(worker.exitCode===null&&worker.signalCode===null){worker.kill('SIGKILL');await new Promise(resolve=>worker.once('exit',resolve))}
+ repository?.close();for(const value of clients){value.editor.destroy();value.document.destroy()}
+ if(dirname(resolve(sandbox))!==resolve(tmpdir())||!basename(sandbox).startsWith('fountain-retained-process-'))throw new Error('Unsafe process-test cleanup target');await rm(sandbox,{recursive:true,force:true});
+}

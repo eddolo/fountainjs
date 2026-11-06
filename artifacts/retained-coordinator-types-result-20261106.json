@@ -1,0 +1,5 @@
+{
+  "command": "pnpm exec tsc --noEmit",
+  "checkedAt": "2026-11-06T22:00:23.0707018Z",
+  "exitCode": 0
+}

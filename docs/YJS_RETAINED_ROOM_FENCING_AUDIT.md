@@ -132,6 +132,10 @@ cross-process fencing, failover ownership and resource/rate controls remain host
 work. An epoch is a consistency version, not a secret or an access permission.
 Opening a second authority does not revoke the first one: the host must retire
 the previous authority and route all writers exclusively to the current one.
+The subsequent [persistent coordinator](YJS_RETAINED_PERSISTENCE_AUDIT.md) adds
+local SQLite CAS across processes, persistent barriers and latest-handoff replay.
+It does not turn this in-memory class into a distributed authority or implement
+multi-host deployment/fresh-room migration.
 
 Staged writes restore/capture/hash full checkpoints. This is intentionally an
 explicit batch reference and has not met a production per-keystroke latency or

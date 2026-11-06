@@ -21,6 +21,27 @@ function complete(document: Y.Doc): void {
   if (document.store.pendingStructs || document.store.pendingDs) failure('invalid-update', 'Update has unresolved dependencies; retain it and resend complete shared state.');
 }
 
+/** Shared private codec boundary for in-memory and persistent authorities. */
+export async function validateRetainedRoomCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<RetainedCheckpoint> {
+  const restored = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
+  try {
+    complete(restored.document);
+    return await captureRetainedCheckpoint(restored.document, schema, schemaVersion, restored.manifest.room);
+  } finally { restored.document.destroy(); }
+}
+
+export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema: Schema, schemaVersion: string, bytes: Uint8Array): Promise<RetainedCheckpoint> {
+  const restored = await restoreRetainedCheckpoint(source, schema, schemaVersion);
+  try {
+    Y.applyUpdate(restored.document, bytes);
+    complete(restored.document);
+    const next = await captureRetainedCheckpoint(restored.document, schema, schemaVersion, source.manifest.room);
+    if (next.manifest.roomId !== source.manifest.roomId) throw new Error('Shared room identity changed.');
+    return next;
+  } catch (cause) { throw new RetainedRoomError('invalid-update', 'Retained update rejected; authoritative state was not changed.', { cause }); }
+  finally { restored.document.destroy(); }
+}
+
 /** Experimental single-authority, in-memory provider reference, not a durable
  * server or a client-side access-control check. No live Y.Doc escapes this store.
  * New-room compaction/translation is deliberately not implemented here. */
@@ -40,12 +61,8 @@ export class FencedRetainedRoom {
   /** Reopening creates a new writer epoch. The caller must route all writers
    * through this authority; persistence, authentication and distributed CAS are host responsibilities. */
   static async open(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<FencedRetainedRoom> {
-    const restored = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
-    try {
-      complete(restored.document);
-      const owned = await captureRetainedCheckpoint(restored.document, schema, schemaVersion, restored.manifest.room);
-      return new FencedRetainedRoom(owned, schema, schemaVersion);
-    } finally { restored.document.destroy(); }
+    const owned = await validateRetainedRoomCheckpoint(checkpoint, schema, schemaVersion);
+    return new FencedRetainedRoom(owned, schema, schemaVersion);
   }
 
   snapshot(): RetainedRoomSnapshot {
@@ -79,21 +96,12 @@ export class FencedRetainedRoom {
     const supplied = request.update;
     if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) failure('invalid-update', 'Invalid retained update size.');
     const bytes = Uint8Array.from(supplied);
-    const restored = await restoreRetainedCheckpoint(source, this.schema, this.schemaVersion);
-    try {
-      let next: RetainedCheckpoint;
-      try {
-        Y.applyUpdate(restored.document, bytes);
-        complete(restored.document);
-        next = await captureRetainedCheckpoint(restored.document, this.schema, this.schemaVersion, source.manifest.room);
-        if (next.manifest.roomId !== source.manifest.roomId) throw new Error('Shared room identity changed.');
-      } catch (cause) { throw new RetainedRoomError('invalid-update', 'Retained update rejected; authoritative state was not changed.', { cause }); }
-      this.writable(epoch);
-      if (generation !== this.#generation) failure('revision-conflict', 'Retained room changed during validation; retry against its current state.');
-      this.advance();
-      this.#checkpoint = next;
-      return this.snapshot();
-    } finally { restored.document.destroy(); }
+    const next = await applyRetainedRoomUpdate(source, this.schema, this.schemaVersion, bytes);
+    this.writable(epoch);
+    if (generation !== this.#generation) failure('revision-conflict', 'Retained room changed during validation; retry against its current state.');
+    this.advance();
+    this.#checkpoint = next;
+    return this.snapshot();
   }
 
   /** Compare-and-swap the exact source revision before beginning handoff. */

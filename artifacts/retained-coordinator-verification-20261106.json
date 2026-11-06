@@ -1,0 +1,576 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "c265b418",
+  "goalComplete": false,
+  "publication": "Local only; no adapter switch, backend deployment or publication.",
+  "source": [
+    {
+      "path": "src/yjs/retained-room-store.ts",
+      "bytes": 8100,
+      "sha256": "0a11bbad5510a4d84f31be880ce32622ac89ffb3b365f59d9901094371cc3bf6"
+    },
+    {
+      "path": "src/yjs/retained-room-coordinator.ts",
+      "bytes": 10905,
+      "sha256": "4ca21ce84ffb3a7c54a06c58ff21a30c5c29c9c05f7a466a36069aa3c7512a82"
+    },
+    {
+      "path": "examples/backends/retained-sqlite.ts",
+      "bytes": 3239,
+      "sha256": "668d86d748062b569498c4b2081c8d6273a5f323b0085e6a449dd78c5ca09e25"
+    },
+    {
+      "path": "tests/yjs-retained-room-coordinator.test.ts",
+      "bytes": 18490,
+      "sha256": "3a1e60ea0a9acade7a889bede59f1718d2d709f1f9436fb095a65a7fbe1d6f98"
+    },
+    {
+      "path": "artifacts/build-retained-coordinator-20261106.mjs",
+      "bytes": 749,
+      "sha256": "bcb6e8e2d48680a6bb832aaf400c57577f12a15eb3d78cae0d3894b5bd3de2cc"
+    },
+    {
+      "path": "artifacts/retained-coordinator-worker-20261106.mjs",
+      "bytes": 2555,
+      "sha256": "e51a98bec6eb7ecdba17de83ec3493782b1d4e98cb50e223bc630ab7487453d7"
+    },
+    {
+      "path": "artifacts/retained-coordinator-process-20261106.mjs",
+      "bytes": 8228,
+      "sha256": "dc3d94e32f16e52b4933abff1b5d53ec9cd32e2b1762111373a8f048edee2b4a"
+    },
+    {
+      "path": "artifacts/retained-coordinator-node-20261106.mjs",
+      "bytes": 4522,
+      "sha256": "7905d416f2389d885f412df07529f160e4769fb554e1f1e42b2eca86fc4ca1fd"
+    },
+    {
+      "path": "artifacts/run-retained-coordinator-checks-20261106.ps1",
+      "bytes": 1876,
+      "sha256": "e8ac0d40e24e5d964ead7eb9274ef0b920ca01ea28c3cfa2c58a18c7097c40a4"
+    },
+    {
+      "path": "artifacts/curate-retained-coordinator-20261106.mjs",
+      "bytes": 1989,
+      "sha256": "77bc46d2ded6ddea9935de2e5a1d8a7cf248240730080ba66b14b9edb229d557"
+    },
+    {
+      "path": "artifacts/verify-retained-coordinator-20261106.mjs",
+      "bytes": 8815,
+      "sha256": "7d54d5287b05395c83c238f269adb15568a7b15a775527f908b9c95832034015"
+    }
+  ],
+  "fullSource": {
+    "path": "artifacts/retained-coordinator-full-source-20261106.json",
+    "bytes": 1750175,
+    "sha256": "409174ae92fd8ca9ab919d34cca452c6863f7474c69edb4e155aa7cfc79cafcd",
+    "total": 4545,
+    "passed": 4539,
+    "failed": 6,
+    "skipped": 0,
+    "files": 292,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "passed": 87,
+    "newCoordinatorCases": 26
+  },
+  "checks": [
+    {
+      "log": "artifacts/retained-coordinator-full-source-20261106.log",
+      "expectedExitCode": 1,
+      "seconds": 329.8526236,
+      "exitCode": 1,
+      "check": "full-source"
+    },
+    {
+      "log": "artifacts/retained-coordinator-build-20261106.log",
+      "expectedExitCode": 0,
+      "seconds": 20.1633965,
+      "exitCode": 0,
+      "check": "build"
+    },
+    {
+      "log": "artifacts/retained-coordinator-api-20261106.log",
+      "expectedExitCode": 0,
+      "seconds": 1.1647367,
+      "exitCode": 0,
+      "check": "api"
+    },
+    {
+      "log": "artifacts/retained-coordinator-headless-20261106.log",
+      "expectedExitCode": 0,
+      "seconds": 1.5405776,
+      "exitCode": 0,
+      "check": "headless"
+    },
+    {
+      "log": "artifacts/retained-coordinator-budget-20261106.log",
+      "expectedExitCode": 1,
+      "seconds": 0.685515,
+      "exitCode": 1,
+      "check": "budget"
+    },
+    {
+      "log": "artifacts/retained-coordinator-browser-20261106.log",
+      "expectedExitCode": 0,
+      "seconds": 40.8484,
+      "exitCode": 0,
+      "check": "browser"
+    }
+  ],
+  "typeReceipt": {
+    "command": "pnpm exec tsc --noEmit",
+    "checkedAt": "2026-11-06T22:00:23.0707018Z",
+    "exitCode": 0
+  },
+  "logs": [
+    {
+      "path": "artifacts/retained-coordinator-full-source-20261106.log",
+      "bytes": 137,
+      "sha256": "f488200eb14a4f2a78ef74bd2e4bc71159227c3d708cdf422ae148bc55b65e31"
+    },
+    {
+      "path": "artifacts/retained-coordinator-build-20261106.log",
+      "bytes": 15898,
+      "sha256": "4463b3232f37cd3c68f73df4e5e9f1ea1368f0f73d59dd93ffa05aa24c0d17ed"
+    },
+    {
+      "path": "artifacts/retained-coordinator-api-20261106.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-coordinator-headless-20261106.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/retained-coordinator-budget-20261106.log",
+      "bytes": 3896,
+      "sha256": "be518a88e3b034933718340d61c20f2ce596eb03945b941bccc1705249c2ad42"
+    },
+    {
+      "path": "artifacts/retained-coordinator-browser-20261106.log",
+      "bytes": 2701,
+      "sha256": "43e69d7cbc848e2513bac0a69a690e3d649d13ced732028ace4b1f7ddce45531"
+    }
+  ],
+  "compiled": {
+    "nodeModules": 196,
+    "nodeCases": 16,
+    "processCases": 8,
+    "processes": 6,
+    "nodes": [
+      {
+        "mode": "es",
+        "passed": 8,
+        "cases": [
+          "pure Node initialization with persistent checkpoint",
+          "actual editor update commits with persistent revision",
+          "frozen persistent authority rejects before reading incoming bytes",
+          "restart retains frozen barrier and preparation",
+          "resumed epoch rejects stale writer without reading payload",
+          "lost acknowledgement replay does not rotate twice",
+          "invalid wire data leaves persisted metadata and bytes intact",
+          "final persisted editor and opaque binary state remain exact"
+        ],
+        "node": "v24.22.1",
+        "dom": false
+      },
+      {
+        "mode": "cjs",
+        "passed": 8,
+        "cases": [
+          "pure Node initialization with persistent checkpoint",
+          "actual editor update commits with persistent revision",
+          "frozen persistent authority rejects before reading incoming bytes",
+          "restart retains frozen barrier and preparation",
+          "resumed epoch rejects stale writer without reading payload",
+          "lost acknowledgement replay does not rotate twice",
+          "invalid wire data leaves persisted metadata and bytes intact",
+          "final persisted editor and opaque binary state remain exact"
+        ],
+        "node": "v24.22.1",
+        "dom": false
+      }
+    ],
+    "processProbe": {
+      "passed": 8,
+      "cases": [
+        "two separate writer processes validate the same generation; SQL admits exactly one",
+        "rejected process batch explicitly retries and both real editor changes survive",
+        "killing a process with an uncommitted SQLite transaction retains the prior row",
+        "process killed after durable freeze leaves writers frozen on restart",
+        "process killed after preparation retains a recoverable exact barrier and preparation",
+        "process killed after committed handoff still fences the old epoch before reading bytes",
+        "retry after lost handoff acknowledgement returns persisted completion without rotating twice",
+        "reopened file retains converged editor content, binary host state and committed epoch"
+      ],
+      "node": "v24.22.1",
+      "dom": false,
+      "workers": 6,
+      "initialEpoch": "4cc8bb63-0880-4aca-8e97-7e8fbc1ea118",
+      "finalEpoch": "6fb42258-07a4-4dcb-90ad-13e3349a68a0",
+      "finalRevision": 3,
+      "checkpointSha256": "86804a6ae32d351b08f17762e45fe0992f56fa3e7005f87d305c759a5dd9a183"
+    }
+  },
+  "browser": {
+    "passed": 9,
+    "scope": "Existing in-memory reference/shared codec regression, not persistent network transport.",
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-25595--reconciles-after-reconnect-chromium\\video.webm",
+        "bytes": 139621,
+        "sha256": "d14546d5eeb49359684ca09416f110aba5dd36548cb3ad7fc7128bd7bce445c2"
+      },
+      {
+        "project": "chromium",
+        "name": "aborts a prepared freeze and sends retained human edits on the original epoch",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-a-75181-edits-on-the-original-epoch-chromium\\video.webm",
+        "bytes": 113028,
+        "sha256": "69f617bee26f33c0c1c5fb75560aaeb58aa850725c06509cac9d48f7fbf4694b"
+      },
+      {
+        "project": "chromium",
+        "name": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-d98ea-thout-replacing-the-editors-chromium\\video.webm",
+        "bytes": 88966,
+        "sha256": "a6d4b9a8d1b3e810a79e631e36d1c0370ba552bac5899bdc5b1f289b5eac36b7"
+      },
+      {
+        "project": "firefox",
+        "name": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-25595--reconciles-after-reconnect-firefox\\video.webm",
+        "bytes": 188907,
+        "sha256": "99d98b5e4a1fb9cec11d71dd2976d52aa67b9487ffaf4c900084d535300dfcf3"
+      },
+      {
+        "project": "firefox",
+        "name": "aborts a prepared freeze and sends retained human edits on the original epoch",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-a-75181-edits-on-the-original-epoch-firefox\\video.webm",
+        "bytes": 122393,
+        "sha256": "18ed8ab7dc56de1d30147d455b0a1d2a6b6c0a0bb4a7645ff3b5ffb3c4bb6593"
+      },
+      {
+        "project": "firefox",
+        "name": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-d98ea-thout-replacing-the-editors-firefox\\video.webm",
+        "bytes": 100253,
+        "sha256": "6813e488f7ba8864c72202518413de01d93fe15d29b2aee0b80b2a2c909f74a3"
+      },
+      {
+        "project": "webkit",
+        "name": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-25595--reconciles-after-reconnect-webkit\\video.webm",
+        "bytes": 178425,
+        "sha256": "6ef6ea2c1eab19839fc8103ad0ffd323b0598e022825944609debbccb30df6f7"
+      },
+      {
+        "project": "webkit",
+        "name": "aborts a prepared freeze and sends retained human edits on the original epoch",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-a-75181-edits-on-the-original-epoch-webkit\\video.webm",
+        "bytes": 90280,
+        "sha256": "cdcdf21e3d6537c01e210c5b016797d43e2142a101917e5c3d1ac21f07c81f1d"
+      },
+      {
+        "project": "webkit",
+        "name": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-room-store-browser-20261106\\retained-room-store-real-r-d98ea-thout-replacing-the-editors-webkit\\video.webm",
+        "bytes": 90660,
+        "sha256": "9d5dab1e698418aecead83f0cee1b049564596b41908399a004721d18271cc03"
+      }
+    ]
+  },
+  "visualArtifacts": [
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-abort-filmstrip.png",
+      "bytes": 338077,
+      "sha256": "bae4a3e452fbd7e01134a5a5a3386dcbe6a290c32226fe96f1c49c27f00221c4"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-abort-final.png",
+      "bytes": 45349,
+      "sha256": "2caa1f70037adeb3c5f147ac53f42798ea809ca379001436b4f9e7e9d3fd3315"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-abort.webm",
+      "bytes": 113028,
+      "sha256": "69f617bee26f33c0c1c5fb75560aaeb58aa850725c06509cac9d48f7fbf4694b"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-handoff-filmstrip.png",
+      "bytes": 325278,
+      "sha256": "91a2847996016f260c1947f3f8ee03f53a99ce149b6135bd4585dc2561ef3f8a"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-handoff-final.png",
+      "bytes": 45049,
+      "sha256": "b6ad66c9bd1a94b03f8795aa77cf35b48ad060abdaf7a16f072ca884b81c7e28"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-handoff-frozen.png",
+      "bytes": 46085,
+      "sha256": "bceac9633f2b865a57b4ae0626f9745cd2bc8e16d7d77cab102d6b88cf43c295"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-handoff-stale.png",
+      "bytes": 46714,
+      "sha256": "da1a2e896d6ecee4d425e86d91ba36c5ac5f031c7a8db1a2daaaef013d461d13"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-handoff.webm",
+      "bytes": 139621,
+      "sha256": "d14546d5eeb49359684ca09416f110aba5dd36548cb3ad7fc7128bd7bce445c2"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-malformed-filmstrip.png",
+      "bytes": 242760,
+      "sha256": "b4618f3ed821c7d0900c0ef78da2d27df2795268cf78df6675529a9c7a9c7754"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-malformed-final.png",
+      "bytes": 45168,
+      "sha256": "4929237b62bbbb71dfd61cfd6144f2e3402f3acdbf64015f35660b705f8feeeb"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/chromium-malformed.webm",
+      "bytes": 88966,
+      "sha256": "a6d4b9a8d1b3e810a79e631e36d1c0370ba552bac5899bdc5b1f289b5eac36b7"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-abort-filmstrip.png",
+      "bytes": 208508,
+      "sha256": "b9c0335a3b06e8cc29d0888fa1cc23c1e77bde47718ffccce30ce96df103a783"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-abort-final.png",
+      "bytes": 48256,
+      "sha256": "7abaf4c64ed0fdb45de7f8f0d1872aaf3b7197707d2bf2f5245411784956e082"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-abort.webm",
+      "bytes": 122393,
+      "sha256": "18ed8ab7dc56de1d30147d455b0a1d2a6b6c0a0bb4a7645ff3b5ffb3c4bb6593"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-handoff-filmstrip.png",
+      "bytes": 279569,
+      "sha256": "fac6b6c64beeb182f5d1f3aa86815b7285b6299bd85c71ad4f6ff33a9bb5dc38"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-handoff-final.png",
+      "bytes": 48016,
+      "sha256": "3070d15fb99bff43ec9d957f696b869a9dca273e1c14b235d3df6a916f4f925e"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-handoff-frozen.png",
+      "bytes": 49156,
+      "sha256": "786bbb6be4b96acded2e1d849915b50bcfd6c407e5bebfc25c150b3cda21a41b"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-handoff-stale.png",
+      "bytes": 49501,
+      "sha256": "a3459c4b848ebdcd0a8af2b5694411e0f29f4c39a5a44bd5df76112f3d5e7919"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-handoff.webm",
+      "bytes": 188907,
+      "sha256": "99d98b5e4a1fb9cec11d71dd2976d52aa67b9487ffaf4c900084d535300dfcf3"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-malformed-filmstrip.png",
+      "bytes": 167478,
+      "sha256": "3e94c3beb20cb9fe7a57667ef420ce5262f7998951c5da50ef21b8fc84fc297a"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-malformed-final.png",
+      "bytes": 48151,
+      "sha256": "17fe4c4ff7ea04627b5694abe0c18e64756789d18a001d50ff7d07052c97cb0c"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/firefox-malformed.webm",
+      "bytes": 100253,
+      "sha256": "6813e488f7ba8864c72202518413de01d93fe15d29b2aee0b80b2a2c909f74a3"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-abort-filmstrip.png",
+      "bytes": 168696,
+      "sha256": "0296fb0294cfefb0e60b35daed970dab54671ef21d58b3560cbc79f40a69813f"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-abort-final.png",
+      "bytes": 111521,
+      "sha256": "11cf7651dceedb1988505e1bd994f6bfde8533384494b7c0029065bab11232fa"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-abort.webm",
+      "bytes": 90280,
+      "sha256": "cdcdf21e3d6537c01e210c5b016797d43e2142a101917e5c3d1ac21f07c81f1d"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-handoff-filmstrip.png",
+      "bytes": 264070,
+      "sha256": "1353825b1370e38d2b5f391457f5211593eed133da9e9df88a5fce607176ca1e"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-handoff-final.png",
+      "bytes": 110576,
+      "sha256": "1191cd5ab183dfc747e1b3e22591094450fe9a9748940d5b73d551f68caad5a5"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-handoff-frozen.png",
+      "bytes": 114381,
+      "sha256": "6771f8765caf257d7a40b9d4cceca877edc40ee3530c3f3e1c792967ce8f69d1"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-handoff-stale.png",
+      "bytes": 115717,
+      "sha256": "55c8bc8f007a71a99cbcf082edb9f7e1ce66b94199252d3867671062da37d44e"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-handoff.webm",
+      "bytes": 178425,
+      "sha256": "6ef6ea2c1eab19839fc8103ad0ffd323b0598e022825944609debbccb30df6f7"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-malformed-filmstrip.png",
+      "bytes": 174433,
+      "sha256": "351a2b2ef8e27a89bce826f0ff7738e4b04b3d989548e6775dadcada0840490c"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-malformed-final.png",
+      "bytes": 110872,
+      "sha256": "aea53460ece5fd7d15d1580646ec2965e06d923f81181836526f107970914acf"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-20261106/webkit-malformed.webm",
+      "bytes": 90660,
+      "sha256": "9d5dab1e698418aecead83f0cee1b049564596b41908399a004721d18271cc03"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/retained-coordinator-focused-20261106.json",
+      "bytes": 27205,
+      "sha256": "7b7e7cbb568ecad1c6088393a51735c929b4cde06dd7790e04181b5b6350cadb"
+    },
+    {
+      "path": "artifacts/retained-coordinator-types-20261106.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/retained-coordinator-types-result-20261106.json",
+      "bytes": 111,
+      "sha256": "b9dcebef6ad1ecb67e481d04f2b769dbace9a8e3a7a493240b3eafc2c270e740"
+    },
+    {
+      "path": "artifacts/retained-coordinator-process-20261106.json",
+      "bytes": 1032,
+      "sha256": "0c794469d878e8f8c7a3d1fd8d18ac17b17170c139d69db6ac2d0575e2049367"
+    },
+    {
+      "path": "artifacts/retained-coordinator-process-20261106.log",
+      "bytes": 26,
+      "sha256": "bcedf09558d10e2028ee3b003ce334d99eae5b875a6839aa80a7b9ab1744234e"
+    },
+    {
+      "path": "artifacts/retained-coordinator-node-es-20261106.json",
+      "bytes": 594,
+      "sha256": "62a9f07abf348cb42a2e63669241363eb05b5ed115c172998abc33998df2aeb9"
+    },
+    {
+      "path": "artifacts/retained-coordinator-node-cjs-20261106.json",
+      "bytes": 595,
+      "sha256": "8ca6d98c27c81bbccf11c84963eeec0855b02435b099c46617b41bac5d10e9bc"
+    },
+    {
+      "path": "artifacts/retained-room-store-browser-20261106.json",
+      "bytes": 49205,
+      "sha256": "bca3e60a13f8730cb0b7b7103bfe3c63e605b7eb9ec2ebbfd9628b81bc2dfbc6"
+    },
+    {
+      "path": "artifacts/retained-coordinator-visual-sources-20261106.json",
+      "bytes": 4340,
+      "sha256": "61c605930e9f563f63425cf2a49d0a33ef4d2e24497614ae752798b6ff200708"
+    }
+  ],
+  "invariants": {
+    "publicRuntimeAndCssByteIdentical": 171,
+    "unchanged": [
+      "src/yjs/index.ts",
+      "package.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_RETAINED_PERSISTENCE_AUDIT.md",
+      "bytes": 9971,
+      "sha256": "0979770270fb6abb06cbd40839fc16bab6b907092a58fa5f56e658a2be391698"
+    },
+    {
+      "path": "docs/YJS_RETAINED_ROOM_FENCING_AUDIT.md",
+      "bytes": 9357,
+      "sha256": "c408b832540b391e03ef978264ed028f8a126f71fed62be046c59076297aec4e"
+    },
+    {
+      "path": "docs/YJS_RETAINED_COMPACTION_DIAGNOSTIC.md",
+      "bytes": 4595,
+      "sha256": "86fe22ecbfa7da394a313e61eb327935dab11c127ad8f9d2e4757c4287ebc3d3"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 302941,
+      "sha256": "d878c7ff9c44e79c08f3d993c7d40914de810eb1dc6af59a86298be50e355fa8"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 165635,
+      "sha256": "73133d8de5d123d154126ee3f2aad9b9f222fd07f1f5ff367558c761c9d76d52"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 190584,
+      "sha256": "ae3981d06b9cbd4a38d1eb8c6c51c94f40a8190a49f0267674ac525093f58df8"
+    }
+  ],
+  "open": [
+    "Six default-adapter failures",
+    "Multi-host provider operations and transport/authentication",
+    "Fresh-room auxiliary/anchor/offline migration and compaction",
+    "Large-room throughput and storage growth",
+    "Legacy adoption",
+    "Three size overruns and fresh complete release CI",
+    "Overall parity"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "mode": "cjs",
+  "passed": 8,
+  "cases": [
+    "pure Node initialization with persistent checkpoint",
+    "actual editor update commits with persistent revision",
+    "frozen persistent authority rejects before reading incoming bytes",
+    "restart retains frozen barrier and preparation",
+    "resumed epoch rejects stale writer without reading payload",
+    "lost acknowledgement replay does not rotate twice",
+    "invalid wire data leaves persisted metadata and bytes intact",
+    "final persisted editor and opaque binary state remain exact"
+  ],
+  "node": "v24.22.1",
+  "dom": false
+}

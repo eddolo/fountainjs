@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a private persistent retained-room coordinator and Node/SQLite reference.
+  Atomically persist revision/epoch/generation, frozen barriers, preparation and
+  latest completion receipts; reject post-validation CAS races and replay a
+  completed handoff without rotating twice. Exercise separate writer processes,
+  interrupted transactions, transition/restart recovery and stored corruption.
+  This remains same-room backend reference work, not fresh-room compaction,
+  public provider deployment or a default-adapter fix.
+
 - Add a private in-memory retained-room authority with writer epochs, exact
   revision freeze, isolated update validation, concurrent-write CAS, abort and
   verified same-room resume. Reject stale/frozen writers before reading update

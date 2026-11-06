@@ -1,0 +1,20 @@
+{
+  "passed": 8,
+  "cases": [
+    "two separate writer processes validate the same generation; SQL admits exactly one",
+    "rejected process batch explicitly retries and both real editor changes survive",
+    "killing a process with an uncommitted SQLite transaction retains the prior row",
+    "process killed after durable freeze leaves writers frozen on restart",
+    "process killed after preparation retains a recoverable exact barrier and preparation",
+    "process killed after committed handoff still fences the old epoch before reading bytes",
+    "retry after lost handoff acknowledgement returns persisted completion without rotating twice",
+    "reopened file retains converged editor content, binary host state and committed epoch"
+  ],
+  "node": "v24.22.1",
+  "dom": false,
+  "workers": 6,
+  "initialEpoch": "4cc8bb63-0880-4aca-8e97-7e8fbc1ea118",
+  "finalEpoch": "6fb42258-07a4-4dcb-90ad-13e3349a68a0",
+  "finalRevision": 3,
+  "checkpointSha256": "86804a6ae32d351b08f17762e45fe0992f56fa3e7005f87d305c759a5dd9a183"
+}
