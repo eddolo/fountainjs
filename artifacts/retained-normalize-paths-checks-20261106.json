@@ -1,0 +1,79 @@
+[
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-typecheck-20261106.log",
+    "seconds": 19.1680736,
+    "check": "typecheck",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 1,
+    "log": "artifacts/retained-normalize-paths-focused-20261106.log",
+    "seconds": 8.7433502,
+    "check": "focused",
+    "expectedExitCode": 1
+  },
+  {
+    "exitCode": 1,
+    "log": "artifacts/retained-normalize-paths-full-source-20261106.log",
+    "seconds": 262.7712406,
+    "check": "full-source",
+    "expectedExitCode": 1
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-build-20261106.log",
+    "seconds": 12.2410121,
+    "check": "build",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-test-api-20261106.log",
+    "seconds": 0.7526465,
+    "check": "test:api",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-test-headless-20261106.log",
+    "seconds": 1.1487239,
+    "check": "test:headless",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-test-package-20261106.log",
+    "seconds": 4.812809,
+    "check": "test:package",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-test-server-runtimes-20261106.log",
+    "seconds": 2.8417845,
+    "check": "test:server-runtimes",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 1,
+    "log": "artifacts/retained-normalize-paths-test-budget-20261106.log",
+    "seconds": 0.6125087,
+    "check": "test:budget",
+    "expectedExitCode": 1
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-test-performance-20261106.log",
+    "seconds": 16.2387477,
+    "check": "test:performance",
+    "expectedExitCode": 0
+  },
+  {
+    "exitCode": 0,
+    "log": "artifacts/retained-normalize-paths-browser-20261106.log",
+    "seconds": 241.6068711,
+    "check": "browser",
+    "expectedExitCode": 0
+  }
+]

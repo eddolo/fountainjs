@@ -1,0 +1,31 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "retained-normalize-paths-baseline-20261106-build",
+  "blocks": 1000,
+  "edits": 64,
+  "warmups": 2,
+  "snapshotCount": 65,
+  "uniqueModelNodes": 2193,
+  "before": {
+    "heap": 42810488,
+    "buffers": 197863,
+    "total": 43008351
+  },
+  "held": {
+    "heap": 44642216,
+    "buffers": 197785,
+    "total": 44840001
+  },
+  "cleared": {
+    "heap": 44075360,
+    "buffers": 197785,
+    "total": 44273145
+  },
+  "snapshotOverheadBytes": 566856,
+  "allSnapshotsRemainExact": true,
+  "exactConvergence": true,
+  "documentSha256": "e58dee417e83b96ed92a48aebe7bfcdf195dbc40555ff3ef580152e60dd0c4d0",
+  "sharedBytes": 1751805,
+  "sharedSha256": "5ba8bdf7828cf97b008dfd43d9725f24b295474e2d09329795366d11b55105a4",
+  "note": "Explicitly retain receiving-editor document snapshots, then clear them while keeping both editors/Ydocs alive. GC diagnostics, not general steady-state memory or CRDT compaction certification."
+}

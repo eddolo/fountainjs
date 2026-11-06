@@ -162,6 +162,66 @@ it('reuses unchanged immutable model branches after fresh projection and retains
   } finally { pair.destroy(); }
 });
 
+const nestedBindings: { name: string; block: NodeJSON; path: number[] }[] = [
+  { name: 'quote', block: { type: 'blockquote', content: [source.content![0]] }, path: [0, 0, 0] },
+  { name: 'list', block: { type: 'bullet_list', content: [{ type: 'list_item', content: [source.content![0]] }] }, path: [0, 0, 0, 0] },
+  { name: 'table', block: { type: 'table', content: [{ type: 'table_row', content: [{ type: 'table_cell', content: [source.content![0]] }] }] }, path: [0, 0, 0, 0, 0] },
+];
+for (const association of [-1, 1] as const) it.each(nestedBindings)(`retains nested $name cursor ownership through typing, movement and collaborative undo (association ${association})`, ({ block, path }) => {
+  const pair = fixture({ ...source, content: [block, source.content![0], source.content![1]] });
+  const manager = new Y.UndoManager([...pair.store.scope], { captureTimeout: 0 });
+  try {
+    const identity = pair.store.identity(path.slice(0, -1))!, oldPath = pair.store.path(identity)!;
+    expect(Object.isFrozen(oldPath)).toBe(true); expect(oldPath).toEqual(path.slice(0, -1));
+    const anchor = pair.store.textAnchor(path, 2, association);
+    pair.editor.dispatch(pair.editor.createTransaction().insertText(path, 2, 'X')); const typed = pair.apply();
+    expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path, offset: association < 0 ? 2 : 3 });
+    expect(moveBlock(pair.editor, 0, 2)).toBe(true); pair.apply();
+    const moved = [2, ...path.slice(1)];
+    expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path: moved, offset: association < 0 ? 2 : 3 });
+    expect(pair.store.path(identity)).toEqual(moved.slice(0, -1)); expect(oldPath).toEqual(path.slice(0, -1));
+    expect(Object.isFrozen(pair.store.path(identity))).toBe(true);
+    expect(manager.undo()).not.toBeNull(); expect(pair.store.read().toJSON()).toEqual(typed.toJSON());
+    expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path, offset: association < 0 ? 2 : 3 });
+    expect(manager.redo()).not.toBeNull(); pair.store.read();
+    expect(pair.store.resolveTextAnchor(anchor)).toEqual({ path: moved, offset: association < 0 ? 2 : 3 });
+    expect(pair.store.read().toJSON()).toEqual(pair.editor.getJSON());
+    expect(getNodeAtPath(pair.store.read(), [0, 0]).text).toBe('Alpha');
+  } finally { manager.destroy(); pair.destroy(); }
+});
+
+it('keeps colon-bearing shared identities distinct when only one equal text leaf is edited', () => {
+  const kit = composeExtensions([CoreExtension]), doc = new Y.Doc(), editor = createEditor({ schema: kit.schema, content: {
+    ...source, content: [source.content![0], source.content![0], source.content![1]],
+  } });
+  let index = 0;
+  const store = new RetainedDocumentStore(doc, 'colons', editor.state.schema, () => `part:${index++}:12.3`);
+  try {
+    store.seed(editor.state.doc); const first = store.read(), left = store.textAnchor([0, 0], 2, 1), right = store.textAnchor([1, 0], 2, 1);
+    expect(first.child(0).child(0)).not.toBe(first.child(1).child(0));
+    const transaction = editor.createTransaction().insertText([0, 0], 2, 'X'); editor.dispatch(transaction); store.apply(transaction);
+    expect(store.resolveTextAnchor(left)).toEqual({ path: [0, 0], offset: 3 });
+    expect(store.resolveTextAnchor(right)).toEqual({ path: [1, 0], offset: 2 });
+    expect(store.read().content.slice(0, 2).map(node => node.textContent)).toEqual(['AlXpha', 'Alpha']);
+  } finally { store.destroy(); editor.destroy(); doc.destroy(); }
+});
+
+it('reads newly supplied text attribute rules after an earlier attribute-free projection', () => {
+  const kit = composeExtensions([CoreExtension]), textSpec = { ...kit.schema.nodes.text };
+  const schema = new Schema({ ...kit.schema, nodes: { ...kit.schema.nodes, text: textSpec } });
+  const doc = new Y.Doc(), original = schema.nodeFromJSON(source), store = new RetainedDocumentStore(doc, 'live-text-rules', schema, factory('live-text-rules'));
+  let allowed = true;
+  try {
+    store.seed(original); expect(store.read().child(0).child(0).attrs.token).toBeUndefined();
+    const saved = Y.encodeStateAsUpdate(doc);
+    textSpec.attrs = { token: { default: 'fresh', validate: () => allowed } };
+    expect(store.read().child(0).child(0).attrs.token).toBe('fresh');
+    allowed = false; expect(() => store.read()).toThrow('Invalid value for attribute: token');
+    allowed = true; expect(store.read().child(0).child(0).attrs.token).toBe('fresh');
+    expect(Y.encodeStateAsUpdate(doc)).toEqual(saved);
+  } finally { store.destroy(); doc.destroy(); }
+});
+
 it('accepts equivalent reordered metadata through native editing and exact save/reopen', () => {
   const pair = fixture({ ...source, attrs: { zeta: { second: 2, first: 1 }, alpha: true } });
   const reopenedDoc = new Y.Doc();

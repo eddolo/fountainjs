@@ -1,0 +1,15 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "retained-normalize-paths-baseline-20261106-build",
+  "blocks": 5000,
+  "warmups": 2,
+  "instrumentedEdits": 1,
+  "stringSplitCallsDuringEdit": 15000,
+  "jsonStringifyCallsDuringEdit": 10043,
+  "documentMatchesPlain": true,
+  "documentSha256": "e86d47a3cf495070859670075fe0ccae0b1da790a9ee403d7b84967a9a683ab3",
+  "sharedBytes": 9308211,
+  "sharedSha256": "297485376fc5e167e9ba195edd61bee929700d5f9f0e37f84a5b650a5af32a16",
+  "domRequired": false,
+  "note": "Counts actual String.split and JSON.stringify invocations during one real adapter edit. Restores both functions before correctness checks. Instrumented counts are separate from uninstrumented latency measurements."
+}

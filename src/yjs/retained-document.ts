@@ -54,7 +54,9 @@ interface ProjectionFrame {
   readonly placements: ReadonlyMap<string, SplitPlacement>;
 }
 interface SplitPlacement { root: string; rootToken: string; token: string; partition: string }
-const bindingKey = (bindings: readonly Binding[], leaf: string): string => JSON.stringify([bindings[0]?.id, bindings[0]?.from, leaf]);
+// Partition/leaf identities cannot contain NUL; separate tuple fields without
+// allocating an array and JSON serialization for every normalized text leaf.
+const bindingKey = (bindings: readonly Binding[], leaf: string): string => `${bindings[0]?.id}\0${bindings[0]?.from}\0${leaf}`;
 const sameBindings = (left: readonly Binding[], right: readonly Binding[]): boolean => left.length === right.length && left.every((entry, index) => {
   const other = right[index]!;
   return entry.id === other.id && entry.from === other.from && entry.length === other.length && entry.modelFrom === other.modelFrom && entry.leaf === other.leaf;
@@ -194,7 +196,7 @@ export class RetainedDocumentStore {
   private textPaths = new Map<string, Binding[]>();
   private identityPaths = new Map<string, readonly number[]>();
   private partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
-  private leafPaths = new Map<string, string>();
+  private textLocations = new Map<string, { leaf: string; path: readonly number[] }>();
   private groups = new Map<string, GroupState>();
   private graph?: RetainedNodeProjection;
 
@@ -371,9 +373,9 @@ export class RetainedDocumentStore {
     if (this.model) {
       for (const [id, path] of this.identityPaths) previousNodes.set(id, getNodeAtPath(this.model, path));
       for (const [path, bindings] of this.textPaths) {
-        const leaf = this.leafPaths.get(path);
-        if (!leaf || !bindings.length) continue;
-        const key = bindingKey(bindings, leaf), node = getNodeAtPath(this.model, path.split('.').map(Number));
+        const location = this.textLocations.get(path);
+        if (!location || !bindings.length) continue;
+        const key = bindingKey(bindings, location.leaf), node = getNodeAtPath(this.model, location.path);
         previousTexts.set(key, previousTexts.has(key) ? null : { node, bindings });
       }
     }
@@ -406,7 +408,8 @@ export class RetainedDocumentStore {
         // Preserve factory validation on every source run before merging when
         // a custom text invariant exists, rather than checking only the result.
         if (type.spec.validate) { append({ node: type.create(attrs, [], text, marks), leaf, bindings }); return; }
-        const prepared = computeAttrs(type.spec.attrs, attrs);
+        const specs = type.spec.attrs;
+        const prepared = specs === undefined && !Object.keys(attrs).length ? EMPTY_ATTRS : computeAttrs(specs, attrs);
         append({ text, attrs: Object.keys(prepared).length ? freezeAttributes(prepared) : EMPTY_ATTRS, marks, leaf, bindings });
       };
       for (const child of ordered) {
@@ -439,22 +442,22 @@ export class RetainedDocumentStore {
     };
     const result = visit(projection.root);
     if (validate) this.schema.validate(result.node);
-    const nodePaths = new Map<string, string>(), textPaths = new Map<string, Binding[]>(), leafPaths = new Map<string, string>();
+    const nodePaths = new Map<string, string>(), textPaths = new Map<string, Binding[]>();
+    const textLocations = new Map<string, { leaf: string; path: readonly number[] }>(), identityPaths = new Map<string, readonly number[]>();
+    const partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
     const bind = (fragment: Fragment, path: number[]) => {
-      if (fragment.id) nodePaths.set(pathKey(path), fragment.id);
-      if (fragment.bindings) { textPaths.set(pathKey(path), fragment.bindings); leafPaths.set(pathKey(path), fragment.leaf!); }
+      const key = pathKey(path), frozen = Object.freeze(path);
+      if (fragment.id) { nodePaths.set(key, fragment.id); identityPaths.set(fragment.id, frozen); }
+      if (fragment.bindings) {
+        textPaths.set(key, fragment.bindings); textLocations.set(key, { leaf: fragment.leaf!, path: frozen });
+        for (const binding of fragment.bindings) {
+          const entries = partitionPaths.get(binding.id) ?? []; entries.push({ path: frozen, binding }); partitionPaths.set(binding.id, entries);
+        }
+      }
       fragment.children?.forEach((child, index) => bind(child, [...path, index]));
     };
-    bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.leafPaths = leafPaths;
-    this.identityPaths = new Map([...nodePaths].map(([path, id]) => [id, Object.freeze(path ? path.split('.').map(Number) : [])]));
-    const partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
-    for (const [key, bindings] of textPaths) {
-      const path = Object.freeze(key.split('.').map(Number));
-      for (const binding of bindings) {
-        const entries = partitionPaths.get(binding.id) ?? []; entries.push({ path, binding }); partitionPaths.set(binding.id, entries);
-      }
-    }
-    this.partitionPaths = partitionPaths;
+    bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textLocations = textLocations;
+    this.identityPaths = identityPaths; this.partitionPaths = partitionPaths;
     this.groups = groupStates; this.graph = projection.root; this.model = result.node;
     return result.node;
   }
@@ -759,5 +762,5 @@ export class RetainedDocumentStore {
     return this.finishChange(after, undefined, shared);
   }
 
-  destroy(): void { this.document.off('afterTransaction', this.sharedFrameChanged); this.clearFrame(); this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
+  destroy(): void { this.document.off('afterTransaction', this.sharedFrameChanged); this.clearFrame(); this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.textLocations.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
 }

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Build retained projection identity, text and partition bindings in one pass,
+  retain frozen numeric paths, and use private delimiter-separated tuple keys
+  instead of JSON-encoding each text binding. Avoid empty scratch attributes
+  only for attribute-free text with no specifications; keep live defaults and
+  validators. Cover nested cursor ownership through moves and collaborative
+  undo/redo, unusual identities and schema changes. The adapter remains private
+  and experimental; adoption, storage/history growth and migration remain open.
+
 - Prove native single-step retained text provenance without constructing a
   whole-document text plan. Capture validated operation fields before Yjs
   transaction hooks, preserve complete preflight for custom/multi-step cases,

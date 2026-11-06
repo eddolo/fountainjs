@@ -20,13 +20,33 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,444 passes and six failures, with no skips. Three
+The current source suite has 4,452 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest native-plan audit](YJS_RETAINED_NATIVE_PLAN_AUDIT.md).
+[latest binding audit](YJS_RETAINED_NORMALIZE_PATHS_AUDIT.md).
+
+Single-pass retained projection bindings (2026-11-06, local): build numeric
+identity/text/partition paths in one traversal, retain frozen text coordinates,
+and avoid per-leaf JSON tuple encoding. Keep all specified defaults and factory
+validators live. All 306 candidate cases pass; full source has 4,452 passes and
+six unchanged default failures across 289 files without skips. All 99 recorded
+browser, 36 compiled Node and 28 compatibility journeys pass; 171 public
+runtime/CSS files remain identical. The 5k work probe removes 15,000 path splits
+and reduces JSON serializations 10,043 to 43. Three-trial edit medians change
+7.19/36.29/75.71 to 7.73/33.70/71.58 ms at 1k/5k/10k: modest larger gains, a small
+1k regression and mixed initialization/receiver timings. Projection, storage
+history, compaction, migration, three size overruns and fresh release CI remain
+open. COLLAB-01 stays Partial; no default switch or publication.
+[Audit](YJS_RETAINED_NORMALIZE_PATHS_AUDIT.md).
+
+The accompanying [compaction study](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md)
+confirms that clearing undo does not shrink live wire state. Fresh-room seeding
+preserves the tested document JSON/application node IDs but resets internal
+identities/history and rejects old-room merging. Checkpoint/migration policy and
+writer fencing remain required; no automatic history loss is introduced.
 
 Native retained provenance preflight (2026-11-06, local): prove a single native
 text replacement from its actual map, ancestor metadata/marks, untouched sibling

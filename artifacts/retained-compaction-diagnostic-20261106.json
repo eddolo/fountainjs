@@ -1,0 +1,204 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "cursor-overlay-build-20261106",
+  "domRequired": false,
+  "cases": [
+    {
+      "edits": 128,
+      "rows": [
+        {
+          "stage": "seed",
+          "sharedBytes": 3170,
+          "sharedV2Bytes": 3046,
+          "sharedSha256": "9b070d246b1a9aeaf22ab7798b981ab418e6aee6899e52d6fe9a16e09f7f804b",
+          "documentSha256": "2b49f117b4a805110036209fff346148693bd7832e0936a33f1dc4a693be1c23",
+          "textDeltaOperations": 2,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "converged",
+          "sharedBytes": 10220,
+          "sharedV2Bytes": 8084,
+          "sharedSha256": "07d95458aa033882dc855420688edaefec455425b1e91b6b97b3c4718a53a806",
+          "documentSha256": "4704f5cc3729945ec9f0511dc2bedc33ed9c742e262e1f3050276a590360a88d",
+          "textDeltaOperations": 132,
+          "undoItems": 128,
+          "redoItems": 0
+        },
+        {
+          "stage": "all-undone",
+          "sharedBytes": 10225,
+          "sharedV2Bytes": 8089,
+          "sharedSha256": "9884294955caba89f03aef83fe3e8f94acb4eab808fe24b2d95ca3447ae0bd0d",
+          "documentSha256": "63099c1ffc8e0f46389a007c7256244f9cb60571606595a5c7783f70e28a9e07",
+          "textDeltaOperations": 4,
+          "undoItems": 0,
+          "redoItems": 128
+        },
+        {
+          "stage": "all-redone",
+          "sharedBytes": 17108,
+          "sharedV2Bytes": 12572,
+          "sharedSha256": "a8d6d39af521dd2f7e5ef76ff25c965ade2a1fbe1f83d5160045afd8e2f7f1fe",
+          "documentSha256": "4704f5cc3729945ec9f0511dc2bedc33ed9c742e262e1f3050276a590360a88d",
+          "textDeltaOperations": 132,
+          "undoItems": 128,
+          "redoItems": 0
+        },
+        {
+          "stage": "left-history-cleared",
+          "sharedBytes": 17108,
+          "sharedV2Bytes": 12572,
+          "sharedSha256": "a8d6d39af521dd2f7e5ef76ff25c965ade2a1fbe1f83d5160045afd8e2f7f1fe",
+          "documentSha256": "4704f5cc3729945ec9f0511dc2bedc33ed9c742e262e1f3050276a590360a88d",
+          "textDeltaOperations": 132,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "both-histories-cleared",
+          "sharedBytes": 17108,
+          "sharedV2Bytes": 12572,
+          "sharedSha256": "a8d6d39af521dd2f7e5ef76ff25c965ade2a1fbe1f83d5160045afd8e2f7f1fe",
+          "documentSha256": "4704f5cc3729945ec9f0511dc2bedc33ed9c742e262e1f3050276a590360a88d",
+          "textDeltaOperations": 132,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "wire-reopened",
+          "sharedBytes": 13167,
+          "sharedV2Bytes": 8483,
+          "sharedSha256": "5dac67c1588181b553c682ca441d4244d80eb1497a13f78fdd1f40518b1a9bf2",
+          "documentSha256": "4704f5cc3729945ec9f0511dc2bedc33ed9c742e262e1f3050276a590360a88d",
+          "textDeltaOperations": 132,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "fresh-room-from-json",
+          "sharedBytes": 3342,
+          "sharedV2Bytes": 3177,
+          "sharedSha256": "5d822e0e806a987e3368396cc52ef416542529e1c0ef8cf16d65f870dcab90b0",
+          "documentSha256": "4704f5cc3729945ec9f0511dc2bedc33ed9c742e262e1f3050276a590360a88d",
+          "textDeltaOperations": 2,
+          "undoItems": 0,
+          "redoItems": 0
+        }
+      ],
+      "exactModelPreserved": true,
+      "authorUndoRedoPreservedBeforeClear": true,
+      "clearDiscardsUndoRedo": true,
+      "freshRoomPreservesDocumentJSON": true,
+      "applicationNodeIdsPreserved": true,
+      "freshRoomHistoryEmpty": true,
+      "staleOldRoomUpdateRejected": {
+        "status": "error",
+        "message": "Legacy, incompatible or conflicting collaboration room; original shared data preserved.",
+        "lastEditorSnapshotPreserved": true,
+        "authoritativeFreshRoomUntouched": true
+      },
+      "scope": "Reads private UndoManager state for a diagnostic. Fresh seeding changes internal room/CRDT identities and is not online compaction, history-preserving migration, or a writer fence."
+    },
+    {
+      "edits": 1024,
+      "rows": [
+        {
+          "stage": "seed",
+          "sharedBytes": 3170,
+          "sharedV2Bytes": 3046,
+          "sharedSha256": "9b070d246b1a9aeaf22ab7798b981ab418e6aee6899e52d6fe9a16e09f7f804b",
+          "documentSha256": "2b49f117b4a805110036209fff346148693bd7832e0936a33f1dc4a693be1c23",
+          "textDeltaOperations": 2,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "converged",
+          "sharedBytes": 60921,
+          "sharedV2Bytes": 42132,
+          "sharedSha256": "1f09a2be364490ad1ea5976926c6e62c14526961b378cf0555bcb692b366b4e1",
+          "documentSha256": "4329d870cb35c0b3e6e58c6e812f2c0b20cd63d6ea3c51ba2c099afba6e0a1eb",
+          "textDeltaOperations": 1028,
+          "undoItems": 1024,
+          "redoItems": 0
+        },
+        {
+          "stage": "all-undone",
+          "sharedBytes": 60926,
+          "sharedV2Bytes": 42137,
+          "sharedSha256": "67e5fd5759da9cd764889fecc1041f2053233ed34a067220142cd127c6fa9e5a",
+          "documentSha256": "63099c1ffc8e0f46389a007c7256244f9cb60571606595a5c7783f70e28a9e07",
+          "textDeltaOperations": 4,
+          "undoItems": 0,
+          "redoItems": 1024
+        },
+        {
+          "stage": "all-redone",
+          "sharedBytes": 118510,
+          "sharedV2Bytes": 77981,
+          "sharedSha256": "cdef492eb65ca33e0da843bf0c107ab5724e0e9f232e3f7b43d4ef855ba342d5",
+          "documentSha256": "4329d870cb35c0b3e6e58c6e812f2c0b20cd63d6ea3c51ba2c099afba6e0a1eb",
+          "textDeltaOperations": 1028,
+          "undoItems": 1024,
+          "redoItems": 0
+        },
+        {
+          "stage": "left-history-cleared",
+          "sharedBytes": 118510,
+          "sharedV2Bytes": 77981,
+          "sharedSha256": "cdef492eb65ca33e0da843bf0c107ab5724e0e9f232e3f7b43d4ef855ba342d5",
+          "documentSha256": "4329d870cb35c0b3e6e58c6e812f2c0b20cd63d6ea3c51ba2c099afba6e0a1eb",
+          "textDeltaOperations": 1028,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "both-histories-cleared",
+          "sharedBytes": 118510,
+          "sharedV2Bytes": 77981,
+          "sharedSha256": "cdef492eb65ca33e0da843bf0c107ab5724e0e9f232e3f7b43d4ef855ba342d5",
+          "documentSha256": "4329d870cb35c0b3e6e58c6e812f2c0b20cd63d6ea3c51ba2c099afba6e0a1eb",
+          "textDeltaOperations": 1028,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "wire-reopened",
+          "sharedBytes": 85372,
+          "sharedV2Bytes": 45219,
+          "sharedSha256": "f0cedfee71e72730ea4712fc80db0b84085369a2e111d9bfc28fb76117c8d71d",
+          "documentSha256": "4329d870cb35c0b3e6e58c6e812f2c0b20cd63d6ea3c51ba2c099afba6e0a1eb",
+          "textDeltaOperations": 1028,
+          "undoItems": 0,
+          "redoItems": 0
+        },
+        {
+          "stage": "fresh-room-from-json",
+          "sharedBytes": 4238,
+          "sharedV2Bytes": 4073,
+          "sharedSha256": "4bbc12a2ffeba8374ebf55765757e2311fd4cedfc17d7f06de5cb40c7d326323",
+          "documentSha256": "4329d870cb35c0b3e6e58c6e812f2c0b20cd63d6ea3c51ba2c099afba6e0a1eb",
+          "textDeltaOperations": 2,
+          "undoItems": 0,
+          "redoItems": 0
+        }
+      ],
+      "exactModelPreserved": true,
+      "authorUndoRedoPreservedBeforeClear": true,
+      "clearDiscardsUndoRedo": true,
+      "freshRoomPreservesDocumentJSON": true,
+      "applicationNodeIdsPreserved": true,
+      "freshRoomHistoryEmpty": true,
+      "staleOldRoomUpdateRejected": {
+        "status": "error",
+        "message": "Legacy, incompatible or conflicting collaboration room; original shared data preserved.",
+        "lastEditorSnapshotPreserved": true,
+        "authoritativeFreshRoomUntouched": true
+      },
+      "scope": "Reads private UndoManager state for a diagnostic. Fresh seeding changes internal room/CRDT identities and is not online compaction, history-preserving migration, or a writer fence."
+    }
+  ],
+  "note": "Exploratory compaction boundary evidence only. No production API, history policy, GC setting, transport or room migration is changed."
+}
