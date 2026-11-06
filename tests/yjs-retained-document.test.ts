@@ -39,6 +39,43 @@ function peers(content = source, reverseIDs = false) {
   }, destroy: () => { left.destroy(); editor.destroy(); store.destroy(); doc.destroy(); } };
 }
 
+it.each([{ path: [] }, { path: [0] }])('does not rewrite reordered portable metadata or create history at path $path', ({ path }) => {
+  const value = { first: ['keep', null, 1], second: { x: 1, y: 2 } }, changed = { second: { y: 2, x: 1 }, first: ['keep', null, 1] };
+  const content: NodeJSON = path.length ? { ...source, content: [{ ...source.content![0], attrs: { custom: value } }, source.content![1]] }
+    : { ...source, attrs: { custom: value } };
+  const pair = fixture(content), history = new Y.UndoManager([...pair.store.scope]);
+  try {
+    const before = Y.encodeStateAsUpdate(pair.doc), transaction = pair.editor.createTransaction().setNodeAttrs(path, { custom: changed });
+    const actual = pair.store.apply(transaction);
+    expect(actual.toJSON()).toEqual(transaction.doc.toJSON()); expect(Y.encodeStateAsUpdate(pair.doc)).toEqual(before); expect(history.undoStack).toHaveLength(0);
+    // The editor still has the original key order. A later genuine edit must
+    // accept that semantically equal source rather than report stale state.
+    const edit = pair.editor.createTransaction().insertText([0, 0], 2, 'X');
+    expect(pair.store.apply(edit).toJSON()).toEqual(edit.doc.toJSON());
+  } finally { history.destroy(); pair.destroy(); }
+});
+
+it('retains changes to nested array order and distinguishes a missing field from null', () => {
+  const pair = fixture({ ...source, attrs: { custom: { items: [1, 2], retained: true } } });
+  try {
+    const transaction = pair.editor.createTransaction().setNodeAttrs([], { custom: { items: [2, 1], retained: true, optional: null } });
+    expect(pair.store.apply(transaction).attrs.custom).toEqual({ items: [2, 1], retained: true, optional: null });
+    expect(pair.store.read().toJSON()).toEqual(transaction.doc.toJSON());
+  } finally { pair.destroy(); }
+});
+
+it.each(['text', 'metadata'] as const)('refuses a stale %s source before shared writes', kind => {
+  const pair = fixture();
+  try {
+    const original = pair.editor.state.doc, stale = kind === 'metadata' ? original.withAttrs({ audit: { keep: false } })
+      : original.copy([original.child(0).copy([pair.editor.state.schema.text('Other')]), original.child(1)]);
+    const transaction = EditorState.create({ schema: pair.editor.state.schema, doc: stale }).createTransaction().setNodeAttrs([], { incoming: true });
+    const before = Y.encodeStateAsUpdate(pair.doc);
+    expect(() => pair.store.apply(transaction)).toThrow('stale source'); expect(Y.encodeStateAsUpdate(pair.doc)).toEqual(before);
+    expect(pair.store.read().toJSON()).toEqual(original.toJSON());
+  } finally { pair.destroy(); }
+});
+
 it.each(['map', 'transaction'] as const)('returns relevant writes made by a %s observer, including matching-origin follow-up transactions', kind => {
   const pair = fixture();
   try {

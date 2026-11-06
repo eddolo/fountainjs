@@ -6,15 +6,20 @@ import type { Transaction } from '../core/transaction/transaction';
 import { ReplaceStep } from '../core/transaction/replace-step';
 import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection, type RetainedNodeSeed } from './retained-nodes';
 import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun, type RetainedTextPartition } from './retained-text';
-import { planRetainedNodeStarts, planRetainedText } from './retained-mapping';
+import { planRetainedNodeStarts, planRetainedText, type RetainedTextPlan } from './retained-mapping';
 
 const VERSION = 'fountain-retained-document/3';
 const LEAF = 'fountain_leaf', ORDER = 'fountain_marks';
 const pathKey = (path: readonly number[]) => path.join('.');
+// Callers compare validated portable metadata/documents, or missing fields.
+// Object-key order is immaterial; avoid sorted copies of entire documents.
 const same = (left: unknown, right: unknown): boolean => {
-  const canonical = (value: unknown): unknown => Array.isArray(value) ? value.map(canonical)
-    : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([key, entry]) => [key, canonical(entry)])) : value;
-  return JSON.stringify(canonical(left)) === JSON.stringify(canonical(right));
+  if (left === right) return true;
+  if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false;
+  if (Array.isArray(left)) return Array.isArray(right) && left.length === right.length && left.every((entry, index) => same(entry, right[index]));
+  if (Array.isArray(right)) return false;
+  const a = left as Record<string, unknown>, b = right as Record<string, unknown>, keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(key => Object.hasOwn(b, key) && same(a[key], b[key]));
 };
 interface Binding { id: string; from: number; length: number; modelFrom: number; leaf: string }
 interface GroupState { id: string; parent: string; value: RetainedNodeProjection }
@@ -270,15 +275,17 @@ export class RetainedDocumentStore {
   }
 
   apply(transaction: Transaction): Node {
-    if (!this.model || !same(this.model.toJSON(), transaction.originalDoc.toJSON())) throw new Error('Retained transaction uses a stale source.');
+    if (!this.model || !this.model.eq(transaction.originalDoc) && !same(this.model.toJSON(), transaction.originalDoc.toJSON())) throw new Error('Retained transaction uses a stale source.');
     this.validate(transaction.doc);
     let before = transaction.originalDoc;
     // Validate every step's provenance before writing any shared state. A later
     // invalid custom step must not leave an earlier valid step half-applied.
     const changes = transaction.steps.map(step => {
       const after = step.apply(before), mapping = new Mapping(step.getMaps?.(before) ?? [step.getMap(before)]);
-      planRetainedText(before, after, mapping, step instanceof ReplaceStep);
-      const change = { before, after, mapping, step }; before = after; return change;
+      const checked = planRetainedText(before, after, mapping, step instanceof ReplaceStep);
+      // Keep one proven plan for a normal keystroke. Do not retain every full
+      // plan in a potentially long multi-step transaction.
+      const change = { before, after, mapping, step, plan: transaction.steps.length === 1 ? checked : undefined }; before = after; return change;
     });
     let writer: Y.Transaction | undefined, changedAfterProjection = false;
     const observed = (event: Y.Transaction): void => {
@@ -291,7 +298,7 @@ export class RetainedDocumentStore {
       const projected = this.document.transact(event => {
         writer = event;
         let result: Node | undefined;
-        for (const change of changes) result = this.change(change.before, change.after, change.mapping, change.step);
+        for (const change of changes) result = this.change(change.before, change.after, change.mapping, change.step, change.plan);
         return result;
       }, this.origin);
       // Reuse only this call's checked projection. Observer/cleanup writes can
@@ -302,8 +309,8 @@ export class RetainedDocumentStore {
     } finally { this.document.off('afterTransaction', observed); }
   }
 
-  private change(before: Node, after: Node, mapping: Mapping, step: Step): Node {
-    const plan = planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
+  private change(before: Node, after: Node, mapping: Mapping, step: Step, checked?: RetainedTextPlan): Node {
+    const plan = checked ?? planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
     const intent = (step as Step & { getRetainedSplit?: () => { textPath: readonly number[]; rightTextPath: readonly number[]; offset: number } }).getRetainedSplit?.();
     const nextNodes = new Map<string, string>([['', 'root']]), values = new Map<string, RetainedNodeProjection>();
     const collect = (raw: RetainedNodeProjection) => { values.set(raw.id, raw); raw.content.forEach(collect); };

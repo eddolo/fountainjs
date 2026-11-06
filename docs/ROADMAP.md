@@ -1,5 +1,17 @@
 # FountainJS opportunity roadmap
 
+Retained comparison/planning follow-up (2026-11-06, local): avoid sorted
+document copies for portable equality and reuse a preflighted text plan only
+for single-step transactions. All 230 candidate cases, 36 compiled Node
+journeys, 28 old/new compatibility journeys and 96 recorded browser journeys
+pass. The focused run has 246 passes and six unchanged default failures;
+types and public runtime checks pass, with all 171 public runtime/CSS files
+byte-identical. Three-trial 10,000-paragraph median editing improves from
+497.49 to 433.87 ms, still too expensive for adoption; initialization is mixed.
+Full projection, history growth, compaction, migration, three size overruns
+and fresh full source/complete CI remain open. No default switch or publication.
+[Audit and evidence](YJS_RETAINED_COMPARISON_AUDIT.md).
+
 Fresh text-pool seeding (2026-11-06, local): validate run snapshots, ownership
 and complete style capacity before writing; retain per-insertion provenance
 and live checks for ordinary operations. All 225 candidate cases, 36 compiled

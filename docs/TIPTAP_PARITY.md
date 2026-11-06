@@ -1,5 +1,15 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local comparison/planning follow-up, 2026-11-06: portable equality avoids sorted
+document copies and a single-step edit reuses its preflight plan. All 230
+candidate cases, 36 compiled Node journeys, 28 compatibility/history journeys
+and 96 recorded browser journeys pass; the focused run retains six default
+failures. Controlled 10,000-paragraph median editing improves from 497.49 to
+433.87 ms, with exact document/shared-state hashes; initialization is mixed.
+Full projection, history growth, compaction, migration, three size overruns
+and fresh full source/complete CI remain open. COLLAB-01 stays Partial; no
+adoption or release claim. [Audit](YJS_RETAINED_COMPARISON_AUDIT.md).
+
 Local text-initialization follow-up, 2026-11-06: fresh text/style capacity is
 reserved before writing, with unchanged insertion provenance and public adapter.
 All 225 candidate cases, 36 compiled Node journeys, 28 old/new compatibility

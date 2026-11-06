@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid canonical sorted document copies in private retained-Yjs comparisons,
+  preserving order-independent object metadata, ordered arrays and explicit
+  null/missing distinctions. Reuse preflight text planning for single-step
+  transactions while preserving all-step preflight before writes. Keep the
+  public adapter and protocol unchanged; large-document projection/editing,
+  history growth, compaction and migration remain adoption work.
+
 - Initialize fresh private retained-Yjs text pools with validated run snapshots
   and pre-reserved style capacity, avoiding repeated scans of growing pools.
   Keep ordinary live checks, insertion-owned provenance and encoded state

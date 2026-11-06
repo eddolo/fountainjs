@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+const read=async name=>JSON.parse(await readFile(`artifacts/${name}-20261106.json`,'utf8'));
+const median=values=>[...values].sort((a,b)=>a-b)[Math.floor(values.length/2)];
+const costs=await Promise.all(['baseline','candidate'].map(kind=>read(`retained-equality-cost-${kind}`)));
+assert.deepEqual(costs[0].identity,costs[1].identity);
+for(const report of costs){assert.equal(report.trials,3);assert.equal(report.rows.length,18);assert(report.rows.every(row=>row.documentMatchesPlain));}
+const summary=[1000,5000,10000].map(blocks=>{
+ const sets=costs.map(report=>report.rows.filter(row=>row.retained&&row.blocks===blocks));assert(sets.every(rows=>rows.length===3));
+ for(const key of ['documentSha256','sharedSha256','sharedBytes'])assert.equal(new Set(sets.flat().map(row=>row[key])).size,1,key);
+ const summaries=sets.map(rows=>({medianInitializationMs:median(rows.map(row=>row.initializationMs)),medianOfEditMediansMs:median(rows.map(row=>row.p50Ms)),maximumTimedEditMs:Math.max(...rows.map(row=>row.p95Ms)),sharedBytes:rows[0].sharedBytes,sharedSha256:rows[0].sharedSha256,trials:rows}));
+ return {blocks,documentsAndEncodedBytesIdentical:true,before:summaries[0],after:summaries[1]};
+});
+const sessions=await Promise.all(['baseline','candidate'].map(kind=>read(`retained-equality-session-${kind}`)));
+const stages=row=>row.rows.map(({stage,sharedBytes,sharedV2Bytes,textDeltaOperations,containers})=>({stage,sharedBytes,sharedV2Bytes,textDeltaOperations,containers}));
+for(const report of sessions){assert.equal(report.trials,3);assert.equal(report.cases.length,3);assert.equal(report.domRequired,false);}
+const reference=sessions[0].cases[0];
+for(const row of sessions.flatMap(report=>report.cases)){
+ assert.equal(row.edits,1024);assert.equal(row.exactConvergence,true);assert.equal(row.authorOnlyFullUndoRedo,true);assert.equal(row.reopenMatches,true);
+ assert.deepEqual(row.released,{left:true,right:true,leftDoc:true,rightDoc:true});
+ assert.equal(row.documentSha256,reference.documentSha256);assert.equal(row.sharedSha256,reference.sharedSha256);assert.deepEqual(stages(row),stages(reference));
+}
+const interop=await read('retained-equality-interop');assert.equal(interop.passed,28);assert(interop.cases.every(row=>row.exactConvergence&&row.authorHistoryPreserved&&row.rootAndImagePreserved));
+const report={baselineCommit:'05a68f06',runtime:costs[0].runtime,summary,sessions:{trialsPerBuild:3,editsPerTrial:1024,documentsAndEncodedBytesIdentical:true,allEditorsAndDocumentsReleased:true,stages:stages(reference)},interopJourneys:28,interpretation:'Compare portable values without canonical sorted document copies; reuse one preflight text plan only for a single-step transaction. All steps still preflight before writes. Encoded state remains identical. Timings are diagnostics, not adoption gates. Full projection and history growth remain; no default-adapter switch, compaction, migration, version/limit increase or publication.'};
+await writeFile('artifacts/retained-equality-comparison-20261106.json',JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify(summary.map(({blocks,before,after})=>({blocks,beforeInitializationMs:before.medianInitializationMs,afterInitializationMs:after.medianInitializationMs,beforeEditMs:before.medianOfEditMediansMs,afterEditMs:after.medianOfEditMediansMs,sharedBytes:after.sharedBytes}))));
