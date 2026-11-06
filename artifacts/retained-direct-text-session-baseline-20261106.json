@@ -1,0 +1,1144 @@
+{
+  "runtime": "v24.22.1",
+  "directory": "retained-direct-text-baseline-20261106-build",
+  "trials": 3,
+  "domRequired": false,
+  "deterministicIdentities": true,
+  "cases": [
+    {
+      "trial": 1,
+      "before": {
+        "heapUsed": 10381624,
+        "arrayBuffers": 197785,
+        "total": 10579409
+      },
+      "after": {
+        "heapUsed": 12697192,
+        "arrayBuffers": 197785,
+        "total": 12894977
+      },
+      "released": {
+        "left": true,
+        "right": true,
+        "leftDoc": true,
+        "rightDoc": true
+      },
+      "retainedDelta": 2315568,
+      "rows": [
+        {
+          "trial": 1,
+          "stage": "seed",
+          "sharedBytes": 3058,
+          "sharedV2Bytes": 2944,
+          "textDeltaOperations": 2,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 12864208,
+            "arrayBuffers": 227105,
+            "total": 13091313
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 1,
+          "stage": "edit-128",
+          "sharedBytes": 9935,
+          "sharedV2Bytes": 7814,
+          "textDeltaOperations": 130,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 15731184,
+            "arrayBuffers": 259252,
+            "total": 15990436
+          },
+          "editMedianMs": 1.2487000000000137,
+          "editMaxMs": 3.529599999999988
+        },
+        {
+          "trial": 1,
+          "stage": "edit-256",
+          "sharedBytes": 16975,
+          "sharedV2Bytes": 12678,
+          "textDeltaOperations": 258,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 17709552,
+            "arrayBuffers": 307408,
+            "total": 18016960
+          },
+          "editMedianMs": 1.466700000000003,
+          "editMaxMs": 9.15870000000001
+        },
+        {
+          "trial": 1,
+          "stage": "edit-384",
+          "sharedBytes": 24156,
+          "sharedV2Bytes": 17542,
+          "textDeltaOperations": 386,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 20007848,
+            "arrayBuffers": 344705,
+            "total": 20352553
+          },
+          "editMedianMs": 2.1925999999999704,
+          "editMaxMs": 4.820299999999975
+        },
+        {
+          "trial": 1,
+          "stage": "edit-512",
+          "sharedBytes": 31452,
+          "sharedV2Bytes": 22406,
+          "textDeltaOperations": 514,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 25756120,
+            "arrayBuffers": 404417,
+            "total": 26160537
+          },
+          "editMedianMs": 2.53879999999981,
+          "editMaxMs": 6.24369999999999
+        },
+        {
+          "trial": 1,
+          "stage": "edit-640",
+          "sharedBytes": 38748,
+          "sharedV2Bytes": 27270,
+          "textDeltaOperations": 642,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 30140904,
+            "arrayBuffers": 423265,
+            "total": 30564169
+          },
+          "editMedianMs": 3.1686999999999443,
+          "editMaxMs": 6.9082999999998265
+        },
+        {
+          "trial": 1,
+          "stage": "edit-768",
+          "sharedBytes": 46044,
+          "sharedV2Bytes": 32134,
+          "textDeltaOperations": 770,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 41702776,
+            "arrayBuffers": 449733,
+            "total": 42152509
+          },
+          "editMedianMs": 3.820799999999963,
+          "editMaxMs": 7.296400000000176
+        },
+        {
+          "trial": 1,
+          "stage": "edit-896",
+          "sharedBytes": 53340,
+          "sharedV2Bytes": 36998,
+          "textDeltaOperations": 898,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 48823032,
+            "arrayBuffers": 524101,
+            "total": 49347133
+          },
+          "editMedianMs": 4.60129999999981,
+          "editMaxMs": 10.54970000000003
+        },
+        {
+          "trial": 1,
+          "stage": "edit-1024",
+          "sharedBytes": 60636,
+          "sharedV2Bytes": 41862,
+          "textDeltaOperations": 1026,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 42896344,
+            "arrayBuffers": 550369,
+            "total": 43446713
+          },
+          "editMedianMs": 5.1064000000001215,
+          "editMaxMs": 10.158899999999903
+        },
+        {
+          "trial": 1,
+          "stage": "converged",
+          "sharedBytes": 60805,
+          "sharedV2Bytes": 42030,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 22531816,
+            "arrayBuffers": 614898,
+            "total": 23146714
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 1,
+          "stage": "all-undone",
+          "sharedBytes": 60810,
+          "sharedV2Bytes": 42035,
+          "textDeltaOperations": 4,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 40863136,
+            "arrayBuffers": 877265,
+            "total": 41740401
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 1,
+          "stage": "all-redone",
+          "sharedBytes": 118390,
+          "sharedV2Bytes": 77879,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 31494488,
+            "arrayBuffers": 1039558,
+            "total": 32534046
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        }
+      ],
+      "edits": 1024,
+      "undoMs": 883.6156999999998,
+      "redoMs": 978.3545999999997,
+      "documentSha256": "81a974639cac8c699ecbc88e4791ad9dba01d0605f1b8cc2fa5b4b871822cf0e",
+      "sharedSha256": "999667b96c02d4fc35b43e86b78aaea851ad0c2aa57ff85606b6a1e23d09f8ec",
+      "exactConvergence": true,
+      "authorOnlyFullUndoRedo": true,
+      "reopenMatches": true
+    },
+    {
+      "trial": 2,
+      "before": {
+        "heapUsed": 12666768,
+        "arrayBuffers": 197785,
+        "total": 12864553
+      },
+      "after": {
+        "heapUsed": 12826992,
+        "arrayBuffers": 197785,
+        "total": 13024777
+      },
+      "released": {
+        "left": true,
+        "right": true,
+        "leftDoc": true,
+        "rightDoc": true
+      },
+      "retainedDelta": 160224,
+      "rows": [
+        {
+          "trial": 2,
+          "stage": "seed",
+          "sharedBytes": 3058,
+          "sharedV2Bytes": 2944,
+          "textDeltaOperations": 2,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 13965000,
+            "arrayBuffers": 227105,
+            "total": 14192105
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 2,
+          "stage": "edit-128",
+          "sharedBytes": 9935,
+          "sharedV2Bytes": 7814,
+          "textDeltaOperations": 130,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 66772896,
+            "arrayBuffers": 261452,
+            "total": 67034348
+          },
+          "editMedianMs": 1.1567000000004555,
+          "editMaxMs": 9.1833000000006
+        },
+        {
+          "trial": 2,
+          "stage": "edit-256",
+          "sharedBytes": 16975,
+          "sharedV2Bytes": 12678,
+          "textDeltaOperations": 258,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 54655400,
+            "arrayBuffers": 308308,
+            "total": 54963708
+          },
+          "editMedianMs": 1.4179999999996653,
+          "editMaxMs": 5.9804000000003725
+        },
+        {
+          "trial": 2,
+          "stage": "edit-384",
+          "sharedBytes": 24156,
+          "sharedV2Bytes": 17542,
+          "textDeltaOperations": 386,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 48665544,
+            "arrayBuffers": 345105,
+            "total": 49010649
+          },
+          "editMedianMs": 2.216099999999642,
+          "editMaxMs": 4.723399999999856
+        },
+        {
+          "trial": 2,
+          "stage": "edit-512",
+          "sharedBytes": 31452,
+          "sharedV2Bytes": 22406,
+          "textDeltaOperations": 514,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 49342200,
+            "arrayBuffers": 404717,
+            "total": 49746917
+          },
+          "editMedianMs": 2.819999999999709,
+          "editMaxMs": 5.556599999999889
+        },
+        {
+          "trial": 2,
+          "stage": "edit-640",
+          "sharedBytes": 38748,
+          "sharedV2Bytes": 27270,
+          "textDeltaOperations": 642,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 59557720,
+            "arrayBuffers": 423565,
+            "total": 59981285
+          },
+          "editMedianMs": 3.746100000000297,
+          "editMaxMs": 7.418099999999868
+        },
+        {
+          "trial": 2,
+          "stage": "edit-768",
+          "sharedBytes": 46044,
+          "sharedV2Bytes": 32134,
+          "textDeltaOperations": 770,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 74344328,
+            "arrayBuffers": 449933,
+            "total": 74794261
+          },
+          "editMedianMs": 4.252599999999802,
+          "editMaxMs": 8.694299999999203
+        },
+        {
+          "trial": 2,
+          "stage": "edit-896",
+          "sharedBytes": 53340,
+          "sharedV2Bytes": 36998,
+          "textDeltaOperations": 898,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 31105432,
+            "arrayBuffers": 589537,
+            "total": 31694969
+          },
+          "editMedianMs": 4.819600000000719,
+          "editMaxMs": 13.185999999999694
+        },
+        {
+          "trial": 2,
+          "stage": "edit-1024",
+          "sharedBytes": 60636,
+          "sharedV2Bytes": 41862,
+          "textDeltaOperations": 1026,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 68236136,
+            "arrayBuffers": 616105,
+            "total": 68852241
+          },
+          "editMedianMs": 5.4950000000008,
+          "editMaxMs": 16.618800000000192
+        },
+        {
+          "trial": 2,
+          "stage": "converged",
+          "sharedBytes": 60805,
+          "sharedV2Bytes": 42030,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 81610376,
+            "arrayBuffers": 1141818,
+            "total": 82752194
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 2,
+          "stage": "all-undone",
+          "sharedBytes": 60810,
+          "sharedV2Bytes": 42035,
+          "textDeltaOperations": 4,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 70504832,
+            "arrayBuffers": 942801,
+            "total": 71447633
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 2,
+          "stage": "all-redone",
+          "sharedBytes": 118390,
+          "sharedV2Bytes": 77879,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 66083416,
+            "arrayBuffers": 1335294,
+            "total": 67418710
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        }
+      ],
+      "edits": 1024,
+      "undoMs": 895.9508000000005,
+      "redoMs": 1144.2808999999997,
+      "documentSha256": "81a974639cac8c699ecbc88e4791ad9dba01d0605f1b8cc2fa5b4b871822cf0e",
+      "sharedSha256": "999667b96c02d4fc35b43e86b78aaea851ad0c2aa57ff85606b6a1e23d09f8ec",
+      "exactConvergence": true,
+      "authorOnlyFullUndoRedo": true,
+      "reopenMatches": true
+    },
+    {
+      "trial": 3,
+      "before": {
+        "heapUsed": 12827672,
+        "arrayBuffers": 197785,
+        "total": 13025457
+      },
+      "after": {
+        "heapUsed": 12901448,
+        "arrayBuffers": 197785,
+        "total": 13099233
+      },
+      "released": {
+        "left": true,
+        "right": true,
+        "leftDoc": true,
+        "rightDoc": true
+      },
+      "retainedDelta": 73776,
+      "rows": [
+        {
+          "trial": 3,
+          "stage": "seed",
+          "sharedBytes": 3058,
+          "sharedV2Bytes": 2944,
+          "textDeltaOperations": 2,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 14108272,
+            "arrayBuffers": 227105,
+            "total": 14335377
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 3,
+          "stage": "edit-128",
+          "sharedBytes": 9935,
+          "sharedV2Bytes": 7814,
+          "textDeltaOperations": 130,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 64914056,
+            "arrayBuffers": 261352,
+            "total": 65175408
+          },
+          "editMedianMs": 1.4315999999998894,
+          "editMaxMs": 9.003200000001016
+        },
+        {
+          "trial": 3,
+          "stage": "edit-256",
+          "sharedBytes": 16975,
+          "sharedV2Bytes": 12678,
+          "textDeltaOperations": 258,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 51829608,
+            "arrayBuffers": 308208,
+            "total": 52137816
+          },
+          "editMedianMs": 1.4508000000005268,
+          "editMaxMs": 4.7620999999999185
+        },
+        {
+          "trial": 3,
+          "stage": "edit-384",
+          "sharedBytes": 24156,
+          "sharedV2Bytes": 17542,
+          "textDeltaOperations": 386,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 44280240,
+            "arrayBuffers": 345005,
+            "total": 44625245
+          },
+          "editMedianMs": 2.0010999999994965,
+          "editMaxMs": 3.2260999999998603
+        },
+        {
+          "trial": 3,
+          "stage": "edit-512",
+          "sharedBytes": 31452,
+          "sharedV2Bytes": 22406,
+          "textDeltaOperations": 514,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 44491928,
+            "arrayBuffers": 404617,
+            "total": 44896545
+          },
+          "editMedianMs": 2.6485999999986234,
+          "editMaxMs": 4.789700000001176
+        },
+        {
+          "trial": 3,
+          "stage": "edit-640",
+          "sharedBytes": 38748,
+          "sharedV2Bytes": 27270,
+          "textDeltaOperations": 642,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 54573720,
+            "arrayBuffers": 423465,
+            "total": 54997185
+          },
+          "editMedianMs": 3.4917999999997846,
+          "editMaxMs": 8.150799999999435
+        },
+        {
+          "trial": 3,
+          "stage": "edit-768",
+          "sharedBytes": 46044,
+          "sharedV2Bytes": 32134,
+          "textDeltaOperations": 770,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 69007760,
+            "arrayBuffers": 449933,
+            "total": 69457693
+          },
+          "editMedianMs": 4.241799999999785,
+          "editMaxMs": 9.259099999999307
+        },
+        {
+          "trial": 3,
+          "stage": "edit-896",
+          "sharedBytes": 53340,
+          "sharedV2Bytes": 36998,
+          "textDeltaOperations": 898,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 25514064,
+            "arrayBuffers": 523901,
+            "total": 26037965
+          },
+          "editMedianMs": 4.637800000000425,
+          "editMaxMs": 11.315899999999601
+        },
+        {
+          "trial": 3,
+          "stage": "edit-1024",
+          "sharedBytes": 60636,
+          "sharedV2Bytes": 41862,
+          "textDeltaOperations": 1026,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 62796736,
+            "arrayBuffers": 550469,
+            "total": 63347205
+          },
+          "editMedianMs": 5.3562999999994645,
+          "editMaxMs": 16.42280000000028
+        },
+        {
+          "trial": 3,
+          "stage": "converged",
+          "sharedBytes": 60805,
+          "sharedV2Bytes": 42030,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 75680128,
+            "arrayBuffers": 1076182,
+            "total": 76756310
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 3,
+          "stage": "all-undone",
+          "sharedBytes": 60810,
+          "sharedV2Bytes": 42035,
+          "textDeltaOperations": 4,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 63922112,
+            "arrayBuffers": 877265,
+            "total": 64799377
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        },
+        {
+          "trial": 3,
+          "stage": "all-redone",
+          "sharedBytes": 118390,
+          "sharedV2Bytes": 77879,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          },
+          "memory": {
+            "heapUsed": 60696880,
+            "arrayBuffers": 1269758,
+            "total": 61966638
+          },
+          "editMedianMs": null,
+          "editMaxMs": null
+        }
+      ],
+      "edits": 1024,
+      "undoMs": 858.4267999999993,
+      "redoMs": 936.1821999999993,
+      "documentSha256": "81a974639cac8c699ecbc88e4791ad9dba01d0605f1b8cc2fa5b4b871822cf0e",
+      "sharedSha256": "999667b96c02d4fc35b43e86b78aaea851ad0c2aa57ff85606b6a1e23d09f8ec",
+      "exactConvergence": true,
+      "authorOnlyFullUndoRedo": true,
+      "reopenMatches": true
+    }
+  ],
+  "note": "Exploratory sessions, not a memory/latency acceptance gate. Timed insertions exclude metrics/JSON assertions. Full author undo/redo with one offline peer edit and reopen. V2 is measured only; no transport setting is changed."
+}

@@ -24,6 +24,40 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}
 
+test('replaces marked text and deletes natively while preserving peer edits through keyboard history',async({page},testInfo)=>{
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
+ const content={type:'doc',attrs:{audit:'native-replacement'},content:[
+  {type:'paragraph',content:[{type:'text',text:'Alpha',marks:[{type:'strong'}]}]},
+  {type:'paragraph',content:[{type:'text',text:'Beta'}]},
+  {type:'image_super',attrs:{src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}},
+ ]};
+ await page.locator('#open').setInputFiles({name:'marked-review.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(content))});
+ await expect(page.locator('#message')).toHaveText('Reopened portable document');const initial=(await snapshot(page))[0].json;
+ const expected=(first:string,second:string)=>{const value=structuredClone(initial);value.content[0].content[0].text=first;value.content[1].content[0].text=second;return value;};
+ await page.getByRole('button',{name:'Pause sync',exact:true}).click();await caret(page,'Ada',1);
+ await page.keyboard.press('Shift+ArrowRight');await page.keyboard.press('Shift+ArrowRight');
+ await expect.poll(()=>page.evaluate(()=>document.getSelection()?.toString())).toBe('lp');await page.keyboard.type('X');
+ await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(expected('AXha','Beta'));
+ await page.keyboard.press('Backspace');await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(expected('Aha','Beta'));
+ await page.locator('#grace').getByText('Beta',{exact:true}).click();await page.keyboard.press('End');await page.keyboard.type('Z');
+ await page.getByRole('button',{name:'Synchronize',exact:true}).click();
+ await expect.poll(async()=> (await snapshot(page)).map((peer:any)=>peer.json)).toEqual([expected('Aha','BetaZ'),expected('Aha','BetaZ')]);
+ await page.locator('#ada').getByText('Aha',{exact:true}).click();await page.keyboard.press('End');
+ await page.keyboard.press('Control+z');await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(expected('AXha','BetaZ'));
+ await page.keyboard.press('Control+z');await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(expected('Alpha','BetaZ'));
+ await page.keyboard.press('Control+Shift+z');await page.keyboard.press('Control+Shift+z');
+ await expect.poll(async()=> (await snapshot(page))[1].json).toEqual(expected('Aha','BetaZ'));
+ await page.locator('#grace').getByText('BetaZ',{exact:true}).click();await page.keyboard.press('End');await page.keyboard.press('Control+z');
+ await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(expected('Aha','Beta'));
+ await page.keyboard.press('Control+Shift+z');
+ await expect.poll(async()=> (await snapshot(page)).map((peer:any)=>({json:peer.json,status:peer.status}))).toEqual([
+  {json:expected('Aha','BetaZ'),status:'connected'},{json:expected('Aha','BetaZ'),status:'connected'},
+ ]);
+ await expect(page.locator('#ada strong')).toHaveText('Aha');await expect(page.locator('#grace strong')).toHaveText('Aha');
+ await page.screenshot({path:testInfo.outputPath('native-replacement-history.png'),fullPage:true});
+ await testInfo.attach('native-replacement-result',{body:JSON.stringify(await snapshot(page)),contentType:'application/json'});expect(errors).toEqual([]);
+});
+
 test('edits a thousand-paragraph shared document with native input and independent author history',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
  const content={type:'doc',attrs:{audit:{source:'bulk-seed',paragraphs:1000}},content:[

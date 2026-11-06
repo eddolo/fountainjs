@@ -1,5 +1,18 @@
 # FountainJS opportunity roadmap
 
+Direct retained text edits (2026-11-06, local): validated single-step native
+edits in one complete, nonempty uniform partition avoid rebuilding unchanged
+group bookkeeping; pending shared writes and complex cases use the general
+path. Full fresh projection and observer checks remain. All 253 candidate
+cases, 36 compiled Node journeys, 28 compatibility journeys and 99 recorded
+browser journeys pass. The fresh full source run has 4,399 passes and the same
+six default failures across 289 files. Controlled 10,000-paragraph median editing
+improves from 375.76 to 264.57 ms, still too expensive for adoption; initialization
+is mixed and encoded state stays identical. Full projection, history growth,
+compaction, migration, three size overruns and complete fresh CI remain open.
+No default switch, acceptance-limit increase or publication.
+[Audit and evidence](YJS_RETAINED_DIRECT_TEXT_AUDIT.md).
+
 Operation-local node reads (2026-11-06, local): one node-pool iteration and
 per-projection placement reuse reduce duplicate reads without a cross-call
 cache. All 239 candidate cases, 36 compiled Node journeys, 28 old/new

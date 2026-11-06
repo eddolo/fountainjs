@@ -1,5 +1,17 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
+Local direct-text follow-up, 2026-11-06: eligible native text steps write their
+existing partition after full preflight, retaining general reconciliation for
+pending shared writes and complex edits. All 253 candidate cases, 36 compiled
+Node journeys, 28 compatibility journeys and 99 recorded browser journeys pass,
+including native marked replacement/deletion and both authors' keyboard history.
+The fresh complete source run has 4,399 passes and six unchanged default failures
+across 289 files. Controlled 10,000-paragraph editing improves from 375.76 to
+264.57 ms with identical shared state, still too expensive for adoption.
+Full projection, history growth, compaction, migration, three size overruns and
+complete fresh CI remain open. COLLAB-01 stays Partial; no release/parity claim.
+[Audit](YJS_RETAINED_DIRECT_TEXT_AUDIT.md).
+
 Local node-read follow-up, 2026-11-06: operation-local records/placements avoid
 duplicate reads without retaining a cache between projections. All 239 candidate
 cases, 36 compiled Node journeys, 28 compatibility journeys and 96 recorded

@@ -4,6 +4,9 @@ import * as Y from 'yjs';
 import { CoreExtension, EditorState, MathExtension, ReplaceDocumentStep, Selection, composeExtensions, createEditor, createHistoryPlugin, defineExtension, moveBlock, setMark, splitBlock, toggleList, toggleQuote, undo, redo,
   type NodeJSON, type Transaction } from '../src';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
+import { ReplaceTextStep } from '../src/core/transaction/replace-text-step';
+import { StepMap, textPointToPosition } from '../src/core/transaction/mapping';
+import { getNodeAtPath } from '../src/core/transaction/path';
 
 const factory = (prefix: string) => { let index = 0; return () => `${prefix}-${index++}`; };
 const source: NodeJSON = { type: 'doc', attrs: { audit: { keep: true } }, content: [
@@ -38,6 +41,79 @@ function peers(content = source, reverseIDs = false) {
     else { Y.applyUpdate(left.doc, b, 'peer'); Y.applyUpdate(doc, a, 'peer'); }
   }, destroy: () => { left.destroy(); editor.destroy(); store.destroy(); doc.destroy(); } };
 }
+
+it.each([
+  { name: 'prefix insertion', from: 0, to: 0, text: 'X' },
+  { name: 'suffix insertion', from: 5, to: 5, text: 'X' },
+  { name: 'partial deletion', from: 1, to: 3, text: '' },
+  { name: 'partial replacement', from: 1, to: 3, text: 'Ω' },
+  { name: 'same-text replacement', from: 1, to: 3, text: 'lp' },
+  { name: 'literal Unicode', from: 2, to: 2, text: '👩‍💻e\u0301\u200B' },
+  { name: 'full replacement', from: 0, to: 5, text: 'Beta' },
+  { name: 'first typing', initial: '', from: 0, to: 0, text: 'X' },
+  { name: 'emptying a leaf', from: 0, to: 5, text: '' },
+  { name: 'first mixed-mark fragment', mixed: true, from: 0, to: 0, text: 'X' },
+  { name: 'second mixed-mark fragment', mixed: true, second: true, from: 1, to: 2, text: 'X' },
+  { name: 'declared whole-leaf replacement map', fullMap: true, from: 1, to: 3, text: 'X' },
+])('matches general shared state and author history for $name', row => {
+  const content: NodeJSON = { ...source, content: [{ ...source.content![0], attrs: { owner: 'Ada' }, content: row.mixed ? [
+    { type: 'text', text: 'A' }, { type: 'text', text: 'lpha', marks: [{ type: 'strong' }] },
+  ] : [{ type: 'text', text: row.initial ?? 'Alpha', attrs: { literal: { keep: ['β', null] } }, marks: [{ type: 'strong' }] }] }, source.content![1]] };
+  const direct = fixture(content), general = fixture(content), path = [0, row.second ? 1 : 0];
+  class DeclaredTextStep extends ReplaceTextStep {
+    override getMap(document: Parameters<ReplaceTextStep['apply']>[0]) {
+      return row.fullMap ? new StepMap([textPointToPosition(document, this.path, 0), getNodeAtPath(document, this.path).nodeSize,
+        getNodeAtPath(document, this.path).nodeSize - (this.to - this.from) + this.text.length]) : super.getMap(document);
+    }
+  }
+  class GeneralTextStep extends DeclaredTextStep { override apply(document: Parameters<ReplaceTextStep['apply']>[0]) { return super.apply(document); } }
+  const histories = [direct, general].map(pair => new Y.UndoManager([...pair.store.scope], { captureTimeout: 0 }));
+  try {
+    const initial = Y.encodeStateAsUpdate(direct.doc);
+    const first = direct.editor.createTransaction().step(new DeclaredTextStep(path, row.from, row.to, row.text));
+    const second = general.editor.createTransaction().step(new GeneralTextStep(path, row.from, row.to, row.text));
+    expect(direct.store.apply(first).toJSON()).toEqual(first.doc.toJSON()); expect(general.store.apply(second).toJSON()).toEqual(second.doc.toJSON());
+    expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(Y.encodeStateAsUpdate(general.doc));
+    if (row.name === 'same-text replacement') {
+      expect(first.steps).toHaveLength(0); expect(second.steps).toHaveLength(0);
+      expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(initial);
+      for (const history of histories) { expect(history.undoStack).toHaveLength(0); expect(history.redoStack).toHaveLength(0); expect(history.undo()).toBeNull(); }
+      return;
+    }
+    for (const history of histories) expect(history.undo()).toBeTruthy();
+    expect(direct.store.read().toJSON()).toEqual(direct.editor.getJSON()); expect(general.store.read().toJSON()).toEqual(general.editor.getJSON());
+    expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(Y.encodeStateAsUpdate(general.doc));
+    for (const history of histories) expect(history.redo()).toBeTruthy();
+    expect(direct.store.read().toJSON()).toEqual(first.doc.toJSON()); expect(general.store.read().toJSON()).toEqual(second.doc.toJSON());
+    expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(Y.encodeStateAsUpdate(general.doc));
+  } finally { histories.forEach(history => history.destroy()); direct.destroy(); general.destroy(); }
+});
+
+it('preserves additional metadata intent from a custom text transformation', () => {
+  const pair = fixture();
+  class AnnotatedTextStep extends ReplaceTextStep {
+    override apply(document: Parameters<ReplaceTextStep['apply']>[0]) { return super.apply(document).withAttrs({ ...document.attrs, annotated: true }); }
+  }
+  try {
+    const transaction = pair.editor.createTransaction().step(new AnnotatedTextStep([0, 0], 2, 2, 'X'));
+    expect(pair.store.apply(transaction).toJSON()).toEqual(transaction.doc.toJSON()); expect(pair.store.read().attrs.annotated).toBe(true);
+  } finally { pair.destroy(); }
+});
+
+it('matches general reconciliation when shared layout was changed earlier in the outer transaction', () => {
+  const direct = fixture(), general = fixture();
+  class GeneralTextStep extends ReplaceTextStep { override apply(document: Parameters<ReplaceTextStep['apply']>[0]) { return super.apply(document); } }
+  try {
+    for (const [pair, StepType] of [[direct, ReplaceTextStep], [general, GeneralTextStep]] as const) pair.doc.transact(() => {
+      const field = pair.store.nodes.project().root.content[0].content[0].id;
+      pair.store.nodes.setTextLayout(field, { field, empty: true });
+      const transaction = pair.editor.createTransaction().step(new StepType([0, 0], 2, 2, 'X'));
+      expect(pair.store.apply(transaction).toJSON()).toEqual(transaction.doc.toJSON());
+      expect(pair.store.nodes.project().root.content[0].content[0].textLayout).toEqual({ field, empty: false });
+    });
+    expect(Y.encodeStateAsUpdate(direct.doc)).toEqual(Y.encodeStateAsUpdate(general.doc));
+  } finally { direct.destroy(); general.destroy(); }
+});
 
 it.each([{ path: [] }, { path: [0] }])('does not rewrite reordered portable metadata or create history at path $path', ({ path }) => {
   const value = { first: ['keep', null, 1], second: { x: 1, y: 2 } }, changed = { second: { y: 2, x: 1 }, first: ['keep', null, 1] };

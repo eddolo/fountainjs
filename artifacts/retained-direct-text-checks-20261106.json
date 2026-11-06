@@ -1,0 +1,86 @@
+[
+  {
+    "exitCode": 0,
+    "check": "typecheck",
+    "expectedExitCode": 0,
+    "seconds": 18.1657023,
+    "log": "artifacts/retained-direct-text-typecheck-20261106.log"
+  },
+  {
+    "exitCode": 1,
+    "check": "focused",
+    "expectedExitCode": 1,
+    "seconds": 7.7850497,
+    "log": "artifacts/retained-direct-text-focused-20261106.log"
+  },
+  {
+    "exitCode": 1,
+    "check": "full-source",
+    "expectedExitCode": 1,
+    "seconds": 253.2805466,
+    "log": "artifacts/retained-direct-text-full-source-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "build",
+    "expectedExitCode": 0,
+    "seconds": 12.5319594,
+    "log": "artifacts/retained-direct-text-build-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:api",
+    "expectedExitCode": 0,
+    "seconds": 0.7759373,
+    "log": "artifacts/retained-direct-text-test-api-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:headless",
+    "expectedExitCode": 0,
+    "seconds": 1.1365463,
+    "log": "artifacts/retained-direct-text-test-headless-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:package",
+    "expectedExitCode": 0,
+    "seconds": 4.5821758,
+    "log": "artifacts/retained-direct-text-test-package-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:server-runtimes",
+    "expectedExitCode": 0,
+    "seconds": 2.782923,
+    "log": "artifacts/retained-direct-text-test-server-runtimes-20261106.log"
+  },
+  {
+    "exitCode": 1,
+    "check": "test:budget",
+    "expectedExitCode": 1,
+    "seconds": 0.6430238,
+    "log": "artifacts/retained-direct-text-test-budget-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "test:performance",
+    "expectedExitCode": 0,
+    "seconds": 15.5623637,
+    "log": "artifacts/retained-direct-text-test-performance-20261106.log"
+  },
+  {
+    "exitCode": 0,
+    "check": "browser",
+    "expectedExitCode": 0,
+    "seconds": 256.1906678,
+    "log": "artifacts/retained-direct-text-browser-20261106.log"
+  },
+  {
+    "check": "manual-types",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "log": "artifacts/retained-direct-text-manual-types-20261106.log",
+    "seconds": 17.6605727
+  }
+]

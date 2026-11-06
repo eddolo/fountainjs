@@ -1,0 +1,1282 @@
+{
+  "baselineCommit": "9d7793dc",
+  "runtime": "v24.22.1",
+  "summary": [
+    {
+      "blocks": 1000,
+      "documentsAndEncodedBytesIdentical": true,
+      "before": {
+        "medianInitializationMs": 113.73099999999977,
+        "medianOfEditMediansMs": 38.08690000000024,
+        "maximumTimedEditMs": 94.5075,
+        "sharedBytes": 1834539,
+        "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+        "trials": [
+          {
+            "trial": 1,
+            "blocks": 1000,
+            "retained": true,
+            "initializationMs": 263.3976,
+            "p50Ms": 62.6706999999999,
+            "p95Ms": 94.5075,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+            "sharedBytes": 1834539,
+            "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 4094,
+              "sumReportedMapEntries": 113002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 6000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 12000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 2000,
+                  "reportedEntries": 8000
+                },
+                "fountain:splits": {
+                  "calls": 2000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 2,
+            "blocks": 1000,
+            "retained": true,
+            "initializationMs": 113.73099999999977,
+            "p50Ms": 38.08690000000024,
+            "p95Ms": 49.60500000000138,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+            "sharedBytes": 1834539,
+            "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 4094,
+              "sumReportedMapEntries": 113002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 6000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 12000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 2000,
+                  "reportedEntries": 8000
+                },
+                "fountain:splits": {
+                  "calls": 2000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 3,
+            "blocks": 1000,
+            "retained": true,
+            "initializationMs": 111.24409999999989,
+            "p50Ms": 36.218400000001566,
+            "p95Ms": 52.290499999999156,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+            "sharedBytes": 1834539,
+            "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 4094,
+              "sumReportedMapEntries": 113002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 29000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 6000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 12000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 2000,
+                  "reportedEntries": 8000
+                },
+                "fountain:splits": {
+                  "calls": 2000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "after": {
+        "medianInitializationMs": 123.73470000000088,
+        "medianOfEditMediansMs": 29.46769999999924,
+        "maximumTimedEditMs": 75.59879999999998,
+        "sharedBytes": 1834539,
+        "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+        "trials": [
+          {
+            "trial": 1,
+            "blocks": 1000,
+            "retained": true,
+            "initializationMs": 270.13109999999995,
+            "p50Ms": 57.678,
+            "p95Ms": 75.59879999999998,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+            "sharedBytes": 1834539,
+            "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 4021,
+              "sumReportedMapEntries": 32002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 2000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 4000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 2000,
+                  "reportedEntries": 8000
+                },
+                "fountain:splits": {
+                  "calls": 2000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 2,
+            "blocks": 1000,
+            "retained": true,
+            "initializationMs": 123.73470000000088,
+            "p50Ms": 29.46769999999924,
+            "p95Ms": 43.65990000000056,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+            "sharedBytes": 1834539,
+            "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 4021,
+              "sumReportedMapEntries": 32002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 2000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 4000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 2000,
+                  "reportedEntries": 8000
+                },
+                "fountain:splits": {
+                  "calls": 2000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 3,
+            "blocks": 1000,
+            "retained": true,
+            "initializationMs": 109.59180000000197,
+            "p50Ms": 27.705799999999726,
+            "p95Ms": 39.947299999999814,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+            "sharedBytes": 1834539,
+            "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 4021,
+              "sumReportedMapEntries": 32002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 6000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 2000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 4000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 2000,
+                  "reportedEntries": 8000
+                },
+                "fountain:splits": {
+                  "calls": 2000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "blocks": 5000,
+      "documentsAndEncodedBytesIdentical": true,
+      "before": {
+        "medianInitializationMs": 637.5644999999968,
+        "medianOfEditMediansMs": 189.71509999999762,
+        "maximumTimedEditMs": 272.2660999999971,
+        "sharedBytes": 9309325,
+        "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+        "trials": [
+          {
+            "trial": 1,
+            "blocks": 5000,
+            "retained": true,
+            "initializationMs": 764.0585999999998,
+            "p50Ms": 208.59259999999995,
+            "p95Ms": 260.52959999999985,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+            "sharedBytes": 9309325,
+            "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 20094,
+              "sumReportedMapEntries": 565002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 30000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 10000,
+                  "reportedEntries": 40000
+                },
+                "fountain:splits": {
+                  "calls": 10000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 2,
+            "blocks": 5000,
+            "retained": true,
+            "initializationMs": 548.6516999999985,
+            "p50Ms": 185.4877000000015,
+            "p95Ms": 243.66139999999905,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+            "sharedBytes": 9309325,
+            "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 20094,
+              "sumReportedMapEntries": 565002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 30000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 10000,
+                  "reportedEntries": 40000
+                },
+                "fountain:splits": {
+                  "calls": 10000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 3,
+            "blocks": 5000,
+            "retained": true,
+            "initializationMs": 637.5644999999968,
+            "p50Ms": 189.71509999999762,
+            "p95Ms": 272.2660999999971,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+            "sharedBytes": 9309325,
+            "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 20094,
+              "sumReportedMapEntries": 565002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 145000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 30000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 10000,
+                  "reportedEntries": 40000
+                },
+                "fountain:splits": {
+                  "calls": 10000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "after": {
+        "medianInitializationMs": 520.391599999999,
+        "medianOfEditMediansMs": 132.39750000000004,
+        "maximumTimedEditMs": 216.6340999999993,
+        "sharedBytes": 9309325,
+        "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+        "trials": [
+          {
+            "trial": 1,
+            "blocks": 5000,
+            "retained": true,
+            "initializationMs": 817.0487999999998,
+            "p50Ms": 132.39750000000004,
+            "p95Ms": 163.38260000000037,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+            "sharedBytes": 9309325,
+            "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 20021,
+              "sumReportedMapEntries": 160002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 10000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 20000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 10000,
+                  "reportedEntries": 40000
+                },
+                "fountain:splits": {
+                  "calls": 10000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 2,
+            "blocks": 5000,
+            "retained": true,
+            "initializationMs": 520.391599999999,
+            "p50Ms": 126.83500000000095,
+            "p95Ms": 134.3101000000006,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+            "sharedBytes": 9309325,
+            "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 20021,
+              "sumReportedMapEntries": 160002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 10000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 20000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 10000,
+                  "reportedEntries": 40000
+                },
+                "fountain:splits": {
+                  "calls": 10000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 3,
+            "blocks": 5000,
+            "retained": true,
+            "initializationMs": 519.1435999999994,
+            "p50Ms": 134.5625,
+            "p95Ms": 216.6340999999993,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+            "sharedBytes": 9309325,
+            "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 20021,
+              "sumReportedMapEntries": 160002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 30000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 10000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 20000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 10000,
+                  "reportedEntries": 40000
+                },
+                "fountain:splits": {
+                  "calls": 10000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "blocks": 10000,
+      "documentsAndEncodedBytesIdentical": true,
+      "before": {
+        "medianInitializationMs": 1166.0011999999988,
+        "medianOfEditMediansMs": 375.7574999999997,
+        "maximumTimedEditMs": 581.4768999999978,
+        "sharedBytes": 18670921,
+        "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+        "trials": [
+          {
+            "trial": 1,
+            "blocks": 10000,
+            "retained": true,
+            "initializationMs": 1180.2374,
+            "p50Ms": 375.2927000000009,
+            "p95Ms": 548.7195000000011,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+            "sharedBytes": 18670921,
+            "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 40094,
+              "sumReportedMapEntries": 1130002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 120000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 20000,
+                  "reportedEntries": 80000
+                },
+                "fountain:splits": {
+                  "calls": 20000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 2,
+            "blocks": 10000,
+            "retained": true,
+            "initializationMs": 1166.0011999999988,
+            "p50Ms": 407.33450000000084,
+            "p95Ms": 505.91739999999845,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+            "sharedBytes": 18670921,
+            "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 40094,
+              "sumReportedMapEntries": 1130002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 120000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 20000,
+                  "reportedEntries": 80000
+                },
+                "fountain:splits": {
+                  "calls": 20000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 3,
+            "blocks": 10000,
+            "retained": true,
+            "initializationMs": 999.866399999999,
+            "p50Ms": 375.7574999999997,
+            "p95Ms": 581.4768999999978,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+            "sharedBytes": 18670921,
+            "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 40094,
+              "sumReportedMapEntries": 1130002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-text:texts": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-text:styles": {
+                  "calls": 29,
+                  "reportedEntries": 290000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 3,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 3,
+                  "reportedEntries": 120000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 20000,
+                  "reportedEntries": 80000
+                },
+                "fountain:splits": {
+                  "calls": 20000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "after": {
+        "medianInitializationMs": 1236.6601999999984,
+        "medianOfEditMediansMs": 264.5742000000009,
+        "maximumTimedEditMs": 377.7462999999989,
+        "sharedBytes": 18670921,
+        "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+        "trials": [
+          {
+            "trial": 1,
+            "blocks": 10000,
+            "retained": true,
+            "initializationMs": 1424.5873000000001,
+            "p50Ms": 270.252199999999,
+            "p95Ms": 296.1876999999995,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+            "sharedBytes": 18670921,
+            "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 40021,
+              "sumReportedMapEntries": 320002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 20000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 40000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 20000,
+                  "reportedEntries": 80000
+                },
+                "fountain:splits": {
+                  "calls": 20000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 2,
+            "blocks": 10000,
+            "retained": true,
+            "initializationMs": 1236.6601999999984,
+            "p50Ms": 264.5742000000009,
+            "p95Ms": 377.7462999999989,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+            "sharedBytes": 18670921,
+            "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 40021,
+              "sumReportedMapEntries": 320002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 20000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 40000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 20000,
+                  "reportedEntries": 80000
+                },
+                "fountain:splits": {
+                  "calls": 20000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          },
+          {
+            "trial": 3,
+            "blocks": 10000,
+            "retained": true,
+            "initializationMs": 1180.306199999999,
+            "p50Ms": 263.59590000000026,
+            "p95Ms": 312.7573999999986,
+            "edits": 12,
+            "documentMatchesPlain": true,
+            "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+            "sharedBytes": 18670921,
+            "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+            "diagnosticExtraEdit": {
+              "sizeGetterCalls": 40021,
+              "sumReportedMapEntries": 320002,
+              "byContainer": {
+                "fountain-text:owners": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-text:texts": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-text:styles": {
+                  "calls": 6,
+                  "reportedEntries": 60000
+                },
+                "fountain-nodes:nodes": {
+                  "calls": 1,
+                  "reportedEntries": 20000
+                },
+                "fountain-nodes:identities": {
+                  "calls": 1,
+                  "reportedEntries": 40000
+                },
+                "fountain-nodes:root": {
+                  "calls": 1,
+                  "reportedEntries": 2
+                },
+                "nested map": {
+                  "calls": 20000,
+                  "reportedEntries": 80000
+                },
+                "fountain:splits": {
+                  "calls": 20000,
+                  "reportedEntries": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "readCounts": {
+    "before": {
+      "runtime": "v24.22.1",
+      "directory": "retained-direct-text-baseline-20261106-build",
+      "blocks": 5000,
+      "counts": {
+        "nodePool": 15001,
+        "placements": 20000
+      },
+      "documentMatchesPlain": true,
+      "documentSha256": "c9b4996ec3940331b8be10500481eecb4a0bc911fa1d0bc5623ed0dec9aa9ddc",
+      "sharedBytes": 9307981,
+      "sharedSha256": "11ca236869d4d80a89939c2e91592350eddd3b52372713a306c5becc61f58b9c",
+      "note": "One actual candidate edit, instrumenting only top-level node/placement Map.get calls. Instrumentation restored before assertions. Diagnostic counts, not latency/acceptance limits."
+    },
+    "after": {
+      "runtime": "v24.22.1",
+      "directory": "cursor-overlay-build-20261106",
+      "blocks": 5000,
+      "counts": {
+        "nodePool": 0,
+        "placements": 10000
+      },
+      "documentMatchesPlain": true,
+      "documentSha256": "c9b4996ec3940331b8be10500481eecb4a0bc911fa1d0bc5623ed0dec9aa9ddc",
+      "sharedBytes": 9307981,
+      "sharedSha256": "11ca236869d4d80a89939c2e91592350eddd3b52372713a306c5becc61f58b9c",
+      "note": "One actual candidate edit, instrumenting only top-level node/placement Map.get calls. Instrumentation restored before assertions. Diagnostic counts, not latency/acceptance limits."
+    }
+  },
+  "sessions": {
+    "trialsPerBuild": 3,
+    "editsPerTrial": 1024,
+    "documentsAndEncodedBytesIdentical": true,
+    "allEditorsAndDocumentsReleased": true,
+    "stages": [
+      {
+        "stage": "seed",
+        "sharedBytes": 3058,
+        "sharedV2Bytes": 2944,
+        "textDeltaOperations": 2,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-128",
+        "sharedBytes": 9935,
+        "sharedV2Bytes": 7814,
+        "textDeltaOperations": 130,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-256",
+        "sharedBytes": 16975,
+        "sharedV2Bytes": 12678,
+        "textDeltaOperations": 258,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-384",
+        "sharedBytes": 24156,
+        "sharedV2Bytes": 17542,
+        "textDeltaOperations": 386,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-512",
+        "sharedBytes": 31452,
+        "sharedV2Bytes": 22406,
+        "textDeltaOperations": 514,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-640",
+        "sharedBytes": 38748,
+        "sharedV2Bytes": 27270,
+        "textDeltaOperations": 642,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-768",
+        "sharedBytes": 46044,
+        "sharedV2Bytes": 32134,
+        "textDeltaOperations": 770,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-896",
+        "sharedBytes": 53340,
+        "sharedV2Bytes": 36998,
+        "textDeltaOperations": 898,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "edit-1024",
+        "sharedBytes": 60636,
+        "sharedV2Bytes": 41862,
+        "textDeltaOperations": 1026,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 1,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "converged",
+        "sharedBytes": 60805,
+        "sharedV2Bytes": 42030,
+        "textDeltaOperations": 1028,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 2,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "all-undone",
+        "sharedBytes": 60810,
+        "sharedV2Bytes": 42035,
+        "textDeltaOperations": 4,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 2,
+          "fountain:splits": 0
+        }
+      },
+      {
+        "stage": "all-redone",
+        "sharedBytes": 118390,
+        "sharedV2Bytes": 77879,
+        "textDeltaOperations": 1028,
+        "containers": {
+          "fountain": 1,
+          "fountain:document": 2,
+          "fountain-nodes:metadata": 1,
+          "fountain-nodes:nodes": 3,
+          "fountain-nodes:placements": 3,
+          "fountain-nodes:identities": 6,
+          "fountain-nodes:root": 2,
+          "fountain-nodes:root-children": 2,
+          "fountain-text:metadata": 1,
+          "fountain-text:texts": 1,
+          "fountain-text:owners": 1,
+          "fountain-text:styles": 2,
+          "fountain:splits": 0
+        }
+      }
+    ]
+  },
+  "interopJourneys": 28,
+  "interpretation": "Single-step native text edits within one complete nonempty uniformly formatted partition can write that partition directly after full document/map preflight. Pending shared writes, custom apply implementations or different mapping intent, mixed/incomplete partitions, empty/full replacement and multi-step operations retain the general path. Final full fresh projection, exact shape comparison and observer checks remain. No cross-call/shared cache. Diagnostic timings, not adoption gates; full projection and history growth remain. No default switch, compaction, migration, version/limit increase or publication."
+}

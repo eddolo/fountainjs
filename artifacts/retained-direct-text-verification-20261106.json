@@ -1,0 +1,3081 @@
+{
+  "date": "2026-11-06",
+  "baselineCommit": "9d7793dcfd1663b3ba92cb7d158dc1593b05116d",
+  "goalComplete": false,
+  "publication": "Local only; no GitHub/npm/website update.",
+  "defaultAdapterSwitched": false,
+  "source": [
+    {
+      "path": "artifacts/run-retained-direct-text-probes-20261106.ps1",
+      "sha256": "fd8217e44fb9a7ee0d6794b65d41426d1c4a90455599ba1032d5bda68684d122"
+    },
+    {
+      "path": "artifacts/measure-retained-node-reads-20261106.mjs",
+      "sha256": "e66bd8d29d3051d837bbc76d3c5ce014f12ed5d6cc14b04b8c2fa82352761bb3"
+    },
+    {
+      "path": "src/yjs/retained-document.ts",
+      "sha256": "5f3592c24efb9261d370fa95c8e694a76cb734d2d3bbba266c9b350868320989"
+    },
+    {
+      "path": "tests/yjs-retained-document.test.ts",
+      "sha256": "b07570aa5253d1e18e38fba05f90e1594448feff0791e8edad847eae15d29d38"
+    },
+    {
+      "path": "artifacts/profile-retained-edit-20261106.mjs",
+      "sha256": "1dc14b17e054ec60a1777c79357bca098e8f1f08cc145aae5a5031b1cd12bde2"
+    },
+    {
+      "path": "artifacts/retained-seed-interop-20261106.mjs",
+      "sha256": "63fb8be55eddf1006313e05234cd39ec05bb1764a86f30b18aef6b70c1e13f30"
+    },
+    {
+      "path": "artifacts/retained-session-20261106.mjs",
+      "sha256": "8b87f404b36eeb83abd7a4fe3d5f2ce7f2792273cbaa6d3b27b2ef50355a735e"
+    },
+    {
+      "path": "artifacts/build-retained-baseline.mjs",
+      "sha256": "e7bcd0b5d7ebcfe980ef290f4988d87498b21c953ae04c4bc1917953ab3b28a7"
+    },
+    {
+      "path": "artifacts/build-cursor-overlay-canary-20261106.mjs",
+      "sha256": "558719e99f881a9319c62ced4f94042e0f5c2b9358970c5a77d7aedd85244b9f"
+    },
+    {
+      "path": "artifacts/retained-adapter-node-20261106.mjs",
+      "sha256": "4cde16c11531812846fc14335aa9b1cb2bf0750f39f5ff21bc43b7511e1d9f05"
+    },
+    {
+      "path": "artifacts/retained-read-controlled-cost-20261106.mjs",
+      "sha256": "e6c9d9ec2a4f48db9cf0c6fbfd0f765c9dde57eabe0b0ed108ffdfbe89aeb31a"
+    },
+    {
+      "path": "artifacts/compare-retained-direct-text-20261106.mjs",
+      "sha256": "2c512236003b70097ff5a43d9d1c2f4d7be88b70e04c60d85a25fd7ab826676c"
+    },
+    {
+      "path": "artifacts/curate-retained-direct-text-20261106.mjs",
+      "sha256": "8461a3398427582eb514abd82ad912b613d279592c053c98d43425f5bd2cf982"
+    },
+    {
+      "path": "artifacts/verify-retained-direct-text-20261106.mjs",
+      "sha256": "89912bd4007a507a0c63dc13dbbd5b6b6ac59cb66f0e1a1e7f821011ac470cba"
+    },
+    {
+      "path": "artifacts/run-retained-direct-text-checks-20261106.ps1",
+      "sha256": "5a52394ac5e2a696c9af039d5235621506e24b4b2eccb6c8290ca4c50cdd901b"
+    },
+    {
+      "path": "artifacts/retained-direct-text-browser-20261106.config.ts",
+      "sha256": "9a78a5f16be783b85227ba5bf7dc0d7fb0db2b2e03809d7ef5f1cc56e8fb4c2e"
+    },
+    {
+      "path": "artifacts/cursor-navigation-browser-20261106.config.ts",
+      "sha256": "3be3404d4d3f638b10d46bb527126c33fa141416dfbd2ff2dcf8e7dfd477f872"
+    },
+    {
+      "path": "artifacts/retained-adapter-browser-20261106.config.ts",
+      "sha256": "fd09005e88c91ccb6c323fa192fbc49faf204d6617736fd426977ad523abd8de"
+    },
+    {
+      "path": "tests/manual/retained-adapter-real.spec.ts",
+      "sha256": "7916275b31b2838defca2d091fc3cc393fdffe92e037c46ac0652c4cdfeab5f1"
+    },
+    {
+      "path": "tests/manual/cursor-native-reference.spec.ts",
+      "sha256": "3ef12b5e8ed7c349cf83cf4aca492a5a96d71c76d368b4a4f2cd15be376cedbf"
+    },
+    {
+      "path": "artifacts/retained-adapter-fixture-20261106.html",
+      "sha256": "1870b451a3417257429a1052813398abd1134c748118785cc19aa782f86c4d39"
+    }
+  ],
+  "focused": {
+    "path": "artifacts/retained-direct-text-focused-20261106.json",
+    "sha256": "9b79e32c4fef69de3360a6c961c56ba9ac1654a7bfae2f6763d163751fc19c91",
+    "total": 275,
+    "passed": 269,
+    "failed": 6,
+    "candidatePassed": 253,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ],
+    "fullSourceSuiteRerun": true
+  },
+  "browser": {
+    "path": "artifacts/retained-direct-text-browser-20261106.json",
+    "sha256": "7128046ee502a4513778757a76443e454990a72948e1ee3eea2669df58e8726d",
+    "distinctPassed": 99,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "workers": 1,
+    "perProject": {
+      "chromium": 33,
+      "firefox": 33,
+      "webkit": 33
+    },
+    "compiledRuntimeVerifiedInEveryJourney": true,
+    "currentSourceMapModules": 190,
+    "recordings": 99,
+    "evidence": [
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/.last-run.json",
+        "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/narrow-label.png",
+        "sha256": "fb6e6433fe1b82df8dde3887909bcf85f80bf4d6262626853efba57b41a8cae2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/top-edge-label.png",
+        "sha256": "2a33a19f7b30af3cdc083ead9a6323f45a63f151df94faa72be43d1662f7ffc6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/trace.zip",
+        "sha256": "acc58ba7aadb307d9f5316e0b8b41b771f32b8afe86258e9f1f13ba40c713a88"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--chromium/video.webm",
+        "sha256": "c4541af0407b1a81350b256cf3d18fa65147b48401b68f96b0b3346dd0a73611"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/narrow-label.png",
+        "sha256": "4860d33da955575e1b5d2ba75151337e2242b466b4069d2b7c93345efd058f92"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/top-edge-label.png",
+        "sha256": "c04bd4ad66c22bc03458560a17996136588e792cbc3e52f346664c980f69c5e9"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/trace.zip",
+        "sha256": "b1b0ab2d52ab53cee5b7065efbdbb26496f1d4e23513b59078996d1771fa41a6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--firefox/video.webm",
+        "sha256": "afa64834c53e04d016f86f26052313e7c16d63c94665b86d474789a1c0326603"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/narrow-label.png",
+        "sha256": "5069a08d4293b2a8c6f041f7f8ac0c4d01ee024abad521ba946ccfeb8752eb42"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/top-edge-label.png",
+        "sha256": "322037d8e3ce110c966bb2b6c77a5e0fa6a0ca8a3eac16e04b1b290ebbc3b1d6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/trace.zip",
+        "sha256": "9f07dd99508355d222ee8d82c3b3e7f0e928d50e86482f27d91f6a433de687b0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-21aa8-ut-moving-their-anchor-ltr--webkit/video.webm",
+        "sha256": "65c4f1be169d6fc75cbb7d11c92765ebd2d2beed15b8e32db5bc685e6f70f237"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/narrow-label.png",
+        "sha256": "5bfef94fd0d59554fed67521e06f3b55a2b98a64707a3b7af91d899810aba086"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/top-edge-label.png",
+        "sha256": "fa9f6385dcc032384dd068e6f1cb2808a49510cd3ba29f3e99e709db208369d6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/trace.zip",
+        "sha256": "9104305d535eb1fecfd467de7ac28c739e3cd9fb531513465af2ca2e998c30bf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--chromium/video.webm",
+        "sha256": "e06c53a8d8c400c7a578f65fbf6dc6738935881718d5f07496623cf34af48a73"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/narrow-label.png",
+        "sha256": "10d9534f32dda53ad560b6f41ef1c587fb0c75c4a79f79c6588c2bbfa5bbe807"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/top-edge-label.png",
+        "sha256": "d3240e76aeffd13d0b8ed750380cc14f8ae029bab53934e680683335970faeb6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/trace.zip",
+        "sha256": "2f86ef3ca43213f5dc62e503ffd83c4cf217c519182c3fae3669895a071b6836"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--firefox/video.webm",
+        "sha256": "3cc5b32cbb36e039708e34bd2dac383cd10595bd14a583a7339090cdc5501d78"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/narrow-label.png",
+        "sha256": "7dd31b9c8979e1e71847fb5cea5de6759e7ac0147ffc8c4bf6dba19f32578939"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/top-edge-label.png",
+        "sha256": "967ea30d376118c65f21778984902e8a496e1610263f82c255af8bd1640b42cb"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/trace.zip",
+        "sha256": "233191acbba852be4a174084000425923b02e1e185b2ba75e963ee04d9ace3b4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ke-5b414-ut-moving-their-anchor-rtl--webkit/video.webm",
+        "sha256": "b3e068d383787724f3df3e1075164f4ad5f21a63cb1331f4d75ffeb1e5067eaf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/comparison.png",
+        "sha256": "88f789a87242d448747f4178ea0c421739aa232b70af26190acef7c94461c894"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/trace.zip",
+        "sha256": "36734f5ecbeaac5ec79c295764eedbff8694360dd9302352af5cf95bf10e41eb"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-chromium/video.webm",
+        "sha256": "02619932437cb4908d3ef412e3b189ae95be46b84e07a940e75403b3a3e5090a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/comparison.png",
+        "sha256": "3464e0626071786a56c78220dbe39a0ccd6700089b5af03c9c10a4b8c8b2d15b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/trace.zip",
+        "sha256": "ecefb29d3dd3a3e59c2cd97287623be32e2674bbb9bf860a64684bb4f2aea80a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-firefox/video.webm",
+        "sha256": "ff955a416fce29dc7df3c33081eedcbd8b342c3e609680ba81a8e21c0f7d76be"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/comparison.png",
+        "sha256": "932e21a476a3f6dbcda5e72c6289687839d587f12174d07655d412ba6d51eef7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/trace.zip",
+        "sha256": "437099cab717e7d6ee6e6f95144175c43fcb10bc206b014ff35b6ff4ca3764d2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-1143c-avigation-and-editing-empty-webkit/video.webm",
+        "sha256": "1d5410d9d8f057cb4fd3d68d1a2fcba33c44d4da5bd552a74d695fa31723b108"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/comparison.png",
+        "sha256": "7e77314d719abfa9d56e2ef501f3ec0fdacc305dff814fe24c54aa57a001ce8c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/trace.zip",
+        "sha256": "f3d4656af74ee0415497623d7905b865e98b29a3500c2f54f8a4b2cb00e17624"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-chromium/video.webm",
+        "sha256": "01b354b1fb308f75cffc5c1175ac8cea470ca45778712dd9f687571eb8690124"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/comparison.png",
+        "sha256": "3b5ca6ec58e5e36c30034427d777b5386033d69c3a3b6406147c1ed70330e039"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/trace.zip",
+        "sha256": "5298e2813d3b152ebec678578f56185c7795791fbdca2bfccbceb81f988406f4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-firefox/video.webm",
+        "sha256": "4039c13f2a160b7eb859b8684277450d30c7e3b1c1f58951b01ae4211cd451fd"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/comparison.png",
+        "sha256": "191e881e9376dcc3ef4d3152e4bddf5fee131be04f3a1628e4f02f9e00951fa7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/trace.zip",
+        "sha256": "4eec9e13ae598ee987779ccb28855a95fb3cb4f9101491aca33d818d387dc296"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-608ef--navigation-and-editing-rtl-webkit/video.webm",
+        "sha256": "fb06a347ccd573da0e23c1723a6363a9f3dc38b83c80b56305f06298c62cc133"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/comparison.png",
+        "sha256": "a43e2c6d91a3d0174601f26c57258dc7b225fb57ff9016d5d558ebca4bb3ab73"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/trace.zip",
+        "sha256": "779e978e924c53a2b595ff0bb0a99123746db7f810bf509d0257905e644011cf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-chromium/video.webm",
+        "sha256": "07d659b574e6052b6876fc6dd63f6fd1b0dd2ba104e88901ae17f327ebb5975a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/comparison.png",
+        "sha256": "f23fd216d7afc23f361187b4e0baa20bdd8aea942910529a685dc42a1a36ba44"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/trace.zip",
+        "sha256": "cbc1ff69cdd982e8e822b0efd7651002ac7c196ced4c99cbf8746af2658dd277"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-firefox/video.webm",
+        "sha256": "5fec431a4d2f2004a670f5d15641a82b77ac3b6ae5206cccc4aedb05ab2a1369"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/comparison.png",
+        "sha256": "a73b4900d9752d8e554606ab119fd417320f3cfe476107a5d617342a753eebf7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/trace.zip",
+        "sha256": "6d0285097552accf977ee29b997eb5dbc184b1c130e67d3fb6983b0f8d3b984c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-74890-ting-combining-inside-range-webkit/video.webm",
+        "sha256": "08d15c0a349c817e3fe22445fb1b069f4904c135abe2d2302a046323d7cac0d2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/comparison.png",
+        "sha256": "75ce571099ad3431b90df887ca5579a3de5cfe3e4d5f03748e4ef0f34bd4c9ff"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/trace.zip",
+        "sha256": "8bd30b493f38658808b319c73ed535a855e59ad538cf61c81acab53086295385"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-chromium/video.webm",
+        "sha256": "3df98ff042eebe3a96e689561950fcf7feea21277729ffd39d7eb3762b916b69"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/comparison.png",
+        "sha256": "bca57f8379f5e447320cbd7507d64afc98f1204e8ed09b180ac685a3fc7249d6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/trace.zip",
+        "sha256": "8fab914a178f8f70aeabed843ca4ddee64fd1dec32bdaba5c36c6a8fbcd1cc86"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-firefox/video.webm",
+        "sha256": "4bf082caf60e7b2e2f4131ce5523c7b0840b4e12587c39be81d5f6e8d6aae9f6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/comparison.png",
+        "sha256": "ee4468567dbe445a0b132ee311881b0f556dac9e52ada78c3269d2b1e3200e03"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/trace.zip",
+        "sha256": "8b00191e44702955354ab95c88e4e213679464386c55e3eb0c58ad79b5c30ddf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-84d40-nd-editing-combining-inside-webkit/video.webm",
+        "sha256": "a1f08e34fa69c0c1173d6c0865d6973b759a744d0149a72ba30cc92b1dde83c0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/comparison.png",
+        "sha256": "cce674362533a444ae8b6efb24bd7df8228dc38381e8646fbf2dccec8fc634d5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/trace.zip",
+        "sha256": "e3ab9fbf59a2aee015a375fe4b6f44a7fccb8e1352339f08189337f6f59e6182"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-chromium/video.webm",
+        "sha256": "294035140d30f142289f42f79f90b05adae1b67589145ee6b47b11e838a37c5a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/comparison.png",
+        "sha256": "c171a6cadc7ab61b92df9ece860c4ab05310b0e81eab347dd73d899aa3b8e3e6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/trace.zip",
+        "sha256": "e37c10b9836a31c991299cb8332d3a8f061e88969049d962f590142af15a0c8c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-firefox/video.webm",
+        "sha256": "aa047fde0174ca15bc6e1361a305c2e50f28e1052d620de4f2e315a94946dbfd"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/comparison.png",
+        "sha256": "41539bdd00badb2af9c7aad00c73089a8161598b946af45f014b187c0744d99f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/trace.zip",
+        "sha256": "b3a7cdc1f29c83af12017f65f0da9f32f739ab69dfef7dbc0c53dcdc2102b361"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-95a2a-avigation-and-editing-emoji-webkit/video.webm",
+        "sha256": "5d63c38a3b34aa288bba06ad56e667a09636c341213361a0d637c8be0c19990e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/comparison.png",
+        "sha256": "2ed666519e4b094600d48fb67e6de6e46769a5e6542a79d96de78b4268377161"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/trace.zip",
+        "sha256": "71fb4ffd193eaa4e9d6b1ffe6548e07fd958cca4b40b80494377d394d7921d8b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-chromium/video.webm",
+        "sha256": "2083f48e31f17669fc3a0f8ee6f99846e78ea97ff7518dbee51537a0afdd8ff1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/comparison.png",
+        "sha256": "52d8fe519a96f3b0749208903955569a09ece4060eeb93b84450bcf56d869bbe"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/trace.zip",
+        "sha256": "ec26427f6f3631be230be854cb5bfd6e36e8f4b63e3f68496ac0143c2fdaafaf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-firefox/video.webm",
+        "sha256": "06cf04da80294322ebb93531837ff94a481fa62bf48f4a56a1a2f9e3dae6b17d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/comparison.png",
+        "sha256": "6c9578a63b41bc1263f0c93475770107ce73e206b0bfc825410431e8590e1676"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/trace.zip",
+        "sha256": "88bd0c53c0b01fed109c50716734c0074911a580fc9a61b8f1cf7b0d6176f4bf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-a0580-tion-and-editing-zwj-inside-webkit/video.webm",
+        "sha256": "16b6ccf67811a5a7abb95362b723508e1b2d9ba766c9c4c2948b797c056686ab"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/comparison.png",
+        "sha256": "64aa55f72b972c331553011b4600e129084389de6b0f6b2807d419fc51d2fa72"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/trace.zip",
+        "sha256": "9254e859bdd0ddd134169f3b931746e3dc39cfac820d3027cfba35fa2c1c711b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-chromium/video.webm",
+        "sha256": "397a91598a9293d96211ca691ad843cf6e22e7476cbbfe11196cf1b90bef8c94"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/comparison.png",
+        "sha256": "5509f5101db5d9e42de81b0fd2438e85da41ea62b05b07ef89f3c1b77527e01a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/trace.zip",
+        "sha256": "84e8a6d55f03450626b4a77a22a1f1703fe22481c76911a752d8875ef57c561e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-firefox/video.webm",
+        "sha256": "f3f19e990a9721675b1f9611660aa378524f1a9b456ada2579fbef7d9e366a46"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/comparison.png",
+        "sha256": "092e15d1b03acee6df3af19ab8afe7bc3547569697fdab9897a05ad9499b356c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/trace.zip",
+        "sha256": "37eeae009bc4f443daa2e2f0e7cde104b43723b9f5aa5eac45c7f11dfccf4d8d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-c1608-nd-editing-zwj-inside-range-webkit/video.webm",
+        "sha256": "108351b31b8e2af932bd654efb3d2b50826b0f85f1c659b37d33ec843ca8b46b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/comparison.png",
+        "sha256": "856b16ce0a5495b5964c3ac4804119eb25ec33201cfc5f21ff6c30e2cb0a9a02"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/trace.zip",
+        "sha256": "51eeb5c40fa6d51f2368901e97df8ef0c70c149123d2e3d31196d2181c8fb9d9"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-chromium/video.webm",
+        "sha256": "23de8463713f68b5dfd3bd54160dd17f6294e375a0b0821bd3518d30fc0c3ffa"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/comparison.png",
+        "sha256": "531754a2a0443a9528e570030b05e8c49645474d2f7ba7a48fc5f545597810a8"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/trace.zip",
+        "sha256": "93e497743cb505ed7a3d82ec36e7542b5f233035992a934bea527b498fc41ea4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-firefox/video.webm",
+        "sha256": "286bdca2212eb98938ecc46288793864fd1c03a6f2554ceb73fd42d5813d4587"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/comparison.png",
+        "sha256": "839c39ade03329cd598ea65b99f9bea70b080cd2db9d39d00155566bd87c71a2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/trace.zip",
+        "sha256": "d857f246deae3da52d0eb5ea3020b1eff4b0ade132635f2fe6aa71bd24bae8fb"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-ca3b0-nd-editing-surrogate-inside-webkit/video.webm",
+        "sha256": "fa64655227bd5fc28e1c27f28d66c83ef0a593ce8e8535294a481f85489894a2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/comparison.png",
+        "sha256": "539da382bd1c2cbe9c9e52ab85b0980676c10400060bb2f998f163c26fb8e0ac"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/trace.zip",
+        "sha256": "a9e37ea61a0e13bb418e01589fa05843dd4fd3bcf809aae72acd3e9a7462b0d5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-chromium/video.webm",
+        "sha256": "92fbcc23ed54038b4e05bbe68f266216fd055e2390c24fe9bd6ae5da2931afc1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/comparison.png",
+        "sha256": "bee295a641c2c1fd030030d2e61a8559a3ec364e471219c3d58c328157aa9723"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/trace.zip",
+        "sha256": "dab6e9c5abedd3c839daa8062fc0212fcd20b71cf299f48c0696d859cc69fdcc"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-firefox/video.webm",
+        "sha256": "ab45b551c33c3d4879d2e806dfaa6d5b086fb7d9770face0a323de9509489776"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/comparison.png",
+        "sha256": "e3b216ce79fbf1c6b5e047179def0081035600124e7027456276841e7fa965e0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/trace.zip",
+        "sha256": "d5c87aabcc8327f5336e55a3d05cb6b57891168598cd2cecd89653fb2213280d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d13f8-igation-and-editing-english-webkit/video.webm",
+        "sha256": "c2ea03ea3a4a4db5c2ab6cd6a1ed732167557bddb4375f4092a3d728697993dd"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/comparison.png",
+        "sha256": "33d477c3ce1b3b965401b1fcbf7811e6f634e31be8437c470fec76e009a4a398"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/trace.zip",
+        "sha256": "8afba514dbce774353d574a09d95a297200edc83c3dab5a24e5c624502744b54"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-chromium/video.webm",
+        "sha256": "87c689c0de6ad5b2d4a3023e782ecb1c3a3f7fa589d8a7ac11de5c8e4aa01cc0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/comparison.png",
+        "sha256": "d2f996c2a668c658e3f08c9745aacce6f30c531bd5ff4167a40edd535db07b53"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/trace.zip",
+        "sha256": "d7b314efae4fa544ad4cc029eb92dec08a17e3fc23abc6a7bf52c39e765e1d63"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-firefox/video.webm",
+        "sha256": "c36a9892bba38708af34c6f2733e22c4ebda717eec3ff555662727878b2d34c7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/comparison.png",
+        "sha256": "0f72de607926eb54de7f77be3106dbb0ca86d62ae261ec7812c784cdfe50e2bb"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/trace.zip",
+        "sha256": "fa6db3c01b869d9b487f42fde1942d31725857c0dd0cf4beea9ff8080cbd8079"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-d69f5-n-and-editing-english-range-webkit/video.webm",
+        "sha256": "06f285c1dc849abce9f4a8c43cdde78ae45fe087eea8584101b9694ef5968478"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/comparison.png",
+        "sha256": "40c3a9a04ee01641070fd530ef5a216e8bebfbce2bd8cfa5e3b1ee71939667be"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/trace.zip",
+        "sha256": "b082b8be084fa1606cdda666c409bcd49159fc75d8b1c23378cf27685161502b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-chromium/video.webm",
+        "sha256": "d8e477c07f2482672d517b32201eea6b2c18102af27d653858afee9d427fb7e3"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/comparison.png",
+        "sha256": "51b4d782f608ebc376dce5c3d754dcd767899687fee252b11c48ed1e2eabe9b7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/trace.zip",
+        "sha256": "c77dee3696c92864c2fdea3665cf5679ec376fce0390947f24f66bec10a6d851"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-firefox/video.webm",
+        "sha256": "e171f4fb41954d1d9bfbfcb7cf757c8962dba2de4c38095d1b35957f15cc189b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/comparison.png",
+        "sha256": "8bd82fb2bdc2c99bca68aca29aeb890b7d9fd6e65cca9a49f762afdbca74e883"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/trace.zip",
+        "sha256": "9b2ec9f7f8b03276a75e7bdaadfbf2cff3d1a27dff8f48113e83c91096ddfae1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-dacc9-avigation-and-editing-mixed-webkit/video.webm",
+        "sha256": "21186408d2501502b107b0ab21821b75c917ca257e40a089d397a217936ea5df"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/comparison.png",
+        "sha256": "c930718e059f28d17a47e5797b989fa7ec361955404b341cfb0daac0a2378e84"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/trace.zip",
+        "sha256": "be7e61914bea495be50ca2a952f10e3a284b2083ba042b91ddff93fca60766a4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-chromium/video.webm",
+        "sha256": "48e41518bc23a28f2750ebaf26db8982b0d75006deb80e37794c8d779443a084"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/comparison.png",
+        "sha256": "14288cf6eec3112cc9b45775cab2d46066121d6220c42d3281e8a66426279d33"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/trace.zip",
+        "sha256": "6d065834856c98f8cfc02f003434a467439a329123e771a762cb4b4e240b434b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-firefox/video.webm",
+        "sha256": "7618b8ed18a4b462d812365ae69fd70d9a0a4796809427fef0fea76f9779a779"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/comparison.png",
+        "sha256": "a94f789f4ac7e5dfc496b969175b32801b113bd679ae52ab6039f77ec523e473"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/trace.zip",
+        "sha256": "92ba1f54c2a2f7589e625154389650d3c3f741c0a9b01e5d08cd5bd214be63c2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-e167c-ting-surrogate-inside-range-webkit/video.webm",
+        "sha256": "7e8ca802bb4420061876cac6315e587986032ba7c9568c2c6a293730f894495c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/comparison.png",
+        "sha256": "fb0d38560129db1a382e78a25c4814915f5bcd09c0e56b7930650fc9596797ea"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/trace.zip",
+        "sha256": "20b288c0d877390e89376fb958743df9c875afbff6160b5e448ac8f436b370ca"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-chromium/video.webm",
+        "sha256": "ff86345fa61986ec60b5925e4503c0a52e207dc0c09f95764267d77cddf463a6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/comparison.png",
+        "sha256": "56f9f7b1a6909beb0686b036042a63562a8dde2f1aef95575d50771d2d3b758f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/trace.zip",
+        "sha256": "194fca8308214c4b463346ea10ca1df12b1d98c9ea1a8ebe666c97ea2fb232e0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-firefox/video.webm",
+        "sha256": "784f1c3b810dfa6e1047f0f0eb39381aedaccc584d19c748a7219a68a0ccbbcc"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/comparison.png",
+        "sha256": "27cdb8c567a1980dc82ccb1fef2311d2a77539df5e0cdd0345fe9202040c4ff7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/trace.zip",
+        "sha256": "685460b31cd2324e934503ef1fc24214d7950324ba21e2877f08ca223251e9de"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-ma-f8d5b-navigation-and-editing-code-webkit/video.webm",
+        "sha256": "cdfa6d1f013bedf2300ec373aae97abc5332507edbfbcab6a1365f3936862246"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/restored-overlay.png",
+        "sha256": "9550c5a93463a086ec4c877aec218a05362b65e2f9ed0a1e539543830055c2c0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/scrolled-overlay.png",
+        "sha256": "d73c215c13d395f56d35fb484a1d5ff06d0fb8c3116f7ce68ab352b8b8190391"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/trace.zip",
+        "sha256": "8c27d786664da7d0d8f005c62a70370983e5093b5893d6601699dc238eb4ee0a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-chromium/video.webm",
+        "sha256": "71327073a012106f537b0a6df113d230472dd47eb8d631b0f97c6fb98b76f82c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/restored-overlay.png",
+        "sha256": "baefe5e3f0258a21c7539e6d56bfef1efcb96144de748742d094cd3f9b8f9be3"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/scrolled-overlay.png",
+        "sha256": "3e146ca57ff5d098cf15c5502676f1864532b41093a49e94625e5a9b8a00376b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/trace.zip",
+        "sha256": "598f73b202a351367e4cf41ea4ac9214e95bb27e0f4ead010f41206ec164380d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-firefox/video.webm",
+        "sha256": "dfb13263e4969c24722834830d769ef9e66e8d5cdccd15d77f3aaf42fc2658cf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/restored-overlay.png",
+        "sha256": "56b230371bb6772545060d03a48734069d38cbd39f9fe73a1774f7683ad2eebc"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/scrolled-overlay.png",
+        "sha256": "3b43d9b50ad1be352ddc9efb3c2ade08220c9d846d04b7ea8cf1a2b6fd31a789"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/trace.zip",
+        "sha256": "8a1a9e8575ac563d464284c6ee70a437e587fa4ead7e3aa6e5145831a1ec6e9f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-pa-9e5b1-unting-text-or-taking-focus-webkit/video.webm",
+        "sha256": "e15f20b25a5df4e03229d603abc871fe35e09c0a7b492dca36c1c9fe9d729e97"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/anchor.png",
+        "sha256": "fbf62163b9087e3af7f4465837b751d3adc23f6dab369c0f877f8af5fcada867"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/trace.zip",
+        "sha256": "8269587775ca0e6c46bf03628fdfb041eb5eff14d57227f5fcff77aeda49ce9f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-chromium/video.webm",
+        "sha256": "8e0f32af32c06b194bbf3d9770fd4feddeda72b8e8725e5447079e7a73cd6d79"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/anchor.png",
+        "sha256": "12847b526f714c84fc602a5117a9d6a502475c5ce7afe05bdf938bb9edca6241"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/trace.zip",
+        "sha256": "a41188dee2fc4c13892637dc0b7c4f52655911e0a1896545a19d628de73c5fc9"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-firefox/video.webm",
+        "sha256": "28c582eb8406dd08446a8314cf6fac1dcb692285c093f624f4edc4830983f90a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/anchor.png",
+        "sha256": "1a95a5440054e0adab2a7a5a8c38fb86ebfe862e5d3b187a3b295cdcf583c4cc"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/trace.zip",
+        "sha256": "a1e8bc4b5801a3b0d13d15f930c93163864ac1c1fa054de714c56d637997119e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-4a031-mounted-atomic-image-anchor-webkit/video.webm",
+        "sha256": "48e86470063b8afe8dddd5ba1e841e8b8c6a6dc44dc6028410c25afa9ebe1e45"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/anchor.png",
+        "sha256": "4d7327fe7276a37394a65e631f57754f8024dfbddbb2370e78134ea679598ba3"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/trace.zip",
+        "sha256": "65d551cb5cdeeb05cb6a89e09f321083605cac388ef9b8a3f918ab21b69ad773"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-chromium/video.webm",
+        "sha256": "f6ddbf142c835caa6ae5049198386afb9a9c0f56e6af4928db194d275ae30796"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/anchor.png",
+        "sha256": "01a3b2762cb0015982f1ee4e6873df8c9b2686af986c1ccccbc211df87a0329a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/trace.zip",
+        "sha256": "3efb8f35642f6da25395ed549a6910b4120d68725cccf963f91bb433a3e77bcc"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-firefox/video.webm",
+        "sha256": "b0cd800f08c4872c38987fa7bc4e5027051929d54cfeb0dc55b48bb93568a6d2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/anchor.png",
+        "sha256": "3c04d076619128c7e393e7ae0359560b7bc9eb5ba76741b6f6a7f26a06bd52e0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/trace.zip",
+        "sha256": "43cfd1cd0698ebbce4db405cfa222be61229133e1868cabe36d65a360d4d5571"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-97ba5--a-mounted-block-gap-anchor-webkit/video.webm",
+        "sha256": "33dfecabc549d346039742985eadfac32bb607171528f34985c3dcf0c07af265"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/anchor.png",
+        "sha256": "f6d4c922ef420a3d4914e140ddf3bb3fc9affffbb7db1303e3f1a35beb43b8bd"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/trace.zip",
+        "sha256": "d8e3406aa8961f9fa9c19f9b04335b97a300d65125c87e2124bfe0af3dbac9fa"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-chromium/video.webm",
+        "sha256": "3422700d5911593f21051b4cacbe86c134b9feb6816980d0bddf57b6f0d360ce"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/anchor.png",
+        "sha256": "f92a456739539cb5bdb201b4a42ec7029395ff4a27d5e36ba20467606cd63007"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/trace.zip",
+        "sha256": "506b2b15cae633fd01ffbdc252d5c4f4336a95c87ea28ba0f3fe3b6d7039b8e6"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-firefox/video.webm",
+        "sha256": "a876544ce4adc9952a6136d9aa92d3f3aed30870dbc99471363c11c746147a67"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/anchor.png",
+        "sha256": "ac85148954a84b178c30904b790d955103141bbe28106dc33469b9e2c6cc2f56"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/trace.zip",
+        "sha256": "7bb5400d7b798995266488ac56fd3a8bed9f7b6d540e7668a0ea1ad4682bd477"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-bc421-t-at-a-mounted-empty-anchor-webkit/video.webm",
+        "sha256": "8e0a230eb4dbf2eb7c3bd804cee7d9aa016898f1d3619fe3510c11911f1b2534"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/anchor.png",
+        "sha256": "47684e6941d8b1a3c973966121b9f51f3667ebf97847e74e5123415505fce858"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/trace.zip",
+        "sha256": "71ef2cf174fa38029fa9623cf3c691944e3bae0c4aae8a4ec5df3b9cfbde6623"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-chromium/video.webm",
+        "sha256": "b679ea411abc8930e783e4d5828eb45a6b06a32b9e0b6939ead4194d4536eca9"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/anchor.png",
+        "sha256": "96c1f916da191b9fd47bd9448b5017292bb3cd83d8082b257309a82ea8224b21"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/trace.zip",
+        "sha256": "eab2d08a2c9573c7f7be7437e1b2101ee7b2764784d28e03a41bee57839e384a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-firefox/video.webm",
+        "sha256": "b63eef2eee663d7acece2092e1ed85476b3cf60711b19554b31b21c84042a10f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/anchor.png",
+        "sha256": "a81c8f0ccfaa5236d9c3388884ee645a678d67ff2f6d1065c25ad55117543399"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/trace.zip",
+        "sha256": "bc1d30b6c025409c5f7bafa3aa224ff9312095fabcefb5b23b51b32445755504"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/cursor-native-reference-sh-f960c-t-at-a-mounted-table-anchor-webkit/video.webm",
+        "sha256": "d24389ae4fb9efecb52e41ba4df69fbe4c1708974f3c209b18ae62cd1ba4e0e5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/observer-continued-typing.png",
+        "sha256": "7886fb48de27aac12d0a134a9f7d28b7ba2580e89f0bc8d2ed80a51d72a570b8"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/trace.zip",
+        "sha256": "023054f9a8adee52f75a97355284959a374fd20c5147079095bbf317beed6551"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-chromium/video.webm",
+        "sha256": "bca507d7ce1439bd15561ebee112ad4aa8d6cf8dd33bceeb2d6bb8bab80800ae"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/observer-continued-typing.png",
+        "sha256": "c2b03f3f56409fdc2546a0fa4954b3eb083781e79850b8f5458c3d5a7714ddaf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/trace.zip",
+        "sha256": "cd1616ee531f21b0606636ae916afd25b42c01035aa782e7c261fe999747f27b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-firefox/video.webm",
+        "sha256": "47c47fd81026db5d3cdc0f66611e279d7b1f92310f2d8f5f192750bcacc5ded9"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/observer-continued-typing.png",
+        "sha256": "673a30dbd8155a9f9f4cee595786dd244d58ebc1f42446d7b1d0bffd3fe5d979"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/trace.zip",
+        "sha256": "8cf9778730aa9a8e4e81283ad10d2cc3378b78def08081a88100846b2ca1ee8c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-cont-91241-te-without-moving-the-caret-webkit/video.webm",
+        "sha256": "91bd625e4048d07cd7cc398690906823fe9763a623512fd443ba14fdd564b747"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-chromium/bulk-document-middle.png",
+        "sha256": "d713d7a75aeaec3a807790b5cf6bb0935f0ca145df4eb3b476920997114272bf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-chromium/trace.zip",
+        "sha256": "b472cb5f2b1ccc67f9f78a55e8696f2dfdec98a20c29b06191bee6c5373c6b61"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-chromium/video.webm",
+        "sha256": "daa6050117092ea00d79f04822072d04ed8733a20de92eb94c767c0db5f00708"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-firefox/bulk-document-middle.png",
+        "sha256": "7762ee729d4241961668b471490eafabfacaf277e18fc71bcaa6ba460ff3b34d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-firefox/trace.zip",
+        "sha256": "bf23eef224339370cdc3807c3d9936451e4c30952e2ce8474858f7d0b90d33cf"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-firefox/video.webm",
+        "sha256": "4b8f92907b8a90468f8259b11d1120e22d758e469f3c3d12cbe1e7cb7775f812"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-webkit/bulk-document-middle.png",
+        "sha256": "41b89d2fcd21fcca1b9dcf5e239f3a0ab221208e2e765d915e01a16a13add95f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-webkit/trace.zip",
+        "sha256": "b4f29fbde32f6be42cf20f1a4789ea0807069ff91c39a791f748bf780a762be0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-edit-06a69--independent-author-history-webkit/video.webm",
+        "sha256": "d552adc900eb2c2970af54a802b8bf453bff5ee1c7d978564d2dbfd738544bc8"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/backward-selection.png",
+        "sha256": "2da45cff164c35ad91096c5ce0d4394f01221136f3d677f3e7cb3b6831c5490f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/reopened.png",
+        "sha256": "eef5e175d2661c74400c8e1057c3497eb0282d042920fb75dd44926603d1c951"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/trace.zip",
+        "sha256": "a490d59afd66570eef399b4961fa90a80054f762f6560cb4fa72e622ecc94448"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-chromium/video.webm",
+        "sha256": "a5fd6751ffa5990100a27f28fdb571653292e6057b903158a890186610447132"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/backward-selection.png",
+        "sha256": "4e5347534807d82349de2f439cc88a3330cd2080256c67b3b6e19b89663a99ba"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/reopened.png",
+        "sha256": "cea4a8a24d886deb4629873e6bdb198eecc9761795e8f86bf14d9bde2a386c62"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/trace.zip",
+        "sha256": "34eff1627ee4953e19e228c2c66458d77aba5371ffe54ccb6e509d38a32e131c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-firefox/video.webm",
+        "sha256": "ad3720b55a17f242bb01f0c1ce64dafce35c1f31d32568b72f8672f54793cb9e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/backward-selection.png",
+        "sha256": "7257d152eb4d7a8d996070216ff557d62816f4caec8516fe9993473096c23f40"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/document.json",
+        "sha256": "36361f4de819e203767e799538ece2a95186517f93d27d3e2b532237b677b63c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/reopened.png",
+        "sha256": "c57b8bdcc8a0d656fd86a5aafcb0e03c8ed613c8a8cbc899dcb63e179eb5a42a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/trace.zip",
+        "sha256": "fe3491bf83019e2bb892692d9b870a03446d9182b51d7d76afc140b98b36a08c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-2190a-acement-download-and-reopen-webkit/video.webm",
+        "sha256": "5820199e504b666f5afd23eb79fd251c6b149b3ce40812dfbd026c2c65f70949"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/converged.png",
+        "sha256": "768c6f69a3bf65489e516808c8b11e15301f2eeb6f64bfdc36839fa7858cc2fd"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "1086b87c4fe2a88e96853db2e4dbe154520a5501038a4def8a629339cdd5885b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-chromium/video.webm",
+        "sha256": "b8225188deb4766f6a6c970e28c69c8cb2f817db89051b5c473b841d3c0ef41d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/converged.png",
+        "sha256": "acb69923a7d67cc1d171637d5689721541ca50eea17521e56883f87c9b32205a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "cd934685188b57a928fc0576ce96616dc16856a9b956724b226fc8de3287683a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-firefox/video.webm",
+        "sha256": "ece4b80256f2e3d97a94565c44f0005a47d7ba7c48c317969a82bcf2707e5435"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/converged.png",
+        "sha256": "64e09f2cbb3740ebdda7d8e557a63d75484993ec2dd2667d66b8f69b60203fa1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "a1adb7c987d9bfbf42ec358c10f26ac2b6088636792fd49dcad9e93392b1ec09"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-35785-s-Bold-author-undo-and-redo-webkit/video.webm",
+        "sha256": "a5aab3b477cbad4ba3605c0adc9718788f90e2c9af383dacd29ff5887224e962"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/converged.png",
+        "sha256": "80f6efbecc38ee901e1cb040e7a40622946a1855dfc5bce170c8a6c66c01ea99"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "318818ad1e6de53322e53213dd48be9aa71401c1b8461f3a51435bbcf68236a5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-chromium/video.webm",
+        "sha256": "6be880936f7e394eb0bcf3252129ee1942705c0f4f98a74ba4aea0c169635bc1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/converged.png",
+        "sha256": "4c4f430c9e86ff533242ed1a860d1ff8a707185c03054c9d816264d756a5ddc4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "1c7e1306c3ee083d75e8358bb28998002b297ae86bd99547c4f2b92e7c3d4296"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-firefox/video.webm",
+        "sha256": "c1f7571b6bb1536c93ca00bc4d4aba055c73d9cb2469b369b13396d93126a2d2"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/converged.png",
+        "sha256": "091e0c5b2207b8e972025f180334997f06ea351bdfe50885626d336ec77ee6d8"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "18d3b32ef0b811b787d411a67fd578785a27813ccdbfe402c3598697695e002e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-8a9e1-Bullet-author-undo-and-redo-webkit/video.webm",
+        "sha256": "dfc2026b530c8a751d9476e11954c26a31f5500db40529184dbf821771776b8a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/multi-paragraph-converged.png",
+        "sha256": "9b9a8a9abc0ee0f4d57b3f4d1db87fef5667690d24ee85fc4a01f059efbfc8d1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/trace.zip",
+        "sha256": "0da41b5c6d2a1d37e4a814212eb2b699beac3e907fb20d6d469d0cf4e8ab9182"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-chromium/video.webm",
+        "sha256": "cf02379da94b2b139b35d00f1002a4c3a55a6143c3881c679222c1af763c4941"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/multi-paragraph-converged.png",
+        "sha256": "b3c116bfe7e462e04af6b852170070c92378ab2f06b9588e3dc7e0df001be64f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/trace.zip",
+        "sha256": "083794af9a4308e2303c87221a8340d5b94ee85e34ee0376f63ffe419f1d7544"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-firefox/video.webm",
+        "sha256": "ce039b525849372cfc11fae7cb7a9e288f4651bacf7aab4e477d8674e2b23191"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/multi-paragraph-converged.png",
+        "sha256": "50981067d8a78308c05ace590b7fa3947bb7f78fba523ad926942c2adde7066a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/trace.zip",
+        "sha256": "c9371f770b582b6eba2d00c3bc88c97490f6831b9fdccd3359525e698c5fe69e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-b1ceb-ent-and-author-only-history-webkit/video.webm",
+        "sha256": "7dac87efc27753a9582b53926c445d08217470e2405d5800641cec4895dcc40c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/converged.png",
+        "sha256": "49a9a16e67f673d1c89cec362b944a7f11ddba11719d3baedbd080b10dff3a96"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "0a610221fe3e213f01b99a686ea5757f5ee57fa4323725b66c06705ecca6425e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-chromium/video.webm",
+        "sha256": "41b003e6e11005b3f8dc8734284af6b2357ad58b696ef3d328bec21bab84e076"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/converged.png",
+        "sha256": "4c7ab7cf586e4a0b6f545c0a4feee349f5f073600824f7ed3650411d9aff6bae"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "7309c3cbbbf8adaf9d80122e1f1f329a50adbb8099f77ecb21adc765e802b212"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-firefox/video.webm",
+        "sha256": "545d6fb6500dfa1fe5b5f190473675d54eabd079b62e0eff246a0f9504417684"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/converged.png",
+        "sha256": "683bcdbea966d39b42850b8cdc3036892dc8d414a16ba5a95978d7432bedb7d5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "cde1307740f552591bad32c38e931ebb3db875e2abe1050051c4135aaaba75d8"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-c4e69--Quote-author-undo-and-redo-webkit/video.webm",
+        "sha256": "ea23467296dafe9d68bd6195a28640edea5e957a01a3e4c4e092fa4117af8ff4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/observer-annotation.png",
+        "sha256": "af967eb0fe044441d5cd98ee526fa224af67f9d64f48b9036bca5bf68a1bdf83"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/trace.zip",
+        "sha256": "c69960dc20c4a3021c399b5c7e0e57c74fe9f2084edc76fe5029f6f2a61f1540"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-chromium/video.webm",
+        "sha256": "46a41191b178454c1f91111cc62b585aefd3f50080121bba51377690cfb21fa0"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/observer-annotation.png",
+        "sha256": "7fcaa945b05ac63e28e2bda35edf16508df025fe46dbc6b8263f6266e031963d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/trace.zip",
+        "sha256": "6c6b413163cbd0800bc208f93e8c6e1b496d8124eb46073970db479c76db4491"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-firefox/video.webm",
+        "sha256": "42ccbf7c57bb14c7e1e1104a7c411bd31939fbf4d95cbf8d9966b0a041cc757f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/observer-annotation.png",
+        "sha256": "b437390bfcfcacee31f71a9e5be9f909e9e14e6a988365438cc6b8ec734abefb"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/trace.zip",
+        "sha256": "f8d19b7e76e515559c41916c250e52b6d8d269b23adf2588c166986dc76e55aa"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-dc8fb-hronization-and-author-undo-webkit/video.webm",
+        "sha256": "cbc09094578c3400c3b53aba8dc7af4a7c39154c824475c01fb7e08f5675fd70"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/converged.png",
+        "sha256": "b28c038e6fef1a13b660228e29b8496f5ca8151111df22f688f6da26479d92fd"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "18cd98a89dc26277ae7c6fa648512794dec09b6f4315daabfb422dbddcb0b370"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-chromium/video.webm",
+        "sha256": "c704027f2d3365569d1a388ca25c889c87fea4c942d3d694e9f773c271fea3c8"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/converged.png",
+        "sha256": "75ee29dea0a2045e63215f202da82bf1d6ca9a0c41f7b51edcf1fc7deedc473c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "9c1693565d56d99ba960015911a8b1f22c64801d6579be39c32077513aff30a5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-firefox/video.webm",
+        "sha256": "6d38bfc34e6315ce5d2144b35f4a870fbb9961612e7e02e25a15b9947e9dccc3"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/converged.png",
+        "sha256": "2bb3d972b1e9c3cc856b21887e7f0fc33ce8af3cfef79988ec2d939e241d27b1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "77114f5d495c85b1293bff416d8298fa98debb900c631ddd89590d32fd5cc0e1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-e4cae-s-Task-author-undo-and-redo-webkit/video.webm",
+        "sha256": "3a9b1557c7a4dbfd83be6c252c734bc75efe3f1269b611de986f92b1295a4f40"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/converged.png",
+        "sha256": "202903c621aa214ccfdefe0f0e010a53e829ff62f011328e2b3f3380c071ae5e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "0a59b1cee22267fe2d4e687a11be2ac3ed2e948a580d85b9ebb679472bc2308f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-chromium/video.webm",
+        "sha256": "000300baebf2bb2da92b48d00d6aaec7b0b0d163e694f5f9580f30602e6b3907"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/converged.png",
+        "sha256": "52007f2f8d9b72c60e1cf76b1fb4d16ee69844717cc204c7ac873ceaa8191578"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "65a2a47f1f34165bb729e9a1636da9f6aec238a4e1fbc26aaeb576a3f079226e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-firefox/video.webm",
+        "sha256": "8167514ed8bae1de2a650dfffa672a510a8d07cae0ba163d99c75b981fa431af"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/converged.png",
+        "sha256": "f02359805e38a3b5447e490c59861ea328fac1f11f96a02fdf26f23903c84205"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "f4e701bc2ef37a1bf566b823cfbbacf01811953d4fbe43f0c89dddfa93dea91a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-ed48b--Enter-author-undo-and-redo-webkit/video.webm",
+        "sha256": "bb1156a267de7227be4a0d915c973837b225857450bd8f6cbc430bd06e092abe"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/converged.png",
+        "sha256": "70237e3f4120ac37018a444a27fe6fa54bbfe043d008dcc7daa26983bf4d6c6e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/trace.zip",
+        "sha256": "1dce8a1092994fc838868772ddcb7a65e99180db668690976be7c0d85ce4e41f"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-chromium/video.webm",
+        "sha256": "3f813971475f48be7181bde25e1a9b1e99ecb29bdc7333bb5a68172faf91c84a"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/converged.png",
+        "sha256": "b8791f9d6b88082e52f874d1689643160d9b53639a6634327b0ef6d7b2a3a3eb"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/trace.zip",
+        "sha256": "afec35f8e2916ca6282653391add09a9ccd86241cb8a87f0500a019e449a6c40"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-firefox/video.webm",
+        "sha256": "7fc4d406054474f0654bbcb241699812be94403115c0c47dae29bf499efc905e"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/converged.png",
+        "sha256": "3a522527d2ac382b1148de92dd98fb75562d201ab31548f68afc70d34339ea1d"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/trace.zip",
+        "sha256": "ccd35b241c6201a2d6255b154e14c3f8c1fb2fa039f0ba5058df038f7a80b155"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-nati-f68b5-rdered-author-undo-and-redo-webkit/video.webm",
+        "sha256": "5e4f475bdee126f46728808b2a8e8547debdfbefdb947a30c5bf165e0f8a6e49"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-chromium/native-replacement-history.png",
+        "sha256": "ccab24c6d400794e17d22070131c0a0c75244ccfbb21cc375a3765cd166f288c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-chromium/trace.zip",
+        "sha256": "de2517fdd6f3d64946675a82c1c8d445e91024bf2f362b56f612353ce584c8c5"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-chromium/video.webm",
+        "sha256": "89d7caf3ec8901efb5b1001c84b7a38268cc961ef54ff54dcc35df62b3fe049b"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-firefox/native-replacement-history.png",
+        "sha256": "949f4eb42ef33295692cd9603995c49e79efd76dc95d48dd10aea98fb9b64f10"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-firefox/trace.zip",
+        "sha256": "df5e7c4846f275a32d8a8123de4dd56c1113b5f7937258f6dc8e6a12c36527c3"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-firefox/video.webm",
+        "sha256": "a062aa7ed5cafdbafd42904abc1b064c02e780e5dea08db8ebddcd33144aaad1"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-webkit/native-replacement-history.png",
+        "sha256": "b27867e754d180b5da3473de2f9f3995b850f3837f626fec7cfd516cee7205a9"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-webkit/trace.zip",
+        "sha256": "7a62011d9a84dd8367e61854f01a0604a7bbd7a0152c6b6bf8780eee6d97b211"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-repl-6cea4-ts-through-keyboard-history-webkit/video.webm",
+        "sha256": "701d8c41acb5736cb3043c6b6a3a7c3c93eb17e52911a5f42ea577d3279625e4"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/trace.zip",
+        "sha256": "8dab4d6936a9d158ab21f94007bc193d70edb5171ff054eaa9d2ab4f7264c355"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-chromium/video.webm",
+        "sha256": "bdc70a518380cf4484e13bc9248f55b69867405688907c151b4bebc149808f62"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/trace.zip",
+        "sha256": "6b416947f63b258d473e43b84f3d1c02d497a568900c5a874db1094f11e4dc5c"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-firefox/video.webm",
+        "sha256": "52c299727472f62cc92e8ef9b756b58e18df91555af5cc65673b58b70417a986"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/trace.zip",
+        "sha256": "c59d225862ab43e221377d7df5699a034003c4d4065b89a369e628f5997f65d7"
+      },
+      {
+        "path": "artifacts/retained-direct-text-browser-20261106/retained-adapter-real-righ-6ba66--consuming-a-character-step-webkit/video.webm",
+        "sha256": "50283cc6fa08a3fd6f9d557f5e807118c38b49f94b94b41b601cc11486507e16"
+      }
+    ],
+    "visualReview": "Large-document editing and native marked replacement/history captures and sampled recording frames reviewed in all three desktop engines. Not full playback or physical-device/IME certification."
+  },
+  "compiledNode": {
+    "journeys": 36,
+    "formats": [
+      {
+        "format": "es",
+        "passed": 18,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup."
+      },
+      {
+        "format": "cjs",
+        "passed": 18,
+        "domRequired": false,
+        "runtime": "Node v24.22.1",
+        "note": "Engine and experimental adapter built in one shared module graph. Actual collaboration lifecycle, moves and author history in both exchange orders; includes metadata written by an observer during local edit cleanup."
+      }
+    ]
+  },
+  "checks": [
+    {
+      "exitCode": 0,
+      "check": "typecheck",
+      "expectedExitCode": 0,
+      "seconds": 18.1657023,
+      "log": "artifacts/retained-direct-text-typecheck-20261106.log"
+    },
+    {
+      "exitCode": 1,
+      "check": "focused",
+      "expectedExitCode": 1,
+      "seconds": 7.7850497,
+      "log": "artifacts/retained-direct-text-focused-20261106.log"
+    },
+    {
+      "exitCode": 1,
+      "check": "full-source",
+      "expectedExitCode": 1,
+      "seconds": 253.2805466,
+      "log": "artifacts/retained-direct-text-full-source-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "build",
+      "expectedExitCode": 0,
+      "seconds": 12.5319594,
+      "log": "artifacts/retained-direct-text-build-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:api",
+      "expectedExitCode": 0,
+      "seconds": 0.7759373,
+      "log": "artifacts/retained-direct-text-test-api-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:headless",
+      "expectedExitCode": 0,
+      "seconds": 1.1365463,
+      "log": "artifacts/retained-direct-text-test-headless-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:package",
+      "expectedExitCode": 0,
+      "seconds": 4.5821758,
+      "log": "artifacts/retained-direct-text-test-package-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:server-runtimes",
+      "expectedExitCode": 0,
+      "seconds": 2.782923,
+      "log": "artifacts/retained-direct-text-test-server-runtimes-20261106.log"
+    },
+    {
+      "exitCode": 1,
+      "check": "test:budget",
+      "expectedExitCode": 1,
+      "seconds": 0.6430238,
+      "log": "artifacts/retained-direct-text-test-budget-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "test:performance",
+      "expectedExitCode": 0,
+      "seconds": 15.5623637,
+      "log": "artifacts/retained-direct-text-test-performance-20261106.log"
+    },
+    {
+      "exitCode": 0,
+      "check": "browser",
+      "expectedExitCode": 0,
+      "seconds": 256.1906678,
+      "log": "artifacts/retained-direct-text-browser-20261106.log"
+    },
+    {
+      "check": "manual-types",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "log": "artifacts/retained-direct-text-manual-types-20261106.log",
+      "seconds": 17.6605727
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/retained-direct-text-typecheck-20261106.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    },
+    {
+      "path": "artifacts/retained-direct-text-focused-20261106.log",
+      "sha256": "e6a33a89b02b59f1f7659cba37cdce4eefc72826bc64c4b3945148b51ac0e398"
+    },
+    {
+      "path": "artifacts/retained-direct-text-full-source-20261106.log",
+      "sha256": "fa82fd1e526663b729d6c9c26ecf43714c47ae829c6b447a6da9431d5cdbe36b"
+    },
+    {
+      "path": "artifacts/retained-direct-text-build-20261106.log",
+      "sha256": "2f469e9f5a280c64f869c4b4d75fbc08b437afffacb263531e68cb0d235cee46"
+    },
+    {
+      "path": "artifacts/retained-direct-text-test-api-20261106.log",
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/retained-direct-text-test-headless-20261106.log",
+      "sha256": "a3a5f9c587bf5e9de1afc23ac1b4594956680c621894d464f115cba355011534"
+    },
+    {
+      "path": "artifacts/retained-direct-text-test-package-20261106.log",
+      "sha256": "1b06944f83fd821dbec808557dc70e49de905280394a8f570edf2fa27b3d439a"
+    },
+    {
+      "path": "artifacts/retained-direct-text-test-server-runtimes-20261106.log",
+      "sha256": "ae2a68e67c0733f11926e6dd48af1a3429c7e13dde0da9e97ac6277d43af3d96"
+    },
+    {
+      "path": "artifacts/retained-direct-text-test-budget-20261106.log",
+      "sha256": "7993139dcabf160c51fadb4121fa7af30f3d14411f8bf4313d8ac9e5a8fe978a"
+    },
+    {
+      "path": "artifacts/retained-direct-text-test-performance-20261106.log",
+      "sha256": "9e3955c249e815059e386f6cb95d5e82cb4a65be5e9e7ac23a05060030fa4c95"
+    },
+    {
+      "path": "artifacts/retained-direct-text-browser-20261106.log",
+      "sha256": "ddfa0d06b4444cfd3712b279ae1f9b8650d447e8af6e222a33f7bce47387f8b9"
+    },
+    {
+      "path": "artifacts/retained-direct-text-manual-types-20261106.log",
+      "sha256": "e31ecc37b9dff901b1cc87b50d4b26c448e2179d9b57b1df546515430177a7c1"
+    }
+  ],
+  "compiledArtifacts": [
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-DGpirzUe.cjs",
+      "sha256": "005757220b830271cf64b51a8e451e61632f19a2aafbec29c6e847c37d7603ba"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-DGpirzUe.cjs.map",
+      "sha256": "dd2e044cdb0b976902ca5ab1f706d8f332c0d344f036939bd7b06d4f91a74f03"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-GTHSw9Ig.js",
+      "sha256": "f9f01fb05774ce839c2ddb7cc98c0a528c55b013e848ba3933bdb7f759b2ad3c"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/collaboration-GTHSw9Ig.js.map",
+      "sha256": "496903f1a5162079dbcaee06f6b90234d03c43241fcd1e31ca678ffeddbb7278"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.cjs",
+      "sha256": "62009b3e71b59bf1d15538991d24793ba9d7075d8f4f300af28c38de7154b91d"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.cjs.map",
+      "sha256": "f3b88f307df0c272911d9b9661b090e072f35b269db0381a4d6047a3635adfa3"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.js",
+      "sha256": "7bffffed4b1a21349993ec02cce8b85fff69cef3bd9111ccfee15214cc7d5898"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/engine.js.map",
+      "sha256": "d420515a67478c0efde216ad69f329c45e96b327bd49cd232268312a928de02a"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.cjs",
+      "sha256": "dcd4e5ad297c4838bba04bc2b31ea610e782670ce5360d5bfa4a20baeb174aab"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.cjs.map",
+      "sha256": "851d2dd25106189a83ce10cfec364a33304b9a8d22329f0a9b188886615bbf15"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.js",
+      "sha256": "26d327f042c7e0ab92c6413da70036a86f44b4755a117ffd51ad4986497496f9"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/retained-adapter.js.map",
+      "sha256": "07966b8e3aed68d958e33e25ee2344881a583fff495444664ff193c5fde6f587"
+    },
+    {
+      "path": "artifacts/cursor-overlay-build-20261106/styles.css",
+      "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7"
+    }
+  ],
+  "measurements": [
+    {
+      "path": "artifacts/retained-direct-text-cost-baseline-20261106.json",
+      "sha256": "106512c8b7b4ac3a4945795b743d66c9450185727e0d6cce8eb466049e3b92a9"
+    },
+    {
+      "path": "artifacts/retained-direct-text-cost-candidate-20261106.json",
+      "sha256": "79329e63ad152d3db145492407f6940e7bcf6080f1ae6d3a2d8cbb6ff3712107"
+    },
+    {
+      "path": "artifacts/retained-direct-text-session-baseline-20261106.json",
+      "sha256": "1213dcfc931d82249fb70a6bf0f92503340fca4c392229400661c82f3ef73c1d"
+    },
+    {
+      "path": "artifacts/retained-direct-text-session-candidate-20261106.json",
+      "sha256": "a4c1c2294b86b90034fcc37a9b17fcc6f92cd79f0182a7ac77c8830144b3d882"
+    },
+    {
+      "path": "artifacts/retained-direct-text-interop-20261106.json",
+      "sha256": "2d060bf52a59b8a4a64d5477c82de327008cb4e81e8d48e23e8572dd34762628"
+    },
+    {
+      "path": "artifacts/retained-direct-text-comparison-20261106.json",
+      "sha256": "5c2d97c39fb1ab8f74bd6f88eb1317d2658426fa624c260eb3903ec40a349d84"
+    }
+  ],
+  "comparison": {
+    "baselineCommit": "9d7793dc",
+    "runtime": "v24.22.1",
+    "summary": [
+      {
+        "blocks": 1000,
+        "documentsAndEncodedBytesIdentical": true,
+        "before": {
+          "medianInitializationMs": 113.73099999999977,
+          "medianOfEditMediansMs": 38.08690000000024,
+          "maximumTimedEditMs": 94.5075,
+          "sharedBytes": 1834539,
+          "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 263.3976,
+              "p50Ms": 62.6706999999999,
+              "p95Ms": 94.5075,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 113.73099999999977,
+              "p50Ms": 38.08690000000024,
+              "p95Ms": 49.60500000000138,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 111.24409999999989,
+              "p50Ms": 36.218400000001566,
+              "p95Ms": 52.290499999999156,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4094,
+                "sumReportedMapEntries": 113002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 29000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 12000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianInitializationMs": 123.73470000000088,
+          "medianOfEditMediansMs": 29.46769999999924,
+          "maximumTimedEditMs": 75.59879999999998,
+          "sharedBytes": 1834539,
+          "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 270.13109999999995,
+              "p50Ms": 57.678,
+              "p95Ms": 75.59879999999998,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4021,
+                "sumReportedMapEntries": 32002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 2000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 123.73470000000088,
+              "p50Ms": 29.46769999999924,
+              "p95Ms": 43.65990000000056,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4021,
+                "sumReportedMapEntries": 32002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 2000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 1000,
+              "retained": true,
+              "initializationMs": 109.59180000000197,
+              "p50Ms": 27.705799999999726,
+              "p95Ms": 39.947299999999814,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "3e83833c254199b4ed55ae2cc0966f71ea46dedfa8a7db17ea1e378bb249fa81",
+              "sharedBytes": 1834539,
+              "sharedSha256": "72dda079b9d151fa033ab0003e4044c8cb89feefa8d542cd291e90122545b234",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 4021,
+                "sumReportedMapEntries": 32002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 6000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 2000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 4000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 2000,
+                    "reportedEntries": 8000
+                  },
+                  "fountain:splits": {
+                    "calls": 2000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "blocks": 5000,
+        "documentsAndEncodedBytesIdentical": true,
+        "before": {
+          "medianInitializationMs": 637.5644999999968,
+          "medianOfEditMediansMs": 189.71509999999762,
+          "maximumTimedEditMs": 272.2660999999971,
+          "sharedBytes": 9309325,
+          "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 764.0585999999998,
+              "p50Ms": 208.59259999999995,
+              "p95Ms": 260.52959999999985,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 548.6516999999985,
+              "p50Ms": 185.4877000000015,
+              "p95Ms": 243.66139999999905,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 637.5644999999968,
+              "p50Ms": 189.71509999999762,
+              "p95Ms": 272.2660999999971,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20094,
+                "sumReportedMapEntries": 565002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 145000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianInitializationMs": 520.391599999999,
+          "medianOfEditMediansMs": 132.39750000000004,
+          "maximumTimedEditMs": 216.6340999999993,
+          "sharedBytes": 9309325,
+          "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 817.0487999999998,
+              "p50Ms": 132.39750000000004,
+              "p95Ms": 163.38260000000037,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20021,
+                "sumReportedMapEntries": 160002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 10000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 520.391599999999,
+              "p50Ms": 126.83500000000095,
+              "p95Ms": 134.3101000000006,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20021,
+                "sumReportedMapEntries": 160002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 10000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 5000,
+              "retained": true,
+              "initializationMs": 519.1435999999994,
+              "p50Ms": 134.5625,
+              "p95Ms": 216.6340999999993,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "a95d19c5b922ec40b6645b2727461c5e841491332a6e0ecff3b86ce2b3c84b77",
+              "sharedBytes": 9309325,
+              "sharedSha256": "eaebf80fa698af6a9bc86a70a57dba75d052bb6208c19d8151863fd2c45a7184",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 20021,
+                "sumReportedMapEntries": 160002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 30000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 10000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 10000,
+                    "reportedEntries": 40000
+                  },
+                  "fountain:splits": {
+                    "calls": 10000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "blocks": 10000,
+        "documentsAndEncodedBytesIdentical": true,
+        "before": {
+          "medianInitializationMs": 1166.0011999999988,
+          "medianOfEditMediansMs": 375.7574999999997,
+          "maximumTimedEditMs": 581.4768999999978,
+          "sharedBytes": 18670921,
+          "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1180.2374,
+              "p50Ms": 375.2927000000009,
+              "p95Ms": 548.7195000000011,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1166.0011999999988,
+              "p50Ms": 407.33450000000084,
+              "p95Ms": 505.91739999999845,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 999.866399999999,
+              "p50Ms": 375.7574999999997,
+              "p95Ms": 581.4768999999978,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40094,
+                "sumReportedMapEntries": 1130002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 29,
+                    "reportedEntries": 290000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 3,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 3,
+                    "reportedEntries": 120000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "after": {
+          "medianInitializationMs": 1236.6601999999984,
+          "medianOfEditMediansMs": 264.5742000000009,
+          "maximumTimedEditMs": 377.7462999999989,
+          "sharedBytes": 18670921,
+          "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+          "trials": [
+            {
+              "trial": 1,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1424.5873000000001,
+              "p50Ms": 270.252199999999,
+              "p95Ms": 296.1876999999995,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40021,
+                "sumReportedMapEntries": 320002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 2,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1236.6601999999984,
+              "p50Ms": 264.5742000000009,
+              "p95Ms": 377.7462999999989,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40021,
+                "sumReportedMapEntries": 320002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            },
+            {
+              "trial": 3,
+              "blocks": 10000,
+              "retained": true,
+              "initializationMs": 1180.306199999999,
+              "p50Ms": 263.59590000000026,
+              "p95Ms": 312.7573999999986,
+              "edits": 12,
+              "documentMatchesPlain": true,
+              "documentSha256": "5698c1317c02c01e32a22af131cee7ee41b07b49bf7d1166d1264a2d0717e515",
+              "sharedBytes": 18670921,
+              "sharedSha256": "0640a0dc845a98a700fbc9c2d26b51427700ad0e598aa031bd04f56b550a96ac",
+              "diagnosticExtraEdit": {
+                "sizeGetterCalls": 40021,
+                "sumReportedMapEntries": 320002,
+                "byContainer": {
+                  "fountain-text:owners": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-text:texts": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-text:styles": {
+                    "calls": 6,
+                    "reportedEntries": 60000
+                  },
+                  "fountain-nodes:nodes": {
+                    "calls": 1,
+                    "reportedEntries": 20000
+                  },
+                  "fountain-nodes:identities": {
+                    "calls": 1,
+                    "reportedEntries": 40000
+                  },
+                  "fountain-nodes:root": {
+                    "calls": 1,
+                    "reportedEntries": 2
+                  },
+                  "nested map": {
+                    "calls": 20000,
+                    "reportedEntries": 80000
+                  },
+                  "fountain:splits": {
+                    "calls": 20000,
+                    "reportedEntries": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "readCounts": {
+      "before": {
+        "runtime": "v24.22.1",
+        "directory": "retained-direct-text-baseline-20261106-build",
+        "blocks": 5000,
+        "counts": {
+          "nodePool": 15001,
+          "placements": 20000
+        },
+        "documentMatchesPlain": true,
+        "documentSha256": "c9b4996ec3940331b8be10500481eecb4a0bc911fa1d0bc5623ed0dec9aa9ddc",
+        "sharedBytes": 9307981,
+        "sharedSha256": "11ca236869d4d80a89939c2e91592350eddd3b52372713a306c5becc61f58b9c",
+        "note": "One actual candidate edit, instrumenting only top-level node/placement Map.get calls. Instrumentation restored before assertions. Diagnostic counts, not latency/acceptance limits."
+      },
+      "after": {
+        "runtime": "v24.22.1",
+        "directory": "cursor-overlay-build-20261106",
+        "blocks": 5000,
+        "counts": {
+          "nodePool": 0,
+          "placements": 10000
+        },
+        "documentMatchesPlain": true,
+        "documentSha256": "c9b4996ec3940331b8be10500481eecb4a0bc911fa1d0bc5623ed0dec9aa9ddc",
+        "sharedBytes": 9307981,
+        "sharedSha256": "11ca236869d4d80a89939c2e91592350eddd3b52372713a306c5becc61f58b9c",
+        "note": "One actual candidate edit, instrumenting only top-level node/placement Map.get calls. Instrumentation restored before assertions. Diagnostic counts, not latency/acceptance limits."
+      }
+    },
+    "sessions": {
+      "trialsPerBuild": 3,
+      "editsPerTrial": 1024,
+      "documentsAndEncodedBytesIdentical": true,
+      "allEditorsAndDocumentsReleased": true,
+      "stages": [
+        {
+          "stage": "seed",
+          "sharedBytes": 3058,
+          "sharedV2Bytes": 2944,
+          "textDeltaOperations": 2,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-128",
+          "sharedBytes": 9935,
+          "sharedV2Bytes": 7814,
+          "textDeltaOperations": 130,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-256",
+          "sharedBytes": 16975,
+          "sharedV2Bytes": 12678,
+          "textDeltaOperations": 258,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-384",
+          "sharedBytes": 24156,
+          "sharedV2Bytes": 17542,
+          "textDeltaOperations": 386,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-512",
+          "sharedBytes": 31452,
+          "sharedV2Bytes": 22406,
+          "textDeltaOperations": 514,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-640",
+          "sharedBytes": 38748,
+          "sharedV2Bytes": 27270,
+          "textDeltaOperations": 642,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-768",
+          "sharedBytes": 46044,
+          "sharedV2Bytes": 32134,
+          "textDeltaOperations": 770,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-896",
+          "sharedBytes": 53340,
+          "sharedV2Bytes": 36998,
+          "textDeltaOperations": 898,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "edit-1024",
+          "sharedBytes": 60636,
+          "sharedV2Bytes": 41862,
+          "textDeltaOperations": 1026,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 1,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "converged",
+          "sharedBytes": 60805,
+          "sharedV2Bytes": 42030,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "all-undone",
+          "sharedBytes": 60810,
+          "sharedV2Bytes": 42035,
+          "textDeltaOperations": 4,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        },
+        {
+          "stage": "all-redone",
+          "sharedBytes": 118390,
+          "sharedV2Bytes": 77879,
+          "textDeltaOperations": 1028,
+          "containers": {
+            "fountain": 1,
+            "fountain:document": 2,
+            "fountain-nodes:metadata": 1,
+            "fountain-nodes:nodes": 3,
+            "fountain-nodes:placements": 3,
+            "fountain-nodes:identities": 6,
+            "fountain-nodes:root": 2,
+            "fountain-nodes:root-children": 2,
+            "fountain-text:metadata": 1,
+            "fountain-text:texts": 1,
+            "fountain-text:owners": 1,
+            "fountain-text:styles": 2,
+            "fountain:splits": 0
+          }
+        }
+      ]
+    },
+    "interopJourneys": 28,
+    "interpretation": "Single-step native text edits within one complete nonempty uniformly formatted partition can write that partition directly after full document/map preflight. Pending shared writes, custom apply implementations or different mapping intent, mixed/incomplete partitions, empty/full replacement and multi-step operations retain the general path. Final full fresh projection, exact shape comparison and observer checks remain. No cross-call/shared cache. Diagnostic timings, not adoption gates; full projection and history growth remain. No default switch, compaction, migration, version/limit increase or publication."
+  },
+  "invariants": {
+    "publicRuntimeAndCssFilesByteIdentical": 171,
+    "apiSnapshotUnchanged": true,
+    "limitsUnchanged": true,
+    "defaultRequiredFailuresUnchanged": true,
+    "defaultAdapterUnchanged": true,
+    "ciWorkflowUnchanged": true
+  },
+  "visualArtifacts": [
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/chromium-large-filmstrip.png",
+      "sha256": "a692031f7c1c1e741b6a9ceff822cb31cc4c71a9628d5aaef58bbc758fb33379"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/chromium-large-workflow.webm",
+      "sha256": "daa6050117092ea00d79f04822072d04ed8733a20de92eb94c767c0db5f00708"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/chromium-middle.png",
+      "sha256": "d713d7a75aeaec3a807790b5cf6bb0935f0ca145df4eb3b476920997114272bf"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/chromium-replacement-filmstrip.png",
+      "sha256": "0da824714ef6ff8ebe55b63b1ce35757e6b9ef03080f0736fc1f410e847d7a34"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/chromium-replacement-workflow.webm",
+      "sha256": "89d7caf3ec8901efb5b1001c84b7a38268cc961ef54ff54dcc35df62b3fe049b"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/chromium-replacement.png",
+      "sha256": "ccab24c6d400794e17d22070131c0a0c75244ccfbb21cc375a3765cd166f288c"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/firefox-large-filmstrip.png",
+      "sha256": "b9ee7702576d6e6c3d7b5a6b796ea6a4341f9549a20ca99b7e264a6e10ae642a"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/firefox-large-workflow.webm",
+      "sha256": "4b8f92907b8a90468f8259b11d1120e22d758e469f3c3d12cbe1e7cb7775f812"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/firefox-middle.png",
+      "sha256": "7762ee729d4241961668b471490eafabfacaf277e18fc71bcaa6ba460ff3b34d"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/firefox-replacement-filmstrip.png",
+      "sha256": "c6c35b9244d9fe536f489cff22917dadf95d815cc3de863236d8abc9ffd7858f"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/firefox-replacement-workflow.webm",
+      "sha256": "a062aa7ed5cafdbafd42904abc1b064c02e780e5dea08db8ebddcd33144aaad1"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/firefox-replacement.png",
+      "sha256": "949f4eb42ef33295692cd9603995c49e79efd76dc95d48dd10aea98fb9b64f10"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/webkit-large-filmstrip.png",
+      "sha256": "b543ceb26864ce3f797ad0318a925d0a8953298b39a669cd64811e6542650596"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/webkit-large-workflow.webm",
+      "sha256": "d552adc900eb2c2970af54a802b8bf453bff5ee1c7d978564d2dbfd738544bc8"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/webkit-middle.png",
+      "sha256": "41b89d2fcd21fcca1b9dcf5e239f3a0ab221208e2e765d915e01a16a13add95f"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/webkit-replacement-filmstrip.png",
+      "sha256": "2388edbcbcb6d1f298ffbffafc052f7c247fa9e20f9f1b3024f0111a3243f3bc"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/webkit-replacement-workflow.webm",
+      "sha256": "701d8c41acb5736cb3043c6b6a3a7c3c93eb17e52911a5f42ea577d3279625e4"
+    },
+    {
+      "path": "artifacts/retained-direct-text-visual-20261106/webkit-replacement.png",
+      "sha256": "b27867e754d180b5da3473de2f9f3995b850f3837f626fec7cfd516cee7205a9"
+    }
+  ],
+  "baselineCompiledSourceProof": {
+    "commit": "9d7793dcfd1663b3ba92cb7d158dc1593b05116d",
+    "verifiedGitBlobModules": 190,
+    "sourceSetMatchesCurrent": true
+  },
+  "open": [
+    "Six default-adapter retention failures",
+    "Full projection and large-document editing cost",
+    "History/wire-state growth and compaction semantics",
+    "Legacy migration and safe adoption",
+    "Three existing size overruns",
+    "Complete fresh CI required for release",
+    "Overall editor parity remains incomplete"
+  ],
+  "fullSource": {
+    "path": "artifacts/retained-direct-text-full-source-20261106.json",
+    "sha256": "71691b9a2b8cd6b4bfcc21ad3d50927e54e3ff04c491656f08e848b126dd251c",
+    "total": 4405,
+    "passed": 4399,
+    "failed": 6,
+    "files": 289,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "nodeReadMeasurements": [
+    {
+      "path": "artifacts/retained-direct-text-counts-baseline-20261106.json",
+      "sha256": "0e25dbabad84c8776b20644f98338b661e96eb3c9179be8862ef3becb87e2803"
+    },
+    {
+      "path": "artifacts/retained-direct-text-counts-candidate-20261106.json",
+      "sha256": "80c99829faadb788626a7e6ad9fd07f5eaa36719e9f72fc59af84fda50c25d18"
+    }
+  ],
+  "documents": [
+    {
+      "path": "docs/YJS_RETAINED_DIRECT_TEXT_AUDIT.md",
+      "sha256": "cbb0d004e3e7c0fc8c8206c1b2cee03cdc344d43f8e9f9569d8b90adacb58b97"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "e0d3cd3a2f6fe20bafff8ea3fdb9263d5e010732ca86d0516a4e647e938e0c4b"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "sha256": "93d72ae3d72516da222fa041310e01502783cdfcc78d4634bc224e56f1cac379"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "b72b05991513b04f388fb1e47b9eeff5594a0032c08d27454b7970d8b823d032"
+    }
+  ],
+  "editProfile": [
+    {
+      "path": "artifacts/retained-direct-text-edit-after-20261106.json",
+      "sha256": "86559639b7301a504ce6a35c04fd090af612bc8f80da3558ba58ceffabb2c86d"
+    },
+    {
+      "path": "artifacts/retained-direct-text-edit-after-20261106.cpuprofile.gz",
+      "sha256": "7c7db3d1337e17c316833ca99ef5674d6cc9fff0a21c6924ba8a3e02d672257e"
+    },
+    {
+      "path": "artifacts/retained-direct-text-edit-after-frames-20261106.json",
+      "sha256": "59276c3a637dcbed0b8722d6642c526fa752a71300e1b010bae0d54004c21db1"
+    }
+  ],
+  "visualSources": {
+    "path": "artifacts/retained-direct-text-visual-sources-20261106.json",
+    "sha256": "3bb2fd1552cebe022696ce3f2daae3177338ca53af9d1a7936e1eb14dc904021"
+  }
+}

@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Apply eligible single-step native text edits directly to an existing private
+  retained-Yjs partition after full document/map preflight. Keep the general
+  path for pending shared writes, custom transformations, mixed partitions,
+  empty/full replacement and multi-step transactions. Preserve final fresh
+  projection, exact shape checks and observer handling; add encoded-state,
+  author-history and recorded native marked replacement/deletion regressions.
+  Large-document cost, history growth and safe adoption remain unfinished.
+
 - Read private retained-Yjs node records once per projection and reuse checked
   placements during ownership resolution and tree traversal. Preserve fresh
   reads between calls, including pending outer transactions, and retain all

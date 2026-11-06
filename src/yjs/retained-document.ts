@@ -4,6 +4,8 @@ import { Mapping } from '../core/transaction/mapping';
 import type { Step } from '../core/transaction/step';
 import type { Transaction } from '../core/transaction/transaction';
 import { ReplaceStep } from '../core/transaction/replace-step';
+import { ReplaceTextStep } from '../core/transaction/replace-text-step';
+import { getNodeAtPath } from '../core/transaction/path';
 import { RetainedNodeStore, retainedNameKey as nameKey, retainedKeyName as keyName, validateRetainedMetadata, type RetainedNodeProjection, type RetainedNodeSeed } from './retained-nodes';
 import { RetainedTextStore, validateRetainedTextFormat, type RetainedTextRun, type RetainedTextPartition } from './retained-text';
 import { planRetainedNodeStarts, planRetainedText, type RetainedTextPlan } from './retained-mapping';
@@ -298,7 +300,8 @@ export class RetainedDocumentStore {
       const projected = this.document.transact(event => {
         writer = event;
         let result: Node | undefined;
-        for (const change of changes) result = this.change(change.before, change.after, change.mapping, change.step, change.plan);
+        for (const change of changes) result = (changes.length === 1 ? this.changeText(change.before, change.after, change.mapping, change.step, event) : undefined)
+          ?? this.change(change.before, change.after, change.mapping, change.step, change.plan);
         return result;
       }, this.origin);
       // Reuse only this call's checked projection. Observer/cleanup writes can
@@ -307,6 +310,34 @@ export class RetainedDocumentStore {
       this.schema.validate(projected);
       return projected;
     } finally { this.document.off('afterTransaction', observed); }
+  }
+
+  private changeText(before: Node, after: Node, mapping: Mapping, step: Step, shared: Y.Transaction): Node | undefined {
+    // The native text step changes one existing leaf without structural or
+    // formatting intent. Custom apply implementations use the general path.
+    if (!(step instanceof ReplaceTextStep) || step.apply !== ReplaceTextStep.prototype.apply || shared.changed.size) return;
+    const { path, from, to, text } = step, original = getNodeAtPath(before, path), target = getNodeAtPath(after, path);
+    if (!original.isText || !target.isText || !original.nodeSize || !target.nodeSize || to - from === original.nodeSize) return;
+    const expected = new ReplaceTextStep(path, from, to, text).getMap(before);
+    if (mapping.maps.length !== 1 || !same(mapping.maps[0]!.ranges, expected.ranges)) return;
+    const bindings = this.textPaths.get(pathKey(path)), binding = bindings?.length === 1 ? bindings[0] : undefined;
+    if (!binding || binding.from || binding.modelFrom || binding.length !== original.nodeSize
+      || this.groups.get(binding.id)?.value.textLayout?.empty !== false) return;
+    const desired = format(original, binding.leaf), partition = this.text.project(binding.id);
+    // Read the actual partition before writing. Incomplete bindings, mixed
+    // formats or pending foreign text must not be treated as one native leaf.
+    if (partition.runs.map(run => run.text).join('') !== original.text
+      || partition.runs.some(run => !same(run.attributes ?? {}, desired))) return;
+    if (to > from) this.text.delete(binding.id, from, to);
+    if (text) this.text.insert(binding.id, from, text, desired);
+    return this.finishChange(after);
+  }
+
+  private finishChange(after: Node): Node {
+    const projected = this.read(false);
+    if (!same(projected.toJSON(), after.toJSON())) throw new Error('Retained transaction changed the native document shape.');
+    this.model = after;
+    return projected;
   }
 
   private change(before: Node, after: Node, mapping: Mapping, step: Step, checked?: RetainedTextPlan): Node {
@@ -521,10 +552,7 @@ export class RetainedDocumentStore {
       const previous = this.splitPlacement(leftId), root = previous?.root ?? leftId;
       this.splits.set(rightId, { root, rootToken: this.nodes.placementIdentity(root)!, token: this.nodes.placementIdentity(rightId)!, partition: group.ids[0] } satisfies SplitPlacement);
     }
-    const projected = this.read(false);
-    if (!same(projected.toJSON(), after.toJSON())) throw new Error('Retained transaction changed the native document shape.');
-    this.model = after;
-    return projected;
+    return this.finishChange(after);
   }
 
   destroy(): void { this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.leafPaths.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
