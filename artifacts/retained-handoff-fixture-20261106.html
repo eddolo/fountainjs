@@ -5,14 +5,15 @@
 <details><summary>Compaction settings</summary><p>A smaller checkpoint resets live undo. The original room stays available for recovery.</p><label for="minimum">Minimum checkpoint bytes to save</label><input id="minimum" type="number" min="1" step="1" placeholder="Optional"></details>
 <div id="draft-controls" hidden><button id="exact">Show saved offline draft</button> <button id="merged">Show merged retired branch</button> <button id="preview-text">Review opening paragraph</button></div>
 <section id="text-review" aria-label="Paragraph recovery review" hidden>
- <p>Current room</p><div id="review-current" class="paragraph-preview"></div>
- <p>Saved offline draft</p><div id="review-draft" class="paragraph-preview"></div>
+ <p>Current room · <span id="current-location"></span></p><div id="review-current" class="paragraph-preview"></div>
+ <p>Saved offline draft · <span id="draft-location"></span></p><div id="review-draft" class="paragraph-preview"></div>
  <div id="manual-replacement">
   <label for="replacement">Reviewed replacement</label>
   <input id="replacement" type="text" size="65" maxlength="20000">
   <button id="resolve-text">Apply reviewed paragraph</button>
  </div>
  <button id="resolve-formatting">Use saved paragraph and formatting</button>
+ <button id="resolve-placement" hidden>Move live paragraph to saved location</button>
  <button id="combine-current">Compose from current paragraph</button>
  <button id="combine-saved">Compose from saved draft</button>
  <div id="combined-review" hidden>
@@ -22,13 +23,13 @@
  </div>
 </section>
 <style>.paragraph-preview p{margin:0 0 10px;padding:6px 10px;background:white;border-radius:6px;overflow-wrap:anywhere}.paragraph-preview a{color:#5940bc;text-decoration:underline}#replacement{box-sizing:border-box;max-width:100%}#text-review button{margin-top:6px}#combined-editor .fountain-editor{min-height:0;background:white;border:1px solid #c5bce6;border-radius:6px;padding:6px 10px}</style>
-<div id="message" role="status">Opening…</div><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · original room</h2></section><section id="active"><h2>Active room · authoritative</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2></section></div>
+<div id="message" role="status">Opening…</div><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · original room</h2><button id="offline-move">Move opening paragraph into quote</button></section><section id="active"><h2>Active room · authoritative</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2></section></div>
 <script type="module">
 import * as Y from 'yjs';
-import {CoreExtension,HistoryExtension,MathExtension,Plugin,EditorView,composeExtensions,createEditor,undoCollaboration,redoCollaboration,renderNode,toggleMark} from '/artifacts/retained-handoff-build-20261106/engine.js';
+import {CoreExtension,HistoryExtension,MathExtension,Plugin,EditorView,composeExtensions,createEditor,moveNode,undoCollaboration,redoCollaboration,renderNode,toggleMark} from '/artifacts/retained-handoff-build-20261106/engine.js';
 import {createRetainedYjsCollaborationExtension} from '/artifacts/retained-handoff-build-20261106/retained-adapter.js';
 import {captureRetainedCheckpoint,restoreRetainedCheckpoint} from '/artifacts/retained-handoff-build-20261106/checkpoint.js';
-const version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Recovery paper'}},content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha technical note.'}]},{type:'blockquote',content:[{type:'paragraph',content:[{type:'text',text:'Keep every accepted edit recoverable.'}]}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}},{type:'math_block',attrs:{latex:'x^2+y^2',label:'eq:one'}},{type:'code_block',attrs:{language:'lean'},content:[{type:'text',text:'example : 1 + 1 = 2 := by decide'}]}]};
+const version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Recovery paper'}},content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha technical note.'}]},{type:'blockquote',attrs:{nodeId:'opening-quote'},content:[{type:'paragraph',attrs:{nodeId:'quote-note'},content:[{type:'text',text:'Keep every accepted edit recoverable.'}]}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}},{type:'math_block',attrs:{latex:'x^2+y^2',label:'eq:one'}},{type:'code_block',attrs:{language:'lean'},content:[{type:'text',text:'example : 1 + 1 = 2 := by decide'}]}]};
 let token,current,original,active,archived,migration,rollbackReceipt,archiveId,lastReplay;const message=document.querySelector('#message');
 let draftAttempt,savedDraft,textReview,composer;
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
@@ -120,6 +121,9 @@ action('preview-text',async()=>{
   document.querySelector(selector).replaceChildren(preview);
  }
  document.querySelector('#manual-replacement').hidden=!textReview.canEditPlainText;
+ document.querySelector('#resolve-placement').hidden=!textReview.canUseSavedPlacement;
+ document.querySelector('#current-location').textContent=textReview.currentLocation;
+ document.querySelector('#draft-location').textContent=textReview.draftLocation;
  if(previous?.draftId!==textReview.draftId || replacement.value===previous.currentText) replacement.value=textReview.currentText;
  document.querySelector('#text-review').hidden=false;
  message.textContent='Review both versions and choose the paragraph to keep';
@@ -143,6 +147,17 @@ async function applyReviewedParagraph(replacement){
 }
 action('resolve-text',()=>applyReviewedParagraph(document.querySelector('#replacement').value));
 action('resolve-formatting',()=>applyReviewedParagraph({useSavedFormatting:true}));
+action('resolve-placement',()=>applyReviewedParagraph({useSavedPlacement:true}));
+action('offline-move',()=>{
+ const doc=original.editor.state.doc;
+ const from=doc.content.findIndex(node=>node.attrs.nodeId==='intro');
+ const quote=doc.content.findIndex(node=>node.attrs.nodeId==='opening-quote');
+ if(from<0||quote<0||!moveNode(original.editor,{fromPath:[from],toParentPath:[quote],toIndex:doc.child(quote).childCount})){
+  throw new Error('Opening paragraph could not be moved into the quote');
+ }
+ document.querySelector('#offline-move').hidden=true;
+ message.textContent='Opening paragraph moved inside the offline quote';
+});
 const composerKit=composeExtensions([CoreExtension,HistoryExtension]);
 const singleParagraph=new Plugin({filterTransaction(transaction){
  const {doc}=transaction;

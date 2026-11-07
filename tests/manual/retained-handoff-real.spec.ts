@@ -221,3 +221,30 @@ test('combines both versions in a local formatted paragraph and retains the comp
   expect((await state(page)).server).toEqual((await state(page)).active);
   await capture(page,info,'combined-applied.png');
 });
+
+test('uses the saved quote placement while preserving newer live wording and formatting', async ({page},info) => {
+  const offline=page.getByRole('textbox',{name:'Offline editor',exact:true});
+  const active=page.getByRole('textbox',{name:'Active editor',exact:true});
+  await page.getByRole('button',{name:'Move opening paragraph into quote'}).click();
+  await expect(offline.locator('blockquote')).toContainText('Alpha technical note.');
+  await type(page,'Active editor',' Live update.');
+  await active.getByText('Alpha technical note. Live update.',{exact:true}).click();
+  await page.keyboard.press('End');
+  for(let index=0;index<'Live update.'.length;index+=1) await page.keyboard.press('Shift+ArrowLeft');
+  await page.keyboard.press('Control+b');
+  await expect(active.locator('strong')).toHaveText('Live update.');
+  await page.getByRole('button',{name:'Switch to fresh room'}).click();
+  await expect(page.getByRole('status')).toContainText('Fresh room installed');
+  await page.getByRole('button',{name:'Retain old edits'}).click();
+  await expect(page.getByRole('status')).toContainText('Old edits retained separately');
+  await page.getByRole('button',{name:'Review opening paragraph'}).click();
+  await expect(page.locator('#current-location')).toHaveText('Document · block 1');
+  await expect(page.locator('#draft-location')).toHaveText('blockquote · block 2');
+  await capture(page,info,'saved-placement-preview.png');
+  await page.getByRole('button',{name:'Move live paragraph to saved location'}).click();
+  await expect(page.getByRole('status')).toContainText('Reviewed paragraph saved');
+  await expect(active.locator('blockquote strong')).toHaveText('Live update.');
+  await expect(active.locator('blockquote p')).toHaveText(['Keep every accepted edit recoverable.','Alpha technical note. Live update.']);
+  expect((await state(page)).server).toEqual((await state(page)).active);
+  await capture(page,info,'saved-placement-applied.png');
+});

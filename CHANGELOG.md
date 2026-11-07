@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Restore a saved paragraph location after an offline move while keeping the
+  live paragraph and its formatting. The recovery review requires stable
+  destination anchors and the current room revision.
+
 - Compose a formatted paragraph from either version during offline recovery.
   Refreshing a stale review keeps the local composition and its marks.
 

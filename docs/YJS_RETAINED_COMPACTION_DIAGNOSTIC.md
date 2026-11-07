@@ -125,9 +125,25 @@ review now also offers a local Fountain editor seeded from either version so
 an author can combine wording and formatting. The authority accepts one
 paragraph of text runs and schema-validated marks and refuses embedded nodes
 and invalid links. A stale review keeps the composition while reloading the
-current and archived previews. Inline widgets, structural reconciliation,
-automatic overlapping placement and archive storage policy remain open.
-Host authorization governs who can preview and apply.
+current and archived previews. Host authorization governs who can preview and
+apply.
+
+The placement review can restore a saved paragraph move within the document
+or into an existing container. It identifies the target parent and immediate
+neighbors by their stable node IDs. Missing or duplicate anchors, changed
+anchor order or ambiguous gaps refuse the move. The standard move command
+relocates the live paragraph, keeping newer text, formatting and retained
+identity, and the authority checks the exact reviewed revision. Restoring
+inline widgets, rebuilding a deleted container, reconciling multiple blocks
+at once, automatic overlapping placement and archive storage policy remain
+open.
+
+Placement recovery passed 201 focused source tests and the 24-journey desktop
+handoff suite. A focused rerun of the move passed in Chromium, Firefox and
+WebKit. The browser verifies that the live update stays bold after moving into
+the quote. The source suite also covers a move back to the document root,
+stale revisions, missing anchors and native identity on both moves. Captures
+and recordings are under `artifacts/retained-placement-review-browser-20261107/`.
 
 Formatted recovery passed 200 focused source cases and 18 recorded browser
 journeys across Chromium, Firefox and WebKit. The browser applies bold and

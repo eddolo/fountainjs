@@ -5,7 +5,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, composeExtensions, createEditor, getCollaborationState, insertText, toggleQuote } from '../src';
+import { CoreExtension, Selection, composeExtensions, createEditor, getCollaborationState, insertText, moveNode, toggleQuote } from '../src';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { prepareRetainedAdmission } from '../src/yjs/retained-admission';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
@@ -248,6 +248,63 @@ it('restores saved marks and links into a moved paragraph without changing its c
   cleanup.push(() => resolvedDoc.document.destroy());
   expect(resolvedDoc.baseDocument.child(0).child(0).toJSON()).toEqual(expected.copy(combined).toJSON());
   expect(await pair.handoff.readRetiredDraft(request.archiveId,draftId)).toEqual(draft);
+});
+
+it('reapplies the archived placement with the live text and refuses a stale or missing anchor', async () => {
+  const pair = await fixture();
+  pair.editor.dispatch(pair.editor.createTransaction().setNodeAttrs([1],{nodeId:'quote'}).setNodeAttrs([1,0],{nodeId:'anchor'}));
+  await pair.room.write({epoch:pair.initial.epoch,update:Y.encodeStateAsUpdate(pair.document)});
+  const moved = await migrate(pair);
+  expect(moveNode(pair.editor,{fromPath:[0],toParentPath:[1],toIndex:1})).toBe(true);
+  const draft = await captureRetainedCheckpoint(pair.document,pair.schema,version);
+  const draftId=uuid(),request={archiveId:moved.operation,draftId,nodeId:'intro'};
+  await pair.handoff.saveRetiredDraft({...request,roomId:draft.manifest.roomId,checkpoint:draft});
+  const service = new RetainedTextRecovery(pair.a,key,pair.schema,version);
+  const review = await service.preview(request);
+  expect(review).toMatchObject({currentLocation:'Document · block 1',draftLocation:'blockquote · block 2',canUseSavedPlacement:true});
+
+  const live = await open(moved.result.snapshot.checkpoint,pair);
+  live.editor.dispatch(live.editor.createTransaction().insertText([0,0],0,'Live update. ')
+    .setNodeAttrs([1,0],{nodeId:'changed-anchor'}));
+  const changed=await pair.other.write({epoch:review.epoch,update:Y.encodeStateAsUpdate(live.document)});
+  await expect(service.apply(review,{useSavedPlacement:true})).rejects.toMatchObject({code:'revision-conflict'});
+  const missing=await service.preview(request);
+  expect(missing.canUseSavedPlacement).toBe(false);
+  await expect(service.apply(missing,{useSavedPlacement:true})).rejects.toThrow('no unambiguous live destination');
+  expect(await pair.room.snapshot()).toEqual(changed);
+
+  live.editor.dispatch(live.editor.createTransaction().setNodeAttrs([1,0],{nodeId:'anchor'}));
+  await pair.room.write({epoch:review.epoch,update:Y.encodeStateAsUpdate(live.document)});
+  const current=await service.preview(request);
+  const store=new RetainedDocumentStore(live.document,'fountain',pair.schema,()=>uuid());
+  cleanup.push(()=>store.destroy());
+  const before=store.read(), identity=store.identity([0]);
+  expect(identity).toBeTruthy();
+  const resolved=await service.apply(current,{useSavedPlacement:true});
+  const restored=await restoreRetainedCheckpoint(resolved.checkpoint,pair.schema,version);
+  cleanup.push(()=>restored.document.destroy());
+  const reader=new RetainedDocumentStore(restored.document,'fountain',pair.schema,()=>uuid());
+  cleanup.push(()=>reader.destroy());
+  const document=reader.read();
+  expect(document.child(0).child(1).toJSON()).toEqual(before.child(0).toJSON());
+  expect(document.child(0).child(0).toJSON()).toEqual(before.child(1).child(0).toJSON());
+  expect(document.child(1).toJSON()).toEqual(before.child(2).toJSON());
+  expect(reader.identity([0,1])).toBe(identity);
+  expect(await pair.handoff.readRetiredDraft(request.archiveId,draftId)).toEqual(draft);
+
+  expect(moveNode(pair.editor,{fromPath:[0,1],toParentPath:[],toIndex:1})).toBe(true);
+  const rootDraft=await captureRetainedCheckpoint(pair.document,pair.schema,version);
+  const rootRequest={...request,draftId:uuid()};
+  await pair.handoff.saveRetiredDraft({...rootRequest,roomId:draft.manifest.roomId,checkpoint:rootDraft});
+  const rootReview=await service.preview(rootRequest);
+  expect(rootReview).toMatchObject({draftLocation:'Document · block 2',canUseSavedPlacement:true});
+  const returned=await service.apply(rootReview,{useSavedPlacement:true});
+  const root=await restoreRetainedCheckpoint(returned.checkpoint,pair.schema,version);
+  cleanup.push(()=>root.document.destroy());
+  const rootReader=new RetainedDocumentStore(root.document,'fountain',pair.schema,()=>uuid());
+  cleanup.push(()=>rootReader.destroy());
+  expect(rootReader.read().child(1).toJSON()).toEqual(before.child(0).toJSON());
+  expect(rootReader.identity([1])).toBe(identity);
 });
 
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {

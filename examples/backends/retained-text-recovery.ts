@@ -1,5 +1,6 @@
 import * as Y from 'yjs';
-import { EditorState, type Node, type NodeJSON, type Schema } from '../../src/core';
+import { Editor, EditorState, moveNode, type NodeMove, type Node, type NodeJSON, type Schema } from '../../src/core';
+import { registerSharedDirectionIdentity } from '../../src/core/shared-direction';
 import { restoreRetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedDocumentStore } from '../../src/yjs/retained-document';
 import { RetainedRoomHandoff, type RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
@@ -21,9 +22,13 @@ export interface RetiredParagraphReview extends DraftParagraph {
   readonly currentParagraph: NodeJSON;
   readonly draftParagraph: NodeJSON;
   readonly canEditPlainText: boolean;
+  readonly currentLocation: string;
+  readonly draftLocation: string;
+  readonly canUseSavedPlacement: boolean;
 }
 
-type ParagraphReplacement = string | { readonly useSavedFormatting: true } | { readonly content: readonly NodeJSON[] };
+type ParagraphReplacement = string | { readonly useSavedFormatting: true } | { readonly content: readonly NodeJSON[] }
+  | { readonly useSavedPlacement: true };
 
 function composedRuns(schema: Schema, input: readonly NodeJSON[]): readonly Node[] {
   if (!Array.isArray(input) || !input.length || input.length > 500 || JSON.stringify(input).length > 128_000) {
@@ -44,19 +49,53 @@ function composedRuns(schema: Schema, input: readonly NodeJSON[]): readonly Node
   return Object.freeze(runs);
 }
 
-function paragraph(document: Node, nodeId: string) {
+function uniqueBlock(document: Node, nodeId: string) {
   const matches: { node: Node; path: readonly number[] }[] = [];
   document.descendants((node, path) => {
-    if (node.attrs.nodeId === nodeId) matches.push({ node, path });
+    if (path.length && node.attrs.nodeId === nodeId) matches.push({ node, path });
   });
-  const match = matches[0];
-  if (matches.length !== 1 || match.node.type.name !== 'paragraph' || match.node.content.some(child => !child.isText)) {
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
+function paragraph(document: Node, nodeId: string) {
+  const match = uniqueBlock(document, nodeId);
+  if (!match || match.node.type.name !== 'paragraph' || match.node.content.some(child => !child.isText)) {
     throw new Error('Review requires one identifiable text-only paragraph in each document.');
   }
   return match;
 }
 
 const plainRun = (node: Node): boolean => node.childCount === 1 && node.child(0).marks.length === 0;
+const stableId = (node: Node | undefined) => typeof node?.attrs.nodeId === 'string' && node.attrs.nodeId ? node.attrs.nodeId : undefined;
+
+function paragraphLocation(doc: Node, path: readonly number[]) {
+  const parentPath = path.slice(0, -1), index = path.at(-1)!;
+  const parent = parentPath.reduce((node, part) => node.child(part), doc);
+  const name = parentPath.length ? parent.type.name.replaceAll('_', ' ') : 'Document';
+  const parentId = stableId(parent), previous = stableId(parent.content[index - 1]), next = stableId(parent.content[index + 1]);
+  const unique = [parentPath.length ? parentId : undefined, previous, next].every(id => !id || uniqueBlock(doc, id));
+  return { parent, label: `${name} · block ${index + 1}`,
+    parentPath, parentId, previous, next, unique };
+}
+
+function reviewedMove(doc: Node, live: ReturnType<typeof paragraph>, saved: ReturnType<typeof paragraphLocation>): NodeMove | undefined {
+  if (!saved.unique) return;
+  const parent = saved.parentPath.length ? saved.parentId && uniqueBlock(doc, saved.parentId) : { node: doc, path: [] };
+  if (!parent || parent.node.type.name !== saved.parent.type.name) return;
+  const siblings = parent.node.content.filter(node => node !== live.node);
+  const anchor = (id: string) => {
+    const node = uniqueBlock(doc, id)?.node;
+    return node ? siblings.indexOf(node) : -1;
+  };
+  const previous = saved.previous ? anchor(saved.previous) : undefined;
+  const next = saved.next ? anchor(saved.next) : undefined;
+  if (previous === -1 || next === -1 || previous !== undefined && next !== undefined && previous + 1 !== next) return;
+  if (previous === undefined && next === undefined && (saved.parent.childCount !== 1 || siblings.length)) return;
+  const index = next ?? (previous === undefined ? 0 : previous + 1);
+  if (live.path.length === parent.path.length + 1 && live.path.at(-1) === index
+    && parent.path.every((part, offset) => part === live.path[offset])) return;
+  return { fromPath: live.path, toParentPath: parent.path, toIndex: index };
+}
 
 /** Host-authorized review of a text paragraph in the current handoff destination. */
 export class RetainedTextRecovery {
@@ -84,13 +123,17 @@ export class RetainedTextRecovery {
     try {
       const active = await restoreRetainedCheckpoint(current.checkpoint, this.schema, this.schemaVersion);
       try {
-        const currentParagraph = paragraph(active.baseDocument, nodeId).node;
-        const draftParagraph = paragraph(draft.baseDocument, nodeId).node;
+        const live = paragraph(active.baseDocument, nodeId);
+        const saved = paragraph(draft.baseDocument, nodeId);
+        const currentParagraph = live.node, draftParagraph = saved.node;
+        const currentLocation = paragraphLocation(active.baseDocument, live.path);
+        const draftLocation = paragraphLocation(draft.baseDocument, saved.path);
         const review = Object.freeze({ archiveId, draftId, nodeId, epoch: current.epoch, revision: current.revision,
           currentText: currentParagraph.textContent, draftText: draftParagraph.textContent,
           currentParagraph: currentParagraph.toJSON(), draftParagraph: draftParagraph.toJSON(),
-          canEditPlainText: plainRun(currentParagraph) && plainRun(draftParagraph) });
-        return { review, snapshot: current, draftParagraph };
+          canEditPlainText: plainRun(currentParagraph) && plainRun(draftParagraph), currentLocation: currentLocation.label,
+          draftLocation: draftLocation.label, canUseSavedPlacement: Boolean(reviewedMove(active.baseDocument, live, draftLocation)) });
+        return { review, snapshot: current, draftParagraph, draftLocation };
       } finally { active.document.destroy(); }
     } finally { draft.document.destroy(); }
   }
@@ -101,6 +144,8 @@ export class RetainedTextRecovery {
 
   async apply(review: RetiredParagraphReview, replacement: ParagraphReplacement) {
     const { archiveId, draftId, nodeId, epoch, revision, currentText, draftText } = review;
+    const usePlacement = replacement !== null && typeof replacement === 'object' && 'useSavedPlacement' in replacement
+      && replacement.useSavedPlacement === true;
     let composed: readonly Node[] | undefined;
     if (typeof replacement === 'string') {
       if (!replacement.trim() || replacement.length > 20_000 || /[\r\n]/.test(replacement)) {
@@ -108,10 +153,10 @@ export class RetainedTextRecovery {
       }
     } else if (replacement && typeof replacement === 'object' && 'content' in replacement) {
       composed = composedRuns(this.schema, replacement.content);
-    } else if (replacement?.useSavedFormatting !== true) {
+    } else if (!usePlacement && (!replacement || typeof replacement !== 'object' || !('useSavedFormatting' in replacement) || replacement.useSavedFormatting !== true)) {
       throw new Error('Choose a reviewed replacement.');
     }
-    const { review: verified, snapshot, draftParagraph } = await this.loadReview({ archiveId, draftId, nodeId });
+    const { review: verified, snapshot, draftParagraph, draftLocation } = await this.loadReview({ archiveId, draftId, nodeId });
     if (verified.epoch !== epoch || verified.revision !== revision
       || verified.currentText !== currentText || verified.draftText !== draftText) {
       throw new RetainedRoomError('revision-conflict', 'The review is stale. Compare the latest room and saved draft again.');
@@ -125,6 +170,20 @@ export class RetainedTextRecovery {
       try {
         const doc = store.read(), target = paragraph(doc, nodeId);
         const state = EditorState.create({ schema: this.schema, doc });
+        const basis = Y.encodeStateVector(restored.document);
+        if (usePlacement) {
+          const move = reviewedMove(doc, target, draftLocation);
+          if (!move) throw new Error('The saved location has no unambiguous live destination.');
+          const editor = new Editor(state, (_state, transaction) => { store.apply(transaction); });
+          const release = registerSharedDirectionIdentity(editor, path => {
+            const identity = store.identity(path);
+            return identity ? `yjs-${identity === 'root' ? restored.manifest.roomId : identity}` : null;
+          });
+          try {
+            if (!moveNode(editor, move)) throw new Error('The saved location is incompatible with the live document.');
+          } finally { release(); editor.destroy(); }
+          return await this.room.write({ epoch, expectedRevision: revision, update: Y.encodeStateAsUpdate(restored.document, basis) });
+        }
         const transaction = state.createTransaction();
         if (typeof replacement === 'string') {
           transaction.replaceText([...target.path, 0], 0, currentText.length, replacement);
@@ -132,7 +191,6 @@ export class RetainedTextRecovery {
           transaction.replaceNode(target.path, [target.node.copy(composed ?? draftParagraph.content)]);
         }
         if (transaction.doc.eq(doc)) return snapshot;
-        const basis = Y.encodeStateVector(restored.document);
         store.apply(transaction);
         return await this.room.write({ epoch, expectedRevision: revision, update: Y.encodeStateAsUpdate(restored.document, basis) });
       } finally { store.destroy(); }

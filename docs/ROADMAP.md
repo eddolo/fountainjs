@@ -33,6 +33,8 @@ Its recovery demo can save and reopen the offline writer's exact draft
 separately from the merged retired branch. The host example can apply an
 author-reviewed plain paragraph, restore its saved formatting, or apply a
 combined formatted paragraph with an exact room revision check.
+It can also restore an offline paragraph move into an existing, identifiable
+container while retaining the newer live paragraph.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).
