@@ -3,7 +3,23 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'fountain-compact-chunk-names',
+      outputOptions(options) {
+        const extension = options.format === 'cjs' ? 'cjs' : 'js';
+        return {
+          ...options,
+          chunkFileNames({ name }) {
+            // The size gate locates the shared HTML entity decoder by this prefix.
+            const prefix = name === 'decode' || name === 'markdown-html' ? '[name]-' : '';
+            return `${prefix}[hash].${extension}`;
+          },
+        };
+      },
+    },
+  ],
   build: {
     lib: {
       entry: {

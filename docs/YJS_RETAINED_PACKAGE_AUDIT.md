@@ -75,3 +75,22 @@ The CommonJS core overrun is new. All existing budget thresholds still apply.
 Production transport, first-room provisioning, durable draft recovery,
 compaction, migration coverage and full release CI remain open. The preview
 is available in the local tarball.
+
+### Compact internal chunk names (2026-11-07)
+
+Using hash-only filenames for shared runtime chunks reduces repeated import
+paths. Public entries, source maps, and the shared HTML entity decoder's
+measurement prefix are retained. The same gate counts the internal chunks in
+the aggregate.
+
+The core entries shrink from 9,888 to 9,614 ESM bytes and from 8,990 to 8,716
+CommonJS bytes. Both meet their existing limits. The aggregate saves 4,411
+ESM bytes and 4,473 CommonJS bytes and still exceeds the existing caps by
+170.1 KiB and 135.4 KiB, respectively.
+
+The build, package smoke, public declarations, headless boundary, and
+Node/workerd runtime checks pass. A fresh installation of the tarball passes
+28 Node checks, both strict NodeNext type examples and all 39 recorded
+Chromium, Firefox and WebKit journeys. Screenshots of the six concurrent
+edits in each engine show both editors displaying the same document. The
+Chromium reopen capture shows the downloaded draft and figure in both panes.
