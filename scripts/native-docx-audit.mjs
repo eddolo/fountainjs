@@ -15,12 +15,13 @@ const output = resolve(process.argv[3] ?? 'artifacts/docx-native-audit');
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const saveJSON = (name, value) => writeFile(resolve(output, name), JSON.stringify(value, null, 2) + '\n');
 
-function inspectDocument(document) {
+function inspectDocument(document, footnoteSuffix = '') {
   assert.equal(document.child(0).attrs.layout?.fontFamily, 'Calibri', 'Declared en-US theme font changed.');
   assert.equal(document.child(0).child(0).marks.find(mark => mark.type.name === 'font_family')?.attrs.family, 'Calibri');
-  const counts = {}, images = [];
+  const counts = {}, images = [], footnotes = [];
   document.descendants(node => {
     counts[node.type.name] = (counts[node.type.name] ?? 0) + 1;
+    if (node.type.name === 'footnote_definition') footnotes.push(node.textContent.replace(/\s+/gu, ' ').trim());
     if (['image', 'image_super', 'inline_image'].includes(node.type.name)) {
       assert.match(String(node.attrs.src), /^data:image\/(?:png|jpeg|gif|webp);base64,/u);
       images.push(digest(Buffer.from(String(node.attrs.src).split(',')[1], 'base64')));
@@ -28,7 +29,8 @@ function inspectDocument(document) {
   });
   assert.equal((counts.inline_math ?? 0) + (counts.math_block ?? 0), provenance.expected.nativeEquations);
   assert.equal(counts.table, provenance.expected.tables);
-  assert.equal(counts.footnote_definition, provenance.expected.footnotes);
+  assert.equal(counts.footnote_reference, provenance.expected.footnotes);
+  assert.deepEqual(footnotes, [provenance.requiredFootnoteText + footnoteSuffix]);
   assert.equal(counts.page_break, provenance.expected.explicitPageBreaks);
   assert.equal(images.length, provenance.expected.bodyImages + provenance.expected.headerImages);
   assert.deepEqual([...new Set(images)].sort(), [...provenance.assetSHA256].sort());
@@ -51,6 +53,7 @@ if (process.argv[2] === 'prepare') {
 } else if (process.argv[2] === 'inspect') {
   const observation = JSON.parse(await readFile(resolve(output, 'browser-observations.json'), 'utf8'));
   assert.equal(observation.actualDownload, true); assert.equal(observation.typingUndoRedo, true);
+  assert.equal(observation.footnoteTypingUndoRedo, true);
   assert.equal(observation.listGeometryMaintained, true);
   assert.equal(observation.listEnterUndoRedoBackspace, true);
   assert.equal(observation.backwardKeyboardSelection, true);
@@ -58,7 +61,7 @@ if (process.argv[2] === 'prepare') {
   assert.equal(observation.nativeFragmentFallback, true);
   const exported = new Uint8Array(await readFile(resolve(output, 'exported.docx')));
   const reopened = importDOCX(exported, schema);
-  const result = inspectDocument(reopened.document);
+  const result = inspectDocument(reopened.document, provenance.editedFootnoteSuffix);
   assert.ok(reopened.document.textContent.includes('END OF REPORT Checked in Fountain.'));
   await saveJSON('reopened-model.json', reopened.document.toJSON());
   await saveJSON('interchange-report.json', {

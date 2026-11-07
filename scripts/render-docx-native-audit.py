@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from zipfile import ZipFile
 
 
 def run(args, destination, environment=None):
@@ -72,6 +73,21 @@ def position_deltas(source, exported, phrases=LAYOUT_PHRASES):
             for phrase in phrases}
 
 
+def declare_fixture_separators(source, destination):
+    # Change only the two omitted Word note types in the checked fixture.
+    with ZipFile(source) as original, ZipFile(destination, "w") as control:
+        for entry in original.infolist():
+            content = original.read(entry)
+            if entry.filename == "word/footnotes.xml":
+                for note_id, kind in [("-1", "separator"), ("0", "continuationSeparator")]:
+                    before = f'<w:footnote w:id="{note_id}">'.encode()
+                    after = f'<w:footnote w:id="{note_id}" w:type="{kind}">'.encode()
+                    if content.count(before) != 1:
+                        raise RuntimeError(f"Expected one untyped fixture footnote {note_id}.")
+                    content = content.replace(before, after)
+            control.writestr(entry, content)
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("directory")
 parser.add_argument("--soffice", required=True)
@@ -86,6 +102,7 @@ provenance = json.loads((root / "source-report.json").read_text(encoding="utf-8"
 interchange = json.loads((root / "interchange-report.json").read_text(encoding="utf-8"))
 assert interchange["browser"]["actualDownload"] is True
 assert interchange["browser"]["typingUndoRedo"] is True
+assert interchange["browser"]["footnoteTypingUndoRedo"] is True
 tools = {name: shutil.which(name) for name in ["pdfinfo", "pdftotext", "pdftoppm", "pdfimages", "fc-match"]}
 if not all(tools.values()):
     raise RuntimeError("Install Poppler and fontconfig in the isolated Linux job first.")
@@ -97,13 +114,17 @@ versions["fonts"] = {font: run([str(tools["fc-match"]), font], native / f"font-{
                      for font in ["Arial", "Calibri", "Cambria", "Consolas"]}
 results = {}
 environment = dict(os.environ, SAL_USE_VCLPLUGIN="svp")
-for name in ["source", "exported"]:
+for name in ["source", "exported", "typed-source-control"]:
     folder = native / name
     folder.mkdir()
     profile = folder / "profile"
     profile.mkdir()
-    source = root / f"{name}.docx"
-    assert hashlib.sha256(source.read_bytes()).hexdigest() == interchange[f"{name}SHA256"]
+    if name == "typed-source-control":
+        source = folder / f"{name}.docx"
+        declare_fixture_separators(root / "source.docx", source)
+    else:
+        source = root / f"{name}.docx"
+        assert hashlib.sha256(source.read_bytes()).hexdigest() == interchange[f"{name}SHA256"]
     run([str(office), f"-env:UserInstallation={profile.as_uri()}", "--headless", "--nologo", "--norestore",
          "--convert-to", "pdf:writer_pdf_Export", "--outdir", str(folder), str(source)], folder / "convert.log", environment)
     pdf = folder / f"{name}.pdf"
@@ -121,6 +142,12 @@ for name in ["source", "exported"]:
             raise RuntimeError(f"Native {name} lost required visible content: {marker}")
     if name == "exported" and "END OF REPORT Checked in Fountain." not in text:
         raise RuntimeError("The actual browser edit is missing from the native exported PDF.")
+    footnote = provenance["requiredFootnoteText"]
+    footnote_count = text.count(footnote)
+    if footnote_count > 1 or (name != "source" and footnote_count != 1):
+        raise RuntimeError(f"Native {name} has an unexpected visible footnote count: {footnote_count}.")
+    if name == "exported" and footnote + provenance["editedFootnoteSuffix"] not in text:
+        raise RuntimeError("The actual footnote edit is missing from the native exported PDF.")
     images = run([str(tools["pdfimages"]), "-list", str(pdf)], folder / "images.txt")
     image_count = len(re.findall(r"^\s*\d+\s+\d+\s+image\s", images, re.MULTILINE))
     if image_count < provenance["expected"]["bodyImages"]:
@@ -131,6 +158,7 @@ for name in ["source", "exported"]:
         raise RuntimeError(f"Incomplete native page images for {name}.")
     coordinates = paragraph_positions(pdf, folder / "paragraph-bbox.txt", tools["pdftotext"])
     results[name] = {"pages": pages, "drawnImageObjects": image_count,
+                     "visibleFootnoteCount": footnote_count,
                      "paragraphPositions": coordinates,
                      "headerPositions": header_positions(pdf, folder, tools["pdftotext"], name),
                      "pdfSHA256": hashlib.sha256(pdf.read_bytes()).hexdigest(),

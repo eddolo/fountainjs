@@ -62,7 +62,7 @@ jobs:
         run: pnpm exec playwright test --config playwright.native-docx-audit.config.ts
       - name: Check the actual browser-downloaded Word file
         run: node scripts/native-docx-audit.mjs inspect artifacts/docx-native-audit
-      - name: Render original and actual exported Word files independently
+      - name: Render original exported and separator control Word files independently
         run: python scripts/render-docx-native-audit.py artifacts/docx-native-audit --soffice /usr/bin/soffice
       # Preserve known fidelity differences too. A successful render is not a
       # visual-equality verdict; source and export stay independently inspectable.
@@ -74,6 +74,7 @@ jobs:
             artifacts/docx-native-audit/*.docx
             artifacts/docx-native-audit/*.json
             artifacts/docx-native-audit/*.png
+            artifacts/docx-native-audit/native/typed-source-control/*.docx
             artifacts/docx-native-audit/native/**/*.pdf
             artifacts/docx-native-audit/native/**/*.png
             artifacts/docx-native-audit/native/**/*.txt

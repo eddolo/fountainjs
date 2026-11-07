@@ -12,5 +12,7 @@
     "b2a3fdb41360566dd6a2cda2fc6407e34fe27144b36d6ab46cd2983f67a311f3"
   ],
   "requiredText": ["Cooling experiment report", "Experimental setup", "Model and measurements", "Recorded temperatures", "Interpretation", "END OF REPORT", "Uninsulated", "Insulated", "80.0", "38.1"],
+  "requiredFootnoteText": "These values are generated from the stated model for conversion testing; they are not measured experimental data.",
+  "editedFootnoteSuffix": " Verified note.",
   "nativeComparison": "Render source and actual browser-downloaded export using the same isolated LibreOffice environment. Completion of the audit is not a pixel-fidelity pass or Microsoft Word certification."
 }

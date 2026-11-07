@@ -1,5 +1,33 @@
 # Independent native DOCX audit
 
+## Footnote separator recovery 2026 11 07
+
+The checked-in scientific source has an ordinary note and its body reference.
+Its reserved separator entries have native marker elements but omit their Word
+note types. LibreOffice 24.2.7.2 shows the body marker and omits the note text.
+A control that changes only the two separator type declarations restores the
+text. Changing only whitespace or explicitly labelling the ordinary note has
+no effect. Removing those types from a prior Fountain download hides the note
+again. The checked-in source and its hash are unchanged.
+[Word footnote type reference](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.footnoteendnotetype.type?view=openxml-3.0.1).
+
+Fountain already recognizes the reserved markers and writes explicit types.
+The importer now resolves Word-qualified note attributes and rejects an
+ambiguous numeric ID shared by a separator and an ordinary note. The audit
+checks an actual edit, undo, redo, DOCX reopen and HTML reader, then verifies
+that the downloaded Word file renders one visible note with the edited text.
+The unchanged source and typed control are rendered independently. The source
+may show the note in a renderer that recovers the omitted types. This evidence
+covers the fixture and LibreOffice, with Microsoft Word and broader note layout
+still open.
+
+All 603 focused DOCX tests, the package and interoperability checks, and three
+recorded Chromium, Firefox and WebKit journeys passed. Visual inspection of
+the editor and independently rendered page 2 confirmed that the control and
+export show the note below the separator, and that the export includes the
+edit. The ESM aggregate passes. Aggregate CommonJS is 148.5 KiB over budget
+and the DOCX CommonJS entry is 2.3 KiB over budget.
+
 ## Whole-table placement 2026 11 07
 
 The source declares center placement in `w:tblPr/w:jc`. The earlier Fountain

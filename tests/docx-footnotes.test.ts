@@ -92,6 +92,25 @@ describe('native DOCX footnote bridge', () => {
     expect(result.report.issues).toContainEqual(expect.objectContaining({ code: 'unresolved-footnote-reference', path: [0], sourcePart: 'word/document.xml' }));
   });
 
+  it('ignores foreign note types and refuses foreign IDs and reference attributes', () => {
+    const note = '<w:footnote xmlns:x="urn:foreign" x:type="separator" w:id="7">' + p('Real note') + '</w:footnote>';
+    const result = read(input({ notes: note }));
+    expect(result.document.child(1).textContent).toBe('Real note');
+    expect(result.report.issues).toEqual([]);
+    expect(() => read(input({ notes: note.replace('w:id=', 'x:id=') }))).toThrow('invalid or duplicate');
+    const misplaced = read(input({ notes: note, body: '<w:p><w:r><w:t>Body</w:t><w:footnoteReference xmlns:x="urn:foreign" x:id="7"/></w:r></w:p>' }));
+    expect(misplaced.document.child(0).textContent).toContain('[Footnote unavailable]');
+    expect(misplaced.document.child(1).textContent).toBe('Real note');
+    expect(misplaced.report.issues.map(issue => issue.code)).toContain('unreferenced-footnote-definition');
+  });
+
+  it('rejects conflicting normal and separator IDs and unknown native types', () => {
+    const normal = '<w:footnote w:id="7">' + p('Real note') + '</w:footnote>';
+    const separator = '<w:footnote w:type="separator" w:id="07"><w:p><w:r><w:separator/></w:r></w:p></w:footnote>';
+    for (const notes of [normal + separator, separator + normal]) expect(() => read(input({ notes }))).toThrow('duplicate footnote IDs');
+    expect(() => read(input({ notes: normal.replace('w:id=', 'w:type="future" w:id=') }))).toThrow('footnote type');
+  });
+
   it('reports custom numbering and separator content instead of claiming default numbering is identical', () => {
     const result = read(input({ notes: '<w:footnote w:id="-1" w:type="separator">' + p('Custom separator') + '</w:footnote><w:footnote w:id="7">' + p('Note') + '</w:footnote>', parts: {
       'word/settings.xml': strToU8(`<w:settings xmlns:w="${w}"><w:footnotePr><w:numStart w:val="4"/></w:footnotePr></w:settings>`),

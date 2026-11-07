@@ -47,10 +47,14 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The DOCX bridge now retains omitted and explicit inline drawing distances.
 Three browser downloads of the scientific fixture match both original header
-positions in independent LibreOffice output. The source footnote discrepancy
-remains. [Native evidence](DOCX_NATIVE_AUDIT.md#inline-drawing-distances-2026-11-07).
+positions in independent LibreOffice output.
+[Native evidence](DOCX_NATIVE_AUDIT.md#inline-drawing-distances-2026-11-07).
 The table bridge now preserves whole-table placement through DOCX and HTML.
 [Table placement audit](DOCX_NATIVE_AUDIT.md#whole-table-placement-2026-11-07).
+The scientific source's missing rendered footnote is explained by two omitted
+Word separator types. The independent audit uses a control with just those
+types added and checks an edited note in the actual Fountain download.
+[Footnote audit](DOCX_NATIVE_AUDIT.md#footnote-separator-recovery-2026-11-07).
 
 The developer guide now offers downloadable plain DOM and React starters
 paired with the live demos. Both pin the published beta and run outside the
@@ -60,8 +64,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-is 148.2 KiB over its existing limit. The DOCX CommonJS entry is 2.0 KiB over
-its limit. [Native evidence and package size](DOCX_NATIVE_AUDIT.md#whole-table-placement-2026-11-07).
+is 148.5 KiB over its existing limit. The DOCX CommonJS entry is 2.3 KiB over
+its limit. [Native evidence and package size](DOCX_NATIVE_AUDIT.md#footnote-separator-recovery-2026-11-07).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested

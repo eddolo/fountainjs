@@ -572,11 +572,12 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
           appendText(textContent(item), marks, expandedName(item) === `${WORD_NS}|t`);
         }
         else if (itemName === 'tab') appendText('\t', marks);
-        else if (itemName === 'footnoteReference' && media.footnotes) {
-          const id = wordNoteId(attr(item, 'id'));
+        else if (itemName === 'footnoteReference' && media.footnotes && expandedName(item) === `${WORD_NS}|footnoteReference`) {
+          const id = wordNoteId(wordPageAttribute(item, 'id'));
           if (id !== undefined && media.footnotes.has(id) && !media.sourcePart) {
             output.push(schema.node('footnote_reference', { id }, [], undefined, marks));
-            if (attr(item, 'customMarkFollows') && !['0', 'false', 'off'].includes(attr(item, 'customMarkFollows')!)) {
+            const customMark = wordPageAttribute(item, 'customMarkFollows');
+            if (customMark && !['0', 'false', 'off'].includes(customMark)) {
               issues.push({ code: 'footnote-custom-mark-normalized', severity: 'warning', message: 'The custom footnote marker was replaced by automatic numbering; following literal text remains.', path });
             }
           } else {
@@ -1307,9 +1308,10 @@ function requiredLimits(options: DOCXLimits): Required<DOCXLimits> {
 const WORD_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 const REL_NS = 'http://schemas.openxmlformats.org/package/2006/relationships';
 const OFFICE_REL_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
-function wordNoteId(value: string | undefined): string | undefined {
-  if (!value || !/^\d{1,10}$/.test(value) || Number(value) > 2147483647) return undefined;
-  return String(Number(value));
+function wordNoteId(value: string | undefined, allowNegative = false): string | undefined {
+  if (!value || !/^-?\d{1,10}$/.test(value) || !allowNegative && value.startsWith('-')) return undefined;
+  const id = Number(value);
+  return id >= -2147483648 && id <= 2147483647 ? String(id) : undefined;
 }
 const MATH_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
 const MATH_SOURCE_NS = 'urn:fountainjs:docx:math:v2';
@@ -1558,22 +1560,26 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
       const container = root && elements(root).find(item => expandedName(item) === `${WORD_NS}|footnotes`);
       if (!container) throw new Error('Invalid DOCX footnotes root.');
       footnotes = new Map();
+      const noteIds = new Set<string>();
       for (const note of elements(container)) {
         if (expandedName(note) !== `${WORD_NS}|footnote`) throw new Error('Invalid DOCX footnote element.');
-        let kind = attr(note, 'type');
-        if (!kind) {
-          const implicit = attr(note, 'id') === '-1' ? 'separator' : attr(note, 'id') === '0' ? 'continuationSeparator' : undefined;
+        const id = wordNoteId(wordPageAttribute(note, 'id'), true);
+        if (id === undefined || noteIds.has(id)) throw new Error('DOCX contains invalid or duplicate footnote IDs.');
+        noteIds.add(id);
+        let kind = wordPageAttribute(note, 'type');
+        if (kind === undefined) {
+          const implicit = id === '-1' ? 'separator' : id === '0' ? 'continuationSeparator' : undefined;
           if (implicit && descendants(note, implicit).some(item => expandedName(item) === `${WORD_NS}|${implicit}`)) {
             kind = implicit;
             if (!issues.some(issue => issue.code === 'footnote-separator-type-inferred' && issue.sourcePart === target)) issues.push({ code: 'footnote-separator-type-inferred', severity: 'warning', message: 'A reserved separator entry omitted its note type. Its native separator marker was recognized; export writes an explicit type.', sourcePart: target });
           }
         }
-        if (kind && kind !== 'normal') {
+        if (kind !== undefined && kind !== 'normal') {
+          if (!['separator', 'continuationSeparator', 'continuationNotice'].includes(kind)) throw new Error('Invalid DOCX footnote type.');
           if (textContent(note).trim() || descendants(note, 'drawing').length) issues.push({ code: 'footnote-separator-not-preserved', severity: 'warning', message: 'Custom footnote separator content was not imported.', sourcePart: target });
           continue;
         }
-        const id = wordNoteId(attr(note, 'id'));
-        if (id === undefined || footnotes.has(id)) throw new Error('DOCX contains invalid or duplicate footnote IDs.');
+        if (id.startsWith('-')) throw new Error('DOCX contains invalid or duplicate footnote IDs.');
         footnotes.set(id, note);
       }
       footnoteRels = parse(relPart);

@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Resolve Word footnote IDs and types by namespace and reject IDs shared by a
+  separator and an ordinary note. Verify that an edited footnote survives a
+  browser download and renders in LibreOffice.
+
 - Preserve Word's whole-table left, center and right placement through editing,
   safe HTML and native DOCX export, separately from cell text alignment.
 

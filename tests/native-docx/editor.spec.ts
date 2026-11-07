@@ -19,6 +19,7 @@ async function listGeometry(surface: Locator) {
 test('edits the independent scientific Word source and downloads the native audit export', async ({ page }, info) => {
   const root = resolve(process.env.FOUNTAIN_NATIVE_DOCX_AUDIT_DIR
     ? `${process.env.FOUNTAIN_NATIVE_DOCX_AUDIT_DIR}/${info.project.name}` : 'artifacts/docx-native-audit');
+  const { provenance } = JSON.parse(await readFile(resolve(root, 'source-report.json'), 'utf8'));
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/conversion-lab.html');
@@ -79,6 +80,35 @@ test('edits the independent scientific Word source and downloads the native audi
   await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
   await expect(ending).toHaveText('END OF REPORT Checked in Fountain.');
   await editor.screenshot({ path: resolve(root, 'editor-edited-ending.png') });
+  await expect(editor.locator('[data-fountain-footnote-reference]')).toBeVisible();
+  const note = editor.locator('[data-fountain-footnote-definition] p');
+  await expect(note).toHaveText(provenance.requiredFootnoteText);
+  await note.scrollIntoViewIfNeeded();
+  const lastCharacter = await note.evaluate(element => {
+    const walker = element.ownerDocument.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let lastText: Node | null = null;
+    for (let text = walker.nextNode(); text; text = walker.nextNode()) {
+      if (text.textContent?.trim()) lastText = text;
+    }
+    if (!lastText?.textContent) throw new Error('Missing editable footnote text.');
+    const range = element.ownerDocument.createRange();
+    range.setStart(lastText, lastText.textContent.length - 1);
+    range.setEnd(lastText, lastText.textContent.length);
+    const { x, y, width, height } = range.getBoundingClientRect();
+    return { x: x + width / 2, y: y + height / 2 };
+  });
+  const editedFootnote = provenance.requiredFootnoteText + provenance.editedFootnoteSuffix;
+  await page.mouse.click(lastCharacter.x, lastCharacter.y);
+  await page.keyboard.press('End');
+  await page.keyboard.type(provenance.editedFootnoteSuffix);
+  await expect(note).toHaveText(editedFootnote);
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(note).toHaveText(provenance.requiredFootnoteText);
+  await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(note).toHaveText(editedFootnote);
+  await note.scrollIntoViewIfNeeded();
+  await expect(note).toBeInViewport();
+  await editor.screenshot({ path: resolve(root, 'editor-footnote.png') });
   await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('docx');
   const pending = page.waitForEvent('download');
   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
@@ -90,6 +120,8 @@ test('edits the independent scientific Word source and downloads the native audi
   const reopenedWorkspace = page.getByRole('region', { name: 'Conversion workspace: exported.docx', exact: true });
   const reopened = reopenedWorkspace.getByRole('textbox', { name: 'Imported document editor', exact: true });
   await expect(reopened).toContainText('END OF REPORT Checked in Fountain.');
+  await expect(reopened.locator('[data-fountain-footnote-reference]')).toHaveCount(1);
+  await expect(reopened.locator('[data-fountain-footnote-definition] p')).toHaveText(editedFootnote);
   await expect.poll(() => reopened.locator('p').filter({ hasText: /^Cooling experiment report$/ })
     .evaluate(element => getComputedStyle(element).fontFamily)).toBe('Calibri');
   await expect(reopened.locator('img')).toHaveCount(3);
@@ -110,6 +142,8 @@ test('edits the independent scientific Word source and downloads the native audi
   try {
     await reader.goto(pathToFileURL(resolve(root, 'reader.html')).href);
     await expect(reader.locator('body')).toContainText('END OF REPORT Checked in Fountain.');
+    await expect(reader.locator('[data-fountain-footnote-reference]')).toHaveCount(1);
+    await expect(reader.locator('[data-fountain-footnote-definition] p')).toHaveText(editedFootnote);
     await expect(reader.locator('img')).toHaveCount(3);
     await expect(reader.locator('img[data-fountain-docx-inline-distances="{}"]')).toHaveCount(3);
     await expect(reader.locator('table')).toHaveAttribute('data-fountain-table-placement', 'center');
@@ -141,7 +175,7 @@ test('edits the independent scientific Word source and downloads the native audi
   expect(errors).toEqual([]);
   const diagnostic = JSON.parse(await readFile(resolve(root, 'conversion-report.json'), 'utf8'));
   await writeFile(resolve(root, 'browser-observations.json'), JSON.stringify({
-    actualDownload: true, typingUndoRedo: true, actualReopen: true, images: 3, math: 2,
+    actualDownload: true, typingUndoRedo: true, footnoteTypingUndoRedo: true, actualReopen: true, images: 3, math: 2,
     listGeometryMaintained: true, importedListGeometry, reopenedListGeometry,
     listEnterUndoRedoBackspace: true, backwardKeyboardSelection: true,
     actualHTMLReader: true, readerListGeometry, nativeFragmentFallback,

@@ -553,7 +553,9 @@ Limits and remaining work:
 
 - Custom numbering/restart/placement and separator content are reported, not
   reproduced. Recognizable reserved separator markers missing their explicit
-  type are recovered with a warning; malformed normal note IDs remain invalid.
+  type are recovered with a warning. Note identifiers and types must be
+  Word-qualified. Duplicate numeric IDs across normal and separator entries
+  are invalid.
 - Repeated references to one definition have an explicit export warning because
   repeated-marker numbering across Word consumers is not certified.
 - DOCX stores notes separately. Their position among Fountain body blocks is not
@@ -570,7 +572,9 @@ Limits and remaining work:
 Evidence: `tests/docx-footnotes.test.ts` runs without a DOM; lab tests verify
 DOCX/HTML/JSON note round trips. The recorded independent-source journey edits,
 adds, removes, undoes, exports and reopens notes in Chromium, Firefox and WebKit.
-See [the checkpoint](DOCX_FIDELITY_CHECKPOINT.md) for visual evidence and limits.
+See [the checkpoint](DOCX_FIDELITY_CHECKPOINT.md) for visual evidence and limits
+and [the native audit](DOCX_NATIVE_AUDIT.md#footnote-separator-recovery-2026-11-07)
+for the scientific source, separator control and browser export.
 
 ## Headers footers and page fields
 
