@@ -24,4 +24,6 @@ it('keeps the public developer guide aligned with the enforced CommonMark profil
   const complete = fixture('commonmark-complete-source-v1');
   const literal = guide.match(/(\d+)\/652 with Markdown-body delimiters and literal addresses/);
   expect(Number(literal?.[1])).toBe(count(complete.requiredMatchRanges) + count(complete.markdownBodyLiteralAddressGains));
+  const caret = guide.match(/(\d+)\/652 when HTML export omits editor-only caret children/);
+  expect(Number(caret?.[1])).toBe(Number(literal?.[1]) + count(complete.readerCaretGains));
 });

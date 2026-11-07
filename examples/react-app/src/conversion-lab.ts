@@ -108,7 +108,7 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
   return { ...result, issues: [{ code: 'markdown-coverage',
     message: textPolicy + htmlPolicy + ' Coverage is limited to supported syntax and structure.' }, ...issues] };
 }
-export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext): {
+export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext, omitMarkdownCaretHosts = false): {
   bytes: Uint8Array; extension: string; mime: string; issues: LabIssue[];
 } {
   // Keep live import/editing provenance when this file owns the schema. A JSON
@@ -125,6 +125,6 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
     const result = source ? MarkdownExporter.exportWithSource(document, source) : MarkdownExporter.exportWithReport(document);
     return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues: result.losses.map(loss => ({ code: loss.kind, type: loss.type, message: loss.detail, path: loss.path })) };
   }
-  const text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document);
+  const text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document, { omitMarkdownCaretHosts });
   return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.' }] : [] };
 }

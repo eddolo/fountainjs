@@ -10,6 +10,7 @@ import { decodeMarkdownEntities, decodeMarkdownText } from '../markdown-entities
 import { unicodeCaseFold } from '../unicode-case-fold';
 import { texMathBlock, texMathStart, texMathCloses, texTableBlock, texTableStart } from '../markdown-tex';
 import { projectTeXTableSource } from '../tex-table';
+import { markMarkdownCaretContainer } from '../editing-provenance';
 import { markdownHTMLBlock, markdownHTMLBlockEnd, markdownEmptyParagraph, markdownHTMLTokenEnd as inlineHTMLTokenEnd, type MarkdownHTMLBlock } from '../markdown-html';
 
 const MAX_MARKDOWN_SOURCE_BLOCKS = 10_000;
@@ -2032,8 +2033,10 @@ function parseList(
     sourceEnd = layout ? itemStart + Math.max(layout.spans.at(-1)?.end ?? 0, lastLine) : index - 1;
     if (layout) pending.push({ marker, layout, start: itemStart, end: sourceEnd, sources });
     else {
-      if (!content.length) content.push(paragraph(schema, '', references));
-      items.push(schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content));
+      const empty = !content.length;
+      if (empty) content.push(paragraph(schema, '', references));
+      const node = schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content);
+      items.push(empty ? markMarkdownCaretContainer(node) : node);
     }
     while (index < lines.length && !lines[index].trim()) index++;
   }
@@ -2046,12 +2049,13 @@ function parseList(
   ));
   for (const { marker, layout, sources } of pending) {
     const content = layout.finish!(tight);
-    if (!content.length) {
+    const empty = !content.length;
+    if (empty) {
       content.push(paragraph(schema, '', references));
       sources.push({ kind: 'empty', blocks: [...content] });
     }
     const node = schema.node(itemName, itemName === 'task_item' ? { checked: marker.checked } : {}, content);
-    items.push(node);
+    items.push(empty ? markMarkdownCaretContainer(node) : node);
     itemSources.push(itemName === 'task_item'
       ? { kind: 'taskItem', checked: Boolean(marker.checked), blocks: [node], children: sources }
       : { kind: 'container', tag: 'li', blocks: [node], children: sources });
@@ -2537,12 +2541,13 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
       }
       const children: PendingHTMLBlockSource[] = [];
       const quoteBlocks = parseBlocks(quote, schema, references, options, undefined, value => children.push(...value));
-      if (!quoteBlocks.length) {
+      const empty = !quoteBlocks.length;
+      if (empty) {
         quoteBlocks.push(paragraph(schema, '', references));
         children.push({ kind: 'empty', blocks: [...quoteBlocks] });
       }
       const node = schema.node('blockquote', {}, quoteBlocks);
-      blocks.push(node);
+      blocks.push(empty ? markMarkdownCaretContainer(node) : node);
       if (options.parseHTMLFlow) sources.push({ kind: 'container', tag: 'blockquote', blocks: [node], children });
       continue;
     }
@@ -2932,7 +2937,7 @@ export class MarkdownImporter {
     }
     const document = schema.topNodeType.create(documentAttributes, content.length ? content : [paragraph(schema, '', source.definitions)]);
     schema.validate(document);
-    return document;
+    return content.length ? document : markMarkdownCaretContainer(document);
   }
 
   /**

@@ -1,5 +1,39 @@
 # Markdown semantics and source fidelity
 
+## HTML export of empty Markdown containers (2026-11-07, unreleased)
+
+Use `HTMLExporter.export(document, { omitMarkdownCaretHosts: true })` when a
+reader should see empty quotes and list items exactly as the Markdown
+describes them. The editor still supplies a paragraph for typing. Export
+omits that child only when the original parsed container remains intact.
+Authored blank paragraphs, edited content, and paragraphs in rebuilt or
+JSON-reopened containers stay in the output. The parser tracks the original
+container with weak in-memory identity.
+
+In the conversion lab, import Markdown, select **HTML** under **Export and
+reopen**, and check **Omit Markdown’s editor-only caret paragraphs in HTML**.
+The lab marks earlier export checks as outdated when this setting changes.
+Reimport can create a new caret for the editor when needed. Inspect the
+downloaded HTML in a browser for its reader structure.
+
+The explicit complete-file source adapter also accepts the option. With
+Markdown-body delimiters and literal addresses it reaches **648/652** body
+projections on LF and CRLF. The additional matches are examples 207, 218,
+239–240, 280–284 and 315. The same neutral comparison checks all 652 examples.
+The four remaining examples use disallowed URI schemes. Source capture still
+passes 1,304 exact untouched-source checks. Plain Markdown, YAML-aware
+capture and the opt-in profile retaining caret children keep their prior
+scores. The complete-file source writer returns unsanitized source data.
+The conversion lab uses the safe HTML exporter.
+
+Three recorded desktop browser journeys download default HTML, enable the
+option, inspect the actual reader DOM, then type into the previously empty
+quote and download it again. Screenshots confirm the authored quote and
+blank paragraph survive. The focused Markdown and HTML suite passes 1,780
+tests across 85 files. Build, types, API, package smoke and headless checks
+pass. The change adds 557 ESM and 603 CommonJS bytes to
+the top-level runtime build. Four existing size overruns remain open.
+
 ## Markdown-body delimiters and literal addresses (2026-11-07, unreleased)
 
 `parseWithSource` recognizes leading YAML frontmatter as metadata by default.
@@ -34,7 +68,7 @@ new setting recovers examples 96 and 98 compared with YAML-aware source capture.
 Disabling bare-address linking adds examples 608, 611 and 612. Default Markdown
 still matches 563/652, plain complete-file parsing 635/652 and YAML-aware
 complete-file capture 633/652. Ten synthesized caret-host differences and four
-URI policy differences remain in the strongest profile. Native HTML model
+URI policy differences remain in this capture profile with caret children. Native HTML model
 retention and layout fidelity have separate checks.
 
 The corpus fixture records each expected example. The browser journeys upload

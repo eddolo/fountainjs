@@ -160,7 +160,7 @@ function htmlMeaning(node: HTMLNode): unknown {
  * Canonical source spelling may change; use Markdown source snapshots for exact
  * untouched spelling. Refusal returns no partial source that looks successful.
  */
-export function exportHTMLSource(document: Node, options: { readonly document?: boolean } = {}): HTMLSourceResult {
+export function exportHTMLSource(document: Node, options: { readonly document?: boolean; readonly omitMarkdownCaretHosts?: boolean } = {}): HTMLSourceResult {
   if (document.type !== document.type.schema.topNodeType) return { ok: false, issues: [{ code: 'invalid-source', message: 'Choose a complete Fountain document for source export.' }] };
   const issues: HTMLSourceIssue[] = [];
   const opaque = new WeakSet<Node>();
@@ -198,6 +198,7 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
   try {
     const emptyBody = isSoleEmptySourceBody(document);
     const fragment = renderHTMLSourceFragment(document, {
+      omitMarkdownCaretHosts: options.omitMarkdownCaretHosts,
       opaque: node => opaque.has(node) || types.has(node.type.name),
       render: (node, path, children) => {
         if (node.type.name === 'html_source_eof') return node.textContent;
@@ -241,7 +242,7 @@ export function exportHTMLSource(document: Node, options: { readonly document?: 
     // The ordinary exporter surrounds block documents with formatting LF. Our
     // source envelope owns no added whitespace: compare its fragment in the same
     // explicit body context, without removing authored text or empty nodes.
-    const intended = bodyTree(`${declaration}<html><head></head><body${pageAttribute}>${HTMLExporter.export(document, { document: false })}</body></html>`);
+    const intended = bodyTree(`${declaration}<html><head></head><body${pageAttribute}>${HTMLExporter.export(document, { document: false, omitMarkdownCaretHosts: options.omitMarkdownCaretHosts })}</body></html>`);
     projectCarriers(intended);
     if (eofNode) {
       const carrier = intended.childNodes.at(-1);

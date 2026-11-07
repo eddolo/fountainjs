@@ -18,11 +18,14 @@ import { textDirectionDOMAttributes } from '../text-direction';
 import { sharedDirectionDOMAttributes } from '../shared-direction';
 import { paragraphLayoutDOMAttributes } from '../paragraph-layout';
 import { codeTheme } from '../code-theme';
+import { isMarkdownCaretContainer } from '../editing-provenance';
 
 export interface HTMLExportOptions {
   document?: boolean;
   title?: string;
   includeStyles?: boolean;
+  /** Render untouched empty Markdown containers without their editor caret child. */
+  omitMarkdownCaretHosts?: boolean;
 }
 
 function escapeHTML(value: unknown): string {
@@ -236,7 +239,14 @@ function mergeAdjacentMarks(value: string): string {
 export interface HTMLSourceProjection {
   render(node: Node, path: readonly number[], children: () => string): string | undefined;
   opaque(node: Node): boolean;
+  omitMarkdownCaretHosts?: boolean;
 }
+
+const markdownReaderProjection: HTMLSourceProjection = {
+  render: () => undefined,
+  opaque: () => false,
+  omitMarkdownCaretHosts: true,
+};
 
 export function renderHTMLSourceFragment(node: Node, projection: HTMLSourceProjection): string {
   return renderNode(node, node, [], projection);
@@ -265,13 +275,14 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
   }
   const context = { document, path };
   if (node.type.name === 'html_comment') return htmlCommentSource(node.attrs.data);
+  const content = projection?.omitMarkdownCaretHosts && isMarkdownCaretContainer(node) ? [] : node.content;
   const children = () => {
-    if (!projection) return mergeAdjacentMarks(node.content
+    if (!projection) return mergeAdjacentMarks(content
       .map((child, index) => renderNode(child, document, [...path, index])).join(''));
     // String-level mark coalescing must never rewrite a script/style body or
     // source attribute that happens to contain closing/opening markup strings.
     let ordinary = '', output = '';
-    node.content.forEach((child, index) => {
+    content.forEach((child, index) => {
       const rendered = renderNode(child, document, [...path, index], projection);
       if (projection.opaque(child)) { output += mergeAdjacentMarks(ordinary) + rendered; ordinary = ''; }
       else ordinary += rendered;
@@ -281,7 +292,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
   const source = projection?.render(node, path, children);
   if (source !== undefined) return source;
   switch (node.type.name) {
-    case 'doc': return node.content.map((child, index) => {
+    case 'doc': return content.map((child, index) => {
       // An anonymous inline flow already owns its whitespace. Pretty-printing
       // separators beside it would become new editable data on HTML reopen.
       const separator = index && child.type.name !== 'html_flow' && node.child(index - 1).type.name !== 'html_flow' ? '\n' : '';
@@ -373,7 +384,7 @@ const DEFAULT_STYLES = LIST_LAYOUT_STYLES + PARAGRAPH_SPACING_STYLES + `body{max
 export class HTMLExporter {
   export(stateOrNode: EditorState | Node, options: HTMLExportOptions = {}): string {
     const node = 'doc' in stateOrNode ? stateOrNode.doc : stateOrNode;
-    const fragment = renderNode(node);
+    const fragment = renderNode(node, node, [], options.omitMarkdownCaretHosts ? markdownReaderProjection : undefined);
     if (options.document === false) return fragment;
     const settings = node.type === node.type.schema.topNodeType ? readDocumentPageSettings(node) : undefined;
     const pageAttribute = settings ? ` data-fountain-page-settings="${escapeHTML(JSON.stringify(settings))}"` : '';

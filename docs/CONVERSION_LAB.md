@@ -11,6 +11,12 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+For a Markdown file, select **HTML** as the export format to reveal **Omit
+Markdown’s editor-only caret paragraphs in HTML**. This keeps an untouched
+empty quote or list item empty in the download while you can still type into
+it in the editor. Authored blank paragraphs and edited text are retained.
+[HTML export policy and evidence](MARKDOWN_SOURCE.md).
+
 Select **Use CommonMark rules for delimiters and bare addresses** before
 uploading a Markdown file to edit a leading delimiter pair as document
 content. Bare URLs and email addresses remain text, and explicit links keep

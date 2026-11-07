@@ -44,7 +44,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const surface = useRef<FountainEditorHandle>(null);
   const state = useFountainState(editor)!;
   const [format, setFormat] = useState<LabFormat>(entry.format!);
-  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node }>();
+  const [omitCaretHosts, setOmitCaretHosts] = useState(false);
+  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node; omitMarkdownCaretHosts: boolean }>();
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [includeContent, setIncludeContent] = useState(false);
@@ -52,7 +53,9 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const images = labImages(entry.result!.document);
   const packageParts = entry.result!.packageParts;
   const unrepresentedMedia = packageParts?.filter(part => part.handling === 'unrepresented-media').length ?? 0;
-  const stale = check && (check.revision !== state.doc || check.format !== format);
+  const markdownHTML = format === 'html' && entry.format === 'markdown';
+  const omitMarkdownCaretHosts = markdownHTML && omitCaretHosts;
+  const stale = check && (check.revision !== state.doc || check.format !== format || check.omitMarkdownCaretHosts !== omitMarkdownCaretHosts);
   const footnoteReport = inspectFootnotes(state.doc);
   const templateReport = inspectPageTemplates(state.doc);
   const pageSettings = readDocumentPageSettings(state.doc);
@@ -70,9 +73,9 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   }
   function convert(save: boolean) {
     try {
-      const output = exportLab(state.doc, format, entry.result?.source, entry.context);
+      const output = exportLab(state.doc, format, entry.result?.source, entry.context, omitMarkdownCaretHosts);
       const reopened = importLab(output.bytes, format, entry.context);
-      setCheck({ id: crypto.randomUUID(), document: reopened.document, equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues], format, revision: state.doc });
+      setCheck({ id: crypto.randomUUID(), document: reopened.document, equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues], format, revision: state.doc, omitMarkdownCaretHosts });
       if (save) download(new Uint8Array(output.bytes), `${entry.file.name}.converted.${output.extension}`, output.mime);
       setError(''); setStatus(save ? 'Export downloaded and reopened below.' : 'Export generated in memory and reopened below. The editable draft was not replaced.');
     } catch (cause) { setCheck(undefined); setError(cause instanceof Error ? cause.message : String(cause)); }
@@ -84,7 +87,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
       importedImages: { represented: images.length, embeddedRaster: images.filter(image => image.embedded).length },
       sourcePackage: packageParts ? { entries: packageParts.length, unrepresentedMedia, parts: includeContent ? packageParts : packageParts.map(({ path: _path, ...part }) => part) } : null,
       importIssues: labReportIssues(entry.result!.issues, includeContent), draftChanged: !sameLabDocument(entry.result!.document, state.doc),
-      roundTrip: check ? { format: check.format, stale: Boolean(stale), exactFountainJSONEquality: check.equal, issues: labReportIssues(check.issues, includeContent) } : null,
+      roundTrip: check ? { format: check.format, stale: Boolean(stale), exactFountainJSONEquality: check.equal,
+        ...(check.omitMarkdownCaretHosts ? { omitMarkdownCaretHosts: true } : {}), issues: labReportIssues(check.issues, includeContent) } : null,
       fidelity: 'Original-format visual fidelity and exhaustive loss detection are unverified.',
       ...(includeContent ? { fileName: entry.file.name, note, importedDocument: entry.result!.document.toJSON(), editedDocument: state.doc.toJSON(), originalText: entry.sourceText } : {}),
     };
@@ -112,6 +116,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
         {footnoteReport.issues.length > 0 && <ul>{footnoteReport.issues.map((issue, index) => <li key={index}>{issue.detail}</li>)}</ul>}
       </section></section></div>
     <section className="lab-export"><h3>3. Export and reopen</h3><div className="lab-actions"><label>Export format<select value={format} onChange={event => setFormat(event.target.value as LabFormat)}>{formats.map(value => <option key={value} value={value}>{value.toUpperCase()}</option>)}</select></label><button onClick={() => convert(false)}>Check round trip</button><button className="lab-primary" onClick={() => convert(true)}>Download export</button></div><p>Compares the current draft with its generated export reimported through Fountain—not with Word or another independent renderer. JSON equality is stricter than visual similarity.</p>
+      {markdownHTML && <label className="lab-checkbox"><input type="checkbox" checked={omitCaretHosts} onChange={event => setOmitCaretHosts(event.target.checked)} /> Omit Markdown’s editor-only caret paragraphs in HTML</label>}
       {check && <div className="lab-check" aria-label="Round-trip result"><strong>{stale ? 'Outdated check — run again after your changes.' : check.equal ? 'Exact Fountain document equality after reopening.' : 'The reopened Fountain document differs. Inspect the preview and report.'}</strong><p>This compares only the current Fountain draft, not the original file. Original import findings: {entry.result!.issues.length}. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.</p><IssueList issues={check.issues} /><Preview key={check.id} document={check.document} context={entry.context} /></div>}
     </section>
     <section className="lab-report"><h3>Found a problem?</h3><p>Download a diagnostic report for your own testing. Files are never attached or submitted automatically. Even report warnings may contain private snippets: review before sharing.</p><label className="lab-checkbox"><input type="checkbox" checked={includeContent} onChange={event => setIncludeContent(event.target.checked)} /> Include filename, document content and my note in the downloaded report</label><label>What went wrong?<textarea value={note} onChange={event => setNote(event.target.value)} placeholder="What you expected, and what happened instead" /></label><div className="lab-actions"><button onClick={report}>Download diagnostic report</button><a href="https://github.com/eddolo/fountainjs/issues/new" target="_blank" rel="noreferrer">Open a blank GitHub bug report ↗</a></div></section>

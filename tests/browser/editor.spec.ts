@@ -42,6 +42,7 @@ import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries
 import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
 import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boundaries-journey';
 import { runMarkdownFrontmatterJourney } from './markdown-frontmatter-journey';
+import { runMarkdownCaretHTMLJourney } from './markdown-caret-html-journey';
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
 import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
 import { runMarkdownContainerReferenceJourney } from './markdown-container-reference-journey';
@@ -6116,6 +6117,10 @@ test('keeps reference definitions outside a terminal fence after real structural
 
 test('imports leading Markdown delimiters and literal addresses through edit, download and reopen', async ({ page }, info) => {
   await runMarkdownFrontmatterJourney(page, info);
+});
+
+test('exports untouched empty Markdown containers without dropping authored blank or edited content', async ({ page }, info) => {
+  await runMarkdownCaretHTMLJourney(page, info);
 });
 
 test('reopens source-preserved issue drafts with the real HTML table adapter enabled', async ({ page }, info) => {

@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Let HTML exports omit untouched Markdown caret children while retaining
+  empty containers and authored blank paragraphs. The conversion lab
+  exposes the option for Markdown-to-HTML downloads. The explicit
+  complete-source body profile reaches 648/652. [Markdown source policies](docs/MARKDOWN_SOURCE.md).
+
 - Let Markdown source capture parse leading delimiters as document content
   with `frontmatter: 'markdown'`. The conversion lab exposes this choice with
   literal bare addresses, and the complete-file source profile reaches

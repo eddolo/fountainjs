@@ -4,6 +4,17 @@ import type { Node } from './schema';
 // paragraph must never be mistaken for the editor's automatic caret repair.
 // Do not retain an entire pre-edit document through its surviving caret node.
 const automaticTrailingParagraphs = new WeakSet<Node>();
+const markdownCaretContainers = new WeakSet<Node>();
+
+/** Only the original Markdown container owns its synthesized empty child. */
+export function markMarkdownCaretContainer(container: Node): Node {
+  markdownCaretContainers.add(container);
+  return container;
+}
+
+export function isMarkdownCaretContainer(container: Node): boolean {
+  return markdownCaretContainers.has(container);
+}
 
 /** Internal boundary used only by the default trailing-editable-block repair. */
 export function markAutomaticTrailingParagraph(node: Node): void {
