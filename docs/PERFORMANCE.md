@@ -940,6 +940,14 @@ The raw aggregate fell from 1,543.0 to 1,540.1 KiB for CommonJS and from
 1,546.7 to 1,543.8 KiB for ESM. CommonJS remains 131.3 KiB over its existing
 limit. Both core entries and the ESM aggregate meet their existing limits.
 
+### Authority-backed Yjs room entry
+
+The optional `yjs/room` entry adds room verification, adapter selection and
+legacy checkpoint support. It measures 13.0 KiB ESM and 12.8 KiB CommonJS
+before its shared imports. The aggregate is 1,556.9 KiB ESM and 1,553.4 KiB
+CommonJS. The ESM aggregate and the individual entry checks pass. CommonJS
+is 144.7 KiB over its existing aggregate limit, up from 131.3 KiB.
+
 The focused source suite passed 286 cases. All 15 recorded Chromium,
 Firefox and WebKit workflows passed, covering native paste, safe and
 rejected links, edited and reopened HTML, and the headless LaTeX demo.

@@ -53,6 +53,9 @@
       "yjs": [
         "dist/yjs/index.d.ts"
       ],
+      "yjs/room": [
+        "dist/yjs/room.d.ts"
+      ],
       "experimental/yjs-retained": [
         "dist/experimental/yjs-retained.d.ts"
       ],
@@ -286,6 +289,16 @@
       "require": {
         "types": "./dist/yjs/index.d.cts",
         "default": "./dist/yjs.cjs"
+      }
+    },
+    "./yjs/room": {
+      "import": {
+        "types": "./dist/yjs/room.d.ts",
+        "default": "./dist/yjs-room.js"
+      },
+      "require": {
+        "types": "./dist/yjs/room.d.cts",
+        "default": "./dist/yjs-room.cjs"
       }
     },
     "./experimental/yjs-retained": {

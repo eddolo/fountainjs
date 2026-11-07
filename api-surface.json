@@ -441,6 +441,8 @@
     "dist/yjs/retained-room-coordinator.d.ts": "ac30ca1aa8ef700f23245778915a7854c188f99579838ead879a642394bf7652",
     "dist/yjs/retained-room-store.d.cts": "1e7c983af856a0e424d40a63c89853f742e560a038b7f45df0664512732e4f2b",
     "dist/yjs/retained-room-store.d.ts": "463a9e3542f1d2737312627f051fbf06bb9688a328b07791a85f9f7e7d88a85a",
+    "dist/yjs/room.d.cts": "b8d76880b7f2266dd1589a95a33bf22fba58954055383e7bd4b93584114211c7",
+    "dist/yjs/room.d.ts": "d063298a8736a53b45c3ff4ed3250cb531347bd3df5b5c4125c5a17eee69c456",
     "dist/yjs/structured-attributes.d.cts": "783fad435a4b880d340fcde14e456c9a437746fc36ddad83ed6cddff3811845f",
     "dist/yjs/structured-attributes.d.ts": "44aecb337c6c742fa45ee136982965b7cbd43da9940936cea9ed69c3ec3a248c"
   }

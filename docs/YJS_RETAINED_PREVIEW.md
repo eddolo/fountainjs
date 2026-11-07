@@ -99,6 +99,56 @@ The server reference handles simultaneous first joins with an atomic insert and
 reuses the saved room on retry. [Provisioning audit](YJS_RETAINED_PROVISIONING_AUDIT.md).
 The host supplies the loader and binding through the extension options.
 
+### Open a room through the application authority
+
+The unreleased `fountainjs-editor/yjs/room` entry defaults to retained rooms.
+It verifies the offered room, the bound checkpoint and the native document
+identity before it returns an extension factory. The same entry exports the
+retained extension factory and both checkpoint capture functions for hosts that need to
+seed rooms or preserve an existing XML room.
+
+```ts
+import { CoreExtension, composeExtensions, createEditor } from 'fountainjs-editor'
+import { openYjsRoom } from 'fountainjs-editor/yjs/room'
+
+const room = await openYjsRoom({
+  schema,
+  schemaVersion: 'article-v1',
+  expected: { key: articleId },
+  open: (protocols, signal) => api.openArticle(articleId, protocols, signal),
+  admit: (offer, signal) => api.admitArticle(offer, signal),
+})
+
+// The application's provider starts disconnected and fences every write
+// against the lease. api is the host's authorized transport.
+const provider = api.createDisconnectedProvider(room.document, room.lease)
+const kit = composeExtensions([CoreExtension, room.createExtension({
+  user: currentUser,
+  provider,
+})])
+const editor = createEditor({
+  schema: kit.schema,
+  plugins: kit.plugins,
+  content: room.baseDocument.toJSON(),
+})
+// When leaving the room, destroy the editor before room.document.destroy().
+```
+
+Use the same schema and structured attribute definitions on the client and
+authority, and compose the same schema extensions when mounting the editor.
+For applications that are migrating XML rooms, pass `protocols: ['retained',
+'legacy']` to open either stored format. The helper preserves a verified
+nested XML fragment when selecting the legacy adapter. Keep a draft available
+until its saved edits are acknowledged. Pass an abort signal when leaving a
+pending join and dispose the returned document if the editor never mounts.
+
+An external install of the local tarball passed 15 collaboration checks each
+in Node ESM and CommonJS, plus strict NodeNext consumer types. The private
+SQLite migration demo uses the package opener and its extension factory.
+Twelve recorded journeys across Chromium, Firefox and WebKit cover handoff,
+rollback, mismatched formats and offline recovery. The older direct XML
+entry still reproduces its six structural cases.
+
 For a deployment with both formats, the SQLite reference offers
 `CoordinatedDocumentRoom.openForEditing({ protocols, loadCheckpoint })`.
 The client declares the formats it can edit. An absent room is seeded with the
@@ -107,8 +157,8 @@ stored format and namespace, and the initializer stays unused. The response
 includes the snapshot and the native identity required for admission. Bind
 through the authority before mounting the matching adapter or starting its
 provider. A format or epoch change between these steps requires a fresh open.
-The client must keep its local draft through that retry. This API belongs to
-the host reference. Existing `/yjs` clients still use the legacy adapter.
+The client must keep its local draft through that retry. The authority API
+belongs to the host reference. Existing `/yjs` clients use the legacy adapter.
 
 The opening flow passed 84 focused source cases and 21 recorded journeys in
 Chromium, Firefox and WebKit. The provisioning demo opens the same retained

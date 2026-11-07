@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add `fountainjs-editor/yjs/room` for authority-backed collaboration. The
+  opener defaults to retained storage, verifies the room before mounting, and
+  creates the matching adapter. Existing XML rooms require explicit legacy
+  support or an authorized migration.
+
 - Keep the editor's local draft and disable shared undo and redo if an
   incompatible room update reaches a collaboration session. Reconnecting the
   same session cannot replace the draft with subsequently repaired shared data.

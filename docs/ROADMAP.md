@@ -10,11 +10,12 @@ those revisions and scopes.
 
 The active priority is COLLAB-01. Six ordinary default-adapter tests still fail
 for offline typing versus concurrent quote/list wrapping, partial marks and
-paragraph splitting. The retained replacement is available as an experimental
-entry in the unreleased local package. Safe production adoption remains open.
+paragraph splitting. The unreleased `fountainjs-editor/yjs/room` entry defaults
+to the retained replacement for authority-backed rooms. Existing XML rooms
+require explicit legacy support or migration. Safe production adoption remains open.
 The SQLite reference can open an existing room in its stored format and use
 the retained format when provisioning a new room.
-The dual-format client reference verifies the bound reply and checkpoint
+The package opener verifies the bound reply and checkpoint
 identity before selecting an adapter and mounting an editor. It refuses an
 unrequested format before admission. Fresh rooms opened through this reference
 select retained storage and pass the six structural cases after durable reopen.
@@ -52,8 +53,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-remains 131.3 KiB over its existing limit after sharing more HTML conversion
-code. [Package output audit](PERFORMANCE.md#shared-inline-html-conversion).
+is 144.7 KiB over its existing limit with the room opener and legacy checkpoint
+support. [Package output audit](PERFORMANCE.md#authority-backed-yjs-room-entry).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested

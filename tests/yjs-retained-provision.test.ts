@@ -12,7 +12,7 @@ import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-ada
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { validateRetainedRoomCheckpoint } from '../src/yjs/retained-room-store';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
-import { openBoundYjsRoom } from '../examples/backends/bound-yjs-room';
+import { openYjsRoom } from '../src/yjs/room';
 
 const key = 'project:first-document';
 const version = 'schema-1';
@@ -58,7 +58,7 @@ async function fixture() {
 
 it('opens a newly provisioned retained room at the newer bound revision', async () => {
   const pair = await fixture();
-  const bound = await openBoundYjsRoom({
+  const bound = await openYjsRoom({
     expected: { key }, schema: pair.schema, schemaVersion: version, protocols: ['legacy', 'retained'],
     open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint: () => pair.checkpoint })).admission,
     admit: async offer => {
@@ -80,9 +80,12 @@ it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(
     const starter = seed('Alpha');
     const initial = await captureRetainedCheckpoint(starter.document, starter.schema, version);
     const open = async () => {
-      const bound = await openBoundYjsRoom({
-        expected: { key }, schema: pair.schema, schemaVersion: version, protocols: ['legacy', 'retained'],
-        open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint: () => initial })).admission,
+      const bound = await openYjsRoom({
+        expected: { key }, schema: pair.schema, schemaVersion: version,
+        open: async protocols => {
+          expect(protocols).toEqual(['retained']);
+          return (await pair.room.openForEditing({ protocols, loadCheckpoint: () => initial })).admission;
+        },
         admit: offer => pair.peer.admit(offer),
       });
       cleanups.push(() => bound.document.destroy());
@@ -91,7 +94,7 @@ it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(
     };
     const author = async () => {
       const bound = await open();
-      const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({ document: bound.document, user })]);
+      const kit = composeExtensions([CoreExtension, bound.createExtension({ user })]);
       const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: bound.baseDocument.toJSON() });
       cleanups.push(() => editor.destroy());
       return { ...bound, editor };
@@ -239,7 +242,7 @@ it('selects the stored legacy adapter and returns the original embedded fragment
   cleanups.push(() => { editor.destroy(); document.destroy(); });
   const saved = await pair.room.initialize(await captureLegacyCheckpoint(document, pair.schema, version, {}, 'Original / α', fragment));
   const loadCheckpoint = vi.fn(() => pair.checkpoint);
-  const bound = await openBoundYjsRoom({
+  const bound = await openYjsRoom({
     expected: saved, schema: pair.schema, schemaVersion: version, protocols: ['legacy', 'retained'],
     open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint })).admission,
     admit: offer => pair.peer.admit(offer),
@@ -249,6 +252,12 @@ it('selects the stored legacy adapter and returns the original embedded fragment
   expect(bound.lease).toMatchObject({ key, epoch: saved.epoch, protocol: 'legacy', room: 'Original / α' });
   expect(bound.fragment).toBe(bound.document.getMap('folder').get('page'));
   expect(bound.baseDocument.toJSON()).toEqual(editor.getJSON());
+  const boundKit = composeExtensions([CoreExtension, bound.createExtension({ user })]);
+  const boundEditor = createEditor({ schema: boundKit.schema, plugins: boundKit.plugins, content: bound.baseDocument.toJSON() });
+  cleanups.push(() => boundEditor.destroy());
+  boundEditor.dispatch(boundEditor.createTransaction().insertText([0, 0], 0, 'Nested: '));
+  const updated = await pair.room.write({ epoch: bound.lease.epoch, protocol: bound.lease.protocol, update: Y.encodeStateAsUpdate(bound.document) });
+  expect(updated.revision).toBe(1);
 });
 
 it('rejects a legacy offer to a retained-only client before admitting the room', async () => {
@@ -258,7 +267,7 @@ it('rejects a legacy offer to a retained-only client before admitting the room',
   const opened = await pair.room.openForEditing({ protocols: ['legacy', 'retained'], loadCheckpoint: () => pair.checkpoint });
   const requested: Array<'retained' | 'legacy'> = ['retained'];
   const admit = vi.fn(offer => pair.peer.admit(offer));
-  await expect(openBoundYjsRoom({
+  await expect(openYjsRoom({
     expected: { key }, schema: pair.schema, schemaVersion: version, protocols: requested,
     open: async protocols => {
       expect(protocols).toEqual(['retained']);
@@ -278,7 +287,7 @@ it.each(['epoch', 'protocol', 'key', 'phase', 'revision'] as const)('refuses a m
   const readBytes = vi.fn(() => opened.snapshot.checkpoint.update);
   const reply = { ...opened.snapshot, checkpoint: { manifest: pair.checkpoint.manifest, get update() { return readBytes(); } } };
   const wrong = { epoch: crypto.randomUUID(), protocol: 'legacy', key: 'other-room', phase: 'frozen', revision: -1 };
-  await expect(openBoundYjsRoom({
+  await expect(openYjsRoom({
     expected: opened.snapshot, schema: pair.schema, schemaVersion: version, protocols: ['retained'], open: async () => opened.admission,
     admit: async () => ({ ...reply, [field]: wrong[field] }),
   })).rejects.toThrow('reply does not match');
@@ -296,7 +305,7 @@ it.each(['legacy', 'retained'] as const)('refuses a valid but foreign %s checkpo
   await pair.room.initialize(await capture(original));
   const opened = await pair.room.openForEditing({ protocols: [protocol], loadCheckpoint: () => pair.checkpoint });
   const checkpoint = await capture(foreign);
-  await expect(openBoundYjsRoom({
+  await expect(openYjsRoom({
     expected: opened.snapshot, schema: pair.schema, schemaVersion: version, protocols: [protocol], open: async () => opened.admission,
     admit: async () => ({ ...opened.snapshot, checkpoint }),
   })).rejects.toThrow('native identity changed');
@@ -309,7 +318,7 @@ it('discards a delayed admission after cancellation before reading its wire data
   const started = deferred<void>();
   const response = deferred<typeof opened.snapshot>();
   const readBytes = vi.fn(() => opened.snapshot.checkpoint.update);
-  const result = openBoundYjsRoom({
+  const result = openYjsRoom({
     expected: opened.snapshot, schema: pair.schema, schemaVersion: version, protocols: ['retained'], signal: controller.signal,
     open: async () => opened.admission, admit: () => { started.resolve(); return response.promise; },
   });

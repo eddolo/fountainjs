@@ -195,7 +195,7 @@ are recreated when the editor reopens.
 
 ## Validating the room before mounting the editor
 
-The [host opener](../examples/backends/bound-yjs-room.ts) first requests a
+The [room opener](../src/yjs/room.ts) first requests a
 metadata-only offer for the expected room key and, when supplied, its epoch,
 protocol, and minimum revision. It sends a frozen copy of the supported formats
 and refuses an unrequested format before calling admission. The admission reply

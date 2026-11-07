@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 
 // Modules are injected so the same contract exercises ESM, isolated CommonJS,
 // and a genuinely packed/installed consumer without mixing Yjs constructors.
-export async function checkRetainedYjs(core, retained, Y, legacy) {
+export async function checkRetainedYjs(core, retained, Y, legacy, room) {
   for (const name of ['RetainedYjsCollaborationAdapter', 'createRetainedYjsCollaborationExtension', 'captureRetainedCheckpoint', 'restoreRetainedCheckpoint']) {
     assert.equal(typeof retained[name], 'function', `Missing retained export: ${name}`);
     assert.equal(core[name], undefined, `Retained preview leaked into the default entry: ${name}`);
@@ -63,6 +63,30 @@ export async function checkRetainedYjs(core, retained, Y, legacy) {
     const checkpoint = await retained.captureRetainedCheckpoint(seedDoc, seed.state.schema, 'packed-v1');
     const epoch = globalThis.crypto.randomUUID();
     const snapshot = { key: 'packed-room', epoch, revision: 0, phase: 'active', protocol: 'retained', checkpoint };
+    if (room) {
+      assert.equal(core.openYjsRoom, undefined);
+      assert.equal(legacy.openYjsRoom, undefined);
+      assert.equal(room.createRetainedYjsCollaborationExtension, retained.createRetainedYjsCollaborationExtension);
+      assert.equal(room.captureRetainedCheckpoint, retained.captureRetainedCheckpoint);
+      assert.equal(typeof room.captureLegacyCheckpoint, 'function');
+      const offer = { key: snapshot.key, epoch, revision: 0, protocol: 'retained', room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
+      const bound = await room.openYjsRoom({
+        expected: { key: snapshot.key }, schema: seed.state.schema, schemaVersion: 'packed-v1',
+        open: async protocols => { assert.deepEqual(protocols, ['retained']); return offer; },
+        admit: async accepted => { assert.deepEqual(accepted, offer); return snapshot; },
+      });
+      let starts = 0;
+      const extension = bound.createExtension({ user: { id: 'verified', name: 'Verified', color: '#7048e8' }, provider: { connect() { starts++; } } });
+      assert.equal(starts, 0);
+      const kit = composeExtensions([CoreExtension, extension]);
+      const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: bound.baseDocument.toJSON() });
+      try {
+        assert.equal(starts, 1);
+        assert.ok(core.getCollaborationAdapter(editor) instanceof retained.RetainedYjsCollaborationAdapter);
+        assert.deepEqual(editor.getJSON(), seed.getJSON());
+      } finally { editor.destroy(); bound.document.destroy(); }
+      cases++;
+    }
     const target = new Y.Doc(); let started = 0, bound;
     const kit = composeExtensions([CoreExtension, retained.createRetainedYjsCollaborationExtension({
       document: target, user: { id: 'joined', name: 'Joined', color: '#7048e8' },
