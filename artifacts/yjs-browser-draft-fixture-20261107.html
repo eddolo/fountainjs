@@ -26,6 +26,11 @@
   <button id="save">Save recovery copy</button>
   <button id="retry-autosave" hidden>Retry automatic save</button>
   <button id="quote">Toggle quote</button>
+  <button id="bullet" data-structural hidden>Toggle bullet list</button>
+  <button id="ordered" data-structural hidden>Toggle numbered list</button>
+  <button id="task" data-structural hidden>Toggle task list</button>
+  <button id="strong" data-structural hidden>Apply bold</button>
+  <button id="redo" data-structural hidden>Redo shared edit</button>
   <button id="undo">Undo shared edit</button>
   <button id="send">Send editor changes</button>
   <button id="rotate">Rotate server session</button>
@@ -40,7 +45,7 @@
 <section id="copies"><h2>Recovery copies on this device</h2><div id="records"></div></section>
 <script type="module">
 import * as Y from 'yjs';
-import {CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState, connectCollaboration, disconnectCollaboration, toggleQuote, undoCollaboration, COLLABORATION_REMOTE_META, COLLABORATION_ORIGIN_META} from './yjs-authority-admission-build-20261107/engine.js';
+import {CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState, connectCollaboration, disconnectCollaboration, toggleQuote, toggleList, setMark, undoCollaboration, redoCollaboration, COLLABORATION_REMOTE_META, COLLABORATION_ORIGIN_META} from './yjs-authority-admission-build-20261107/engine.js';
 import {createRetainedYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/adapter.js';
 import {captureRetainedCheckpoint, restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';
 import {prepareRetainedAdmission} from './yjs-authority-admission-build-20261107/admission.js';
@@ -51,6 +56,11 @@ const version = 'admission-browser-1';
 const select = selector => document.querySelector(selector);
 const local = text => ({type: 'doc', content: [{type: 'paragraph', content: [{type: 'text', text}]}]});
 const incident = () => {
+  if (query.has('structural')) return {
+    ...local('Alpha'),
+    attrs: { audit: 'offline-structure' },
+    content: [...local('Alpha').content, { type: 'image_super', attrs: { src: '/tests/fixtures/cross-container-figure.png', alt: 'Original figure' } }],
+  };
   const seed = local('Shared incident report.');
   if (query.has('large')) {
     for (let index = 1; index <= 48; index += 1) {
@@ -61,6 +71,7 @@ const incident = () => {
 };
 const query = new URLSearchParams(location.search);
 document.body.classList.toggle('large', query.has('large'));
+if (query.has('structural')) document.querySelectorAll('[data-structural]').forEach(control => { control.hidden = false; });
 const autosaveEnabled = !query.has('manual');
 const live = query.has('live');
 const user = query.has('peer')
@@ -330,7 +341,10 @@ button(select('#leave'), () => {
 button(select('#save'), async () => { await saveCopy(); await listCopies(); });
 button(select('#retry-autosave'), async () => { await client.autosave?.flush(); });
 button(select('#quote'), () => { toggleQuote(client.editor); });
+for (const kind of ['bullet', 'ordered', 'task']) button(select('#' + kind), () => { toggleList(client.editor, kind); });
+button(select('#strong'), () => { setMark(client.editor, 'strong'); });
 button(select('#undo'), () => { undoCollaboration(client.editor); });
+button(select('#redo'), () => { redoCollaboration(client.editor); });
 button(select('#send'), async () => {
   if (getCollaborationState(client.editor)?.status !== 'connected' || !client.lease) throw new Error('Join an active session before sending edits.');
   try { await request('write', {epoch: client.lease.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(client.doc)}); }

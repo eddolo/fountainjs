@@ -91,6 +91,8 @@ The [live HTTP transport reference](YJS_LIVE_HTTP_REFERENCE.md) also shows
 automatic edit exchange after binding, retry after a dropped reply, and
 recovery when a room refuses an old session. It includes an ephemeral peer
 cursor and selection channel fenced to the active room epoch.
+Its structural recovery matrix demonstrates the retained path for quote and
+list wrapping, partial bold, and paragraph splitting across an offline reload.
 
 Typing while admission is pending is retained locally. If it conflicts with the
 loaded state, admission reports an error instead of overwriting it. Cancellation

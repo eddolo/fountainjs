@@ -48,6 +48,9 @@ full validation and a generation check before delivery.
 Established document requests now time out and retry transient failures with
 jittered backoff while keeping local edits available.
 Both adapters also discard an older queued cursor after a newer one is sent.
+The retained live workflow now has 18 recorded browser checks for all six
+default-adapter structural cases across offline autosave, reload, resume, undo
+and redo. The ordinary default adapter matrix still reproduces its six failures.
 [Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
 
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies

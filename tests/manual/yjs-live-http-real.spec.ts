@@ -1,5 +1,6 @@
 import { expect, test, type Page, type Route } from '@playwright/test';
 import { auditCompiledRuntime } from './compiled-runtime-audit';
+import type { NodeJSON } from '../../src';
 
 const build = '/artifacts/yjs-authority-admission-build-20261107';
 auditCompiledRuntime(`${build}/engine.js`, `${build}/adapter.js`, `${build}/checkpoint.js`, `${build}/admission.js`);
@@ -32,7 +33,8 @@ async function secondAuthor(page: Page) {
   const token = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
   const peer = await page.context().newPage();
   await peer.addInitScript(token => sessionStorage.setItem('fountain-draft-audit-session', token), token);
-  await peer.goto(fixture + '&peer' + (new URL(page.url()).searchParams.has('large') ? '&large' : ''));
+  const profile = new URL(page.url()).searchParams;
+  await peer.goto(fixture + '&peer' + ['large', 'structural'].filter(name => profile.has(name)).map(name => '&' + name).join(''));
   await join(peer);
   return peer;
 }
@@ -70,7 +72,8 @@ const serverRevision = (page: Page) => page.evaluate(async () => {
 });
 
 test.beforeEach(async ({ page }, info) => {
-  await page.goto(fixture + (info.tags.includes('@large') ? '&large' : '') + (info.tags.includes('@deadline') ? '&deadline' : ''));
+  const profile = ['large', 'deadline', 'structural'].filter(name => info.tags.includes('@' + name));
+  await page.goto(fixture + profile.map(name => '&' + name).join(''));
   await join(page);
 });
 
@@ -364,3 +367,91 @@ test('delivers presence while the receiving editor is behind the current documen
     await peer.screenshot({ path: info.outputPath('presence-after-catchup.png'), scale: 'css' });
   } finally { await peer.close(); }
 });
+
+const structureCases = [
+  { name: 'quote', button: 'Toggle quote', selector: 'blockquote', type: 'blockquote' },
+  { name: 'bullet list', button: 'Toggle bullet list', selector: 'ul:not([data-type])', type: 'bullet_list' },
+  { name: 'numbered list', button: 'Toggle numbered list', selector: 'ol', type: 'ordered_list' },
+  { name: 'task list', button: 'Toggle task list', selector: 'ul[data-type="task-list"]', type: 'task_list' },
+  { name: 'partial bold', button: 'Apply bold', selector: 'strong', type: 'paragraph' },
+  { name: 'paragraph split', button: null, selector: 'p', type: 'paragraph' },
+] as const;
+
+const readModel = (page: Page) => page.evaluate(async () => {
+  const { model, server } = await (window as unknown as { audit: {
+    snapshot(): Promise<{ model: NodeJSON; server: NodeJSON }>;
+  } }).audit.snapshot();
+  return { model, server };
+});
+
+async function placeAlphaCaret(page: Page, offset: number) {
+  await editor(page).getByText('Alpha', { exact: true }).click();
+  await page.keyboard.press('Home');
+  for (let index = 0; index < offset; index += 1) await page.keyboard.press('ArrowRight');
+}
+
+for (const operation of structureCases) {
+  test(`recovers an offline edit through reload after ${operation.name}`, { tag: '@structural' }, async ({ page }, info) => {
+    const peer = await secondAuthor(page);
+    try {
+      const original = (await readModel(page)).model;
+      await page.route(write, offline);
+      await page.route(poll, offline);
+      await placeAlphaCaret(page, 2);
+      await page.keyboard.type('X');
+      await expect(editor(page)).toContainText('AlXpha');
+      await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+      await expect(editor(peer)).toContainText('Alpha');
+      await page.reload();
+      await expect(page.getByRole('status')).toHaveText('Ready');
+
+      await placeAlphaCaret(peer, operation.name === 'partial bold' ? 1 : 3);
+      if (operation.name === 'partial bold') {
+        for (let index = 0; index < 3; index += 1) await peer.keyboard.press('Shift+ArrowRight');
+        await expect.poll(() => peer.evaluate(() => document.getSelection()?.toString())).toBe('lph');
+      }
+      if (operation.button) await peer.getByRole('button', { name: operation.button, exact: true }).click();
+      else await peer.keyboard.press('Enter');
+      if (operation.name === 'paragraph split') await expect(server(peer).locator('p')).toHaveText(['Alp', 'ha']);
+      else await expect(server(peer).locator(operation.selector)).toHaveText(operation.name === 'partial bold' ? 'lph' : 'Alpha');
+
+      await page.unroute(write, offline);
+      await page.unroute(poll, offline);
+      await page.getByRole('button', { name: 'Resume this session' }).click();
+      await expect(connection(page)).toHaveText('connected');
+      const assertRecovered = async () => {
+        for (const author of [page, peer]) {
+          if (operation.name === 'paragraph split') {
+            await expect(editor(author).locator('p')).toHaveText(['AlXp', 'ha']);
+            await expect(server(author).locator('p')).toHaveText(['AlXp', 'ha']);
+          } else {
+            await expect(editor(author)).toContainText('AlXpha');
+            await expect(server(author)).toContainText('AlXpha');
+            if (operation.name === 'partial bold') {
+              await expect.poll(async () => (await editor(author).locator('strong').allTextContents()).join('').replace('X', '')).toBe('lph');
+            } else await expect(editor(author).locator(operation.selector)).toHaveText('AlXpha');
+          }
+        }
+        const left = await readModel(page);
+        const right = await readModel(peer);
+        expect(left.model).toEqual(left.server);
+        expect(right.model).toEqual(left.model);
+        expect(right.server).toEqual(left.model);
+        expect(left.model.attrs).toEqual(original.attrs);
+        expect(left.model.content?.at(-1)).toEqual(original.content?.at(-1));
+        expect(left.model.content?.[0].type).toBe(operation.type);
+        const image = editor(page).getByRole('img', { name: 'Original figure', exact: true });
+        await expect(image).toBeVisible();
+        await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.naturalWidth)).toBeGreaterThan(0);
+      };
+      await assertRecovered();
+      await page.screenshot({ path: info.outputPath('recovered-structure.png'), scale: 'css' });
+      await peer.getByRole('button', { name: 'Undo shared edit', exact: true }).click();
+      await expect(server(page).locator('p')).toHaveText(['AlXpha']);
+      await expect(editor(page).locator('blockquote, ul, ol, strong')).toHaveCount(0);
+      await peer.getByRole('button', { name: 'Redo shared edit', exact: true }).click();
+      await assertRecovered();
+      await page.screenshot({ path: info.outputPath('redone-structure.png'), scale: 'css' });
+    } finally { await peer.close(); }
+  });
+}

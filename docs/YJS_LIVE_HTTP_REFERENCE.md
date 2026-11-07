@@ -110,6 +110,30 @@ raw-size gates remain over their existing limits.
 pnpm exec playwright test --config artifacts/yjs-live-http-20261107.config.ts
 ```
 
+For the six default-adapter structural cases, the live fixture also has a
+separate recovery matrix. It uses the retained adapter and SQLite transport.
+An author types inside `Alpha` while offline, waits for the IndexedDB save,
+and reloads. Another author wraps the paragraph in a quote or one of three
+list kinds, applies a partial bold mark, or splits it with the browser's Enter
+key. Resuming the same session sends the preserved edit. The test compares both
+editor models and both server readers, including the image and root metadata.
+It then exercises structural undo and redo from the other author and checks
+that the recovered typing stays in the saved document.
+
+```powershell
+pnpm exec playwright test --config artifacts/yjs-live-structural-20261107.config.ts
+```
+
+This matrix extends the earlier in-memory and packed-package evidence to actual
+transport and reload. All 18 recorded journeys passed across Chromium, Firefox
+and WebKit, without retries or skips. The retained adapter passed 46 source
+tests. The separately rerun default XML matrix still reports its six structural
+failures and 16 passes. Existing rooms still require a safe migration before
+using retained collaboration. Review included the recovered screenshots from
+all three engines and sampled frames of the paragraph split. Firefox briefly
+showed the earlier tab's presence after reload while its old lease expired.
+Recordings, traces and images are in `artifacts/yjs-live-structural-browser-20261107/`.
+
 The tests open the [two-author browser fixture](../artifacts/yjs-browser-draft-fixture-20261107.html?live)
 against a real loopback HTTP and SQLite authority. They cover automatic exchange,
 offline typing against a peer's quote wrap, a dropped reply after a committed
