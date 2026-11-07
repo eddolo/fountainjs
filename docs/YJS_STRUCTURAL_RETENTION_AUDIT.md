@@ -5,6 +5,21 @@ certification of collaboration parity. The separate native-focus repair is
 [draft PR #22](https://github.com/eddolo/fountainjs/pull/22); this unfinished
 structural work is not part of that PR or an npm/site release.
 
+## Incompatible room recovery
+
+The November 7 protocol-conflict repair covers a separate failure during
+legacy-to-retained rollout. An incompatible update previously left shared undo
+available, and removing the foreign root could replace the editor's private
+draft. Both adapters now keep the affected session in error until the host
+replaces it. The tests verify that shared bytes stay unchanged by undo or local
+typing after the conflict, including after the foreign root is removed and the
+same session reconnects.
+
+The focused source run passed 137 cases. The compiled demo passed 21 recorded
+Chromium, Firefox and WebKit workflows, including the three mixed-room
+recoveries. The inspected capture shows both drafts still present after the
+foreign roots were removed. The six original legacy cases below still fail.
+
 ## Reproduction
 
 `tests/yjs-document-range.test.ts` creates two actual `Y.Doc` instances, syncs

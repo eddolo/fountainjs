@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep the editor's local draft and disable shared undo and redo if an
+  incompatible room update reaches a collaboration session. Reconnecting the
+  same session cannot replace the draft with subsequently repaired shared data.
+
 - Reuse verified retained checkpoint bytes when admitting peers and serving a
   changed room snapshot. The returned bytes still match the saved archive.
 

@@ -79,6 +79,14 @@ each initialize an empty room, even from identical initial JSON. Their native
 identities differ; merging those independently seeded rooms is refused rather
 than selecting a winner and losing the other document.
 
+If incompatible room data reaches an established legacy or retained editor,
+the session stays in error. It clears shared presence and suspends shared
+writes, undo and redo. The editor can still hold new local text. Removing the
+foreign root or reconnecting the same adapter leaves that draft intact. Save
+the current editor JSON before replacing the adapter with one bound to the
+verified room. The host still controls the underlying transport and must
+check room identity before routing updates.
+
 For a local experiment, create one editor with the retained extension and an empty
 `Y.Doc`, then copy `Y.encodeStateAsUpdate(seedDoc)` into a second empty `Y.Doc`
 **before** creating its editor. After that, exchange Yjs updates normally. Keep

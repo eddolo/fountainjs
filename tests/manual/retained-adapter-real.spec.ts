@@ -28,6 +28,35 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}
 
+if (!installedPreview) test('keeps both drafts after incompatible room data is removed', async ({page},info) => {
+  await page.goto(url);
+  await page.getByText('Protocol conflict test', {exact:true}).click();
+  await page.getByRole('button', {name:'Open separate legacy and retained rooms'}).click();
+  const ada = page.getByRole('textbox', {name:'Ada editor'});
+  const grace = page.getByRole('textbox', {name:'Grace editor'});
+  await caret(page,'Ada',0);
+  await page.keyboard.type('Retained ');
+  await caret(page,'Grace',0);
+  await page.keyboard.type('Legacy ');
+  await page.getByRole('button', {name:'Synchronize', exact:true}).click();
+  await expect(page.locator('#ada output')).toContainText('error');
+  await expect(page.locator('#grace output')).toContainText('error');
+  await expect(page.locator('#message')).toContainText('Preserve the local draft');
+  for (const author of ['Ada','Grace']) {
+    await caret(page,author,0);
+    await page.keyboard.press('Control+z');
+    await page.keyboard.type('Draft ');
+  }
+  await expect(ada).toContainText('Draft Retained Alpha');
+  await expect(grace).toContainText('Draft Legacy Alpha');
+  await page.getByRole('button', {name:'Remove incompatible roots'}).click();
+  await expect(page.locator('#ada output')).toContainText('error');
+  await expect(page.locator('#grace output')).toContainText('error');
+  await expect(ada).toContainText('Draft Retained Alpha');
+  await expect(grace).toContainText('Draft Legacy Alpha');
+  await page.screenshot({path:info.outputPath('drafts-after-conflict.png'),fullPage:true});
+});
+
 test('replaces marked text and deletes natively while preserving peer edits through keyboard history',async({page},testInfo)=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(url);
  const content={type:'doc',attrs:{audit:'native-replacement'},content:[

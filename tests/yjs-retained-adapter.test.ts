@@ -409,3 +409,38 @@ it.each(['retained', 'legacy'] as const)('detects conflicting offline initializa
     }
   } finally { left.editor.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); }
 });
+
+it.each(['retained', 'legacy'] as const)('keeps an established %s editor fenced after a mixed room appears to recover', kind => {
+  const localDoc = new Y.Doc(), foreignDoc = new Y.Doc();
+  const make = (document: Y.Doc, protocol: 'legacy' | 'retained', id: string) => {
+    const extension = protocol === 'legacy' ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+    const kit = composeExtensions([CoreExtension, extension({document, captureTimeout:0, user:{id,name:id,color:'#7048e8'}})]);
+    return createEditor({schema:kit.schema, plugins:kit.plugins, content:source});
+  };
+  const local = make(localDoc, kind, 'Local'), foreign = make(foreignDoc, kind === 'legacy' ? 'retained' : 'legacy', 'Foreign');
+  try {
+    local.dispatch(local.createTransaction().insertText([0,0], 0, 'Saved '));
+    expect(canUndoCollaboration(local)).toBe(true);
+    Y.applyUpdate(localDoc, Y.encodeStateAsUpdate(foreignDoc), 'wrong room');
+    expect(getCollaborationState(local)?.status).toBe('error');
+    const mixed = Y.encodeStateAsUpdate(localDoc);
+    expect(canUndoCollaboration(local)).toBe(false);
+    expect(undoCollaboration(local)).toBe(false);
+    expect(redoCollaboration(local)).toBe(false);
+    local.dispatch(local.createTransaction().insertText([0,0], 0, 'Draft '));
+    expect(local.state.doc.child(0).textContent).toBe('Draft Saved Alpha');
+    expect(Y.encodeStateAsUpdate(localDoc)).toEqual(mixed);
+
+    // Removing the wrong root does not reconcile the editor's private draft.
+    const fragment = localDoc.getXmlFragment('fountain');
+    const own = kind === 'legacy' ? 'fountain-node' : 'fountain-retained-room';
+    fragment.delete(fragment.toArray().findIndex(root => (root as Y.XmlElement).nodeName !== own), 1);
+    const repaired = Y.encodeStateAsUpdate(localDoc);
+    expect(getCollaborationState(local)?.status).toBe('error');
+    expect(local.state.doc.child(0).textContent).toBe('Draft Saved Alpha');
+    reconnectCollaboration(local);
+    expect(getCollaborationState(local)?.status).toBe('error');
+    expect(local.state.doc.child(0).textContent).toBe('Draft Saved Alpha');
+    expect(Y.encodeStateAsUpdate(localDoc)).toEqual(repaired);
+  } finally { local.destroy(); foreign.destroy(); localDoc.destroy(); foreignDoc.destroy(); }
+});

@@ -473,7 +473,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private readonly captureTimeout: number;
   private readonly presenceThrottleMs: number;
   private readonly preserveConcurrentRoots: boolean;
-  private initializationConflict = false;
+  private initializationConflict?: string;
   private readonly structuredAttributes?: YjsStructuredAttributeStore;
   private readonly processedTransactions = new WeakSet<Y.Transaction>();
   private context?: CollaborationAdapterContext;
@@ -721,9 +721,6 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
     this.assertInitialization();
-    if (this.fragment.toArray().some(root => !isSharedElement(root))) {
-      throw new Error('Incompatible shared root; refusing legacy writes without overwriting shared data.');
-    }
     this.structuredAttributes?.overlay(update.before);
     this.structuredAttributes?.validate(update.document);
     const recordHistory = update.transaction.getMeta('addToHistory') !== false;
@@ -775,25 +772,26 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private normalizeRoots(): void {
     this.assertInitialization();
     if (this.fragment.length <= 1) return;
-    const children = this.fragment.toArray();
-    if (!children.every(isSharedElement)) return;
     this.document.transact(() => this.fragment.delete(1, this.fragment.length - 1), this.repairOrigin);
   }
 
   private assertInitialization(): void {
-    if (!this.preserveConcurrentRoots) return;
-    if (!this.initializationConflict && this.fragment.length > 1) {
-      this.initializationConflict = true;
+    if (this.initializationConflict) throw new Error(this.initializationConflict);
+    const length = this.fragment.length;
+    const incompatible = length === 1 ? !isSharedElement(this.fragment.get(0))
+      : length > 1 && !this.fragment.toArray().every(isSharedElement);
+    if (incompatible || this.preserveConcurrentRoots && length > 1) {
+      this.initializationConflict = incompatible
+        ? 'Incompatible shared root; refusing legacy writes. Preserve the local draft and replace the collaboration session.'
+        : 'The room has conflicting initial roots. Preserve the local draft and replace the collaboration session.';
       directionIdentityReleases.get(this)?.();
       directionIdentityReleases.delete(this);
       if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
       this.presenceTimer = undefined;
       this.pendingPresence = undefined;
-      this.awareness?.setLocalStateField(this.awarenessField, null);
+      if (this.publishedPresenceSignature !== undefined) this.awareness?.setLocalStateField(this.awarenessField, null);
       this.context?.setPresences([]);
-    }
-    if (this.initializationConflict) {
-      throw new Error('The room has conflicting initial roots. Preserve the local draft and replace the collaboration session.');
+      throw new Error(this.initializationConflict);
     }
   }
 

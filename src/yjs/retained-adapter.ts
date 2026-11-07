@@ -56,6 +56,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private store?: RetainedDocumentStore;
   private manager?: Y.UndoManager;
   private roomId?: string;
+  private roomConflict?: Error;
   private releaseDirection?: () => void;
   private localSelection?: RetainedSelection;
   private pendingHistory?: { before: RetainedSelection; after?: RetainedSelection };
@@ -92,18 +93,41 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private gate(): string {
+    if (this.roomConflict) throw this.roomConflict;
     const entry = this.fragment.get(0);
     if (this.fragment.length !== 1 || !(entry instanceof Y.XmlElement) || entry.nodeName !== GATE || entry.length
-      || Object.keys(entry.getAttributes()).length !== 2 || entry.getAttribute('format') !== FORMAT) throw new Error('Legacy, incompatible or conflicting collaboration room; original shared data preserved.');
+      || Object.keys(entry.getAttributes()).length !== 2 || entry.getAttribute('format') !== FORMAT) {
+      throw this.roomFailure('Legacy, incompatible or conflicting collaboration room; original shared data preserved.');
+    }
     const id = entry.getAttribute('room');
-    if (typeof id !== 'string' || !/^r-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(id) || this.roomId && id !== this.roomId) throw new Error('Retained collaboration room identity changed.');
+    if (typeof id !== 'string' || !/^r-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(id) || this.roomId && id !== this.roomId) {
+      throw this.roomFailure('Retained collaboration room identity changed.');
+    }
     return id;
+  }
+
+  private roomFailure(message: string): Error {
+    if (!this.roomId) return new Error(message);
+    const error = new Error(`${message} Preserve the local draft and replace the collaboration session.`);
+    this.roomConflict = error;
+    this.releaseDirection?.();
+    this.releaseDirection = undefined;
+    if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
+    this.presenceTimer = undefined;
+    this.pendingPresence = undefined;
+    if (this.published !== undefined) {
+      this.published = undefined;
+      this.awareness()?.setLocalStateField(this.field, null);
+    }
+    this.context?.setPresences([]);
+    return error;
   }
 
   private error(error: unknown): void { this.context?.setStatus('error', { message: error instanceof Error ? error.message : String(error), recoverable: true }); }
   private readonly awareness = () => this.options.awareness ?? this.options.provider?.awareness;
   private readonly awarenessChanged = (): void => { try { this.presences(); } catch (error) { this.error(error); } };
   private readonly providerStatus = (value: string | { status?: string }): void => {
+    if (this.roomConflict) return;
     const status = typeof value === 'string' ? value : value.status;
     if (status === 'connected' || status === 'connecting' || status === 'reconnecting' || status === 'disconnected') this.context?.setStatus(status);
   };
@@ -147,7 +171,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private readonly sharedChanged = (transaction: Y.Transaction): void => {
-    if (!this.context || !this.store || transaction.origin === this.origin || transaction.origin === this.repair) return;
+    if (!this.context || !this.store || this.roomConflict || transaction.origin === this.origin || transaction.origin === this.repair) return;
     const changed = new Set<unknown>(transaction.changedParentTypes.keys());
     if (![this.fragment, ...this.store.observed, ...(this.structured ? [this.structured.map] : [])].some(type => changed.has(type))) return;
     try {
@@ -166,6 +190,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     if (this.destroyed || this.context) throw new Error('Retained adapter is destroyed or already connected.');
+    if (this.roomConflict) throw this.roomConflict;
     if (this.admission) {
       this.context = context; this.joining = true; this.joinBaseline ??= context.editor.state.doc;
       const controller = new AbortController(); this.admissionController = controller;
@@ -276,7 +301,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalSelection(document: Node, selection: AnySelection): void {
-    if (!this.context || !this.store || this.joining) return;
+    if (!this.context || !this.store || this.joining || this.roomConflict) return;
     this.localSelection = retainSelection(this.store, document, selection);
     if (!this.awareness()) return;
     const value = { user: this.localUser, selection: this.localSelection }, signature = JSON.stringify(value);
@@ -301,7 +326,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     this.published = signature; this.lastPresence = Date.now(); this.awareness()?.setLocalStateField(this.field, value);
   }
   private presences(): void {
-    if (!this.context || !this.store) return;
+    if (!this.context || !this.store || this.roomConflict) return;
     const awareness = this.awareness(); if (!awareness) return;
     const result: CollaborationPresence[] = [], document = this.context.editor.state.doc;
     for (const [client, state] of awareness.getStates()) {
@@ -315,7 +340,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   undo(): boolean {
     const manager = this.manager;
-    if (!manager || this.joining) return false;
+    if (!manager || this.joining || this.roomConflict) return false;
     while (this.manager === manager) {
       const item = manager.undo();
       if (!item) return false;
@@ -325,11 +350,11 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   redo(): boolean {
-    if (this.joining) return false;
+    if (this.joining || this.roomConflict) return false;
     return Boolean(this.manager?.redo());
   }
-  canUndo(): boolean { return !this.joining && (this.manager?.canUndo() ?? false); }
-  canRedo(): boolean { return !this.joining && (this.manager?.canRedo() ?? false); }
+  canUndo(): boolean { return !this.joining && !this.roomConflict && (this.manager?.canUndo() ?? false); }
+  canRedo(): boolean { return !this.joining && !this.roomConflict && (this.manager?.canRedo() ?? false); }
   stopCapturing(): void { this.manager?.stopCapturing(); }
   destroy(): void {
     if (this.destroyed) return;
