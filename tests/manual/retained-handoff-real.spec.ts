@@ -176,3 +176,48 @@ test('previews and restores native bold and italic formatting from the saved dra
   expect((await state(page)).server).toEqual(draft);
   await capture(page,info,'formatted-paragraph-applied.png');
 });
+
+test('combines both versions in a local formatted paragraph and retains the composition on stale review', async ({page},info) => {
+  const offline = page.getByRole('textbox',{name:'Offline editor',exact:true});
+  const active = page.getByRole('textbox',{name:'Active editor',exact:true});
+  await offline.getByText('Alpha technical note.',{exact:true}).click();
+  await page.keyboard.press('Home');
+  for(let index=0;index<5;index+=1) await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Control+i');
+  await expect(offline.locator('em')).toHaveText('Alpha');
+  await type(page,'Active editor',' Current decision.');
+  await page.getByRole('button',{name:'Switch to fresh room'}).click();
+  await expect(page.getByRole('status')).toContainText('Fresh room installed');
+  await page.getByRole('button',{name:'Retain old edits'}).click();
+  await expect(page.getByRole('status')).toContainText('Old edits retained separately');
+  const review = page.getByRole('button',{name:'Review opening paragraph'});
+  await review.click();
+  await page.getByRole('button',{name:'Compose from saved draft'}).click();
+  const composer = page.getByRole('textbox',{name:'Combined paragraph',exact:true});
+  await expect(composer.locator('em')).toHaveText('Alpha');
+  await page.keyboard.insertText(' Current decision.');
+  for(let index=0;index<'Current decision.'.length;index+=1) await page.keyboard.press('Shift+ArrowLeft');
+  await page.keyboard.press('Control+b');
+  await expect(composer.locator('strong')).toHaveText('Current decision.');
+  await capture(page,info,'combined-composition.png');
+
+  await type(page,'Active editor',' New context.');
+  await page.getByRole('button',{name:'Save active edits'}).click();
+  await expect(page.getByRole('status')).toContainText('durably saved');
+  const apply = page.getByRole('button',{name:'Apply combined paragraph'});
+  await apply.click();
+  await expect(page.getByRole('status')).toContainText('review is stale');
+  await review.click();
+  await expect(page.locator('#review-current')).toContainText('New context.');
+  await expect(composer.locator('strong')).toHaveText('Current decision.');
+  await composer.click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' New context.');
+  await apply.click();
+  await expect(page.getByRole('status')).toContainText('Reviewed paragraph saved');
+  await expect(active.locator('em')).toHaveText('Alpha');
+  await expect(active.locator('strong')).toContainText('Current decision.');
+  await expect(active).toContainText('Current decision. New context.');
+  expect((await state(page)).server).toEqual((await state(page)).active);
+  await capture(page,info,'combined-applied.png');
+});

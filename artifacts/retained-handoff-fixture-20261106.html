@@ -13,17 +13,24 @@
   <button id="resolve-text">Apply reviewed paragraph</button>
  </div>
  <button id="resolve-formatting">Use saved paragraph and formatting</button>
+ <button id="combine-current">Compose from current paragraph</button>
+ <button id="combine-saved">Compose from saved draft</button>
+ <div id="combined-review" hidden>
+  <p>Combine wording and formatting in one paragraph. Use Ctrl or Command with B or I to format text.</p>
+  <div id="combined-editor"></div>
+  <button id="resolve-combined">Apply combined paragraph</button>
+ </div>
 </section>
-<style>.paragraph-preview p{margin:0 0 10px;padding:6px 10px;background:white;border-radius:6px;overflow-wrap:anywhere}.paragraph-preview a{color:#5940bc;text-decoration:underline}#replacement{box-sizing:border-box;max-width:100%}#text-review button{margin-top:6px}</style>
+<style>.paragraph-preview p{margin:0 0 10px;padding:6px 10px;background:white;border-radius:6px;overflow-wrap:anywhere}.paragraph-preview a{color:#5940bc;text-decoration:underline}#replacement{box-sizing:border-box;max-width:100%}#text-review button{margin-top:6px}#combined-editor .fountain-editor{min-height:0;background:white;border:1px solid #c5bce6;border-radius:6px;padding:6px 10px}</style>
 <div id="message" role="status">Opening…</div><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · original room</h2></section><section id="active"><h2>Active room · authoritative</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2></section></div>
 <script type="module">
 import * as Y from 'yjs';
-import {CoreExtension,MathExtension,Plugin,EditorView,composeExtensions,createEditor,undoCollaboration,redoCollaboration,renderNode,toggleMark} from '/artifacts/retained-handoff-build-20261106/engine.js';
+import {CoreExtension,HistoryExtension,MathExtension,Plugin,EditorView,composeExtensions,createEditor,undoCollaboration,redoCollaboration,renderNode,toggleMark} from '/artifacts/retained-handoff-build-20261106/engine.js';
 import {createRetainedYjsCollaborationExtension} from '/artifacts/retained-handoff-build-20261106/retained-adapter.js';
 import {captureRetainedCheckpoint,restoreRetainedCheckpoint} from '/artifacts/retained-handoff-build-20261106/checkpoint.js';
 const version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Recovery paper'}},content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha technical note.'}]},{type:'blockquote',content:[{type:'paragraph',content:[{type:'text',text:'Keep every accepted edit recoverable.'}]}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Retained figure'}},{type:'math_block',attrs:{latex:'x^2+y^2',label:'eq:one'}},{type:'code_block',attrs:{language:'lean'},content:[{type:'text',text:'example : 1 + 1 = 2 := by decide'}]}]};
 let token,current,original,active,archived,migration,rollbackReceipt,archiveId,lastReplay;const message=document.querySelector('#message');
-let draftAttempt,savedDraft,textReview;
+let draftAttempt,savedDraft,textReview,composer;
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
 async function request(action,body={}){const response=await fetch('/__handoff/'+action,{method:'POST',headers:{'Content-Type':'application/json',...(token?{'X-Handoff-Session':token}:{})},body:encode(body)}),result=decode(await response.text());if(!result.ok){const error=new Error(result.error);error.code=result.code;throw error}return result.value}
 const shortcuts=new Plugin({props:{handleKeyDown(editor,event){
@@ -106,6 +113,7 @@ action('merged',async()=>{
 action('preview-text',async()=>{
  const previous=textReview, replacement=document.querySelector('#replacement');
  textReview=await request('preview-text',{...savedDraft,nodeId:'intro'});
+ if(previous?.draftId!==textReview.draftId) clearComposer();
  for(const [selector,paragraph] of [['#review-current',textReview.currentParagraph],['#review-draft',textReview.draftParagraph]]){
   const preview=renderNode(active.editor.state.schema.nodeFromJSON(paragraph));
   preview.querySelectorAll('a').forEach(link=>link.removeAttribute('href'));
@@ -131,9 +139,39 @@ async function applyReviewedParagraph(replacement){
  document.querySelector('#text-review').hidden=true;
  message.textContent='Reviewed paragraph saved';
  report('Applied reviewed paragraph');
+ clearComposer();
 }
 action('resolve-text',()=>applyReviewedParagraph(document.querySelector('#replacement').value));
 action('resolve-formatting',()=>applyReviewedParagraph({useSavedFormatting:true}));
+const composerKit=composeExtensions([CoreExtension,HistoryExtension]);
+const singleParagraph=new Plugin({filterTransaction(transaction){
+ const {doc}=transaction;
+ return doc.childCount===1 && doc.child(0).type.name==='paragraph' && doc.child(0).content.every(node=>node.isText);
+}});
+function clearComposer(){
+ if(!composer) return;
+ composer.view.destroy();
+ composer.editor.destroy();
+ composer=undefined;
+ document.querySelector('#combined-review').hidden=true;
+}
+function startComposer(paragraph){
+ clearComposer();
+ const editor=createEditor({schema:composerKit.schema,plugins:[...composerKit.plugins,singleParagraph],content:{type:'doc',content:[paragraph]}});
+ const view=new EditorView(document.querySelector('#combined-editor'),editor,{ariaLabel:'Combined paragraph'});
+ composer={editor,view};
+ document.querySelector('#combined-review').hidden=false;
+ view.focus('end');
+}
+action('combine-current',()=>startComposer(textReview.currentParagraph));
+action('combine-saved',()=>startComposer(textReview.draftParagraph));
+action('resolve-combined',async()=>{
+ const review=document.querySelector('#text-review');
+ const content=composer.editor.getJSON().content[0].content??[];
+ review.inert=true;
+ try {await applyReviewedParagraph({content});}
+ finally {review.inert=false;}
+});
 action('rollback',async()=>{current=await request('write',{epoch:current.epoch,update:Y.encodeStateAsUpdate(active.doc)});const ticket=await request('freeze',current);rollbackReceipt=await request('rollback',{ticket,operation:crypto.randomUUID(),archive:archiveId,restore:document.querySelector('#restore').value});await install(rollbackReceipt);archived=await reopen(rollbackReceipt.archive.source.checkpoint,'archive',archived);document.querySelector('#archive-title').textContent='Replaced room · new edits archived';message.textContent='Rollback committed · replaced room preserved in its own archive'});
 let initialEpoch,originalRoomId;
 try{token=(await request('open')).token;original=mount(new Y.Doc(),'offline');const checkpoint=await captureRetainedCheckpoint(original.doc,original.editor.state.schema,version);current=await request('initialize',{checkpoint});initialEpoch=current.epoch;originalRoomId=checkpoint.manifest.roomId;active=await reopen(current.checkpoint,'active');report('Original room initialized');message.textContent='Ready · edit offline or active, then switch rooms'}catch(error){message.textContent='Opening failed: '+error.message;throw error}

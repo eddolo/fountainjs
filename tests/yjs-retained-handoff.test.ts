@@ -235,6 +235,19 @@ it('restores saved marks and links into a moved paragraph without changing its c
   expect(document.toJSON()).toEqual(current.editor.createTransaction().replaceNode([0,0],[expected]).doc.toJSON());
   expect(reader.identity([0,0])).toBe(identity);
   expect(await pair.handoff.readRetiredDraft(request.archiveId,draftId)).toEqual(draft);
+  const fresh = await service.preview(request);
+  await expect(service.apply(fresh,{content:[{type:'hard_break'}]})).rejects.toThrow('single-line text and marks');
+  await expect(service.apply(fresh,{content:[{type:'text',text:'unsafe',marks:[{type:'link',attrs:{href:'javascript:alert(1)'}}]}]}))
+    .rejects.toThrow('Invalid value for attribute: href');
+  expect(await pair.room.snapshot()).toEqual(saved);
+  const combined = [...draftParagraph.content, schema.text(' with a live update.',[schema.mark('strong')])];
+  const replacement = {content:combined.map(node=>node.toJSON())};
+  await expect(service.apply(review,replacement)).rejects.toMatchObject({code:'revision-conflict'});
+  const resolved = await service.apply(fresh,replacement);
+  const resolvedDoc = await restoreRetainedCheckpoint(resolved.checkpoint,schema,version);
+  cleanup.push(() => resolvedDoc.document.destroy());
+  expect(resolvedDoc.baseDocument.child(0).child(0).toJSON()).toEqual(expected.copy(combined).toJSON());
+  expect(await pair.handoff.readRetiredDraft(request.archiveId,draftId)).toEqual(draft);
 });
 
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {

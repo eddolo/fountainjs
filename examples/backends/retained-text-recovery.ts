@@ -5,6 +5,7 @@ import { RetainedDocumentStore } from '../../src/yjs/retained-document';
 import { RetainedRoomHandoff, type RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import { CoordinatedRetainedRoom } from '../../src/yjs/retained-room-coordinator';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
+import { assertRetainedWireString } from '../../src/yjs/retained-wire';
 
 interface DraftParagraph {
   readonly archiveId: string;
@@ -22,7 +23,26 @@ export interface RetiredParagraphReview extends DraftParagraph {
   readonly canEditPlainText: boolean;
 }
 
-type ParagraphReplacement = string | { readonly useSavedFormatting: true };
+type ParagraphReplacement = string | { readonly useSavedFormatting: true } | { readonly content: readonly NodeJSON[] };
+
+function composedRuns(schema: Schema, input: readonly NodeJSON[]): readonly Node[] {
+  if (!Array.isArray(input) || !input.length || input.length > 500 || JSON.stringify(input).length > 128_000) {
+    throw new Error('A combined paragraph needs between 1 and 500 text runs within the request size limit.');
+  }
+  let units = 0;
+  const runs = Array.from(input, run => {
+    if (!run || run.type !== 'text' || typeof run.text !== 'string' || !run.text.length || /[\r\n]/.test(run.text)
+      || Object.keys(run).some(key => !['type', 'text', 'marks'].includes(key))
+      || (run.marks !== undefined && (!Array.isArray(run.marks) || run.marks.length > 32))) {
+      throw new Error('Combined paragraphs support single-line text and marks.');
+    }
+    units += run.text.length;
+    if (units > 20_000) throw new Error('Combined paragraphs are limited to 20,000 characters.');
+    assertRetainedWireString(run.text);
+    return schema.nodeFromJSON(run);
+  });
+  return Object.freeze(runs);
+}
 
 function paragraph(document: Node, nodeId: string) {
   const matches: { node: Node; path: readonly number[] }[] = [];
@@ -81,10 +101,13 @@ export class RetainedTextRecovery {
 
   async apply(review: RetiredParagraphReview, replacement: ParagraphReplacement) {
     const { archiveId, draftId, nodeId, epoch, revision, currentText, draftText } = review;
+    let composed: readonly Node[] | undefined;
     if (typeof replacement === 'string') {
       if (!replacement.trim() || replacement.length > 20_000 || /[\r\n]/.test(replacement)) {
         throw new Error('Enter one nonempty line of at most 20,000 characters.');
       }
+    } else if (replacement && typeof replacement === 'object' && 'content' in replacement) {
+      composed = composedRuns(this.schema, replacement.content);
     } else if (replacement?.useSavedFormatting !== true) {
       throw new Error('Choose a reviewed replacement.');
     }
@@ -106,7 +129,7 @@ export class RetainedTextRecovery {
         if (typeof replacement === 'string') {
           transaction.replaceText([...target.path, 0], 0, currentText.length, replacement);
         } else {
-          transaction.replaceNode(target.path, [target.node.copy(draftParagraph.content)]);
+          transaction.replaceNode(target.path, [target.node.copy(composed ?? draftParagraph.content)]);
         }
         if (transaction.doc.eq(doc)) return snapshot;
         const basis = Y.encodeStateVector(restored.document);

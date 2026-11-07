@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Compose a formatted paragraph from either version during offline recovery.
+  Refreshing a stale review keeps the local composition and its marks.
+
 - Preview and restore saved paragraph formatting in the retained recovery
   reference, including marks and links. The live paragraph keeps its location
   and attributes.

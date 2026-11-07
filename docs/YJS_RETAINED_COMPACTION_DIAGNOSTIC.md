@@ -120,10 +120,14 @@ text run in each version. For formatted paragraphs, the author can preview and
 use the saved text runs and marks in one action. The operation keeps the live
 paragraph's attributes, position in the tree and identity, even if the live
 paragraph has moved into a quote. The previews keep links visible and disable
-navigation. The applied paragraph retains its saved link destinations. Inline
-widgets, combining formatting from both versions, structural reconciliation,
-automatic overlapping placement and archive storage policy remain open. Host
-authorization governs who can preview and apply.
+navigation. The applied paragraph retains its saved link destinations. The
+review now also offers a local Fountain editor seeded from either version so
+an author can combine wording and formatting. The authority accepts one
+paragraph of text runs and schema-validated marks and refuses embedded nodes
+and invalid links. A stale review keeps the composition while reloading the
+current and archived previews. Inline widgets, structural reconciliation,
+automatic overlapping placement and archive storage policy remain open.
+Host authorization governs who can preview and apply.
 
 Formatted recovery passed 200 focused source cases and 18 recorded browser
 journeys across Chromium, Firefox and WebKit. The browser applies bold and
@@ -132,6 +136,13 @@ document after recovery. The source suite also checks saved links, live
 alignment and retained identity after moving the paragraph into a quote.
 Captures and recordings are under
 `artifacts/retained-formatted-review-browser-20261107/`.
+
+Combined review passed 200 focused source cases and the 21-journey desktop
+browser suite. Chromium, Firefox and WebKit each preserved the local italic
+and bold runs after a stale review and applied the edited paragraph after
+refreshing. Source tests reject invalid links and embedded nodes without a
+room write. Captures and recordings are under
+`artifacts/retained-combined-review-browser-20261107/`.
 
 Paragraph review passed 75 focused source cases and the 15-journey desktop
 handoff suite. A final focused rerun passed in Chromium, Firefox and WebKit.
