@@ -30,6 +30,14 @@ Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).
 
+Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies
+survive reload. A same-session draft resumes through the normal admission checks
+and keeps its unsent text when a peer has wrapped the paragraph in a quote.
+Retired or pre-admission copies open in a separate local editor. A failed save
+keeps the current editor intact. Eighteen recorded Chromium, Firefox and WebKit
+journeys pass with visual review. Automatic saves and production rollout remain
+open. [Draft recovery audit](YJS_BROWSER_DRAFT_RECOVERY_AUDIT.md).
+
 First-room provisioning reference (2026-11-07, local). Two concurrent requests
 can prepare independent checkpoints and load the same durable room selected by
 the atomic insert. Retrying after a lost acknowledgement loads the saved

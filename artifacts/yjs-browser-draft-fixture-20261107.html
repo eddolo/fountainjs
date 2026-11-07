@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Recover an unsent Fountain draft</title>
+<link rel="stylesheet" href="./yjs-authority-admission-build-20261107/styles.css">
+<style>
+  body { margin: 32px auto; max-width: 1150px; padding: 0 24px; background: #f6f4fc; color: #221d38; font: 16px system-ui; }
+  header { display: flex; flex-wrap: wrap; gap: 10px; margin-block: 16px; }
+  button { padding: 8px 12px; border: 1px solid #b8afd4; border-radius: 6px; background: white; color: inherit; font: inherit; }
+  .panes { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); }
+  section { min-width: 0; padding: 20px; border: 1px solid #ccc3df; border-radius: 12px; background: white; }
+  h2 { margin-top: 0; font-size: 19px; }
+  .fountain-editor { padding: 12px; min-height: 135px; border: 1px solid #ded7eb; border-radius: 5px; }
+  #copies { margin-top: 16px; }
+  #message { min-height: 24px; }
+</style>
+<h1>Recover an unsent Fountain draft</h1>
+<p>Save a recovery copy on this device. Resume the same shared session or open an older draft separately.</p>
+<header id="controls">
+  <button id="join">Join shared session</button>
+  <button id="save">Save recovery copy</button>
+  <button id="quote">Toggle quote</button>
+  <button id="send">Send editor changes</button>
+  <button id="rotate">Rotate server session</button>
+  <button id="choose">Keep a copy and open shared</button>
+</header>
+<p role="status" id="message">Opening…</p>
+<div class="panes">
+  <section><h2 id="edit-title">Your draft</h2><p id="connection"></p><div id="editing"></div></section>
+  <section><h2>Saved on the server</h2><div id="reader"></div></section>
+</div>
+<section id="copies"><h2>Recovery copies on this device</h2><div id="records"></div></section>
+<script type="module">
+import * as Y from 'yjs';
+import {CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState, connectCollaboration, disconnectCollaboration, toggleQuote} from './yjs-authority-admission-build-20261107/engine.js';
+import {createRetainedYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/adapter.js';
+import {captureRetainedCheckpoint, restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';
+import {prepareRetainedAdmission} from './yjs-authority-admission-build-20261107/admission.js';
+import {openBrowserDrafts, isSameDraftSession} from '/examples/backends/retained-browser-drafts.ts';
+
+const version = 'admission-browser-1';
+const select = selector => document.querySelector(selector);
+const local = text => ({type: 'doc', content: [{type: 'paragraph', content: [{type: 'text', text}]}]});
+const user = new URLSearchParams(location.search).has('peer')
+  ? {id: 'grace', name: 'Grace', color: '#af3e7d'}
+  : {id: 'ada', name: 'Ada', color: '#7048e8'};
+const base = composeExtensions([CoreExtension]);
+let client, reader, current, serverModel, drafts, starts = 0;
+let token = sessionStorage.getItem('fountain-draft-audit-session');
+
+async function request(action, body = {}, signal) {
+  const response = await fetch('/__admission/' + action, {
+    method: 'POST', signal, headers: {'Content-Type': 'application/json', 'X-Admission-Session': token ?? ''},
+    body: JSON.stringify(body, (_key, value) => value instanceof Uint8Array ? {__wire: btoa(Array.from(value, byte => String.fromCharCode(byte)).join(''))} : value),
+  });
+  const reply = await response.json();
+  if (!reply.ok) throw new Error(reply.error);
+  if (reply.value?.checkpoint) reply.value.checkpoint.update = Uint8Array.from(atob(reply.value.checkpoint.update.__wire), byte => byte.charCodeAt(0));
+  return reply.value;
+}
+
+async function refresh() {
+  current = await request('snapshot');
+  const restored = await restoreRetainedCheckpoint(current.checkpoint, client.editor.state.schema, version);
+  serverModel = restored.baseDocument.toJSON();
+  restored.document.destroy();
+  reader?.view.destroy();
+  reader?.editor.destroy();
+  const editor = createEditor({schema: base.schema, content: serverModel, editable: false});
+  reader = {editor, view: new EditorView(select('#reader'), editor, {ariaLabel: 'Server document'})};
+}
+
+function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
+  client?.view.destroy();
+  client?.editor.destroy();
+  client?.doc.destroy();
+  const next = {doc, detached, lease: null, bound: null};
+  const admission = {
+    schemaVersion: version,
+    authority: {key: current.key, async bind(lease, signal) {
+      next.bound = await request('bind', lease, signal);
+      next.signal = signal;
+    }},
+    async load(signal) {
+      const snapshot = await request('snapshot', {}, signal);
+      if (draft && !isSameDraftSession(draft, snapshot)) throw new Error('Saved draft belongs to another session. Open it as a local copy.');
+      return snapshot;
+    },
+  };
+  const provider = {async connect() {
+    const accepted = next.bound;
+    const candidate = await prepareRetainedAdmission(doc, accepted.checkpoint, next.editor.state.schema, version, 'fountain');
+    if (next.signal.aborted) return;
+    candidate.install('http-provider-initial-sync');
+    next.lease = {key: accepted.key, epoch: accepted.epoch, revision: accepted.revision, protocol: 'retained', room: 'fountain', identity: candidate.identity};
+    starts += 1;
+  }};
+  const kit = detached ? base : composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({document: doc, user, admission, provider, autoConnect: false})]);
+  const editor = createEditor({schema: kit.schema, plugins: kit.plugins, content: model});
+  next.editor = editor;
+  next.savedModel = editor.state.doc;
+  next.view = new EditorView(select('#editing'), editor, {ariaLabel: 'Your draft'});
+  client = next;
+  select('#edit-title').textContent = detached ? 'Detached recovery copy' : 'Your draft';
+  const render = () => {
+    const state = getCollaborationState(editor);
+    select('#connection').textContent = detached ? 'Local only' : [state?.status, state?.error?.message].filter(Boolean).join(' · ');
+  };
+  editor.subscribe(render);
+  render();
+}
+
+async function saveCopy() {
+  const active = client;
+  const {editor, doc, lease} = active;
+  const model = editor.state.doc;
+  const checkpoint = lease ? await captureRetainedCheckpoint(doc, editor.state.schema, version, lease.room) : null;
+  if (checkpoint) {
+    const verified = await restoreRetainedCheckpoint(checkpoint, editor.state.schema, version);
+    try {
+      if (!verified.baseDocument.eq(model)) throw new Error('Native draft and visible text disagree. Keep the current editor open.');
+    } finally { verified.document.destroy(); }
+  }
+  await drafts.save({schemaVersion: version, model: model.toJSON(), source: checkpoint ? {lease, checkpoint} : null});
+  if (active !== client || !model.eq(editor.state.doc)) throw new Error('The draft changed while saving. Save its latest version before switching.');
+  active.savedModel = model;
+  select('#message').textContent = 'Recovery copy saved on this device.';
+}
+
+async function preserveCurrentEdits() {
+  if (!client.savedModel.eq(client.editor.state.doc)) await saveCopy();
+}
+
+function assertCurrentSaved() {
+  if (!client.savedModel.eq(client.editor.state.doc)) throw new Error('The draft changed while opening another copy. Save its latest version before switching.');
+}
+
+function button(node, action) {
+  node.onclick = async () => {
+    const controls = [...document.querySelectorAll('button')];
+    const enabled = controls.filter(control => !control.disabled);
+    enabled.forEach(control => { control.disabled = true; });
+    try { await action(); }
+    catch (error) { select('#message').textContent = error.message; }
+    finally { enabled.forEach(control => { control.disabled = false; }); }
+  };
+}
+
+async function listCopies() {
+  const records = select('#records');
+  records.replaceChildren();
+  const copies = await drafts.list();
+  if (!copies.length) records.textContent = 'No recovery copies yet.';
+  for (const draft of copies) {
+    const row = document.createElement('div');
+    const description = document.createElement('p');
+    description.textContent = !draft.source ? 'Local draft made before joining' : isSameDraftSession(draft, current) ? 'Draft from this session' : 'Draft from a previous session';
+    const open = document.createElement('button');
+    open.textContent = 'Open local copy';
+    button(open, async () => {
+      const schema = client.editor.state.schema;
+      if (draft.schemaVersion !== version) throw new Error('This copy needs its original schema version.');
+      const model = schema.nodeFromJSON(draft.model);
+      await preserveCurrentEdits();
+      assertCurrentSaved();
+      mount(model.toJSON(), {detached: true});
+      await listCopies();
+      select('#message').textContent = 'Opened separately. The shared document was not changed.';
+    });
+    row.append(description, open);
+    if (isSameDraftSession(draft, current)) {
+      const resume = document.createElement('button');
+      resume.textContent = 'Resume this session';
+      button(resume, async () => {
+        await preserveCurrentEdits();
+        await refresh();
+        if (!isSameDraftSession(draft, current)) throw new Error('Saved draft belongs to another session. Open it as a local copy.');
+        const schema = client.editor.state.schema;
+        const restored = await restoreRetainedCheckpoint(draft.source.checkpoint, schema, version);
+        try {
+          if (!restored.baseDocument.eq(schema.nodeFromJSON(draft.model))) throw new Error('The recovery copy failed its content check.');
+          assertCurrentSaved();
+        } catch (error) {
+          restored.document.destroy();
+          throw error;
+        }
+        mount(draft.model, {doc: restored.document, draft});
+        connectCollaboration(client.editor);
+        await listCopies();
+      });
+      row.append(resume);
+    }
+    records.append(row);
+  }
+}
+
+if (!token) {
+  ({token} = await request('open'));
+  const doc = new Y.Doc();
+  const seedKit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({document: doc, user})]);
+  const seed = createEditor({schema: seedKit.schema, plugins: seedKit.plugins, content: local('Shared incident report.')});
+  try { await request('initialize', {checkpoint: await captureRetainedCheckpoint(doc, seed.state.schema, version)}); }
+  finally { seed.destroy(); doc.destroy(); }
+  sessionStorage.setItem('fountain-draft-audit-session', token);
+}
+current = await request('snapshot');
+drafts = await openBrowserDrafts('fountain-draft-audit-v1', current.key + ':' + user.id);
+mount(local('Local incident notes.'));
+await refresh();
+await listCopies();
+button(select('#join'), () => {
+  if (client.detached || !client.savedModel.eq(client.editor.state.doc)) throw new Error('Keep a copy before replacing this local draft.');
+  connectCollaboration(client.editor);
+});
+button(select('#save'), async () => { await saveCopy(); await listCopies(); });
+button(select('#quote'), () => { toggleQuote(client.editor); });
+button(select('#send'), async () => {
+  if (getCollaborationState(client.editor)?.status !== 'connected' || !client.lease) throw new Error('Join an active session before sending edits.');
+  try { await request('write', {epoch: client.lease.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(client.doc)}); }
+  catch (error) { disconnectCollaboration(client.editor); throw error; }
+  await refresh();
+  select('#message').textContent = 'Changes saved on the server.';
+});
+button(select('#rotate'), async () => { await request('rotate'); await refresh(); await listCopies(); select('#message').textContent = 'Server session rotated.'; });
+button(select('#choose'), async () => {
+  await refresh();
+  await saveCopy();
+  assertCurrentSaved();
+  mount(serverModel);
+  connectCollaboration(client.editor);
+  await listCopies();
+});
+select('#message').textContent = 'Ready';
+window.audit = {async snapshot() { return {starts, server: serverModel, model: client.editor.getJSON(), copies: await drafts.list()}; }};
+</script>
+</html>
