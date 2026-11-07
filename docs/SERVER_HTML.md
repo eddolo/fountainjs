@@ -704,6 +704,11 @@ rule definition. Existing `parseDOM` rules remain supported by the browser
 importer for backward compatibility and for extensions that genuinely require
 an `HTMLElement`.
 
+When an extension registers the same rule object in both `parseHTML` and
+`parseDOM`, both importers consider it once. A declined rule falls through to
+the next distinct rule. Priority and schema order still apply to separate
+rule objects.
+
 The server importer can use a browser rule with no callback because its selector
 and default attributes are declarative. If a matching `parseDOM` rule has a
 browser-only `getAttrs(HTMLElement)`, it is skipped and reported rather than

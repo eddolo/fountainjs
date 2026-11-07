@@ -43,6 +43,34 @@ const fixtures = [
 ];
 
 describe('HTML fallback wrapper structure', () => {
+  it('advances to a distinct rule after a dual-registered portable rule declines', () => {
+    let calls = 0;
+    const shared = { tag: 'section[data-custom]', getAttrs: () => ++calls === 1 ? false as const : { variant: 'retried' } };
+    const portable = { tag: shared.tag, getAttrs: () => ({ variant: 'fallback' }) };
+    const customSchema = new Schema(composeExtensions([CoreExtension, defineExtension({
+      name: 'dual-registered-html-rule',
+      nodes: {
+        shared_rule: {
+          group: 'block', content: 'inline*', attrs: { variant: { default: '' } },
+          parseHTML: [shared], parseDOM: [shared],
+        },
+        fallback_rule: {
+          group: 'block', content: 'inline*', attrs: { variant: { default: '' } },
+          parseHTML: [portable],
+        },
+      },
+    })]).schema);
+    const source = '<section data-custom>Readable text</section>';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      calls = 0;
+      const parsed = importer.parse(source, customSchema);
+      expect(parsed.child(0).type.name).toBe('fallback_rule');
+      expect(parsed.child(0).attrs.variant).toBe('fallback');
+      expect(parsed.textContent).toBe('Readable text');
+      expect(calls).toBe(1);
+    }
+  });
+
   it.each(['0', '  +0tail', '3e2', '0x10', '7.9', '\t+12more', '', 'bad', '\u00a02', '2147483647', '2147483648', '9'.repeat(400)])('matches the native supported ordered-list start for %j', value => {
     const native = document.createElement('ol');
     native.setAttribute('start', value);

@@ -53,8 +53,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-is 144.7 KiB over its existing limit with the room opener and legacy checkpoint
-support. [Package output audit](PERFORMANCE.md#authority-backed-yjs-room-entry).
+is 144.0 KiB over its existing limit after sharing the HTML import rule logic.
+[Package output audit](PERFORMANCE.md#shared-html-import-rules).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested

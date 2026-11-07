@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Use the next distinct rule when a custom HTML import rule declines. Browser
+  paste now skips duplicate registrations of the same rule object, matching
+  headless HTML import.
+
 - Add `fountainjs-editor/yjs/room` for authority-backed collaboration. The
   opener defaults to retained storage, verifies the room before mounting, and
   creates the matching adapter. Existing XML rooms require explicit legacy

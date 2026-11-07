@@ -948,6 +948,26 @@ before its shared imports. The aggregate is 1,556.9 KiB ESM and 1,553.4 KiB
 CommonJS. The ESM aggregate and the individual entry checks pass. CommonJS
 is 144.7 KiB over its existing aggregate limit, up from 131.3 KiB.
 
+### Shared HTML import rules
+
+Browser and server imports share rule priority, plain-object attribute
+validation, schema validation, and ruby projection. The browser uses native
+selectors. The server keeps its selector diagnostics and does not call
+browser-only attribute readers. Both try a portable rule object once when
+it is registered in both rule lists.
+
+The aggregate fell to 1,555.8 KiB ESM and 1,552.7 KiB CommonJS. CommonJS is
+144.0 KiB over its existing limit. A trial second minification pass saved
+about 4.7 KiB of CommonJS, which leaves the build well above the limit.
+The production build continues to use the existing minifier settings.
+
+All 1,124 focused tests and 12 recorded Chromium, Firefox and WebKit
+workflows passed. The recordings cover native rich paste, section authoring,
+table edits inside HTML sections and reader reopen. Visual checks included
+the pasted research note and the edited section alongside its reader. The
+package, headless, Node/workerd, Markdown conformance and runtime performance
+checks passed.
+
 The focused source suite passed 286 cases. All 15 recorded Chromium,
 Firefox and WebKit workflows passed, covering native paste, safe and
 rejected links, edited and reopened HTML, and the headless LaTeX demo.

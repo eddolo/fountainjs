@@ -10,15 +10,10 @@ import {
   Mark,
   Node as FountainNode,
   type Attributes,
-  type DOMParseRule,
   type HTMLParseElement,
-  type HTMLParseRule,
   type HTMLSourceTokens,
-  type MarkType,
-  type NodeType,
   type Schema,
 } from '../core/schema';
-import { matchesContentExpression } from '../core/schema/content-expression';
 import { textNodes, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, projectHTMLFormatting, projectHTMLLink, type HTMLLinkProjectionIssue } from '../core/importers/html-marks';
 import { projectHTMLInlineAtom, projectHTMLMath } from '../core/importers/html-inline-atoms';
 import { embedNode, fileNode, playbackNode, projectImage, projectMediaFigure } from '../core/importers/html-media';
@@ -35,12 +30,12 @@ import { readHTMLDocumentPageSettings } from '../core/importers/html-page-settin
 import type { DocumentPageSettings } from '../core/page-settings';
 import type { MarkdownHTMLFlowBlockSource, MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLFlowTextBlockSource, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
 import { markdownHTMLTokenEnd } from '../core/markdown-html';
+import { HTML_BLOCK_TAGS, createHTMLRuleNode, hasHTMLRule, matchingHTMLRules, projectHTMLRuby, readHTMLRuleAttributes, type HTMLImportRule as ParseRule } from '../core/importers/html-rules';
 
 type RawNode = Htmlparser2TreeAdapterMap['node'];
 type SelectorCache = Map<string, (node: RawNode) => boolean>;
 type RawParent = Htmlparser2TreeAdapterMap['parentNode'];
 type RawElement = Htmlparser2TreeAdapterMap['element'];
-type ParseRule = HTMLParseRule | DOMParseRule;
 
 const TABLE_PROJECTION_MESSAGES = {
   'row-order': 'Table rows were placed in native header/body/footer order. Source row-group order and repeat-on-print behavior are not retained.',
@@ -506,10 +501,6 @@ function reportRuleFailure(context: ImportContext, rule: ParseRule, contribution
   });
 }
 
-function parseRulePriority(rule: ParseRule): number {
-  return Number.isFinite(rule.priority) ? Number(rule.priority) : 50;
-}
-
 function matchingRule(
   element: SourceElement,
   rule: ParseRule,
@@ -544,36 +535,7 @@ function attrsFromRule(
     });
     return false;
   }
-  try {
-    const getAttrs = portable
-      ? (rule.getAttrs as ((candidate: HTMLParseElement) => Attributes | null | false) | undefined)
-      : undefined;
-    const value = getAttrs?.(element) ?? {};
-    if (value === false) return false;
-    if (!value || typeof value !== 'object' || Array.isArray(value)) {
-      reportRuleFailure(context, rule, contribution, 'attribute reader did not return a plain attribute object');
-      return false;
-    }
-    const prototype = Object.getPrototypeOf(value);
-    if (prototype === Object.prototype || prototype === null) return value;
-    reportRuleFailure(context, rule, contribution, 'attribute reader did not return a plain attribute object');
-    return false;
-  } catch {
-    reportRuleFailure(context, rule, contribution, 'attribute reader threw an exception');
-    return false;
-  }
-}
-
-function configuredRules(
-  spec: { parseHTML?: readonly HTMLParseRule[]; parseDOM?: readonly DOMParseRule[] },
-): Array<{ rule: ParseRule; portable: boolean }> {
-  return [
-    ...(spec.parseHTML ?? []).map((rule) => ({ rule, portable: true })),
-    // One rule object may deliberately serve both environments. A declined
-    // portable rule must not be retried as an unsupported DOM-only callback.
-    ...(spec.parseDOM ?? []).filter(rule => !spec.parseHTML?.includes(rule as HTMLParseRule))
-      .map((rule) => ({ rule, portable: false })),
-  ];
+  return portable ? readHTMLRuleAttributes(element, rule, reason => reportRuleFailure(context, rule, contribution, reason)) : {};
 }
 
 function ruleContentElement(
@@ -600,19 +562,7 @@ function ruleContentElement(
 }
 
 function configuredMarks(element: SourceElement, schema: Schema, context: ImportContext): Mark[] {
-  const matches: Array<{
-    type: MarkType;
-    rule: ParseRule;
-    portable: boolean;
-    order: number;
-  }> = [];
-  Object.values(schema.marks).forEach((type, order) => {
-    if (!type.spec.parseHTML?.length && !type.spec.parseDOM?.length) return;
-    configuredRules(type.spec).forEach(({ rule, portable }) => {
-      if (matchingRule(element, rule, `mark:${type.name}`, context)) matches.push({ type, rule, portable, order });
-    });
-  });
-  matches.sort((left, right) => parseRulePriority(right.rule) - parseRulePriority(left.rule) || left.order - right.order);
+  const matches = matchingHTMLRules(schema.marks, (rule, type) => matchingRule(element, rule, `mark:${type.name}`, context));
   const result: Mark[] = [];
   matches.forEach(({ type, rule, portable }) => {
     if (result.some((mark) => mark.type === type)) return;
@@ -633,20 +583,8 @@ function configuredNode(
 ): FountainNode | null {
   const retained = inline ? context.literalRawText?.get(element.raw) : undefined;
   if (retained) return inheritedMarks.length ? retained.withMarks(inheritedMarks) : retained;
-  const matches: Array<{
-    type: NodeType;
-    rule: ParseRule;
-    portable: boolean;
-    order: number;
-  }> = [];
-  Object.values(schema.nodes).forEach((type, order) => {
-    if (type.name === 'doc' || type.name === 'text' || type.isInline !== inline) return;
-    if (!type.spec.parseHTML?.length && !type.spec.parseDOM?.length) return;
-    configuredRules(type.spec).forEach(({ rule, portable }) => {
-      if (matchingRule(element, rule, `node:${type.name}`, context)) matches.push({ type, rule, portable, order });
-    });
-  });
-  matches.sort((left, right) => parseRulePriority(right.rule) - parseRulePriority(left.rule) || left.order - right.order);
+  const matches = matchingHTMLRules(schema.nodes, (rule, type) => matchingRule(element, rule, `node:${type.name}`, context),
+    type => type.name !== 'doc' && type.name !== 'text' && type.isInline === inline);
 
   for (const { type, rule, portable } of matches) {
     const contribution = `node:${type.name}`;
@@ -689,15 +627,12 @@ function configuredNode(
         const comment = branch.commentOrigins?.get(before);
         if (comment) branch.commentOrigins?.set(node, comment);
       });
-      if (expression && !matchesContentExpression(content, expression)) continue;
-      try {
-        const node = type.create(attrs, content, undefined, inheritedMarks);
-        schema.validate(node);
-        branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
-        branch.inlineSlots?.atomVisits.forEach(offset => context.inlineSlots!.atomVisits.push(offset));
-        branch.issues.forEach(issue => reportOnce(context, issue));
-        return node;
-      } catch { /* Try the next content shape or parse rule. */ }
+      const node = createHTMLRuleNode(type, attrs, content, inheritedMarks, schema);
+      if (!node) continue;
+      branch.inlineSlots?.breakVisits.forEach(offset => context.inlineSlots!.breakVisits.push(offset));
+      branch.inlineSlots?.atomVisits.forEach(offset => context.inlineSlots!.atomVisits.push(offset));
+      branch.issues.forEach(issue => reportOnce(context, issue));
+      return node;
     }
     reportRuleFailure(context, rule, contribution, 'no content and attribute projection satisfied the node schema');
   }
@@ -722,13 +657,7 @@ function configuredRuby(
     childNodes: element.childNodes.filter((child) => child.kind !== 'element' || !['rt', 'rp'].includes(child.tagName)),
     textContent: '',
   };
-  const base = inlineChildren(baseRoot, schema, inheritedMarks, context);
-  if (!annotation || !base.length || base.some((node) => !node.isText)) return base;
-  try {
-    const ruby = type.create({ rt: annotation }, relativeHTMLContent(base, inheritedMarks), undefined, inheritedMarks);
-    schema.validate(ruby);
-    return [ruby];
-  } catch { return base; }
+  return projectHTMLRuby(type, annotation, inlineChildren(baseRoot, schema, inheritedMarks, context), inheritedMarks, schema);
 }
 
 const HTML_LINK_ISSUES = {
@@ -887,23 +816,16 @@ function hasProjectedPreformattedMarkup(element: SourceElement): boolean {
     && child.childNodes.every(node => node.kind === 'text')));
 }
 
-const BLOCK_TAGS = new Set([
-  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'dt', 'dd', 'fieldset',
-  'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'header', 'hr', 'img', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'summary',
-  'table', 'ul', 'audio', 'video', 'iframe',
-]);
-
 function hasConfiguredBlockRule(element: SourceElement, schema: Schema, context: ImportContext): boolean {
   return Object.values(schema.nodes).some((type) => type.isBlock && type.name !== 'doc'
-    && configuredRules(type.spec).some(({ rule }) => matchingRule(element, rule, `node:${type.name}`, context)));
+    && hasHTMLRule(type.spec, rule => matchingRule(element, rule, `node:${type.name}`, context)));
 }
 
 function hasStructuralContent(element: SourceElement, schema: Schema, context: ImportContext): boolean {
-  if (BLOCK_TAGS.has(element.tagName) || element.matches('a[data-fountain-file]') || hasConfiguredBlockRule(element, schema, context)) return true;
+  if (HTML_BLOCK_TAGS.has(element.tagName) || element.matches('a[data-fountain-file]') || hasConfiguredBlockRule(element, schema, context)) return true;
   // Keep registered inline nodes authoritative over their own HTML subtree.
   if (Object.values(schema.nodes).some(type => type.isInline
-    && configuredRules(type.spec).some(({ rule }) => matchingRule(element, rule, `node:${type.name}`, context)))) return false;
+    && hasHTMLRule(type.spec, rule => matchingRule(element, rule, `node:${type.name}`, context)))) return false;
   return element.children.some(child => hasStructuralContent(child, schema, context));
 }
 
@@ -1371,7 +1293,7 @@ export class ServerHTMLImporter {
             continue;
           }
         }
-        if ((!paragraphMode && BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
+        if ((!paragraphMode && HTML_BLOCK_TAGS.has(child.tagName) && child.tagName !== 'img') || /^(script|style|textarea|title|iframe|xmp|plaintext|svg|math|template|select|option)$/u.test(child.tagName)) {
           throw new Error(`Inline HTML <${child.tagName}> requires a block or specialized adapter; literal source retained.`);
         }
         inspect(child);

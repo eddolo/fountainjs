@@ -3,13 +3,8 @@ import {
   Mark,
   Node as FountainNode,
   type Attributes,
-  type DOMParseRule,
-  type HTMLParseRule,
-  type MarkType,
-  type NodeType,
   type Schema,
 } from '../schema';
-import { matchesContentExpression } from '../schema/content-expression';
 import { textNodes, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, projectHTMLFormatting, projectHTMLLink } from './html-marks';
 import { projectHTMLInlineAtom, projectHTMLMath } from './html-inline-atoms';
 import { embedNode, fileNode, playbackNode, projectImage, projectMediaFigure } from './html-media';
@@ -23,51 +18,25 @@ import { projectHTMLTable } from './html-table';
 import { htmlOrderedListStart } from './html-list';
 import { importDefinitionList } from './html-definition-list';
 import { readHTMLDocumentPageSettings } from './html-page-settings';
+import { HTML_BLOCK_TAGS, createHTMLRuleNode, hasHTMLRule, matchingHTMLRules, projectHTMLRuby, readHTMLRuleAttributes, type HTMLImportRule } from './html-rules';
 
-type BrowserParseRule = DOMParseRule | HTMLParseRule;
-
-function parseRules(spec: { parseHTML?: readonly HTMLParseRule[]; parseDOM?: readonly DOMParseRule[] }): BrowserParseRule[] {
-  return [...(spec.parseHTML ?? []), ...(spec.parseDOM ?? [])];
-}
-
-function parseRulePriority(rule: BrowserParseRule): number {
-  return Number.isFinite(rule.priority) ? Number(rule.priority) : 50;
-}
-
-function matchesRule(element: Element, rule: BrowserParseRule): boolean {
+function matchesRule(element: Element, rule: HTMLImportRule): boolean {
   try { return Boolean(rule.tag) && element.matches(rule.tag); }
   catch { return false; }
 }
 
-function attrsFromRule(element: HTMLElement, rule: BrowserParseRule): Attributes | false {
-  try {
-    const getAttrs = rule.getAttrs as ((candidate: HTMLElement) => Attributes | null | false) | undefined;
-    const value = getAttrs?.(element) ?? {};
-    if (value === false) return false;
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
-    const prototype = Object.getPrototypeOf(value);
-    return prototype === Object.prototype || prototype === null ? value : false;
-  } catch { return false; }
-}
-
-function ruleContentElement(element: HTMLElement, rule: BrowserParseRule): HTMLElement | null {
+function ruleContentElement(element: HTMLElement, rule: HTMLImportRule): HTMLElement | null {
   if (!rule.contentElement) return element;
   try { return element.querySelector<HTMLElement>(rule.contentElement); }
   catch { return null; }
 }
 
 function configuredMarks(element: HTMLElement, schema: Schema): Mark[] {
-  const matches: Array<{ type: MarkType; rule: BrowserParseRule; order: number }> = [];
-  Object.values(schema.marks).forEach((type, order) => {
-    parseRules(type.spec).forEach((rule) => {
-      if (matchesRule(element, rule)) matches.push({ type, rule, order });
-    });
-  });
-  matches.sort((left, right) => parseRulePriority(right.rule) - parseRulePriority(left.rule) || left.order - right.order);
+  const matches = matchingHTMLRules(schema.marks, rule => matchesRule(element, rule));
   const result: Mark[] = [];
   matches.forEach(({ type, rule }) => {
     if (result.some((mark) => mark.type === type)) return;
-    const attrs = attrsFromRule(element, rule);
+    const attrs = readHTMLRuleAttributes(element, rule);
     if (attrs === false) return;
     try { result.push(type.create(attrs)); }
     catch { /* Invalid extension attributes decline this rule. */ }
@@ -81,17 +50,11 @@ function configuredNode(
   inline: boolean,
   inheritedMarks: readonly Mark[] = [],
 ): FountainNode | null {
-  const matches: Array<{ type: NodeType; rule: BrowserParseRule; order: number }> = [];
-  Object.values(schema.nodes).forEach((type, order) => {
-    if (type.name === 'doc' || type.name === 'text' || type.isInline !== inline) return;
-    parseRules(type.spec).forEach((rule) => {
-      if (matchesRule(element, rule)) matches.push({ type, rule, order });
-    });
-  });
-  matches.sort((left, right) => parseRulePriority(right.rule) - parseRulePriority(left.rule) || left.order - right.order);
+  const matches = matchingHTMLRules(schema.nodes, rule => matchesRule(element, rule),
+    type => type.name !== 'doc' && type.name !== 'text' && type.isInline === inline);
 
   for (const { type, rule } of matches) {
-    const attrs = attrsFromRule(element, rule);
+    const attrs = readHTMLRuleAttributes(element, rule);
     const contentRoot = ruleContentElement(element, rule);
     if (attrs === false || !contentRoot) continue;
     const expression = type.spec.content;
@@ -107,12 +70,8 @@ function configuredNode(
     if (/^block[+*?]$/.test(expression ?? '')) candidates.reverse();
     for (const candidate of candidates) {
       const content = relativeHTMLContent(restoreHTMLFlowCaret(type.name, contentRoot, candidate, schema), inheritedMarks);
-      if (expression && !matchesContentExpression(content, expression)) continue;
-      try {
-        const node = type.create(attrs, content, undefined, inheritedMarks);
-        schema.validate(node);
-        return node;
-      } catch { /* Try the next content shape or parse rule. */ }
+      const node = createHTMLRuleNode(type, attrs, content, inheritedMarks, schema);
+      if (node) return node;
     }
   }
   return null;
@@ -150,13 +109,7 @@ function configuredRuby(
     });
     baseRoot = fragment;
   }
-  const base = inlineChildren(baseRoot, schema, inheritedMarks);
-  if (!annotation || !base.length || base.some((node) => !node.isText)) return base;
-  try {
-    const ruby = type.create({ rt: annotation }, relativeHTMLContent(base, inheritedMarks), undefined, inheritedMarks);
-    schema.validate(ruby);
-    return [ruby];
-  } catch { return base; }
+  return projectHTMLRuby(type, annotation, inlineChildren(baseRoot, schema, inheritedMarks), inheritedMarks, schema);
 }
 
 function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly Mark[] = [], literalText = false): FountainNode[] {
@@ -235,24 +188,17 @@ function preformattedChildren(element: Element, schema: Schema): FountainNode[] 
   });
 }
 
-const BLOCK_TAGS = new Set([
-  'address', 'article', 'aside', 'blockquote', 'details', 'div', 'dl', 'dt', 'dd', 'fieldset',
-  'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'header', 'hr', 'img', 'main', 'nav', 'ol', 'p', 'pre', 'section', 'summary',
-  'table', 'ul', 'audio', 'video', 'iframe',
-]);
-
 function hasConfiguredBlockRule(element: HTMLElement, schema: Schema): boolean {
   return Object.values(schema.nodes).some((type) => type.isBlock && type.name !== 'doc'
-    && parseRules(type.spec).some((rule) => matchesRule(element, rule)));
+    && hasHTMLRule(type.spec, rule => matchesRule(element, rule)));
 }
 
 function hasStructuralContent(element: HTMLElement, schema: Schema): boolean {
-  if (BLOCK_TAGS.has(element.tagName.toLowerCase()) || element.matches('a[data-fountain-file]') || hasConfiguredBlockRule(element, schema)) return true;
+  if (HTML_BLOCK_TAGS.has(element.tagName.toLowerCase()) || element.matches('a[data-fountain-file]') || hasConfiguredBlockRule(element, schema)) return true;
   // An explicit inline node owns its content, even if its HTML contains block
   // descendants (for example an application-defined atomic preview).
   if (Object.values(schema.nodes).some(type => type.isInline
-    && parseRules(type.spec).some(rule => matchesRule(element, rule)))) return false;
+    && hasHTMLRule(type.spec, rule => matchesRule(element, rule)))) return false;
   return [...element.children].some(child => child instanceof HTMLElement && hasStructuralContent(child, schema));
 }
 
