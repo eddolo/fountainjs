@@ -5,8 +5,9 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import * as Y from 'yjs';
 
-const [baselinePath, candidatePath] = process.argv.slice(2);
+const [baselinePath, candidatePath, operation = 'write'] = process.argv.slice(2);
 assert(baselinePath && candidatePath, 'Pass the baseline and candidate authority build directories.');
+assert(operation === 'read' || operation === 'write', 'Choose read or write.');
 const version = 'write-benchmark-1';
 const key = 'bench:retained-write';
 const user = { id: 'author', name: 'Author', color: '#7048e8' };
@@ -38,17 +39,24 @@ async function measure(api, blocks) {
   const times = [], digestCounts = [];
   try {
     const initial = await api.captureRetainedCheckpoint(document, schema, version);
-    let saved = await room.initialize(initial);
+    const opened = await room.openForEditing({ protocols: ['retained'], loadCheckpoint: () => initial });
+    let saved = opened.snapshot, lease = opened.admission;
     subtle.digest = (...args) => { digests++; return digest(...args); };
     for (let edit = 0; edit < warmup + samples; edit++) {
       const vector = Y.encodeStateVectorFromUpdate(saved.checkpoint.update);
       const path = [Math.floor(blocks / 2), 0];
       editor.dispatch(editor.createTransaction().insertText(path, 3 + edit, 'x'));
       const update = Y.encodeStateAsUpdate(document, vector);
+      const write = () => room.write({ epoch: saved.epoch, protocol: 'retained', update });
+      if (operation === 'read') saved = await write();
       digests = 0;
       const start = performance.now();
-      saved = await room.write({ epoch: saved.epoch, protocol: 'retained', update });
+      const next = await (operation === 'read' ? room.pollRetained(lease) : write());
       if (edit >= warmup) { times.push(performance.now() - start); digestCounts.push(digests); }
+      assert(next);
+      if (operation === 'read') assert.deepEqual(next, saved);
+      saved = next;
+      lease = { ...lease, revision: saved.revision };
       assert.equal(saved.revision, edit + 1);
     }
     const restored = await api.restoreRetainedCheckpoint(saved.checkpoint, schema, version);
@@ -71,8 +79,8 @@ function summarize(runs) {
   const middle = Math.floor(times.length / 2);
   return {
     medianMs: Number(((times[middle - 1] + times[middle]) / 2).toFixed(2)),
-    measuredWrites: times.length,
-    digestsPerWrite: [...new Set(runs.flatMap(run => run.digestCounts))],
+    measuredOperations: times.length,
+    digestsPerOperation: [...new Set(runs.flatMap(run => run.digestCounts))],
   };
 }
 
@@ -86,4 +94,4 @@ for (const blocks of [250, 1_000]) {
   assert.equal(new Set([...before, ...after].map(run => run.documentSha256)).size, 1);
   results.push({ blocks, baseline: summarize(before), candidate: summarize(after) });
 }
-console.log(JSON.stringify({ runtime: process.version, warmupWritesPerRun: warmup, results }, null, 2));
+console.log(JSON.stringify({ runtime: process.version, operation, warmupOperationsPerRun: warmup, results }, null, 2));

@@ -1,6 +1,6 @@
 import * as Y from 'yjs';
 import type { Schema } from '../core/schema';
-import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
+import { captureRetainedCheckpoint, restoreRetainedCheckpoint, verifyRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 
 export type RetainedRoomErrorCode = 'closed' | 'stale-epoch' | 'frozen' | 'revision-conflict' | 'invalid-ticket' | 'invalid-update' | 'insufficient-savings';
 export class RetainedRoomError extends Error {
@@ -23,10 +23,10 @@ function complete(document: Y.Doc): void {
 
 /** Shared private codec boundary for in-memory and persistent authorities. */
 export async function validateRetainedRoomCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<RetainedCheckpoint> {
-  const restored = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
+  const restored = await verifyRetainedCheckpoint(checkpoint, schema, schemaVersion);
   try {
     complete(restored.document);
-    return await captureRetainedCheckpoint(restored.document, schema, schemaVersion, restored.manifest.room);
+    return restored.checkpoint;
   } finally { restored.document.destroy(); }
 }
 

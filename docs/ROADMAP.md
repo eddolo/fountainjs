@@ -36,7 +36,7 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-remains 135.2 KiB over its existing limit. [Package output audit](PERFORMANCE.md#shared-html-import-projection).
+remains 135.4 KiB over its existing limit. [Package output audit](PERFORMANCE.md#shared-html-import-projection).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested
@@ -107,6 +107,9 @@ revision when the complete validated checkpoint and storage generation match.
 The durable write path restores and validates the saved checkpoint once. In a
 single-machine SQLite benchmark, median write time for 1,000 paragraphs fell
 from 569.05 ms to 289.82 ms.
+The changed-read path serves the verified checkpoint bytes directly. Median
+authority read time fell from 283.67 ms to 118.36 ms for the same document
+size in the local SQLite benchmark.
 Both adapters also discard an older queued cursor after a newer one is sent.
 The retained live workflow now has 18 recorded browser checks for all six
 default-adapter structural cases across offline autosave, reload, resume, undo

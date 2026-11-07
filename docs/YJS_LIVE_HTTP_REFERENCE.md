@@ -279,6 +279,39 @@ into separate directories. Run the benchmark against the two compiled builds.
 node artifacts/benchmark-yjs-authority-write-20261107.mjs artifacts/yjs-authority-write-baseline-20261107 artifacts/yjs-authority-admission-build-20261107
 ```
 
+## Changed checkpoint read cost
+
+The authority serves an owned copy of the bytes it verified. It checks the
+manifest and update digests, the room identity, the schema projection and its
+digest, and the absence of unresolved native dependencies. Changed polls
+still verify the storage generation immediately before returning. The
+receiver still verifies any delta against its last accepted checkpoint.
+
+The local Node 24 SQLite benchmark measures a changed poll after each saved
+edit. Median time fell from 68.18 ms to 29.01 ms for 250 paragraphs and from
+283.67 ms to 118.36 ms for 1,000 paragraphs. Each changed read used three
+SHA-256 operations, down from six. Both builds returned the same saved
+checkpoint to the reader and produced matching document digests across runs.
+There were 16 measured reads per build and size after warm-up. This measures
+the authority on one machine. The network, delta encoding and concurrent
+production traffic are outside this measurement.
+
+All 195 focused tests and 18 recorded Chromium, Firefox and WebKit journeys
+passed. The ownership test mutates the supplied archive during verification
+and the returned byte copy afterwards. The changed-poll test refuses a
+corrupted payload with a matching room header. The Firefox capture shows the
+editor and saved reader in agreement after a corrupted delta falls back to a
+full receipt. Recordings are in `artifacts/yjs-authority-read-browser-20261107/`.
+The preview entry grows about 0.14 KiB per format. Public export signatures
+stay the same.
+
+Build the authority fixture from baseline `7e8ca6fb` and from this change
+into separate directories, then run the read profile.
+
+```powershell
+node artifacts/benchmark-yjs-authority-write-20261107.mjs artifacts/yjs-authority-read-baseline-20261107 artifacts/yjs-authority-admission-build-20261107 read
+```
+
 ## Deployment boundaries
 
 This reference uses periodic HTTP polling. The server still

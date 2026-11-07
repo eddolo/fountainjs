@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reuse verified retained checkpoint bytes when admitting peers and serving a
+  changed room snapshot. The returned bytes still match the saved archive.
+
 - Add an optional Angular 22 Reactive Forms document field with portable JSON
   values, touched state, disabled state, programmatic writes and undo-safe form
   reset. The Angular campaign demo includes a form you can validate and submit.

@@ -10,6 +10,7 @@ import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepo
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
+import { validateRetainedRoomCheckpoint } from '../src/yjs/retained-room-store';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
 import { openBoundYjsRoom } from '../examples/backends/bound-yjs-room';
 
@@ -71,6 +72,34 @@ it('opens a newly provisioned retained room at the newer bound revision', async 
   expect(Object.isFrozen(bound.lease)).toBe(true);
   expect(bound.baseDocument.textContent).toBe('New: Canonical starter');
   expect(bound.fragment).toBeUndefined();
+});
+
+it('returns the exact verified bytes without retaining the supplied checkpoint object', async () => {
+  const pair = await fixture();
+  const manifest = { ...pair.checkpoint.manifest, roots: pair.checkpoint.manifest.roots.map(root => ({ ...root })) };
+  const update = pair.checkpoint.update;
+  const validation = validateRetainedRoomCheckpoint({ manifest, update }, pair.schema, version);
+  manifest.guid = 'changed-after-read';
+  manifest.roots[0]!.name = 'changed-after-read';
+  update.fill(0);
+  const checked = await validation;
+  expect(checked).toEqual(pair.checkpoint);
+  expect(Object.isFrozen(checked.manifest.roots[0])).toBe(true);
+  checked.update.fill(0);
+  expect(checked.update).toEqual(pair.checkpoint.update);
+});
+
+it('checks the changed poll payload even when the room header matches', async () => {
+  const pair = await fixture();
+  const opened = await pair.room.openForEditing({ protocols: ['retained'], loadCheckpoint: () => pair.checkpoint });
+  pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'Changed: '));
+  const saved = await pair.peer.write({ epoch: opened.admission.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(pair.document) });
+  const row = (await pair.first.readDocument(key))!;
+  const update = row.checkpoint.update;
+  update[0] ^= 1;
+  vi.spyOn(pair.first, 'readDocument').mockResolvedValueOnce({ ...row, checkpoint: { ...row.checkpoint, update } });
+  await expect(pair.room.pollRetained(opened.admission)).rejects.toThrow('Checkpoint update checksum mismatch');
+  expect(await pair.room.pollRetained(opened.admission)).toEqual(saved);
 });
 
 it.each(['insertion', 'deletion'] as const)('acknowledges a replayed %s without advancing or rewriting the room', async edit => {

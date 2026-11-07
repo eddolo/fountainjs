@@ -28,6 +28,10 @@ export interface RetainedCheckpoint {
   readonly update: Uint8Array;
 }
 
+function ownedCheckpoint(manifest: RetainedCheckpointManifest, update: Uint8Array): RetainedCheckpoint {
+  return Object.freeze({ manifest, get update() { return update.slice(); } });
+}
+
 const sameBytes = (a: Uint8Array, b: Uint8Array): boolean => a.length === b.length && a.every((value, index) => value === b[index]);
 function stableJSON(value: unknown): string {
   if (Array.isArray(value)) return '[' + value.map(stableJSON).join(',') + ']';
@@ -121,7 +125,7 @@ export async function captureRetainedCheckpoint(document: Y.Doc, schema: Schema,
     assertUnchanged(copy, update, projected.roots); assertUnchanged(document, update, inventory);
     if (document.guid !== guid || document.gc !== gc) throw new Error('Checkpoint source options changed during capture.');
     const manifest: RetainedCheckpointManifest = Object.freeze({ ...body, checkpointSha256 });
-    return Object.freeze({ manifest, get update() { return update.slice(); } });
+    return ownedCheckpoint(manifest, update);
   } finally { copy.destroy(); }
 }
 
@@ -171,6 +175,12 @@ export type CheckpointRoot = Root;
 
 /** Restore into an isolated document only. Never merges into a live room. */
 export async function restoreRetainedCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<{ document: Y.Doc; baseDocument: Node; manifest: RetainedCheckpointManifest }> {
+  const restored = await verifyRetainedCheckpoint(checkpoint, schema, schemaVersion);
+  return { document: restored.document, baseDocument: restored.baseDocument, manifest: restored.checkpoint.manifest };
+}
+
+/** Verify the archive and keep an owned copy for the authority to serve. */
+export async function verifyRetainedCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<{ document: Y.Doc; baseDocument: Node; checkpoint: RetainedCheckpoint }> {
   const manifest = manifestCopy(checkpoint.manifest, schemaVersion), supplied = checkpoint.update;
   if (!(supplied instanceof Uint8Array) || supplied.length !== manifest.bytes) throw new Error('Invalid checkpoint update length.');
   const update = Uint8Array.from(supplied);
@@ -185,6 +195,6 @@ export async function restoreRetainedCheckpoint(checkpoint: RetainedCheckpoint, 
     assertUnchanged(document, update, manifest.roots);
     if (await digest(encoded) !== manifest.documentSha256) throw new Error('Checkpoint document projection mismatch.');
     assertUnchanged(document, update, manifest.roots); document.gc = manifest.gc;
-    return { document, baseDocument, manifest };
+    return { document, baseDocument, checkpoint: ownedCheckpoint(manifest, update) };
   } catch (error) { document.destroy(); throw error; }
 }
