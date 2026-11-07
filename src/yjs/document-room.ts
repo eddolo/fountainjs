@@ -20,6 +20,12 @@ export interface DocumentRoomAdmission {
   readonly key: string; readonly epoch: string; readonly revision: number;
   readonly protocol: DocumentProtocol; readonly room: string; readonly identity: string;
 }
+export interface RetainedRoomProvisionOptions {
+  readonly room?: string;
+  readonly signal?: AbortSignal;
+  /** Load a server-owned initial checkpoint only when the room is absent. */
+  readonly loadCheckpoint: (signal: AbortSignal | undefined) => RetainedCheckpoint | Promise<RetainedCheckpoint>;
+}
 export const documentProtocol = (checkpoint: DocumentCheckpoint): DocumentProtocol => {
   if (checkpoint.manifest.format === 'fountain-legacy-checkpoint/1') return 'legacy';
   if (checkpoint.manifest.format === 'fountain-retained-checkpoint/1') return 'retained';
@@ -36,6 +42,12 @@ export function assertDocumentFreeze(row: DocumentRoomRecord, ticket: Coordinate
   if (row.key !== ticket.key || row.phase !== 'frozen' || row.preparationId !== null || row.freezeId !== ticket.id || row.epoch !== ticket.epoch || row.revision !== ticket.revision || row.checkpoint.manifest.checkpointSha256 !== ticket.checkpointSha256) documentRoomFailure('invalid-ticket', 'Document-room freeze ticket is no longer current.');
 }
 export const documentSnapshot = (row: DocumentRoomRecord): DocumentRoomSnapshot => Object.freeze({ key: row.key, epoch: row.epoch, revision: row.revision, phase: row.phase, protocol: documentProtocol(row.checkpoint), checkpoint: row.checkpoint });
+function initialDocumentRoom(key: string, checkpoint: DocumentCheckpoint): DocumentRoomRecord {
+  return {
+    key, checkpoint, epoch: crypto.randomUUID(), generation: crypto.randomUUID(), revision: 0,
+    phase: 'active', freezeId: null, preparationId: null, lastResume: null,
+  };
+}
 export interface ValidatedDocumentCheckpoint { readonly checkpoint: DocumentCheckpoint; readonly protocol: DocumentProtocol; readonly identity: string }
 export async function validateDocumentCheckpoint(checkpoint: DocumentCheckpoint, schema: Schema, schemaVersion: string, projection: LegacyProjectionOptions): Promise<ValidatedDocumentCheckpoint> {
   if (documentProtocol(checkpoint) === 'retained') {
@@ -80,8 +92,46 @@ export class CoordinatedDocumentRoom {
     if (!await this.repository.compareDocument(this.key, row.generation, next)) documentRoomFailure('revision-conflict', 'Document room changed; retain pending edits and retry.'); return next;
   }
   async initialize(checkpoint: DocumentCheckpoint): Promise<DocumentRoomSnapshot> {
-    const checked = await validateDocumentCheckpoint(checkpoint, this.schema, this.schemaVersion, this.projection), row: DocumentRoomRecord = { key: this.key, epoch: crypto.randomUUID(), generation: crypto.randomUUID(), revision: 0, phase: 'active', freezeId: null, preparationId: null, lastResume: null, checkpoint: checked.checkpoint };
+    const checked = await validateDocumentCheckpoint(checkpoint, this.schema, this.schemaVersion, this.projection);
+    const row = initialDocumentRoom(this.key, checked.checkpoint);
     if (!await this.repository.createDocument(row)) documentRoomFailure('revision-conflict', 'Document room already exists.'); return documentSnapshot(row);
+  }
+  /** Authorized load-or-create. A repository's atomic insert chooses the only
+   * authoritative seed. Losing requests load that room through the same checks
+   * as subsequent joins. A separate admission fence is still required. */
+  async provisionRetained(options: RetainedRoomProvisionOptions): Promise<DocumentRoomSnapshot> {
+    const { room = 'fountain', loadCheckpoint, signal } = options;
+    if (typeof room !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,193}$/.test(room)
+      || typeof loadCheckpoint !== 'function') throw new TypeError('Invalid retained room provisioning options.');
+    signal?.throwIfAborted();
+
+    const existingSnapshot = async (row: DocumentRoomRecord): Promise<DocumentRoomSnapshot> => {
+      validateCoordinatedRoomRecord(row, this.key, this.schemaVersion);
+      if (documentProtocol(row.checkpoint) !== 'retained') documentRoomFailure('stale-epoch', 'Existing room requires explicit migration to retained storage.');
+      if (row.phase !== 'active') documentRoomFailure('frozen', 'Existing room is frozen.');
+      if (row.checkpoint.manifest.room !== room) documentRoomFailure('revision-conflict', 'Existing room uses a different namespace.');
+      const checkpoint = await validateRetainedRoomCheckpoint(row.checkpoint as RetainedCheckpoint, this.schema, this.schemaVersion);
+      signal?.throwIfAborted();
+      return documentSnapshot({ ...row, checkpoint });
+    };
+
+    const existing = await this.repository.readDocument(this.key);
+    signal?.throwIfAborted();
+    if (existing) return existingSnapshot(existing);
+
+    const initial = await loadCheckpoint(signal);
+    signal?.throwIfAborted();
+    const checkpoint = await validateRetainedRoomCheckpoint(initial, this.schema, this.schemaVersion);
+    if (checkpoint.manifest.room !== room) documentRoomFailure('revision-conflict', 'Initial checkpoint uses a different namespace.');
+    const row = initialDocumentRoom(this.key, checkpoint);
+    signal?.throwIfAborted();
+    const created = await this.repository.createDocument(row);
+    signal?.throwIfAborted();
+    if (created) return documentSnapshot(row);
+
+    const winner = await this.current();
+    signal?.throwIfAborted();
+    return existingSnapshot(winner);
   }
   async snapshot(): Promise<DocumentRoomSnapshot> { const row = await this.current(), checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection); return documentSnapshot({ ...row, checkpoint: checked.checkpoint }); }
   /** Read-only connection fence. Every later write must still check its epoch;

@@ -20,13 +20,22 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,802 passes and six failures, with no skips. Four
+The latest full source run had 4,802 passes and six failures, with no skips. Four
 raw-size limits are exceeded in the preview build. Complete fresh release CI,
 retained history/storage growth and compaction, nested-fragment migration and
 safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Roadmap](ROADMAP.md).
+
+First-room provisioning reference (2026-11-07, local). Two concurrent requests
+can prepare independent checkpoints and load the same durable room selected by
+the atomic insert. Retrying after a lost acknowledgement loads the saved
+revision. Frozen, legacy and mismatched rooms are refused. Eight focused
+provisioning tests and six recorded Chromium, Firefox and WebKit journeys pass.
+All 178 top-level runtime and CSS files match the package preview build.
+Hosted rollout and default-adapter adoption remain open.
+[Provisioning audit](YJS_RETAINED_PROVISIONING_AUDIT.md).
 
 Retained collaboration package preview (2026-11-07, local). The opt-in
 `fountainjs-editor/experimental/yjs-retained` entry ships in a local tarball with

@@ -40,9 +40,11 @@ For a local experiment, create one editor with the retained extension and an emp
 each editor's Yjs constructors in one module system; mixing ESM and CommonJS Yjs
 instances in the same process creates incompatible constructor universes.
 
-A shared application should instead provision once on its authorized backend,
-persist an authoritative checkpoint, and admit each client before its transport
-starts. The host supplies the loader and binding through the extension options.
+A shared application provisions on its authorized backend, persists an
+authoritative checkpoint, and admits each client before its transport starts.
+The server reference handles simultaneous first joins with an atomic insert and
+reuses the saved room on retry. [Provisioning audit](YJS_RETAINED_PROVISIONING_AUDIT.md).
+The host supplies the loader and binding through the extension options.
 
 ```ts
 import * as Y from 'yjs';
@@ -103,7 +105,7 @@ independent initialization, legacy XML data, subdocuments and nonportable wire
 values are refused. Existing XML rooms need the separately audited migration and
 rollback workflow; this entry intentionally exports no migration/admin service.
 
-Remaining adoption work includes production transport/provisioning, durable client
+Remaining adoption work includes deployed transport and provisioning, durable client
 draft reconciliation, multi-host authority, history/metadata growth and compaction,
 broader application integration, and full release CI. Recorded desktop-engine
 journeys are not physical mobile/IME or assistive-technology certification.

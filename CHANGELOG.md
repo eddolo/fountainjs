@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add an atomic load-or-create path for the retained room authority. Simultaneous
+  first joins receive the same saved checkpoint. Retries use the latest revision
+  and preserve frozen or incompatible rooms. [Provisioning audit](docs/YJS_RETAINED_PROVISIONING_AUDIT.md).
+
 - Add an opt-in `experimental/yjs-retained` package entry for the retained
   collaboration adapter, authoritative admission types and isolated checkpoint
   capture/restore. Existing rooms continue using the XML format. Document
