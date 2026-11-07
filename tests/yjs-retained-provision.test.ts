@@ -172,3 +172,77 @@ it('validates the initial bytes before writing a row', async () => {
   expect(await pair.second.readDocument(key)).toBeUndefined();
   expect(await pair.peer.provisionRetained({ loadCheckpoint: () => pair.checkpoint })).toMatchObject({ revision: 0 });
 });
+
+it('offers a retained default to new clients, including concurrent first opens', async () => {
+  const pair = await fixture();
+  const alternate = seed('Alternate first-open template');
+  const other = await captureRetainedCheckpoint(alternate.document,alternate.schema,version);
+  const onlyLegacy = vi.fn(() => pair.checkpoint);
+  await expect(pair.room.openForEditing({protocols:['legacy'],loadCheckpoint:onlyLegacy})).rejects.toMatchObject({code:'stale-epoch'});
+  expect(onlyLegacy).not.toHaveBeenCalled();
+  const both = deferred<void>();
+  let loads = 0;
+  const load = async (checkpoint: typeof other) => {
+    if (++loads === 2) both.resolve();
+    await both.promise;
+    return checkpoint;
+  };
+  const [first,second] = await Promise.all([
+    pair.room.openForEditing({protocols:['legacy','retained'],loadCheckpoint:()=>load(pair.checkpoint)}),
+    pair.peer.openForEditing({protocols:['retained'],loadCheckpoint:()=>load(other)}),
+  ]);
+  expect(first).toEqual(second);
+  expect(first.admission).toMatchObject({protocol:'retained',room:'fountain',revision:0});
+  expect(await pair.peer.admit(first.admission)).toEqual(first.snapshot);
+  expect(loads).toBe(2);
+});
+
+it('offers a named legacy room without selecting a retained seed or rewriting bytes', async () => {
+  const pair = await fixture(), name = 'Research / α';
+  const source = seed('Existing named XML document',name,true);
+  const checkpoint = await captureLegacyCheckpoint(source.document,source.schema,version,{},name);
+  const created = await pair.room.initialize(checkpoint);
+  const loadCheckpoint = vi.fn(() => pair.checkpoint);
+  await expect(pair.peer.openForEditing({protocols:['retained'],loadCheckpoint})).rejects.toMatchObject({code:'stale-epoch'});
+  const opened = await pair.peer.openForEditing({protocols:['retained','legacy'],loadCheckpoint});
+  expect(opened.snapshot).toEqual(created);
+  expect(opened.admission).toMatchObject({protocol:'legacy',room:name,identity:expect.stringMatching(/^yjs-/)});
+  expect(await pair.room.admit(opened.admission)).toEqual(created);
+  expect(loadCheckpoint).not.toHaveBeenCalled();
+  expect((await pair.first.readDocument(key))?.checkpoint.update).toEqual(checkpoint.update);
+  await pair.room.freeze(created);
+  await expect(pair.peer.admit(opened.admission)).rejects.toMatchObject({code:'frozen'});
+});
+
+it('uses a concurrently installed legacy room when it wins the first-open insert', async () => {
+  const pair = await fixture(), source = seed('Legacy writer won the first insert','old-notes',true);
+  const legacy = await captureLegacyCheckpoint(source.document,source.schema,version,{},'old-notes');
+  const started = deferred<void>(), candidate = deferred<typeof pair.checkpoint>();
+  const pending = pair.room.openForEditing({protocols:['retained','legacy'],loadCheckpoint(){
+    started.resolve();
+    return candidate.promise;
+  }});
+  await started.promise;
+  const winner = await pair.peer.initialize(legacy);
+  candidate.resolve(pair.checkpoint);
+  const result = await pending;
+  expect(result.snapshot).toEqual(winner);
+  expect(result.admission).toMatchObject({protocol:'legacy',room:'old-notes'});
+  expect((await pair.first.readDocument(key))?.checkpoint.update).toEqual(legacy.update);
+});
+
+it('refuses an opening receipt when another authority changes the room during verification', async () => {
+  const pair = await fixture(), initial = await pair.room.initialize(pair.checkpoint);
+  const repository: DocumentRoomRepository = {
+    readDocument: pair.first.readDocument.bind(pair.first), createDocument: pair.first.createDocument.bind(pair.first),
+    compareDocument: pair.first.compareDocument.bind(pair.first),
+    async readDocumentHeader(roomKey) {
+      await pair.peer.freeze(initial);
+      return pair.first.readDocumentHeader(roomKey);
+    },
+  };
+  const authority = new CoordinatedDocumentRoom(repository,key,pair.schema,version);
+  const loadCheckpoint = vi.fn(() => pair.checkpoint);
+  await expect(authority.openForEditing({protocols:['retained'],loadCheckpoint})).rejects.toMatchObject({code:'revision-conflict'});
+  expect(loadCheckpoint).not.toHaveBeenCalled();
+});

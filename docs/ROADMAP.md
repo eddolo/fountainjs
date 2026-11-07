@@ -12,6 +12,8 @@ The active priority is COLLAB-01. Six ordinary default-adapter tests still fail
 for offline typing versus concurrent quote/list wrapping, partial marks and
 paragraph splitting. The retained replacement is available as an experimental
 entry in the unreleased local package. Safe production adoption remains open.
+The SQLite reference can open an existing room in its stored format and use
+the retained format when provisioning a new room.
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

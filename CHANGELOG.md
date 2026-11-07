@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Let the SQLite collaboration authority open existing rooms under their
+  persisted format and provision missing rooms with retained collaboration.
+  Unsupported clients are refused before adapter attachment.
+
 - Restore a saved paragraph location after an offline move while keeping the
   live paragraph and its formatting. The recovery review requires stable
   destination anchors and the current room revision.

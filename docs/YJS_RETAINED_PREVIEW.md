@@ -46,6 +46,25 @@ The server reference handles simultaneous first joins with an atomic insert and
 reuses the saved room on retry. [Provisioning audit](YJS_RETAINED_PROVISIONING_AUDIT.md).
 The host supplies the loader and binding through the extension options.
 
+For a deployment with both formats, the SQLite reference offers
+`CoordinatedDocumentRoom.openForEditing({ protocols, loadCheckpoint })`.
+The client declares the formats it can edit. An absent room is seeded with the
+retained format only if the client supports it. An existing room keeps its
+stored format and namespace, and the initializer stays unused. The response
+includes the snapshot and the native identity required for admission. Bind
+through the authority before mounting the matching adapter or starting its
+provider. A format or epoch change between these steps requires a fresh open.
+The client must keep its local draft through that retry. This API belongs to
+the host reference. Existing `/yjs` clients still use the legacy adapter.
+
+The opening flow passed 84 focused source cases and 21 recorded journeys in
+Chromium, Firefox and WebKit. The provisioning demo opens the same retained
+room for two simultaneous first authors. The migration demo shows an existing
+nested XML room opening with its legacy adapter, refusing a retained-only
+client, and accepting that client after explicit migration. A source test
+also checks that a legacy room winning the initial insert keeps its exact
+bytes. The default-adapter matrix still reproduces its six failures.
+
 ```ts
 import * as Y from 'yjs';
 import type { YjsProvider } from 'fountainjs-editor/yjs';

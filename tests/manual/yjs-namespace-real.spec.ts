@@ -36,6 +36,10 @@ test('maps an explicit author-selected destination and refuses invalid input bef
 test('moves a nested research document and rolls back to the same embedded fragment', {tag:'@nested'}, async ({page},info) => {
   const original = await state(page);
   expect(original.activeNested).toBe(true);
+  await page.getByRole('button',{name:'Try retained-only join'}).click();
+  await expect(page.getByRole('status')).toContainText('does not support the existing room format');
+  expect((await state(page)).server).toEqual(original.server);
+  await capture(page,info,'legacy-format-refusal.png');
   expect(original.folderTitle).toBe('Physics review');
   expect(original.nestedFragment).toMatchObject({client:expect.any(Number),clock:expect.any(Number)});
   await type(page,'Offline editor',' OFFLINE draft');
@@ -47,6 +51,8 @@ test('moves a nested research document and rolls back to the same embedded fragm
   expect(moved.activeNested).toBe(false);
   expect(moved.folderTitle).toBe(original.folderTitle);
   expect(moved.folderRoom).toBe('mapped-paper');
+  await page.getByRole('button',{name:'Try retained-only join'}).click();
+  await expect(page.getByRole('status')).toContainText('Retained-only client can join this room');
   await page.getByRole('button',{name:'Retain offline edits'}).click();
   await expect(page.getByRole('status')).toContainText('Offline edits retained separately');
   await expect(page.getByRole('textbox',{name:'Archive reader'})).toContainText('OFFLINE draft');

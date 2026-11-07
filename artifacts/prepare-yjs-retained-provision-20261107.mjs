@@ -41,7 +41,8 @@ server = replace(server, "if(action==='initialize')value=await room.initialize(b
   "  const authority = body.id === 'left' ? room : state.peer;",
   '  const controller = new AbortController();',
   "  res.once('close', () => { if (!res.writableFinished) controller.abort(); });",
-  '  value = await authority.provisionRetained({',
+  '  const opened = await authority.openForEditing({',
+  "    protocols: ['retained'],",
   '    signal: controller.signal,',
   '    async loadCheckpoint(signal) {',
   '      if (++state.loads === 2) state.both.resolve();',
@@ -52,6 +53,7 @@ server = replace(server, "if(action==='initialize')value=await room.initialize(b
   '      return checkpoint;',
   '    },',
   '  });',
+  '  value = opened.snapshot;',
   "} else if (action === 'provision-stats') value = { loads: state.loads, attempts: state.attempts };",
 ].join('\n'));
 server = replace(server, "sessions.delete(req.headers['x-admission-session']);", "sessions.delete(req.headers['x-admission-session']); provisioning.delete(req.headers['x-admission-session']);");
