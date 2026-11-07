@@ -15,7 +15,9 @@ entry in the unreleased local package. Safe production adoption remains open.
 The SQLite reference can open an existing room in its stored format and use
 the retained format when provisioning a new room.
 The dual-format client reference verifies the bound reply and checkpoint
-identity before selecting an adapter and mounting an editor.
+identity before selecting an adapter and mounting an editor. It refuses an
+unrequested format before admission. Fresh rooms opened through this reference
+select retained storage and pass the six structural cases after durable reopen.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
 The live reference can run the six concurrency cases against an upgraded
 legacy room, verifying its archive and active identity across reload and undo.

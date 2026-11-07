@@ -197,8 +197,10 @@ are recreated when the editor reopens.
 
 The [host opener](../examples/backends/bound-yjs-room.ts) first requests a
 metadata-only offer for the expected room key and, when supplied, its epoch,
-protocol, and minimum revision. The admission reply must stay in that room and
-epoch, keep the selected protocol, be active, and meet the offered revision.
+protocol, and minimum revision. It sends a frozen copy of the supported formats
+and refuses an unrequested format before calling admission. The admission reply
+must stay in that room and epoch, keep the selected protocol, be active, and
+meet the offered revision.
 It may carry a newer revision committed between the two requests. Wrong
 metadata, namespace, or checkpoint format is refused before reading update
 bytes. The isolated restore checks the schema and digests, then verifies native
@@ -213,6 +215,18 @@ protocol, and cancellation before reading bytes. They also open a newly
 provisioned retained room after another writer advances its revision. The
 host authorizes requests and fences later writes. This reference uses the
 existing experimental and legacy adapters.
+
+The negotiation follow-up passed 117 focused source tests and six recorded
+Chromium, Firefox and WebKit journeys. A browser test widens the request at
+the transport boundary to obtain a real legacy offer from SQLite. The
+retained-only client refuses that offer without an admission request or an
+editor change. After migration it completes admission with the retained
+format. Three repeat runs captured the refusal, and the WebKit screenshot shows
+the original editor and the refusal status together. Six new source cases
+also provision fresh rooms through the dual-format
+opener and reopen each saved merge to verify offline text and the other
+author's wrap, partial mark or split. The existing public XML adapter still
+reproduces all six failures.
 
 The full namespace run passed 36 recorded Chromium, Firefox and WebKit
 workflows. After moving the shared identity helper into a private module, the

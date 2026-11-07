@@ -386,6 +386,23 @@ test('moves a nested research document and rolls back to the same embedded fragm
   await expect(page.getByRole('status')).toContainText('does not support the existing room format');
   expect((await state(page)).server).toEqual(original.server);
   await capture(page,info,'legacy-format-refusal.png');
+  let admissionRequests = 0;
+  const countAdmission = (request: import('@playwright/test').Request) => {
+    if (new URL(request.url()).pathname === '/__handoff/admit') admissionRequests++;
+  };
+  page.on('request', countAdmission);
+  await page.route('**/__handoff/join', async route => {
+    expect(route.request().postDataJSON()).toEqual({ protocols: ['retained'] });
+    const response = await route.fetch({ postData: { protocols: ['legacy', 'retained'] } });
+    expect(response.ok()).toBe(true);
+    await route.fulfill({ response });
+  }, { times: 1 });
+  await page.getByRole('button',{name:'Try retained-only join'}).click();
+  await expect(page.getByRole('status')).toContainText('Room opening offer does not match');
+  expect(admissionRequests).toBe(0);
+  expect((await state(page)).active).toEqual(original.active);
+  page.off('request', countAdmission);
+  await capture(page,info,'unsupported-room-offer.png');
   expect(original.folderTitle).toBe('Physics review');
   expect(original.nestedFragment).toMatchObject({client:expect.any(Number),clock:expect.any(Number)});
   await type(page,'Offline editor',' OFFLINE draft');
@@ -397,8 +414,10 @@ test('moves a nested research document and rolls back to the same embedded fragm
   expect(moved.activeNested).toBe(false);
   expect(moved.folderTitle).toBe(original.folderTitle);
   expect(moved.folderRoom).toBe('mapped-paper');
+  const admission = page.waitForResponse(response => new URL(response.url()).pathname === '/__handoff/admit');
   await page.getByRole('button',{name:'Try retained-only join'}).click();
   await expect(page.getByRole('status')).toContainText('Retained-only client can join this room');
+  expect((await admission).ok()).toBe(true);
   await page.getByRole('button',{name:'Retain offline edits'}).click();
   await expect(page.getByRole('status')).toContainText('Offline edits retained separately');
   await expect(page.getByRole('textbox',{name:'Archive reader'})).toContainText('OFFLINE draft');

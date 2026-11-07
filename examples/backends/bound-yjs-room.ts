@@ -1,6 +1,6 @@
 import type * as Y from 'yjs';
 import type { Node, Schema } from '../../src/core/schema';
-import type { DocumentRoomAdmission, DocumentRoomSnapshot } from '../../src/yjs/document-room';
+import type { DocumentProtocol, DocumentRoomAdmission, DocumentRoomSnapshot } from '../../src/yjs/document-room';
 import { legacyNodeIdentity } from '../../src/yjs/legacy-node-identity';
 import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from '../../src/yjs/legacy-checkpoint';
 import { checkpointWire, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
@@ -10,7 +10,8 @@ interface BoundYjsRoomOptions {
   readonly schemaVersion: string;
   readonly legacyProjection?: LegacyProjectionOptions;
   readonly expected: Pick<DocumentRoomAdmission, 'key'> & Partial<Pick<DocumentRoomAdmission, 'epoch' | 'protocol' | 'revision'>>;
-  readonly open: (signal?: AbortSignal) => Promise<DocumentRoomAdmission>;
+  readonly protocols: readonly DocumentProtocol[];
+  readonly open: (protocols: readonly DocumentProtocol[], signal?: AbortSignal) => Promise<DocumentRoomAdmission>;
   readonly admit: (offer: DocumentRoomAdmission, signal?: AbortSignal) => Promise<DocumentRoomSnapshot>;
   readonly signal?: AbortSignal;
 }
@@ -29,11 +30,20 @@ export async function openBoundYjsRoom(options: BoundYjsRoomOptions): Promise<Bo
   const { key, epoch, protocol, revision } = options.expected;
   const legacyProjection = snapshotLegacyProjection(options.legacyProjection);
   signal?.throwIfAborted();
-  const offer = Object.freeze(checkpointWire.fields(await open(signal), 'epoch,identity,key,protocol,revision,room'));
+  const requested = options.protocols;
+  if (!Array.isArray(requested) || requested.length < 1 || requested.length > 2) {
+    throw new TypeError('Invalid supported document-room protocols.');
+  }
+  const protocols = Object.freeze([...requested]);
+  if (protocols.some(value => value !== 'legacy' && value !== 'retained')
+    || new Set(protocols).size !== protocols.length || (protocol !== undefined && !protocols.includes(protocol))) {
+    throw new TypeError('Invalid supported document-room protocols.');
+  }
+  const offer = Object.freeze(checkpointWire.fields(await open(protocols, signal), 'epoch,identity,key,protocol,revision,room'));
   signal?.throwIfAborted();
   if (offer.key !== key || typeof offer.epoch !== 'string' || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(offer.epoch)
     || !Number.isSafeInteger(offer.revision) || offer.revision < 0 || offer.revision < (revision ?? 0)
-    || (offer.protocol !== 'legacy' && offer.protocol !== 'retained')
+    || !protocols.includes(offer.protocol)
     || (epoch !== undefined && offer.epoch !== epoch)
     || (protocol !== undefined && offer.protocol !== protocol)
     || typeof offer.room !== 'string' || offer.room.length > 1_000

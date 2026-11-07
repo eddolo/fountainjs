@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, composeExtensions, createEditor } from '../src';
+import { CoreExtension, Selection, composeExtensions, createEditor, insertText, setMark, splitBlock, toggleList, toggleQuote } from '../src';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
@@ -59,8 +59,8 @@ async function fixture() {
 it('opens a newly provisioned retained room at the newer bound revision', async () => {
   const pair = await fixture();
   const bound = await openBoundYjsRoom({
-    expected: { key }, schema: pair.schema, schemaVersion: version,
-    open: async () => (await pair.room.openForEditing({ protocols: ['legacy', 'retained'], loadCheckpoint: () => pair.checkpoint })).admission,
+    expected: { key }, schema: pair.schema, schemaVersion: version, protocols: ['legacy', 'retained'],
+    open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint: () => pair.checkpoint })).admission,
     admit: async offer => {
       pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'New: '));
       await pair.peer.write({ epoch: offer.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(pair.document) });
@@ -73,6 +73,53 @@ it('opens a newly provisioned retained room at the newer bound revision', async 
   expect(bound.baseDocument.textContent).toBe('New: Canonical starter');
   expect(bound.fragment).toBeUndefined();
 });
+
+it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(
+  'retains concurrent offline typing after a fresh room chooses retained storage (%s)', async change => {
+    const pair = await fixture();
+    const starter = seed('Alpha');
+    const initial = await captureRetainedCheckpoint(starter.document, starter.schema, version);
+    const open = async () => {
+      const bound = await openBoundYjsRoom({
+        expected: { key }, schema: pair.schema, schemaVersion: version, protocols: ['legacy', 'retained'],
+        open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint: () => initial })).admission,
+        admit: offer => pair.peer.admit(offer),
+      });
+      cleanups.push(() => bound.document.destroy());
+      expect(bound.lease.protocol).toBe('retained');
+      return bound;
+    };
+    const author = async () => {
+      const bound = await open();
+      const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({ document: bound.document, user })]);
+      const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: bound.baseDocument.toJSON() });
+      cleanups.push(() => editor.destroy());
+      return { ...bound, editor };
+    };
+    const offline = await author(), online = await author();
+    expect(offline.lease).toEqual(online.lease);
+    offline.editor.dispatch(offline.editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(insertText(offline.editor, 'X')).toBe(true);
+    const selection = change === 'mark' ? Selection.range([0, 0], 1, [0, 0], 4) : Selection.cursor([0, 0], change === 'split' ? 3 : 0);
+    online.editor.dispatch(online.editor.createTransaction().setSelection(selection));
+    if (change === 'mark') expect(setMark(online.editor, 'strong')).toBe(true);
+    else if (change === 'split') expect(splitBlock(online.editor)).toBe(true);
+    else if (change === 'quote') expect(toggleQuote(online.editor)).toBe(true);
+    else expect(toggleList(online.editor, change)).toBe(true);
+
+    const vector = Y.encodeStateVectorFromUpdate(initial.update);
+    for (const writer of [online, offline]) {
+      await pair.peer.write({ epoch: writer.lease.epoch, protocol: writer.lease.protocol, update: Y.encodeStateAsUpdate(writer.document, vector) });
+    }
+    const reopened = await open();
+    expect(reopened.lease).toMatchObject({ epoch: offline.lease.epoch, identity: offline.lease.identity, revision: 2 });
+    expect(reopened.baseDocument.textContent).toBe('AlXpha');
+    const first = reopened.baseDocument.child(0);
+    if (change === 'mark') expect(first.content.filter(node => node.marks.some(mark => mark.type.name === 'strong')).map(node => node.text).join('')).toBe('lXph');
+    else if (change === 'split') expect(reopened.baseDocument.content.map(block => block.textContent)).toEqual(['AlXp', 'ha']);
+    else expect(first.type.name).toBe(change === 'quote' ? 'blockquote' : `${change}_list`);
+  },
+);
 
 it('returns the exact verified bytes without retaining the supplied checkpoint object', async () => {
   const pair = await fixture();
@@ -193,8 +240,8 @@ it('selects the stored legacy adapter and returns the original embedded fragment
   const saved = await pair.room.initialize(await captureLegacyCheckpoint(document, pair.schema, version, {}, 'Original / α', fragment));
   const loadCheckpoint = vi.fn(() => pair.checkpoint);
   const bound = await openBoundYjsRoom({
-    expected: saved, schema: pair.schema, schemaVersion: version,
-    open: async () => (await pair.room.openForEditing({ protocols: ['legacy', 'retained'], loadCheckpoint })).admission,
+    expected: saved, schema: pair.schema, schemaVersion: version, protocols: ['legacy', 'retained'],
+    open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint })).admission,
     admit: offer => pair.peer.admit(offer),
   });
   cleanups.push(() => bound.document.destroy());
@@ -204,6 +251,27 @@ it('selects the stored legacy adapter and returns the original embedded fragment
   expect(bound.baseDocument.toJSON()).toEqual(editor.getJSON());
 });
 
+it('rejects a legacy offer to a retained-only client before admitting the room', async () => {
+  const pair = await fixture();
+  const legacy = seed('Existing XML document', 'fountain', true);
+  const saved = await pair.room.initialize(await captureLegacyCheckpoint(legacy.document, pair.schema, version));
+  const opened = await pair.room.openForEditing({ protocols: ['legacy', 'retained'], loadCheckpoint: () => pair.checkpoint });
+  const requested: Array<'retained' | 'legacy'> = ['retained'];
+  const admit = vi.fn(offer => pair.peer.admit(offer));
+  await expect(openBoundYjsRoom({
+    expected: { key }, schema: pair.schema, schemaVersion: version, protocols: requested,
+    open: async protocols => {
+      expect(protocols).toEqual(['retained']);
+      expect(Object.isFrozen(protocols)).toBe(true);
+      requested.push('legacy');
+      return opened.admission;
+    },
+    admit,
+  })).rejects.toThrow('opening offer does not match');
+  expect(admit).not.toHaveBeenCalled();
+  expect(await pair.room.snapshot()).toEqual(saved);
+});
+
 it.each(['epoch', 'protocol', 'key', 'phase', 'revision'] as const)('refuses a mismatched %s in the bound reply before reading checkpoint bytes', async field => {
   const pair = await fixture();
   const opened = await pair.room.openForEditing({ protocols: ['retained'], loadCheckpoint: () => pair.checkpoint });
@@ -211,7 +279,7 @@ it.each(['epoch', 'protocol', 'key', 'phase', 'revision'] as const)('refuses a m
   const reply = { ...opened.snapshot, checkpoint: { manifest: pair.checkpoint.manifest, get update() { return readBytes(); } } };
   const wrong = { epoch: crypto.randomUUID(), protocol: 'legacy', key: 'other-room', phase: 'frozen', revision: -1 };
   await expect(openBoundYjsRoom({
-    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, open: async () => opened.admission,
+    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, protocols: ['retained'], open: async () => opened.admission,
     admit: async () => ({ ...reply, [field]: wrong[field] }),
   })).rejects.toThrow('reply does not match');
   expect(readBytes).not.toHaveBeenCalled();
@@ -229,7 +297,7 @@ it.each(['legacy', 'retained'] as const)('refuses a valid but foreign %s checkpo
   const opened = await pair.room.openForEditing({ protocols: [protocol], loadCheckpoint: () => pair.checkpoint });
   const checkpoint = await capture(foreign);
   await expect(openBoundYjsRoom({
-    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, open: async () => opened.admission,
+    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, protocols: [protocol], open: async () => opened.admission,
     admit: async () => ({ ...opened.snapshot, checkpoint }),
   })).rejects.toThrow('native identity changed');
 });
@@ -242,7 +310,7 @@ it('discards a delayed admission after cancellation before reading its wire data
   const response = deferred<typeof opened.snapshot>();
   const readBytes = vi.fn(() => opened.snapshot.checkpoint.update);
   const result = openBoundYjsRoom({
-    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, signal: controller.signal,
+    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, protocols: ['retained'], signal: controller.signal,
     open: async () => opened.admission, admit: () => { started.resolve(); return response.promise; },
   });
   await started.promise;

@@ -29,9 +29,12 @@ async function reopen(checkpoint,id,previous,epoch){
  const selected=codec(checkpoint),restored=await selected.restore(checkpoint,schema,version);
  return mount(restored.document,id,previous,restored.baseDocument.toJSON(),selected.protocol,epoch,checkpoint.manifest.room,restored.reader?.fragment);
 }
+function openRoom(expected,protocols){
+ return openBoundYjsRoom({schema,schemaVersion:version,expected,protocols,
+  open:supported=>request('join',{protocols:supported}),admit:offer=>request('admit',offer)});
+}
 async function openActive(snapshot,previous,beforeMount){
- const {document,baseDocument,fragment,lease}=await openBoundYjsRoom({schema,schemaVersion:version,expected:snapshot,
-  open:()=>request('join',{protocols:['legacy','retained']}),admit:offer=>request('admit',offer)});
+ const {document,baseDocument,fragment,lease}=await openRoom(snapshot,['legacy','retained']);
  try{beforeMount?.()}catch(error){document.destroy();throw error}
  return mount(document,'active',previous,baseDocument.toJSON(),lease.protocol,lease.epoch,lease.room,fragment);
 }
@@ -101,7 +104,7 @@ async function submitOperation(kind,operation,dropAcknowledgement=false){
  return request(kind,{...operation,dropAcknowledgement});
 }
 action('save',async()=>{current=await request('write',{epoch:active.epoch,protocol:active.protocol,update:Y.encodeStateAsUpdate(active.doc)});message.textContent='Active edits durably saved';report('Accepted active edit')});
-action('retained-only',async()=>{await request('join',{protocols:['retained']});message.textContent='Retained-only client can join this room'});
+action('retained-only',async()=>{const bound=await openRoom({key:current.key},['retained']);bound.document.destroy();message.textContent='Retained-only client can join this room'});
 async function finishMigration(retry){
  const result=await submitOperation('migrate',migration,!retry&&document.querySelector('#drop').checked);
  await install(result);
