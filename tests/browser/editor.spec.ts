@@ -41,6 +41,7 @@ import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries-journey';
 import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
 import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boundaries-journey';
+import { runMarkdownFrontmatterJourney } from './markdown-frontmatter-journey';
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
 import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
 import { runMarkdownContainerReferenceJourney } from './markdown-container-reference-journey';
@@ -6111,6 +6112,10 @@ test('preserves nested Markdown source through real list and quote editing', asy
 
 test('keeps reference definitions outside a terminal fence after real structural editing', async ({ page }, info) => {
   await runMarkdownReferenceBoundariesJourney(page, info);
+});
+
+test('imports leading Markdown delimiters and literal addresses through edit, download and reopen', async ({ page }, info) => {
+  await runMarkdownFrontmatterJourney(page, info);
 });
 
 test('reopens source-preserved issue drafts with the real HTML table adapter enabled', async ({ page }, info) => {

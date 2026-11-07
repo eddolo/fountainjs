@@ -1,5 +1,53 @@
 # Markdown semantics and source fidelity
 
+## Markdown-body delimiters and literal addresses (2026-11-07, unreleased)
+
+`parseWithSource` recognizes leading YAML frontmatter as metadata by default.
+For files where the same delimiters are authored Markdown, select
+`frontmatter: 'markdown'`. The source snapshot then covers the entire input
+body. Use the existing `autolinkLiterals: false` option to keep bare URLs and
+email addresses as text. Explicit links still use the normal safe URL policy.
+
+```ts
+const { document, source } = MarkdownImporter.parseWithSource(markdown, schema, {
+  frontmatter: 'markdown',
+  autolinkLiterals: false,
+});
+const saved = MarkdownExporter.exportWithSource(document, source);
+```
+
+Edited exports validate the proposed source with the same prefix policy.
+Parser-owned block spans now support an inline HTML projection when the span
+matches the imported document. This allows an unchanged thematic rule and
+adjacent Setext heading with inline markup to survive a later paragraph edit.
+Whole-document and block HTML projections keep their existing boundaries.
+
+The conversion lab offers **Use CommonMark rules for delimiters and bare
+addresses** under **Options for the next files**. Uploading the same file
+twice lets you compare the two readings. Editing, export and the round-trip
+check use the policy saved with each file. [Conversion lab workflow](CONVERSION_LAB.md).
+
+With the explicit complete-file source adapter, this source-capture profile
+matches **638/652** CommonMark 0.31.2 body projections on both LF and CRLF.
+The gate separately verifies **1,304 exact untouched-source outputs**. The
+new setting recovers examples 96 and 98 compared with YAML-aware source capture.
+Disabling bare-address linking adds examples 608, 611 and 612. Default Markdown
+still matches 563/652, plain complete-file parsing 635/652 and YAML-aware
+complete-file capture 633/652. Ten synthesized caret-host differences and four
+URI policy differences remain in the strongest profile. Native HTML model
+retention and layout fidelity have separate checks.
+
+The corpus fixture records each expected example. The browser journeys upload
+two copies of a CRLF file, edit one paragraph, download the actual Markdown and
+reopen it. The download preserves the untouched delimiters, emphasis spelling
+and line endings. All three recorded built-site journeys pass in Chromium,
+Firefox and WebKit. Screenshots show the thematic rule, heading, literal
+address and explicit link in the reopened reader. The Markdown-focused suite
+passes 1,096 tests across 46 files. Build, types, API, package smoke and the
+headless boundary also pass.
+The library change adds 48 raw ESM bytes and 38 raw CommonJS bytes across the
+top-level runtime files. The existing four size overruns remain release gates.
+
 ## Block-kind boundary repair (2026-11-04, unreleased follow-up)
 
 Changing a captured child block's kind can remove the syntax that separated it

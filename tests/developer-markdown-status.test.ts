@@ -21,4 +21,7 @@ it('keeps the public developer guide aligned with the enforced CommonMark profil
   expect(declared).not.toBeNull();
   expect(declared!.slice(1).map(Number)).toEqual([defaults, containers, comments].map(value => count(value.requiredMatchRanges)));
   expect(guide).toContain('This is not full CommonMark conformance or pixel fidelity');
+  const complete = fixture('commonmark-complete-source-v1');
+  const literal = guide.match(/(\d+)\/652 with Markdown-body delimiters and literal addresses/);
+  expect(Number(literal?.[1])).toBe(count(complete.requiredMatchRanges) + count(complete.markdownBodyLiteralAddressGains));
 });

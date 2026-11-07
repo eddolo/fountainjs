@@ -3,6 +3,7 @@
   "standard": "CommonMark 0.31.2",
   "projectionVersion": 13,
   "sourceCaptureFrontmatterDivergences": "96,98",
+  "markdownBodyLiteralAddressGains": "608,611-612",
   "profile": "Complete source DATA; explicit body parsing context; physical-break-aware v13 neutral body reducer plus separate declaration/EOF/retention oracles",
   "requiredMatchRanges": "1-206,208-217,219-238,241-279,285-314,316-595,597,600,602-607,609-610,613-652",
   "unresolvedRanges": "207,218,239-240,280-284,315,596,598-599,601,608,611-612",

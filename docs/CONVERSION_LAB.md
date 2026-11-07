@@ -11,6 +11,13 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+Select **Use CommonMark rules for delimiters and bare addresses** before
+uploading a Markdown file to edit a leading delimiter pair as document
+content. Bare URLs and email addresses remain text, and explicit links keep
+their normal behavior. Each file retains its setting when you edit, download
+or check a round trip. Upload the same file with both settings to compare.
+[Markdown source policies and evidence](MARKDOWN_SOURCE.md).
+
 Located findings follow-up (2026-11-03, Unreleased): Markdown export findings
 keep the affected schema type and document path, so `mark · em` and
 `mark · highlight` are distinguishable instead of repeated anonymous warnings.

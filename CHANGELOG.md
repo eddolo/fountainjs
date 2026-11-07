@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Let Markdown source capture parse leading delimiters as document content
+  with `frontmatter: 'markdown'`. The conversion lab exposes this choice with
+  literal bare addresses, and the complete-file source profile reaches
+  638/652 CommonMark body matches. [Markdown source policies](docs/MARKDOWN_SOURCE.md).
+
 - Add an atomic load-or-create path for the retained room authority. Simultaneous
   first joins receive the same saved checkpoint. Retries use the latest revision
   and preserve frozen or incompatible rooms. [Provisioning audit](docs/YJS_RETAINED_PROVISIONING_AUDIT.md).

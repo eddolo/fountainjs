@@ -14,17 +14,24 @@ export function labReportIssues(issues: readonly LabIssue[], includeSourcePaths:
   return issues.map(({ sourcePart, ...issue }) => includeSourcePaths && sourcePart !== undefined ? { ...issue, sourcePart } : issue);
 }
 export const labPolicy = 'starter-kit-pages-v2; markdown-inert-html; bounded-html-docx; json-depth64-nodes20000';
-export type LabImportOptions = { readonly preserveHTMLStructure?: boolean };
+export type LabImportOptions = {
+  readonly preserveHTMLStructure?: boolean;
+  readonly commonMarkText?: boolean;
+};
 /** Each imported file owns its schema/policy for editing, export and reopening.
  * Changing the next-import controls must never reinterpret an existing draft.
  */
 export function createLabContext(options: LabImportOptions = {}) {
-  const settings = Object.freeze({ preserveHTMLStructure: options.preserveHTMLStructure === true });
+  const settings = Object.freeze({
+    preserveHTMLStructure: options.preserveHTMLStructure === true,
+    commonMarkText: options.commonMarkText === true,
+  });
   const kit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
     renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
   }), ...(settings.preserveHTMLStructure ? [HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension] : [])]);
+  const policy = settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy;
   return Object.freeze({ options: settings, kit, schema: new Schema(kit.schema),
-    policy: settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy });
+    policy: settings.commonMarkText ? policy + '; markdown-body-delimiters; bare-addresses-literal' : policy });
 }
 export type LabContext = ReturnType<typeof createLabContext>;
 export const defaultLabContext = createLabContext();
@@ -82,17 +89,24 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
     return { document, issues: [{ code: 'schema-boundary', message: `Validated against this file’s selected lab schema${context.options.preserveHTMLStructure ? ', including supported HTML structure' : ' (StarterKit + Pages)'}, not every extension schema. Extra data and visual fidelity are not certified; keep the original file.` }] };
   }
   const issues: LabIssue[] = [];
-  const result = MarkdownImporter.parseWithSource(text, labSchema, context.options.preserveHTMLStructure ? {
-    parseHTMLDocument: (segments, schema, sourceContext) => {
-      const parsed = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, schema, sourceContext);
-      issues.push(...parsed.issues);
-      return parsed.nodes;
-    },
-    onHTMLFlowFallback: issue => issues.push({ code: 'html-source-fallback', message: issue.message }),
-  } : {});
-  return { ...result, issues: [{ code: 'markdown-coverage', message: context.options.preserveHTMLStructure
-    ? 'HTML conversion is enabled for this file. Supported structure is retained; unsupported HTML can remain literal or lose structure with a report. Full CommonMark/dialect conformance and original layout are not certified.'
-    : 'Default Markdown parser: raw HTML stays inert; full CommonMark/dialect conformance and exhaustive import-loss reporting are not available.' }, ...issues] };
+  const result = MarkdownImporter.parseWithSource(text, labSchema, {
+    frontmatter: context.options.commonMarkText ? 'markdown' : 'metadata',
+    autolinkLiterals: !context.options.commonMarkText,
+    ...(context.options.preserveHTMLStructure ? {
+      parseHTMLDocument: (segments, schema, sourceContext) => {
+        const parsed = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, schema, sourceContext);
+        issues.push(...parsed.issues);
+        return parsed.nodes;
+      },
+      onHTMLFlowFallback: issue => issues.push({ code: 'html-source-fallback', message: issue.message }),
+    } : {}),
+  });
+  const textPolicy = context.options.commonMarkText ? 'Leading delimiters are parsed as Markdown. Bare addresses stay as text. ' : '';
+  const htmlPolicy = context.options.preserveHTMLStructure
+    ? 'HTML conversion is enabled for this file. Unsupported HTML can remain literal or lose structure with a report.'
+    : 'Raw HTML stays inert.';
+  return { ...result, issues: [{ code: 'markdown-coverage',
+    message: textPolicy + htmlPolicy + ' Coverage is limited to supported syntax and structure.' }, ...issues] };
 }
 export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext): {
   bytes: Uint8Array; extension: string; mime: string; issues: LabIssue[];

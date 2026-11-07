@@ -115,6 +115,12 @@ export interface MarkdownImportOptions {
    * not a full CommonMark mode or an editor typing/clipboard setting.
    */
   readonly autolinkLiterals?: boolean;
+  /**
+   * Source capture stores leading YAML frontmatter as metadata by default.
+   * Use 'markdown' to parse the entire file as Markdown and retain its source.
+   * The plain parse() route already treats these lines as Markdown.
+   */
+  readonly frontmatter?: 'metadata' | 'markdown';
   /** Explicit, lossy projection of simple TeX tabular cells/alignment; not a TeX compiler. */
   readonly texTables?: boolean;
   /** Unsupported syntax stays literal; successful projections report omitted float/rule layout. */
@@ -311,7 +317,7 @@ export class MarkdownSourceSnapshot {
 
   static parse(source: string, schema: Schema, options: MarkdownImportOptions = {}): MarkdownSourceImportResult {
     if (typeof source !== 'string') throw new TypeError('Markdown source must be a string.');
-    const parts = splitMarkdownSource(source);
+    const parts = splitMarkdownSource(source, options.frontmatter);
     let documentHTMLScope = false;
     const documentAdapter = options.parseHTMLDocument;
     const parseOptions = documentAdapter ? { ...options, parseHTMLDocument: (...args: Parameters<typeof documentAdapter>) => {
@@ -329,7 +335,7 @@ export class MarkdownSourceSnapshot {
     if (capture?.blocks.length && (capture.referenceScope?.containerDefinitions || options.parseHTMLDocument || options.parseHTMLFlow
       || options.parseHTMLBlock || options.parseHTMLInline || options.parseHTMLParagraph)) {
       const quietOptions = quietMarkdownOptions(options);
-      registerMarkdownSourceProjection(snapshot, value => new MarkdownImporter().parse(splitMarkdownSource(value).body, schema, quietOptions));
+      registerMarkdownSourceProjection(snapshot, value => new MarkdownImporter().parse(splitMarkdownSource(value, quietOptions.frontmatter).body, schema, quietOptions));
     }
     return Object.freeze({ document, source: snapshot });
   }
@@ -674,9 +680,11 @@ interface MarkdownBlockSpan {
  * footnotes and external projections retain their conservative contract.
  */
 function captureParserMarkdownBlocks(source: string, schema: Schema, document: Node, options: MarkdownImportOptions): MarkdownBlockCapture | undefined {
+  // Inline projection is local to its containing block. The same span and
+  // document checks apply, and export still proves the complete proposal.
   if (options.parseHTMLDocument || options.parseHTMLFlow || options.parseHTMLBlock
-    || options.parseHTMLInline || options.parseHTMLParagraph) return undefined;
-  const quietOptions = { ...options, onTeXTableIssue: undefined };
+    || options.parseHTMLParagraph) return undefined;
+  const quietOptions = quietMarkdownOptions(options);
   const input = source.replace(/\r\n$|[\r\n]$/u, '');
   const context = references(input, schema, quietOptions);
   if (extractFootnoteDefinitions(source, schema, quietOptions).definitions.length) return undefined;
@@ -762,8 +770,9 @@ function closingDelimiter(value: string): '---' | '...' | null {
   return match === '---' || match === '...' ? match : null;
 }
 
-function splitMarkdownSource(source: string): MarkdownSourceParts {
+function splitMarkdownSource(source: string, frontmatter?: MarkdownImportOptions['frontmatter']): MarkdownSourceParts {
   const lineEnding = sourceLineEnding(source);
+  if (frontmatter === 'markdown') return { body: source, lineEnding };
   const opening = sourceLine(source, 0);
   if (!isOpeningDelimiter(opening.value) || !opening.ending) return { body: source, lineEnding };
 
