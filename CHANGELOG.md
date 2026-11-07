@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Skip redundant formatting history in the retained Yjs preview when a peer
+  has already deleted the affected text.
+
 - Use author-only collaboration history from the standard Undo and Redo
   controls. Restore the author's caret through repeated undo/redo while
   keeping peer edits.

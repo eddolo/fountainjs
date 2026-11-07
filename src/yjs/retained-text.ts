@@ -12,6 +12,46 @@ const MAX_ATTRIBUTES = 1_000;
 const MAX_ATTRIBUTE_LENGTH = 1_000_000;
 const MAX_PROVENANCE = 2_000_000;
 
+/** A native undo can delete only redundant provenance resets after another
+ * author deletes the associated text. Check the surviving wire attributes. */
+export function removesOnlyDuplicateProvenance(transaction: Y.Transaction): boolean {
+  const [change] = transaction.changed;
+  if (transaction.changed.size !== 1 || !change || !(change[0] instanceof Y.Text)
+    || change[1].size !== 1 || !change[1].has(null)) return false;
+  for (const [client, clock] of transaction.afterState) {
+    if (clock !== (transaction.beforeState.get(client) ?? 0)) return false;
+  }
+  let deleted = 0;
+  for (const ranges of transaction.deleteSet.clients.values()) {
+    for (const range of ranges) deleted += range.len;
+  }
+  if (!deleted || deleted > 32) return false;
+
+  let duplicate = true;
+  Y.iterateDeletedStructs(transaction, transaction.deleteSet, item => {
+    if (!duplicate) return;
+    if (!(item instanceof Y.Item) || item.parent !== change[0]
+      || !(item.content instanceof Y.ContentFormat) || item.content.key !== PROVENANCE
+      || !Array.isArray(item.content.value) || item.content.value.length !== 3) {
+      duplicate = false;
+      return;
+    }
+    const provenance = item.content.value;
+    // Deleted markers in the same transaction cannot prove equivalence.
+    let previous = item.left;
+    for (let hops = 0; previous && hops < 64; hops++, previous = previous.left) {
+      const format = previous.content;
+      if (previous.deleted || !(format instanceof Y.ContentFormat) || format.key !== PROVENANCE) continue;
+      const value: unknown = format.value;
+      duplicate = Array.isArray(value) && value.length === 3
+        && value.every((part, index) => Number.isSafeInteger(part) && part === provenance[index]);
+      return;
+    }
+    duplicate = false;
+  });
+  return duplicate;
+}
+
 export interface RetainedTextRun {
   readonly text: string;
   /** Opaque serialized mark/attribute values; decoding belongs to the schema adapter. */

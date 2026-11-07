@@ -2,7 +2,7 @@
 import { expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection, RangeSelection, Selection, composeExtensions, createEditor,
-  createCollaborationExtension, defineExtension, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
+  canRedoCollaboration, canUndoCollaboration, createCollaborationExtension, defineExtension, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
   redoCollaboration, replaceCollaborationAdapter, splitBlock, setMark, toggleList, toggleQuote, undoCollaboration, moveBlock,
   type NodeJSON } from '../src';
 import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborationExtensionOptions, type YjsProvider } from '../src/yjs';
@@ -223,6 +223,54 @@ it('retains a gap inside a copied quote owner while a peer appends a block', () 
       pair.right.state.schema.nodeFromJSON({ type: 'paragraph', content: [{ type: 'text', text: 'Tail' }] }),
     ])])); pair.sync();
     expect(pair.left.state.selection).toMatchObject({ kind: 'gap', position: 10, parentPath: [0], index: 2, association: -1 });
+  } finally { pair.destroy(); }
+});
+
+it.each([false, true])('skips redundant format history after a peer deletes the last authored character (reverse: %s)', reverse => {
+  const pair = peers();
+  const { left, right } = pair;
+  const select = (offset: number) => left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], offset)));
+  try {
+    select(2);
+    expect(insertText(left, 'X')).toBe(true);
+    select(5);
+    expect(insertText(left, 'Y')).toBe(true);
+    pair.sync(reverse);
+    right.dispatch(right.createTransaction().replaceText([0, 0], 5, 6, ''));
+    pair.sync(reverse);
+
+    select(0);
+    expect(undoCollaboration(left)).toBe(true);
+    pair.sync(reverse);
+    expect(left.state.doc.child(0).textContent).toBe('Alpha');
+    expect(left.state.selection).toMatchObject({ path: [0, 0], from: 2, to: 2 });
+    expect(canUndoCollaboration(left)).toBe(false);
+
+    expect(redoCollaboration(left)).toBe(true);
+    pair.sync(reverse);
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(left.state.selection).toMatchObject({ path: [0, 0], from: 3, to: 3 });
+    expect(canRedoCollaboration(left)).toBe(false);
+    expect(redoCollaboration(left)).toBe(false);
+  } finally { pair.destroy(); }
+});
+
+it('leaves the caret and redo empty when only redundant format history remains', () => {
+  const pair = peers();
+  const { left, right } = pair;
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(insertText(left, 'X')).toBe(true);
+    pair.sync();
+    right.dispatch(right.createTransaction().replaceText([0, 0], 2, 3, ''));
+    pair.sync();
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(undoCollaboration(left)).toBe(false);
+    pair.sync();
+    expect(left.state.doc.child(0).textContent).toBe('Alpha');
+    expect(left.state.selection).toMatchObject({ path: [0, 0], from: 0, to: 0 });
+    expect(canUndoCollaboration(left)).toBe(false);
+    expect(canRedoCollaboration(left)).toBe(false);
   } finally { pair.destroy(); }
 });
 

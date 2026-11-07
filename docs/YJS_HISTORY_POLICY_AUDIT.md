@@ -32,12 +32,29 @@ restored position. Both panes show the follow-up character in the expected
 place in the inspected WebKit retained capture. Three more recorded journeys
 exercise native non-collaborative split/undo/redo in those engines.
 
-A separate built-package reproduction still finds a retained undo step with no
+A separate built-package reproduction found a retained undo step with no
 visible text change. Author A inserts X, then Y as a separate edit. Author B
-deletes Y. The first author undo reports success and moves the caret, leaving
-the text unchanged. The next undo removes X. Redo repeats the extra invisible
-step after restoring X. This remains open alongside the six default structural
-concurrency failures and the two aggregate size failures.
+deletes Y. Previously, the first undo only moved the caret. The next undo
+removed X, and redo later repeated the invisible step.
+
+### Redundant retained undo repair
+
+The retained adapter now keeps going after a native undo that deletes only
+duplicate text provenance markers. The bounded proof requires one changed
+Y.Text, no inserted native items, and exact matching provenance on the nearest
+surviving marker before each deletion. It preserves the current caret while
+processing that cleanup and omits the inverse history entry. Text, marks,
+partition boundaries and other changes still use ordinary history. This
+does not change the stored format or edit the default adapter.
+
+The source regression checks both update orders and the case where no earlier
+authored edit remains. The focused retained history, text and document suites
+pass 278 cases. Three recorded Chromium, Firefox and WebKit journeys use
+native typing, peer deletion, Undo and Redo. They check native caret positions
+and toolbar state. Visual inspection of Firefox confirms both panes match
+after each operation. The built Node reproduction, package smoke, declaration
+and type checks pass. The six default structural concurrency failures and two
+aggregate size failures remain open.
 
 ## Implementation
 

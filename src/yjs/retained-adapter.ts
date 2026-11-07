@@ -5,6 +5,7 @@ import { createCollaborationExtension, type CollaborationAdapter, type Collabora
   type CollaborationLocalUpdate, type CollaborationPresence, type CollaborationUser } from '../extensions/collaboration';
 import type { YjsCollaborationExtensionOptions } from './index';
 import { RetainedDocumentStore, validateRetainedDocument } from './retained-document';
+import { removesOnlyDuplicateProvenance } from './retained-text';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore } from './structured-attributes';
 import { prepareRetainedAdmission, readRetainedAdmission, snapshotRetainedAdmission, type RetainedAdmission, type RetainedAdmissionLease } from './retained-admission';
@@ -17,6 +18,7 @@ export interface RetainedYjsCollaborationExtensionOptions extends Omit<YjsCollab
 
 const GATE = 'fountain-retained-room', FORMAT = 'fountain-retained-document/3';
 const BEFORE = Symbol('retained-selection-before'), AFTER = Symbol('retained-selection-after');
+const REDUNDANT_UNDO = Symbol('retained-redundant-undo');
 const uuid = () => `r-${globalThis.crypto.randomUUID()}`;
 
 function user(value: CollaborationUser): CollaborationUser {
@@ -151,8 +153,9 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     try {
       this.gate();
       const manager = this.manager;
-      const bookmark = manager && transaction.origin === manager
-        ? manager.currStackItem?.meta.get(manager.undoing ? BEFORE : AFTER) as RetainedSelection | undefined
+      const item = manager && transaction.origin === manager ? manager.currStackItem : undefined;
+      const bookmark = manager && item && !item.meta.has(REDUNDANT_UNDO)
+        ? item.meta.get(manager.undoing ? BEFORE : AFTER) as RetainedSelection | undefined
         : undefined;
       const value = this.canonical();
       const selection = restoreSelection(this.store, value, bookmark ?? this.localSelection);
@@ -224,6 +227,16 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       if (!this.manager) {
         this.manager = new Y.UndoManager([...this.store!.scope, ...(this.structured ? [this.structured.map] : [])], {
           captureTimeout: this.options.captureTimeout ?? 500, trackedOrigins: new Set([this.origin]),
+          captureTransaction: transaction => {
+            const manager = this.manager;
+            if (manager?.undoing && transaction.origin === manager && manager.currStackItem
+              && removesOnlyDuplicateProvenance(transaction)) {
+              manager.currStackItem.meta.set(REDUNDANT_UNDO, true);
+              manager.stopCapturing();
+              return false;
+            }
+            return true;
+          },
         });
         this.manager.on('stack-item-added', this.historyItem); this.manager.on('stack-item-updated', this.historyItem);
       }
@@ -301,8 +314,14 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   undo(): boolean {
-    if (this.joining) return false;
-    return Boolean(this.manager?.undo());
+    const manager = this.manager;
+    if (!manager || this.joining) return false;
+    while (this.manager === manager) {
+      const item = manager.undo();
+      if (!item) return false;
+      if (!item.meta.has(REDUNDANT_UNDO)) return true;
+    }
+    return false;
   }
 
   redo(): boolean {

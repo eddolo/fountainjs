@@ -26,7 +26,7 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,802 passes and six failures, with no skips.
 Both core entry-size checks now pass. The aggregate ESM and CommonJS builds
-remain 170.1 KiB and 135.4 KiB over their existing limits. Fresh release CI,
+remain 171.5 KiB and 136.4 KiB over their existing limits. Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested
 legacy fragments and preserves their original identity through rollback. The
