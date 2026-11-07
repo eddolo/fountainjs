@@ -259,6 +259,36 @@ test('renders a native peer selection without writing a document revision and cl
   } finally { await peer.close(); }
 });
 
+test('clears the old cursor on reload and renders the new cursor after rejoining', async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  try {
+    const before = await serverRevision(page);
+    const heartbeat = peer.waitForRequest(request => request.url().endsWith('/presence') && Boolean(request.postDataJSON().state));
+    await selectReport(peer);
+    await expect(peerSelection(page)).toHaveText('report.');
+    await page.screenshot({ path: info.outputPath('before-peer-reload.png'), scale: 'css' });
+    const oldPresence = await heartbeat;
+    const origin = new URL(peer.url()).origin;
+    await peer.reload();
+    await expect.poll(async () => {
+      const response = await page.request.post(oldPresence.url(), {
+        headers: { Origin: origin, 'X-Admission-Session': (await oldPresence.allHeaders())['x-admission-session'] },
+        data: oldPresence.postDataJSON(),
+      });
+      return (await response.json()).error;
+    }, { timeout: 3_000 }).toBe('Presence session is no longer active.');
+    await expect(peerLabel(page)).toHaveCount(0);
+    await expect(peerSelection(page)).toHaveCount(0);
+    await page.screenshot({ path: info.outputPath('after-peer-reload.png'), scale: 'css' });
+    await join(peer);
+    await selectReport(peer);
+    await expect(peerLabel(page)).toHaveText('Grace');
+    await expect(peerSelection(page)).toHaveText('report.');
+    expect(await serverRevision(page)).toBe(before);
+    await page.screenshot({ path: info.outputPath('peer-rejoined.png'), scale: 'css' });
+  } finally { await peer.close(); }
+});
+
 test('expires a silent peer and keeps old presence out of a rotated session', async ({ page }, info) => {
   const peer = await secondAuthor(page);
   try {

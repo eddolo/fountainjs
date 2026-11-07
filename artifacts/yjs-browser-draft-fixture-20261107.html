@@ -87,7 +87,8 @@ async function request(action, body = {}, signal) {
     throw Object.assign(new Error('The authority could not be reached.', {cause: error}), {code: 'network'});
   };
   const response = await fetch('/__admission/' + action, {
-    method: 'POST', signal, headers: {'Content-Type': 'application/json', 'X-Admission-Session': token ?? ''},
+    method: 'POST', signal, keepalive: action === 'leave-live',
+    headers: {'Content-Type': 'application/json', 'X-Admission-Session': token ?? ''},
     body: JSON.stringify(body, (_key, value) => value instanceof Uint8Array ? {__wire: btoa(Array.from(value, byte => String.fromCharCode(byte)).join(''))} : value),
   }).catch(networkFailure);
   const reply = await response.json().catch(error => {
@@ -334,6 +335,9 @@ button(select('#join'), () => {
   connectCollaboration(client.editor);
 });
 select('#leave').hidden = !live;
+if (live) window.addEventListener('pagehide', event => {
+  if (!event.persisted) disconnectCollaboration(client.editor);
+});
 button(select('#leave'), () => {
   client.transportStatus = undefined;
   disconnectCollaboration(client.editor);

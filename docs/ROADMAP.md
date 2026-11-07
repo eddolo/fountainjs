@@ -37,6 +37,9 @@ text, and a rotated room fences the old writer while its local copy survives
 reload. The local presence channel paints remote cursors and native selections,
 expires silent peers, and clears indicators when the room changes. Production
 deployment, shared presence across processes, load and storage validation remain open.
+The reference browser releases its old cursor on reload. The three desktop
+engines verify retirement of the old server presence token and a fresh cursor
+after rejoining.
 Native backward and forward selections publish the active end to peers, including
 when the native endpoints reverse over the same highlighted text.
 Changed room responses now use verified deltas when smaller. The 49-paragraph

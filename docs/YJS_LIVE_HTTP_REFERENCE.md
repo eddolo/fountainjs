@@ -134,6 +134,20 @@ all three engines and sampled frames of the paragraph split. Firefox briefly
 showed the earlier tab's presence after reload while its old lease expired.
 Recordings, traces and images are in `artifacts/yjs-live-structural-browser-20261107/`.
 
+The reference browser host now releases presence on ordinary navigation or
+reload. On `pagehide` it disconnects the current editor and sends the small
+leave request with `keepalive`. A page stored in the back/forward cache keeps
+its session. If a browser cannot deliver the leave request, the existing
+heartbeat expiry still clears the stale cursor. A separate browser journey
+checks that the server rejects the old presence token after reload, the
+observer clears the old selection, and a fresh join restores the new selection
+without writing a document revision. The reload, explicit-leave and expiry
+journeys passed in Chromium, Firefox and WebKit, nine passes with no retries
+or skips. Recordings, traces and the Firefox before/after/rejoin review are in
+`artifacts/yjs-peer-reload-server-verified-20261107/`.
+All six Firefox offline structural recovery journeys also passed after the
+lifecycle change, including autosave, reload, rejoin and author undo/redo.
+
 The tests open the [two-author browser fixture](../artifacts/yjs-browser-draft-fixture-20261107.html?live)
 against a real loopback HTTP and SQLite authority. They cover automatic exchange,
 offline typing against a peer's quote wrap, a dropped reply after a committed
