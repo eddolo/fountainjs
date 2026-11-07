@@ -948,6 +948,31 @@ before its shared imports. The aggregate is 1,556.9 KiB ESM and 1,553.4 KiB
 CommonJS. The ESM aggregate and the individual entry checks pass. CommonJS
 is 144.7 KiB over its existing aggregate limit, up from 131.3 KiB.
 
+### DOCX package assembly
+
+The writer builds each package manifest and relationship list before encoding
+it. The document, notes, headers and footers reuse one serialized resource
+list and one set of XML namespace declarations. Native page settings, footnotes,
+styles, and optional math and paragraph metadata retain their existing part
+order and relationship IDs.
+
+With a fixed timestamp, the preceding build and this build generated identical
+ZIP bytes, reports and reimported models for three documents in each module
+format. The comparisons cover a minimal document, the independent scientific
+fixture, and a compound document with all six header/footer variants, linked
+footnotes, raster media and both metadata parts.
+
+All 603 focused DOCX tests passed. Chromium, Firefox and WebKit passed the
+recorded edit, download and reopen workflow. LibreOffice rendered each actual
+download, and all six page images match the earlier audit captures byte for
+byte. The edited note is visible in each rendered download. The packed
+consumer, API, TypeScript and independent python-docx checks passed.
+
+The DOCX entry shrinks by 3,838 raw ESM bytes and 3,872 raw CommonJS bytes.
+The CommonJS entry measures 169.3 KiB against its existing 170.75 KiB limit.
+The CommonJS aggregate measures 1,554.5 KiB and exceeds its 1,408.75 KiB limit
+by 145.7 KiB. The aggregate ESM check passes.
+
 ### Shared HTML import rules
 
 Browser and server imports share rule priority, plain-object attribute

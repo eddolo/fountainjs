@@ -2397,13 +2397,31 @@ function blockXML(node: FountainNode, context: ExportContext, path: readonly num
   }
 }
 
-function contentTypes(media: readonly ExportedMedia[]): string {
-  const defaults = [...new Map(media.map((item) => [extensionFor(item.contentType), item.contentType])).entries()]
-    .map(([extension, contentType]) => `<Default Extension="${extension}" ContentType="${contentType}"/>`).join('');
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${defaults}<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`;
+const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+const OFFICE_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.';
+function wordPartType(name: string, kind: string): string {
+  return `<Override PartName="/word/${name}" ContentType="${OFFICE_CONTENT_TYPE}wordprocessingml.${kind}+xml"/>`;
 }
 
-const ROOT_RELS = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>`;
+function contentTypes(media: readonly ExportedMedia[], overrides: readonly string[]): string {
+  const defaults = [...new Map(media.map((item) => [extensionFor(item.contentType), item.contentType])).entries()]
+    .map(([extension, contentType]) => `<Default Extension="${extension}" ContentType="${contentType}"/>`).join('');
+  return `${XML_DECLARATION}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${defaults}${wordPartType('document.xml', 'document.main')}${wordPartType('styles.xml', 'styles')}${wordPartType('numbering.xml', 'numbering')}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="${OFFICE_CONTENT_TYPE}extended-properties+xml"/>${overrides.join('')}</Types>`;
+}
+
+function relationshipXML(id: string, type: string, target: string, external = false): string {
+  return `<Relationship Id="${id}" Type="${type}" Target="${xmlEscape(target)}"${external ? ' TargetMode="External"' : ''}/>`;
+}
+
+function relationshipsXML(body: string): string {
+  return `<Relationships xmlns="${REL_NS}">${body}</Relationships>`;
+}
+
+const ROOT_RELS = XML_DECLARATION + relationshipsXML(
+  relationshipXML('rId1', `${OFFICE_REL_NS}/officeDocument`, 'word/document.xml')
+  + relationshipXML('rId2', `${REL_NS}/metadata/core-properties`, 'docProps/core.xml')
+  + relationshipXML('rId3', `${OFFICE_REL_NS}/extended-properties`, 'docProps/app.xml'),
+);
 
 const HEADING_SIZES = [64, 52, 44, 36, 30, 26] as const;
 const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/></w:rPr></w:style>${HEADING_SIZES.map((size, index) => `<w:style w:type="paragraph" w:styleId="Heading${index + 1}"><w:name w:val="heading ${index + 1}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="${index === 0 ? 360 : 240}" w:after="160"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:color w:val="181426"/><w:sz w:val="${size}"/><w:szCs w:val="${size}"/></w:rPr></w:style>`).join('')}<w:style w:type="paragraph" w:styleId="Quote"><w:name w:val="Quote"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="left"/><w:ind w:left="360" w:right="360"/><w:pBdr><w:left w:val="single" w:sz="18" w:space="12" w:color="7047FF"/></w:pBdr><w:spacing w:before="160" w:after="200"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:color w:val="51476A"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Caption"><w:name w:val="Caption"/><w:basedOn w:val="Normal"/></w:style><w:style w:type="paragraph" w:styleId="Code"><w:name w:val="Code"/><w:basedOn w:val="Normal"/><w:pPr><w:shd w:val="clear" w:fill="F2EFF8"/><w:spacing w:before="120" w:after="160"/></w:pPr><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:sz w:val="20"/></w:rPr></w:style><w:style w:type="character" w:styleId="CodeChar"><w:name w:val="Code Char"/><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:shd w:val="clear" w:fill="F2EFF8"/></w:rPr></w:style><w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/></w:style></w:styles>`;
@@ -2496,56 +2514,67 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   if (templateParts.some(part => part.xml.includes('<w:fldSimple'))) issues.push({ code: 'page-field-recalculation-required', severity: 'warning', message: 'Dynamic PAGE/NUMPAGES fields need recalculation by the receiving layout engine. Cached values are placeholders, not verified page numbers.' });
   const section = `<w:sectPr>${templateParts.map(part => `<w:${part.kind}Reference w:type="${part.variant}" r:id="${part.id}"/>`).join('')}${wordPageSettingsXML(node, options, issues)}${firstPages ? '<w:titlePg/>' : ''}</w:sectPr>`;
   const paragraphNamespaces = context.paragraphBridge.roles.length ? ` xmlns:w14="${WORD_PARAGRAPH_ID_NS}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="w14"` : '';
-  const documentXML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}><w:body>${body}${section}</w:body></w:document>`;
-  const documentRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdNumbering" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map((item) => `<Relationship Id="${item.relationshipId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`;
+  const storyNamespaces = `xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="${WORD_DRAWING_NS}" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}`;
+  const documentXML = `${XML_DECLARATION}<w:document ${storyNamespaces}><w:body>${body}${section}</w:body></w:document>`;
+  const resourceRels = [...context.hyperlinks].map(([id, target]) => relationshipXML(id, `${OFFICE_REL_NS}/hyperlink`, target, true)).join('')
+    + context.media.map(item => relationshipXML(item.relationshipId, `${OFFICE_REL_NS}/image`, `media/${item.fileName}`)).join('');
+  const documentRels = [
+    relationshipXML('rIdStyles', `${OFFICE_REL_NS}/styles`, 'styles.xml'),
+    relationshipXML('rIdNumbering', `${OFFICE_REL_NS}/numbering`, 'numbering.xml'),
+    resourceRels,
+  ];
+  const overrides: string[] = [];
+  const styles = ['<w:style w:type="paragraph" w:styleId="FountainDefinitionTerm"><w:name w:val="Fountain Definition Term"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/></w:pPr><w:rPr><w:b/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="FountainExplicitQuote"><w:name w:val="Fountain Explicit Quote"/><w:basedOn w:val="Normal"/></w:style>'];
   const now = new Date().toISOString();
-  const core = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEscape(options.title)}</dc:title><dc:creator>${xmlEscape(options.creator ?? 'FountainJS')}</dc:creator><dc:description>${xmlEscape(options.description)}</dc:description><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`;
-  const app = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>FountainJS</Application></Properties>`;
-  const parts: Record<string, Uint8Array> = {
-    '[Content_Types].xml': strToU8(contentTypes(context.media)),
-    '_rels/.rels': strToU8(ROOT_RELS),
-    'word/document.xml': strToU8(documentXML),
-    'word/styles.xml': strToU8(STYLES.replace('</w:styles>', '<w:style w:type="paragraph" w:styleId="FountainDefinitionTerm"><w:name w:val="Fountain Definition Term"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/></w:pPr><w:rPr><w:b/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="FountainExplicitQuote"><w:name w:val="Fountain Explicit Quote"/><w:basedOn w:val="Normal"/></w:style></w:styles>')),
-    'word/numbering.xml': strToU8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">${context.numberingDefinitions.join('')}${context.numbering.join('')}</w:numbering>`),
-    'word/_rels/document.xml.rels': strToU8(documentRels),
-    'docProps/core.xml': strToU8(core),
-    'docProps/app.xml': strToU8(app),
-  };
+  const core = `${XML_DECLARATION}<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEscape(options.title)}</dc:title><dc:creator>${xmlEscape(options.creator ?? 'FountainJS')}</dc:creator><dc:description>${xmlEscape(options.description)}</dc:description><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`;
+  const app = `${XML_DECLARATION}<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>FountainJS</Application></Properties>`;
+  const parts: Record<string, Uint8Array> = {};
   if (context.mathSources.length) {
     // Bookmarks bind each source to one projection, independent of model path.
     // Import must validate both the binding and complete equation before reuse.
     parts[MATH_SOURCE_PART] = strToU8(`<f:mathSources xmlns:f="${MATH_SOURCE_NS}">${xmlEscape(JSON.stringify(context.mathSources))}</f:mathSources>`);
-    parts['word/_rels/document.xml.rels'] = strToU8(documentRels.replace('</Relationships>', '<Relationship Id="rIdFountainMathSources" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml" Target="../customXml/fountainMath.xml"/></Relationships>'));
+    documentRels.push(relationshipXML('rIdFountainMathSources', `${OFFICE_REL_NS}/customXml`, `../${MATH_SOURCE_PART}`));
   }
   if (context.paragraphBridge.groups.size || context.paragraphBridge.roles.length) {
     const groups = [...context.paragraphBridge.groups].map(([group, style]) => [style, group]);
-    parts['word/styles.xml'] = strToU8(strFromU8(parts['word/styles.xml']!).replace('</w:styles>', `${groups.map(([style]) => `<w:style w:type="paragraph" w:styleId="${style}"><w:name w:val="${style}"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr></w:style>`).join('')}</w:styles>`));
+    styles.push(groups.map(([style]) => `<w:style w:type="paragraph" w:styleId="${style}"><w:name w:val="${style}"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr></w:style>`).join(''));
     const metadata = strToU8(`<f:paragraphs xmlns:f="${PARAGRAPH_BRIDGE_NS}" version="1">${xmlEscape(JSON.stringify({ groups, roles: context.paragraphBridge.roles }))}</f:paragraphs>`);
     if (metadata.length > 8_000_000) throw new RangeError('DOCX paragraph metadata exceeds its expanded byte limit.');
     parts[PARAGRAPH_BRIDGE_PART] = metadata;
-    parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdFountainParagraphs" Type="${OFFICE_REL_NS}/customXml" Target="../${PARAGRAPH_BRIDGE_PART}"/></Relationships>`));
+    documentRels.push(relationshipXML('rIdFountainParagraphs', `${OFFICE_REL_NS}/customXml`, `../${PARAGRAPH_BRIDGE_PART}`));
   }
   if (footnotes.size) {
-    parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', '<Override PartName="/word/footnotes.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/></Types>'));
-    parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdFootnotes" Type="${OFFICE_REL_NS}/footnotes" Target="footnotes.xml"/></Relationships>`));
-    parts['word/footnotes.xml'] = strToU8(`<w:footnotes xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}><w:footnote w:type="separator" w:id="-1"><w:p><w:r><w:separator/></w:r></w:p></w:footnote><w:footnote w:type="continuationSeparator" w:id="0"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:footnote>${noteXML}</w:footnotes>`);
-    parts['word/_rels/footnotes.xml.rels'] = strToU8(`<Relationships xmlns="${REL_NS}">${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="${OFFICE_REL_NS}/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map(item => `<Relationship Id="${item.relationshipId}" Type="${OFFICE_REL_NS}/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`);
-    parts['word/styles.xml'] = strToU8(strFromU8(parts['word/styles.xml']!).replace('</w:styles>', '<w:style w:type="character" w:styleId="FootnoteReference"><w:name w:val="footnote reference"/><w:rPr><w:vertAlign w:val="superscript"/></w:rPr></w:style></w:styles>'));
+    overrides.push(wordPartType('footnotes.xml', 'footnotes'));
+    documentRels.push(relationshipXML('rIdFootnotes', `${OFFICE_REL_NS}/footnotes`, 'footnotes.xml'));
+    parts['word/footnotes.xml'] = strToU8(`<w:footnotes ${storyNamespaces}><w:footnote w:type="separator" w:id="-1"><w:p><w:r><w:separator/></w:r></w:p></w:footnote><w:footnote w:type="continuationSeparator" w:id="0"><w:p><w:r><w:continuationSeparator/></w:r></w:p></w:footnote>${noteXML}</w:footnotes>`);
+    parts['word/_rels/footnotes.xml.rels'] = strToU8(relationshipsXML(resourceRels));
+    styles.push('<w:style w:type="character" w:styleId="FootnoteReference"><w:name w:val="footnote reference"/><w:rPr><w:vertAlign w:val="superscript"/></w:rPr></w:style>');
   }
   for (const template of templateParts) {
-    parts[`word/${template.name}`] = strToU8(`<w:${template.kind === 'header' ? 'hdr' : 'ftr'} xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}>${template.xml}</w:${template.kind === 'header' ? 'hdr' : 'ftr'}>`);
-    parts[`word/_rels/${template.name}.rels`] = strToU8(`<Relationships xmlns="${REL_NS}">${[...context.hyperlinks].map(([id, target]) => `<Relationship Id="${id}" Type="${OFFICE_REL_NS}/hyperlink" Target="${xmlEscape(target)}" TargetMode="External"/>`).join('')}${context.media.map(item => `<Relationship Id="${item.relationshipId}" Type="${OFFICE_REL_NS}/image" Target="media/${xmlEscape(item.fileName)}"/>`).join('')}</Relationships>`);
-    parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', `<Override PartName="/word/${template.name}" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.${template.kind}+xml"/></Types>`));
-    parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="${template.id}" Type="${OFFICE_REL_NS}/${template.kind}" Target="${template.name}"/></Relationships>`));
+    const tag = template.kind === 'header' ? 'hdr' : 'ftr';
+    parts[`word/${template.name}`] = strToU8(`<w:${tag} ${storyNamespaces}>${template.xml}</w:${tag}>`);
+    parts[`word/_rels/${template.name}.rels`] = strToU8(relationshipsXML(resourceRels));
+    overrides.push(wordPartType(template.name, template.kind));
+    documentRels.push(relationshipXML(template.id, `${OFFICE_REL_NS}/${template.kind}`, template.name));
   }
   // Emit settings even without page variants: native consumers initialize
   // Word defaults while reading this part. In particular, LibreOffice otherwise
   // retains its additive paragraph-spacing default instead of Word's maximum.
   // Do not compensate by rewriting the author's before/after declarations.
   parts['word/settings.xml'] = strToU8(`<w:settings xmlns:w="${WORD_NS}">${evenPages ? '<w:evenAndOddHeaders/>' : ''}</w:settings>`);
-  parts['[Content_Types].xml'] = strToU8(strFromU8(parts['[Content_Types].xml']!).replace('</Types>', '<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>'));
-  parts['word/_rels/document.xml.rels'] = strToU8(strFromU8(parts['word/_rels/document.xml.rels']!).replace('</Relationships>', `<Relationship Id="rIdSettings" Type="${OFFICE_REL_NS}/settings" Target="settings.xml"/></Relationships>`));
+  overrides.push(wordPartType('settings.xml', 'settings'));
+  documentRels.push(relationshipXML('rIdSettings', `${OFFICE_REL_NS}/settings`, 'settings.xml'));
   for (const item of context.media) parts[`word/media/${item.fileName}`] = item.bytes;
-  const bytes = zipSync(parts, { level: 6 });
+  const bytes = zipSync({
+    '[Content_Types].xml': strToU8(contentTypes(context.media, overrides)),
+    '_rels/.rels': strToU8(ROOT_RELS),
+    'word/document.xml': strToU8(documentXML),
+    'word/styles.xml': strToU8(STYLES.replace('</w:styles>', styles.join('') + '</w:styles>')),
+    'word/numbering.xml': strToU8(`${XML_DECLARATION}<w:numbering xmlns:w="${WORD_NS}">${context.numberingDefinitions.join('')}${context.numbering.join('')}</w:numbering>`),
+    'word/_rels/document.xml.rels': strToU8(XML_DECLARATION + relationshipsXML(documentRels.join(''))),
+    'docProps/core.xml': strToU8(core),
+    'docProps/app.xml': strToU8(app),
+    ...parts,
+  }, { level: 6 });
   return Object.freeze({ bytes, report: report(issues) });
 }

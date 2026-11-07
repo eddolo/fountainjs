@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Assemble DOCX package relationships and manifests once per export, bringing
+  the CommonJS DOCX entry below its size limit.
+
 - Pin the admitted room root through editor mount and live editing. A replaced
   retained root or detached XML fragment leaves the local draft available and
   suspends shared writes and undo.
