@@ -107,6 +107,32 @@ and the retained edits appeared in their expected panes. Build, types, API,
 headless and packed-package smoke checks passed. The four raw-size overruns
 remain with their existing limits.
 
+## Edits while reconnecting after a protocol switch
+
+The HTTP/SQLite browser reference previously saved the old editor's Yjs update,
+then waited for the replacement room's admission. An edit made during that wait
+could disappear when the old view was replaced. A held admission reply reproduced
+the problem in Chromium while the new room was already active on the server.
+
+Immediately before mounting a validated replacement, the reference checks the
+mounted source editor, its immutable model, and its complete Yjs update against
+the copy it sent to the retired branch. The byte check includes deletions that a
+state vector can miss. If the source changed, its view stays editable and the
+staged document is destroyed. Retry uses the same migration or rollback operation
+UUID, archives the newer source state, and opens the already committed room.
+
+The recorded cases use keyboard input during the held reply. One inserts text
+during a migration. The other deletes a character during rollback. Both compare
+the server document, active editor, and retired archive after retry. The source
+remains in the mounted browser editor during this window. Crash-persistent
+cross-format draft recovery and production deployment remain open.
+
+All 21 recorded namespace journeys pass across Chromium, Firefox and WebKit,
+and all 120 focused source tests pass. The Chromium capture shows the unsent
+insertion in the still-editable source. The Firefox capture shows the deletion
+in the retired archive beside the reopened legacy document. The fix is in the
+loopback host reference and leaves the default collaboration adapter in place.
+
 ## Remaining work
 
 Production costs, archive/raw retention and compaction, external coordination

@@ -27,6 +27,88 @@ test('recovers a lost migration acknowledgement and archives typing made before 
  await type(page,'Active editor',' AFTER retry');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.server).toEqual(saved.active);expect(saved.archive).toEqual(pending);const raw=await page.evaluate(async(id:string)=>{const batch=await (window as any).audit.batch(id,1);return {revision:batch.revision,sha256:batch.sha256,bytes:batch.update.length}},saved.archiveId);expect(raw.revision).toBe(1);expect(raw.sha256).toMatch(/^[a-f0-9]{64}$/);expect(raw.bytes).toBeGreaterThan(0);await info.attach('retired-raw-batch',{body:JSON.stringify(raw),contentType:'application/json'});await capture(page,info,'final.png');
 });
 
+async function holdAdmission(page: import('@playwright/test').Page) {
+  let release!: () => void;
+  const held = new Promise<void>(resolve => { release = resolve; });
+  await page.route('**/__handoff/admit', async route => {
+    const response = await route.fetch();
+    await held;
+    await route.fulfill({ response });
+  }, { times: 1 });
+  return { release, request: page.waitForRequest('**/__handoff/admit') };
+}
+
+test('recovers edits made while the replacement room admission reply is in flight', async ({ page }, info) => {
+  const before = await state(page);
+  const admission = await holdAdmission(page);
+
+  try {
+    await page.getByRole('button', { name: 'Migrate legacy room', exact: true }).click();
+    await admission.request;
+    await type(page, 'Active editor', ' TYPED during admission');
+    const pending = (await state(page)).active;
+    expect(pending).not.toEqual(before.active);
+    admission.release();
+
+    await expect(page.getByRole('status')).toContainText('Source editor changed during reconnection');
+    const waiting = await state(page);
+    expect(waiting.activeProtocol).toBe('legacy');
+    expect(waiting.active).toEqual(pending);
+    expect(waiting.protocol).toBe('retained');
+    expect(waiting.server).toEqual(before.server);
+    await capture(page, info, 'source-still-editable.png');
+
+    await page.getByRole('button', { name: 'Retry last migration', exact: true }).click();
+    await expect(page.getByRole('status')).toContainText('Durable migration receipt replayed');
+    const reopened = await state(page);
+    expect(reopened.active).toEqual(before.server);
+    expect(reopened.server).toEqual(before.server);
+    expect(reopened.archive).toEqual(pending);
+    expect(reopened.archiveProtocol).toBe('legacy');
+    expect(reopened.epoch).toBe(waiting.epoch);
+    await capture(page, info, 'archive-after-retry.png');
+  } finally { admission.release(); }
+});
+
+test('keeps a deletion made during rollback admission and archives it on retry', async ({ page }, info) => {
+  const before = await state(page);
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Legacy room migrated');
+  await type(page, 'Active editor', ' Retained draft!');
+  const admission = await holdAdmission(page);
+
+  try {
+    await button('Rollback with archive').click();
+    await admission.request;
+    await page.getByRole('textbox', { name: 'Active editor', exact: true }).click();
+    await page.keyboard.press('Control+Home');
+    await page.keyboard.press('End');
+    await page.keyboard.press('Backspace');
+    const pending = (await state(page)).active;
+    expect(pending.content[0].content[0].text).toBe('Alpha technical note. Retained draft');
+    admission.release();
+
+    await expect(status).toContainText('Source editor changed during reconnection');
+    const waiting = await state(page);
+    expect(waiting.activeProtocol).toBe('retained');
+    expect(waiting.active).toEqual(pending);
+    expect(waiting.protocol).toBe('legacy');
+    expect(waiting.server).toEqual(before.server);
+
+    await button('Retry last rollback').click();
+    await expect(status).toContainText('Rollback committed to legacy');
+    const reopened = await state(page);
+    expect(reopened.active).toEqual(before.server);
+    expect(reopened.server).toEqual(before.server);
+    expect(reopened.archive).toEqual(pending);
+    expect(reopened.archiveProtocol).toBe('retained');
+    expect(reopened.epoch).toBe(waiting.epoch);
+    await capture(page, info, 'rollback-archive-after-retry.png');
+  } finally { admission.release(); }
+});
+
 test('maps an explicit author-selected destination and refuses invalid input before freezing',async({page},info)=>{
  const before=await state(page);await page.getByLabel('Retained destination namespace',{exact:true}).fill('bad space');await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Invalid explicit destination');const refused=await state(page);expect(refused.epoch).toBe(before.epoch);expect(refused.revision).toBe(before.revision);expect(refused.phase).toBe('active');expect(refused.server).toEqual(before.server);
  await page.getByLabel('Retained destination namespace',{exact:true}).fill('review-copy');await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Legacy room migrated');const moved=await state(page);expect(moved.namespace).toBe('review-copy');expect(moved.activeNamespace).toBe('review-copy');expect(moved.archiveNamespace).toBe('Research / α 😀');expect(moved.active).toEqual(before.active);
