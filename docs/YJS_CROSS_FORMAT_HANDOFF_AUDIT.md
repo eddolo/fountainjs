@@ -1,5 +1,10 @@
 # Cross-format collaboration handoff audit
 
+Namespace follow-up (2026-11-07): [explicit destination mapping](YJS_NAMESPACE_MIGRATION_AUDIT.md)
+adds differently named source/destination rooms, binds replay and rollback to the
+mapping, and retains older same-name archives. The compatible-name scope below
+describes the earlier checkpoint; nested fragments and safe adoption remain open.
+
 Date: 2026-11-07. Local, private implementation; no public adapter switch or
 publication. This follows the [legacy conversion](YJS_LEGACY_MIGRATION_AUDIT.md)
 and [retained handoff](YJS_RETAINED_HANDOFF_AUDIT.md) audits.

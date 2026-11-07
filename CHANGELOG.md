@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add explicit private legacy-room namespace mapping for retained migration.
+  Preserve original Unicode/spaced or explicitly empty top-level XML names in
+  recovery checkpoints; require a compatible host-selected destination when
+  necessary. Bind archive metadata, retry and rollback to actual namespaces,
+  retain native references and structured state, and read older same-name
+  archives. Nested fragment handles, six default concurrency failures and safe
+  replacement adoption remain open. [Audit](docs/YJS_NAMESPACE_MIGRATION_AUDIT.md).
+
 - Honor `addToHistory: false` in the default Yjs adapter using its existing
   untracked repair origin. Neutral imported text, review metadata and remote
   stable-ID maintenance no longer become authored undo entries; grouped typing

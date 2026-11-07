@@ -1,5 +1,10 @@
 # Existing XML-room conversion — 2026-11-06
 
+Namespace follow-up (2026-11-07): [explicit destination mapping](YJS_NAMESPACE_MIGRATION_AUDIT.md)
+extends the source-name contract to Unicode/spaced and explicitly selected empty
+top-level roots, with exact rollback preservation. Nested fragment handles and
+safe adoption remain open. The compatible-name restrictions below are historical.
+
 Follow-up (2026-11-07): the [cross-format handoff audit](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md)
 adds atomic authority, rollback and exact late-batch recovery for compatible
 named rooms. The original evidence and remaining general-fragment/adoption limits

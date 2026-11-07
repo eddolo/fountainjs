@@ -7,11 +7,21 @@ import { RetainedDocumentStore } from './retained-document';
 import { retainSelection, restoreSelection } from './retained-selection';
 import { validateRetainedRoomCheckpoint } from './retained-room-store';
 
+export interface LegacyMigrationOptions extends RetainedMigrationOptions {
+  /** Explicit retained namespace. Required when the source name is incompatible. */
+  readonly destinationRoom?: string;
+}
+export function snapshotLegacyMigrationOptions(options: LegacyMigrationOptions): LegacyMigrationOptions {
+  const destinationRoom = options?.destinationRoom;
+  if (destinationRoom !== undefined && (typeof destinationRoom !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,193}$/.test(destinationRoom))) throw new Error('Invalid explicit retained destination namespace.');
+  return Object.freeze({ ...snapshotRetainedMigrationOptions(options), ...(destinationRoom === undefined ? {} : { destinationRoom }) });
+}
 export interface LegacyMigrationCandidate {
   readonly source: LegacyCheckpoint;
   readonly destination: RetainedCheckpoint;
   readonly report: {
     readonly sourceFormat: 'legacy-xml'; readonly sourceGuid: string; readonly destinationRoomId: string;
+    readonly sourceRoom: string; readonly destinationRoom: string;
     readonly sourceBytes: number; readonly destinationBytes: number;
     readonly auxiliaryRoots: readonly { readonly name: string; readonly migrator: string }[];
     readonly translated: { readonly textAnchors: number; readonly selections: number; readonly nodeIdentities: number };
@@ -29,19 +39,20 @@ const synchronous = (value: unknown): void => { if (value && typeof (value as Pr
 
 /** Verified isolated conversion from the public XML adapter, never a live switch.
  * Complete source wire state stays separately recoverable in its own format. */
-export async function buildLegacyMigrationCandidate(checkpoint: LegacyCheckpoint, schema: Schema, schemaVersion: string, options: RetainedMigrationOptions, projection: LegacyProjectionOptions = {}): Promise<LegacyMigrationCandidate> {
-  const policy = snapshotRetainedMigrationOptions(options), settings = snapshotLegacyProjection(projection);
+export async function buildLegacyMigrationCandidate(checkpoint: LegacyCheckpoint, schema: Schema, schemaVersion: string, options: LegacyMigrationOptions, projection: LegacyProjectionOptions = {}): Promise<LegacyMigrationCandidate> {
+  const policy = snapshotLegacyMigrationOptions(options), settings = snapshotLegacyProjection(projection);
   const restored = await restoreLegacyCheckpoint(checkpoint, schema, schemaVersion, settings), source = restored.checkpoint, from = restored.document, document = restored.baseDocument;
-  const target = new Y.Doc({ gc: from.gc }), room = source.manifest.room, prefix = `legacy-${crypto.randomUUID()}`; let sequence = 0, active = true, store: RetainedDocumentStore | undefined;
+  const target = new Y.Doc({ gc: from.gc }), sourceRoom = source.manifest.room, room = policy.destinationRoom ?? sourceRoom, prefix = `legacy-${crypto.randomUUID()}`; let sequence = 0, active = true, store: RetainedDocumentStore | undefined;
   try {
+    if (!/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,193}$/.test(room)) throw new Error('Legacy source requires an explicit retained destinationRoom namespace.');
     store = new RetainedDocumentStore(target, room, schema, () => `${prefix}:${++sequence}`); store.seed(document);
     const gate = new Y.XmlElement('fountain-retained-room'); gate.setAttribute('format', 'fountain-retained-document/3'); gate.setAttribute('room', `r-${crypto.randomUUID()}`); target.getXmlFragment(room).insert(0, [gate]);
     const core = new Set(target.share.keys()), owners = new Map<string, string>();
     for (const migrator of policy.migrators) for (const name of migrator.roots) {
-      if (typeof name !== 'string' || name === room || !from.share.has(name) || core.has(name) || owners.has(name)) throw new Error(`Missing, reserved or duplicate legacy migration root: ${String(name)}`);
+      if (typeof name !== 'string' || name === sourceRoom || !from.share.has(name) || core.has(name) || owners.has(name)) throw new Error(`Missing, reserved or duplicate legacy migration root: ${String(name)}`);
       owners.set(name, migrator.name);
     }
-    const unclaimed = [...from.share.keys()].filter(name => name !== room && !owners.has(name));
+    const unclaimed = [...from.share.keys()].filter(name => name !== sourceRoom && !owners.has(name));
     if (unclaimed.length) throw new Error(`Unclaimed legacy migration roots: ${unclaimed.join(', ')}. Source retained.`);
     const checks: Array<() => void> = [], counts = { textAnchors: 0, selections: 0, nodeIdentities: 0 }, live = () => { if (!active) throw new Error('Legacy migration context expired.'); };
     const context: RetainedMigrationContext = Object.freeze({ source: from, target, document,
@@ -68,7 +79,7 @@ export async function buildLegacyMigrationCandidate(checkpoint: LegacyCheckpoint
     for (const migrator of policy.migrators) { synchronous(migrator.verify(context)); inventory(); assertLegacyCheckpointState(from, source); assertRetainedCheckpointState(target, destination); }
     if (destination.manifest.documentSha256 !== source.manifest.documentSha256 || destination.manifest.guid === source.manifest.guid || !same(store.read().toJSON(), document.toJSON())) throw new Error('Legacy destination changed content or retained the old identity.');
     for (const check of checks) check(); inventory(); assertLegacyCheckpointState(from, source); assertRetainedCheckpointState(target, destination);
-    const report = Object.freeze({ sourceFormat: 'legacy-xml' as const, sourceGuid: source.manifest.guid, destinationRoomId: destination.manifest.roomId,
+    const report = Object.freeze({ sourceFormat: 'legacy-xml' as const, sourceGuid: source.manifest.guid, destinationRoomId: destination.manifest.roomId, sourceRoom, destinationRoom: room,
       sourceBytes: source.manifest.bytes, destinationBytes: destination.manifest.bytes, auxiliaryRoots: Object.freeze([...owners].map(([name, migrator]) => Object.freeze({ name, migrator }))), translated: Object.freeze({ ...counts }),
       history: policy.history, offline: policy.offline, externalState: policy.externalState, activation: 'not-implemented' as const });
     return Object.freeze({ source, destination, report });

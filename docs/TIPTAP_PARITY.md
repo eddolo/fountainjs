@@ -20,13 +20,26 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,719 passes and six failures, with no skips. Three
+The current source suite has 4,747 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
-growth and compaction, general legacy migration and safe adapter adoption remain open.
+growth and compaction, nested-fragment migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest default-history audit](YJS_HISTORY_POLICY_AUDIT.md).
+[latest namespace-migration audit](YJS_NAMESPACE_MIGRATION_AUDIT.md).
+
+Explicit legacy namespace mapping (2026-11-07, local): preserve the exact named
+XML source, including Unicode/spaces or an explicitly selected empty root, while
+the host chooses a compatible retained destination. Native references and
+structured state translate without changing the source; durable replay binds to
+the destination, rollback restores the original namespace, and older same-name
+archives remain readable. All 28 new / 264 focused cases, 18 compiled process
+checks and 12 recorded three-engine journeys pass. Complete source has 4,747
+passes and the same six failures across 299 files, no skips. Types/build/API/
+headless pass; all 173 public runtime/CSS files remain identical. Three size
+overruns remain with limits unchanged. Nested fragment handles, provider admission,
+production storage costs and safe adoption remain open. No default switch,
+publication or COLLAB-01 promotion. [Audit](YJS_NAMESPACE_MIGRATION_AUDIT.md).
 
 Default Yjs history policy (2026-11-07, local): the public XML adapter now honors
 history-neutral transactions through its existing repair origin. Eight failing

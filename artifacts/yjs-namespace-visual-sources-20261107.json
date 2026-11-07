@@ -1,0 +1,98 @@
+[
+  {
+    "engine": "chromium",
+    "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+    "kind": "migration",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-migrate-554ad-le-archiving-retained-edits-chromium\\video.webm",
+    "durationSeconds": 5.76,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\chromium-migration"
+  },
+  {
+    "engine": "chromium",
+    "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-restore-cb0de--the-replaced-retained-room-chromium\\video.webm",
+    "durationSeconds": 3.2,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\chromium-original"
+  },
+  {
+    "engine": "chromium",
+    "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-recover-c5c3f-ng-made-before-reconnection-chromium\\video.webm",
+    "durationSeconds": 3.28,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\chromium-lost-ack"
+  },
+  {
+    "engine": "chromium",
+    "name": "maps an explicit author-selected destination and refuses invalid input before freezing",
+    "kind": "mapping",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-maps-an-08f56-valid-input-before-freezing-chromium\\video.webm",
+    "durationSeconds": 2.72,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\chromium-mapping"
+  },
+  {
+    "engine": "firefox",
+    "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+    "kind": "migration",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-migrate-554ad-le-archiving-retained-edits-firefox\\video.webm",
+    "durationSeconds": 9.12,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\firefox-migration"
+  },
+  {
+    "engine": "firefox",
+    "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-restore-cb0de--the-replaced-retained-room-firefox\\video.webm",
+    "durationSeconds": 4.44,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\firefox-original"
+  },
+  {
+    "engine": "firefox",
+    "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-recover-c5c3f-ng-made-before-reconnection-firefox\\video.webm",
+    "durationSeconds": 5,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\firefox-lost-ack"
+  },
+  {
+    "engine": "firefox",
+    "name": "maps an explicit author-selected destination and refuses invalid input before freezing",
+    "kind": "mapping",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-maps-an-08f56-valid-input-before-freezing-firefox\\video.webm",
+    "durationSeconds": 4.08,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\firefox-mapping"
+  },
+  {
+    "engine": "webkit",
+    "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+    "kind": "migration",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-migrate-554ad-le-archiving-retained-edits-webkit\\video.webm",
+    "durationSeconds": 17.04,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\webkit-migration"
+  },
+  {
+    "engine": "webkit",
+    "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-restore-cb0de--the-replaced-retained-room-webkit\\video.webm",
+    "durationSeconds": 9.44,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\webkit-original"
+  },
+  {
+    "engine": "webkit",
+    "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-recover-c5c3f-ng-made-before-reconnection-webkit\\video.webm",
+    "durationSeconds": 11.12,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\webkit-lost-ack"
+  },
+  {
+    "engine": "webkit",
+    "name": "maps an explicit author-selected destination and refuses invalid input before freezing",
+    "kind": "mapping",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-namespace-browser-20261107\\yjs-namespace-real-maps-an-08f56-valid-input-before-freezing-webkit\\video.webm",
+    "durationSeconds": 7.92,
+    "target": "artifacts\\yjs-namespace-visual-20261107\\webkit-mapping"
+  }
+]
