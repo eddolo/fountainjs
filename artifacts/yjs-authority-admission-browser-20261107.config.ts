@@ -1,0 +1,3 @@
+import {defineConfig} from '@playwright/test';
+import base from './yjs-admission-browser-20261107.config';
+export default defineConfig({...base,testMatch:'**/yjs-authority-admission-real.spec.ts',outputDir:'./yjs-authority-admission-browser-20261107',reporter:[['list'],['json',{outputFile:'yjs-authority-admission-browser-20261107.json'}]],webServer:{...base.webServer,command:'node artifacts/prepare-yjs-authority-admission-20261107.mjs && node artifacts/build-yjs-authority-admission-20261107.mjs && node artifacts/yjs-authority-admission-server-20261107.mjs',url:'http://127.0.0.1:4195/artifacts/yjs-authority-admission-fixture-20261107.html'}});

@@ -16,6 +16,10 @@ export interface DocumentRoomRepository {
 export interface DocumentRoomSnapshot extends RetainedRoomVersion {
   readonly key: string; readonly phase: 'active' | 'frozen'; readonly protocol: DocumentProtocol; readonly checkpoint: DocumentCheckpoint;
 }
+export interface DocumentRoomAdmission {
+  readonly key: string; readonly epoch: string; readonly revision: number;
+  readonly protocol: DocumentProtocol; readonly room: string; readonly identity: string;
+}
 export const documentProtocol = (checkpoint: DocumentCheckpoint): DocumentProtocol => {
   if (checkpoint.manifest.format === 'fountain-legacy-checkpoint/1') return 'legacy';
   if (checkpoint.manifest.format === 'fountain-retained-checkpoint/1') return 'retained';
@@ -80,6 +84,22 @@ export class CoordinatedDocumentRoom {
     if (!await this.repository.createDocument(row)) documentRoomFailure('revision-conflict', 'Document room already exists.'); return documentSnapshot(row);
   }
   async snapshot(): Promise<DocumentRoomSnapshot> { const row = await this.current(), checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection); return documentSnapshot({ ...row, checkpoint: checked.checkpoint }); }
+  /** Read-only connection fence. Every later write must still check its epoch;
+   * this receipt does not reserve an active room or grant authorization. */
+  async admit(request: DocumentRoomAdmission): Promise<DocumentRoomSnapshot> {
+    const expected = request && { key: request.key, epoch: request.epoch, revision: request.revision, protocol: request.protocol, room: request.room, identity: request.identity };
+    if (!expected || expected.key !== this.key || !documentRoomId(expected.epoch) || !Number.isSafeInteger(expected.revision) || expected.revision < 0
+      || !['legacy', 'retained'].includes(expected.protocol) || typeof expected.room !== 'string' || expected.room.length > 1_000
+      || typeof expected.identity !== 'string' || !expected.identity || expected.identity.length > 200) documentRoomFailure('invalid-ticket', 'Invalid authority admission request.');
+    const row = await this.current();
+    if (row.epoch !== expected.epoch || documentProtocol(row.checkpoint) !== expected.protocol) documentRoomFailure('stale-epoch', 'Admission epoch/protocol is stale; preserve pending edits.');
+    if (row.phase !== 'active') documentRoomFailure('frozen', 'Authority admission refused: room is frozen.');
+    if (row.revision < expected.revision || row.checkpoint.manifest.room !== expected.room) documentRoomFailure('revision-conflict', 'Admission revision or namespace is incompatible.');
+    const checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection);
+    if (checked.identity !== expected.identity) documentRoomFailure('invalid-ticket', 'Admission native room identity differs.');
+    if ((await this.current()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed during admission verification; retry explicitly.');
+    return documentSnapshot({ ...row, checkpoint: checked.checkpoint });
+  }
   async write(request: { readonly epoch: string; readonly protocol: DocumentProtocol; readonly update: Uint8Array }): Promise<DocumentRoomSnapshot> {
     const epoch = request.epoch, protocol = request.protocol, row = await this.current();
     if (epoch !== row.epoch || protocol !== documentProtocol(row.checkpoint)) documentRoomFailure('stale-epoch', 'Writer epoch/protocol is stale; reconnect and retain pending edits.');

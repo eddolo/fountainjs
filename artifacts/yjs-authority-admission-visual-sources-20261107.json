@@ -1,0 +1,122 @@
+[
+  {
+    "engine": "chromium",
+    "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+    "kind": "frozen",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-chromium\\video.webm",
+    "durationSeconds": 2.28,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\chromium-frozen"
+  },
+  {
+    "engine": "chromium",
+    "name": "refuses a freeze between loading and binding without starting the provider",
+    "kind": "binding",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-chromium\\video.webm",
+    "durationSeconds": 2.32,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\chromium-binding"
+  },
+  {
+    "engine": "chromium",
+    "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+    "kind": "epoch",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-chromium\\video.webm",
+    "durationSeconds": 3.44,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\chromium-epoch"
+  },
+  {
+    "engine": "chromium",
+    "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+    "kind": "history",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-chromium\\video.webm",
+    "durationSeconds": 3.4,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\chromium-history"
+  },
+  {
+    "engine": "chromium",
+    "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+    "kind": "catchup",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-chromium\\video.webm",
+    "durationSeconds": 2.32,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\chromium-catchup"
+  },
+  {
+    "engine": "firefox",
+    "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+    "kind": "frozen",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-firefox\\video.webm",
+    "durationSeconds": 4.52,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\firefox-frozen"
+  },
+  {
+    "engine": "firefox",
+    "name": "refuses a freeze between loading and binding without starting the provider",
+    "kind": "binding",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-firefox\\video.webm",
+    "durationSeconds": 3.32,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\firefox-binding"
+  },
+  {
+    "engine": "firefox",
+    "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+    "kind": "epoch",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\video.webm",
+    "durationSeconds": 4.52,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\firefox-epoch"
+  },
+  {
+    "engine": "firefox",
+    "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+    "kind": "history",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-firefox\\video.webm",
+    "durationSeconds": 4.28,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\firefox-history"
+  },
+  {
+    "engine": "firefox",
+    "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+    "kind": "catchup",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-firefox\\video.webm",
+    "durationSeconds": 2.88,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\firefox-catchup"
+  },
+  {
+    "engine": "webkit",
+    "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+    "kind": "frozen",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-webkit\\video.webm",
+    "durationSeconds": 5.96,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\webkit-frozen"
+  },
+  {
+    "engine": "webkit",
+    "name": "refuses a freeze between loading and binding without starting the provider",
+    "kind": "binding",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-webkit\\video.webm",
+    "durationSeconds": 6.16,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\webkit-binding"
+  },
+  {
+    "engine": "webkit",
+    "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+    "kind": "epoch",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-webkit\\video.webm",
+    "durationSeconds": 7.8,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\webkit-epoch"
+  },
+  {
+    "engine": "webkit",
+    "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+    "kind": "history",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\video.webm",
+    "durationSeconds": 9.04,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\webkit-history"
+  },
+  {
+    "engine": "webkit",
+    "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+    "kind": "catchup",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-webkit\\video.webm",
+    "durationSeconds": 4.96,
+    "target": "artifacts\\yjs-authority-admission-visual-20261107\\webkit-catchup"
+  }
+]

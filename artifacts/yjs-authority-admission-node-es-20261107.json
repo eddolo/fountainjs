@@ -1,0 +1,14 @@
+{
+  "mode": "es",
+  "passed": 6,
+  "cases": [
+    "validated immutable lease binds the actual SQLite authority before provider start",
+    "remote admission refresh remains outside author undo and redo",
+    "frozen metadata refuses byte access and prevents local installation",
+    "freeze after snapshot load is fenced again by the binding endpoint",
+    "new authority epoch cannot silently reuse a client even with unchanged native room identity",
+    "server admission is read-only and stale requests cannot change persistent state"
+  ],
+  "node": "v24.22.1",
+  "dom": false
+}

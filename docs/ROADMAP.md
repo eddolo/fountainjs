@@ -20,13 +20,29 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,773 passes and six failures, with no skips. Three
+The current source suite has 4,802 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, nested-fragment migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest client-admission audit](YJS_RETAINED_ADMISSION_AUDIT.md).
+[latest authority-admission audit](YJS_AUTHORITY_ADMISSION_AUDIT.md).
+
+Authority-bound admission (2026-11-07, local): validate active snapshot metadata
+before byte access, bind an immutable key/epoch/revision/native-identity lease
+before provider start, and recheck the local draft after asynchronous binding.
+Reconnect refuses an epoch change even when native room identity is unchanged.
+A read-only server fence verifies the current generation after checkpoint
+validation. Refreshed checkpoints now use an untracked origin, so author undo
+preserves remote edits. All 29 new / 189 focused cases, 12 compiled Node checks
+and 15 recorded three-engine HTTP/SQLite journeys pass, including catch-up to a
+newer binding acknowledgement. Complete source has 4,802 passes and the same six
+failures across 301 files, no skips. Types/build/API/headless pass; all 173 public
+runtime/CSS files stay identical and the same three size overruns remain.
+Deployed live transport, first-room provisioning, durable draft reconciliation,
+multi-host admission, production costs and safe public adoption remain open.
+No default switch, public export, publication or COLLAB-01 promotion.
+[Audit](YJS_AUTHORITY_ADMISSION_AUDIT.md).
 
 Retained client admission (2026-11-07, local): an opt-in private checkpoint
 loader validates an authoritative existing room before provider connection or

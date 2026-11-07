@@ -7,7 +7,7 @@ import type { YjsCollaborationExtensionOptions } from './index';
 import { RetainedDocumentStore, validateRetainedDocument } from './retained-document';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore } from './structured-attributes';
-import { prepareRetainedAdmission, type RetainedAdmission } from './retained-admission';
+import { prepareRetainedAdmission, readRetainedAdmission, snapshotRetainedAdmission, type RetainedAdmission, type RetainedAdmissionLease } from './retained-admission';
 
 export interface RetainedYjsCollaborationExtensionOptions extends YjsCollaborationExtensionOptions {
   /** Validate an authoritative existing-room snapshot before starting transport.
@@ -70,6 +70,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private admissionController?: AbortController;
   private joining = false;
   private joinBaseline?: Node;
+  private admissionLease?: RetainedAdmissionLease;
 
   constructor(private readonly options: RetainedYjsCollaborationExtensionOptions) {
     if (!(options?.document instanceof Y.Doc)) throw new TypeError('Yjs needs a Y.Doc.');
@@ -85,9 +86,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       || options.captureTimeout !== undefined && (!Number.isFinite(options.captureTimeout) || options.captureTimeout < 0)) throw new TypeError('Invalid retained collaboration timing or awareness options.');
     if (options.structuredAttributes) this.structured = new YjsStructuredAttributeStore(options.document, options.structuredAttributes, `${this.room}:structured-attributes`);
     if (options.admission !== undefined) {
-      const schemaVersion = options.admission?.schemaVersion, load = options.admission?.load;
-      if (typeof schemaVersion !== 'string' || !schemaVersion.trim() || schemaVersion.length > 200 || /[\u0000-\u001f\u007f]/.test(schemaVersion) || typeof load !== 'function') throw new TypeError('Invalid retained admission contract.');
-      this.admission = Object.freeze({ schemaVersion, load });
+      this.admission = snapshotRetainedAdmission(options.admission);
     }
   }
 
@@ -165,12 +164,18 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     const current = () => !controller.signal.aborted && !this.destroyed && this.context === context;
     let attaching = false;
     try {
-      const checkpoint = await this.admission!.load(controller.signal);
+      const response = await this.admission!.load(controller.signal);
       if (!current()) return;
+      const { checkpoint, reference } = readRetainedAdmission(response, this.admission!, this.admissionLease);
       const candidate = await prepareRetainedAdmission(this.options.document, checkpoint, context.editor.state.schema, this.admission!.schemaVersion, this.room);
       if (!current()) return;
-      if (!context.editor.state.doc.eq(this.joinBaseline!) && !context.editor.state.doc.eq(candidate.document)) throw new Error('Unresolved local draft made while joining; draft preserved. Resolve it explicitly before reconnecting.');
-      candidate.install(this.origin); if (!current()) return;
+      const checkDraft = () => { if (!context.editor.state.doc.eq(this.joinBaseline!) && !context.editor.state.doc.eq(candidate.document)) throw new Error('Unresolved local draft made while joining; draft preserved. Resolve it explicitly before reconnecting.'); };
+      checkDraft();
+      const lease = reference ? Object.freeze({ ...reference, room: this.room, identity: candidate.identity }) : undefined;
+      if (lease && this.admissionLease && lease.identity !== this.admissionLease.identity) throw new Error('Authority admission room identity changed; original client preserved.');
+      if (lease) { await this.admission!.authority!.bind(lease, controller.signal); if (!current()) return; checkDraft(); }
+      candidate.install(this.repair); if (!current()) return;
+      this.admissionLease = lease;
       this.joining = false; attaching = true;
       await this.attach(context, false);
       if (current()) { this.admissionController = undefined; this.joinBaseline = undefined; }

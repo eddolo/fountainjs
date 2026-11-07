@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {mkdir,cp,readFile,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+const baseline='artifacts/yjs-authority-admission-baseline-20261107',control='artifacts/yjs-authority-admission-history-control-20261107';await mkdir(baseline,{recursive:true});
+execFileSync('git',['archive','--format=tar',`--output=${baseline}.tar`,'d4568dcb','src']);execFileSync('tar',['-xf',baseline+'.tar','-C',baseline]);
+const source=await readFile('tests/yjs-retained-authority-admission.test.ts','utf8'),marker="it.each(['authority','checkpoint'] as const)";assert.equal(source.split(marker).length,2);await writeFile(baseline+'.test.ts',source.slice(0,source.indexOf(marker)).trimEnd()+'\n');
+const config=(folder,include,pattern='')=>`import {defineConfig} from 'vitest/config';
+import {resolve} from 'node:path';
+export default defineConfig({resolve:{alias:[{find:/^\\.\\.\\/src(?=\\/|$)/,replacement:resolve('${folder}/src')}]},test:{environment:'node',include:['${include}']${pattern?`,testNamePattern:'${pattern}'`:''}}});
+`;
+await writeFile(baseline+'.config.ts',config(baseline,baseline+'.test.ts'));
+await cp('src',control+'/src',{recursive:true});const adapter=control+'/src/yjs/retained-adapter.ts',current=await readFile(adapter,'utf8');assert.equal(current.split('candidate.install(this.repair)').length,2);await writeFile(adapter,current.replace('candidate.install(this.repair)','candidate.install(this.origin)'));
+await writeFile(control+'.config.ts',config(control,'tests/yjs-retained-authority-admission.test.ts','keeps a refreshed remote checkpoint'));
+console.log('Prepared archived twenty-two-case baseline and one-origin history negative control.');

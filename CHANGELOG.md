@@ -7,6 +7,17 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Bind private retained admission to an active authority snapshot and immutable
+  session lease before provider start. Refuse frozen rooms, incompatible keys/
+  protocols/revisions and a pinned epoch change before reading checkpoint bytes;
+  recheck the draft after asynchronous binding. Add a read-only server admission
+  fence with post-validation generation checks. Fix reconnect imports entering
+  author undo by using the existing repair origin, and verify retained drafts,
+  explicit new-session choice, native identity, catch-up and author undo/redo in
+  compiled Node and recorded HTTP/SQLite workflows. The public default adapter,
+  its six concurrency failures and safe replacement adoption remain unchanged.
+  [Audit](docs/YJS_AUTHORITY_ADMISSION_AUDIT.md).
+
 - Add private retained-room admission from an authoritative existing checkpoint
   before provider connection. Validate and stage the full same-room offline
   merge, preserve a pending local draft across refusal/retry, and abort retired

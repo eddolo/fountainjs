@@ -1,5 +1,11 @@
 # Retained-room client admission — 2026-11-07
 
+Authority follow-up: [session-bound admission](YJS_AUTHORITY_ADMISSION_AUDIT.md)
+adds active phase/epoch/revision/native-identity binding and a read-only server
+connection fence. It also keeps reconnect imports out of author undo. The scope
+and remaining-work descriptions below refer to this earlier checkpoint-only
+admission revision; public adoption and deployed transport remain unfinished.
+
 The private retained adapter can now validate an authoritative existing-room
 checkpoint before it starts a live provider. An empty joining client does not
 seed its own competing document. This is an opt-in internal adoption boundary;

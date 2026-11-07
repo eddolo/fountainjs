@@ -1,0 +1,913 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\cappu\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "artifacts/yjs-authority-admission-browser-20261107.config.ts"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/yjs-authority-admission-browser-20261107",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/yjs-authority-admission-real.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/yjs-authority-admission-browser-20261107",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/yjs-authority-admission-real.spec.ts"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/yjs-authority-admission-browser-20261107",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/manual",
+        "testIgnore": [],
+        "testMatch": [
+          "**/yjs-authority-admission-real.spec.ts"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "yjs-authority-admission-browser-20261107.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "cwd": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\",
+      "command": "node artifacts/prepare-yjs-authority-admission-20261107.mjs && node artifacts/build-yjs-authority-admission-20261107.mjs && node artifacts/yjs-authority-admission-server-20261107.mjs",
+      "url": "http://127.0.0.1:4195/artifacts/yjs-authority-admission-fixture-20261107.html",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "yjs-authority-admission-real.spec.ts",
+      "file": "yjs-authority-admission-real.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3377,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:36:43.029Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiN2NkNTY2YTktYWI3OS00NzhkLTk2OTQtMTM2MjFlMDkwNmVkIiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MCwicm9vbUlkIjoici1kMWFkYWEyOC0xZGI0LTRlMWYtODQ4My1hM2IzZjcxMjljNWYiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjpjYjI2MmZlYi1mZjhkLTQwMmItOWUzNy1hNWIxZDc0NDYyMGUiLCJlcG9jaCI6IjdjZDU2NmE5LWFiNzktNDc4ZC05Njk0LTEzNjIxZTA5MDZlZCIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLWQxYWRhYTI4LTFkYjQtNGUxZi04NDgzLWEzYjNmNzEyOWM1ZiJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjg5LCJtaW5QYW5lIjo0NTMuMzI4MTI1LCJtYXhPdmVyZmxvdyI6MCwiaW52YWxpZCI6W119"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkYXB0ZXIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9yZXRhaW5lZC1yb29tLXN0b3JlLXlHMjR4bzR6LmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-e7e907e5a499220371b4",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "refuses a freeze between loading and binding without starting the provider",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2565,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:36:46.750Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiOGM4YzcwODYtNzQ2Ni00ZGI3LTkxYzQtYzdlZTQ2OWMxZDg5IiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MCwicm9vbUlkIjoici1jMDViZDE4ZS03ZjYwLTQ3ZmUtOGY2OS00YWNkMWY1NDBkNGUiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjpiOGI1ZTBkZi1kNWVkLTRlNTUtOGNhMC1lODNiY2M4OTBmY2IiLCJlcG9jaCI6IjhjOGM3MDg2LTc0NjYtNGRiNy05MWM0LWM3ZWU0NjljMWQ4OSIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLWMwNWJkMThlLTdmNjAtNDdmZS04ZjY5LTRhY2QxZjU0MGQ0ZSJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjc4LCJtaW5QYW5lIjo0NTMuMzI4MTI1LCJtYXhPdmVyZmxvdyI6MCwiaW52YWxpZCI6W119"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9hZGFwdGVyLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-6d419aeeab48ccf12363",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3352,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:36:49.456Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiZWEwZjA5OTItYTQ1ZS00MzFjLWIyZDktZjcxOTA4MzU4NDQwIiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MSwicm9vbUlkIjoici1mZTZkMWM0Yi0wY2JiLTQ4MjQtYTgwZi1jZjZmMDA3Nzk0M2MiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjIsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjpjYzZjNjc4My01ZjI0LTRjNjYtYjU3Mi05OWJmMjk5NzJkZTIiLCJlcG9jaCI6ImVhMGYwOTkyLWE0NWUtNDMxYy1iMmQ5LWY3MTkwODM1ODQ0MCIsInJldmlzaW9uIjoxLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLWZlNmQxYzRiLTBjYmItNDgyNC1hODBmLWNmNmYwMDc3OTQzYyJ9LCJyZXRpcmVkIjpbeyJtb2RlbCI6eyJ0eXBlIjoiZG9jIiwiY29udGVudCI6W3sidHlwZSI6ImhlYWRpbmciLCJhdHRycyI6eyJsZXZlbCI6MiwiYWxpZ24iOiJsZWZ0Iiwibm9kZUlkIjoidGl0bGUifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiU2hhcmVkIHRlY2huaWNhbCBwYXBlciBQRU5ESU5HIG9sZCBzZXNzaW9uIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJieXRlcyI6OTk0OCwibGVhc2UiOnsia2V5IjoiYWRtaXNzaW9uOmNjNmM2NzgzLTVmMjQtNGM2Ni1iNTcyLTk5YmYyOTk3MmRlMiIsImVwb2NoIjoiMjI2ZDYzOWQtNmE4Zi00M2EwLTg2ZDUtY2FhMTE1YTY1ZGExIiwicmV2aXNpb24iOjAsInByb3RvY29sIjoicmV0YWluZWQiLCJyb29tIjoiZm91bnRhaW4iLCJpZGVudGl0eSI6InItZmU2ZDFjNGItMGNiYi00ODI0LWE4MGYtY2Y2ZjAwNzc5NDNjIn19XSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjExOSwibWluUGFuZSI6NDUzLjMyODEyNSwibWF4T3ZlcmZsb3ciOjAsImludmFsaWQiOltdfQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9hZGFwdGVyLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3JldGFpbmVkLWNoZWNrcG9pbnQtRDh3a3JySGIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-610ec9fd1ae2338f290e",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3297,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:36:53.116Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgTE9DQUwgUkVNT1RFIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJlcG9jaCI6ImVjMWJiZGNhLTNjY2ItNGUwMS1hM2NkLWNkMTJmNWU2NzE4ZiIsInBoYXNlIjoiYWN0aXZlIiwicmV2aXNpb24iOjIsInJvb21JZCI6InItNmQ4YTQ2OWUtZmI1My00MDQ5LTkzYWQtMGJhNTNiNjNjZjY5IiwicGVlcnMiOnsibGVmdCI6eyJtb2RlbCI6eyJ0eXBlIjoiZG9jIiwiY29udGVudCI6W3sidHlwZSI6ImhlYWRpbmciLCJhdHRycyI6eyJsZXZlbCI6MiwiYWxpZ24iOiJsZWZ0Iiwibm9kZUlkIjoidGl0bGUifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiU2hhcmVkIHRlY2huaWNhbCBwYXBlciBMT0NBTCBSRU1PVEUifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sInN0YXR1cyI6eyJzdGF0dXMiOiJjb25uZWN0ZWQiLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjEsInN0YXJ0cyI6MiwibGVhc2UiOnsia2V5IjoiYWRtaXNzaW9uOmQzNGVlNTZjLTA2ZTYtNDkzNi05MDdhLTFkNTkxMTdmNzg1MiIsImVwb2NoIjoiZWMxYmJkY2EtM2NjYi00ZTAxLWEzY2QtY2QxMmY1ZTY3MThmIiwicmV2aXNpb24iOjEsInByb3RvY29sIjoicmV0YWluZWQiLCJyb29tIjoiZm91bnRhaW4iLCJpZGVudGl0eSI6InItNmQ4YTQ2OWUtZmI1My00MDQ5LTkzYWQtMGJhNTNiNjNjZjY5In0sInJldGlyZWQiOltdLCJwZW5kaW5nIjowfSwicmlnaHQiOnsibW9kZWwiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgTE9DQUwgUkVNT1RFIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjpkMzRlZTU2Yy0wNmU2LTQ5MzYtOTA3YS0xZDU5MTE3Zjc4NTIiLCJlcG9jaCI6ImVjMWJiZGNhLTNjY2ItNGUwMS1hM2NkLWNkMTJmNWU2NzE4ZiIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLTZkOGE0NjllLWZiNTMtNDA0OS05M2FkLTBiYTUzYjYzY2Y2OSJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH19fQ=="
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjEyNywibWluUGFuZSI6NDUzLjMyODEyNSwibWF4T3ZlcmZsb3ciOjAsImludmFsaWQiOltdfQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkYXB0ZXIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3JldGFpbmVkLWNoZWNrcG9pbnQtRDh3a3JySGIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-abf2baf4498034c8737b",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5711,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:36:57.375Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiYWJjYjI0OTktM2M0NC00MDFkLWFhYjMtZjg5MzRiNjcyNzY1IiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MCwicm9vbUlkIjoici0xNjg5NjY2OC1hMTA2LTRkYmYtODU5ZS1jNGRiM2JlZDJmNGUiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjpkYjc4ODRlNC04ZjU1LTRiYTUtYWJjMS0zOGE4MTg3MDVkYzUiLCJlcG9jaCI6ImFiY2IyNDk5LTNjNDQtNDAxZC1hYWIzLWY4OTM0YjY3Mjc2NSIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLTE2ODk2NjY4LWExMDYtNGRiZi04NTllLWM0ZGIzYmVkMmY0ZSJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjgwLCJtaW5QYW5lIjo0NTMuMzMzMzEyOTg4MjgxMjUsIm1heE92ZXJmbG93IjowLCJpbnZhbGlkIjpbXX0="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9hZGFwdGVyLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3JldGFpbmVkLWNoZWNrcG9pbnQtRDh3a3JySGIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-15bfdb9ec9be11e420bf",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "refuses a freeze between loading and binding without starting the provider",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3311,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:04.051Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiMjhiMjYwYmUtYWIxMi00ZmVmLTg5MGYtMTg4YzY3OGJmZjhjIiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MCwicm9vbUlkIjoici1jM2ZjZTlhYy0yYzM3LTQ5ODctODkzMy1lZmY4ZDNlMjhmMzAiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjpjMTNlNjhmYS1hZmM1LTQ1MmItYmJmYy0zM2JmYzg0NWVkZWUiLCJlcG9jaCI6IjI4YjI2MGJlLWFiMTItNGZlZi04OTBmLTE4OGM2NzhiZmY4YyIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLWMzZmNlOWFjLTJjMzctNDk4Ny04OTMzLWVmZjhkM2UyOGYzMCJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjk5LCJtaW5QYW5lIjo0NTMuMzMzMzEyOTg4MjgxMjUsIm1heE92ZXJmbG93IjowLCJpbnZhbGlkIjpbXX0="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9hZGFwdGVyLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3JldGFpbmVkLWNoZWNrcG9pbnQtRDh3a3JySGIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-7708ec6d0c10677a0683",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 10107,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#left pre').first()\nTimeout: 5000ms\n\u001b[32m- Expected substring  - 1\u001b[39m\n\u001b[31m+ Received string     + 4\u001b[39m\n\n\u001b[32m- Status: connected\u001b[39m\n\u001b[31m+ Status: connect\u001b[7ming\u001b[27m\u001b[39m\n\u001b[31m+ Roots: 0 · provider starts: 1\u001b[39m\n\u001b[31m+ \u001b[7mEpoch: not admitt\u001b[27med\u001b[39m\n\u001b[31m+\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#left pre').first()\u001b[22m\n\u001b[2m    13 × locator resolved to <pre>Status: connecting↵Roots: 0 · provider starts: 1↵…</pre>\u001b[22m\n\u001b[2m       - unexpected value \"Status: connecting\u001b[22m\n\u001b[2mRoots: 0 · provider starts: 1\u001b[22m\n\u001b[2mEpoch: not admitted\u001b[22m\n\u001b[2m\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#left pre').first()\nTimeout: 5000ms\n\u001b[32m- Expected substring  - 1\u001b[39m\n\u001b[31m+ Received string     + 4\u001b[39m\n\n\u001b[32m- Status: connected\u001b[39m\n\u001b[31m+ Status: connect\u001b[7ming\u001b[27m\u001b[39m\n\u001b[31m+ Roots: 0 · provider starts: 1\u001b[39m\n\u001b[31m+ \u001b[7mEpoch: not admitt\u001b[27med\u001b[39m\n\u001b[31m+\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#left pre').first()\u001b[22m\n\u001b[2m    13 × locator resolved to <pre>Status: connecting↵Roots: 0 · provider starts: 1↵…</pre>\u001b[22m\n\u001b[2m       - unexpected value \"Status: connecting\u001b[22m\n\u001b[2mRoots: 0 · provider starts: 1\u001b[22m\n\u001b[2mEpoch: not admitted\u001b[22m\n\u001b[2m\"\u001b[22m\n\n    at join (C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts:3:171)\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts:15:1083",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts",
+                      "column": 171,
+                      "line": 3
+                    },
+                    "snippet": "  1 | import {expect,test} from '@playwright/test';\n  2 | const errors=new WeakMap<object,string[]>(),state=(page:any)=>page.evaluate(()=>(window as any).audit.snapshot());\n> 3 | async function join(page:any,id='left'){await page.getByRole('button',{name:'Complete '+id+' join',exact:true}).click();await expect(page.locator('#'+id+' pre').first()).toContainText('Status: connected');}\n    |                                                                                                                                                                           ^\n  4 | async function type(page:any,id:string,text:string){await page.getByRole('textbox',{name:id==='left'?'Left editor':'Right editor',exact:true}).click();await page.keyboard.press('Control+Home');await page.keyboard.press('End');await page.keyboard.type(text);}\n  5 | async function capture(page:any,info:any,name:string){await page.evaluate(()=>window.scrollTo(0,0));const size=await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight,viewport:innerWidth,viewportHeight:innerHeight}));expect(size.width).toBeLessThanOrEqual(size.viewport);expect(size.height).toBeLessThanOrEqual(size.viewportHeight);await page.screenshot({path:info.outputPath(name),fullPage:false,scale:'css'});}\n  6 | test.beforeEach(async({page})=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-authority-admission-fixture-20261107.html');await expect(page.getByRole('status')).toContainText('Ready');await page.evaluate(()=>{const samples={frames:0,minPane:Infinity,maxOverflow:0,invalid:[] as any[]};(window as any).layout=samples;function sample(){const widths=[...document.querySelectorAll('.panes>section')].map(p=>p.getBoundingClientRect().width),overflow=document.documentElement.scrollWidth-innerWidth;samples.frames++;samples.minPane=Math.min(samples.minPane,...widths);samples.maxOverflow=Math.max(samples.maxOverflow,overflow);if(widths.some(w=>w<200)||overflow>2)samples.invalid.push({widths,overflow});requestAnimationFrame(sample);}sample();});});"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts",
+                        "column": 171,
+                        "line": 3
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#left pre').first()\nTimeout: 5000ms\n\u001b[32m- Expected substring  - 1\u001b[39m\n\u001b[31m+ Received string     + 4\u001b[39m\n\n\u001b[32m- Status: connected\u001b[39m\n\u001b[31m+ Status: connect\u001b[7ming\u001b[27m\u001b[39m\n\u001b[31m+ Roots: 0 · provider starts: 1\u001b[39m\n\u001b[31m+ \u001b[7mEpoch: not admitt\u001b[27med\u001b[39m\n\u001b[31m+\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#left pre').first()\u001b[22m\n\u001b[2m    13 × locator resolved to <pre>Status: connecting↵Roots: 0 · provider starts: 1↵…</pre>\u001b[22m\n\u001b[2m       - unexpected value \"Status: connecting\u001b[22m\n\u001b[2mRoots: 0 · provider starts: 1\u001b[22m\n\u001b[2mEpoch: not admitted\u001b[22m\n\u001b[2m\"\u001b[22m\n\n\n  1 | import {expect,test} from '@playwright/test';\n  2 | const errors=new WeakMap<object,string[]>(),state=(page:any)=>page.evaluate(()=>(window as any).audit.snapshot());\n> 3 | async function join(page:any,id='left'){await page.getByRole('button',{name:'Complete '+id+' join',exact:true}).click();await expect(page.locator('#'+id+' pre').first()).toContainText('Status: connected');}\n    |                                                                                                                                                                           ^\n  4 | async function type(page:any,id:string,text:string){await page.getByRole('textbox',{name:id==='left'?'Left editor':'Right editor',exact:true}).click();await page.keyboard.press('Control+Home');await page.keyboard.press('End');await page.keyboard.type(text);}\n  5 | async function capture(page:any,info:any,name:string){await page.evaluate(()=>window.scrollTo(0,0));const size=await page.evaluate(()=>({width:document.documentElement.scrollWidth,height:document.documentElement.scrollHeight,viewport:innerWidth,viewportHeight:innerHeight}));expect(size.width).toBeLessThanOrEqual(size.viewport);expect(size.height).toBeLessThanOrEqual(size.viewportHeight);await page.screenshot({path:info.outputPath(name),fullPage:false,scale:'css'});}\n  6 | test.beforeEach(async({page})=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-authority-admission-fixture-20261107.html');await expect(page.getByRole('status')).toContainText('Ready');await page.evaluate(()=>{const samples={frames:0,minPane:Infinity,maxOverflow:0,invalid:[] as any[]};(window as any).layout=samples;function sample(){const widths=[...document.querySelectorAll('.panes>section')].map(p=>p.getBoundingClientRect().width),overflow=document.documentElement.scrollWidth-innerWidth;samples.frames++;samples.minPane=Math.min(samples.minPane,...widths);samples.maxOverflow=Math.max(samples.maxOverflow,overflow);if(widths.some(w=>w<200)||overflow>2)samples.invalid.push({widths,overflow});requestAnimationFrame(sample);}sample();});});\n    at join (C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts:3:171)\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts:15:1083"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:07.624Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\test-failed-1.png"
+                    },
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiZTA5NmFjMzEtOGM0MS00NGI1LTkxN2MtZDczYTFlZTc5M2JmIiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MSwicm9vbUlkIjoici04MDM4YTVkZC04NWZmLTQzZTUtYWY5OC0xNTM1MzBkNDZhYjAiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGluZyIsInByZXNlbmNlcyI6W119LCJyb290cyI6MCwic3RhcnRzIjoxLCJsZWFzZSI6bnVsbCwicmV0aXJlZCI6W3sibW9kZWwiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgUEVORElORyBvbGQgc2Vzc2lvbiJ9XX0seyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0Iiwibm9kZUlkIjoiaW50cm8ifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiQXV0aG9yaXRhdGl2ZSBpbnRyb2R1Y3Rpb24uIn1dfSx7InR5cGUiOiJibG9ja3F1b3RlIiwiY29udGVudCI6W3sidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJFdmVyeSBkcmFmdCBzdGF5cyByZWNvdmVyYWJsZS4ifV19XX0seyJ0eXBlIjoiaW1hZ2Vfc3VwZXIiLCJhdHRycyI6eyJzcmMiOiIvdGVzdHMvZml4dHVyZXMvY3Jvc3MtY29udGFpbmVyLWZpZ3VyZS5wbmciLCJhbHQiOiJPcmlnaW5hbCBmaWd1cmUiLCJ0aXRsZSI6IiIsIndpZHRoIjoiMTAwJSIsImhlaWdodCI6ImF1dG8iLCJhbGlnbiI6ImNlbnRlciIsInNyY3NldCI6IiIsInNpemVzIjoiIiwibG9hZGluZyI6ImxhenkiLCJkZWNvZGluZyI6ImFzeW5jIiwiY2FwdGlvbiI6IiIsIm5vZGVJZCI6ImZpZ3VyZSJ9fSx7InR5cGUiOiJtYXRoX2Jsb2NrIiwiYXR0cnMiOnsibGF0ZXgiOiJ4XjIreV4yIiwiYXJpYUxhYmVsIjoiIiwibGFiZWwiOiJlcTpvbmUifX1dfSwiYnl0ZXMiOjk5NDgsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjoyNWM3Y2FlNC00MzlmLTQ1M2EtOGVhOC0xZjlmMWI3N2QyZTYiLCJlcG9jaCI6ImJjZDBmZGNlLWI3MDUtNDk5OS04M2RkLTY2OTU1YTBhYzYyZSIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLTgwMzhhNWRkLTg1ZmYtNDNlNS1hZjk4LTE1MzUzMGQ0NmFiMCJ9fV0sInBlbmRpbmciOjF9LCJyaWdodCI6eyJtb2RlbCI6eyJ0eXBlIjoiZG9jIiwiY29udGVudCI6W3sidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJyaWdodCBsb2NhbCB0ZW1wbGF0ZS4ifV19XX0sInN0YXR1cyI6eyJzdGF0dXMiOiJjb25uZWN0aW5nIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjowLCJzdGFydHMiOjAsImxlYXNlIjpudWxsLCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MX19fQ=="
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjQ2MiwibWluUGFuZSI6NDUzLjMzMzMxMjk4ODI4MTI1LCJtYXhPdmVyZmxvdyI6MCwiaW52YWxpZCI6W119"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9hZGFwdGVyLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3JldGFpbmVkLWNoZWNrcG9pbnQtRDh3a3JySGIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts",
+                    "column": 171,
+                    "line": 3
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "460897887b3e2c721913-15447d25223ac358c0f0",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9035,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:19.468Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgTE9DQUwgUkVNT1RFIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJlcG9jaCI6ImNiMmQxZTgxLWUzY2YtNGQzMS1iMmIyLTg4Yzk2YzkxNmNjMiIsInBoYXNlIjoiYWN0aXZlIiwicmV2aXNpb24iOjIsInJvb21JZCI6InItYmZhMDc5YTYtNGM5MC00MGUyLWFkY2UtZTYxOTkyZDQ5MzM5IiwicGVlcnMiOnsibGVmdCI6eyJtb2RlbCI6eyJ0eXBlIjoiZG9jIiwiY29udGVudCI6W3sidHlwZSI6ImhlYWRpbmciLCJhdHRycyI6eyJsZXZlbCI6MiwiYWxpZ24iOiJsZWZ0Iiwibm9kZUlkIjoidGl0bGUifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiU2hhcmVkIHRlY2huaWNhbCBwYXBlciBMT0NBTCBSRU1PVEUifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sInN0YXR1cyI6eyJzdGF0dXMiOiJjb25uZWN0ZWQiLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjEsInN0YXJ0cyI6MiwibGVhc2UiOnsia2V5IjoiYWRtaXNzaW9uOjIxZTUyZDk1LWFjMzUtNDU1NS1hZDc3LTg2MDI4NGYwOGEyNyIsImVwb2NoIjoiY2IyZDFlODEtZTNjZi00ZDMxLWIyYjItODhjOTZjOTE2Y2MyIiwicmV2aXNpb24iOjEsInByb3RvY29sIjoicmV0YWluZWQiLCJyb29tIjoiZm91bnRhaW4iLCJpZGVudGl0eSI6InItYmZhMDc5YTYtNGM5MC00MGUyLWFkY2UtZTYxOTkyZDQ5MzM5In0sInJldGlyZWQiOltdLCJwZW5kaW5nIjowfSwicmlnaHQiOnsibW9kZWwiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgTE9DQUwgUkVNT1RFIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjoyMWU1MmQ5NS1hYzM1LTQ1NTUtYWQ3Ny04NjAyODRmMDhhMjciLCJlcG9jaCI6ImNiMmQxZTgxLWUzY2YtNGQzMS1iMmIyLTg4Yzk2YzkxNmNjMiIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLWJmYTA3OWE2LTRjOTAtNDBlMi1hZGNlLWU2MTk5MmQ0OTMzOSJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH19fQ=="
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjI1MCwibWluUGFuZSI6NDUzLjMzMzMxMjk4ODI4MTI1LCJtYXhPdmVyZmxvdyI6MCwiaW52YWxpZCI6W119"
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkYXB0ZXIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvY29sbGFib3JhdGlvbi1Cd091VFJUMy5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-76e1e7203291ccc963e1",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6368,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:31.020Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiOTQxM2FjNmUtOTU3Mi00ZjdjLWIzN2QtODk1YmUyNzFiMjEwIiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MCwicm9vbUlkIjoici02YmUwZWVlNi0xNDg1LTRlZWYtYTI3Yy0xMDY0YWM2NmNkZmIiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjoxYTc0ZWNjZS0yN2Q3LTRkNjctOTRiNy00NjE3NDY5OWFmY2QiLCJlcG9jaCI6Ijk0MTNhYzZlLTk1NzItNGY3Yy1iMzdkLTg5NWJlMjcxYjIxMCIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLTZiZTBlZWU2LTE0ODUtNGVlZi1hMjdjLTEwNjRhYzY2Y2RmYiJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjEwMiwibWluUGFuZSI6NDUzLjMyODEyNSwibWF4T3ZlcmZsb3ciOjAsImludmFsaWQiOltdfQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkYXB0ZXIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2V4dGVuc2lvbi0wZHhjTHRZVi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvY29sbGFib3JhdGlvbi1Cd091VFJUMy5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvc3RydWN0dXJlZC1hdHRyaWJ1dGVzLU9LQXZsTE4yLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9yZXRhaW5lZC1yb29tLXN0b3JlLXlHMjR4bzR6LmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-7bd4816aff06d98f6b36",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "refuses a freeze between loading and binding without starting the provider",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5807,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:37.668Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiY2E2MjMxOGEtMjE4YS00OWIwLWExNWItNWZmY2NkNDQyZTcyIiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MCwicm9vbUlkIjoici1hZWUyODUyMS0zYThkLTRiMGMtOWVjNi1iZjg5MTk3OWEyMzAiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjo5YjljNjViMy0wOTk0LTQ0NmMtOGJlMS00YmNlODg2MTQ3YzIiLCJlcG9jaCI6ImNhNjIzMThhLTIxOGEtNDliMC1hMTViLTVmZmNjZDQ0MmU3MiIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLWFlZTI4NTIxLTNhOGQtNGIwYy05ZWM2LWJmODkxOTc5YTIzMCJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjExNywibWluUGFuZSI6NDUzLjMyODEyNSwibWF4T3ZlcmZsb3ciOjAsImludmFsaWQiOltdfQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9hZGFwdGVyLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L3N0cnVjdHVyZWQtYXR0cmlidXRlcy1PS0F2bExOMi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtcm9vbS1zdG9yZS15RzI0eG80ei5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvZXh0ZW5zaW9uLTBkeGNMdFlWLmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-f86693df821616d613dd",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9379,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:43.602Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sImVwb2NoIjoiNWE0ZmQwODItNDZiMi00YzBmLTg3MmMtNmNkNDA5YzQ4Yzk0IiwicGhhc2UiOiJhY3RpdmUiLCJyZXZpc2lvbiI6MSwicm9vbUlkIjoici02OGY4ZTFhNC05MmU4LTRjM2UtODNhMS1kZTZiNWMyZjU3NjUiLCJwZWVycyI6eyJsZWZ0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoiaGVhZGluZyIsImF0dHJzIjp7ImxldmVsIjoyLCJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJ0aXRsZSJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJTaGFyZWQgdGVjaG5pY2FsIHBhcGVyIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjIsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjo5ZGEyM2VlYS1iZmI1LTQwMTgtYTU2YS00ZDY2YTM2YmMwMzAiLCJlcG9jaCI6IjVhNGZkMDgyLTQ2YjItNGMwZi04NzJjLTZjZDQwOWM0OGM5NCIsInJldmlzaW9uIjoxLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLTY4ZjhlMWE0LTkyZTgtNGMzZS04M2ExLWRlNmI1YzJmNTc2NSJ9LCJyZXRpcmVkIjpbeyJtb2RlbCI6eyJ0eXBlIjoiZG9jIiwiY29udGVudCI6W3sidHlwZSI6ImhlYWRpbmciLCJhdHRycyI6eyJsZXZlbCI6MiwiYWxpZ24iOiJsZWZ0Iiwibm9kZUlkIjoidGl0bGUifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiU2hhcmVkIHRlY2huaWNhbCBwYXBlciBQRU5ESU5HIG9sZCBzZXNzaW9uIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJieXRlcyI6OTk0OCwibGVhc2UiOnsia2V5IjoiYWRtaXNzaW9uOjlkYTIzZWVhLWJmYjUtNDAxOC1hNTZhLTRkNjZhMzZiYzAzMCIsImVwb2NoIjoiMzE3YjJkNjgtZDE1Yi00ZjdkLWE1ZWItMzUxYmEwOTkwM2ZjIiwicmV2aXNpb24iOjAsInByb3RvY29sIjoicmV0YWluZWQiLCJyb29tIjoiZm91bnRhaW4iLCJpZGVudGl0eSI6InItNjhmOGUxYTQtOTJlOC00YzNlLTgzYTEtZGU2YjVjMmY1NzY1In19XSwicGVuZGluZyI6MH0sInJpZ2h0Ijp7Im1vZGVsIjp7InR5cGUiOiJkb2MiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6InJpZ2h0IGxvY2FsIHRlbXBsYXRlLiJ9XX1dfSwic3RhdHVzIjp7InN0YXR1cyI6ImNvbm5lY3RpbmciLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjAsInN0YXJ0cyI6MCwibGVhc2UiOm51bGwsInJldGlyZWQiOltdLCJwZW5kaW5nIjoxfX19"
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjE1MSwibWluUGFuZSI6NDUzLjMyODEyNSwibWF4T3ZlcmZsb3ciOjAsImludmFsaWQiOltdfQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkYXB0ZXIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NvbGxhYm9yYXRpb24tQndPdVRSVDMuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2V4dGVuc2lvbi0wZHhjTHRZVi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvc3RydWN0dXJlZC1hdHRyaWJ1dGVzLU9LQXZsTE4yLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9yZXRhaW5lZC1yb29tLXN0b3JlLXlHMjR4bzR6LmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "460897887b3e2c721913-8917c0471e65e52569ff",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 14,
+          "column": 1
+        },
+        {
+          "title": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 10447,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -6,11 +6,11 @@\u001b[39m\n\u001b[2m          \"level\": 2,\u001b[22m\n\u001b[2m          \"nodeId\": \"title\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m        \"content\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[32m-           \"text\": \"Shared technical paper LOCAL REMOTE\",\u001b[39m\n\u001b[31m+           \"text\": \"Shared technical paper REMOTE\",\u001b[39m\n\u001b[2m            \"type\": \"text\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[2m        \"type\": \"heading\",\u001b[22m\n\u001b[2m      },\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -6,11 +6,11 @@\u001b[39m\n\u001b[2m          \"level\": 2,\u001b[22m\n\u001b[2m          \"nodeId\": \"title\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m        \"content\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[32m-           \"text\": \"Shared technical paper LOCAL REMOTE\",\u001b[39m\n\u001b[31m+           \"text\": \"Shared technical paper REMOTE\",\u001b[39m\n\u001b[2m            \"type\": \"text\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[2m        \"type\": \"heading\",\u001b[22m\n\u001b[2m      },\u001b[22m\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts:18:1033",
+                    "location": {
+                      "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts",
+                      "column": 1033,
+                      "line": 18
+                    },
+                    "snippet": "  16 | });\n  17 | test('keeps refreshed remote edits through local undo and redo before saving the combined paper',async({page},info)=>{\n> 18 |  await join(page);await join(page,'right');await type(page,'left',' LOCAL');await type(page,'right',' REMOTE');await page.getByRole('button',{name:'Save right edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');await page.getByRole('button',{name:'Retry left join',exact:true}).click();await join(page);await page.getByRole('button',{name:'Undo left',exact:true}).click();let current=await state(page);expect(JSON.stringify(current.peers.left.model)).toContain('REMOTE');expect(JSON.stringify(current.peers.left.model)).not.toContain('LOCAL');await capture(page,info,'refused.png');await page.getByRole('button',{name:'Redo left',exact:true}).click();await page.getByRole('button',{name:'Save left edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');await page.getByRole('button',{name:'Refresh right',exact:true}).click();current=await state(page);expect(current.peers.left.model).toEqual(current.server);expect(current.peers.right.model).toEqual(current.server);expect(JSON.stringify(current.server)).toContain('LOCAL');expect(JSON.stringify(current.server)).toContain('REMOTE');expect(await page.locator('#left img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);await capture(page,info,'final.png');\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^\n  19 | });\n  20 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts",
+                        "column": 1033,
+                        "line": 18
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -6,11 +6,11 @@\u001b[39m\n\u001b[2m          \"level\": 2,\u001b[22m\n\u001b[2m          \"nodeId\": \"title\",\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[2m        \"content\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[32m-           \"text\": \"Shared technical paper LOCAL REMOTE\",\u001b[39m\n\u001b[31m+           \"text\": \"Shared technical paper REMOTE\",\u001b[39m\n\u001b[2m            \"type\": \"text\",\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[2m        ],\u001b[22m\n\u001b[2m        \"type\": \"heading\",\u001b[22m\n\u001b[2m      },\u001b[22m\n\n  16 | });\n  17 | test('keeps refreshed remote edits through local undo and redo before saving the combined paper',async({page},info)=>{\n> 18 |  await join(page);await join(page,'right');await type(page,'left',' LOCAL');await type(page,'right',' REMOTE');await page.getByRole('button',{name:'Save right edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');await page.getByRole('button',{name:'Retry left join',exact:true}).click();await join(page);await page.getByRole('button',{name:'Undo left',exact:true}).click();let current=await state(page);expect(JSON.stringify(current.peers.left.model)).toContain('REMOTE');expect(JSON.stringify(current.peers.left.model)).not.toContain('LOCAL');await capture(page,info,'refused.png');await page.getByRole('button',{name:'Redo left',exact:true}).click();await page.getByRole('button',{name:'Save left edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');await page.getByRole('button',{name:'Refresh right',exact:true}).click();current=await state(page);expect(current.peers.left.model).toEqual(current.server);expect(current.peers.right.model).toEqual(current.server);expect(JSON.stringify(current.server)).toContain('LOCAL');expect(JSON.stringify(current.server)).toContain('REMOTE');expect(await page.locator('#left img').evaluate((img:HTMLImageElement)=>img.naturalWidth)).toBeGreaterThan(0);await capture(page,info,'final.png');\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^\n  19 | });\n  20 |\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts:18:1033"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T02:37:53.192Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\test-failed-1.png"
+                    },
+                    {
+                      "name": "authority-result",
+                      "contentType": "application/json",
+                      "body": "eyJzZXJ2ZXIiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgTE9DQUwgUkVNT1RFIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJlcG9jaCI6IjM3MTJjNDQ4LWU1YTctNDgxNy1hODQ2LTNkYzBjYzE0OGRmNSIsInBoYXNlIjoiYWN0aXZlIiwicmV2aXNpb24iOjIsInJvb21JZCI6InItODc4ZWE1MWEtNzdlMi00NWJhLWEzNTItNGZkYzA3OTMxOGY5IiwicGVlcnMiOnsibGVmdCI6eyJtb2RlbCI6eyJ0eXBlIjoiZG9jIiwiY29udGVudCI6W3sidHlwZSI6ImhlYWRpbmciLCJhdHRycyI6eyJsZXZlbCI6MiwiYWxpZ24iOiJsZWZ0Iiwibm9kZUlkIjoidGl0bGUifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiU2hhcmVkIHRlY2huaWNhbCBwYXBlciBMT0NBTCBSRU1PVEUifV19LHsidHlwZSI6InBhcmFncmFwaCIsImF0dHJzIjp7ImFsaWduIjoibGVmdCIsIm5vZGVJZCI6ImludHJvIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkF1dGhvcml0YXRpdmUgaW50cm9kdWN0aW9uLiJ9XX0seyJ0eXBlIjoiYmxvY2txdW90ZSIsImNvbnRlbnQiOlt7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQifSwiY29udGVudCI6W3sidHlwZSI6InRleHQiLCJ0ZXh0IjoiRXZlcnkgZHJhZnQgc3RheXMgcmVjb3ZlcmFibGUuIn1dfV19LHsidHlwZSI6ImltYWdlX3N1cGVyIiwiYXR0cnMiOnsic3JjIjoiL3Rlc3RzL2ZpeHR1cmVzL2Nyb3NzLWNvbnRhaW5lci1maWd1cmUucG5nIiwiYWx0IjoiT3JpZ2luYWwgZmlndXJlIiwidGl0bGUiOiIiLCJ3aWR0aCI6IjEwMCUiLCJoZWlnaHQiOiJhdXRvIiwiYWxpZ24iOiJjZW50ZXIiLCJzcmNzZXQiOiIiLCJzaXplcyI6IiIsImxvYWRpbmciOiJsYXp5IiwiZGVjb2RpbmciOiJhc3luYyIsImNhcHRpb24iOiIiLCJub2RlSWQiOiJmaWd1cmUifX0seyJ0eXBlIjoibWF0aF9ibG9jayIsImF0dHJzIjp7ImxhdGV4IjoieF4yK3leMiIsImFyaWFMYWJlbCI6IiIsImxhYmVsIjoiZXE6b25lIn19XX0sInN0YXR1cyI6eyJzdGF0dXMiOiJjb25uZWN0ZWQiLCJwcmVzZW5jZXMiOltdfSwicm9vdHMiOjEsInN0YXJ0cyI6MiwibGVhc2UiOnsia2V5IjoiYWRtaXNzaW9uOjc4NjZiOGJlLTY5ODktNDBiYS05ZDVjLTc1NzUyZjNlM2JiNCIsImVwb2NoIjoiMzcxMmM0NDgtZTVhNy00ODE3LWE4NDYtM2RjMGNjMTQ4ZGY1IiwicmV2aXNpb24iOjEsInByb3RvY29sIjoicmV0YWluZWQiLCJyb29tIjoiZm91bnRhaW4iLCJpZGVudGl0eSI6InItODc4ZWE1MWEtNzdlMi00NWJhLWEzNTItNGZkYzA3OTMxOGY5In0sInJldGlyZWQiOltdLCJwZW5kaW5nIjowfSwicmlnaHQiOnsibW9kZWwiOnsidHlwZSI6ImRvYyIsImNvbnRlbnQiOlt7InR5cGUiOiJoZWFkaW5nIiwiYXR0cnMiOnsibGV2ZWwiOjIsImFsaWduIjoibGVmdCIsIm5vZGVJZCI6InRpdGxlIn0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IlNoYXJlZCB0ZWNobmljYWwgcGFwZXIgTE9DQUwgUkVNT1RFIn1dfSx7InR5cGUiOiJwYXJhZ3JhcGgiLCJhdHRycyI6eyJhbGlnbiI6ImxlZnQiLCJub2RlSWQiOiJpbnRybyJ9LCJjb250ZW50IjpbeyJ0eXBlIjoidGV4dCIsInRleHQiOiJBdXRob3JpdGF0aXZlIGludHJvZHVjdGlvbi4ifV19LHsidHlwZSI6ImJsb2NrcXVvdGUiLCJjb250ZW50IjpbeyJ0eXBlIjoicGFyYWdyYXBoIiwiYXR0cnMiOnsiYWxpZ24iOiJsZWZ0In0sImNvbnRlbnQiOlt7InR5cGUiOiJ0ZXh0IiwidGV4dCI6IkV2ZXJ5IGRyYWZ0IHN0YXlzIHJlY292ZXJhYmxlLiJ9XX1dfSx7InR5cGUiOiJpbWFnZV9zdXBlciIsImF0dHJzIjp7InNyYyI6Ii90ZXN0cy9maXh0dXJlcy9jcm9zcy1jb250YWluZXItZmlndXJlLnBuZyIsImFsdCI6Ik9yaWdpbmFsIGZpZ3VyZSIsInRpdGxlIjoiIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiYXV0byIsImFsaWduIjoiY2VudGVyIiwic3Jjc2V0IjoiIiwic2l6ZXMiOiIiLCJsb2FkaW5nIjoibGF6eSIsImRlY29kaW5nIjoiYXN5bmMiLCJjYXB0aW9uIjoiIiwibm9kZUlkIjoiZmlndXJlIn19LHsidHlwZSI6Im1hdGhfYmxvY2siLCJhdHRycyI6eyJsYXRleCI6InheMit5XjIiLCJhcmlhTGFiZWwiOiIiLCJsYWJlbCI6ImVxOm9uZSJ9fV19LCJzdGF0dXMiOnsic3RhdHVzIjoiY29ubmVjdGVkIiwicHJlc2VuY2VzIjpbXX0sInJvb3RzIjoxLCJzdGFydHMiOjEsImxlYXNlIjp7ImtleSI6ImFkbWlzc2lvbjo3ODY2YjhiZS02OTg5LTQwYmEtOWQ1Yy03NTc1MmYzZTNiYjQiLCJlcG9jaCI6IjM3MTJjNDQ4LWU1YTctNDgxNy1hODQ2LTNkYzBjYzE0OGRmNSIsInJldmlzaW9uIjowLCJwcm90b2NvbCI6InJldGFpbmVkIiwicm9vbSI6ImZvdW50YWluIiwiaWRlbnRpdHkiOiJyLTg3OGVhNTFhLTc3ZTItNDViYS1hMzUyLTRmZGMwNzkzMThmOSJ9LCJyZXRpcmVkIjpbXSwicGVuZGluZyI6MH19fQ=="
+                    },
+                    {
+                      "name": "layout-samples",
+                      "contentType": "application/json",
+                      "body": "eyJmcmFtZXMiOjIwMiwibWluUGFuZSI6NDUzLjMyODEyNSwibWF4T3ZlcmZsb3ciOjAsImludmFsaWQiOltdfQ=="
+                    },
+                    {
+                      "name": "runtime-modules",
+                      "contentType": "application/json",
+                      "body": "WyIvbm9kZV9tb2R1bGVzLy52aXRlLXlqcy1hdXRob3JpdHktYWRtaXNzaW9uLTIwMjYxMTA3L2RlcHMveWpzLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9lbmdpbmUuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkYXB0ZXIuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2NoZWNrcG9pbnQuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2FkbWlzc2lvbi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmVwbGFjZS10ZXh0LXN0ZXAtREJfWWx0TWwuanMiLCIvYXJ0aWZhY3RzL3lqcy1hdXRob3JpdHktYWRtaXNzaW9uLWJ1aWxkLTIwMjYxMTA3L2V4dGVuc2lvbi0wZHhjTHRZVi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvY29sbGFib3JhdGlvbi1Cd091VFJUMy5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvcmV0YWluZWQtY2hlY2twb2ludC1EOHdrcnJIYi5qcyIsIi9hcnRpZmFjdHMveWpzLWF1dGhvcml0eS1hZG1pc3Npb24tYnVpbGQtMjAyNjExMDcvc3RydWN0dXJlZC1hdHRyaWJ1dGVzLU9LQXZsTE4yLmpzIiwiL2FydGlmYWN0cy95anMtYXV0aG9yaXR5LWFkbWlzc2lvbi1idWlsZC0yMDI2MTEwNy9yZXRhaW5lZC1yb29tLXN0b3JlLXlHMjR4bzR6LmpzIl0="
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\manual\\yjs-authority-admission-real.spec.ts",
+                    "column": 1033,
+                    "line": 18
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "460897887b3e2c721913-366cdfc072983193f8a2",
+          "file": "yjs-authority-admission-real.spec.ts",
+          "line": 17,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-07T02:36:38.907Z",
+    "duration": 85411.309,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

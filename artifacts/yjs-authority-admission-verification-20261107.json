@@ -1,0 +1,5564 @@
+{
+  "date": "2026-11-07",
+  "baselineCommit": "d4568dcb",
+  "goalComplete": false,
+  "publication": "Local private authority-bound admission and reconnect history fix; no public export, default switch, limits change or publication.",
+  "source": [
+    {
+      "path": "src/yjs/retained-admission.ts",
+      "bytes": 6560,
+      "sha256": "678dcf20930535b35e75b8d1de6809eba3c2f5ef7170dae2b138f370b62dadf7"
+    },
+    {
+      "path": "src/yjs/retained-adapter.ts",
+      "bytes": 21156,
+      "sha256": "ebd10a5c312929daa8639d64311c4c8afe811e3a7e4832422b024c063cc61f5d"
+    },
+    {
+      "path": "src/yjs/document-room.ts",
+      "bytes": 12456,
+      "sha256": "853af3542a96218a42936da5280551e9d74ee285ece902c8400212116a00eef6"
+    },
+    {
+      "path": "tests/yjs-retained-authority-admission.test.ts",
+      "bytes": 15762,
+      "sha256": "7ff935d8b36fc448fc89812c35fc6c3a4739d0f2b21b0c7529f2e86d2277ab4e"
+    },
+    {
+      "path": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "bytes": 8761,
+      "sha256": "55313d8fbb1997304195e9b1b861a03f7dc2d5d757109a0c7831d4b4a25293e5"
+    },
+    {
+      "path": "artifacts/prepare-yjs-authority-admission-20261107.mjs",
+      "bytes": 3272,
+      "sha256": "513e8040f9673e092fdc29c72278437602e1698e9068fe84fec564c57d77f788"
+    },
+    {
+      "path": "artifacts/build-yjs-authority-admission-20261107.mjs",
+      "bytes": 922,
+      "sha256": "fc8254c94f4a827e070bac7b7baccdf009b95e2e84ac9637917b45356e03bec8"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-server-20261107.mjs",
+      "bytes": 5212,
+      "sha256": "820eb4142c094cf5e75b63841e105ec479abcb1a1c04450d54afc8e2f0f68fc8"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-fixture-20261107.html",
+      "bytes": 11168,
+      "sha256": "f1fe4c25aaf434e11698ebefbe951bb22b80e7edb14d72059b1fb3ebcda6f01a"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-browser-20261107.config.ts",
+      "bytes": 651,
+      "sha256": "c3b98812b6bde5fa43f8ee3321e93068f41b4af5cf656342d0462071b581c8ec"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-node-20261107.mjs",
+      "bytes": 6533,
+      "sha256": "0b5896c8642987d2c35874f14b2b4251a00ffbaac45781431072bcac98fb28d9"
+    },
+    {
+      "path": "artifacts/curate-yjs-authority-admission-20261107.mjs",
+      "bytes": 2704,
+      "sha256": "f4d7c1622066c7b524db379f63f79bcfe60a445cf0bb4ff7d4945d963132dcf6"
+    },
+    {
+      "path": "artifacts/prepare-yjs-authority-admission-controls-20261107.mjs",
+      "bytes": 1732,
+      "sha256": "3bd21d747752cedda4bc175f42a8a9198193d54c72ca47504533056c3aae354a"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-baseline-20261107.config.ts",
+      "bytes": 334,
+      "sha256": "e4545fee0cc0bb6fd8dd57c3653161c5115696ef25bcef23fcbfe1dbfb4483ab"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-baseline-20261107.test.ts",
+      "bytes": 12754,
+      "sha256": "70c2a86e405ec8b93c35efddf9e2ce80151d540ee5e64fae99edaa654ee670b6"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-history-control-20261107.config.ts",
+      "bytes": 382,
+      "sha256": "32fbc8c535c9c88bb2867f3130b75ddd803cc2574e71cd126f73481c793973f4"
+    },
+    {
+      "path": "artifacts/run-yjs-authority-admission-checks-20261107.ps1",
+      "bytes": 2834,
+      "sha256": "25b6d41fed223b871e400171a35da9cdca75aacde47eac2c1100fd7189c882aa"
+    },
+    {
+      "path": "artifacts/run-yjs-authority-admission-browser-20261107.ps1",
+      "bytes": 1027,
+      "sha256": "e1ff901fcd452df0067736fbbbf3c514d88e50bf0a5cac9cdd48539f93824e61"
+    },
+    {
+      "path": "artifacts/verify-yjs-authority-admission-20261107.mjs",
+      "bytes": 14780,
+      "sha256": "d3d1312c4138116e61c5a0c1b3691fbe7b7784656fffc5609b2cef7559b01114"
+    }
+  ],
+  "baseline": {
+    "sourceFiles": 301,
+    "provenance": "Every archived source blob matches git ls-tree for d4568dcb"
+  },
+  "before": {
+    "path": "artifacts/yjs-authority-admission-before-20261107.json",
+    "bytes": 17237,
+    "sha256": "92a044a51801456788800a31bdbfa498a57427c9c4263b71963bddccc47c1520",
+    "total": 22,
+    "passed": 0,
+    "failed": 22,
+    "requiredFailureNames": [
+      "binds an immutable validated session before starting the provider",
+      "refuses frozen metadata before reading checkpoint bytes or changing the client",
+      "refuses wrong key metadata before reading checkpoint bytes or changing the client",
+      "refuses wrong protocol metadata before reading checkpoint bytes or changing the client",
+      "refuses invalid epoch metadata before reading checkpoint bytes or changing the client",
+      "refuses negative revision metadata before reading checkpoint bytes or changing the client",
+      "refuses fractional revision metadata before reading checkpoint bytes or changing the client",
+      "refuses unsafe revision metadata before reading checkpoint bytes or changing the client",
+      "retains typing made while asynchronous authority binding is pending",
+      "cancels asynchronous binding without a late success reviving the session",
+      "refuses a room frozen between snapshot load and authority binding",
+      "refuses an epoch rotated between snapshot load and binding without importing the old checkpoint",
+      "pins an admitted epoch across reconnect even when the native room identity is unchanged",
+      "accepts newer revisions of the same epoch and rejects a cached lower revision before bytes",
+      "owns authority key and binding callback before asynchronous loading",
+      "checks provider admission without changing the persisted generation, revision or wire",
+      "refuses an incorrect server admission epoch without modifying storage",
+      "refuses an incorrect server admission identity without modifying storage",
+      "refuses an incorrect server admission room without modifying storage",
+      "refuses an incorrect server admission revision without modifying storage",
+      "owns server admission metadata before repository awaits",
+      "refuses a server generation changed during checkpoint verification"
+    ]
+  },
+  "historyControl": {
+    "path": "artifacts/yjs-authority-admission-history-control-20261107.json",
+    "bytes": 9704,
+    "sha256": "8d15a690f4d6b802cedcbe96d84d74717efd31281f8b1b98e16d0c788e10a50c",
+    "sourceFiles": 301,
+    "total": 29,
+    "failed": 2,
+    "intentionallyUnselected": 27,
+    "requiredFailureNames": [
+      "keeps a refreshed remote checkpoint out of author undo while retaining the author edit (authority)",
+      "keeps a refreshed remote checkpoint out of author undo while retaining the author edit (checkpoint)"
+    ],
+    "change": "Only candidate.install(this.repair) changed back to candidate.install(this.origin); all other copied source bytes match current source."
+  },
+  "focused": {
+    "passed": 189,
+    "newCases": [
+      "binds an immutable validated session before starting the provider",
+      "refuses frozen metadata before reading checkpoint bytes or changing the client",
+      "refuses wrong key metadata before reading checkpoint bytes or changing the client",
+      "refuses wrong protocol metadata before reading checkpoint bytes or changing the client",
+      "refuses invalid epoch metadata before reading checkpoint bytes or changing the client",
+      "refuses negative revision metadata before reading checkpoint bytes or changing the client",
+      "refuses fractional revision metadata before reading checkpoint bytes or changing the client",
+      "refuses unsafe revision metadata before reading checkpoint bytes or changing the client",
+      "retains typing made while asynchronous authority binding is pending",
+      "cancels asynchronous binding without a late success reviving the session",
+      "refuses a room frozen between snapshot load and authority binding",
+      "refuses an epoch rotated between snapshot load and binding without importing the old checkpoint",
+      "pins an admitted epoch across reconnect even when the native room identity is unchanged",
+      "accepts newer revisions of the same epoch and rejects a cached lower revision before bytes",
+      "owns authority key and binding callback before asynchronous loading",
+      "checks provider admission without changing the persisted generation, revision or wire",
+      "refuses an incorrect server admission epoch without modifying storage",
+      "refuses an incorrect server admission identity without modifying storage",
+      "refuses an incorrect server admission room without modifying storage",
+      "refuses an incorrect server admission revision without modifying storage",
+      "owns server admission metadata before repository awaits",
+      "refuses a server generation changed during checkpoint verification",
+      "keeps a refreshed remote checkpoint out of author undo while retaining the author edit (authority)",
+      "keeps a refreshed remote checkpoint out of author undo while retaining the author edit (checkpoint)",
+      "rejects invalid authority configuration ({\"key\":\"../bad\"})",
+      "rejects invalid authority configuration ({\"key\":\"authority:paper\",\"bind\":null})",
+      "rejects invalid authority configuration ({\"key\":\"\"})",
+      "keeps the generic server admission fence compatible with legacy XML room fountain",
+      "keeps the generic server admission fence compatible with legacy XML room Research / α 😀"
+    ]
+  },
+  "fullSource": {
+    "path": "artifacts/yjs-authority-admission-full-source-20261107.json",
+    "bytes": 1832535,
+    "sha256": "c6d07c1738f355ad41c37cb406ee4019f3aca454af3dffe103ba179be37cddb2",
+    "total": 4808,
+    "passed": 4802,
+    "failed": 6,
+    "skipped": 0,
+    "files": 301,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "seconds": 1.4039613,
+      "log": "artifacts/yjs-authority-admission-prepare-controls-20261107.log",
+      "exitCode": 0,
+      "check": "prepare-controls",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 7.2666436,
+      "log": "artifacts/yjs-authority-admission-types-20261107.log",
+      "exitCode": 0,
+      "check": "types",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 23.9446373,
+      "log": "artifacts/yjs-authority-admission-focused-20261107.log",
+      "exitCode": 0,
+      "check": "focused",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 17.1881718,
+      "log": "artifacts/yjs-authority-admission-before-20261107.log",
+      "exitCode": 1,
+      "check": "before",
+      "expectedExitCode": 1
+    },
+    {
+      "seconds": 9.2066587,
+      "log": "artifacts/yjs-authority-admission-history-control-20261107.log",
+      "exitCode": 1,
+      "check": "history-control",
+      "expectedExitCode": 1
+    },
+    {
+      "seconds": 0.528636,
+      "log": "artifacts/yjs-authority-admission-node-es-20261107.log",
+      "exitCode": 0,
+      "check": "node-es",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 0.5387239,
+      "log": "artifacts/yjs-authority-admission-node-cjs-20261107.log",
+      "exitCode": 0,
+      "check": "node-cjs",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 5.0804597,
+      "log": "artifacts/yjs-authority-admission-curate-20261107.log",
+      "exitCode": 0,
+      "check": "curate",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 400.325703,
+      "log": "artifacts/yjs-authority-admission-full-source-20261107.log",
+      "exitCode": 1,
+      "check": "full-source",
+      "expectedExitCode": 1
+    },
+    {
+      "seconds": 18.3936969,
+      "log": "artifacts/yjs-authority-admission-build-20261107.log",
+      "exitCode": 0,
+      "check": "build",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 1.0361617,
+      "log": "artifacts/yjs-authority-admission-api-20261107.log",
+      "exitCode": 0,
+      "check": "api",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 1.8578455,
+      "log": "artifacts/yjs-authority-admission-headless-20261107.log",
+      "exitCode": 0,
+      "check": "headless",
+      "expectedExitCode": 0
+    },
+    {
+      "seconds": 0.7307171,
+      "log": "artifacts/yjs-authority-admission-budget-20261107.log",
+      "exitCode": 1,
+      "check": "budget",
+      "expectedExitCode": 1
+    }
+  ],
+  "finalBrowserChecks": [
+    {
+      "seconds": 69.9102568,
+      "check": "browser",
+      "exitCode": 0,
+      "log": "artifacts/yjs-authority-admission-final-browser-20261107.log"
+    },
+    {
+      "seconds": 5.016157,
+      "check": "curate",
+      "exitCode": 0,
+      "log": "artifacts/yjs-authority-admission-final-curate-20261107.log"
+    },
+    {
+      "seconds": 5.6821919,
+      "check": "types",
+      "exitCode": 0,
+      "log": "artifacts/yjs-authority-admission-final-types-20261107.log"
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/yjs-authority-admission-prepare-controls-20261107.log",
+      "bytes": 85,
+      "sha256": "26fe4eaab6f50cd034193e95d3fbb5703fe176d0ce8bf7fa924832b6372ccf4d"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-types-20261107.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-focused-20261107.log",
+      "bytes": 136,
+      "sha256": "f14fa187e17684b51ff15390e4caabd58a57a5aa2eeba1e36f00699be06d7fa7"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-before-20261107.log",
+      "bytes": 135,
+      "sha256": "1b93d676a74133e99d0910f35f75515434ffeb7951c6d7a5f191c7d9af046f2a"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-history-control-20261107.log",
+      "bytes": 144,
+      "sha256": "9b47a17cb2d31ad236a09ec15e45b04c84bd72daca754ec3baddcbb5f2cc57fa"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-node-es-20261107.log",
+      "bytes": 529,
+      "sha256": "05b86cf7cf383ef70b4e7de64fb039ccae377cbafa88e35258d87fdcdfcdbe95"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-node-cjs-20261107.log",
+      "bytes": 530,
+      "sha256": "32acb7597944cfeb8bcc6b4a95c2f52b30ff1aba8ff153bb33f9384974bb3d4f"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-curate-20261107.log",
+      "bytes": 70,
+      "sha256": "80bb53cc17c93ba56b98d87fde882989168de84c575a91a0c0af56238f9b4236"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-full-source-20261107.log",
+      "bytes": 140,
+      "sha256": "c4b1987e85476f94d8dae58b27e6113f99fd05bc3633b95eebc285211bc31d87"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-build-20261107.log",
+      "bytes": 16081,
+      "sha256": "5b7854d095a2509daace1ceb5e6afea3487fa39961a2025b39a4bd28f8342047"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-api-20261107.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-headless-20261107.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-budget-20261107.log",
+      "bytes": 3896,
+      "sha256": "cdc3e8b753db4e536c1f7140ca0b98e648ed0a0a716abf77ebed129ae3aa71ab"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-final-browser-20261107.log",
+      "bytes": 3712,
+      "sha256": "6def1339c1ec2fd62087682ced169f228ef7406bcbdef5954af917ab8fc353bf"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-final-curate-20261107.log",
+      "bytes": 70,
+      "sha256": "5871e0b71869676ad1326c0d9627c4f8564e054db997af26836df27af0eab505"
+    },
+    {
+      "path": "artifacts/yjs-authority-admission-final-types-20261107.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "compiled": {
+    "entries": 7,
+    "sourceModules": 200,
+    "nodeChecks": 12,
+    "nodes": [
+      {
+        "mode": "es",
+        "passed": 6,
+        "cases": [
+          "validated immutable lease binds the actual SQLite authority before provider start",
+          "remote admission refresh remains outside author undo and redo",
+          "frozen metadata refuses byte access and prevents local installation",
+          "freeze after snapshot load is fenced again by the binding endpoint",
+          "new authority epoch cannot silently reuse a client even with unchanged native room identity",
+          "server admission is read-only and stale requests cannot change persistent state"
+        ],
+        "node": "v24.22.1",
+        "dom": false
+      },
+      {
+        "mode": "cjs",
+        "passed": 6,
+        "cases": [
+          "validated immutable lease binds the actual SQLite authority before provider start",
+          "remote admission refresh remains outside author undo and redo",
+          "frozen metadata refuses byte access and prevents local installation",
+          "freeze after snapshot load is fenced again by the binding endpoint",
+          "new authority epoch cannot silently reuse a client even with unchanged native room identity",
+          "server admission is read-only and stale requests cannot change persistent state"
+        ],
+        "node": "v24.22.1",
+        "dom": false
+      }
+    ]
+  },
+  "browser": {
+    "passed": 15,
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-chromium\\video.webm",
+        "bytes": 90836,
+        "sha256": "229efd83ee0579abe018db75f57f42875f97f4c6da478f7617943b0534fc65f2",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-chromium\\trace.zip",
+          "bytes": 1121298,
+          "sha256": "0105350ba51f629d62ce45be72ecda9c7a761b401add396591911ed703420ba5"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-chromium\\video.webm",
+        "bytes": 86999,
+        "sha256": "ecd3c41f60b77b9b3e5335dfd74bb05d894a3ed8c989dc18f32ab7e7d7c6c97a",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-chromium\\trace.zip",
+          "bytes": 1079402,
+          "sha256": "89d1e03d111d0c1c91f7b7f051a85d79888fddfd615d7e694f5e75e1de20060f"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-chromium\\video.webm",
+        "bytes": 118170,
+        "sha256": "de491a31cfef7935f0635962aaee5c0d9c5ca29827f90c396bb01d1f6e66ac4c",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-chromium\\trace.zip",
+          "bytes": 2206828,
+          "sha256": "eef84a70c7242ecec2a96bcede08f02dfd12dd528a1b69a58dcf4d9794b91563"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-chromium\\video.webm",
+        "bytes": 126193,
+        "sha256": "6ca13d88363ef20efe3dcdef7346e3e31f8c668d75c98406e6fdfe32e3c66444",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-chromium\\trace.zip",
+          "bytes": 2641885,
+          "sha256": "c6d7202953abc6955137f7e5827e94d83bfc1d5ede3cbb6075e651bcd9c40e20"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-chromium\\video.webm",
+        "bytes": 77503,
+        "sha256": "02d3033508abe91297e5baa82c44a99d3a715bfe02f0b7100ed8665e86d8f063",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-chromium\\trace.zip",
+          "bytes": 941949,
+          "sha256": "fdeec11163200a33ea5c34cb6008dd70ee7887fe98afe959588323355a0e2a84"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-firefox\\video.webm",
+        "bytes": 134891,
+        "sha256": "0dfb6422d357521cb8ef78827dfdb888070069435b367632a7eb4fa446ce2bad",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-firefox\\trace.zip",
+          "bytes": 1843219,
+          "sha256": "5124f45dadf996f79be29a68fc5f55c39942800c0afe6f7a183add69b5d9da66"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-firefox\\video.webm",
+        "bytes": 139718,
+        "sha256": "e829282b36501829e610b75f5ae01568512359ec8e6d748373e5f99335140a8a",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-firefox\\trace.zip",
+          "bytes": 1650098,
+          "sha256": "e0e8b1a90a77cbdeb867ed96440bbe0a7986dfa545f6ecbced567be8870e7b8e"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\video.webm",
+        "bytes": 199859,
+        "sha256": "bd54a0499d2d7a107cf94f796bea220723eee968edb3590d0f55c5860769a958",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-firefox\\trace.zip",
+          "bytes": 3275105,
+          "sha256": "d0797289ee6df903f26b7cc3ab75c6fffda0aaf378381564a556605b9201a6cc"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-firefox\\video.webm",
+        "bytes": 158367,
+        "sha256": "bac6b38997496ae49a5e88f6c599df52cac5e771f4d3adf702f93a8aa6ac2d1d",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-firefox\\trace.zip",
+          "bytes": 3338210,
+          "sha256": "0a0b5a9446d106b7be2ffca9b560a9becced46069e1800c4cd201672057e85e0"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-firefox\\video.webm",
+        "bytes": 110413,
+        "sha256": "c99028944af98e9633d5f7b1c2067a755176822c18f88bff2674f6286f35f89f",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-firefox\\trace.zip",
+          "bytes": 1281672,
+          "sha256": "1aa8476c0100f4dc1fc019829fdf7b9e4397cb81bc3c6ecad978a3baeb3f0899"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-webkit\\video.webm",
+        "bytes": 212173,
+        "sha256": "1e10af848290a3baa54b16711676f25a8662b86e469fb72fcd97969fa9e36650",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-83ca0-ins-after-explicit-unfreeze-webkit\\trace.zip",
+          "bytes": 704343,
+          "sha256": "acd9ca23c0920adc792f0bf067cb30a554f39a8db72bf0f75ecf1d675262c6ea"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-webkit\\video.webm",
+        "bytes": 198038,
+        "sha256": "6df50b211596cdfffa419b81b8a52334d40379b2abacf0852569da53d09a3955",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-b42ca-thout-starting-the-provider-webkit\\trace.zip",
+          "bytes": 794254,
+          "sha256": "aaac19018f45178fc7f46ad06ca56277554522d3bd3e5aa794c79bf656fd5be6"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-webkit\\video.webm",
+        "bytes": 283806,
+        "sha256": "18a041b3bea78d4d963a70d2b96a2740cdec717cdfcf6fb2fe30f5c24ae62ce9",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-0515e-ion-only-on-explicit-choice-webkit\\trace.zip",
+          "bytes": 1945318,
+          "sha256": "da061ad2a2c5fc23e26d40069868b234bba14d22876713afde75f1097aec3e8c"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\video.webm",
+        "bytes": 295336,
+        "sha256": "62423ea86b6aaa0f9dad1fd1e3ae82d16632d01677ab1fecde2817195ab6b87a",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-fb3db-e-saving-the-combined-paper-webkit\\trace.zip",
+          "bytes": 2352951,
+          "sha256": "b40aac9f729ba36376d30933be5b950b3da800538bbb569f2ebebd85d34916f2"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-webkit\\video.webm",
+        "bytes": 160546,
+        "sha256": "ebcceb46516dfe5b70c788b7def6fc48060fdac5de565d85e37b61ad2eaa0ec1",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-authority-admission-browser-20261107\\yjs-authority-admission-re-c1773-ting-the-provider-connected-webkit\\trace.zip",
+          "bytes": 542607,
+          "sha256": "08f7273276478d80ae6ac7e413f26fa359343e754aa45b2098ffc38f64e623eb"
+        }
+      }
+    ],
+    "reports": [
+      {
+        "project": "chromium",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "f37b32f1-7bfc-4f74-9864-3edac8b98d57",
+          "phase": "active",
+          "revision": 0,
+          "roomId": "r-264a2e6a-906c-4b6a-8bf0-98ae336b5ca2",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:9be3a330-60d5-46d9-84f4-ec5fc46b35d2",
+                "epoch": "f37b32f1-7bfc-4f74-9864-3edac8b98d57",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-264a2e6a-906c-4b6a-8bf0-98ae336b5ca2"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "ebbde143-5081-4a82-8731-4937efdf8d55",
+          "phase": "active",
+          "revision": 0,
+          "roomId": "r-cd9497cb-b269-4f6b-b4a2-fbc7d73260c6",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:dead16d2-e9e2-4ef3-b4fd-789ea5fe57a4",
+                "epoch": "ebbde143-5081-4a82-8731-4937efdf8d55",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-cd9497cb-b269-4f6b-b4a2-fbc7d73260c6"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "02fe1ba3-396b-4837-90ff-f1ceed0be015",
+          "phase": "active",
+          "revision": 1,
+          "roomId": "r-038d8044-ba66-4d71-9477-fab8d8b37ace",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 2,
+              "lease": {
+                "key": "admission:46cb2fa4-a5d5-46c4-877b-8076d5904de5",
+                "epoch": "02fe1ba3-396b-4837-90ff-f1ceed0be015",
+                "revision": 1,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-038d8044-ba66-4d71-9477-fab8d8b37ace"
+              },
+              "retired": [
+                {
+                  "model": {
+                    "type": "doc",
+                    "content": [
+                      {
+                        "type": "heading",
+                        "attrs": {
+                          "level": 2,
+                          "align": "left",
+                          "nodeId": "title"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Shared technical paper PENDING old session"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left",
+                          "nodeId": "intro"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Authoritative introduction."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "blockquote",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "Every draft stays recoverable."
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "image_super",
+                        "attrs": {
+                          "src": "/tests/fixtures/cross-container-figure.png",
+                          "alt": "Original figure",
+                          "title": "",
+                          "width": "100%",
+                          "height": "auto",
+                          "align": "center",
+                          "srcset": "",
+                          "sizes": "",
+                          "loading": "lazy",
+                          "decoding": "async",
+                          "caption": "",
+                          "nodeId": "figure"
+                        }
+                      },
+                      {
+                        "type": "math_block",
+                        "attrs": {
+                          "latex": "x^2+y^2",
+                          "ariaLabel": "",
+                          "label": "eq:one"
+                        }
+                      }
+                    ]
+                  },
+                  "bytes": 9948,
+                  "lease": {
+                    "key": "admission:46cb2fa4-a5d5-46c4-877b-8076d5904de5",
+                    "epoch": "d6134d7b-c157-4781-be04-4e54482a8232",
+                    "revision": 0,
+                    "protocol": "retained",
+                    "room": "fountain",
+                    "identity": "r-038d8044-ba66-4d71-9477-fab8d8b37ace"
+                  }
+                }
+              ],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper LOCAL REMOTE"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "a06c40dd-fe34-48c6-ba1b-5c829e5eec2d",
+          "phase": "active",
+          "revision": 2,
+          "roomId": "r-d38ae36b-a931-46c6-91d9-483606b25c63",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper LOCAL REMOTE"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 2,
+              "lease": {
+                "key": "admission:4f537e11-4162-4fca-844c-dba7e247446f",
+                "epoch": "a06c40dd-fe34-48c6-ba1b-5c829e5eec2d",
+                "revision": 1,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-d38ae36b-a931-46c6-91d9-483606b25c63"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper LOCAL REMOTE"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:4f537e11-4162-4fca-844c-dba7e247446f",
+                "epoch": "a06c40dd-fe34-48c6-ba1b-5c829e5eec2d",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-d38ae36b-a931-46c6-91d9-483606b25c63"
+              },
+              "retired": [],
+              "pending": 0
+            }
+          }
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction. ACCEPTED during bind"
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "74ba94ef-c003-49f9-a208-0c5a7a89dfb6",
+          "phase": "active",
+          "revision": 1,
+          "roomId": "r-f23e83da-ee42-49fd-a61e-caade70259f1",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction. ACCEPTED during bind"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:fa2b7c38-5cc8-46a0-a9ca-0b24f77e5ba6",
+                "epoch": "74ba94ef-c003-49f9-a208-0c5a7a89dfb6",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-f23e83da-ee42-49fd-a61e-caade70259f1"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "f2a65cdf-b48a-4d32-b12e-27e639dab81f",
+          "phase": "active",
+          "revision": 0,
+          "roomId": "r-1ad6b160-4302-4f38-bd67-00e09667d436",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:d797ea4e-627c-4371-99d7-ce954fc53e63",
+                "epoch": "f2a65cdf-b48a-4d32-b12e-27e639dab81f",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-1ad6b160-4302-4f38-bd67-00e09667d436"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "6ea8b403-c40b-456b-bce8-c14dcf8a4a11",
+          "phase": "active",
+          "revision": 0,
+          "roomId": "r-8550b165-6b2e-4e94-9888-cdc8ac4f6e72",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:d28aacdc-9f83-4c89-a29e-89488d5bbe7d",
+                "epoch": "6ea8b403-c40b-456b-bce8-c14dcf8a4a11",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-8550b165-6b2e-4e94-9888-cdc8ac4f6e72"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "e26a609d-2909-427d-815d-3f8a7c455754",
+          "phase": "active",
+          "revision": 1,
+          "roomId": "r-8cebcf65-d023-41f8-9be1-f75f5cf57b23",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 2,
+              "lease": {
+                "key": "admission:5eeebadb-0786-40c6-b2a8-e68e13428347",
+                "epoch": "e26a609d-2909-427d-815d-3f8a7c455754",
+                "revision": 1,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-8cebcf65-d023-41f8-9be1-f75f5cf57b23"
+              },
+              "retired": [
+                {
+                  "model": {
+                    "type": "doc",
+                    "content": [
+                      {
+                        "type": "heading",
+                        "attrs": {
+                          "level": 2,
+                          "align": "left",
+                          "nodeId": "title"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Shared technical paper PENDING old session"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left",
+                          "nodeId": "intro"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Authoritative introduction."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "blockquote",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "Every draft stays recoverable."
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "image_super",
+                        "attrs": {
+                          "src": "/tests/fixtures/cross-container-figure.png",
+                          "alt": "Original figure",
+                          "title": "",
+                          "width": "100%",
+                          "height": "auto",
+                          "align": "center",
+                          "srcset": "",
+                          "sizes": "",
+                          "loading": "lazy",
+                          "decoding": "async",
+                          "caption": "",
+                          "nodeId": "figure"
+                        }
+                      },
+                      {
+                        "type": "math_block",
+                        "attrs": {
+                          "latex": "x^2+y^2",
+                          "ariaLabel": "",
+                          "label": "eq:one"
+                        }
+                      }
+                    ]
+                  },
+                  "bytes": 9948,
+                  "lease": {
+                    "key": "admission:5eeebadb-0786-40c6-b2a8-e68e13428347",
+                    "epoch": "40f0208f-e02d-48db-8cc3-bc29981dcc8b",
+                    "revision": 0,
+                    "protocol": "retained",
+                    "room": "fountain",
+                    "identity": "r-8cebcf65-d023-41f8-9be1-f75f5cf57b23"
+                  }
+                }
+              ],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper REMOTE LOCAL"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "b242ee58-416e-46c5-ac76-9e4f09fee1d0",
+          "phase": "active",
+          "revision": 2,
+          "roomId": "r-93722da4-3faf-4972-9a29-50b4abe5105c",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper REMOTE LOCAL"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 2,
+              "lease": {
+                "key": "admission:e6c05faf-ef67-4ec0-a781-a339b84f9cd0",
+                "epoch": "b242ee58-416e-46c5-ac76-9e4f09fee1d0",
+                "revision": 1,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-93722da4-3faf-4972-9a29-50b4abe5105c"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper REMOTE LOCAL"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:e6c05faf-ef67-4ec0-a781-a339b84f9cd0",
+                "epoch": "b242ee58-416e-46c5-ac76-9e4f09fee1d0",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-93722da4-3faf-4972-9a29-50b4abe5105c"
+              },
+              "retired": [],
+              "pending": 0
+            }
+          }
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction. ACCEPTED during bind"
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "f6d095cc-902c-49fc-8089-9d1218e13666",
+          "phase": "active",
+          "revision": 1,
+          "roomId": "r-3b8250cb-c910-40c4-85a6-d130265c7998",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction. ACCEPTED during bind"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:e2550cfd-4d51-4f5a-8434-a4da43c26dcf",
+                "epoch": "f6d095cc-902c-49fc-8089-9d1218e13666",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-3b8250cb-c910-40c4-85a6-d130265c7998"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "a3399b20-c028-4d59-999e-13b1e2861161",
+          "phase": "active",
+          "revision": 0,
+          "roomId": "r-387c4890-23d8-4f23-a057-a3357909a7fa",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:0276cad6-813a-4134-9181-95e8b626a343",
+                "epoch": "a3399b20-c028-4d59-999e-13b1e2861161",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-387c4890-23d8-4f23-a057-a3357909a7fa"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "e4840bce-6fa2-4244-b9c4-a525761a7a26",
+          "phase": "active",
+          "revision": 0,
+          "roomId": "r-72f652c2-c3fb-48b2-8a9a-1922b0ceab3b",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:84ff092c-03fd-4052-9abd-514029773f36",
+                "epoch": "e4840bce-6fa2-4244-b9c4-a525761a7a26",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-72f652c2-c3fb-48b2-8a9a-1922b0ceab3b"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "940b916a-aafa-4714-a150-ca916ae397f3",
+          "phase": "active",
+          "revision": 1,
+          "roomId": "r-af7f2a0a-b5e9-47fd-814d-00d851513b4f",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 2,
+              "lease": {
+                "key": "admission:459fa27c-6fc2-4ceb-8623-9bb8007cd32a",
+                "epoch": "940b916a-aafa-4714-a150-ca916ae397f3",
+                "revision": 1,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-af7f2a0a-b5e9-47fd-814d-00d851513b4f"
+              },
+              "retired": [
+                {
+                  "model": {
+                    "type": "doc",
+                    "content": [
+                      {
+                        "type": "heading",
+                        "attrs": {
+                          "level": 2,
+                          "align": "left",
+                          "nodeId": "title"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Shared technical paper PENDING old session"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left",
+                          "nodeId": "intro"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Authoritative introduction."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "blockquote",
+                        "content": [
+                          {
+                            "type": "paragraph",
+                            "attrs": {
+                              "align": "left"
+                            },
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "Every draft stays recoverable."
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "image_super",
+                        "attrs": {
+                          "src": "/tests/fixtures/cross-container-figure.png",
+                          "alt": "Original figure",
+                          "title": "",
+                          "width": "100%",
+                          "height": "auto",
+                          "align": "center",
+                          "srcset": "",
+                          "sizes": "",
+                          "loading": "lazy",
+                          "decoding": "async",
+                          "caption": "",
+                          "nodeId": "figure"
+                        }
+                      },
+                      {
+                        "type": "math_block",
+                        "attrs": {
+                          "latex": "x^2+y^2",
+                          "ariaLabel": "",
+                          "label": "eq:one"
+                        }
+                      }
+                    ]
+                  },
+                  "bytes": 9844,
+                  "lease": {
+                    "key": "admission:459fa27c-6fc2-4ceb-8623-9bb8007cd32a",
+                    "epoch": "05b10a13-3732-44a8-ba92-823385ca3c35",
+                    "revision": 0,
+                    "protocol": "retained",
+                    "room": "fountain",
+                    "identity": "r-af7f2a0a-b5e9-47fd-814d-00d851513b4f"
+                  }
+                }
+              ],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper LOCAL REMOTE"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction."
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "e340a07c-da9e-4d22-83fc-dd34e2ad91b1",
+          "phase": "active",
+          "revision": 2,
+          "roomId": "r-39676a6f-b5af-41bf-9cdf-6ab5cd2381fd",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper LOCAL REMOTE"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 2,
+              "lease": {
+                "key": "admission:21745ca2-1778-4396-963e-6348ae201da1",
+                "epoch": "e340a07c-da9e-4d22-83fc-dd34e2ad91b1",
+                "revision": 1,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-39676a6f-b5af-41bf-9cdf-6ab5cd2381fd"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper LOCAL REMOTE"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction."
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:21745ca2-1778-4396-963e-6348ae201da1",
+                "epoch": "e340a07c-da9e-4d22-83fc-dd34e2ad91b1",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-39676a6f-b5af-41bf-9cdf-6ab5cd2381fd"
+              },
+              "retired": [],
+              "pending": 0
+            }
+          }
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "result": {
+          "server": {
+            "type": "doc",
+            "content": [
+              {
+                "type": "heading",
+                "attrs": {
+                  "level": 2,
+                  "align": "left",
+                  "nodeId": "title"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Shared technical paper"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "attrs": {
+                  "align": "left",
+                  "nodeId": "intro"
+                },
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Authoritative introduction. ACCEPTED during bind"
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Every draft stays recoverable."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "image_super",
+                "attrs": {
+                  "src": "/tests/fixtures/cross-container-figure.png",
+                  "alt": "Original figure",
+                  "title": "",
+                  "width": "100%",
+                  "height": "auto",
+                  "align": "center",
+                  "srcset": "",
+                  "sizes": "",
+                  "loading": "lazy",
+                  "decoding": "async",
+                  "caption": "",
+                  "nodeId": "figure"
+                }
+              },
+              {
+                "type": "math_block",
+                "attrs": {
+                  "latex": "x^2+y^2",
+                  "ariaLabel": "",
+                  "label": "eq:one"
+                }
+              }
+            ]
+          },
+          "epoch": "7abc85ce-84ae-4058-a96c-632d6d34e19c",
+          "phase": "active",
+          "revision": 1,
+          "roomId": "r-68740937-c28f-4537-95d0-2887f519a46f",
+          "peers": {
+            "left": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "heading",
+                    "attrs": {
+                      "level": 2,
+                      "align": "left",
+                      "nodeId": "title"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Shared technical paper"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left",
+                      "nodeId": "intro"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Authoritative introduction. ACCEPTED during bind"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "blockquote",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "attrs": {
+                          "align": "left"
+                        },
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Every draft stays recoverable."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "image_super",
+                    "attrs": {
+                      "src": "/tests/fixtures/cross-container-figure.png",
+                      "alt": "Original figure",
+                      "title": "",
+                      "width": "100%",
+                      "height": "auto",
+                      "align": "center",
+                      "srcset": "",
+                      "sizes": "",
+                      "loading": "lazy",
+                      "decoding": "async",
+                      "caption": "",
+                      "nodeId": "figure"
+                    }
+                  },
+                  {
+                    "type": "math_block",
+                    "attrs": {
+                      "latex": "x^2+y^2",
+                      "ariaLabel": "",
+                      "label": "eq:one"
+                    }
+                  }
+                ]
+              },
+              "status": {
+                "status": "connected",
+                "presences": []
+              },
+              "roots": 1,
+              "starts": 1,
+              "lease": {
+                "key": "admission:72970553-d2fb-40c8-825a-4db05d709455",
+                "epoch": "7abc85ce-84ae-4058-a96c-632d6d34e19c",
+                "revision": 0,
+                "protocol": "retained",
+                "room": "fountain",
+                "identity": "r-68740937-c28f-4537-95d0-2887f519a46f"
+              },
+              "retired": [],
+              "pending": 0
+            },
+            "right": {
+              "model": {
+                "type": "doc",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "attrs": {
+                      "align": "left"
+                    },
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "right local template."
+                      }
+                    ]
+                  }
+                ]
+              },
+              "status": {
+                "status": "connecting",
+                "presences": []
+              },
+              "roots": 0,
+              "starts": 0,
+              "lease": null,
+              "retired": [],
+              "pending": 1
+            }
+          }
+        }
+      }
+    ],
+    "layouts": [
+      {
+        "project": "chromium",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "frames": 58,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "frames": 54,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "frames": 91,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "frames": 119,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "frames": 40,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "frames": 83,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "frames": 73,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "frames": 150,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "frames": 141,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "frames": 58,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+        "frames": 99,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "refuses a freeze between loading and binding without starting the provider",
+        "frames": 105,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+        "frames": 147,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+        "frames": 174,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "catches up a newer binding acknowledgement before reporting the provider connected",
+        "frames": 69,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      }
+    ],
+    "initialRun": {
+      "path": "artifacts/yjs-authority-admission-browser-initial-20261107.json",
+      "bytes": 110056,
+      "sha256": "51bbdaf40782e84594e84ed6ce71f0b696e459fcde98f2798e16ae1f458940e6",
+      "passed": 10,
+      "failed": 2,
+      "reason": "Wait for actual asynchronous session replacement and peer-refresh completion; content assertions unchanged.",
+      "captures": [
+        {
+          "path": "artifacts/yjs-authority-admission-initial-20261107/firefox-pending-choice.png",
+          "bytes": 91982,
+          "sha256": "e6ab52071533fb8b6d65638cd52282fb1cd2a9d75b4f387e284d017e9b83de15"
+        },
+        {
+          "path": "artifacts/yjs-authority-admission-initial-20261107/webkit-refresh-in-flight.png",
+          "bytes": 239622,
+          "sha256": "69146a769e0ca0ea2b66b4c613a8f33b90187af37f322ef83a1080c0cb14ff3b"
+        }
+      ]
+    }
+  },
+  "visualReview": {
+    "method": "Final-state contacts for fifteen journeys; sampled epoch/history filmstrips and selected complete stage captures. Not full playback or physical-device certification.",
+    "artifacts": [
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-all-final.png",
+        "bytes": 143161,
+        "sha256": "1b4d9162545e9806846ff9910bdea92f42ad18b055acfa51f0927b11c94d388c"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-binding-filmstrip.png",
+        "bytes": 256446,
+        "sha256": "feeb893f6c274fb988c796d53eb049d466425e877c3b3e3a4107a43e02338539"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-binding-final.png",
+        "bytes": 74400,
+        "sha256": "b1843da88eb2883ba103db2d4bd3650caded903ce600d3077d55c6d272908196"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-binding-refused.png",
+        "bytes": 62180,
+        "sha256": "4ed46cf40941773b482616e84b62fed7f24b2b8d35e9220126ed240989024796"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-binding.webm",
+        "bytes": 86999,
+        "sha256": "ecd3c41f60b77b9b3e5335dfd74bb05d894a3ed8c989dc18f32ab7e7d7c6c97a"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-catchup-filmstrip.png",
+        "bytes": 259227,
+        "sha256": "12923e6f55e7381b24bb46a512c773d2f1787cc6af94a62cde63ae13ac93964a"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-catchup-final.png",
+        "bytes": 77123,
+        "sha256": "8441fa12b54e4fd3118c0651ea6a0ccfcb8343854daaa8d61dd68b9b2527cb54"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-catchup-joined.png",
+        "bytes": 76677,
+        "sha256": "4f730d34e065d9e1a7c392686ab0eb61c5e37676575f7d523e4744ba0ca8c403"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-catchup.webm",
+        "bytes": 77503,
+        "sha256": "02d3033508abe91297e5baa82c44a99d3a715bfe02f0b7100ed8665e86d8f063"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-epoch-filmstrip.png",
+        "bytes": 284064,
+        "sha256": "4b3d8eb8f431fe596db7ca99666ceef562b3bc9ada1ffa828d66101f335f4806"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-epoch-final.png",
+        "bytes": 81591,
+        "sha256": "bedc4b6f3cd353867b6cf080d6c8d36babf55a6087a91d4577fb7d12d1507701"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-epoch-refused.png",
+        "bytes": 80270,
+        "sha256": "0e41cf4d4a89d3be5752ba401750e745ca5ca63690c70d37c14223fefdcd7f67"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-epoch.webm",
+        "bytes": 118170,
+        "sha256": "de491a31cfef7935f0635962aaee5c0d9c5ca29827f90c396bb01d1f6e66ac4c"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-frozen-filmstrip.png",
+        "bytes": 308340,
+        "sha256": "7f37981774890a721a9a6c9c5c26f819b26e1c15a20cfa9efd9c9b3d62abdcb9"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-frozen-final.png",
+        "bytes": 74401,
+        "sha256": "d4c3963209a5efa3eb1e33c128cdcd90706dda06c690e09f71608c3b0b54a7bb"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-frozen-refused.png",
+        "bytes": 61928,
+        "sha256": "00c2f4690c26eabfc5dc131c71f2ada4892e7b18cd7ea7ebcb0144459c13a045"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-frozen.webm",
+        "bytes": 90836,
+        "sha256": "229efd83ee0579abe018db75f57f42875f97f4c6da478f7617943b0534fc65f2"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-history-filmstrip.png",
+        "bytes": 403348,
+        "sha256": "e1de6ec9edf9302e450eb27eaf17a029c26501e6e8ac996637cfa39dd89b711e"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-history-final.png",
+        "bytes": 90549,
+        "sha256": "98e5e4976f239671c489e50e2b5f5768428698289c67090aa6eff6c2129db15c"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-history-undo.png",
+        "bytes": 88054,
+        "sha256": "a171d96ff7722f50dae6270e5dcf39446ef4f299861e45ea6912b1e76bad829b"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/chromium-history.webm",
+        "bytes": 126193,
+        "sha256": "6ca13d88363ef20efe3dcdef7346e3e31f8c668d75c98406e6fdfe32e3c66444"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-all-final.png",
+        "bytes": 141797,
+        "sha256": "4890b8f738bf7eddcca3cc93ca57e0a60549c1f79d4c2ecf31c69fbcdddce3b5"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-binding-filmstrip.png",
+        "bytes": 236631,
+        "sha256": "dc63562baab0d06635b219db27ee1a50389c022c188de9018956cf3b0da6a524"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-binding-final.png",
+        "bytes": 84854,
+        "sha256": "8f870326c2768024a353cbccf503b520208631ac159c22e8e1165556afc3b848"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-binding-refused.png",
+        "bytes": 70380,
+        "sha256": "4e57773da55eb60882b392bc8bad5aea80bf41c2bcf036c93b013fe4def9c89e"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-binding.webm",
+        "bytes": 139718,
+        "sha256": "e829282b36501829e610b75f5ae01568512359ec8e6d748373e5f99335140a8a"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-catchup-filmstrip.png",
+        "bytes": 226797,
+        "sha256": "ed1a7e74973bc74f2541616e84f82ebe0fb2c88b25d6b101de8149ab59c481cf"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-catchup-final.png",
+        "bytes": 87037,
+        "sha256": "08000db6b9dde35506b71162477bfc87ab436d11dc31711f1b403923457b644f"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-catchup-joined.png",
+        "bytes": 87037,
+        "sha256": "08000db6b9dde35506b71162477bfc87ab436d11dc31711f1b403923457b644f"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-catchup.webm",
+        "bytes": 110413,
+        "sha256": "c99028944af98e9633d5f7b1c2067a755176822c18f88bff2674f6286f35f89f"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-epoch-filmstrip.png",
+        "bytes": 319650,
+        "sha256": "c1f2c4780de536ee2cc0ee064d03cef8b0c5b9dadb79209c372382304c67e3ae"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-epoch-final.png",
+        "bytes": 92794,
+        "sha256": "73000f020d301118fe5643ab3106e61425dd4e00b6fc1ad88273a593e00ab138"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-epoch-refused.png",
+        "bytes": 90609,
+        "sha256": "cafeba3a786dde00fddb0c6ad3c1f38194057ebe04757399df751b5d0153e449"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-epoch.webm",
+        "bytes": 199859,
+        "sha256": "bd54a0499d2d7a107cf94f796bea220723eee968edb3590d0f55c5860769a958"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-frozen-filmstrip.png",
+        "bytes": 176885,
+        "sha256": "7fafffa438b3fe2c9d2d9b1e4b37daca3553f18f5fbaa5f11366639a17f848a7"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-frozen-final.png",
+        "bytes": 84929,
+        "sha256": "56b9cc277bdd9841ba76d3e5fd49d2a92411cec1c9aa3246274d087764b16a73"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-frozen-refused.png",
+        "bytes": 70115,
+        "sha256": "98ac68f72f94c0bd936d3031fd29402ba354fc77bed4c80ac919a9f6e997677a"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-frozen.webm",
+        "bytes": 134891,
+        "sha256": "0dfb6422d357521cb8ef78827dfdb888070069435b367632a7eb4fa446ce2bad"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-history-filmstrip.png",
+        "bytes": 344663,
+        "sha256": "baa65873eddbe4585e02e4f865038ed508520f10e3c38eaa9a2bffc9b47f53df"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-history-final.png",
+        "bytes": 100945,
+        "sha256": "02d11db9a58338d827e44b00ae9ea15a6897909240eda605cadb2198288f533e"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-history-undo.png",
+        "bytes": 98598,
+        "sha256": "ef8f42f7d133c871308f391bcdc77312a81721166fb60438c2255d9408c0608d"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/firefox-history.webm",
+        "bytes": 158367,
+        "sha256": "bac6b38997496ae49a5e88f6c599df52cac5e771f4d3adf702f93a8aa6ac2d1d"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-all-final.png",
+        "bytes": 139612,
+        "sha256": "273c030a560ddcc966c871dd673aa5f63c02171706ff236fa9f0a1c4db1c9f76"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-binding-filmstrip.png",
+        "bytes": 229808,
+        "sha256": "babdb63c680ad18c130e159dc8cce2146981f5401031cabc7e403ac0dcca1d4e"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-binding-final.png",
+        "bytes": 74240,
+        "sha256": "06f76e373a062f55617f621793cecba0a41386fd5bfd7c603eea1b16d9553eb3"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-binding-refused.png",
+        "bytes": 62718,
+        "sha256": "145822b34d3039e76e1798abb7fa6d7455a655f8d74afede9306571e3dbbddb0"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-binding.webm",
+        "bytes": 198038,
+        "sha256": "6df50b211596cdfffa419b81b8a52334d40379b2abacf0852569da53d09a3955"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-catchup-filmstrip.png",
+        "bytes": 220168,
+        "sha256": "ecdbea667d9129b3fd02f111a95019a944654afbece130c5a247439818d76bad"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-catchup-final.png",
+        "bytes": 75779,
+        "sha256": "d4f4060c0392ee4d45422cc9754d2a1b89d0aecfe2d1da41ce674028f278a214"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-catchup-joined.png",
+        "bytes": 75779,
+        "sha256": "d4f4060c0392ee4d45422cc9754d2a1b89d0aecfe2d1da41ce674028f278a214"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-catchup.webm",
+        "bytes": 160546,
+        "sha256": "ebcceb46516dfe5b70c788b7def6fc48060fdac5de565d85e37b61ad2eaa0ec1"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-epoch-filmstrip.png",
+        "bytes": 312241,
+        "sha256": "d5bc1d8f09aae813b969bc0a5493b0263759ea2516042a659292f7fc166cb017"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-epoch-final.png",
+        "bytes": 80751,
+        "sha256": "acd8eb2f41b0b313e51b1a51aaf829f89d71ea81edc5896ee9578268de30f518"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-epoch-refused.png",
+        "bytes": 79935,
+        "sha256": "ff20a83cc2ae785c9d699aafd0381b354916f10f0e6e08693a4fcdbcb72f7290"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-epoch.webm",
+        "bytes": 283806,
+        "sha256": "18a041b3bea78d4d963a70d2b96a2740cdec717cdfcf6fb2fe30f5c24ae62ce9"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-frozen-filmstrip.png",
+        "bytes": 246150,
+        "sha256": "e6f9b9d091adef5b35d825b48ae68e1d91ccd0a2558f67bcfd276765d8eb9782"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-frozen-final.png",
+        "bytes": 74346,
+        "sha256": "a226540ea8821b53272c611bcfc01ae6d873662af32cea7b190f7bb67c1e0136"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-frozen-refused.png",
+        "bytes": 62646,
+        "sha256": "3e3500715cf44cf9b3d70864ec404478ddfceba4605fdc2b47fa4f356ef76b72"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-frozen.webm",
+        "bytes": 212173,
+        "sha256": "1e10af848290a3baa54b16711676f25a8662b86e469fb72fcd97969fa9e36650"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-history-filmstrip.png",
+        "bytes": 296150,
+        "sha256": "2037d504d39c95186f64856d5563875821712e0914d8f6ce54009d10f189ed44"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-history-final.png",
+        "bytes": 88616,
+        "sha256": "1ec1afc8199d2b85d993ef97c37c5c158babbba21fc55e0bf78fc4873e5dc8c7"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-history-undo.png",
+        "bytes": 86922,
+        "sha256": "46fcd0841751455a987a40f3f6280a5c903eef67942f0058fbe0bdcc3d9ebd37"
+      },
+      {
+        "path": "artifacts/yjs-authority-admission-visual-20261107/webkit-history.webm",
+        "bytes": 295336,
+        "sha256": "62423ea86b6aaa0f9dad1fd1e3ae82d16632d01677ab1fecde2817195ab6b87a"
+      }
+    ]
+  },
+  "publicRuntime": {
+    "files": 173,
+    "unchangedFiles": 173,
+    "esmDeltaBytes": 0,
+    "cjsDeltaBytes": 0,
+    "filesVerified": [
+      {
+        "path": "dist/ai-conversation.cjs",
+        "bytes": 13425,
+        "sha256": "b51f589d770607016ab95bcb8d891840e2f268cf0e61fd274c21f171dc937ba8"
+      },
+      {
+        "path": "dist/ai-conversation.js",
+        "bytes": 15960,
+        "sha256": "7a5ebf9a3ac7a862c8b224558fb699de9ea7404081cab0bf87fb9a425baf48d2"
+      },
+      {
+        "path": "dist/ai-document-tools.cjs",
+        "bytes": 13939,
+        "sha256": "f82dff7d70652034039865fd646b383af16395bf1fb20f1537847c8313e5a945"
+      },
+      {
+        "path": "dist/ai-document-tools.js",
+        "bytes": 16837,
+        "sha256": "c1a33c6fa86aba90d8eee7ea45d47f62aab3847a929a1cb96da004293d5ff199"
+      },
+      {
+        "path": "dist/ai-generated-media.cjs",
+        "bytes": 9115,
+        "sha256": "9b91969faf90204baa027f585e8b601351272e911286b969d5ba3d9bd782e7a0"
+      },
+      {
+        "path": "dist/ai-generated-media.js",
+        "bytes": 10717,
+        "sha256": "4454170ef27133dc7b597b3a574fa367bc4b49e5c5f4f68f36d40fa58b317d6a"
+      },
+      {
+        "path": "dist/angular/index.js",
+        "bytes": 4150,
+        "sha256": "d46a467c1df7e125e96faa9b1d40c8f4b50c575247b4a7f0feeb3872fac5a3cd"
+      },
+      {
+        "path": "dist/block-lineage-C3eCDDus.js",
+        "bytes": 389,
+        "sha256": "ff3ced420b62308cdd4fa694e40746991943e71af2251266b98ba0202dec9048"
+      },
+      {
+        "path": "dist/block-lineage-ItJipPvY.cjs",
+        "bytes": 392,
+        "sha256": "f0addfb7c3f25ab2a0ece0f96ee435be2f0feac708740eb57490848c5e9e6677"
+      },
+      {
+        "path": "dist/child-offset-BSNa84aJ.cjs",
+        "bytes": 1035,
+        "sha256": "622603d3fc7e7a78dda94c55507978f429a6a207109b0b019f94ab3a1c51b494"
+      },
+      {
+        "path": "dist/child-offset-BmGL4OFL.js",
+        "bytes": 1207,
+        "sha256": "a694ef2fd7f716bde18ce4ed3f87a1b1115e0d9bfb2bea2e68c09d3998ac17d2"
+      },
+      {
+        "path": "dist/collaboration-DS4JkVls.cjs",
+        "bytes": 1849,
+        "sha256": "280a92942d8b5758befcdd3815447e23f5f83c0ef457da26b1c2c4c7ccf97aba"
+      },
+      {
+        "path": "dist/collaboration-VutXQQsk.js",
+        "bytes": 2190,
+        "sha256": "d6df3a6337c9a6e7298c364825d78966352cfff93d574eae085fcb2060eefbb8"
+      },
+      {
+        "path": "dist/collaboration-core-CLw7oEkK.js",
+        "bytes": 11210,
+        "sha256": "20575f89ac8f174ad4ab287691547a9326a7c46880a14177d1669c3f97ca3ba8"
+      },
+      {
+        "path": "dist/collaboration-core-DSglQmES.cjs",
+        "bytes": 10153,
+        "sha256": "f11016b718f84196859cb47b7e445d8f3b0c804521e3ebcf41c9dbb4aab3260f"
+      },
+      {
+        "path": "dist/command-manager-CSDUCeVE.js",
+        "bytes": 1322,
+        "sha256": "8af5df20581f15a6f90479bb1e3993aa2cf3399b0f13046b6b56a7feb34b629b"
+      },
+      {
+        "path": "dist/command-manager-DU4ahU5C.cjs",
+        "bytes": 1066,
+        "sha256": "c40db936693f1e1c2790ba70135e1131c78ecabf6e005ce9a960175c40fd06c6"
+      },
+      {
+        "path": "dist/commands-CICEteU3.cjs",
+        "bytes": 73987,
+        "sha256": "65f956ab60881835943d60a244db2e11f9017004061cc53b15883d0f0443f55b"
+      },
+      {
+        "path": "dist/commands-DapFC6SQ.js",
+        "bytes": 84642,
+        "sha256": "65ab8d6102eb5e416ac9fd118e939a11891c9db02db4c6efdb7cc8c0efeff71b"
+      },
+      {
+        "path": "dist/comments.cjs",
+        "bytes": 24184,
+        "sha256": "a9ffb35f3edd3d14efe16a649adc86b98ee980babeb600c9b81fc688a06d3504"
+      },
+      {
+        "path": "dist/comments.js",
+        "bytes": 29772,
+        "sha256": "df3c9ac82110c74177d78f1ae5cf8cf5039c6929e6226bd37a478815d2fc5ca8"
+      },
+      {
+        "path": "dist/content-expression-CuobUc-r.js",
+        "bytes": 2872,
+        "sha256": "1bb4e92314bba719dba4fea843d2671288fc75387d48aa570a27a38c2d8bd2fe"
+      },
+      {
+        "path": "dist/content-expression-YXcFdjFU.cjs",
+        "bytes": 2151,
+        "sha256": "d656360f123de707e7998de29398ad1d6d6897fbeb4ad1a4d258a57cffa6c0bc"
+      },
+      {
+        "path": "dist/core.cjs",
+        "bytes": 8956,
+        "sha256": "ae63f9792c1faf38288c5b1b3e44d368d4cf68ba9e913c78c087b2b3d72ba34d"
+      },
+      {
+        "path": "dist/core.js",
+        "bytes": 9840,
+        "sha256": "933c96adbfe2b69a452015ca52e4e2997fb91f2bd7c29489fe22decfdae8ea4a"
+      },
+      {
+        "path": "dist/decoration-BPtXgDUL.js",
+        "bytes": 3188,
+        "sha256": "204705e92ec3bfb2367e3b17d329808e44afadf7a2d6c62386380abab7b10c39"
+      },
+      {
+        "path": "dist/decoration-Yguu_1Ay.cjs",
+        "bytes": 2719,
+        "sha256": "9f65de1722eb192dcbea44873156fee76c4b64ebacc9853aaf6020b10c2cac82"
+      },
+      {
+        "path": "dist/details.cjs",
+        "bytes": 6355,
+        "sha256": "ac0ad38d516840d8cd68087bcddb0e1dfde3c36c2600ec2822c9053e24a83437"
+      },
+      {
+        "path": "dist/details.js",
+        "bytes": 7728,
+        "sha256": "ba378cc9c37aa6293bbc4c19808c308eeef84402deb2296ae023577e164e3d6a"
+      },
+      {
+        "path": "dist/direction-scope-CQCtpWVO.cjs",
+        "bytes": 83865,
+        "sha256": "c8cfae817314aed43bd16e5521c9bb6c07c69cf5ec6c4d65b443a7006f9a31cb"
+      },
+      {
+        "path": "dist/direction-scope-DwwjjUhS.js",
+        "bytes": 107478,
+        "sha256": "b29a47779b1e6070212d0a4525e14c890bcaa8b4e3db2d997e820995c39d85dc"
+      },
+      {
+        "path": "dist/document-utilities.cjs",
+        "bytes": 19379,
+        "sha256": "ec27f1c9d95efa3095c865de3ea3888ad2b01ec7faed6283a676d46484b021d9"
+      },
+      {
+        "path": "dist/document-utilities.js",
+        "bytes": 23886,
+        "sha256": "1f634fd45e7e790e02e684f371bc1f4621d6fb43e3fc08e847653ce810b65de2"
+      },
+      {
+        "path": "dist/docx.cjs",
+        "bytes": 174798,
+        "sha256": "02190d8c467388463dc7013780c777ead6725a82c7fee5b6dcd1aa1c787e8c72"
+      },
+      {
+        "path": "dist/docx.js",
+        "bytes": 215704,
+        "sha256": "06e0dbc3bfe28f136505a6838fec0caeec26014f1e7d589cf2ceba56b05512a5"
+      },
+      {
+        "path": "dist/editor-DkKCzohS.js",
+        "bytes": 11173,
+        "sha256": "359268e86c8b630ba210eaaffdd0e4127bedac6e5e724af10a977432a8ef61ea"
+      },
+      {
+        "path": "dist/editor-p9HbPL41.cjs",
+        "bytes": 9476,
+        "sha256": "f3e0d6733d27251eb3d9e0d83233a9416eb7e08ab05214e6e9144bf6dd1f634a"
+      },
+      {
+        "path": "dist/emoji-C-WenbG4.cjs",
+        "bytes": 14668,
+        "sha256": "4da6bbfed1f88a435a82f2c1cadc04ed26d51e45803a3245a466489266556e29"
+      },
+      {
+        "path": "dist/emoji-D--0xrtP.js",
+        "bytes": 17420,
+        "sha256": "1bce11698ef2923b9afcc7c5881c35e67993be8fbcf2f2f2df9ad2ec8415b22a"
+      },
+      {
+        "path": "dist/emoji-data.cjs",
+        "bytes": 274549,
+        "sha256": "86fe6762639409f7a4755ee2b80ebb3e401b5c0eb7f90e6279758968947a343b"
+      },
+      {
+        "path": "dist/emoji-data.js",
+        "bytes": 331400,
+        "sha256": "5bc0ba4c12262883d43e6bdbe65a04c58e608fa9806f825cd74f1fbc42a5465e"
+      },
+      {
+        "path": "dist/extension-Cfbujo9B.js",
+        "bytes": 3205,
+        "sha256": "b88e5b222e9feda97c096cca511f4380a551228488bdbd2f33c987bb299c4db8"
+      },
+      {
+        "path": "dist/extension-Sb4ErwsF.cjs",
+        "bytes": 2867,
+        "sha256": "443582bc2bc0a2037290e4b52af74eb174d4c7e373ace5e8368c67dce3b4bf22"
+      },
+      {
+        "path": "dist/extensions-DeU9fqoP.cjs",
+        "bytes": 32757,
+        "sha256": "ca2d98a1d36ba46524ea3310553f274f5e858cfb7edf4b9c0ce65a2992a5d25c"
+      },
+      {
+        "path": "dist/extensions-Dmn8AQwB.js",
+        "bytes": 35438,
+        "sha256": "184792b3243ffe9980ac1c837f9fbf37a68d9beca64366f2510690cfd7dccb03"
+      },
+      {
+        "path": "dist/history-DGDycHm8.js",
+        "bytes": 10290,
+        "sha256": "bea8482cd54a0aebea4216bfed0e4533fc2d86ea473a3bd29b6010f0e7084edf"
+      },
+      {
+        "path": "dist/history-ynF3bAnD.cjs",
+        "bytes": 8175,
+        "sha256": "fcfd5f07faf265cf1b7a64c5901412d7b9f7243318797ed1f3a8cc0bc697be84"
+      },
+      {
+        "path": "dist/html-anchors-7nXQoLnr.cjs",
+        "bytes": 5494,
+        "sha256": "194ff8be207343e9f71ee5b70ace1f9a5a5d74245df5ed6e3183d42a9dc603b4"
+      },
+      {
+        "path": "dist/html-anchors-CTlfIJt0.js",
+        "bytes": 5973,
+        "sha256": "a228bc3d07116fe6ee04d6af120da1ff64dbb6d8a18a555433bf4c33bc5ac6b0"
+      },
+      {
+        "path": "dist/html-document-envelope-DvSMKRQb.cjs",
+        "bytes": 6026,
+        "sha256": "e75f33c855813343804db53e8cc4f8f5ebd0481c11423f5c2f4b8a111349bc0e"
+      },
+      {
+        "path": "dist/html-document-envelope-QZ1S_Zn2.js",
+        "bytes": 5718,
+        "sha256": "ece76d7b82cbc949b38e13eb85ddb975c566064fe4fb762008b71b3b6932d8cf"
+      },
+      {
+        "path": "dist/html-exporter-CTmmKIpf.js",
+        "bytes": 20249,
+        "sha256": "ea305cc2631bf7e24ee1e74aa78da725f2d5c1bc8a99f4ea613978202ba8bd9d"
+      },
+      {
+        "path": "dist/html-exporter-hAUMYH_P.cjs",
+        "bytes": 17695,
+        "sha256": "33e3d7abe31bbb4285340dd31b3b4526bc306ec496caf376a4835a3626eeb141"
+      },
+      {
+        "path": "dist/html-inert.cjs",
+        "bytes": 7109,
+        "sha256": "05908fc956547bb515c55f26c3f97ce99540abae277fe6568b59ea3ae361939c"
+      },
+      {
+        "path": "dist/html-inert.js",
+        "bytes": 8553,
+        "sha256": "59adac6c7325d00ce1a802315f51ce6c2af924914ab194c75cc5ff8ec8705991"
+      },
+      {
+        "path": "dist/html-link-url-B8XIl2Ok.js",
+        "bytes": 591,
+        "sha256": "5931be9df37341b413baed12d80be201d389851613061d19bc0d4fed6a943cb5"
+      },
+      {
+        "path": "dist/html-link-url-tZSXfHX8.cjs",
+        "bytes": 542,
+        "sha256": "3875dd8a10bdba8c770cae7215e5a44b1ff9a1f0951ac7e26341dbdfa7a5b84a"
+      },
+      {
+        "path": "dist/html-page-settings-Cqfxq3To.js",
+        "bytes": 5053,
+        "sha256": "16ddbce4bdfc769633214666c717c7dd885c95ed74ade67fe4c8c149b153a2bf"
+      },
+      {
+        "path": "dist/html-page-settings-DrW2laK9.cjs",
+        "bytes": 4578,
+        "sha256": "9be376cfe6b68886f8eeb5039d7dfa761a9b74a5841d3209c35e7872b7a789ea"
+      },
+      {
+        "path": "dist/html-server.cjs",
+        "bytes": 172,
+        "sha256": "e26158f4b977daec8f33ae792fb73bd1fdd0b35f4ca093ae328c383020216fc0"
+      },
+      {
+        "path": "dist/html-server.js",
+        "bytes": 113,
+        "sha256": "ebba4d9279a77dcbfd674a6bd0c072dd5a29427b8902649d0eac1e23e07fe5a0"
+      },
+      {
+        "path": "dist/html-source.cjs",
+        "bytes": 11808,
+        "sha256": "6ccfaa643f128d20fbdddd8bdede3e94b6ec00ddfc709dd4790b7ca9a6a224d9"
+      },
+      {
+        "path": "dist/html-source.js",
+        "bytes": 14214,
+        "sha256": "f4112c2dd8578c85bc5c350adcadb4a69a7e772a2cd3c6ec10ac894017888c20"
+      },
+      {
+        "path": "dist/index.cjs",
+        "bytes": 75038,
+        "sha256": "5479ef78f84a30febfa44499c29b2d21efaaf23460fbdea58c5ad035599c8de5"
+      },
+      {
+        "path": "dist/index.js",
+        "bytes": 88574,
+        "sha256": "b69257f55c7933d7e8a1b29a41ef6838dd0ac21393a20c947cc454b656753cf7"
+      },
+      {
+        "path": "dist/inline-atom-Bsl8UaNG.cjs",
+        "bytes": 1531,
+        "sha256": "2f00b2f8286185dfce8fe3bc3d9a352184418cbbb9e0907ea199d77f86130d05"
+      },
+      {
+        "path": "dist/inline-atom-CvQHgSVX.js",
+        "bytes": 1760,
+        "sha256": "b790d1236b4d184ed42832bd00e4886f14ce983fe8c616917472c5b585fad8ac"
+      },
+      {
+        "path": "dist/input-rules-BR33dhUp.cjs",
+        "bytes": 2668,
+        "sha256": "88b01ad75c44fda13b9c862d29af2e934b25fd8fde147526476ec09442a55c11"
+      },
+      {
+        "path": "dist/input-rules-BdOSr2d3.js",
+        "bytes": 2995,
+        "sha256": "85ccfeeaf170f841631580487d5269587a0ca3e125d86d11f3eb449a046548a7"
+      },
+      {
+        "path": "dist/integrity-dom.cjs",
+        "bytes": 4360,
+        "sha256": "e30da5f0a863cb5bfa0836daf0559449fb68bc77265fc8202eeb54b39de63425"
+      },
+      {
+        "path": "dist/integrity-dom.js",
+        "bytes": 5079,
+        "sha256": "38f82e30871c61d51e9844d8bf2dc1c4c31f2dae93e30b21869ea0d6889c8886"
+      },
+      {
+        "path": "dist/integrity.cjs",
+        "bytes": 9367,
+        "sha256": "8037a0047176fb648a780d50dba94cd2c3e8ac101d33c8a64d6b0cd10e6e6b84"
+      },
+      {
+        "path": "dist/integrity.js",
+        "bytes": 11469,
+        "sha256": "b9856a87e8817420d0367b131848f4e6ae2f8288a9c6652362afffc16efdb80b"
+      },
+      {
+        "path": "dist/link-behavior-BsgeLLGl.js",
+        "bytes": 18017,
+        "sha256": "5c68e5337abcaebe36ba283f3e248e65bbe4776d4ff058ca9a73149946f67845"
+      },
+      {
+        "path": "dist/link-behavior-CrZNxZkO.cjs",
+        "bytes": 16217,
+        "sha256": "b5dfdeccf56397b2316199a147135557a245de76fcc6e112d1210e66509bc89a"
+      },
+      {
+        "path": "dist/mapping-DLMr5-8G.js",
+        "bytes": 7877,
+        "sha256": "8e6e35beaa738fb87546440c3a026b4e19854c1135506b3d47e067cd6a9df011"
+      },
+      {
+        "path": "dist/mapping-P-atFptq.cjs",
+        "bytes": 6642,
+        "sha256": "c8840e789a9c489215b2239b9178e8912f3c9802e726dfac4fd6ad04e070b1ee"
+      },
+      {
+        "path": "dist/mark-range-step-CLay1SPk.js",
+        "bytes": 4731,
+        "sha256": "ac582982be0d4e7981692655374563d9f53a7e3b623cc9f5f282b0821758aa48"
+      },
+      {
+        "path": "dist/mark-range-step-ChnNArGp.cjs",
+        "bytes": 4088,
+        "sha256": "a81701018e7c7b2572fe8f1a025e6d3413f52b593aacab8c2b024172da00e11e"
+      },
+      {
+        "path": "dist/markdown-html-83ZGjqmO.js",
+        "bytes": 43575,
+        "sha256": "520ffe95eed013795e70ac3f02f3dafa25a9d0d219b996e438a5d33bfff64ded"
+      },
+      {
+        "path": "dist/markdown-html-DD8ATANg.cjs",
+        "bytes": 41420,
+        "sha256": "eadb69c13adc8c79a59637016d70a7c6ba06ac83fcc5818b57b6aa6b14114320"
+      },
+      {
+        "path": "dist/media-B0fSgq0I.cjs",
+        "bytes": 36024,
+        "sha256": "1a3272bf7d7b344a07ea7e07d7d4a4abc396a1947c6e865bcc8fbe565a0e8edd"
+      },
+      {
+        "path": "dist/media-BjDFTl3I.js",
+        "bytes": 43776,
+        "sha256": "87378d995853bf708cac77aa82e7d797d1f711ee08692fd6575f00ce8eee5c86"
+      },
+      {
+        "path": "dist/menu-position-1HnlWQPp.js",
+        "bytes": 8238,
+        "sha256": "897467d7cebb2b2f6ae7cdefa56770cec0c87dca603a0edbb47637ee85d0073f"
+      },
+      {
+        "path": "dist/menu-position-xq2Z64WB.cjs",
+        "bytes": 7213,
+        "sha256": "bcdf55e54503f7f12bb6d1fa09a996669d599ce02c8b9fba2c654ad02503726e"
+      },
+      {
+        "path": "dist/migrations.cjs",
+        "bytes": 6101,
+        "sha256": "6c3dde8d6455dd8f20a26843780f3ac8610c44239fd2f41abdd09ea0615f7436"
+      },
+      {
+        "path": "dist/migrations.js",
+        "bytes": 7048,
+        "sha256": "e833986d61b92254979fd76462d088bc3458170d0c3cb42f6b9c2ece8ef820e8"
+      },
+      {
+        "path": "dist/node-ARR0a2Rq.cjs",
+        "bytes": 5140,
+        "sha256": "7550ea7443c5cefd03c866a70548cb5488429934b5a5d10a7ddf48e0459af368"
+      },
+      {
+        "path": "dist/node-CrH-gHhx.js",
+        "bytes": 5904,
+        "sha256": "01f284cedb47d8604b20fc70d8395d402827cd031b89465d6ff572db7b2abadf"
+      },
+      {
+        "path": "dist/node-ids.cjs",
+        "bytes": 7187,
+        "sha256": "a2731bd219548819400cd0a4d2c31fd2405e82a5f151f14fcc27bbfa555e4bce"
+      },
+      {
+        "path": "dist/node-ids.js",
+        "bytes": 8744,
+        "sha256": "ba89192ac17d0911b9eeea451f1808fcd4f75884bf3a648a699ab658f591f275"
+      },
+      {
+        "path": "dist/node-spec-Dl5lMC1C.js",
+        "bytes": 643,
+        "sha256": "c23f616dd39b1be7a81b0e7f8fab6cd95abd21335ed3bfae0c9debe2768d92af"
+      },
+      {
+        "path": "dist/node-spec-owlJN_nc.cjs",
+        "bytes": 593,
+        "sha256": "e3be8015183da710140876527eda26ef0b8de6da06af91b7d0d6c93aada05ef0"
+      },
+      {
+        "path": "dist/page-settings-Ba0JI01b.js",
+        "bytes": 15349,
+        "sha256": "1a4c1a6f2ef63da73193bb773c7efb62cc94dfcfe24f24104d35b0f1409241aa"
+      },
+      {
+        "path": "dist/page-settings-DgJELdLi.cjs",
+        "bytes": 14432,
+        "sha256": "b2d680134f17c88d69d617974dc4ddccc9b65bf107bd325a37c08969bf3a3f39"
+      },
+      {
+        "path": "dist/pages-dom.cjs",
+        "bytes": 44811,
+        "sha256": "b383ad078ae49a0b3108ddd33ac7c128a06a92dbada8be85a8f472c1c1323cf5"
+      },
+      {
+        "path": "dist/pages-dom.js",
+        "bytes": 53726,
+        "sha256": "d2e790d58bc506265a9b51230b1df8b4a274ac7fb982a317f32748152f98d882"
+      },
+      {
+        "path": "dist/pages-preview.cjs",
+        "bytes": 11421,
+        "sha256": "eac83294094d56a791fd9d8938cabe6ce921f6a8dc7327f9d8fe4f306c7ae78b"
+      },
+      {
+        "path": "dist/pages-preview.js",
+        "bytes": 13474,
+        "sha256": "2e2567721dcd08635cd16b611c92d48a38cba46858dfb9d986a0d274880235ef"
+      },
+      {
+        "path": "dist/pages.cjs",
+        "bytes": 9367,
+        "sha256": "28c5729cdfd125846dca7ba5d619ac043208e83bd9532aec1c75019241e89af3"
+      },
+      {
+        "path": "dist/pages.js",
+        "bytes": 11277,
+        "sha256": "727a4feaa49192500fc0a646b8866e49c57b9c0e4751465159f2dee9637c9059"
+      },
+      {
+        "path": "dist/path-B7Cr90vg.js",
+        "bytes": 1897,
+        "sha256": "25b4e73eea7154749e94810167467038803ef846a0d660e1d7b39222a1a90beb"
+      },
+      {
+        "path": "dist/path-DDY3uxw-.cjs",
+        "bytes": 1981,
+        "sha256": "21f9f380ad8aa98d20bb6413db0d2bac777d062c015672046738095f8d8c233a"
+      },
+      {
+        "path": "dist/plugin-B0KSKRXJ.js",
+        "bytes": 392,
+        "sha256": "45088459a05a28a0c243669ebc4813985d48acbe62e88bd6adb133a83b1dd20f"
+      },
+      {
+        "path": "dist/plugin-DlQkwKdU.cjs",
+        "bytes": 482,
+        "sha256": "f1d38bb5e46190ff31d074ffd8842fe60e168ec5759f4cb981d7254cb20cccfd"
+      },
+      {
+        "path": "dist/presentation-6Ico4QXk.cjs",
+        "bytes": 17925,
+        "sha256": "c2c2ea6be72571eb0a701d01ba9067f49c963386554b633b60156cb0cf19821b"
+      },
+      {
+        "path": "dist/presentation-DH2_Z-Ob.js",
+        "bytes": 21378,
+        "sha256": "9cbdc4d1a0b10441e467c97a4962d1640e6e06b39bf649c74cd0afe4f088ed70"
+      },
+      {
+        "path": "dist/react-comments.cjs",
+        "bytes": 7052,
+        "sha256": "cb5a4189ffbd0593cb38329840e2821f101d973569fb5a2a59dc124fd6096916"
+      },
+      {
+        "path": "dist/react-comments.js",
+        "bytes": 9786,
+        "sha256": "9777ae045668dcdc35932ad96b7640378d2f293c7280519cd6020306adca2c20"
+      },
+      {
+        "path": "dist/react-integrity.cjs",
+        "bytes": 6183,
+        "sha256": "aab915eddf5c5eb377aaa09022e59e4f36e6582d14b2f6943df26364e53f1031"
+      },
+      {
+        "path": "dist/react-integrity.js",
+        "bytes": 8094,
+        "sha256": "a0a2d19599823f945115ef81a383d5eea3c64c83a5b71cc4fbdc24b8d8366dd3"
+      },
+      {
+        "path": "dist/react-tracked-changes.cjs",
+        "bytes": 5715,
+        "sha256": "d1bbd0ab1250fe712f32ce7c4957b8d24edd50ccd1cf27104a739d7dccd1215e"
+      },
+      {
+        "path": "dist/react-tracked-changes.js",
+        "bytes": 7650,
+        "sha256": "8ae0c1d8e714ef49d7ff769e239c9699f4c589eb9db6ac4d7358d0bdb7274ff5"
+      },
+      {
+        "path": "dist/react-versions.cjs",
+        "bytes": 7377,
+        "sha256": "d44145d97710d267eabd021d4e9362caaf5286f405b064327ffd167935b50d47"
+      },
+      {
+        "path": "dist/react-versions.js",
+        "bytes": 10062,
+        "sha256": "72297423e7215eceb2f792ab1d5c1de6ecde30da8fc6791374281c6bd69a88fd"
+      },
+      {
+        "path": "dist/react-widgets.cjs",
+        "bytes": 1337,
+        "sha256": "9547d53b819fb2a290fd5e8468897a8887ea295d2b1d499b863f1b625272e471"
+      },
+      {
+        "path": "dist/react-widgets.js",
+        "bytes": 1576,
+        "sha256": "68a582728b882a84e61cfbc7ada10173e3c3b62beb714e808019b884a9f1685c"
+      },
+      {
+        "path": "dist/react.cjs",
+        "bytes": 71018,
+        "sha256": "40fc6ccb8d8a0c5f24fca104fd2e26c7ec3aceba88c19996c643dd0fe8acc51e"
+      },
+      {
+        "path": "dist/react.js",
+        "bytes": 94791,
+        "sha256": "f39d5d6fbf3fbec42a763409ceb289df3622da52d29fed88f64b5e79c82da481"
+      },
+      {
+        "path": "dist/replace-text-range-step-CXlYwNp_.js",
+        "bytes": 13434,
+        "sha256": "e558636bc2a724e1bc5471a526e9d189821396f9256e80414d078182cb332036"
+      },
+      {
+        "path": "dist/replace-text-range-step-CuxpORKM.cjs",
+        "bytes": 10408,
+        "sha256": "d7b922f0cdb297994244a8b2fe0f0d4874a3b1f71847e672a5714b94b10e9c87"
+      },
+      {
+        "path": "dist/rolldown-runtime-Chgba0Kb.cjs",
+        "bytes": 772,
+        "sha256": "97ace14b1c618063a813c153abc2f2357e9da284c5f87b88ea494c8f00b0b276"
+      },
+      {
+        "path": "dist/ruby.cjs",
+        "bytes": 9340,
+        "sha256": "9ceeb53f9fcfb77ca9b1ec139b2de3acf94d9f03a19b64fdf8164439e29c9cdb"
+      },
+      {
+        "path": "dist/ruby.js",
+        "bytes": 11105,
+        "sha256": "5a2131cb365869e09fcad88582d2befd69ff5c2dc290119cbb0a7da0cea094be"
+      },
+      {
+        "path": "dist/search-BjCl0iPt.cjs",
+        "bytes": 1765,
+        "sha256": "a87e5ae51a268388c386e8722372c209eedd98a987de71b8dabdcc5088db4cb4"
+      },
+      {
+        "path": "dist/search-Ry6iMDsx.js",
+        "bytes": 1996,
+        "sha256": "bb6a5cc0a6b884c8b5f08b41545f40a1b1bfc266dbb66f2acaaedb2bd9af8343"
+      },
+      {
+        "path": "dist/selection-C9imWT6Q.js",
+        "bytes": 9742,
+        "sha256": "6a85c4891b7d2d0b6c7669596945d62565c5cb08216619f66f234209d7732feb"
+      },
+      {
+        "path": "dist/selection-DA5lccUk.cjs",
+        "bytes": 8201,
+        "sha256": "2510cee74f61b5953ffd07d9853db47ab49967b791ba7fe4bfa1d0d8924246f4"
+      },
+      {
+        "path": "dist/server-BFdoQg0I.js",
+        "bytes": 265813,
+        "sha256": "a98aee9bf29c4306ca146f4470376c2474b399c3ea821a11ca3e8c011972b545"
+      },
+      {
+        "path": "dist/server-BOpQ8jLV.cjs",
+        "bytes": 216363,
+        "sha256": "d5184a5d25fe6f6b27ce986c1c6caa364dadb52d0b7d32ec9070042abc227e78"
+      },
+      {
+        "path": "dist/shared-direction-CXFVBXQk.js",
+        "bytes": 10972,
+        "sha256": "18c2aa2b3f5768ad5cb61179038efe1993a5ae7f5d0d819a0696430e8a7a1926"
+      },
+      {
+        "path": "dist/shared-direction-DKpgM0gI.cjs",
+        "bytes": 9373,
+        "sha256": "b1668621bcd768bd08e03b48fd89f089d0f13175f06c26f2f1d50edc5c4cc09f"
+      },
+      {
+        "path": "dist/step-B0XaC5Gk.cjs",
+        "bytes": 214,
+        "sha256": "99823e8cefb84befaae078f5631c5be32ba26f75921a8df3ebb6936f2ad8751a"
+      },
+      {
+        "path": "dist/step-BemI2QEq.js",
+        "bytes": 224,
+        "sha256": "a351d2230047e0fdee68b6a0eeac1ec8b5857665ec2816f1ae501666904f378b"
+      },
+      {
+        "path": "dist/structured-attributes.cjs",
+        "bytes": 8417,
+        "sha256": "0ba9e42889df541daef338cb35f8783952053ab788bcda666a23fae72d5337e8"
+      },
+      {
+        "path": "dist/structured-attributes.js",
+        "bytes": 10036,
+        "sha256": "c3dec6d754c51810627cfa0289e86cc9b95c2ff9f47fe95b19fcf08aa0886da8"
+      },
+      {
+        "path": "dist/styles.css",
+        "bytes": 90833,
+        "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7"
+      },
+      {
+        "path": "dist/svelte.cjs",
+        "bytes": 891,
+        "sha256": "968fec74bcd795b023e1fc4838376eb2508605beb2b2e93b9dfe32671b3ec74e"
+      },
+      {
+        "path": "dist/svelte.js",
+        "bytes": 1083,
+        "sha256": "a5aaa28f547ff2d1b768433325a1846728b150fa01ebdd92187d90bae4e39a3b"
+      },
+      {
+        "path": "dist/table-layout-DclxIB5V.cjs",
+        "bytes": 6748,
+        "sha256": "1140804261a00d385bd6bdfbb649b621837cbe3924c2d6bd63655e06f650dc3f"
+      },
+      {
+        "path": "dist/table-layout-Dg1bu3Pt.js",
+        "bytes": 7075,
+        "sha256": "c91c59335b36debe41512766afc7048ddd3c9c76ccae64bf444087455104dc62"
+      },
+      {
+        "path": "dist/table-map-Dbo_d2TT.cjs",
+        "bytes": 2651,
+        "sha256": "31e3b5afbfcecd0121d1108018de98ab86b820922f719f5bc50d943ddc176277"
+      },
+      {
+        "path": "dist/table-map-Du2VwT8u.js",
+        "bytes": 3475,
+        "sha256": "a97dd4574084d3a773410bbb7cf49d408b123664999661a9f2ccb8b1ebe0639f"
+      },
+      {
+        "path": "dist/table-of-contents.cjs",
+        "bytes": 4754,
+        "sha256": "1a5f3de0c869a32738efe8ca229f95a8866bd9da4f746ea0e93681f73ae1f9dd"
+      },
+      {
+        "path": "dist/table-of-contents.js",
+        "bytes": 5695,
+        "sha256": "b03bafc0d41cde82066b93eef43095fb66a3ec593f27b68f47e1cea9ad5269db"
+      },
+      {
+        "path": "dist/testing.cjs",
+        "bytes": 5439,
+        "sha256": "dc5ec2c9f818caed2c9677027ff23d713c215edac4ba97223bdb1bc4b71bd9c1"
+      },
+      {
+        "path": "dist/testing.js",
+        "bytes": 6494,
+        "sha256": "8f11288f3f1f3328fb457455d87936fb0ab6284324de1aff944285ae3efdcfc7"
+      },
+      {
+        "path": "dist/text-direction-BAy8LwDF.js",
+        "bytes": 2851,
+        "sha256": "09733327790cdc3c9f03e699f5315bcd8c11e1014a69e604a223d39dfe3ca6b7"
+      },
+      {
+        "path": "dist/text-direction-T5Baosqb.cjs",
+        "bytes": 2891,
+        "sha256": "b8aac504d7617a4c9fcfdbc7cbfbabae17617e01e1114cfa14e42ec0f090236a"
+      },
+      {
+        "path": "dist/text-style-DoULguwX.cjs",
+        "bytes": 5095,
+        "sha256": "92de90cb1284520c157d00806c616f9ddc2358a808bc4095318104627d76e4e5"
+      },
+      {
+        "path": "dist/text-style-dZrvb9-A.js",
+        "bytes": 4836,
+        "sha256": "09acc56ec0993f2f1b5ca842c83e021a4e300506476cc21a17ac7afe1d8b36fe"
+      },
+      {
+        "path": "dist/text-style.cjs",
+        "bytes": 878,
+        "sha256": "68731d01479d756616612e53081031c7d0a5c983465fbcb780315e4ea871b75a"
+      },
+      {
+        "path": "dist/text-style.js",
+        "bytes": 876,
+        "sha256": "9ae6f47233f2a220c7b2d198f635bb5e536b84aac8078ead02ebcc03aa6f77ba"
+      },
+      {
+        "path": "dist/tracked-changes.cjs",
+        "bytes": 23667,
+        "sha256": "b7fd55a910f1fc2e2e7a650ce60c0d3cd46b59d869accf85931e031110e305ff"
+      },
+      {
+        "path": "dist/tracked-changes.js",
+        "bytes": 28575,
+        "sha256": "df3f85ac9e95bbe346edd78bba7b250535d661b4c92251fd470f47c50b17206f"
+      },
+      {
+        "path": "dist/transaction-CkMxTsTS.js",
+        "bytes": 5607,
+        "sha256": "ad47227483c82735ebac7e69b7b647f7b1f2ff25a64361680eb7d4de7c6e031b"
+      },
+      {
+        "path": "dist/transaction-KMk_Mipg.cjs",
+        "bytes": 4929,
+        "sha256": "dd3a78e2f1e279387c7442df8e0577ef8b138d405647f8a8cf7401f2502770db"
+      },
+      {
+        "path": "dist/url-Co8QRAHd.cjs",
+        "bytes": 923,
+        "sha256": "0fb4f476f7ae427962fe367260dd2b788dc565022792e543e3be9cc1a784a6b6"
+      },
+      {
+        "path": "dist/url-sjMj-efj.js",
+        "bytes": 1032,
+        "sha256": "ce1519b79eeadc5e10e96f8b8952ee0fc4a7b34a09c772acc155eb020fcb2d2d"
+      },
+      {
+        "path": "dist/useFountain-Cm9rq3fp.js",
+        "bytes": 1092,
+        "sha256": "c901a8fdf71ec860e2fa89cdee54e014dfb916ea57c499b893d1376cb0ac3302"
+      },
+      {
+        "path": "dist/useFountain-lA83BeVM.cjs",
+        "bytes": 965,
+        "sha256": "f17f3034cc9774e930b391a05374bae25aed8ab6048f09437af6ffe881d0ee95"
+      },
+      {
+        "path": "dist/versions.cjs",
+        "bytes": 24360,
+        "sha256": "ecf133d02b330817424b4e7c9b7caf268dd7e7c2c35cf767d4e74ab9e94b1985"
+      },
+      {
+        "path": "dist/versions.js",
+        "bytes": 29342,
+        "sha256": "eb6f2e339e6a46228ffb2523ecd3ea999639258144a09f878e80667d7b3b4d0a"
+      },
+      {
+        "path": "dist/view-BlDAOal5.js",
+        "bytes": 149106,
+        "sha256": "ce6c5c0eb5fab1043ef602373641dc0d20b42161ed8cc66cd9e23d914bc36c35"
+      },
+      {
+        "path": "dist/view-CVLHrxmQ.cjs",
+        "bytes": 126705,
+        "sha256": "24074cc92aef7796edb4710fe9e21dd6e6aeb357a04134af9389506b04d66187"
+      },
+      {
+        "path": "dist/vue.cjs",
+        "bytes": 1456,
+        "sha256": "b724de50966370f184922ee04a9bc95824baa76968297ed4495f8cd7907e2ccb"
+      },
+      {
+        "path": "dist/vue.js",
+        "bytes": 1720,
+        "sha256": "916fc46f1ce3b22efeaed06a7a026856d151b38106f2b2224ef11fd39f3f906d"
+      },
+      {
+        "path": "dist/widgets-dom.cjs",
+        "bytes": 4029,
+        "sha256": "938b31bd1d106c2f7ded79d1e65ad801b0f400986cee1820e931cec63df1b029"
+      },
+      {
+        "path": "dist/widgets-dom.js",
+        "bytes": 4743,
+        "sha256": "9abfcb8796264deaf3214d5e343e7ccf217fae1ac4df51a8aff6abeb43852313"
+      },
+      {
+        "path": "dist/widgets.cjs",
+        "bytes": 7337,
+        "sha256": "7d056297d0493f12845cfc97272a5756606022d063a6f751161dd8481bb61662"
+      },
+      {
+        "path": "dist/widgets.js",
+        "bytes": 8789,
+        "sha256": "ac0abb92eda817efd6fc49d47539d5419c9d471d49ec74235f3bf1ce75e000e1"
+      },
+      {
+        "path": "dist/yjs.cjs",
+        "bytes": 25122,
+        "sha256": "5d485efb36af6fa61d210f11e714b6151fe4c976b0cbf0f00da39763bfe7dafc"
+      },
+      {
+        "path": "dist/yjs.js",
+        "bytes": 30384,
+        "sha256": "5e40fa833680c10d5405a736bf85a8345b1a9bf9c58786184ef17266bc229d08"
+      }
+    ],
+    "budgetFailures": [
+      "- dist/core.js exceeds its budget by 0.1 KiB",
+      "- all ESM runtime code exceeds its budget by 77.4 KiB",
+      "- all CommonJS runtime code exceeds its budget by 61.1 KiB"
+    ],
+    "unchanged": [
+      "src/yjs/index.ts",
+      "src/core/editor.ts",
+      "src/extensions/collaboration-core.ts",
+      "examples/backends/retained-sqlite.ts",
+      "tests/yjs-document-range.test.ts",
+      "package.json",
+      "api-surface.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_AUTHORITY_ADMISSION_AUDIT.md",
+      "bytes": 8153,
+      "sha256": "d884f73d2e3eb2cd304b22f6cd6331bcc5e155ffe280a978d7a0a4142e0f3717"
+    },
+    {
+      "path": "docs/YJS_RETAINED_ADMISSION_AUDIT.md",
+      "bytes": 6892,
+      "sha256": "e6e480f85c2ca6b4ad4eecffe6eb0f52c0dccf21fdf10da76721e0c6cc22b52b"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 307725,
+      "sha256": "9f11bac439b8c68af1bd03c0511493b9296ebe6a80e2cce001bc2fe9a8cd8397"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 172919,
+      "sha256": "2ba7bfffdde03193786f65fe17f71c80adeb0fc9c5bbce619a9d0fd326aca438"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 193485,
+      "sha256": "f2852cb427e4f0bcf155382c29d177028e0d6f1d6f7316ab65985256b5128101"
+    }
+  ],
+  "open": [
+    "Six default-adapter concurrency failures and safe public replacement adoption",
+    "Consistent first-room provisioning and deployed live transport integrations",
+    "Durable pending-draft persistence/reconciliation and multi-host admission",
+    "Nested fragments; production storage/history/compaction costs",
+    "Three size overruns, complete fresh release CI and overall parity"
+  ]
+}
