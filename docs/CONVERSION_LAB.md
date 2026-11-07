@@ -11,6 +11,12 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+With **Preserve supported HTML structure** enabled, select **Preserve blocked
+Markdown autolinks as inactive data** before uploading. The document retains
+the original destination and editable label. The reader and safe HTML download
+show it as non-clickable text. Export and reopen use the file's saved schema.
+[Inactive URI policy and corpus evidence](MARKDOWN_SOURCE.md).
+
 For a Markdown file, select **HTML** as the export format to reveal **Omit
 Markdown’s editor-only caret paragraphs in HTML**. This keeps an untouched
 empty quote or list item empty in the download while you can still type into

@@ -130,13 +130,14 @@ export function ConversionLab() {
   const [message, setMessage] = useState('');
   const [preserveHTMLStructure, setPreserveHTMLStructure] = useState(false);
   const [commonMarkText, setCommonMarkText] = useState(false);
+  const [retainBlockedAutolinks, setRetainBlockedAutolinks] = useState(false);
   const importing = useRef(false);
   async function open(files: File[]) {
     if (importing.current) return;
     if (files.length + entries.length > 8) { setMessage('Keep up to 8 files in this lab. Remove files or clear the session first.'); return; }
     if ([...entries.map(entry => entry.file), ...files].reduce((sum, file) => sum + file.size, 0) > 16 * 1024 * 1024) { setMessage('Session limit: 16 MiB total. Try fewer or smaller files.'); return; }
     importing.current = true; setBusy(true); setMessage('Reading files locally…');
-    const context = createLabContext({ preserveHTMLStructure, commonMarkText });
+    const context = createLabContext({ preserveHTMLStructure, commonMarkText, retainBlockedAutolinks });
     const added: Entry[] = [];
     try {
       for (const file of files) {
@@ -162,6 +163,7 @@ export function ConversionLab() {
       <legend>Options for the next files</legend>
       <label className="lab-checkbox"><input type="checkbox" checked={preserveHTMLStructure} onChange={event => setPreserveHTMLStructure(event.target.checked)} /> Preserve supported HTML structure</label>
       <p>Keep supported sections, bookmarks, comments and inline flow. HTML inside Markdown will be converted too. This does not reproduce arbitrary styles or scripts.</p>
+      {preserveHTMLStructure && <label className="lab-checkbox"><input type="checkbox" checked={retainBlockedAutolinks} onChange={event => setRetainBlockedAutolinks(event.target.checked)} /> Preserve blocked Markdown autolinks as inactive data</label>}
       <label className="lab-checkbox"><input type="checkbox" checked={commonMarkText} onChange={event => setCommonMarkText(event.target.checked)} /> Use CommonMark rules for delimiters and bare addresses</label>
       <p>Parse leading --- lines as Markdown and leave bare URLs and email addresses as text. Existing drafts keep their original settings.</p>
     </fieldset>

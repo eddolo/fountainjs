@@ -15,12 +15,11 @@ entry in the unreleased local package. Safe production adoption remains open.
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
-confidence, accessibility, RTL/localization, and practical onboarding. Complete
-CommonMark is also unfinished: the default semantic profile is 563/652 and the
-strongest explicit complete-file body profile is 648/652. The latter uses
-Markdown-body delimiters, literal bare addresses and HTML export without
-editor-only caret children, with separate exact-source checks. DOCX/PDF have
-bounded supported workflows. ODT/EPUB remain unclaimed.
+confidence, accessibility, RTL/localization, and practical onboarding. The
+default Markdown semantic profile matches 563/652. The explicit complete-file
+source-data profile matches all 652 CommonMark body examples, with separate
+exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
+have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
 The latest full source run had 4,802 passes and six failures, with no skips. Four

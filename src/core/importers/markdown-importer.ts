@@ -116,6 +116,10 @@ export interface MarkdownImportOptions {
    * not a full CommonMark mode or an editor typing/clipboard setting.
    */
   readonly autolinkLiterals?: boolean;
+  /** Keep blocked angle-bracket URI autolinks as inactive source data.
+   * Requires the inert HTML anchor extension. Navigation policy stays the same.
+   */
+  readonly retainBlockedAutolinks?: boolean;
   /**
    * Source capture stores leading YAML frontmatter as metadata by default.
    * Use 'markdown' to parse the entire file as Markdown and retain its source.
@@ -1384,7 +1388,7 @@ function styledTextToken(
   return nodes.length ? { nodes, end } : null;
 }
 
-function containsNestedLink(label: string, references: References): boolean {
+function containsNestedLink(label: string, references: References, retainBlockedAutolinks: boolean): boolean {
   for (let index = 0; index < label.length;) {
     if (label[index] === '\\') { index += 2; continue; }
     if (label[index] === '`') {
@@ -1392,7 +1396,7 @@ function containsNestedLink(label: string, references: References): boolean {
       if (code) { index = code.end; continue; }
     }
     if (label[index] === '<') {
-      const autolink = autolinkToken(label, index);
+      const autolink = autolinkToken(label, index, retainBlockedAutolinks);
       if (autolink) return true;
       const htmlEnd = inlineHTMLTokenEnd(label, index);
       if (htmlEnd > index) { index = htmlEnd; continue; }
@@ -1412,6 +1416,7 @@ function linkToken(
   start: number,
   references: References,
   rejectNestedLinks = true,
+  retainBlockedAutolinks = false,
 ): LinkToken | null {
   const image = value.startsWith('![', start);
   const bracket = image ? start + 1 : start;
@@ -1421,7 +1426,7 @@ function linkToken(
   const label = value.slice(bracket + 1, labelEnd);
   const following = labelEnd + 1;
   const result = (definition: ReferenceDefinition, end: number): LinkToken | null => (
-    !image && rejectNestedLinks && containsNestedLink(label, references)
+    !image && rejectNestedLinks && containsNestedLink(label, references, retainBlockedAutolinks)
       ? null
       : { ...definition, label, image, end }
   );
@@ -1452,7 +1457,9 @@ function linkToken(
   return definition ? result(definition, labelEnd + 1) : null;
 }
 
-function autolinkToken(value: string, start: number): (ReferenceDefinition & { readonly label: string; readonly end: number }) | null {
+function autolinkToken(value: string, start: number, retainBlocked = false): (ReferenceDefinition & {
+  readonly label: string; readonly end: number; readonly blocked: boolean;
+}) | null {
   if (value[start] !== '<') return null;
   const closing = value.indexOf('>', start + 1);
   if (closing < 0) return null;
@@ -1461,7 +1468,9 @@ function autolinkToken(value: string, start: number): (ReferenceDefinition & { r
   const email = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/u.test(label);
   const href = email ? `mailto:${label}` : label;
   if (!email && !/^[A-Za-z][A-Za-z\d+.-]{1,31}:/u.test(label)) return null;
-  return isSafeURL(href) ? { href, title: '', label, end: closing + 1 } : null;
+  const blocked = !isSafeURL(href);
+  if (blocked && (!retainBlocked || label.length > 8_192)) return null;
+  return { href, title: '', label, end: closing + 1, blocked };
 }
 
 function extendedWebAutolinkToken(
@@ -1513,10 +1522,11 @@ function extendedEmailAutolinkToken(
 function inline(
   text: string, schema: Schema, references: References, inheritedMarks: readonly Mark[] = [],
   htmlTokens?: Map<Node, MarkdownHTMLInlineSegment>,
-  autolinkLiterals = true,
+  options: Pick<MarkdownImportOptions, 'autolinkLiterals' | 'retainBlockedAutolinks'> = {},
   softBreaks?: Map<Node, { readonly softBreak?: true; readonly textRun: number }>,
 ): Node[] {
   const emphasisDelimiters: EmphasisDelimiter[] = [];
+  const retainBlocked = options.retainBlockedAutolinks === true && Boolean(schema.nodes.html_inert_anchor);
   const result: Node[] = [];
   let plain = '';
   const flush = () => {
@@ -1579,8 +1589,18 @@ function inline(
         index = parsed.end;
         continue;
       }
-      const autolink = autolinkToken(text, index);
-      if (autolink && schema.marks.link) {
+      const autolink = autolinkToken(text, index, retainBlocked);
+      if (autolink?.blocked && !inheritedMarks.some(mark => mark.type.name === 'link')) {
+        try {
+          const anchor = schema.node('html_inert_anchor', { tag: 'a', attributes: { href: autolink.href } },
+            [schema.text(autolink.label)], undefined, inheritedMarks);
+          flush();
+          result.push(anchor);
+          index = autolink.end;
+          continue;
+        } catch { /* An incompatible schema keeps the original syntax literal. */ }
+      }
+      if (autolink && !autolink.blocked && schema.marks.link) {
         flush();
         result.push(...textNodes(autolink.label, schema, [
           ...inheritedMarks,
@@ -1620,7 +1640,7 @@ function inline(
       }
     }
     if (text[index] === '!' || text[index] === '[') {
-      const parsed = linkToken(text, index, references);
+      const parsed = linkToken(text, index, references, true, retainBlocked);
       if (parsed) {
         const safe = isSafeURL(parsed.href, {
           allowDataImage: parsed.image,
@@ -1632,13 +1652,13 @@ function inline(
             try {
               result.push(schema.node('inline_image', {
                 src: parsed.href,
-                alt: imageDescription(parsed.label, schema, references),
+                alt: imageDescription(parsed.label, schema, references, options),
                 title: parsed.title,
               }, [], undefined, inheritedMarks));
             } catch { result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks)); }
           } else if (!parsed.image && schema.marks.link) {
             const mark = schema.marks.link.create({ href: parsed.href, title: parsed.title });
-            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens, autolinkLiterals, softBreaks));
+            result.push(...inline(parsed.label, schema, references, [...inheritedMarks, mark], htmlTokens, options, softBreaks));
           } else {
             result.push(...textNodes(text.slice(index, parsed.end), schema, inheritedMarks));
           }
@@ -1647,7 +1667,7 @@ function inline(
         }
       }
     }
-    if (autolinkLiterals && schema.marks.link && !inheritedMarks.some((mark) => mark.type.name === 'link')) {
+    if (options.autolinkLiterals !== false && schema.marks.link && !inheritedMarks.some((mark) => mark.type.name === 'link')) {
       const extended = extendedWebAutolinkToken(text, index) ?? extendedEmailAutolinkToken(text, index);
       if (extended) {
         flush();
@@ -1696,7 +1716,7 @@ function inline(
       result.push(...inline(text.slice(index + delimiter.length, end), schema, references, [
         ...inheritedMarks,
         ...types.map((type) => type.create()),
-      ], htmlTokens, autolinkLiterals, softBreaks));
+      ], htmlTokens, options, softBreaks));
       index = end + delimiter.length;
       handled = true;
       break;
@@ -1736,8 +1756,8 @@ function inline(
   return resolveEmphasisDelimiters(result, emphasisDelimiters, schema, inheritedMarks, htmlTokens, softBreaks);
 }
 
-function imageDescription(value: string, schema: Schema, references: References): string {
-  return inline(value, schema, references).map((node) => {
+function imageDescription(value: string, schema: Schema, references: References, options: MarkdownImportOptions): string {
+  return inline(value, schema, references, [], undefined, options).map((node) => {
     if (node.isText) return node.textContent;
     if (node.type.name === 'inline_image') return String(node.attrs.alt ?? '');
     if (node.type.name === 'hard_break') return '\n';
@@ -1749,9 +1769,9 @@ function imageDescription(value: string, schema: Schema, references: References)
 }
 
 function projectInline(text: string, schema: Schema, references: References, options: MarkdownImportOptions): Node[] {
-  if (!options.parseHTMLInline) return inline(text, schema, references, [], undefined, options.autolinkLiterals);
+  if (!options.parseHTMLInline) return inline(text, schema, references, [], undefined, options);
   const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
-  const nodes = inline(text, schema, references, [], tokens, options.autolinkLiterals);
+  const nodes = inline(text, schema, references, [], tokens, options);
   if (!tokens.size) return nodes;
   const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node })));
   let issue: MarkdownHTMLInlineFallback;
@@ -1772,7 +1792,7 @@ function projectInline(text: string, schema: Schema, references: References, opt
     issue = { source: text, reason: 'error', message: error instanceof Error ? error.message : 'Inline HTML adapter failed; literal source retained.' };
   }
   options.onHTMLInlineFallback?.(Object.freeze(issue));
-  return inline(text, schema, references, [], undefined, options.autolinkLiterals);
+  return inline(text, schema, references, [], undefined, options);
 }
 
 function paragraph(schema: Schema, value: string, references: References, align = 'left', options: MarkdownImportOptions = {}): Node {
@@ -1788,7 +1808,7 @@ function paragraphBlocks(schema: Schema, value: string, references: References, 
   if (!options.parseHTMLParagraph) return [paragraph(schema, value, references, 'left', options)];
   const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
   const softBreaks = new Map<Node, { readonly softBreak?: true; readonly textRun: number }>();
-  const nodes = inline(value, schema, references, [], tokens, options.autolinkLiterals, softBreaks);
+  const nodes = inline(value, schema, references, [], tokens, options, softBreaks);
   if (!tokens.size) return [schema.node('paragraph', { align: 'left' }, nodes)];
   const segments = Object.freeze(nodes.map(node => tokens.get(node) ?? Object.freeze({ kind: 'node' as const, node, ...softBreaks.get(node) })));
   let issue: MarkdownHTMLInlineFallback;
@@ -1812,7 +1832,7 @@ function paragraphBlocks(schema: Schema, value: string, references: References, 
     issue = { source: value, reason: 'error', message: error instanceof Error ? error.message : 'Paragraph HTML adapter failed; literal source retained.' };
   }
   options.onHTMLParagraphFallback?.(Object.freeze(issue));
-  return [schema.node('paragraph', { align: 'left' }, inline(value, schema, references, [], undefined, options.autolinkLiterals))];
+  return [schema.node('paragraph', { align: 'left' }, inline(value, schema, references, [], undefined, options))];
 }
 
 function tableCells(line: string): string[] {
@@ -2213,14 +2233,14 @@ function htmlFlowContext(sources: readonly PendingHTMLBlockSource[], schema: Sch
   let textBlocks: readonly MarkdownHTMLFlowTextBlockSource[] | undefined;
   let allBlocks: readonly MarkdownHTMLFlowBlockSource[] | undefined;
   const snapshots = new Map<PendingHTMLTextBlockSource, MarkdownHTMLFlowTextBlockSource>();
-  const autolinkLiterals = options.autolinkLiterals;
+  const inlineOptions = { autolinkLiterals: options.autolinkLiterals, retainBlockedAutolinks: options.retainBlockedAutolinks };
   const inspect = (source: PendingHTMLTextBlockSource): MarkdownHTMLFlowTextBlockSource => {
     const existing = snapshots.get(source);
     if (existing) return existing;
     const tokens = new Map<Node, MarkdownHTMLInlineSegment>();
     const characters = new Map<Node, { readonly softBreak?: true; readonly textRun: number }>();
     const nodes = source.kind === 'code' ? [schema.text(source.source)]
-      : inline(source.source, schema, references, [], tokens, autolinkLiterals, characters);
+      : inline(source.source, schema, references, [], tokens, inlineOptions, characters);
     const segments = Object.freeze(nodes.map(node => tokens.get(node)
       ?? Object.freeze({ kind: 'node' as const, node, ...characters.get(node) })));
     const result = Object.freeze({ ...source, segments });
@@ -2430,7 +2450,7 @@ function parseBlocks(lines: readonly string[], schema: Schema, references: Refer
     }
     const image = blockImage(line, references);
     if (image && isSafeURL(image.href, { allowDataImage: true })) {
-      const alt = imageDescription(image.label, schema, references);
+      const alt = imageDescription(image.label, schema, references, options);
       const node = schema.node('image_super', {
         src: image.href,
         alt,

@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve blocked Markdown URI autolinks as inactive data when the import
+  policy and inert anchor extension are enabled. The safe HTML reader keeps
+  the addresses non-clickable. The explicit complete-file source profile
+  matches all 652 CommonMark body examples. [Markdown source policies](docs/MARKDOWN_SOURCE.md).
+
 - Let HTML exports omit untouched Markdown caret children while retaining
   empty containers and authored blank paragraphs. The conversion lab
   exposes the option for Markdown-to-HTML downloads. The explicit

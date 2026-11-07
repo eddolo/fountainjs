@@ -2,6 +2,7 @@ import katex from 'katex';
 import { HTMLAnchorExtension, HTMLCommentExtension, HTMLContainerExtension, HTMLFlowExtension, HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { PagesExtension } from 'fountainjs-editor/pages';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
+import { createInertHTMLAnchorExtension } from 'fountainjs-editor/html/inert';
 import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/docx';
 import { compileTeXForDOCX } from './mathjax-docx';
 
@@ -17,6 +18,7 @@ export const labPolicy = 'starter-kit-pages-v2; markdown-inert-html; bounded-htm
 export type LabImportOptions = {
   readonly preserveHTMLStructure?: boolean;
   readonly commonMarkText?: boolean;
+  readonly retainBlockedAutolinks?: boolean;
 };
 /** Each imported file owns its schema/policy for editing, export and reopening.
  * Changing the next-import controls must never reinterpret an existing draft.
@@ -25,11 +27,14 @@ export function createLabContext(options: LabImportOptions = {}) {
   const settings = Object.freeze({
     preserveHTMLStructure: options.preserveHTMLStructure === true,
     commonMarkText: options.commonMarkText === true,
+    retainBlockedAutolinks: options.preserveHTMLStructure === true && options.retainBlockedAutolinks === true,
   });
   const kit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
     renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
-  }), ...(settings.preserveHTMLStructure ? [HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension] : [])]);
-  const policy = settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy;
+  }), ...(settings.preserveHTMLStructure ? [HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension] : []),
+  ...(settings.retainBlockedAutolinks ? [createInertHTMLAnchorExtension()] : [])]);
+  const policy = (settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy)
+    + (settings.retainBlockedAutolinks ? '; blocked-autolinks-inert' : '');
   return Object.freeze({ options: settings, kit, schema: new Schema(kit.schema),
     policy: settings.commonMarkText ? policy + '; markdown-body-delimiters; bare-addresses-literal' : policy });
 }
@@ -92,6 +97,7 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
   const result = MarkdownImporter.parseWithSource(text, labSchema, {
     frontmatter: context.options.commonMarkText ? 'markdown' : 'metadata',
     autolinkLiterals: !context.options.commonMarkText,
+    retainBlockedAutolinks: context.options.retainBlockedAutolinks,
     ...(context.options.preserveHTMLStructure ? {
       parseHTMLDocument: (segments, schema, sourceContext) => {
         const parsed = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, schema, sourceContext);
@@ -101,7 +107,8 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
       onHTMLFlowFallback: issue => issues.push({ code: 'html-source-fallback', message: issue.message }),
     } : {}),
   });
-  const textPolicy = context.options.commonMarkText ? 'Leading delimiters are parsed as Markdown. Bare addresses stay as text. ' : '';
+  const textPolicy = (context.options.commonMarkText ? 'Leading delimiters are parsed as Markdown. Bare addresses stay as text. ' : '')
+    + (context.options.retainBlockedAutolinks ? 'Blocked Markdown autolinks are retained as inactive data. ' : '');
   const htmlPolicy = context.options.preserveHTMLStructure
     ? 'HTML conversion is enabled for this file. Unsupported HTML can remain literal or lose structure with a report.'
     : 'Raw HTML stays inert.';

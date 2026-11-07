@@ -43,6 +43,7 @@ import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey
 import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boundaries-journey';
 import { runMarkdownFrontmatterJourney } from './markdown-frontmatter-journey';
 import { runMarkdownCaretHTMLJourney } from './markdown-caret-html-journey';
+import { runMarkdownInactiveAutolinksJourney } from './markdown-inactive-autolinks-journey';
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
 import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
 import { runMarkdownContainerReferenceJourney } from './markdown-container-reference-journey';
@@ -6121,6 +6122,10 @@ test('imports leading Markdown delimiters and literal addresses through edit, do
 
 test('exports untouched empty Markdown containers without dropping authored blank or edited content', async ({ page }, info) => {
   await runMarkdownCaretHTMLJourney(page, info);
+});
+
+test('retains blocked Markdown destinations through edits and safe reader downloads', async ({ page }, info) => {
+  await runMarkdownInactiveAutolinksJourney(page, info);
 });
 
 test('reopens source-preserved issue drafts with the real HTML table adapter enabled', async ({ page }, info) => {

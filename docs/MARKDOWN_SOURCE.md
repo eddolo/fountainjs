@@ -1,5 +1,48 @@
 # Markdown semantics and source fidelity
 
+## Inactive URI autolinks and complete-file body verification (2026-11-07, unreleased)
+
+`retainBlockedAutolinks: true` captures a blocked angle-bracket URI using
+`createInertHTMLAnchorExtension()`. The document stores its destination
+and editable label in an inactive anchor. The normal HTML exporter renders
+a span with a data payload. Approved destinations keep their ordinary link
+behavior. The option falls back to literal Markdown when the matching
+extension is absent or the address exceeds its bounded input size.
+
+In the conversion lab, select **Preserve supported HTML structure** and
+**Preserve blocked Markdown autolinks as inactive data** before uploading.
+The settings follow the file through editing and reimport. Exact Markdown
+source export keeps the original angle-bracket syntax where the source
+proof applies. An edited label can also use the safe HTML carrier in a
+canonical Markdown export with the same HTML-aware schema.
+[Conversion lab workflow](CONVERSION_LAB.md).
+
+The explicit complete-file profile matches **652/652** CommonMark 0.31.2 body
+examples on both LF and CRLF. It combines the complete-file source adapter
+and its schema extensions, `frontmatter: 'markdown'`, `autolinkLiterals: false`,
+`retainBlockedAutolinks: true` and `omitMarkdownCaretHosts: true` during source
+export. This adds examples 596, 598–599 and 601 to the 648/652 profile. The
+same neutral semantic comparator checks every case. A separate check verifies
+all 1,304 untouched Markdown snapshots exactly.
+
+`exportHTMLSource` reconstructs source data, including original href values,
+and returns `sanitized: false`. The corpus compares its parsed body without
+executing it. The editor, the conversion lab and `HTMLExporter` use the safe
+carrier for viewing and download. The default Markdown and safe-reader
+profiles retain their separately measured behavior. These checks cover the
+official body corpus and the documented source model, with independent
+verification for native model retention and layout.
+
+Three recorded browser journeys compare a standard import and an inactive
+import, type into the draft, download Markdown, and open the actual safe
+HTML export in the browser. The native reader DOM contains two inactive
+carriers and one approved link. Unit checks also cover hostile schemes,
+quote-shaped payloads, nested link boundaries, literal code and escapes,
+and canonical Markdown after a label edit. The runtime change adds 476 ESM
+and 355 CommonJS bytes across the top-level build. The Markdown and HTML
+regression suite passes 1,790 tests across 86 files. Build, types, API,
+package smoke and headless checks pass. The four size overruns remain open.
+
 ## HTML export of empty Markdown containers (2026-11-07, unreleased)
 
 Use `HTMLExporter.export(document, { omitMarkdownCaretHosts: true })` when a

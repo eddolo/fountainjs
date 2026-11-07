@@ -124,6 +124,9 @@ export function checkCompleteSourceConformance({ engine, examples, referenceProj
   for (const number of literalCaptureGains) assert.ok(unresolved.has(number), 'Literal policy gains must be separate from existing matches.');
   const readerCaretGains = ranges(fixture.readerCaretGains);
   for (const number of readerCaretGains) assert.ok(unresolved.has(number) && !literalCaptureGains.has(number));
+  const retainedURIGains = ranges(fixture.retainedURIGains);
+  for (const number of retainedURIGains) assert.ok(unresolved.has(number) && !literalCaptureGains.has(number) && !readerCaretGains.has(number));
+  assert.equal(new Set([...required, ...literalCaptureGains, ...readerCaretGains, ...retainedURIGains]).size, examples.length);
   for (let number = 1; number <= 652; number++) if (Number(required.has(number)) + Number(unresolved.has(number)) !== 1) throw Error(`Complete source case ${number} needs one classification.`);
   const extensions = [engine.HTMLContainerExtension, engine.HTMLCommentExtension, engine.HTMLFlowExtension, engine.HTMLAnchorExtension,
     engine.createInertHTMLAnchorExtension(), engine.createHTMLSourceEmptyBodyExtension(), engine.createHTMLSourceEOFExtension(),
@@ -141,6 +144,7 @@ export function checkCompleteSourceConformance({ engine, examples, referenceProj
   const modelStatuses = {};
   let literalCaptureMatches = 0;
   let readerMatches = 0;
+  let retainedURIMatches = 0;
   for (const example of examples) for (const ending of ['\n', '\r\n']) {
     const source = materializeTabs(example.markdown).replaceAll('\n', ending);
     const issues = [], fallbacks = [];
@@ -172,6 +176,12 @@ export function checkCompleteSourceConformance({ engine, examples, referenceProj
     const readerMatched = readerOutput.ok && JSON.stringify(projectBodyNodes(inspectCompleteSource(literal.document, readerOutput.sourceHTML).nodes)) === JSON.stringify(expected);
     assert.equal(readerMatched, literalMatched || readerCaretGains.has(example.number), 'Review caret-free body result for ' + example.number + ' / ' + JSON.stringify(ending));
     readerMatches += Number(readerMatched);
+    const retainedURI = engine.MarkdownImporter.parseWithSource(source, schema, { ...literalOptions, retainBlockedAutolinks: true });
+    assert.equal(engine.MarkdownExporter.exportWithSource(retainedURI.document, retainedURI.source).markdown, source, 'Inactive URI capture must retain exact source.');
+    const retainedOutput = engine.exportHTMLSource(retainedURI.document, { omitMarkdownCaretHosts: true });
+    const retainedURIMatched = retainedOutput.ok && JSON.stringify(projectBodyNodes(inspectCompleteSource(retainedURI.document, retainedOutput.sourceHTML).nodes)) === JSON.stringify(expected);
+    assert.equal(retainedURIMatched, readerMatched || retainedURIGains.has(example.number), 'Review retained URI body result for ' + example.number + ' / ' + JSON.stringify(ending));
+    retainedURIMatches += Number(retainedURIMatched);
     const captureOutput = engine.exportHTMLSource(captured.document);
     const captureBodyMatched = captureOutput.ok && JSON.stringify(projectBodyNodes(inspectCompleteSource(captured.document, captureOutput.sourceHTML).nodes)) === JSON.stringify(expected);
     if (captureBodyMatched) { captureBodyMatches++; captureCounts.set(example.number, (captureCounts.get(example.number) ?? 0) + 1); }
@@ -187,7 +197,7 @@ export function checkCompleteSourceConformance({ engine, examples, referenceProj
     } else actual = { refused: output.issues };
     const matched = JSON.stringify(actual) === JSON.stringify(expected);
     if (matched) counts.set(example.number, (counts.get(example.number) ?? 0) + 1);
-    records.push({ number: example.number, ending, matched, captureBodyMatched, literalMatched, readerMatched, sameCapturedModel, safeHTMLMatch, sourceOK: output.ok,
+    records.push({ number: example.number, ending, matched, captureBodyMatched, literalMatched, readerMatched, retainedURIMatched, sameCapturedModel, safeHTMLMatch, sourceOK: output.ok,
       ...(output.ok ? { modelRoundTrip: output.modelRoundTrip } : { exportIssues: output.issues }),
       declarationChecked: inspection?.declarationChecked ?? false, eofChecked: inspection?.eofChecked ?? false,
       ...(!safeHTMLMatch ? { safeHTMLDifferences: modelDifferences(doc.toJSON(), safeReopened) } : {}),
@@ -200,13 +210,14 @@ export function checkCompleteSourceConformance({ engine, examples, referenceProj
   const report = { profile: fixture.profile, projectionVersion: fixture.projectionVersion, matching: matching.length, total: 652,
     oracleControls, sourceChecks, jsonChecks, declarationChecks, eofChecks, safeHTMLMatches, safeHTMLTotal: records.length, modelStatuses,
     capturedMatchingExamples: capturedMatching, captureBodyMatches, captureBodyTotal: records.length, sourceCaptureFrontmatterDivergences: [...frontmatterDivergences],
-    literalCaptureMatches, literalCaptureTotal: records.length, readerMatches, regressions, gains, matchingExamples: matching, records };
+    literalCaptureMatches, literalCaptureTotal: records.length, readerMatches, retainedURIMatches, regressions, gains, matchingExamples: matching, records };
   if (reportPath) writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
   console.log(`Complete-document source BODY profile: ${matching.length}/652; ${sourceChecks} exact-source and ${jsonChecks} native-JSON checks; ${declarationChecks} declaration / ${eofChecks} EOF checks.`);
   console.log(`Complete source retention diagnostics: ${safeHTMLMatches}/${records.length} exact safe-HTML model reopens; source model statuses ${JSON.stringify(modelStatuses)}. Neither is body semantic conformance.`);
   console.log(`Source-capture body diagnostics: ${capturedMatching.length}/652 on both line endings (${captureBodyMatches}/${records.length} checks); frontmatter route differs from parse() only in examples ${[...frontmatterDivergences].join(',')}.`);
   console.log(`Explicit Markdown-body and literal-address source capture: ${literalCaptureMatches / 2}/652 on both line endings, with ${records.length} exact-source checks.`);
   console.log(`Explicit complete source body without Markdown caret children: ${readerMatches / 2}/652 on both line endings.`);
+  console.log(`Explicit complete source body with inactive URI capture: ${retainedURIMatches / 2}/652 on both line endings; ${records.length} exact-source checks.`);
   if (regressions.length) throw Error(`Complete source semantic regressions: ${regressions.join(',')}`);
   if (gains.length && !reportOnly) throw Error(`Review complete source gains before promotion: ${gains.join(',')}`);
   return report;

@@ -26,4 +26,6 @@ it('keeps the public developer guide aligned with the enforced CommonMark profil
   expect(Number(literal?.[1])).toBe(count(complete.requiredMatchRanges) + count(complete.markdownBodyLiteralAddressGains));
   const caret = guide.match(/(\d+)\/652 when HTML export omits editor-only caret children/);
   expect(Number(caret?.[1])).toBe(Number(literal?.[1]) + count(complete.readerCaretGains));
+  const uri = guide.match(/(\d+)\/652 with inactive URI capture/);
+  expect(Number(uri?.[1])).toBe(Number(caret?.[1]) + count(complete.retainedURIGains));
 });
