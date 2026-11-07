@@ -76,6 +76,8 @@ export interface YjsCollaborationAdapterOptions {
   readonly captureTimeout?: number;
   /** Minimum milliseconds between outgoing awareness writes. Defaults to 32. Set 0 to disable throttling. */
   readonly presenceThrottleMs?: number;
+  /** Refuse independently initialized XML roots and preserve the local draft. */
+  readonly preserveConcurrentRoots?: boolean;
   /** Opt-in granular CRDT storage for selected nested node attributes. */
   readonly structuredAttributes?: YjsStructuredAttributesOptions;
 }
@@ -470,6 +472,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private readonly repairOrigin = Object.freeze({ fountain: 'repair' });
   private readonly captureTimeout: number;
   private readonly presenceThrottleMs: number;
+  private readonly preserveConcurrentRoots: boolean;
+  private initializationConflict = false;
   private readonly structuredAttributes?: YjsStructuredAttributeStore;
   private readonly processedTransactions = new WeakSet<Y.Transaction>();
   private context?: CollaborationAdapterContext;
@@ -511,6 +515,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   private readonly onSharedChange = (events: readonly Y.YEvent<any>[], transaction: Y.Transaction): void => {
     if (!this.context
+      || this.initializationConflict
       || transaction.origin === this.localOrigin
       || transaction.origin === this.repairOrigin
       || this.processedTransactions.has(transaction)) return;
@@ -549,6 +554,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   };
 
   private readonly onAwarenessChange = (): void => {
+    if (this.initializationConflict) return;
     try { this.publishPresences(); }
     catch (error) {
       this.context?.setStatus('error', {
@@ -558,6 +564,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     }
   };
   private readonly onProviderStatus = (event: { status?: string } | string): void => {
+    if (this.initializationConflict) return;
     const status = providerStatus(event);
     if (status) this.context?.setStatus(status);
   };
@@ -599,6 +606,9 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         || options.presenceThrottleMs > 1_000)) {
       throw new TypeError('Invalid Yjs presence throttle.');
     }
+    if (options.preserveConcurrentRoots !== undefined && typeof options.preserveConcurrentRoots !== 'boolean') {
+      throw new TypeError('Invalid Yjs concurrent root policy.');
+    }
     this.document = options.document;
     this.fragment = options.fragment ?? options.document.getXmlFragment(options.fragmentName ?? 'fountain');
     this.user = normalizeLocalUser(options.user);
@@ -607,6 +617,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.awarenessField = options.awarenessField ?? 'fountain';
     this.captureTimeout = Math.max(0, options.captureTimeout ?? 500);
     this.presenceThrottleMs = Math.max(0, options.presenceThrottleMs ?? 32);
+    this.preserveConcurrentRoots = options.preserveConcurrentRoots ?? false;
     if (options.structuredAttributes) {
       this.structuredAttributes = new YjsStructuredAttributeStore(
         options.document,
@@ -619,6 +630,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     this.context = context;
+    this.assertInitialization();
     this.structuredAttributes?.validate(context.editor.state.doc);
     if (!this.observing) {
       this.fragment.observeDeep(this.onSharedChange);
@@ -700,6 +712,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
+    this.assertInitialization();
     if (this.fragment.toArray().some(root => !isSharedElement(root))) {
       throw new Error('Incompatible shared root; refusing legacy writes without overwriting shared data.');
     }
@@ -726,10 +739,11 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalSelection(document: Node, selection: AnySelection): void {
-    this.publishLocalSelection(document, selection);
+    if (!this.initializationConflict) this.publishLocalSelection(document, selection);
   }
 
   undo(): boolean {
+    if (this.initializationConflict) return false;
     const manager = this.undoManager;
     const item = manager?.undoStack.at(-1);
     if (!manager || !item) return false;
@@ -739,6 +753,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   redo(): boolean {
+    if (this.initializationConflict) return false;
     const manager = this.undoManager;
     const item = manager?.redoStack.at(-1);
     if (!manager || !item) return false;
@@ -747,8 +762,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     finally { this.pendingRestoredSelection = undefined; }
   }
 
-  canUndo(): boolean { return this.undoManager?.canUndo() ?? false; }
-  canRedo(): boolean { return this.undoManager?.canRedo() ?? false; }
+  canUndo(): boolean { return !this.initializationConflict && (this.undoManager?.canUndo() ?? false); }
+  canRedo(): boolean { return !this.initializationConflict && (this.undoManager?.canRedo() ?? false); }
   stopCapturing(): void { this.undoManager?.stopCapturing(); }
 
   destroy(): void {
@@ -760,10 +775,28 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private normalizeRoots(): void {
+    this.assertInitialization();
     if (this.fragment.length <= 1) return;
     const children = this.fragment.toArray();
     if (!children.every(isSharedElement)) return;
     this.document.transact(() => this.fragment.delete(1, this.fragment.length - 1), this.repairOrigin);
+  }
+
+  private assertInitialization(): void {
+    if (!this.preserveConcurrentRoots) return;
+    if (!this.initializationConflict && this.fragment.length > 1) {
+      this.initializationConflict = true;
+      directionIdentityReleases.get(this)?.();
+      directionIdentityReleases.delete(this);
+      if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
+      this.presenceTimer = undefined;
+      this.pendingPresence = undefined;
+      this.awareness?.setLocalStateField(this.awarenessField, null);
+      this.context?.setPresences([]);
+    }
+    if (this.initializationConflict) {
+      throw new Error('The room has conflicting initial roots. Preserve the local draft and replace the collaboration session.');
+    }
   }
 
   private repairCanonicalDocument(before: Node, after: Node): void {

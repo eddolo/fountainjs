@@ -51,6 +51,8 @@ Both adapters also discard an older queued cursor after a newer one is sent.
 The retained live workflow now has 18 recorded browser checks for all six
 default-adapter structural cases across offline autosave, reload, resume, undo
 and redo. The ordinary default adapter matrix still reproduces its six failures.
+Legacy applications can enable `preserveConcurrentRoots` to retain independently
+initialized roots and keep typing locally while the host reviews the conflict.
 [Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
 
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies

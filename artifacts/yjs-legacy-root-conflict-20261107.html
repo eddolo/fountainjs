@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Preserve conflicting collaboration drafts</title>
+<link rel="stylesheet" href="./cross-format-build-20261107/styles.css">
+<style>
+  body { margin: 32px auto; max-width: 1040px; padding: 0 24px; background: #f5f3fb; color: #242036; font: 16px system-ui, sans-serif; }
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+  section { padding: 20px; border: 1px solid #d2c9e4; border-radius: 12px; background: white; }
+  button { margin: 0 8px 8px 0; padding: 8px 12px; border: 1px solid #c6bdd9; border-radius: 6px; background: white; color: inherit; font: inherit; }
+  .fountain-editor { min-height: 140px; padding: 12px; border: 1px solid #ded6ed; }
+  .status { min-height: 3em; }
+</style>
+<h1>Preserve independently edited room drafts</h1>
+<p>These two editors started from separate copies. Exchange the drafts to see what happens when the room has two roots.</p>
+<button id="exchange">Exchange offline edits</button>
+<button id="archive" disabled>Download shared roots</button>
+<p id="summary" role="status">The drafts are still separate.</p>
+<main>
+  <section><h2>Ada’s draft</h2><p id="ada-status" class="status"></p><div id="ada"></div></section>
+  <section><h2>Grace’s draft</h2><p id="grace-status" class="status"></p><div id="grace"></div></section>
+</main>
+<script type="module">
+import * as Y from 'yjs';
+import { CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState } from './cross-format-build-20261107/engine.js';
+import { createYjsCollaborationExtension } from './cross-format-build-20261107/legacy-adapter.js';
+
+function mount(id, name, color) {
+  const doc = new Y.Doc();
+  const collaboration = createYjsCollaborationExtension({ document: doc, user: {id, name, color}, preserveConcurrentRoots: true });
+  const kit = composeExtensions([CoreExtension, collaboration]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+    type: 'doc', content: [{type: 'paragraph', content: [{type: 'text', text: 'Common template.'}]}],
+  }});
+  const view = new EditorView(document.getElementById(id), editor, { ariaLabel: name + ' editor' });
+  const updateStatus = () => {
+    const state = getCollaborationState(editor);
+    document.getElementById(id + '-status').textContent = state.error?.message ?? 'Editing an independent copy';
+  };
+  editor.subscribe(updateStatus);
+  updateStatus();
+  return { doc, editor, view };
+}
+
+const ada = mount('ada', 'Ada', '#7048e8');
+const grace = mount('grace', 'Grace', '#af3e7d');
+let archived;
+document.getElementById('exchange').onclick = () => {
+  const left = Y.encodeStateAsUpdate(ada.doc), right = Y.encodeStateAsUpdate(grace.doc);
+  Y.applyUpdate(ada.doc, right, 'peer');
+  Y.applyUpdate(grace.doc, left, 'peer');
+  archived = Y.encodeStateAsUpdate(ada.doc);
+  const count = ada.doc.getXmlFragment('fountain').length;
+  document.getElementById('summary').textContent = `${count} shared roots preserved. New typing stays in each local draft.`;
+  document.getElementById('archive').disabled = false;
+  document.getElementById('exchange').disabled = true;
+};
+document.getElementById('archive').onclick = () => {
+  const url = URL.createObjectURL(new Blob([archived], {type: 'application/octet-stream'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'conflicting-room.yjs';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+window.audit = {
+  wire: () => [ada, grace].map(peer => Array.from(Y.encodeStateAsUpdate(peer.doc))),
+  inspect(bytes) {
+    const copy = new Y.Doc();
+    try {
+      Y.applyUpdate(copy, Uint8Array.from(bytes));
+      const roots = copy.getXmlFragment('fountain').toArray();
+      return roots.map(root => root.toString());
+    } finally { copy.destroy(); }
+  },
+};
+</script>
+</html>

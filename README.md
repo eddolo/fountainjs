@@ -1195,7 +1195,7 @@ syntax survived.
 
 The root package exposes a provider-independent collaboration boundary. The
 separate `fountainjs-editor/yjs` entry adds shared editing, relative remote
-selections, accessible carets, deterministic room initialization, and
+selections, accessible carets, a configurable room initialization conflict policy, and
 local-origin undo/redo.
 
 ```bash
@@ -1225,6 +1225,9 @@ also creates only one editor across Strict Mode's duplicate development render.
 
 See the [collaboration and Yjs guide](docs/COLLABORATION.md) for lifecycle,
 provider, security, offline, and replacement examples.
+For the legacy adapter, `preserveConcurrentRoots: true` keeps independently
+initialized shared roots and stops synchronization until the host reviews the
+drafts and replaces the session.
 
 Concurrent typing with some structural or formatting edits can still lose or
 misplace text in the default adapter. The unreleased retained preview uses a

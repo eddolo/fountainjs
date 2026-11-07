@@ -64,6 +64,33 @@ trusted channel and apply received bytes with `Y.applyUpdate`. Yjs updates are
 binary CRDT data, not FountainJS JSON; validate room membership before relaying
 them and apply ordinary transport limits.
 
+### Preserve conflicting room roots
+
+Seed a room once and load its authoritative update into every new client's
+`Y.Doc` before attaching the editor. The legacy adapter historically kept the
+first root when separately initialized peers met. Applications can set
+`preserveConcurrentRoots: true` on `createYjsCollaborationExtension` or
+`YjsCollaborationAdapter` to refuse that conflict instead.
+
+The adapter then reports an error, leaves the shared roots in place, and keeps
+the current editor available for local typing. Shared undo and writes stop for
+that adapter. Even if an older peer later removes a root, the existing adapter
+keeps the local draft. Save the local draft JSON and any available native room
+bytes separately, then explicitly replace the adapter with one backed by the
+reviewed authoritative room. A native room archive contains edits accepted into
+Yjs before the refusal. Later local typing belongs to the local editor JSON.
+
+Enable the policy on each participating legacy client. Older or unconfigured
+peers can still delete roots through their own legacy behavior. The retained
+preview always refuses independent initialization.
+
+The recorded legacy browser example exchanges two independently typed drafts,
+shows the refusal, and downloads native bytes that reopen with both roots.
+
+```powershell
+pnpm exec playwright test --config artifacts/yjs-legacy-root-conflict-20261107.config.ts
+```
+
 ## Attach a network provider
 
 `YjsProvider` is structural. A provider may expose `connect`, `disconnect`,

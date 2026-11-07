@@ -1408,6 +1408,11 @@ bursts cannot multiply awareness traffic; set `0` only when an integration
 requires synchronous unthrottled presence. `yjs` is an external optional peer;
 the root and React entries do not load it.
 
+The legacy adapter's `preserveConcurrentRoots` option defaults to `false`.
+Set it to `true` to preserve independently initialized roots and stop shared
+writes on conflict. The retained preview has its own initialization rules.
+[Conflict recovery](COLLABORATION.md#preserve-conflicting-room-roots).
+
 ```ts
 const ydoc = new Y.Doc()
 const collaboration = createYjsCollaborationExtension({

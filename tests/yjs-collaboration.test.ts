@@ -198,6 +198,63 @@ describe('optional Yjs collaboration adapter', () => {
     expect(rightDocument.getXmlFragment('fountain').length).toBe(1);
   });
 
+  it('keeps both independent roots and local edits when opted into conflict preservation', () => {
+    const leftDoc = new Y.Doc(), rightDoc = new Y.Doc(), merged = new Y.Doc();
+    const make = (ydoc: Y.Doc, user: CollaborationUser) => {
+      const collaboration = createYjsCollaborationExtension({ document: ydoc, user, preserveConcurrentRoots: true });
+      const kit = composeExtensions([CoreExtension, collaboration]);
+      return createEditor({ schema: kit.schema, plugins: kit.plugins, content: document('Common template') });
+    };
+    const left = make(leftDoc, ada), right = make(rightDoc, linus);
+    try {
+      left.dispatch(left.createTransaction().insertText([0, 0], 0, 'Ada: '));
+      right.dispatch(right.createTransaction().insertText([0, 0], 0, 'Linus: '));
+      Y.applyUpdate(merged, Y.encodeStateAsUpdate(leftDoc));
+      Y.applyUpdate(merged, Y.encodeStateAsUpdate(rightDoc));
+      const bytes = Y.encodeStateAsUpdate(merged);
+      sync(leftDoc, rightDoc);
+      for (const [ydoc, editor] of [[leftDoc, left], [rightDoc, right]] as const) {
+        expect(ydoc.getXmlFragment('fountain').length).toBe(2);
+        expect(Y.encodeStateAsUpdate(ydoc)).toEqual(bytes);
+        expect(getCollaborationState(editor)?.error?.message).toContain('conflicting initial roots');
+        expect(canUndoCollaboration(editor)).toBe(false);
+        expect(undoCollaboration(editor)).toBe(false);
+      }
+      left.dispatch(left.createTransaction().insertText([0, 0], 0, 'Local only. '));
+      expect(left.getText()).toBe('Local only. Ada: Common template');
+      expect(right.getText()).toBe('Linus: Common template');
+      expect(Y.encodeStateAsUpdate(leftDoc)).toEqual(bytes);
+      // An older peer may have deleted one root. Its update does not grant it
+      // permission to replace the local draft held by the conflicted editor.
+      merged.getXmlFragment('fountain').delete(1, 1);
+      Y.applyUpdate(leftDoc, Y.encodeStateAsUpdate(merged), 'older-peer');
+      expect(leftDoc.getXmlFragment('fountain').length).toBe(1);
+      expect(left.getText()).toBe('Local only. Ada: Common template');
+      expect(getCollaborationState(left)?.status).toBe('error');
+      reconnectCollaboration(left);
+      expect(getCollaborationState(left)?.status).toBe('error');
+      expect(left.getText()).toBe('Local only. Ada: Common template');
+    } finally { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); merged.destroy(); }
+  });
+
+  it('refuses an already conflicted room before starting its provider', () => {
+    const first = new Y.Doc(), second = new Y.Doc();
+    const a = createCollaborativeEditor(first, ada, document('First draft'));
+    const b = createCollaborativeEditor(second, linus, document('Second draft'));
+    a.destroy(); b.destroy();
+    Y.applyUpdate(first, Y.encodeStateAsUpdate(second));
+    const bytes = Y.encodeStateAsUpdate(first);
+    const provider = { connect: vi.fn(), disconnect: vi.fn() };
+    const kit = composeExtensions([CoreExtension, createYjsCollaborationExtension({ document: first, user: ada, provider, preserveConcurrentRoots: true })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: document('Unsynced draft') });
+    try {
+      expect(getCollaborationState(editor)?.status).toBe('error');
+      expect(editor.getText()).toBe('Unsynced draft');
+      expect(provider.connect).not.toHaveBeenCalled();
+      expect(Y.encodeStateAsUpdate(first)).toEqual(bytes);
+    } finally { editor.destroy(); first.destroy(); second.destroy(); }
+  });
+
   it('preserves block identities while concurrent structural insertions converge', () => {
     const leftDocument = new Y.Doc();
     const left = createCollaborativeEditor(leftDocument, ada, document('One', 'Two'));

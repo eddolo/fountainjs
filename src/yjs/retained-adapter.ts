@@ -9,7 +9,7 @@ import { retainSelection, restoreSelection, type RetainedSelection } from './ret
 import { YjsStructuredAttributeStore } from './structured-attributes';
 import { prepareRetainedAdmission, readRetainedAdmission, snapshotRetainedAdmission, type RetainedAdmission, type RetainedAdmissionLease } from './retained-admission';
 
-export interface RetainedYjsCollaborationExtensionOptions extends YjsCollaborationExtensionOptions {
+export interface RetainedYjsCollaborationExtensionOptions extends Omit<YjsCollaborationExtensionOptions, 'preserveConcurrentRoots'> {
   /** Validate an authoritative existing-room snapshot before starting transport.
    * Without this opt-in, isolated local/offline initialization is unchanged. */
   readonly admission?: RetainedAdmission;

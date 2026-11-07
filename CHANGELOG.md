@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add `preserveConcurrentRoots` to the legacy Yjs adapter. When enabled, peers
+  that initialized independently keep their shared roots and local drafts for
+  review. [Collaboration guide](docs/COLLABORATION.md#preserve-conflicting-room-roots).
+
 - Keep a queued awareness update from overwriting a newer cursor in either Yjs
   adapter when the throttle timer runs late. [Transport reference](docs/YJS_LIVE_HTTP_REFERENCE.md).
 
