@@ -26,10 +26,48 @@ describe('portable image-paragraph layout', () => {
     const images = document.content.filter(node => node.type.name === 'image_super');
     expect(images).toHaveLength(2);
     for (const node of images) {
+      expect(node.attrs.docxInlineDistances).toEqual({});
       expect(node.attrs.imageLayout).toMatchObject({ unit: 'pt', fontFamily: 'Arial', fontSize: 11, spacingBefore: 0, spacingAfter: 7,
         lineHeight: 1.15, lineHeightUnit: 'multiple', lineHeightRule: 'auto' });
       expect(node.attrs.captionLayout).toMatchObject({ spacingAfter: 7, lineHeight: 1 });
     }
+  });
+
+  it('keeps absent, zero, and nonzero inline distance declarations distinct through HTML and DOCX', () => {
+    const distances = { distL: 0, distR: 24000 };
+    const source = doc({ docxInlineDistances: distances });
+    const html = HTMLExporter.export(source, { document: false });
+    expect(html).toContain('data-fountain-docx-inline-distances=');
+    expect(html).not.toContain('margin-right:');
+    expect(ServerHTMLImporter.parse(html, schema).eq(source)).toBe(true);
+    const bytes = exportDOCX(source).bytes;
+    const parts = unzipSync(bytes);
+    expect(strFromU8(parts['word/document.xml']!)).toContain('<wp:inline distL="0" distR="24000">');
+    expect(importDOCX(bytes, schema).document.child(0).attrs.docxInlineDistances).toEqual(distances);
+
+    const original = importDOCX(fixture, schema).document;
+    const output = unzipSync(exportDOCX(original).bytes);
+    expect(strFromU8(output['word/document.xml']!).match(/<wp:inline>/g)).toHaveLength(2);
+    const authored = exportDOCX(doc()).bytes;
+    expect(strFromU8(unzipSync(authored)['word/document.xml']!)).toContain('<wp:inline distT="0" distB="0" distL="0" distR="0">');
+    expect(importDOCX(authored, schema).document.child(0).attrs.docxInlineDistances).toBeUndefined();
+  });
+
+  it('rejects invalid native distances without losing the image or accepting foreign attributes', () => {
+    const parts = unzipSync(exportDOCX(doc()).bytes);
+    const source = strFromU8(parts['word/document.xml']!);
+    parts['word/document.xml'] = strToU8(source.replace('<wp:inline distT="0" distB="0" distL="0" distR="0">',
+      '<wp:inline xmlns:foreign="urn:example" foreign:distT="123" distB="-1" distL="0" distR="4294967296">'));
+    const reopened = importDOCX(zipSync(parts), schema);
+    expect(reopened.document.child(0).attrs.docxInlineDistances).toEqual({ distL: 0 });
+    expect(reopened.report.issues.filter(issue => issue.code === 'invalid-inline-drawing-distance')).toEqual([
+      expect.objectContaining({ message: expect.stringContaining('distB'), sourcePart: 'word/document.xml' }),
+      expect.objectContaining({ message: expect.stringContaining('distR'), sourcePart: 'word/document.xml' }),
+    ]);
+    const invalidHTML = '<img src="/image.png" data-fountain-docx-inline-distances=\'{"distL":"999"}\'>';
+    expect(ServerHTMLImporter.parse(invalidHTML, schema).child(0).attrs.docxInlineDistances).toBeUndefined();
+    expect(MarkdownExporter.exportWithReport(doc({ docxInlineDistances: {} })).losses)
+      .toContainEqual(expect.objectContaining({ path: [0], detail: expect.stringContaining('drawing distances') }));
   });
 
   it('preserves independent image/caption geometry through safe HTML without a browser', () => {

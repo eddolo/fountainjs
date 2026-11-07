@@ -1,4 +1,5 @@
 import { isSafeURL, type Attributes } from '../../core';
+import { isInlineDrawingDistances } from '../../core/image-drawing';
 
 export type ImageAlignment = 'left' | 'center' | 'right';
 export type ImageLoading = 'eager' | 'lazy';
@@ -36,6 +37,7 @@ export const imageAttributes = {
   sizes: { default: '', validate: isImageSizes },
   loading: { default: 'lazy', validate: (value: unknown) => ['eager', 'lazy'].includes(String(value)) },
   decoding: { default: 'async', validate: (value: unknown) => ['auto', 'sync', 'async'].includes(String(value)) },
+  docxInlineDistances: { default: undefined, validate: (value: unknown) => value === undefined || isInlineDrawingDistances(value) },
 } as const;
 
 export function imageDOMAttributes(attrs: Attributes): Attributes {

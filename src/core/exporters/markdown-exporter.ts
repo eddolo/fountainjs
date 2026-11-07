@@ -208,6 +208,8 @@ function reportNodeAttributes(
     report(context, 'attribute', name, path, 'The typed semantic math tree is projected to TeX source in Markdown; retain Fountain JSON or HTML for the lossless representation.');
   }
   if (['image_super', 'inline_image'].includes(name)) {
+    if (node.attrs.docxInlineDistances !== undefined) report(context, 'attribute', name, path,
+      'Word inline drawing distances are not represented by ordinary Markdown; retain Fountain JSON or HTML.');
     if (name === 'image_super' && node.attrs.imageLayout !== undefined) report(context, 'attribute', name, path,
       'Image paragraph layout is not represented by ordinary Markdown; retain Fountain JSON, HTML or a supported paged format.');
     const nonDefaultLayout = node.attrs.width !== '100%'

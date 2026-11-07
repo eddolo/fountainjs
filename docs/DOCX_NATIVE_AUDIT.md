@@ -1,5 +1,34 @@
 # Independent native DOCX audit
 
+## Inline drawing distances 2026 11 07
+
+Fountain was adding four explicit zero distances to drawings even when Word's
+source omitted those declarations. A controlled copy of the previous browser
+export changes only `word/header1.xml` and only those four attributes. In
+LibreOffice 24.2.7.2 this restores the original horizontal positions on both
+pages. The old export placed the logo 9.05 pt and the header text 18.1 pt too
+far left. The original report is unchanged. [Inline drawing contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.drawing.wordprocessing.inline?view=openxml-3.0.1).
+
+Import retains the optional `distT`, `distB`, `distL` and `distR` values in
+native EMUs. It distinguishes an omitted side from a zero. Four explicit
+zeros use the existing authored-image default, so older Fountain JSON remains
+valid. The safe HTML carrier retains the declarations without using them as
+browser margins. Ordinary Markdown reports their loss. Invalid values and
+receiving schemas without the attribute produce warnings while the image
+remains available.
+
+The original and all three actual browser downloads were rendered in isolated
+LibreOffice under Ubuntu WSL. The permanent Poppler gate checks both pages and
+rejects the saved pre-repair PDF. The logo rectangles match in all three
+exports. The existing native paragraph-position gate still passes. Both
+Chromium source and export pages and the reopened WebKit editor were visually
+checked. The footnote remains a separate discrepancy in the source render.
+The 698 focused tests, three recorded Chromium/Firefox/WebKit workflows,
+package loading, TypeScript and python-docx interoperability passed.
+
+The aggregate CommonJS output exceeds its current limit by 146.8 KiB. The
+DOCX CommonJS entry exceeds its own limit by 1.5 KiB. No threshold changed.
+
 ## Font repair within existing capacity (2026-11-03)
 
 The optimized implementation passes all 438 focused DOCX tests and the full

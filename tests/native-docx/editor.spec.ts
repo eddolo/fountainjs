@@ -101,6 +101,7 @@ test('edits the independent scientific Word source and downloads the native audi
     await reader.goto(pathToFileURL(resolve(root, 'reader.html')).href);
     await expect(reader.locator('body')).toContainText('END OF REPORT Checked in Fountain.');
     await expect(reader.locator('img')).toHaveCount(3);
+    await expect(reader.locator('img[data-fountain-docx-inline-distances="{}"]')).toHaveCount(3);
     for (let index = 0; index < 3; index++) {
       await reader.locator('img').nth(index).scrollIntoViewIfNeeded();
       await expect.poll(() => reader.locator('img').nth(index).evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);

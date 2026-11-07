@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -33,9 +34,10 @@ CAPTION_PHRASES = ["Figure 1 Probe positions in the two vessels",
 SECOND_PAGE_PHRASES = ["Model and measurements", "Newton cooling model", "Half cooling time",
                        "The rate constants are 0.08 and 0.04 per minute.", "Recorded temperatures"]
 LAYOUT_PHRASES = PARAGRAPH_PHRASES + CAPTION_PHRASES + SECOND_PAGE_PHRASES
+HEADER_PHRASE = "Cooling study 2026"
 
 
-def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES):
+def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES, header_page=None):
     bbox = run([str(pdftotext), "-bbox-layout", str(pdf), "-"], destination)
     document = ET.fromstring(bbox)
     pages = [item for item in document.iter() if item.tag.rsplit("}", 1)[-1] == "page"]
@@ -43,7 +45,7 @@ def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES):
         raise RuntimeError("No independently extracted PDF page coordinates.")
     result = {}
     for phrase in phrases:
-        page_index = 1 if phrase in SECOND_PAGE_PHRASES else 0
+        page_index = header_page if header_page is not None else int(phrase in SECOND_PAGE_PHRASES)
         if page_index >= len(pages):
             raise RuntimeError(f"Missing independent PDF page {page_index + 1}.")
         words = [item for item in pages[page_index].iter() if item.tag.rsplit("}", 1)[-1] == "word"]
@@ -56,6 +58,12 @@ def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES):
         first = words[indices[0]]
         result[phrase] = {"x": float(first.attrib["xMin"]), "y": float(first.attrib["yMin"])}
     return result
+
+
+def header_positions(pdf, folder, pdftotext, label):
+    return [paragraph_positions(pdf, folder / f"{label}-header-{page + 1}-bbox.txt",
+                                pdftotext, [HEADER_PHRASE], header_page=page)[HEADER_PHRASE]
+            for page in range(2)]
 
 
 def position_deltas(source, exported, phrases=LAYOUT_PHRASES):
@@ -77,8 +85,8 @@ provenance = json.loads((root / "source-report.json").read_text(encoding="utf-8"
 interchange = json.loads((root / "interchange-report.json").read_text(encoding="utf-8"))
 assert interchange["browser"]["actualDownload"] is True
 assert interchange["browser"]["typingUndoRedo"] is True
-tools = {name: Path("/usr/bin") / name for name in ["pdfinfo", "pdftotext", "pdftoppm", "pdfimages", "fc-match"]}
-if not all(path.is_file() for path in tools.values()):
+tools = {name: shutil.which(name) for name in ["pdfinfo", "pdftotext", "pdftoppm", "pdfimages", "fc-match"]}
+if not all(tools.values()):
     raise RuntimeError("Install Poppler and fontconfig in the isolated Linux job first.")
 native = root / "native"
 native.mkdir(exist_ok=False)
@@ -123,6 +131,7 @@ for name in ["source", "exported"]:
     coordinates = paragraph_positions(pdf, folder / "paragraph-bbox.txt", tools["pdftotext"])
     results[name] = {"pages": pages, "drawnImageObjects": image_count,
                      "paragraphPositions": coordinates,
+                     "headerPositions": header_positions(pdf, folder, tools["pdftotext"], name),
                      "pdfSHA256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
                      "pageImages": [str(path.relative_to(root)) for path in captures]}
 # A retained, actual pre-repair export must fail the coordinate profile. This
@@ -156,14 +165,28 @@ for phrase, expected_y in zip(math_phrases, [1, 2, 2]):
     if abs(math_negative[phrase]["x"]) > 0.01 or abs(math_negative[phrase]["y"] - expected_y) > 0.01:
         raise RuntimeError("The retained equation-layout control did not exhibit its known cumulative drift.")
 deltas = position_deltas(results["source"]["paragraphPositions"], results["exported"]["paragraphPositions"])
+header_control = Path("artifacts/table-column-precision-native-evidence-20261104/unpacked/native")
+header_before = {name: header_positions(header_control / name / f"{name}.pdf", native,
+                                        tools["pdftotext"], f"header-control-{name}")
+                 for name in ["source", "exported"]}
+header_negative = position_deltas(header_before["source"], header_before["exported"], range(2))
+if any(abs(delta["x"] + 18.1) > 0.01 or abs(delta["y"]) > 0.01 for delta in header_negative.values()):
+    raise RuntimeError("The retained drawing-distance control did not exhibit its known header drift.")
+header_deltas = position_deltas(results["source"]["headerPositions"], results["exported"]["headerPositions"], range(2))
+header_check = {"phrase": HEADER_PHRASE, "tolerancePt": 0.01, "deltasPtByPageIndex": header_deltas,
+                "negativeControl": {"retainedPreRepairPDF": str(header_control), "deltasPtByPageIndex": header_negative}}
 layout_check = {"scope": LAYOUT_PHRASES, "tolerancePt": 0.01, "deltasPt": deltas,
                 "negativeControl": {"retainedPreRepairPDF": str(control), "deltasPt": negative, "correctlyRejected": True},
                 "captionNegativeControl": {"retainedPreRepairPDF": str(caption_control), "deltasPt": caption_negative, "correctlyRejected": True},
                 "mathNegativeControl": {"retainedPreRepairPDF": str(math_control), "deltasPt": math_negative, "correctlyRejected": True}}
 (root / "paragraph-position-report.json").write_text(json.dumps(layout_check, indent=2) + "\n", encoding="utf-8")
+(root / "header-position-report.json").write_text(json.dumps(header_check, indent=2) + "\n", encoding="utf-8")
 if any(abs(value) > 0.01 for delta in deltas.values() for value in delta.values()):
     raise RuntimeError("Native paragraph position regression; inspect paragraph-position-report.json.")
+if any(abs(value) > 0.01 for delta in header_deltas.values() for value in delta.values()):
+    raise RuntimeError("Native header position regression; inspect header-position-report.json.")
 summary = {"toolchain": versions, "rendered": results, "paragraphPositionCheck": layout_check,
+           "headerPositionCheck": header_check,
            "sourceSHA256": interchange["sourceSHA256"], "exportedSHA256": interchange["exportedSHA256"],
            "status": "native render and required-content checks passed; visual comparison still requires inspection",
            "pixelFidelityCertified": False, "microsoftWordCertified": False,

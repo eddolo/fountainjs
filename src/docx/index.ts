@@ -6,6 +6,7 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 import { Node as FountainNode, type Mark, type Schema } from '../core/schema';
 import { isSafeURL } from '../core/url';
+import { INLINE_DRAWING_SIDES, isInlineDrawingDistances, type InlineDrawingDistances } from '../core/image-drawing';
 import { tableBackground } from '../core/table-background';
 import { TableMap } from '../core/table-map';
 import { tableRowRepeats } from '../core/table-layout';
@@ -394,6 +395,27 @@ function pxFromEMU(value: string | undefined): string {
   return Number.isFinite(emu) && emu > 0 ? `${Math.max(1, Number((emu / 9525).toFixed(6)))}px` : 'auto';
 }
 
+const WORD_DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
+
+function inlineDrawingDistances(drawing: XMLElement, issue: (side: string) => void): InlineDrawingDistances | undefined {
+  const inline = elements(drawing, 'inline').find(element => {
+    const colon = element.name.indexOf(':');
+    return element.namespaces[colon < 0 ? '' : element.name.slice(0, colon)] === WORD_DRAWING_NS;
+  });
+  if (!inline) return undefined;
+  const distances: InlineDrawingDistances = {};
+  for (const side of INLINE_DRAWING_SIDES) {
+    const raw = inline.attrs[side]?.trim();
+    if (raw === undefined) continue;
+    const distance = Number(raw);
+    if (/^\+?\d+$/.test(raw) && Number.isInteger(distance) && distance <= 0xFFFFFFFF) distances[side] = distance;
+    else issue(side);
+  }
+  // Fountain-authored images already write four explicit zeros. Keep their
+  // historical JSON shape while preserving every other presence pattern.
+  return INLINE_DRAWING_SIDES.every(side => distances[side] === 0) ? undefined : distances;
+}
+
 function embeddedImageNode(
   element: XMLElement,
   schema: Schema,
@@ -453,8 +475,15 @@ function embeddedImageNode(
     issues.push({ code: 'missing-image-node', severity: 'warning', message: 'The active schema has no inline_image node; the image description was preserved.', path });
     return undefined;
   }
+  const sourcePart = media.sourcePart ?? 'word/document.xml';
+  const distances = inlineDrawingDistances(element, side => issues.push({ code: 'invalid-inline-drawing-distance', severity: 'warning',
+    message: `Word drawing distance ${side} was invalid and omitted. The image remains.`, path, sourcePart }));
+  const retainDistances = schema.nodes.inline_image.spec.attrs?.docxInlineDistances;
+  if (distances !== undefined && !retainDistances) issues.push({ code: 'inline-drawing-distances-not-imported', severity: 'warning',
+    message: 'The receiving image schema cannot retain Word drawing distances. The image remains.', path, sourcePart });
   const node = schema.node('inline_image', {
     src: source, alt, title, width, height, align: 'center', srcset: '', sizes: '', loading: 'lazy', decoding: 'async',
+    ...(retainDistances && distances !== undefined ? { docxInlineDistances: distances } : {}),
   });
   media.importedParts.add(partPath);
   return node;
@@ -737,7 +766,12 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
       if (layout.contextualSpacing !== undefined) issues.push({ code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
         message: 'An image-only Word paragraph became an image block whose schema cannot retain contextual paragraph intent.' });
     }
-    return { node: schema.node('image_super', { ...content[0].attrs, align, caption: '', ...(retained ? { imageLayout: layout } : {}) }) };
+    const { docxInlineDistances, ...imageAttrs } = content[0].attrs;
+    const retainDistances = schema.nodes.image_super.spec.attrs?.docxInlineDistances;
+    if (docxInlineDistances !== undefined && !retainDistances) issues.push({ code: 'inline-drawing-distances-not-imported', severity: 'warning',
+      message: 'The receiving block image schema cannot retain Word drawing distances. The image remains.', path, sourcePart: media.sourcePart ?? 'word/document.xml' });
+    return { node: schema.node('image_super', { ...imageAttrs, align, caption: '', ...(retained ? { imageLayout: layout } : {}),
+      ...(retainDistances && docxInlineDistances !== undefined ? { docxInlineDistances } : {}) }) };
   }
   const displayMath = content.filter(node => node.type.name === 'math_block');
   const ownsDisplayLayout = content.length === 1 && schema.nodes.math_block?.spec.attrs?.layout;
@@ -1871,7 +1905,13 @@ function imageRun(node: FountainNode, context: ExportContext, path: readonly num
   const drawingId = context.nextDrawingId++;
   const alt = xmlEscape(node.attrs.alt ?? '');
   const title = xmlEscape(node.attrs.title ?? '');
-  return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${drawingId}" name="${xmlEscape(media.fileName)}" descr="${alt}" title="${title}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${xmlEscape(media.fileName)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${media.relationshipId}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+  const declared = node.attrs.docxInlineDistances;
+  if (declared !== undefined && !isInlineDrawingDistances(declared)) context.issues.push({ code: 'invalid-inline-drawing-distance', severity: 'warning',
+    message: 'Invalid Word drawing distances were replaced by explicit zeros. The image remains.', path });
+  const distances = isInlineDrawingDistances(declared)
+    ? INLINE_DRAWING_SIDES.map(side => Object.hasOwn(declared, side) ? ` ${side}="${declared[side]}"` : '').join('')
+    : ' distT="0" distB="0" distL="0" distR="0"';
+  return `<w:r><w:drawing><wp:inline${distances}><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${drawingId}" name="${xmlEscape(media.fileName)}" descr="${alt}" title="${title}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${xmlEscape(media.fileName)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${media.relationshipId}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
 }
 
 function paragraphFontProperties(layout: ParagraphLayout | undefined, issues: DOCXIssue[], path: readonly number[]): { family: string; size: string } {

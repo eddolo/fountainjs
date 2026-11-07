@@ -1,6 +1,7 @@
 import { readImageCaptionAttributes, readImageParagraphAttributes } from '../image-caption';
 import type { Attributes, Mark, Node, Schema } from '../schema';
 import { isSafeURL } from '../url';
+import { INLINE_DRAWING_DATA, readInlineDrawingData } from '../image-drawing';
 
 interface MediaChild {
   readonly textContent: string | null;
@@ -74,6 +75,7 @@ export function projectImage<E extends FigureElement>(
       src,
       ...htmlImageAttributes(image, container),
       ...dimensions,
+      ...(schema.nodes[type].spec.attrs?.docxInlineDistances ? { docxInlineDistances: readInlineDrawingData(image.getAttribute(INLINE_DRAWING_DATA)) } : {}),
       ...(block ? { caption: rich ? '' : caption?.textContent ?? '', ...readImageCaptionAttributes(caption ?? null), ...readImageParagraphAttributes(image) } : {}),
     }, content, undefined, marks);
   } catch { return null; }

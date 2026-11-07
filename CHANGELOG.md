@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve Word inline drawing distances and omitted sides through DOCX, JSON
+  and safe HTML. The scientific DOCX fixture's repeated header now matches its
+  original logo and text positions in LibreOffice.
+
 - Use the next distinct rule when a custom HTML import rule declines. Browser
   paste now skips duplicate registrations of the same rule object, matching
   headless HTML import.

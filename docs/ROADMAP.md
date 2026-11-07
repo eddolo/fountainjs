@@ -45,6 +45,11 @@ exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
+The DOCX bridge now retains omitted and explicit inline drawing distances.
+Three browser downloads of the scientific fixture match both original header
+positions in independent LibreOffice output. The source footnote discrepancy
+remains. [Native evidence](DOCX_NATIVE_AUDIT.md#inline-drawing-distances-2026-11-07).
+
 The developer guide now offers downloadable plain DOM and React starters
 paired with the live demos. Both pin the published beta and run outside the
 repository. The plain DOM starter includes a custom editable callout and
@@ -53,8 +58,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-is 144.0 KiB over its existing limit after sharing the HTML import rule logic.
-[Package output audit](PERFORMANCE.md#shared-html-import-rules).
+is 146.8 KiB over its existing limit. The DOCX CommonJS entry is 1.5 KiB over
+its limit. [Native evidence and package size](DOCX_NATIVE_AUDIT.md#inline-drawing-distances-2026-11-07).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested

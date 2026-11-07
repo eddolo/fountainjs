@@ -4,6 +4,7 @@ import { paragraphSpacingDOMAttributes, PARAGRAPH_SPACING_STYLES } from '../para
 import type { EditorState } from '../state';
 import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
 import { isSafeURL } from '../url';
+import { INLINE_DRAWING_DATA, isInlineDrawingDistances } from '../image-drawing';
 import { tableBackground } from '../table-background';
 import { quoteDOMAttributes, textBlockDOMAttributes } from '../explicit-emphasis';
 import { isMathExpression } from '../math-expression';
@@ -136,7 +137,9 @@ function imageAttributes(node: Node): string {
   const sizes = node.attrs.sizes ? ` sizes="${escapeHTML(node.attrs.sizes)}"` : '';
   const loading = node.attrs.loading === 'eager' ? 'eager' : 'lazy';
   const decoding = ['auto', 'sync', 'async'].includes(String(node.attrs.decoding)) ? node.attrs.decoding : 'async';
-  return `src="${src}" alt="${escapeHTML(node.attrs.alt)}"${title}${srcset}${sizes} loading="${loading}" decoding="${decoding}"`;
+  const distances = node.attrs.docxInlineDistances;
+  const drawing = isInlineDrawingDistances(distances) ? ` ${INLINE_DRAWING_DATA}="${escapeHTML(JSON.stringify(distances))}"` : '';
+  return `src="${src}" alt="${escapeHTML(node.attrs.alt)}"${title}${srcset}${sizes} loading="${loading}" decoding="${decoding}"${drawing}`;
 }
 
 function imageSize(value: unknown, fallback: string): string {
