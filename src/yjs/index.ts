@@ -26,6 +26,7 @@ import {
 import type { FountainExtension } from '../extensions/extension';
 import { registerSharedDirectionIdentity } from '../core/shared-direction';
 import { hasSharedBlockLineage } from '../core/schema/block-lineage';
+import { admittedRoomRootChanged, admittedRoomRoots } from './admitted-room-root';
 import {
   YjsStructuredAttributeStore,
   type YjsStructuredAttributesOptions,
@@ -459,6 +460,7 @@ function normalizeLocalUser(user: CollaborationUser | undefined): CollaborationU
 
 // Private adapter lifecycle state does not add members to its public shape.
 const directionIdentityReleases = new WeakMap<YjsCollaborationAdapter, () => void>();
+const nestedRoomObservers = new WeakMap<YjsCollaborationAdapter, (transaction: Y.Transaction) => void>();
 
 export class YjsCollaborationAdapter implements CollaborationAdapter {
   readonly document: Y.Doc;
@@ -643,11 +645,21 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     if (!this.observing) {
       this.fragment.observeDeep(this.onSharedChange);
       this.structuredAttributeMap?.observeDeep(this.onSharedChange);
+      // A deleted parent can detach an embedded fragment without dispatching
+      // a deep event to that fragment.
+      if (this.fragment.parent && admittedRoomRoots.has(this.fragment)) {
+        const check = (transaction: Y.Transaction) => {
+          if (admittedRoomRootChanged(this.fragment)) this.onSharedChange([], transaction);
+        };
+        nestedRoomObservers.set(this, check);
+        this.document.on('afterTransaction', check);
+      }
       this.awareness?.on('change', this.onAwarenessChange);
       this.provider?.on?.('status', this.onProviderStatus);
       this.observing = true;
     }
     if (this.fragment.length === 0) {
+      if (admittedRoomRoots.has(this.fragment)) this.assertInitialization();
       this.document.transact(() => {
         this.fragment.insert(0, [createSharedElement(context.editor.state.doc)]);
         this.structuredAttributes?.synchronize(context.editor.state.doc);
@@ -693,6 +705,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.publishLocalSelection(context.editor.state.doc, context.editor.state.selection);
     this.publishPresences();
     if (!this.provider?.connect) return undefined;
+    if (admittedRoomRoots.has(this.fragment)) this.assertInitialization();
     this.providerActive = true;
     return this.provider.connect();
   }
@@ -703,6 +716,11 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     if (this.observing) {
       this.fragment.unobserveDeep(this.onSharedChange);
       this.structuredAttributeMap?.unobserveDeep(this.onSharedChange);
+      const check = nestedRoomObservers.get(this);
+      if (check) {
+        this.document.off('afterTransaction', check);
+        nestedRoomObservers.delete(this);
+      }
       this.awareness?.off('change', this.onAwarenessChange);
       this.provider?.off?.('status', this.onProviderStatus);
       this.observing = false;
@@ -778,10 +796,13 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private assertInitialization(): void {
     if (this.initializationConflict) throw new Error(this.initializationConflict);
     const length = this.fragment.length;
+    const replaced = admittedRoomRootChanged(this.fragment);
     const incompatible = length === 1 ? !isSharedElement(this.fragment.get(0))
       : length > 1 && !this.fragment.toArray().every(isSharedElement);
-    if (incompatible || this.preserveConcurrentRoots && length > 1) {
-      this.initializationConflict = incompatible
+    if (replaced || incompatible || this.preserveConcurrentRoots && length > 1) {
+      this.initializationConflict = replaced
+        ? 'The admitted room root changed. Preserve the local draft and replace the collaboration session.'
+        : incompatible
         ? 'Incompatible shared root; refusing legacy writes. Preserve the local draft and replace the collaboration session.'
         : 'The room has conflicting initial roots. Preserve the local draft and replace the collaboration session.';
       directionIdentityReleases.get(this)?.();

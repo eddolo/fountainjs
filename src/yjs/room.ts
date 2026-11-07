@@ -7,6 +7,7 @@ import { legacyNodeIdentity } from './legacy-node-identity';
 import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from './retained-adapter';
 import { checkpointWire, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
+import { admittedRoomRoots } from './admitted-room-root';
 
 export { captureLegacyCheckpoint, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 export { captureRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
@@ -96,6 +97,7 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     try {
       signal?.throwIfAborted();
       if (legacyNodeIdentity(restored.reader.root) !== offer.identity) throw new Error('Room admission native identity changed.');
+      admittedRoomRoots.set(restored.reader.fragment, restored.reader.root);
       return bind(restored.document, restored.baseDocument, restored.reader.fragment);
     } catch (error) { restored.document.destroy(); throw error; }
   }
@@ -106,6 +108,8 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
   try {
     signal?.throwIfAborted();
     if (restored.document.store.pendingStructs || restored.document.store.pendingDs) throw new Error('Room admission returned unresolved update dependencies.');
+    const fragment = restored.document.getXmlFragment(lease.room);
+    admittedRoomRoots.set(fragment, fragment.get(0) as Y.XmlElement);
     return bind(restored.document, restored.baseDocument);
   } catch (error) { restored.document.destroy(); throw error; }
 }

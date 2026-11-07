@@ -19,6 +19,8 @@ The package opener verifies the bound reply and checkpoint
 identity before selecting an adapter and mounting an editor. It refuses an
 unrequested format before admission. Fresh rooms opened through this reference
 select retained storage and pass the six structural cases after durable reopen.
+Bound adapters also verify the admitted native root at mount and stop shared
+editing if that root is replaced or an embedded XML fragment is detached.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
 The live reference can run the six concurrency cases against an upgraded
 legacy room, verifying its archive and active identity across reload and undo.
@@ -64,8 +66,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-is 148.5 KiB over its existing limit. The DOCX CommonJS entry is 2.3 KiB over
-its limit. [Native evidence and package size](DOCX_NATIVE_AUDIT.md#footnote-separator-recovery-2026-11-07).
+is 149.5 KiB over its existing limit. The DOCX CommonJS entry is 2.3 KiB over
+its limit. [Room binding verification](YJS_NAMESPACE_MIGRATION_AUDIT.md#keep-the-admitted-root-through-editor-startup).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested

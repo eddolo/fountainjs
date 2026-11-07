@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Pin the admitted room root through editor mount and live editing. A replaced
+  retained root or detached XML fragment leaves the local draft available and
+  suspends shared writes and undo.
+
 - Keep the saved revision when an already-integrated retained Yjs update is
   retried after a lost reply, including updates to a retired recovery branch.
 

@@ -138,7 +138,12 @@ Use the same schema and structured attribute definitions on the client and
 authority, and compose the same schema extensions when mounting the editor.
 For applications that are migrating XML rooms, pass `protocols: ['retained',
 'legacy']` to open either stored format. The helper preserves a verified
-nested XML fragment when selecting the legacy adapter. Keep a draft available
+nested XML fragment when selecting the legacy adapter. Both adapters pin the
+native root returned by admission. A removed root or an equal-looking
+replacement prevents provider startup. If the change reaches a mounted
+editor, shared writes and shared history stop and the local draft stays
+editable. Open a verified replacement session to resume collaboration.
+Keep a draft available
 until its saved edits are acknowledged. Pass an abort signal when leaving a
 pending join and dispose the returned document if the editor never mounts.
 

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, composeExtensions, createEditor, insertText, setMark, splitBlock, toggleList, toggleQuote } from '../src';
+import { CoreExtension, Selection, canUndoCollaboration, composeExtensions, createEditor, getCollaborationState, insertText, reconnectCollaboration, setMark, splitBlock, toggleList, toggleQuote } from '../src';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
@@ -72,6 +72,87 @@ it('opens a newly provisioned retained room at the newer bound revision', async 
   expect(Object.isFrozen(bound.lease)).toBe(true);
   expect(bound.baseDocument.textContent).toBe('New: Canonical starter');
   expect(bound.fragment).toBeUndefined();
+});
+
+it.each([
+  ['retained', 'replaced'], ['retained', 'removed'], ['retained', 'removed by the provider listener'],
+  ['legacy', 'replaced'], ['legacy', 'removed'], ['legacy', 'removed by the provider listener'],
+] as const)('refuses a %s root %s before starting the first provider', async (protocol, change) => {
+  const pair = await fixture();
+  if (protocol === 'legacy') {
+    const legacy = seed('Existing XML document', 'fountain', true);
+    await pair.room.initialize(await captureLegacyCheckpoint(legacy.document, pair.schema, version));
+  }
+  const bound = await openYjsRoom({
+    expected: { key }, schema: pair.schema, schemaVersion: version, protocols: [protocol],
+    open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint: () => pair.checkpoint })).admission,
+    admit: offer => pair.peer.admit(offer),
+  });
+  cleanups.push(() => bound.document.destroy());
+  const connect = vi.fn();
+  const fragment = bound.fragment ?? bound.document.getXmlFragment(bound.lease.room);
+  let received: Uint8Array | undefined;
+  const changeRoot = () => {
+    bound.document.transact(() => {
+      const clone = change === 'replaced' ? (fragment.get(0) as Y.XmlElement).clone() : undefined;
+      fragment.delete(0, 1);
+      if (clone) fragment.insert(0, [clone]);
+    }, 'late-provider');
+    received = Y.encodeStateAsUpdate(bound.document);
+  };
+  const changeOnListen = change === 'removed by the provider listener';
+  const provider = changeOnListen ? { connect, on: changeRoot } : { connect };
+  const kit = composeExtensions([CoreExtension, bound.createExtension({ user, provider })]);
+  if (!changeOnListen) changeRoot();
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: bound.baseDocument.toJSON() });
+  cleanups.push(() => editor.destroy());
+  expect(getCollaborationState(editor)).toMatchObject({ status: 'error', error: { recoverable: true, message: expect.stringContaining('admitted room root') } });
+  expect(connect).not.toHaveBeenCalled();
+  expect(received).toBeDefined();
+  expect(Y.encodeStateAsUpdate(bound.document)).toEqual(received);
+});
+
+it.each(['retained', 'legacy', 'nested legacy'] as const)('preserves the editor draft when an admitted %s root disappears', async mode => {
+  const pair = await fixture();
+  const protocol = mode === 'retained' ? 'retained' : 'legacy';
+  if (mode === 'legacy') {
+    const legacy = seed('Existing XML document', 'fountain', true);
+    await pair.room.initialize(await captureLegacyCheckpoint(legacy.document, pair.schema, version));
+  } else if (mode === 'nested legacy') {
+    const document = new Y.Doc(), fragment = new Y.XmlFragment();
+    document.getMap('folder').set('page', fragment);
+    const kit = composeExtensions([CoreExtension, createYjsCollaborationExtension({ document, fragment, user })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: pair.editor.getJSON() });
+    cleanups.push(() => { editor.destroy(); document.destroy(); });
+    await pair.room.initialize(await captureLegacyCheckpoint(document, pair.schema, version, {}, 'fountain', fragment));
+  }
+  const bound = await openYjsRoom({
+    expected: { key }, schema: pair.schema, schemaVersion: version, protocols: [protocol],
+    open: async protocols => (await pair.room.openForEditing({ protocols, loadCheckpoint: () => pair.checkpoint })).admission,
+    admit: offer => pair.peer.admit(offer),
+  });
+  cleanups.push(() => bound.document.destroy());
+  const connect = vi.fn();
+  const kit = composeExtensions([CoreExtension, bound.createExtension({ user, provider: { connect } })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: bound.baseDocument.toJSON() });
+  cleanups.push(() => editor.destroy());
+  expect(getCollaborationState(editor)?.status).toBe('connected');
+  editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Draft: '));
+  expect(canUndoCollaboration(editor)).toBe(true);
+  bound.document.transact(() => {
+    if (mode === 'nested legacy') bound.document.getMap('folder').delete('page');
+    else (bound.fragment ?? bound.document.getXmlFragment(bound.lease.room)).delete(0, 1);
+  }, 'late-provider');
+  const received = Y.encodeStateAsUpdate(bound.document);
+  expect(getCollaborationState(editor)).toMatchObject({ status: 'error', error: { recoverable: true, message: expect.stringContaining('admitted room root') } });
+  expect(canUndoCollaboration(editor)).toBe(false);
+  editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Local '));
+  expect(editor.state.doc.textContent).toBe('Local Draft: ' + bound.baseDocument.textContent);
+  expect(Y.encodeStateAsUpdate(bound.document)).toEqual(received);
+  expect(reconnectCollaboration(editor)).toBe(false);
+  expect(getCollaborationState(editor)?.status).toBe('error');
+  expect(connect).toHaveBeenCalledTimes(1);
+  expect(Y.encodeStateAsUpdate(bound.document)).toEqual(received);
 });
 
 it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(

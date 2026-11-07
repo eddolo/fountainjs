@@ -237,6 +237,33 @@ retired archive when the verified replacement opens. The package build, all
 441 tracked declarations, and the headless boundary pass. The aggregate size
 gate still reports the existing 174.3 KiB ESM and 138.7 KiB CommonJS overruns.
 
+### Keep the admitted root through editor startup
+
+`openYjsRoom` now binds the exact restored Yjs root in both formats. The
+adapter rechecks it before starting the provider, including when a provider
+listener delivers an update during mount. Deletion and replacement with a
+clone both fail admission at that point. Ordinary edits under the admitted
+root continue to synchronize.
+
+For a mounted editor, losing the root puts that session in a recoverable
+error and suspends shared writes, undo and redo. An embedded XML fragment can
+be removed by its parent map without a deep event on the fragment. Bound
+nested adapters also check detachment at the Yjs transaction boundary and
+remove that listener when disconnecting.
+
+The loopback migration demo exercises the loss of each root and checks that
+the authority keeps the last saved revision. The author continues typing and
+downloads the current document as Fountain JSON, including text entered
+after the loss. The JSON is a recovery copy of the visible document.
+
+All 146 focused source checks and nine recorded Chromium, Firefox and WebKit
+journeys passed. The browser checks include migration and rollback plus six
+recovery downloads. Visual review verified the draft and download control in
+the retained WebKit fixture. ESM and CommonJS package consumers both enforce
+the binding. The build and API and TypeScript checks passed. The CommonJS
+aggregate exceeds its limit by 149.5 KiB and the DOCX CommonJS entry by 2.3 KiB.
+Recordings are under `artifacts/yjs-bound-root-browser-final-20261107/`.
+
 ## Remaining work
 
 Production costs, archive/raw retention and compaction, external coordination

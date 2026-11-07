@@ -9,6 +9,7 @@ import { removesOnlyDuplicateProvenance } from './retained-text';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore } from './structured-attributes';
 import { prepareRetainedAdmission, readRetainedAdmission, snapshotRetainedAdmission, type RetainedAdmission, type RetainedAdmissionLease } from './retained-admission';
+import { admittedRoomRootChanged, admittedRoomRoots } from './admitted-room-root';
 
 export interface RetainedYjsCollaborationExtensionOptions extends Omit<YjsCollaborationExtensionOptions, 'preserveConcurrentRoots'> {
   /** Validate an authoritative existing-room snapshot before starting transport.
@@ -94,6 +95,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   private gate(): string {
     if (this.roomConflict) throw this.roomConflict;
+    if (admittedRoomRootChanged(this.fragment)) throw this.roomFailure('The admitted room root changed.');
     const entry = this.fragment.get(0);
     if (this.fragment.length !== 1 || !(entry instanceof Y.XmlElement) || entry.nodeName !== GATE || entry.length
       || Object.keys(entry.getAttributes()).length !== 2 || entry.getAttribute('format') !== FORMAT) {
@@ -231,7 +233,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private attach(context: CollaborationAdapterContext, allowSeed = true): void | Promise<void> {
     const fresh = this.fragment.length === 0 && this.options.document.getMap(`${this.room}:document`).size === 0;
     if (fresh && !allowSeed) throw new Error('Admission requires an already initialized retained room.');
-    if (!fresh) this.roomId = this.gate();
+    if (!fresh || admittedRoomRoots.has(this.fragment)) this.roomId = this.gate();
     validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
     this.context = context;
     try {
@@ -268,7 +270,11 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       this.options.document.on('afterTransaction', this.sharedChanged); this.awareness()?.on('change', this.awarenessChanged);
       this.options.provider?.on?.('status', this.providerStatus);
       this.onLocalSelection(context.editor.state.doc, context.editor.state.selection); this.presences();
-      if (this.options.provider?.connect) { this.providerActive = true; return this.options.provider.connect(); }
+      if (this.options.provider?.connect) {
+        if (admittedRoomRoots.has(this.fragment)) this.gate();
+        this.providerActive = true;
+        return this.options.provider.connect();
+      }
     } catch (error) {
       try { const cleanup = this.disconnect(); if (cleanup) void cleanup.catch(() => undefined); } catch { /* Preserve the connection failure. */ }
       throw error;

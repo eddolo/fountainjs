@@ -84,6 +84,19 @@ export async function checkRetainedYjs(core, retained, Y, legacy, room) {
         assert.equal(starts, 1);
         assert.ok(core.getCollaborationAdapter(editor) instanceof retained.RetainedYjsCollaborationAdapter);
         assert.deepEqual(editor.getJSON(), seed.getJSON());
+        const fragment = bound.document.getXmlFragment(bound.lease.room);
+        bound.document.transact(() => {
+          const replacement = fragment.get(0).clone();
+          fragment.delete(0, 1);
+          fragment.insert(0, [replacement]);
+        }, 'retired-provider');
+        const received = Y.encodeStateAsUpdate(bound.document);
+        assert.equal(getCollaborationState(editor).status, 'error');
+        assert.match(getCollaborationState(editor).error.message, /admitted room root/);
+        assert.equal(undoCollaboration(editor), false);
+        editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Local: '));
+        assert.ok(editor.state.doc.textContent.startsWith('Local: '));
+        assert.deepEqual(Y.encodeStateAsUpdate(bound.document), received);
       } finally { editor.destroy(); bound.document.destroy(); }
       cases++;
     }

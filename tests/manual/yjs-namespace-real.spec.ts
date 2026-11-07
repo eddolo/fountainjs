@@ -1,4 +1,5 @@
 import {expect,test} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
 const errors=new WeakMap<object,string[]>(),state=(page:any)=>page.evaluate(()=>(window as any).audit.snapshot());
 async function capture(page:any,info:any,name:string){await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));const size=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth}));expect(size.height).toBeLessThanOrEqual(size.viewport);expect(size.width).toBeLessThanOrEqual(size.viewportWidth);await page.screenshot({path:info.outputPath(name),fullPage:false,scale:'css'})}
 async function type(page:any,name:string,text:string){await page.getByRole('textbox',{name,exact:true}).click();await page.keyboard.press('Control+Home');await page.keyboard.press('End');await page.keyboard.type(text)}
@@ -439,3 +440,38 @@ test('moves a nested research document and rolls back to the same embedded fragm
   expect((await state(page)).nestedFragment).toEqual(original.nestedFragment);
   await capture(page,info,'nested-rollback.png');
 });
+
+for (const protocol of ['legacy', 'retained'] as const) {
+  const title = protocol === 'legacy'
+    ? 'keeps the draft when the admitted embedded legacy fragment is detached'
+    : 'recovers a local draft when the admitted retained root disappears';
+  test(title, {tag:'@nested'}, async ({page}, info) => {
+    const status = page.getByRole('status');
+    if (protocol === 'retained') {
+      await page.getByRole('button', {name:'Migrate legacy room'}).click();
+      await expect(status).toContainText('Legacy room migrated');
+    }
+    const before = await state(page);
+    const editor = page.getByRole('textbox', {name:'Active editor', exact:true});
+    await type(page, 'Active editor', ' LOCAL draft');
+    await expect(editor).toContainText('LOCAL draft');
+    expect(await page.evaluate(() => (window as any).audit.dropAdmittedRoot())).toBe('error');
+    await expect(status).toContainText('The admitted room root changed');
+    const receivedWire = await page.evaluate(() => (window as any).audit.localRoomWire());
+    await type(page, 'Active editor', ' STILL local');
+    await expect(editor).toContainText('LOCAL draft STILL local');
+    expect(await page.evaluate(() => (window as any).audit.localRoomWire())).toBe(receivedWire);
+    const after = await state(page);
+    expect(after.revision).toBe(before.revision);
+    expect(after.server).toEqual(before.server);
+    await expect(page.getByRole('button', {name:'Save active edits'})).toBeDisabled();
+    const pendingDownload = page.waitForEvent('download');
+    await page.getByRole('button', {name:'Download local draft'}).click();
+    const download = await pendingDownload;
+    expect(download.suggestedFilename()).toBe('recovered-draft.fountain.json');
+    const destination = info.outputPath(download.suggestedFilename());
+    await download.saveAs(destination);
+    expect(JSON.parse(await readFile(destination, 'utf8'))).toEqual(after.active);
+    await capture(page, info, 'admitted-root-draft.png');
+  });
+}
