@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep untouched Markdown source after proven visual edits in a document with
+  a whole-document HTML projection. Report when the Conversion Lab falls back
+  to rewritten Markdown.
+- Add CommonMark source review to the Conversion Lab. Preserve supported raw
+  HTML as inactive data, retain Markdown spelling through edits, and export
+  an offline HTML reader.
+
 - Suspend shared writes, undo and presence when a mounted Yjs editor cannot
   apply a peer document update. Keep the local draft editable while the host
   opens a fresh collaboration session.

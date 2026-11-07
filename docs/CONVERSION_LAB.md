@@ -11,6 +11,22 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+Select **Use CommonMark source review for Markdown** before choosing a
+Markdown file. The mode combines CommonMark delimiter and bare-address
+rules with source capture. It retains supported HTML declarations, unfinished
+end tags, and `script`, `style`, and `textarea` text as inert data. Blocked
+autolinks keep their destinations as data. The selection applies to the
+next Markdown files, and each draft keeps its original import mode.
+
+Download **Markdown** to retain original syntax wherever the source proof
+applies. Edits to independently mapped blocks keep the surrounding source,
+including its original line endings. The export report flags a fallback to
+rewritten Markdown. The download can contain the author's original HTML. Choose
+**HTML** for a standalone reader that uses inactive carriers and blocks
+external resource loads. Editor-only Markdown caret paragraphs are omitted
+by default in that reader. The import report identifies other HTML that the
+lab could only retain as literal text or project with losses.
+
 With **Preserve supported HTML structure** enabled, select **Preserve blocked
 Markdown autolinks as inactive data** before uploading. The document retains
 the original destination and editable label. The reader and safe HTML download

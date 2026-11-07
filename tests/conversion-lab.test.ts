@@ -62,6 +62,51 @@ describe('public conversion lab adapters', () => {
     expect(importLab(bytes(source), 'markdown').document.textContent).toContain('<section');
   });
 
+  it('imports CommonMark source for editing and exports an offline HTML reader', () => {
+    const context = createLabContext({ commonMarkSourceReview: true });
+    const declaration = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+    const source = [
+      declaration, '', '# Review', '', '<script>window.sourceRan = true</script>', '',
+      '<javascript:alert(1)> https://example.test', '', 'Draft body.', '', '<div title="unfinished',
+    ].join('\r\n');
+    const result = importLab(bytes(source), 'markdown', context);
+    const types: string[] = [];
+    result.document.descendants(node => { types.push(node.type.name); });
+    expect(context.options).toMatchObject({ commonMarkText: true, preserveHTMLStructure: true, retainBlockedAutolinks: true });
+    expect(result.document.attrs.htmlSourceEnvelope).toMatchObject({ doctype: declaration, mode: 'quirks' });
+    expect(types).toEqual(expect.arrayContaining(['html_inert_raw_text', 'html_inert_anchor', 'html_source_eof']));
+    expect(importLab(bytes(source), 'markdown').document.textContent).toContain('<script>');
+    expect(new TextDecoder().decode(exportLab(result.document, 'markdown', result.source, context).bytes)).toBe(source);
+    const html = exportLab(result.document, 'html', result.source, context, true);
+    const reader = new TextDecoder().decode(html.bytes);
+    expect(reader).toContain('Content-Security-Policy');
+    expect(reader).toContain("default-src 'none'");
+    expect(reader).not.toContain('<script>');
+    expect(reader).not.toContain('href="javascript:');
+    const reopened = importLab(html.bytes, 'html', context);
+    expect(reopened.document.attrs.htmlSourceEnvelope).toEqual(result.document.attrs.htmlSourceEnvelope);
+    expect(reopened.document.textContent).toContain('window.sourceRan = true');
+    expect(reopened.document.textContent).toContain('<div title="unfinished');
+
+    const editor = createEditor({ schema: context.kit.schema, state: EditorState.create({
+      schema: context.schema, doc: result.document, plugins: context.kit.plugins,
+    }) });
+    try {
+      const index = result.document.content.findIndex(node => node.textContent === 'Draft body.');
+      editor.dispatch(editor.state.createTransaction().insertText([index, 0], 'Draft body.'.length, ' Reviewed.'));
+      const edited = exportLab(editor.state.doc, 'markdown', result.source, context);
+      expect(new TextDecoder().decode(edited.bytes)).toBe(source.replace('Draft body.', 'Draft body. Reviewed.'));
+      expect(edited.issues).toEqual([]);
+      expect(importLab(edited.bytes, 'markdown', context).document.toJSON()).toEqual(editor.getJSON());
+      const authoredTail = editor.state.doc.copy([...editor.state.doc.content,
+        context.schema.node('paragraph', {}, [context.schema.text('')]),
+      ]);
+      expect(exportLab(authoredTail, 'markdown', result.source, context).issues).toContainEqual(
+        expect.objectContaining({ code: 'markdown-source-rewritten' }),
+      );
+    } finally { editor.destroy(); }
+  });
+
   it('preserves untouched Markdown after the live editor adds an automatic caret paragraph', () => {
     const context = createLabContext({ preserveHTMLStructure: true });
     const source = '<section id="part">\n<p>Untouched</p>\n<!--note-->\n</section>\n';
@@ -74,6 +119,22 @@ describe('public conversion lab adapters', () => {
       expect(new TextDecoder().decode(exportLab(editor.state.doc, 'markdown', result.source, context).bytes)).toBe(source);
       const serialized = context.schema.nodeFromJSON(editor.getJSON());
       expect(new TextDecoder().decode(exportLab(serialized, 'markdown', result.source, context).bytes)).not.toBe(source);
+    } finally { editor.destroy(); }
+  });
+
+  it('rewrites the editable span while keeping identical text inside raw HTML and the live caret out of source', () => {
+    const context = createLabContext({ commonMarkSourceReview: true });
+    const source = '<script>Same text.</script>\n\nSame text.\n\n***\n';
+    const result = importLab(bytes(source), 'markdown', context);
+    const editor = createEditor({ schema: context.kit.schema, state: EditorState.create({
+      schema: context.schema, doc: result.document, plugins: context.kit.plugins,
+    }) });
+    try {
+      expect(editor.state.doc.childCount).toBe(result.document.childCount + 1);
+      editor.dispatch(editor.state.createTransaction().insertText([1, 0], 'Same text.'.length, ' Edited.'));
+      const output = exportLab(editor.state.doc, 'markdown', result.source, context);
+      expect(new TextDecoder().decode(output.bytes)).toBe('<script>Same text.</script>\n\nSame text. Edited.\n\n***\n');
+      expect(output.issues).toEqual([]);
     } finally { editor.destroy(); }
   });
 

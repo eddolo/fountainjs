@@ -245,8 +245,8 @@ export class MarkdownSourceSnapshot {
    * prefixes are removed only in its fallback definition footer. */
   readonly referenceDefinitions: string;
   /**
-   * Conservatively mapped top-level blocks. An empty array means this source was
-   * too structurally ambiguous for block-level preservation.
+   * Conservatively mapped top-level blocks. An empty array means a complete
+   * top-level mapping was unavailable.
    */
   readonly blocks: readonly MarkdownSourceBlockSnapshot[];
 
@@ -337,10 +337,15 @@ export class MarkdownSourceSnapshot {
       parseHTMLFlow: undefined, parseHTMLBlock: undefined, parseHTMLInline: undefined, parseHTMLParagraph: undefined } : options;
     const capture = documentHTMLScope ? undefined : captureMarkdownBlocks(parts.body, schema, document, captureOptions);
     const snapshot = new MarkdownSourceSnapshot(source, parts, document, capture);
-    if (capture?.blocks.length && (capture.referenceScope?.containerDefinitions || options.parseHTMLDocument || options.parseHTMLFlow
-      || options.parseHTMLBlock || options.parseHTMLInline || options.parseHTMLParagraph)) {
+    if (documentHTMLScope || (capture?.blocks.length && (capture.referenceScope?.containerDefinitions || options.parseHTMLDocument
+      || options.parseHTMLFlow || options.parseHTMLBlock || options.parseHTMLInline || options.parseHTMLParagraph))) {
       const quietOptions = quietMarkdownOptions(options);
-      registerMarkdownSourceProjection(snapshot, value => new MarkdownImporter().parse(splitMarkdownSource(value, quietOptions.frontmatter).body, schema, quietOptions));
+      const project = (value: string) => new MarkdownImporter().parse(splitMarkdownSource(value, quietOptions.frontmatter).body, schema, quietOptions);
+      if (documentHTMLScope) {
+        registerMarkdownSourceProjection(snapshot, project, { original: document,
+          capture: () => captureProjectedMarkdownRanges(parts.body, schema, document, quietMarkdownOptions(captureOptions)),
+        });
+      } else registerMarkdownSourceProjection(snapshot, project);
     }
     return Object.freeze({ document, source: snapshot });
   }
@@ -678,6 +683,36 @@ interface MarkdownBlockSpan {
   readonly start: number;
   readonly end: number;
   readonly blocks: readonly Node[];
+}
+
+/** Use physical spans from the Markdown parser, never a text search through
+ * HTML. A span must correspond to one uniquely identifiable projected block. */
+function captureProjectedMarkdownRanges(source: string, schema: Schema, document: Node, options: MarkdownImportOptions) {
+  const ranges = new Map<number, { from: number; to: number }>();
+  if (document.childCount > MAX_MARKDOWN_SOURCE_BLOCKS || extractFootnoteDefinitions(source, schema, options).definitions.length) return ranges;
+  const input = source.replace(/\r\n$|[\r\n]$/u, '');
+  const physical = sourceLines(input);
+  const context = references(input, schema, options);
+  if (context.lines.length !== physical.length) return ranges;
+  const indexByContent = new Map<string, number>();
+  document.content.forEach((node, index) => {
+    const key = markdownNodeFingerprint(node);
+    indexByContent.set(key, indexByContent.has(key) ? -1 : index);
+  });
+  const ambiguous = new Set<number>();
+  parseBlocks(context.lines, schema, context.definitions, options, undefined, undefined, ({ start, end, blocks }) => {
+    if (blocks.length !== 1 || !physical[start] || !physical[end] || end < start) return;
+    const block = blocks[0];
+    const index = indexByContent.get(markdownNodeFingerprint(block));
+    if (index === undefined || index < 0 || !block.eq(document.child(index)) || ambiguous.has(index)) return;
+    const from = physical[start].start, to = physical[end].end;
+    if (context.definitions.size && references(source.slice(from, to), schema, options).definitions.size) return;
+    if (ranges.has(index)) {
+      ranges.delete(index);
+      ambiguous.add(index);
+    } else ranges.set(index, { from, to });
+  });
+  return ranges;
 }
 
 /** Capture physical regions when blank-line splitting cannot own a container or

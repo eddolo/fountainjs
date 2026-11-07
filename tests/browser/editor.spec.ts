@@ -44,6 +44,7 @@ import { runMarkdownReferenceBoundariesJourney } from './markdown-reference-boun
 import { runMarkdownFrontmatterJourney } from './markdown-frontmatter-journey';
 import { runMarkdownCaretHTMLJourney } from './markdown-caret-html-journey';
 import { runMarkdownInactiveAutolinksJourney } from './markdown-inactive-autolinks-journey';
+import { runMarkdownSourceReviewJourney } from './markdown-source-review-journey';
 import { runIssueHTMLSourceJourney } from './issue-html-source-journey';
 import { runMarkdownNestedReferenceJourney } from './markdown-nested-reference-journey';
 import { runMarkdownContainerReferenceJourney } from './markdown-container-reference-journey';
@@ -5924,6 +5925,10 @@ test('exports untouched empty Markdown containers without dropping authored blan
 
 test('retains blocked Markdown destinations through edits and safe reader downloads', async ({ page }, info) => {
   await runMarkdownInactiveAutolinksJourney(page, info);
+});
+
+test('reviews CommonMark source and downloads an offline HTML reader', async ({ page }, info) => {
+  await runMarkdownSourceReviewJourney(page, info);
 });
 
 test('reopens source-preserved issue drafts with the real HTML table adapter enabled', async ({ page }, info) => {

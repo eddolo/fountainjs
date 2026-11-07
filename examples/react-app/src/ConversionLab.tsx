@@ -44,7 +44,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const surface = useRef<FountainEditorHandle>(null);
   const state = useFountainState(editor)!;
   const [format, setFormat] = useState<LabFormat>(entry.format!);
-  const [omitCaretHosts, setOmitCaretHosts] = useState(false);
+  const [omitCaretHosts, setOmitCaretHosts] = useState(entry.context.options.commonMarkSourceReview);
   const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node; omitMarkdownCaretHosts: boolean }>();
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
@@ -97,7 +97,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   }
   return <section className="lab-file" hidden={!active} aria-label={`Conversion workspace: ${entry.file.name}`}>
     <div className="lab-file-heading"><div><h2>{entry.file.name}</h2><p>{entry.format?.toUpperCase()} · {entry.file.size.toLocaleString()} bytes · {state.doc.childCount} top-level blocks</p></div><button onClick={() => download(entry.file, entry.file.name)}>Download untouched original</button></div>
-    <p className="lab-import-mode">This file uses {entry.context.options.preserveHTMLStructure ? 'supported HTML structure conversion' : 'literal HTML inside Markdown'}. Export checks use the same import settings.</p>
+    <p className="lab-import-mode">This file uses {entry.context.options.commonMarkSourceReview ? 'CommonMark source review' : entry.context.options.preserveHTMLStructure ? 'supported HTML structure conversion' : 'literal HTML inside Markdown'}. Export checks use the same import settings.</p>
+    {entry.context.options.commonMarkSourceReview && <p className="lab-import-mode">Markdown downloads can contain the original HTML source. Choose HTML for the safe reader export.</p>}
     {entry.format === 'markdown' && entry.context.options.commonMarkText && <p className="lab-import-mode">Leading delimiters are part of the Markdown body. Bare addresses stay as text.</p>}
     <div className="lab-notice"><strong>Import report</strong><p>These are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.</p>{entry.result!.issues.length ? <IssueList issues={entry.result!.issues} /> : <ul><li>No issues reported by this adapter. Undetected losses remain possible.</li></ul>}</div>
     {packageParts && <details className="lab-package" aria-label="Source package inventory"><summary>Source package: {packageParts.length} entries · Unrepresented media: {unrepresentedMedia}</summary><p>Archive entries are counted before conversion. Adapter input means bytes were read, not that every feature survived. Unrepresented media may be unused or belong to omitted content. Skipped parts remain in the untouched original; they are not embedded in the converted document.</p><ul>{packageParts.map((part, index) => <li key={index}><code>{part.path}</code> — {part.handling} · {part.declaredBytes.toLocaleString()} declared bytes</li>)}</ul></details>}
@@ -130,6 +131,7 @@ export function ConversionLab() {
   const [message, setMessage] = useState('');
   const [preserveHTMLStructure, setPreserveHTMLStructure] = useState(false);
   const [commonMarkText, setCommonMarkText] = useState(false);
+  const [commonMarkSourceReview, setCommonMarkSourceReview] = useState(false);
   const [retainBlockedAutolinks, setRetainBlockedAutolinks] = useState(false);
   const importing = useRef(false);
   async function open(files: File[]) {
@@ -137,16 +139,18 @@ export function ConversionLab() {
     if (files.length + entries.length > 8) { setMessage('Keep up to 8 files in this lab. Remove files or clear the session first.'); return; }
     if ([...entries.map(entry => entry.file), ...files].reduce((sum, file) => sum + file.size, 0) > 16 * 1024 * 1024) { setMessage('Session limit: 16 MiB total. Try fewer or smaller files.'); return; }
     importing.current = true; setBusy(true); setMessage('Reading files locally…');
-    const context = createLabContext({ preserveHTMLStructure, commonMarkText, retainBlockedAutolinks });
     const added: Entry[] = [];
     try {
+      const context = createLabContext({ preserveHTMLStructure, commonMarkText, retainBlockedAutolinks });
+      const markdownContext = commonMarkSourceReview ? createLabContext({ commonMarkSourceReview }) : context;
       for (const file of files) {
         const entry: Entry = { id: crypto.randomUUID(), file, context };
         try {
           entry.format = detectLabFormat(file.name);
+          if (entry.format === 'markdown') entry.context = markdownContext;
           if (file.size > (entry.format === 'docx' ? 4 : 1) * 1024 * 1024) throw new Error('Lab limit: 1 MiB per text/JSON file; 4 MiB per DOCX.');
           const bytes = new Uint8Array(await file.arrayBuffer());
-          entry.result = importLab(bytes, entry.format, context);
+          entry.result = importLab(bytes, entry.format, entry.context);
           if (entry.format !== 'docx') entry.sourceText = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
         } catch (cause) { entry.error = cause instanceof Error ? cause.message : String(cause); }
         added.push(entry);
@@ -161,6 +165,8 @@ export function ConversionLab() {
     <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Try a sample</button><button disabled={busy || !entries.length} onClick={() => { if (window.confirm('Clear all local drafts? Download anything you want to keep first.')) { setEntries([]); setActive(''); setMessage('Local session cleared.'); } }}>Clear session</button></div></section>
     <fieldset className="lab-import-options" disabled={busy}>
       <legend>Options for the next files</legend>
+      <label className="lab-checkbox"><input type="checkbox" checked={commonMarkSourceReview} onChange={event => setCommonMarkSourceReview(event.target.checked)} /> Use CommonMark source review for Markdown</label>
+      <p>Read leading delimiters as Markdown and keep bare addresses as text. Preserve supported HTML source as inactive data. This takes precedence over the other Markdown settings for new files.</p>
       <label className="lab-checkbox"><input type="checkbox" checked={preserveHTMLStructure} onChange={event => setPreserveHTMLStructure(event.target.checked)} /> Preserve supported HTML structure</label>
       <p>Keep supported sections, bookmarks, comments and inline flow. HTML inside Markdown will be converted too. This does not reproduce arbitrary styles or scripts.</p>
       {preserveHTMLStructure && <label className="lab-checkbox"><input type="checkbox" checked={retainBlockedAutolinks} onChange={event => setRetainBlockedAutolinks(event.target.checked)} /> Preserve blocked Markdown autolinks as inactive data</label>}

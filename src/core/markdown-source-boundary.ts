@@ -1,12 +1,19 @@
 import type { Node } from './schema';
 import type { MarkdownSourceBlockSnapshot, MarkdownSourceSnapshot } from './importers/markdown-importer';
+import { isAutomaticTrailingParagraph } from './editing-provenance';
 
 type ParseSource = (source: string) => readonly Node[];
+type SourceRange = { readonly from: number; readonly to: number };
+type ProjectionCapture = {
+  readonly original: Node;
+  readonly capture: () => ReadonlyMap<number, SourceRange>;
+  ranges?: ReadonlyMap<number, SourceRange>;
+};
 
 // Only parser-owned captures register here. Weak ownership
 // releases the schema/options when the source snapshot is no longer used.
 const parsers = new WeakMap<MarkdownSourceBlockSnapshot, ParseSource>();
-const projections = new WeakMap<MarkdownSourceSnapshot, (source: string) => Node>();
+const projections = new WeakMap<MarkdownSourceSnapshot, { parse: (source: string) => Node; capture?: ProjectionCapture }>();
 const footerChecks = new WeakMap<MarkdownSourceBlockSnapshot, {
   readonly parse: ParseSource;
   readonly entries: { readonly before: string; readonly after: string; readonly separator: string; readonly valid: boolean }[];
@@ -16,8 +23,39 @@ export function registerMarkdownSourceBoundary(block: MarkdownSourceBlockSnapsho
   parsers.set(block, parse);
 }
 
-export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot, parse: (value: string) => Node): void {
-  projections.set(source, parse);
+export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot, parse: (value: string) => Node,
+  capture?: ProjectionCapture): void {
+  projections.set(source, { parse, capture });
+}
+
+/** Whole-document HTML projection can consume or merge source blocks. Edit
+ * only independently identified spans, leaving all other source in place. */
+export function rewriteMarkdownProjection(source: MarkdownSourceSnapshot, current: Node,
+  render: (node: Node, index: number) => string): { body: string; document: Node } | null {
+  const entry = projections.get(source)?.capture;
+  if (!entry || entry.original.type !== current.type) return null;
+  const { original } = entry;
+  const document = current.childCount === original.childCount + 1 && isAutomaticTrailingParagraph(current.content.at(-1))
+    ? current.copy(current.content.slice(0, -1)) : current;
+  if (document.childCount !== original.childCount) return null;
+  const changed = document.content.flatMap((node, index) => node.eq(original.child(index)) ? [] : [index]);
+  if (!changed.length) return null;
+  const ranges = entry.ranges ??= entry.capture();
+  const replacements = [];
+  for (const index of changed) {
+    const range = ranges.get(index);
+    if (!range) return null;
+    replacements.push({ ...range, index });
+  }
+  replacements.sort((left, right) => left.from - right.from);
+  const chunks: string[] = [];
+  let cursor = 0;
+  for (const { from, to, index } of replacements) {
+    chunks.push(source.body.slice(cursor, from), render(document.child(index), index));
+    cursor = to;
+  }
+  chunks.push(source.body.slice(cursor));
+  return { body: chunks.join(''), document };
 }
 
 export function hasMarkdownSourceProjection(source: MarkdownSourceSnapshot): boolean {
@@ -27,7 +65,7 @@ export function hasMarkdownSourceProjection(source: MarkdownSourceSnapshot): boo
 /** HTML adapters and container definitions can affect distant blocks. Captures
  * without nonlocal scope keep their existing local proof path. */
 export function markdownSourceProjectionMatches(source: MarkdownSourceSnapshot, value: string, document: Node): boolean {
-  const parse = projections.get(source);
+  const parse = projections.get(source)?.parse;
   if (!parse) return true;
   try { return parse(value).eq(document); }
   catch { return false; }

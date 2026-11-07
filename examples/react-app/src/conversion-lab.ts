@@ -2,7 +2,8 @@ import katex from 'katex';
 import { HTMLAnchorExtension, HTMLCommentExtension, HTMLContainerExtension, HTMLFlowExtension, HTMLExporter, MarkdownExporter, MarkdownImporter, Schema, StarterKit, composeExtensions, createKaTeXRenderer, createMathExtension, type Node, type MarkdownSourceSnapshot } from 'fountainjs-editor';
 import { PagesExtension } from 'fountainjs-editor/pages';
 import { ServerHTMLImporter } from 'fountainjs-editor/html/server';
-import { createInertHTMLAnchorExtension } from 'fountainjs-editor/html/inert';
+import { createHTMLSourceEmptyBodyExtension, createHTMLSourceEOFExtension, createInertHTMLAnchorExtension, createInertHTMLRawTextExtension } from 'fountainjs-editor/html/inert';
+import { createHTMLSourceMarkdownAdapter } from 'fountainjs-editor/html/source';
 import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/docx';
 import { compileTeXForDOCX } from './mathjax-docx';
 
@@ -19,22 +20,29 @@ export type LabImportOptions = {
   readonly preserveHTMLStructure?: boolean;
   readonly commonMarkText?: boolean;
   readonly retainBlockedAutolinks?: boolean;
+  readonly commonMarkSourceReview?: boolean;
 };
 /** Each imported file owns its schema/policy for editing, export and reopening.
  * Changing the next-import controls must never reinterpret an existing draft.
  */
 export function createLabContext(options: LabImportOptions = {}) {
+  const commonMarkSourceReview = options.commonMarkSourceReview === true;
+  const preserveHTMLStructure = commonMarkSourceReview || options.preserveHTMLStructure === true;
   const settings = Object.freeze({
-    preserveHTMLStructure: options.preserveHTMLStructure === true,
-    commonMarkText: options.commonMarkText === true,
-    retainBlockedAutolinks: options.preserveHTMLStructure === true && options.retainBlockedAutolinks === true,
+    preserveHTMLStructure,
+    commonMarkText: commonMarkSourceReview || options.commonMarkText === true,
+    retainBlockedAutolinks: commonMarkSourceReview || preserveHTMLStructure && options.retainBlockedAutolinks === true,
+    commonMarkSourceReview,
   });
   const kit = composeExtensions([...StarterKit.extensions, PagesExtension, createMathExtension({
     renderer: createKaTeXRenderer(katex, { maxExpand: 1000, maxSize: 20 }),
   }), ...(settings.preserveHTMLStructure ? [HTMLContainerExtension, HTMLCommentExtension, HTMLFlowExtension, HTMLAnchorExtension] : []),
-  ...(settings.retainBlockedAutolinks ? [createInertHTMLAnchorExtension()] : [])]);
+  ...(settings.retainBlockedAutolinks ? [createInertHTMLAnchorExtension()] : []),
+  ...(commonMarkSourceReview ? [createHTMLSourceEmptyBodyExtension(), createHTMLSourceEOFExtension(),
+    createInertHTMLRawTextExtension({ tags: ['script', 'style', 'textarea'] })] : [])]);
   const policy = (settings.preserveHTMLStructure ? 'starter-kit-pages-html-structure-v1; markdown-document-html; bounded-html-docx; json-depth64-nodes20000' : labPolicy)
-    + (settings.retainBlockedAutolinks ? '; blocked-autolinks-inert' : '');
+    + (settings.retainBlockedAutolinks ? '; blocked-autolinks-inert' : '')
+    + (commonMarkSourceReview ? '; markdown-source-review-v1' : '');
   return Object.freeze({ options: settings, kit, schema: new Schema(kit.schema),
     policy: settings.commonMarkText ? policy + '; markdown-body-delimiters; bare-addresses-literal' : policy });
 }
@@ -93,23 +101,33 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
     if (document.type !== labSchema.topNodeType) throw new Error('Choose a complete Fountain document JSON object with type "doc", not a single node or a workspace bundle.');
     return { document, issues: [{ code: 'schema-boundary', message: `Validated against this file’s selected lab schema${context.options.preserveHTMLStructure ? ', including supported HTML structure' : ' (StarterKit + Pages)'}, not every extension schema. Extra data and visual fidelity are not certified; keep the original file.` }] };
   }
-  const issues: LabIssue[] = [];
+  let importIssues: LabIssue[] | undefined = [];
+  const parseHTMLDocument: NonNullable<Parameters<typeof MarkdownImporter.parseWithSource>[2]>['parseHTMLDocument'] = context.options.commonMarkSourceReview
+    ? createHTMLSourceMarkdownAdapter({ sourceTokens: true }, report => importIssues?.push(...report.issues))
+    : context.options.preserveHTMLStructure
+      ? (segments, schema, sourceContext) => {
+        const parsed = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, schema, sourceContext);
+        importIssues?.push(...parsed.issues);
+        return parsed.nodes;
+      }
+      : undefined;
   const result = MarkdownImporter.parseWithSource(text, labSchema, {
     frontmatter: context.options.commonMarkText ? 'markdown' : 'metadata',
     autolinkLiterals: !context.options.commonMarkText,
     retainBlockedAutolinks: context.options.retainBlockedAutolinks,
-    ...(context.options.preserveHTMLStructure ? {
-      parseHTMLDocument: (segments, schema, sourceContext) => {
-        const parsed = new ServerHTMLImporter().parseTextBlockFlowWithReport(segments, schema, sourceContext);
-        issues.push(...parsed.issues);
-        return parsed.nodes;
-      },
-      onHTMLFlowFallback: issue => issues.push({ code: 'html-source-fallback', message: issue.message }),
+    ...(parseHTMLDocument ? {
+      parseHTMLDocument,
+      onHTMLFlowFallback: issue => importIssues?.push({ code: 'html-source-fallback', message: issue.message }),
     } : {}),
   });
+  const issues = importIssues;
+  // The source snapshot may call the same adapter again to verify edits.
+  importIssues = undefined;
   const textPolicy = (context.options.commonMarkText ? 'Leading delimiters are parsed as Markdown. Bare addresses stay as text. ' : '')
     + (context.options.retainBlockedAutolinks ? 'Blocked Markdown autolinks are retained as inactive data. ' : '');
-  const htmlPolicy = context.options.preserveHTMLStructure
+  const htmlPolicy = context.options.commonMarkSourceReview
+    ? 'Markdown source review retains supported HTML declarations, unfinished tags, and script, style, and textarea content as inert data. Other HTML can fall back to literal text or lose structure with a report.'
+    : context.options.preserveHTMLStructure
     ? 'HTML conversion is enabled for this file. Unsupported HTML can remain literal or lose structure with a report.'
     : 'Raw HTML stays inert.';
   return { ...result, issues: [{ code: 'markdown-coverage',
@@ -130,8 +148,18 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
   }
   if (format === 'markdown') {
     const result = source ? MarkdownExporter.exportWithSource(document, source) : MarkdownExporter.exportWithReport(document);
-    return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues: result.losses.map(loss => ({ code: loss.kind, type: loss.type, message: loss.detail, path: loss.path })) };
+    const issues: LabIssue[] = result.losses.map(loss => ({ code: loss.kind, type: loss.type, message: loss.detail, path: loss.path }));
+    if (context.options.commonMarkSourceReview && 'preservation' in result
+      && (result.preservation === 'canonical' || result.preservation === 'frontmatter')) {
+      issues.unshift({ code: 'markdown-source-rewritten', message: 'The source-preserving export could not verify this edit. The download uses rewritten Markdown. Compare it with the original before replacing your source.' });
+    }
+    return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues };
   }
-  const text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document, { omitMarkdownCaretHosts });
+  let text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document, { omitMarkdownCaretHosts });
+  if (format === 'html' && context.options.commonMarkSourceReview) {
+    // Insert before authored body content so a standalone reader also stays offline.
+    text = text.replace('<meta charset="utf-8">', `$&
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; media-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
+  }
   return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.' }] : [] };
 }

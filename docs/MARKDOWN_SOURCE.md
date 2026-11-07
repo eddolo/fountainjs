@@ -1,5 +1,25 @@
 # Markdown semantics and source fidelity
 
+## CommonMark source review in the Conversion Lab
+
+The lab offers a single source-review option for the next Markdown files.
+It composes the existing complete-source adapter and the standard inert
+anchor, raw-text, and unfinished-source extensions. It uses the safe reader
+export with a policy that blocks external resource loads. The original source
+panel and Markdown download still let authors inspect and retain raw syntax.
+Arbitrary custom HTML tags need a host-defined allowlist. The separate
+complete-file corpus profile uses its own explicit tag registrations.
+[Conversion Lab workflow](CONVERSION_LAB.md#workflow).
+
+The whole-document HTML adapter can combine blocks or move source into root
+metadata. When the editor changes a block that the Markdown parser can still
+identify by a unique physical span, the source exporter rewrites that span and
+reparses the complete candidate with the original adapter. A successful proof
+retains the other source bytes, including declarations and an unfinished tag
+at EOF. It may omit an unchanged editor-generated trailing caret paragraph.
+Ambiguous spans, changes to unowned regions, and failed proofs can still fall
+back to canonical Markdown, which the lab reports separately.
+
 ## Inactive URI autolinks and complete-file body verification (2026-11-07, unreleased)
 
 `retainBlockedAutolinks: true` captures a blocked angle-bracket URI using

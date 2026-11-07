@@ -5,7 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator } from '../markdown-source-boundary';
+import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator, rewriteMarkdownProjection } from '../markdown-source-boundary';
 import { draftMarkdownNestedSource, hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
@@ -741,6 +741,17 @@ export class MarkdownExporter {
         losses: Object.freeze([]),
         preservation: 'exact' as const,
       });
+    }
+
+    const projectionContext: RenderContext = { options: { ...options, onLoss: undefined }, losses: [], references: new Map() };
+    const projection = rewriteMarkdownProjection(source, node, (block, index) =>
+      withLineEnding(render(block, projectionContext, [index]).trimEnd(), source.lineEnding));
+    if (projection && projectionContext.references.size === 0) {
+      const markdown = withSourceFrontmatter(source, projection.body);
+      if (markdownSourceProjectionMatches(source, markdown, projection.document)) {
+        projectionContext.losses.forEach(loss => notifyLoss(options, loss));
+        return Object.freeze({ markdown, losses: Object.freeze([...projectionContext.losses]), preservation: 'blocks' as const });
+      }
     }
 
     const automaticTail = node.type.name === 'doc' && source.blocks.some(hasMarkdownNestedSource)

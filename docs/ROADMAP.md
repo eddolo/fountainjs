@@ -50,6 +50,14 @@ exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
+The Conversion Lab's local CommonMark source-review mode keeps supported
+raw HTML as inert data. An edit to an independently mapped paragraph retained
+the original declaration, script spelling, blocked autolink, CRLF endings,
+and unfinished HTML in actual Markdown downloads. Chromium, Firefox and
+WebKit also reopened the separate HTML reader export with the script inactive
+and the external image load blocked. Rewritten Markdown is reported when
+source preservation cannot be verified. [Lab workflow](CONVERSION_LAB.md#workflow).
+
 The DOCX bridge now retains omitted and explicit inline drawing distances.
 Three browser downloads of the scientific fixture match both original header
 positions in independent LibreOffice output.
