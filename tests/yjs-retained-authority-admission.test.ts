@@ -39,6 +39,46 @@ it('suppresses unchanged retained checkpoints and fences reads across freeze and
   await expect(pair.room.pollRetained(lease)).rejects.toMatchObject({ code: 'stale-epoch' });
 });
 
+it('checks idle polls and behind presence without loading checkpoint bytes from SQLite', async () => {
+  const pair = await fixture();
+  const lease = { key, epoch: pair.initial.epoch, revision: 0, protocol: 'retained' as const, room: 'fountain', identity: pair.checkpoint.manifest.roomId };
+  const full = vi.spyOn(pair.a, 'readDocument');
+  const headers = vi.spyOn(pair.a, 'readDocumentHeader');
+  const header = await pair.a.readDocumentHeader(key);
+  expect(header?.checkpoint).toEqual({ manifest: pair.checkpoint.manifest });
+  headers.mockClear();
+  const results = await Promise.all(Array.from({ length: 64 }, () => pair.room.pollRetained(lease)));
+  expect(results.every(result => result === null)).toBe(true);
+  expect(headers).toHaveBeenCalledTimes(64);
+  expect(full).not.toHaveBeenCalled();
+
+  pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'New '));
+  const latest = await pair.other.write({ epoch: lease.epoch, protocol: lease.protocol, update: Y.encodeStateAsUpdate(pair.document) });
+  await Promise.all(Array.from({ length: 64 }, () => pair.room.fenceRetainedPresence(lease)));
+  expect(headers).toHaveBeenCalledTimes(128);
+  expect(full).not.toHaveBeenCalled();
+  await expect(pair.room.pollRetained(lease)).resolves.toEqual(latest);
+  expect(full).toHaveBeenCalledOnce();
+
+  const frozen = await pair.other.freeze(latest);
+  await expect(pair.room.fenceRetainedPresence(lease)).rejects.toMatchObject({ code: 'frozen' });
+  await pair.other.abort(await pair.other.recoverFrozen(frozen));
+  await rotate(pair);
+  await expect(pair.room.fenceRetainedPresence(lease)).rejects.toMatchObject({ code: 'stale-epoch' });
+  expect(full).toHaveBeenCalledOnce();
+});
+
+it('rejects a freeze committed on another connection between the full read and its header fence', async () => {
+  const pair = await fixture();
+  const lease = { key, epoch: pair.initial.epoch, revision: 0, protocol: 'retained' as const, room: 'fountain', identity: pair.checkpoint.manifest.roomId };
+  const readHeader = pair.a.readDocumentHeader.bind(pair.a);
+  vi.spyOn(pair.a, 'readDocumentHeader').mockImplementationOnce(async requested => {
+    await pair.other.freeze(await pair.other.snapshot());
+    return readHeader(requested);
+  });
+  await expect(pair.room.admit(lease)).rejects.toMatchObject({ code: 'revision-conflict' });
+});
+
 it('binds an immutable validated session before starting the provider',async()=>{
  const pair=await fixture(),leases:any[]=[],provider={connect:vi.fn(),disconnect:vi.fn()},admission=contract(pair,undefined,async lease=>{expect(provider.connect).not.toHaveBeenCalled();expect(Object.isFrozen(lease)).toBe(true);leases.push(lease);await (pair.room as any).admit(lease);}),client=make('Template',{provider,admission});await settled(client.editor);expect(leases).toEqual([{key,epoch:pair.initial.epoch,revision:0,protocol:'retained',room:'fountain',identity:pair.checkpoint.manifest.roomId}]);expect(provider.connect).toHaveBeenCalledTimes(1);expect(client.editor.getJSON()).toEqual(pair.editor.getJSON());
 });

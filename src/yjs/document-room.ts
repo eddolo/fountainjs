@@ -8,8 +8,11 @@ import { validateCoordinatedRoomRecord, type CoordinatedRecord, type Coordinated
 export type DocumentCheckpoint = RetainedCheckpoint | LegacyCheckpoint;
 export type DocumentProtocol = 'legacy' | 'retained';
 export type DocumentRoomRecord = CoordinatedRecord<DocumentCheckpoint>;
+export type DocumentRoomHeader = CoordinatedRecord<Pick<DocumentCheckpoint, 'manifest'>>;
 export interface DocumentRoomRepository {
   readDocument(key: string): Promise<DocumentRoomRecord | undefined>;
+  /** Read an owned header from the same atomic row used by readDocument. */
+  readDocumentHeader?(key: string): Promise<DocumentRoomHeader | undefined>;
   createDocument(record: DocumentRoomRecord): Promise<boolean>;
   compareDocument(key: string, expectedGeneration: string, next: DocumentRoomRecord): Promise<boolean>;
 }
@@ -26,7 +29,7 @@ export interface RetainedRoomProvisionOptions {
   /** Load a server-owned initial checkpoint only when the room is absent. */
   readonly loadCheckpoint: (signal: AbortSignal | undefined) => RetainedCheckpoint | Promise<RetainedCheckpoint>;
 }
-export const documentProtocol = (checkpoint: DocumentCheckpoint): DocumentProtocol => {
+export const documentProtocol = (checkpoint: Pick<DocumentCheckpoint, 'manifest'>): DocumentProtocol => {
   if (checkpoint.manifest.format === 'fountain-legacy-checkpoint/1') return 'legacy';
   if (checkpoint.manifest.format === 'fountain-retained-checkpoint/1') return 'retained';
   throw new Error('Unknown document-room protocol.');
@@ -87,6 +90,13 @@ export class CoordinatedDocumentRoom {
     this.projection = snapshotLegacyProjection(projection);
   }
   private async current(): Promise<DocumentRoomRecord> { const row = await this.repository.readDocument(this.key); validateCoordinatedRoomRecord(row, this.key, this.schemaVersion); documentProtocol(row.checkpoint); return row; }
+  private async currentHeader(): Promise<DocumentRoomHeader> {
+    if (!this.repository.readDocumentHeader) return this.current();
+    const row = await this.repository.readDocumentHeader(this.key);
+    validateCoordinatedRoomRecord(row, this.key, this.schemaVersion);
+    documentProtocol(row.checkpoint);
+    return row;
+  }
   private async commit(row: DocumentRoomRecord, patch: Partial<DocumentRoomRecord>): Promise<DocumentRoomRecord> {
     const next = { ...row, ...patch, generation: crypto.randomUUID() };
     if (!await this.repository.compareDocument(this.key, row.generation, next)) documentRoomFailure('revision-conflict', 'Document room changed; retain pending edits and retry.'); return next;
@@ -138,17 +148,25 @@ export class CoordinatedDocumentRoom {
    * checkpoint. The durable row still fences epoch, protocol and phase. */
   async pollRetained(lease: DocumentRoomAdmission): Promise<DocumentRoomSnapshot | null> {
     const expected = { ...lease };
-    const row = await this.current();
+    const row = await this.retainedReader(expected);
+    return expected.revision === row.revision ? null : this.admit(expected);
+  }
+  /** Presence carries no document bytes, even when the receiver is behind. */
+  async fenceRetainedPresence(lease: DocumentRoomAdmission): Promise<void> {
+    await this.retainedReader({ ...lease });
+  }
+  private async retainedReader(expected: DocumentRoomAdmission): Promise<DocumentRoomHeader> {
+    const row = await this.currentHeader();
     if (row.epoch !== expected.epoch || expected.protocol !== 'retained' || documentProtocol(row.checkpoint) !== 'retained') {
       documentRoomFailure('stale-epoch', 'Reader epoch/protocol is stale; reconnect and retain pending edits.');
     }
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
-    const manifest = (row.checkpoint as RetainedCheckpoint).manifest;
+    const manifest = row.checkpoint.manifest as RetainedCheckpoint['manifest'];
     if (expected.key !== this.key || manifest.room !== expected.room || manifest.roomId !== expected.identity
       || !Number.isSafeInteger(expected.revision) || expected.revision < 0 || expected.revision > row.revision) {
       documentRoomFailure('invalid-ticket', 'Retained reader does not match the active room.');
     }
-    return expected.revision === row.revision ? null : this.admit(expected);
+    return row;
   }
   /** Read-only connection fence. Every later write must still check its epoch;
    * this receipt does not reserve an active room or grant authorization. */
@@ -163,7 +181,7 @@ export class CoordinatedDocumentRoom {
     if (row.revision < expected.revision || row.checkpoint.manifest.room !== expected.room) documentRoomFailure('revision-conflict', 'Admission revision or namespace is incompatible.');
     const checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection);
     if (checked.identity !== expected.identity) documentRoomFailure('invalid-ticket', 'Admission native room identity differs.');
-    if ((await this.current()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed during admission verification; retry explicitly.');
+    if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed during admission verification; retry explicitly.');
     return documentSnapshot({ ...row, checkpoint: checked.checkpoint });
   }
   async write(request: { readonly epoch: string; readonly protocol: DocumentProtocol; readonly update: Uint8Array }): Promise<DocumentRoomSnapshot> {

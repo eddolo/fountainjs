@@ -261,3 +261,27 @@ test('keeps local typing when the write response has no acknowledgement', async 
   await expect(server(page)).toHaveText('Shared incident report.');
   await page.screenshot({ path: info.outputPath('write-unacknowledged.png'), scale: 'css' });
 });
+
+test('delivers presence while the receiving editor is behind the current document revision', async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  try {
+    const holdCatchup = (route: Route) => route.fulfill({ json: { ok: true, value: null } });
+    await peer.route(poll, holdCatchup);
+    await editor(page).click();
+    await page.keyboard.press('Home');
+    await page.keyboard.insertText('Updated: ');
+    await expect(server(page)).toHaveText('Updated: Shared incident report.');
+    await expect(editor(peer)).toHaveText('Shared incident report.');
+    await selectReport(page);
+    await expect(peerLabel(peer)).toHaveText('Ada');
+    await expect(peerSelection(peer)).toHaveText('report.');
+    await expectCaretEdge(peer, 'left');
+    await expect(server(peer)).toHaveText('Shared incident report.');
+    await peer.screenshot({ path: info.outputPath('presence-while-behind.png'), scale: 'css' });
+    await peer.unroute(poll, holdCatchup);
+    await expect(editor(peer)).toHaveText('Updated: Shared incident report.');
+    await expect(peerSelection(peer)).toHaveText('report.');
+    await expectCaretEdge(peer, 'left');
+    await peer.screenshot({ path: info.outputPath('presence-after-catchup.png'), scale: 'css' });
+  } finally { await peer.close(); }
+});

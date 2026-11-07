@@ -1,14 +1,23 @@
-import { DatabaseSync } from 'node:sqlite';
+import { DatabaseSync, type StatementSync } from 'node:sqlite';
 import type { RetainedRoomRecord } from '../../src/yjs/retained-room-coordinator';
 import type { RetainedRoomArchive, RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
-import type { DocumentRoomRecord, DocumentCheckpoint } from '../../src/yjs/document-room';
+import type { DocumentRoomRecord, DocumentRoomHeader, DocumentCheckpoint } from '../../src/yjs/document-room';
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
+
+function roomMetadata(result: Record<string, unknown>, key: string) {
+  if (typeof result.metadata !== 'string' || typeof result.generation !== 'string') throw new Error('Invalid SQLite retained room row.');
+  const data = JSON.parse(result.metadata) as Omit<DocumentRoomRecord, 'checkpoint'> & { manifest: DocumentCheckpoint['manifest'] };
+  if (data.key !== key || data.generation !== result.generation) throw new Error('SQLite retained metadata identity mismatch.');
+  if (!['fountain-retained-checkpoint/1', 'fountain-legacy-checkpoint/1'].includes(data.manifest?.format)) throw new Error('Invalid SQLite document checkpoint format.');
+  return data;
+}
 
 /** Internal Node 24+ reference. Local SQLite file, not network/shared-filesystem
  * storage or a public Fountain package entry. The host owns paths and access. */
 export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, CrossFormatRepository {
   private readonly db: DatabaseSync;
+  private readonly selectRoomMetadata: StatementSync;
   constructor(path: string) {
     this.db = new DatabaseSync(path, { timeout: 1_000, allowExtension: false, enableDoubleQuotedStringLiterals: false });
     try {
@@ -56,6 +65,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
           wire BLOB NOT NULL CHECK(length(wire) BETWEEN 1 AND 67108864),
           PRIMARY KEY(room_key, archive_id, revision)
         ) STRICT;`);
+      this.selectRoomMetadata = this.db.prepare('SELECT generation, metadata FROM fountain_retained_rooms_v1 WHERE room_key = ?');
     } catch (error) { this.db.close(); throw error; }
   }
 
@@ -68,13 +78,17 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   async readDocument(key: string): Promise<DocumentRoomRecord | undefined> {
     const result = this.db.prepare('SELECT generation, metadata, wire FROM fountain_retained_rooms_v1 WHERE room_key = ?').get(key);
     if (!result) return undefined;
-    if (typeof result.metadata !== 'string' || typeof result.generation !== 'string' || !(result.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retained room row.');
-    const data = JSON.parse(result.metadata) as Omit<DocumentRoomRecord, 'checkpoint'> & { manifest: DocumentCheckpoint['manifest'] };
-    if (data.key !== key || data.generation !== result.generation) throw new Error('SQLite retained metadata identity mismatch.');
-    if (!['fountain-retained-checkpoint/1', 'fountain-legacy-checkpoint/1'].includes(data.manifest?.format)) throw new Error('Invalid SQLite document checkpoint format.');
-    const { manifest, ...row } = data, update = Uint8Array.from(result.wire);
+    if (!(result.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retained room row.');
+    const { manifest, ...row } = roomMetadata(result, key), update = Uint8Array.from(result.wire);
     const checkpoint: DocumentCheckpoint = manifest.format === 'fountain-retained-checkpoint/1' ? { manifest, update } : { manifest, update };
     return { ...row, checkpoint };
+  }
+
+  async readDocumentHeader(key: string): Promise<DocumentRoomHeader | undefined> {
+    const result = this.selectRoomMetadata.get(key);
+    if (!result) return undefined;
+    const { manifest, ...row } = roomMetadata(result, key);
+    return { ...row, checkpoint: { manifest } };
   }
 
   private packet(record: DocumentRoomRecord): { metadata: string; wire: Uint8Array } {
@@ -101,7 +115,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     if (next.key !== key || next.generation === expectedGeneration) throw new Error('Invalid SQLite retained CAS replacement.');
     // Only coordination metadata is needed for this guard. Do not copy the
     // full checkpoint wire again just to enforce the same-format CAS contract.
-    const before = this.db.prepare('SELECT generation, metadata FROM fountain_retained_rooms_v1 WHERE room_key = ?').get(key);
+    const before = this.selectRoomMetadata.get(key);
     if (!before || before.generation !== expectedGeneration) return false;
     if (typeof before.metadata !== 'string' || JSON.parse(before.metadata).manifest?.format !== next.checkpoint.manifest.format) throw new Error('Format changes require an atomic recovery archive.');
     const packet = this.packet(next);

@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Read room metadata alone for idle polling and presence in the retained
+  SQLite reference. Changed documents keep the existing checkpoint and
+  generation verification. [Transport reference](docs/YJS_LIVE_HTTP_REFERENCE.md).
+
 - Preserve the active end of native backward text selections in collaboration.
   A peer's caret follows the selection direction even when the highlighted
   text stays the same. [Browser audit](docs/YJS_LIVE_HTTP_REFERENCE.md).

@@ -9,7 +9,7 @@ server=once(server,"else if(action==='write')value=await room.write(body);",`els
    else if(action==='bind')value=await room.admit(body);
    else if(action==='poll-retained'){const snapshot=await room.pollRetained(body.lease??body);value=snapshot&&retainedHttpReceipt(snapshot,body.basis);}
    else if(action==='bind-live'){const snapshot=await room.admit(body.lease);value={snapshot,token:presence.bind(room.key,snapshot.epoch)};}
-   else if(action==='presence'){await room.pollRetained(body.lease);value=presence.exchange(room.key,body.lease.epoch,body.token,body.state);}
+   else if(action==='presence'){await room.fenceRetainedPresence(body.lease);value=presence.exchange(room.key,body.lease.epoch,body.token,body.state);}
    else if(action==='leave-live'){presence.leave(room.key,body.epoch,body.token);value=null;}
    else if(action==='bind-advance'){const snapshot=await room.snapshot(),opened=await restoreRetainedCheckpoint(snapshot.checkpoint,schema,'admission-browser-1'),kit=composeExtensions([CoreExtension,MathExtension,createRetainedYjsCollaborationExtension({document:opened.document,user:{id:'server',name:'Server',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:opened.baseDocument.toJSON()});try{editor.dispatch(editor.createTransaction().insertText([1,0],editor.state.doc.child(1).textContent.length,' ACCEPTED during bind'));await room.write({epoch:snapshot.epoch,protocol:'retained',update:Y.encodeStateAsUpdate(opened.document)});}finally{editor.destroy();opened.document.destroy();}value=await room.admit(body);}
    else if(action==='freeze')value=await room.freeze(await room.snapshot());

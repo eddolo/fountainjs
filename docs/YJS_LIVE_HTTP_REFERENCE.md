@@ -10,6 +10,28 @@ checkpoint if the room revision is unchanged. It still checks the active phase,
 protocol, epoch, namespace and native identity. Writes use the existing fenced
 SQLite authority.
 
+## Idle reads and presence checks
+
+The SQLite host projects the room metadata separately from the checkpoint BLOB.
+Unchanged polls and presence checks use that projection. Presence can be read
+while the client is behind without loading a document that the presence response
+would discard. A changed-document poll still reads and validates the checkpoint.
+The final admission generation check also reads metadata alone, so a freeze
+committed by a second connection still invalidates a receipt under verification.
+Repositories without the optional metadata reader use their existing full read.
+
+A two-connection SQLite test performed 64 unchanged polls and 64 presence
+checks from a behind client with zero full checkpoint reads. A changed poll
+performed one. Separate checks verified freeze and epoch refusal and a freeze
+between full checkpoint validation and the final generation check. The browser
+scenario pauses document catch-up in one tab while a live selection arrives,
+then releases catch-up and verifies the caret remains on the selected text.
+The metadata-read audit passed 106 focused tests and 24 recorded journeys
+across Chromium, Firefox and WebKit. Visual review confirmed the selection on
+both revisions. The build produced identical bytes in all 180 top-level runtime
+and CSS files. The declaration audit records the optional internal header method
+and the presence fence in the room-authority declarations.
+
 ## Incremental receipts
 
 After initial admission, the [HTTP receipt codec](../examples/backends/retained-http-delta.ts)
@@ -91,9 +113,10 @@ the internal polling method in the ESM and CommonJS room-authority declarations.
 ## Deployment boundaries
 
 This reference uses periodic HTTP polling with fixed delays. The server still
-validates full checkpoints, and the client retains an accepted checkpoint and
-reconstructs full bytes for validation. Polling, validation, SQLite reads and
-client memory have not been load-tested for large rooms or many editors.
+validates full checkpoints when it delivers changed document state, and the
+client retains an accepted checkpoint and reconstructs full bytes for validation.
+The metadata projection avoids materializing the BLOB in Node. SQLite physical
+page reads and multi-client CPU and memory at production scale remain unmeasured.
 Presence is process-local. A real host must
 authenticate the actor and supply or verify their display identity. The reference
 has no deployed process, deadline for document requests, multi-host presence
