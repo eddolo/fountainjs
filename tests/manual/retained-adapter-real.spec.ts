@@ -1,7 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 import {auditCompiledRuntime} from './compiled-runtime-audit';
-auditCompiledRuntime();
-const url='/artifacts/retained-adapter-fixture-compiled-20261106.html';
+const installedPreview = process.env.FOUNTAIN_RETAINED_PACKAGE_AUDIT === '1';
+auditCompiledRuntime(...(installedPreview ? [
+ '/node_modules/.vite/deps/fountainjs-editor.js',
+ '/node_modules/.vite/deps/fountainjs-editor_experimental_yjs-retained.js',
+] : []));
+const url = installedPreview ? '/index.html' : '/artifacts/retained-adapter-fixture-compiled-20261106.html';
 async function snapshot(page:Page){return page.evaluate(()=> (window as any).audit.snapshot());}
 async function caret(page:Page,name:string,offset:number){const editor=page.getByRole('textbox',{name:`${name} editor`});await editor.click();await page.keyboard.press('Control+Home');for(let i=0;i<offset;i++)await page.keyboard.press('ArrowRight');return editor;}
 for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`native offline typing survives ${operation}, author undo and redo`,async({page},testInfo)=>{

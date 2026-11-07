@@ -13,6 +13,7 @@ import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'n
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { checkMarkdownBlockAtoms } from './fixtures/markdown-block-atoms-check.mjs';
+import { checkRetainedYjs } from './fixtures/yjs-retained-check.mjs';
 import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
 import { checkModelIntegrity } from './fixtures/model-integrity-check.mjs';
 import { checkInertHTMLSource } from './fixtures/html-inert-source-check.mjs';
@@ -255,6 +256,7 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
 `], { stdio: 'inherit' });
 const esmYjs = await import('fountainjs-editor/yjs');
 assertExports(esmYjs, yjsNames, 'ESM Yjs entry');
+await checkRetainedYjs(esmCore, await import('fountainjs-editor/experimental/yjs-retained'), await import('yjs'), esmYjs);
 assertExports(await import('fountainjs-editor/comments'), commentsNames, 'ESM comments entry');
 assertExports(await import('fountainjs-editor/react/comments'), reactCommentsNames, 'ESM React comments entry');
 assertExports(await import('fountainjs-editor/tracked-changes'), trackedChangesNames, 'ESM tracked changes entry');
@@ -492,6 +494,13 @@ execFileSync(process.execPath, ['-e', `
   const module = require('fountainjs-editor/yjs');
   const missing = ${JSON.stringify(yjsNames)}.filter((name) => typeof module[name] === 'undefined');
   if (missing.length) throw new Error('CommonJS Yjs entry is missing: ' + missing.join(', '));
+`], { stdio: 'inherit' });
+
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  import { createRequire } from 'node:module';
+  import { checkRetainedYjs } from './scripts/fixtures/yjs-retained-check.mjs';
+  const require = createRequire(import.meta.url);
+  await checkRetainedYjs(require('fountainjs-editor'), require('fountainjs-editor/experimental/yjs-retained'), require('yjs'), require('fountainjs-editor/yjs'));
 `], { stdio: 'inherit' });
 
 const doctorDirectory = mkdtempSync(join(tmpdir(), 'fountain-doctor-'));

@@ -21,7 +21,7 @@ export interface RetainedCheckpointManifest {
   readonly documentSha256: string;
   readonly checkpointSha256: string;
 }
-/** Experimental internal rollback snapshot, not an online compaction or .fjs format. */
+/** Experimental rollback snapshot, not an online compaction or .fjs format. */
 export interface RetainedCheckpoint {
   readonly manifest: RetainedCheckpointManifest;
   /** Capture returns an owned copy on every access. */

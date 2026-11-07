@@ -10,8 +10,8 @@ those revisions and scopes.
 
 The active priority is COLLAB-01. Six ordinary default-adapter tests still fail
 for offline typing versus concurrent quote/list wrapping, partial marks and
-paragraph splitting. The retained replacement is private and experimental;
-performance improvements do not constitute safe adoption or a public fix.
+paragraph splitting. The retained replacement is available as an experimental
+entry in the unreleased local package. Safe production adoption remains open.
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
@@ -20,13 +20,23 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,802 passes and six failures, with no skips. Three
-raw-size limits are exceeded. Complete fresh release CI, retained history/storage
-growth and compaction, nested-fragment migration and safe adapter adoption remain open.
+The current source suite has 4,802 passes and six failures, with no skips. Four
+raw-size limits are exceeded in the preview build. Complete fresh release CI,
+retained history/storage growth and compaction, nested-fragment migration and
+safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
-products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest authority-admission audit](YJS_AUTHORITY_ADMISSION_AUDIT.md).
+products remain future work. [Roadmap](ROADMAP.md).
+
+Retained collaboration package preview (2026-11-07, local). The opt-in
+`fountainjs-editor/experimental/yjs-retained` entry ships in a local tarball with
+ESM and CommonJS. Its isolated consumer passes 28 Node checks, both NodeNext
+type examples and 39 recorded browser journeys against the installed package.
+The full source suite reproduces the same six default failures. Existing API
+declarations retain their hashes. The preview adds about 94 KiB
+ESM and 76 KiB CommonJS to aggregate raw runtime size. The default adapter's
+six concurrency failures and production adoption work remain open.
+[Installed package audit](YJS_RETAINED_PACKAGE_AUDIT.md).
 
 Authority-bound admission (2026-11-07, local): validate active snapshot metadata
 before byte access, bind an immutable key/epoch/revision/native-identity lease
@@ -1804,7 +1814,7 @@ A row may move to **Delivered** only when all applicable gates pass:
 
 | ID | User outcome | Status | Work required for parity |
 | --- | --- | --- | --- |
-| COLLAB-01 | Concurrent conflict-free document editing | Partial | Reopened by the November structural audit: six required default-adapter cases lose or misplace offline typing during quote/list wrapping, partial marks and paragraph splits. The private retained candidate passes the corresponding actual-adapter cases, author history and recorded browser journeys, but larger-scale performance, history/metadata growth, compaction, migration and safe adoption remain required. The earlier 244-case and [150-journey CI checkpoint](https://github.com/eddolo/fountainjs/actions/runs/33891892320) covered a narrower contract and does not supersede these counterexamples. See [current evidence and remaining work](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md). |
+| COLLAB-01 | Concurrent conflict-free document editing | Partial | Reopened by the November structural audit: six required default-adapter cases lose or misplace offline typing during quote/list wrapping, partial marks and paragraph splits. The retained package preview passes the corresponding actual-adapter cases, author history and recorded browser journeys, but larger-scale performance, history/metadata growth, compaction, migration and safe adoption remain required. The earlier 244-case and [150-journey CI checkpoint](https://github.com/eddolo/fountainjs/actions/runs/33891892320) covered a narrower contract and does not supersede these counterexamples. See [current evidence and remaining work](YJS_RETAINED_READ_PERFORMANCE_AUDIT.md). |
 | COLLAB-02 | Provider-independent synchronization | Delivered | Framework-neutral lifecycle/status/reconnect contracts keep WebSocket, WebRTC, managed, custom, and offline providers optional while authentication, authorization, persistence, and retention stay host-owned. Adapter teardown, failure containment, package boundaries, documentation, the complete [CI gate](https://github.com/eddolo/fountainjs/actions/runs/33891892320), and the deployed provider-boundary demo verify the contract. |
 | COLLAB-03 | Presence and remote selections | Delivered | Awareness-relative text selections, normalized immutable users, overlapping-safe accessible range/caret decorations, departure cleanup, and the two-editor demo are covered by unit and all-engine browser tests in the complete [CI run](https://github.com/eddolo/fountainjs/actions/runs/33891892320), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33891892227), and live deployed peer/caret verification. |
 | COLLAB-04 | Threaded inline and document comments | Delivered | Provider-neutral thread records and lifecycle; inline/cross-block, point, block, and document anchors; overlapping decorations; mapped movement, deterministic recovery/orphan reattachment; replies, rich bodies, editing, reactions, resolve/archive/delete; permission hooks; authoritative storage operations plus an in-memory reference; accessible React UI; isolated ESM/CommonJS/types entries; and production/security guidance are covered by 252 behavioral tests, the complete 153-test Chromium/Firefox/WebKit/mobile [CI run for `75ae25f`](https://github.com/eddolo/fountainjs/actions/runs/33895703954), the successful [Pages deployment](https://github.com/eddolo/fountainjs/actions/runs/33895703856), and live deployed verification of shared annotations, reply, reaction, resolution, and document-thread creation. |

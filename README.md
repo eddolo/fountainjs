@@ -1194,9 +1194,9 @@ syntax survived.
 ## Optional real-time collaboration
 
 The root package exposes a provider-independent collaboration boundary. The
-separate `fountainjs-editor/yjs` entry adds conflict-free shared text and
-structure, relative remote selections, accessible carets, deterministic room
-initialization, and local-origin undo/redo.
+separate `fountainjs-editor/yjs` entry adds shared editing, relative remote
+selections, accessible carets, deterministic room initialization, and
+local-origin undo/redo.
 
 ```bash
 npm install fountainjs-editor yjs
@@ -1225,6 +1225,10 @@ also creates only one editor across Strict Mode's duplicate development render.
 
 See the [collaboration and Yjs guide](docs/COLLABORATION.md) for lifecycle,
 provider, security, offline, and replacement examples.
+
+Concurrent typing with some structural or formatting edits can still lose or
+misplace text in the default adapter. The unreleased retained preview uses a
+separate room format and is opt-in. [Retained preview guide](docs/YJS_RETAINED_PREVIEW.md).
 
 The provider is optional. An app may transport Yjs updates itself, add offline
 persistence to the same `Y.Doc`, select a managed provider, or leave

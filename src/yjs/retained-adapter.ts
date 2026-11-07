@@ -39,7 +39,7 @@ function bounds(document: Node, selection: AnySelection): { anchor: number; head
   return { anchor: textPointToPosition(document, selection.path, selection.from), head: textPointToPosition(document, selection.endPath, selection.to) };
 }
 
-/** Experimental internal adapter. Not exported by the package or used by demos.
+/** Opt-in experimental adapter, separate from the default /yjs entry.
  * Named new rooms only; existing legacy data is refused, never auto-migrated. */
 export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private readonly room: string;

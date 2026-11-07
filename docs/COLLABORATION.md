@@ -9,11 +9,10 @@ FountainJS collaboration has two layers:
    relative cursor positions, and origin-aware undo. It has a `yjs` peer
    dependency and is not loaded by the root package.
 
-Current local reliability status (2026-11-07): six required tests still expose
+Six required tests still expose
 offline typing conflicts with structural/formatting edits in the default XML
-adapter. The retained replacement is private and experimental; its successful
-cases do not constitute a public fix or default switch. See the
-[latest repair/adoption audit](COLLABORATION_APPENDED_REPAIR_AUDIT.md).
+adapter. The local beta includes an experimental retained package entry with
+separate wire storage and explicit room initialization. [Retained preview guide](YJS_RETAINED_PREVIEW.md).
 
 For adapter authors, normal remote updates are not sent back as local updates.
 When an extension explicitly requests rebroadcast of an appended maintenance
@@ -23,7 +22,7 @@ editor's older pre-remote state. History-neutral repairs retain
 `addToHistory: false`; an authored action followed by maintenance still requests
 history in the combined notification. An adapter implementing its own history
 must honor that distinction. Custom adapters must implement their own history
-policy. The default XML and private retained adapters now pass the
+policy. The default XML and retained preview adapters pass the
 [shared history-neutral workflow checks](YJS_HISTORY_POLICY_AUDIT.md).
 
 The application still owns the room service, network transport,
@@ -341,7 +340,7 @@ route for snapshots and other untrusted whole documents.
 Delivered today:
 
 - provider-independent lifecycle and status;
-- Yjs conflict-free text and structural synchronization;
+- Yjs text and structural synchronization within the supported editing workflows;
 - disconnected edits and deterministic seed repair;
 - relative text selections and accessible collaborator decorations;
 - origin-aware undo/redo with selection restoration;

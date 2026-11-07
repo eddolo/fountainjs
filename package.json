@@ -50,6 +50,9 @@
       "yjs": [
         "dist/yjs/index.d.ts"
       ],
+      "experimental/yjs-retained": [
+        "dist/experimental/yjs-retained.d.ts"
+      ],
       "comments": [
         "dist/comments/index.d.ts"
       ],
@@ -276,6 +279,16 @@
       "require": {
         "types": "./dist/yjs/index.d.cts",
         "default": "./dist/yjs.cjs"
+      }
+    },
+    "./experimental/yjs-retained": {
+      "import": {
+        "types": "./dist/experimental/yjs-retained.d.ts",
+        "default": "./dist/yjs-retained.js"
+      },
+      "require": {
+        "types": "./dist/experimental/yjs-retained.d.cts",
+        "default": "./dist/yjs-retained.cjs"
       }
     },
     "./comments": {

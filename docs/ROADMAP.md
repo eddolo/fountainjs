@@ -10,8 +10,8 @@ those revisions and scopes.
 
 The active priority is COLLAB-01. Six ordinary default-adapter tests still fail
 for offline typing versus concurrent quote/list wrapping, partial marks and
-paragraph splitting. The retained replacement is private and experimental;
-performance improvements do not constitute safe adoption or a public fix.
+paragraph splitting. The retained replacement is available as an experimental
+entry in the unreleased local package. Safe production adoption remains open.
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
@@ -20,13 +20,23 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,802 passes and six failures, with no skips. Three
-raw-size limits are exceeded. Complete fresh release CI, retained history/storage
-growth and compaction, nested-fragment migration and safe adapter adoption remain open.
+The current source suite has 4,802 passes and six failures, with no skips. Four
+raw-size limits are exceeded in the preview build. Complete fresh release CI,
+retained history/storage growth and compaction, nested-fragment migration and
+safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
-products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest authority-admission audit](YJS_AUTHORITY_ADMISSION_AUDIT.md).
+products remain future work. [Parity ledger](TIPTAP_PARITY.md).
+
+Retained collaboration package preview (2026-11-07, local). The opt-in
+`fountainjs-editor/experimental/yjs-retained` entry ships in a local tarball with
+ESM and CommonJS. Its isolated consumer passes 28 Node checks, both NodeNext
+type examples and 39 recorded browser journeys against the installed package.
+The full source suite reproduces the same six default failures. Existing API
+declarations retain their hashes. The preview adds about 94 KiB
+ESM and 76 KiB CommonJS to aggregate raw runtime size. The default adapter's
+six concurrency failures and production adoption work remain open.
+[Installed package audit](YJS_RETAINED_PACKAGE_AUDIT.md).
 
 Authority-bound admission (2026-11-07, local): validate active snapshot metadata
 before byte access, bind an immutable key/epoch/revision/native-identity lease

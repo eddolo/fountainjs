@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add an opt-in `experimental/yjs-retained` package entry for the retained
+  collaboration adapter, authoritative admission types and isolated checkpoint
+  capture/restore. Existing rooms continue using the XML format. Document
+  one-authority initialization, separate wire formats, provider ordering and
+  remaining adoption limits. COLLAB-01 remains partial. [Guide](docs/YJS_RETAINED_PREVIEW.md).
+
 - Bind private retained admission to an active authority snapshot and immutable
   session lease before provider start. Refuse frozen rooms, incompatible keys/
   protocols/revisions and a pinned epoch change before reading checkpoint bytes;
