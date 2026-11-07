@@ -1,5 +1,5 @@
 import * as Y from 'yjs';
-import { EditorState, type Node, type Schema } from '../../src/core';
+import { EditorState, type Node, type NodeJSON, type Schema } from '../../src/core';
 import { restoreRetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedDocumentStore } from '../../src/yjs/retained-document';
 import { RetainedRoomHandoff, type RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
@@ -17,7 +17,12 @@ export interface RetiredParagraphReview extends DraftParagraph {
   readonly revision: number;
   readonly currentText: string;
   readonly draftText: string;
+  readonly currentParagraph: NodeJSON;
+  readonly draftParagraph: NodeJSON;
+  readonly canEditPlainText: boolean;
 }
+
+type ParagraphReplacement = string | { readonly useSavedFormatting: true };
 
 function paragraph(document: Node, nodeId: string) {
   const matches: { node: Node; path: readonly number[] }[] = [];
@@ -25,14 +30,15 @@ function paragraph(document: Node, nodeId: string) {
     if (node.attrs.nodeId === nodeId) matches.push({ node, path });
   });
   const match = matches[0];
-  if (matches.length !== 1 || match.node.type.name !== 'paragraph' || match.node.childCount !== 1
-    || !match.node.child(0).isText || match.node.child(0).marks.length) {
-    throw new Error('Review requires one identifiable paragraph with a single plain-text run in each document.');
+  if (matches.length !== 1 || match.node.type.name !== 'paragraph' || match.node.content.some(child => !child.isText)) {
+    throw new Error('Review requires one identifiable text-only paragraph in each document.');
   }
-  return { text: match.node.textContent, path: [...match.path, 0] };
+  return match;
 }
 
-/** Host-authorized review of a plain paragraph in the current handoff destination. */
+const plainRun = (node: Node): boolean => node.childCount === 1 && node.child(0).marks.length === 0;
+
+/** Host-authorized review of a text paragraph in the current handoff destination. */
 export class RetainedTextRecovery {
   private readonly room: CoordinatedRetainedRoom;
   private readonly handoff: RetainedRoomHandoff;
@@ -58,9 +64,13 @@ export class RetainedTextRecovery {
     try {
       const active = await restoreRetainedCheckpoint(current.checkpoint, this.schema, this.schemaVersion);
       try {
+        const currentParagraph = paragraph(active.baseDocument, nodeId).node;
+        const draftParagraph = paragraph(draft.baseDocument, nodeId).node;
         const review = Object.freeze({ archiveId, draftId, nodeId, epoch: current.epoch, revision: current.revision,
-          currentText: paragraph(active.baseDocument, nodeId).text, draftText: paragraph(draft.baseDocument, nodeId).text });
-        return { review, snapshot: current };
+          currentText: currentParagraph.textContent, draftText: draftParagraph.textContent,
+          currentParagraph: currentParagraph.toJSON(), draftParagraph: draftParagraph.toJSON(),
+          canEditPlainText: plainRun(currentParagraph) && plainRun(draftParagraph) });
+        return { review, snapshot: current, draftParagraph };
       } finally { active.document.destroy(); }
     } finally { draft.document.destroy(); }
   }
@@ -69,25 +79,38 @@ export class RetainedTextRecovery {
     return (await this.loadReview(request)).review;
   }
 
-  async apply(review: RetiredParagraphReview, replacement: string) {
+  async apply(review: RetiredParagraphReview, replacement: ParagraphReplacement) {
     const { archiveId, draftId, nodeId, epoch, revision, currentText, draftText } = review;
-    if (typeof replacement !== 'string' || !replacement.trim() || replacement.length > 20_000 || /[\r\n]/.test(replacement)) {
-      throw new Error('Enter one nonempty line of at most 20,000 characters.');
+    if (typeof replacement === 'string') {
+      if (!replacement.trim() || replacement.length > 20_000 || /[\r\n]/.test(replacement)) {
+        throw new Error('Enter one nonempty line of at most 20,000 characters.');
+      }
+    } else if (replacement?.useSavedFormatting !== true) {
+      throw new Error('Choose a reviewed replacement.');
     }
-    const { review: verified, snapshot } = await this.loadReview({ archiveId, draftId, nodeId });
+    const { review: verified, snapshot, draftParagraph } = await this.loadReview({ archiveId, draftId, nodeId });
     if (verified.epoch !== epoch || verified.revision !== revision
       || verified.currentText !== currentText || verified.draftText !== draftText) {
       throw new RetainedRoomError('revision-conflict', 'The review is stale. Compare the latest room and saved draft again.');
     }
-    if (replacement === currentText) return snapshot;
+    if (typeof replacement === 'string' && !verified.canEditPlainText) {
+      throw new Error('Manual text requires a single unformatted run in each version. Use the saved paragraph instead.');
+    }
     const restored = await restoreRetainedCheckpoint(snapshot.checkpoint, this.schema, this.schemaVersion);
     try {
       const store = new RetainedDocumentStore(restored.document, restored.manifest.room, this.schema, () => `review-${crypto.randomUUID()}`);
       try {
         const doc = store.read(), target = paragraph(doc, nodeId);
         const state = EditorState.create({ schema: this.schema, doc });
+        const transaction = state.createTransaction();
+        if (typeof replacement === 'string') {
+          transaction.replaceText([...target.path, 0], 0, currentText.length, replacement);
+        } else {
+          transaction.replaceNode(target.path, [target.node.copy(draftParagraph.content)]);
+        }
+        if (transaction.doc.eq(doc)) return snapshot;
         const basis = Y.encodeStateVector(restored.document);
-        store.apply(state.createTransaction().replaceText(target.path, 0, target.text.length, replacement));
+        store.apply(transaction);
         return await this.room.write({ epoch, expectedRevision: revision, update: Y.encodeStateAsUpdate(restored.document, basis) });
       } finally { store.destroy(); }
     } finally { restored.document.destroy(); }

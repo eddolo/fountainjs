@@ -5,9 +5,10 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, composeExtensions, createEditor, getCollaborationState, insertText } from '../src';
+import { CoreExtension, Selection, composeExtensions, createEditor, getCollaborationState, insertText, toggleQuote } from '../src';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { prepareRetainedAdmission } from '../src/yjs/retained-admission';
+import { RetainedDocumentStore } from '../src/yjs/retained-document';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { CoordinatedRetainedRoom } from '../src/yjs/retained-room-coordinator';
 import { RetainedRoomHandoff, type RetainedHandoffRepository, type RetainedHandoffPolicy } from '../src/yjs/retained-handoff';
@@ -194,6 +195,46 @@ it('applies a reviewed paragraph only to its checked live revision and leaves th
   const resumed = await pair.room.commitResume(ticket,await pair.room.prepareResume(ticket));
   expect((await service.preview(request)).epoch).toBe(resumed.epoch);
   await expect(service.apply(fresh,'Old review')).rejects.toMatchObject({code:'revision-conflict'});
+});
+
+it('restores saved marks and links into a moved paragraph without changing its current attributes or identity', async () => {
+  const pair = await fixture(), moved = await migrate(pair), {schema} = pair;
+  const draftParagraph = pair.editor.state.doc.child(0).copy([
+    schema.text('Bold', [schema.mark('strong')]),
+    schema.text(' and '),
+    schema.text('linked', [schema.mark('em'), schema.mark('link', {href:'https://example.com/review'})]),
+  ]);
+  pair.editor.dispatch(pair.editor.createTransaction().replaceNode([0],[draftParagraph]));
+  const draft = await captureRetainedCheckpoint(pair.document,schema,version);
+  const draftId = uuid(), request = {archiveId:moved.operation,draftId,nodeId:'intro'};
+  await pair.handoff.saveRetiredDraft({...request,roomId:draft.manifest.roomId,checkpoint:draft});
+
+  const current = await open(moved.result.snapshot.checkpoint,pair);
+  current.editor.dispatch(current.editor.createTransaction().setNodeAttrs([0],{...current.editor.state.doc.child(0).attrs,align:'right'})
+    .setSelection(Selection.cursor([0,0],0)));
+  expect(toggleQuote(current.editor)).toBe(true);
+  const online = await pair.room.write({epoch:moved.result.snapshot.epoch,update:Y.encodeStateAsUpdate(current.document)});
+  const store = new RetainedDocumentStore(current.document,'fountain',schema,()=>uuid());
+  cleanup.push(() => store.destroy());
+  store.read();
+  const identity = store.identity([0,0]);
+  expect(identity).toBeTruthy();
+  const service = new RetainedTextRecovery(pair.a,key,schema,version);
+  const review = await service.preview(request);
+  expect(review.canEditPlainText).toBe(false);
+  expect(review.draftParagraph).toEqual(draftParagraph.toJSON());
+  await expect(service.apply(review,'Lose the marks')).rejects.toThrow('single unformatted run');
+  expect(await pair.room.snapshot()).toEqual(online);
+  const saved = await service.apply(review,{useSavedFormatting:true});
+  const restored = await restoreRetainedCheckpoint(saved.checkpoint,schema,version);
+  cleanup.push(() => restored.document.destroy());
+  const reader = new RetainedDocumentStore(restored.document,'fountain',schema,()=>uuid());
+  cleanup.push(() => reader.destroy());
+  const document = reader.read();
+  const expected = current.editor.state.doc.child(0).child(0).copy(draftParagraph.content);
+  expect(document.toJSON()).toEqual(current.editor.createTransaction().replaceNode([0,0],[expected]).doc.toJSON());
+  expect(reader.identity([0,0])).toBe(identity);
+  expect(await pair.handoff.readRetiredDraft(request.archiveId,draftId)).toEqual(draft);
 });
 
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {

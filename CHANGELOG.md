@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preview and restore saved paragraph formatting in the retained recovery
+  reference, including marks and links. The live paragraph keeps its location
+  and attributes.
+
 - Add manual review of an offline paragraph in the retained SQLite reference.
   Applying the author's replacement is conditional on the reviewed revision.
 

@@ -143,3 +143,36 @@ test('lets the author compare the merged branch with the exact offline draft', a
   expect((await state(page)).archive).toEqual(offline);
   await capture(page,info,'paragraph-review-applied.png');
 });
+
+test('previews and restores native bold and italic formatting from the saved draft', async ({page},info) => {
+  const offline = page.getByRole('textbox',{name:'Offline editor',exact:true});
+  const active = page.getByRole('textbox',{name:'Active editor',exact:true});
+  await offline.getByText('Alpha technical note.',{exact:true}).click();
+  await page.keyboard.press('Home');
+  for(let index=0;index<5;index+=1) await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Control+b');
+  await expect(offline.locator('strong')).toHaveText('Alpha');
+  await page.keyboard.press('Home');
+  for(let index=0;index<6;index+=1) await page.keyboard.press('ArrowRight');
+  for(let index=0;index<9;index+=1) await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Control+i');
+  await expect(offline.locator('em')).toHaveText('technical');
+  const draft = (await state(page)).offline;
+
+  await page.getByRole('button',{name:'Switch to fresh room'}).click();
+  await expect(page.getByRole('status')).toContainText('Fresh room installed');
+  await page.getByRole('button',{name:'Retain old edits'}).click();
+  await expect(page.getByRole('status')).toContainText('Old edits retained separately');
+  await page.getByRole('button',{name:'Review opening paragraph'}).click();
+  await expect(page.locator('#review-draft strong')).toHaveText('Alpha');
+  await expect(page.locator('#review-draft em')).toHaveText('technical');
+  await expect(page.locator('#review-current strong')).toHaveCount(0);
+  await expect(page.getByLabel('Reviewed replacement')).toBeHidden();
+  await capture(page,info,'formatted-paragraph-preview.png');
+  await page.getByRole('button',{name:'Use saved paragraph and formatting'}).click();
+  await expect(page.getByRole('status')).toContainText('Reviewed paragraph saved');
+  await expect(active.locator('strong')).toHaveText('Alpha');
+  await expect(active.locator('em')).toHaveText('technical');
+  expect((await state(page)).server).toEqual(draft);
+  await capture(page,info,'formatted-paragraph-applied.png');
+});

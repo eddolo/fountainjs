@@ -115,10 +115,23 @@ room and uses the same epoch, revision and compare-and-swap checks as other
 room writes. Unsaved editor changes prevent applying from the demo. A newer
 server revision requires reviewing again, and refreshing the review keeps any
 replacement text the author already entered. The draft remains read only and
-available for later comparison. This workflow handles one paragraph with a
-single unformatted text run and a unique node ID. Structured and formatted
-reconciliation, automatic overlapping placement, and archive storage policy
-remain open. Host authorization governs who can preview and apply.
+available for later comparison. Manual typing handles a single unformatted
+text run in each version. For formatted paragraphs, the author can preview and
+use the saved text runs and marks in one action. The operation keeps the live
+paragraph's attributes, position in the tree and identity, even if the live
+paragraph has moved into a quote. The previews keep links visible and disable
+navigation. The applied paragraph retains its saved link destinations. Inline
+widgets, combining formatting from both versions, structural reconciliation,
+automatic overlapping placement and archive storage policy remain open. Host
+authorization governs who can preview and apply.
+
+Formatted recovery passed 200 focused source cases and 18 recorded browser
+journeys across Chromium, Firefox and WebKit. The browser applies bold and
+italic with keyboard shortcuts and verifies the formatting on the live
+document after recovery. The source suite also checks saved links, live
+alignment and retained identity after moving the paragraph into a quote.
+Captures and recordings are under
+`artifacts/retained-formatted-review-browser-20261107/`.
 
 Paragraph review passed 75 focused source cases and the 15-journey desktop
 handoff suite. A final focused rerun passed in Chromium, Firefox and WebKit.
