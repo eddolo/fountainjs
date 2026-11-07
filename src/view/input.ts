@@ -309,7 +309,12 @@ export class InputManager {
     const mark = modifier && !event.altKey
       ? key === 'b' ? 'strong' : key === 'i' ? 'em' : key === 'u' ? 'underline' : null
       : null;
-    if (modifier && !event.altKey && key === 'a') {
+    if (modifier && !event.altKey && !event.isComposing && !this.composingValue && this.editor.editable
+      && (key === 'z' || key === 'y' && !event.shiftKey)) {
+      event.preventDefault();
+      if (key === 'z' && !event.shiftKey) undo(this.editor);
+      else redo(this.editor);
+    } else if (modifier && !event.altKey && key === 'a') {
       event.preventDefault();
       selectAll(this.editor);
     } else if (event.altKey && event.shiftKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(key)) {

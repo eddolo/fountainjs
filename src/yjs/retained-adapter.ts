@@ -56,7 +56,6 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private roomId?: string;
   private releaseDirection?: () => void;
   private localSelection?: RetainedSelection;
-  private restoring?: RetainedSelection;
   private pendingHistory?: { before: RetainedSelection; after?: RetainedSelection };
   private providerActive = false;
   private presenceTimer?: ReturnType<typeof setTimeout>;
@@ -107,6 +106,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     if (status === 'connected' || status === 'connecting' || status === 'reconnecting' || status === 'disconnected') this.context?.setStatus(status);
   };
   private readonly historyItem = (event: { stackItem: { meta: Map<unknown, unknown> }; origin: unknown }): void => {
+    const manager = this.manager;
+    if (manager && event.origin === manager && manager.currStackItem) {
+      // Yjs creates a new stack item for the inverse operation.
+      for (const [key, value] of manager.currStackItem.meta) event.stackItem.meta.set(key, value);
+      return;
+    }
     if (event.origin !== this.origin || !this.pendingHistory) return;
     if (!event.stackItem.meta.has(BEFORE)) event.stackItem.meta.set(BEFORE, this.pendingHistory.before);
     if (this.pendingHistory.after) event.stackItem.meta.set(AFTER, this.pendingHistory.after);
@@ -144,7 +149,13 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     const changed = new Set<unknown>(transaction.changedParentTypes.keys());
     if (![this.fragment, ...this.store.observed, ...(this.structured ? [this.structured.map] : [])].some(type => changed.has(type))) return;
     try {
-      this.gate(); const value = this.canonical(), selection = restoreSelection(this.store, value, this.restoring ?? this.localSelection);
+      this.gate();
+      const manager = this.manager;
+      const bookmark = manager && transaction.origin === manager
+        ? manager.currStackItem?.meta.get(manager.undoing ? BEFORE : AFTER) as RetainedSelection | undefined
+        : undefined;
+      const value = this.canonical();
+      const selection = restoreSelection(this.store, value, bookmark ?? this.localSelection);
       this.apply(value, selection, transaction.origin);
       this.context.setStatus('connected'); this.presences();
     } catch (error) { this.error(error); }
@@ -291,13 +302,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   undo(): boolean {
     if (this.joining) return false;
-    const item = this.manager?.undoStack.at(-1); if (!item) return false;
-    this.restoring = item.meta.get(BEFORE); try { return Boolean(this.manager!.undo()); } finally { this.restoring = undefined; }
+    return Boolean(this.manager?.undo());
   }
+
   redo(): boolean {
     if (this.joining) return false;
-    const item = this.manager?.redoStack.at(-1); if (!item) return false;
-    this.restoring = item.meta.get(AFTER); try { return Boolean(this.manager!.redo()); } finally { this.restoring = undefined; }
+    return Boolean(this.manager?.redo());
   }
   canUndo(): boolean { return !this.joining && (this.manager?.canUndo() ?? false); }
   canRedo(): boolean { return !this.joining && (this.manager?.canRedo() ?? false); }

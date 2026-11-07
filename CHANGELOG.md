@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Use author-only collaboration history from the standard Undo and Redo
+  controls. Restore the author's caret through repeated undo/redo while
+  keeping peer edits.
+
 - Serve unchanged SQLite cursor heartbeats without taking the writer lock
   between renewals. Cursor changes and token expiry retain their room fence.
 

@@ -2,6 +2,7 @@ import { Editor, InsertTextStep, Mapping, Node, Plugin, PluginKey, ReplaceDocume
   mapSelection, positionToTextPoint, textPointToPosition, type AnySelection, type Transaction } from '../../core';
 import { rebaseInsertion } from '../../core/transaction/rebase-insertion';
 import { rebaseDeletion, type DeletedRange } from '../../core/transaction/rebase-deletion';
+import { getCollaborationAdapter } from '../collaboration-core';
 
 export interface HistorySnapshot {
   doc: Node;
@@ -267,15 +268,27 @@ function restore(editor: Editor, snapshot: HistorySnapshot, action: 'undo' | 're
   return editor.dispatch(transaction);
 }
 
-export function canUndo(editor: Editor): boolean { return (historyKey.get(editor.state)?.done.length ?? 0) > 0; }
-export function canRedo(editor: Editor): boolean { return (historyKey.get(editor.state)?.undone.length ?? 0) > 0; }
+export function canUndo(editor: Editor): boolean {
+  const adapter = getCollaborationAdapter(editor);
+  if (adapter?.undo) return adapter.canUndo?.() ?? false;
+  return (historyKey.get(editor.state)?.done.length ?? 0) > 0;
+}
+export function canRedo(editor: Editor): boolean {
+  const adapter = getCollaborationAdapter(editor);
+  if (adapter?.redo) return adapter.canRedo?.() ?? false;
+  return (historyKey.get(editor.state)?.undone.length ?? 0) > 0;
+}
 
 export function undo(editor: Editor): boolean {
+  const adapter = getCollaborationAdapter(editor);
+  if (adapter?.undo) return adapter.undo();
   const snapshot = historyKey.get(editor.state)?.done.at(-1);
   return snapshot ? restore(editor, snapshot, 'undo') : false;
 }
 
 export function redo(editor: Editor): boolean {
+  const adapter = getCollaborationAdapter(editor);
+  if (adapter?.redo) return adapter.redo();
   const snapshot = historyKey.get(editor.state)?.undone.at(-1);
   return snapshot ? restore(editor, snapshot, 'redo') : false;
 }

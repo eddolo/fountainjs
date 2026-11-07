@@ -1,8 +1,8 @@
 // @vitest-environment node
 import {describe,expect,it} from 'vitest';
 import * as Y from 'yjs';
-import {CoreExtension,Selection,canUndoCollaboration,composeExtensions,createEditor,createTrailingEditableBlockExtension,
-  getCollaborationState,insertText,redoCollaboration,undoCollaboration,type NodeJSON} from '../src';
+import {CoreExtension,HistoryExtension,Selection,canRedo,canUndo,canUndoCollaboration,composeExtensions,createEditor,createTrailingEditableBlockExtension,
+  getCollaborationState,insertText,redo,redoCollaboration,undo,undoCollaboration,type NodeJSON} from '../src';
 import {createYjsCollaborationExtension} from '../src/yjs';
 import {createRetainedYjsCollaborationExtension} from '../src/yjs/retained-adapter';
 import {createStableNodeIdsExtension,inspectStableNodeIds} from '../src/node-ids';
@@ -11,10 +11,73 @@ const initial:NodeJSON={type:'doc',content:[{type:'paragraph',attrs:{nodeId:'int
 for(const [protocol,factory] of [['legacy',createYjsCollaborationExtension],['retained',createRetainedYjsCollaborationExtension]] as const)describe(`${protocol} shared history policy`,()=>{
   function peers(options:{repairAuthor?:boolean;repairPeer?:boolean;captureTimeout?:number}={}){
     const a=new Y.Doc(),b=new Y.Doc();
-    const make=(document:Y.Doc,repair:boolean)=>{const kit=composeExtensions([CoreExtension,...(repair?[createStableNodeIdsExtension(),createTrailingEditableBlockExtension()]:[]),factory({document,captureTimeout:options.captureTimeout??0,user:{id:repair?'repair':'plain',name:'Author',color:'#7048e8'}})]);return createEditor({schema:kit.schema,plugins:kit.plugins,content:initial});};
+    const make=(document:Y.Doc,repair:boolean)=>{const kit=composeExtensions([CoreExtension,HistoryExtension,...(repair?[createStableNodeIdsExtension(),createTrailingEditableBlockExtension()]:[]),factory({document,captureTimeout:options.captureTimeout??0,user:{id:repair?'repair':'plain',name:'Author',color:'#7048e8'}})]);return createEditor({schema:kit.schema,plugins:kit.plugins,content:initial});};
     const author=make(a,options.repairAuthor??false);Y.applyUpdate(b,Y.encodeStateAsUpdate(a));const peer=make(b,options.repairPeer??false);
     return {author,peer,sync(reverse=false){for(let i=0;i<2;i++){const left=Y.encodeStateAsUpdate(a),right=Y.encodeStateAsUpdate(b);if(reverse){Y.applyUpdate(a,right,'peer');Y.applyUpdate(b,left,'peer');}else{Y.applyUpdate(b,left,'peer');Y.applyUpdate(a,right,'peer');}}expect(author.getJSON()).toEqual(peer.getJSON());for(const editor of [author,peer])expect(getCollaborationState(editor)?.status,getCollaborationState(editor)?.error?.message).toBe('connected');},destroy(){author.destroy();peer.destroy();a.destroy();b.destroy();}};
   }
+  it('restores the authored caret across repeated undo and redo after a peer edit', () => {
+    const pair = peers();
+    const { author, peer } = pair;
+    const select = (offset: number) => {
+      author.dispatch(author.createTransaction().setSelection(Selection.cursor([0, 0], offset)));
+    };
+    const caret = (offset: number) => {
+      expect(author.state.selection).toMatchObject({ path: [0, 0], from: offset, to: offset });
+    };
+    try {
+      select(2);
+      expect(insertText(author, 'X')).toBe(true);
+      pair.sync();
+      peer.dispatch(peer.createTransaction().insertText([0, 0], 0, 'P'));
+      pair.sync();
+      for (let cycle = 0; cycle < 2; cycle++) {
+        select(0);
+        expect(canUndo(author)).toBe(true);
+        expect(undo(author)).toBe(true);
+        expect(canUndo(author)).toBe(false);
+        expect(author.getText()).toBe('PShared');
+        caret(3);
+        pair.sync();
+        select(0);
+        expect(canRedo(author)).toBe(true);
+        expect(redo(author)).toBe(true);
+        expect(canRedo(author)).toBe(false);
+        expect(author.getText()).toBe('PShXared');
+        caret(4);
+        pair.sync();
+      }
+    } finally { pair.destroy(); }
+  });
+
+  it('restores the earlier caret when a peer superseded the newest undo item', () => {
+    const pair = peers();
+    const { author, peer } = pair;
+    const select = (offset: number) => {
+      author.dispatch(author.createTransaction().setSelection(Selection.cursor([0, 0], offset)));
+    };
+    try {
+      select(2);
+      expect(insertText(author, 'X')).toBe(true);
+      select(6);
+      author.dispatch(author.createTransaction().setNodeAttrs([0], { review: 'local' }));
+      pair.sync();
+      peer.dispatch(peer.createTransaction().setNodeAttrs([0], { review: 'peer' }));
+      pair.sync();
+      expect(author.getText()).toBe('ShXared');
+      select(0);
+      expect(undoCollaboration(author)).toBe(true);
+      expect(author.getText()).toBe('Shared');
+      expect(author.state.doc.child(0).attrs.review).toBe('peer');
+      expect(author.state.selection).toMatchObject({ path: [0, 0], from: 2, to: 2 });
+      pair.sync();
+      select(0);
+      expect(redoCollaboration(author)).toBe(true);
+      expect(author.getText()).toBe('ShXared');
+      expect(author.state.selection).toMatchObject({ path: [0, 0], from: 3, to: 3 });
+      pair.sync();
+    } finally { pair.destroy(); }
+  });
+
   for(const reverse of [false,true]){
     it(`keeps neutral metadata through authored undo/redo (reverse: ${reverse})`,()=>{
       const pair=peers();try{

@@ -11,6 +11,34 @@ stable IDs to a remote duplicate. A metadata update between two grouped typing
 transactions could also be undone with the typing. Eight required source cases
 covering these four workflows failed before this repair.
 
+## Follow-up: native shortcuts and caret restoration
+
+The standard history commands now use author-local history when the active
+adapter implements the operation. The React toolbar uses those same commands.
+The DOM view handles Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z and Ctrl/Cmd+Y after the host's
+keyboard hooks. Native history input also goes through the standard commands.
+Editors without adapter history still use local snapshot history.
+
+Both Yjs adapters now restore the bookmark from the stack item Yjs actually
+applies. This matters when a peer supersedes a newer operation and Yjs skips
+it. The inverse stack item receives the original before/after bookmarks,
+which keeps the caret available on repeated undo and redo. The four changed
+declaration hashes remove two private fields in both module formats.
+
+The focused source suite passes 190 cases. Six recorded two-author journeys
+pass in Chromium, Firefox and WebKit for both protocols. They use keyboard
+shortcuts, check the native caret after each operation, and type at the
+restored position. Both panes show the follow-up character in the expected
+place in the inspected WebKit retained capture. Three more recorded journeys
+exercise native non-collaborative split/undo/redo in those engines.
+
+A separate built-package reproduction still finds a retained undo step with no
+visible text change. Author A inserts X, then Y as a separate edit. Author B
+deletes Y. The first author undo reports success and moves the caret, leaving
+the text unchanged. The next undo removes X. Redo repeats the extra invisible
+step after restoring X. This remains open alongside the six default structural
+concurrency failures and the two aggregate size failures.
+
 ## Implementation
 
 `src/yjs/index.ts`, `YjsCollaborationAdapter.onLocalUpdate`, reads the transaction's

@@ -481,7 +481,6 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   private observing = false;
   private providerActive = false;
   private pendingHistory?: PendingHistorySelection;
-  private pendingRestoredSelection?: RelativeSelectionJSON;
   private localSelection?: RelativeSelectionJSON;
   private publishedPresenceSignature?: string;
   private pendingPresence?: { readonly value: Readonly<Record<string, unknown>>; readonly signature: string };
@@ -522,9 +521,13 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     this.processedTransactions.add(transaction);
     try {
       this.normalizeRoots();
+      const manager = this.undoManager;
+      const bookmark = manager && transaction.origin === manager
+        ? manager.currStackItem?.meta.get(manager.undoing ? HISTORY_BEFORE : HISTORY_AFTER) as RelativeSelectionJSON | undefined
+        : undefined;
+      const relativeSelection = bookmark ?? this.localSelection;
       const incremental = this.textTransactionFromEvents(events);
       if (incremental) {
-        const relativeSelection = this.pendingRestoredSelection ?? this.localSelection;
         const selection = relativeSelection
           ? this.resolveRelativeSelection(relativeSelection, incremental.doc)
           : undefined;
@@ -538,7 +541,6 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         ? this.context.editor.state.schema.nodeFromJSON(this.structuredAttributes.overlay(base))
         : base;
       if (this.structuredAttributes && !base.eq(document)) this.repairCanonicalDocument(base, document);
-      const relativeSelection = this.pendingRestoredSelection ?? this.localSelection;
       const selection = relativeSelection
         ? this.resolveRelativeSelection(relativeSelection, document)
         : undefined;
@@ -570,6 +572,12 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   };
 
   private readonly onHistoryItem = (event: { stackItem: { meta: Map<unknown, unknown> }; origin: unknown }): void => {
+    const manager = this.undoManager;
+    if (manager && event.origin === manager && manager.currStackItem) {
+      // Yjs creates a new stack item for the inverse operation.
+      for (const [key, value] of manager.currStackItem.meta) event.stackItem.meta.set(key, value);
+      return;
+    }
     if (event.origin !== this.localOrigin || !this.pendingHistory) return;
     if (!event.stackItem.meta.has(HISTORY_BEFORE) && this.pendingHistory.before) {
       event.stackItem.meta.set(HISTORY_BEFORE, this.pendingHistory.before);
@@ -744,22 +752,12 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   undo(): boolean {
     if (this.initializationConflict) return false;
-    const manager = this.undoManager;
-    const item = manager?.undoStack.at(-1);
-    if (!manager || !item) return false;
-    this.pendingRestoredSelection = item.meta.get(HISTORY_BEFORE) as RelativeSelectionJSON | undefined;
-    try { return Boolean(manager.undo()); }
-    finally { this.pendingRestoredSelection = undefined; }
+    return Boolean(this.undoManager?.undo());
   }
 
   redo(): boolean {
     if (this.initializationConflict) return false;
-    const manager = this.undoManager;
-    const item = manager?.redoStack.at(-1);
-    if (!manager || !item) return false;
-    this.pendingRestoredSelection = item.meta.get(HISTORY_AFTER) as RelativeSelectionJSON | undefined;
-    try { return Boolean(manager.redo()); }
-    finally { this.pendingRestoredSelection = undefined; }
+    return Boolean(this.undoManager?.redo());
   }
 
   canUndo(): boolean { return !this.initializationConflict && (this.undoManager?.canUndo() ?? false); }
