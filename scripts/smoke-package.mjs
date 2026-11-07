@@ -223,6 +223,18 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   for (const name of ['createFountain', 'fountainState', 'FountainEditorDirective']) {
     if (typeof binding[name] !== 'function') throw new Error('Missing Angular export: ' + name);
   }
+  if (typeof (await import('fountainjs-editor/angular/forms')).FountainDocumentField !== 'function') {
+    throw new Error('Missing Angular Forms document field.');
+  }
+`], { stdio: 'inherit' });
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  import { registerHooks } from 'node:module';
+  registerHooks({ resolve(specifier, context, nextResolve) {
+    if (specifier === '@angular/forms') throw new Error('The base Angular entry loaded the optional forms peer.');
+    return nextResolve(specifier, context);
+  } });
+  await import('@angular/compiler');
+  await import('fountainjs-editor/angular');
 `], { stdio: 'inherit' });
 execFileSync(process.execPath, ['--input-type=module', '-e', `
   import { registerHooks } from 'node:module';

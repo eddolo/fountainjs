@@ -59,6 +59,14 @@ time and the installed preview passed 39 recorded desktop browser workflows.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).
 
+Angular Forms follow-up (2026-11-07, local). The Angular 22 campaign demo has
+a reactive form that accepts Fountain document JSON. It validates content,
+loads application values, blocks editing while disabled, submits JSON, and
+clears the previous draft and undo history on reset. The base Angular adapter
+can still load without Angular Forms. The form and existing media workflows
+pass six recorded desktop runs across Chromium, Firefox and WebKit.
+[Angular integration guide](ANGULAR.md#use-fountain-as-a-form-field).
+
 React lifecycle follow-up (2026-11-07, local). A suspended editor no longer
 starts plugins or opens collaboration connections before commit. A committed
 editor keeps its document and provider through a temporary Suspense fallback.

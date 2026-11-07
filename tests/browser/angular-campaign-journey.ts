@@ -79,3 +79,41 @@ export async function angularCampaignJourney(page: Page, info: TestInfo) {
   }
   expect(errors).toEqual([]);
 }
+
+export async function angularBriefFormJourney(page: Page, info: TestInfo) {
+  await page.goto('/demos/angular-media.html');
+  const form = page.getByRole('region', { name: 'Campaign brief form' });
+  const editor = form.getByRole('textbox', { name: 'Campaign brief' });
+  const surface = form.locator('fountain-document-field [role="textbox"]');
+  await expect(editor).toBeVisible();
+  await form.getByRole('button', { name: 'Save brief', exact: true }).click();
+  await expect(form.getByRole('alert')).toHaveText('Write a brief before saving.');
+  await editor.click();
+  await page.keyboard.type('Review launch artwork.');
+  await expect(editor).toHaveText('Review launch artwork.');
+  await expect(form.getByRole('alert')).toHaveCount(0);
+  await form.getByRole('button', { name: 'Save brief', exact: true }).click();
+  await expect(form.getByRole('status')).toHaveText('Brief saved for this session.');
+  expect(JSON.parse((await form.getByLabel('Saved campaign brief').textContent())!).brief.content[0].content[0].text)
+    .toBe('Review launch artwork.');
+  await form.screenshot({ path: info.outputPath('angular-brief-saved.png') });
+
+  await form.getByRole('button', { name: 'Disable brief editing' }).click();
+  await expect(surface).toHaveAttribute('contenteditable', 'false');
+  await expect(form.getByRole('button', { name: 'Save brief', exact: true })).toBeDisabled();
+  await surface.evaluate(element => (element as HTMLElement).focus());
+  await expect(surface).not.toBeFocused();
+  await form.getByRole('button', { name: 'Load sample brief' }).click();
+  await expect(surface).toHaveText('Review the launch artwork before Friday.');
+  await form.getByRole('button', { name: 'Enable brief editing' }).click();
+  await expect(editor).toHaveAttribute('contenteditable', 'true');
+  await editor.click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' Draft.');
+  await expect(editor).toContainText('Draft.');
+  await form.getByRole('button', { name: 'Reset brief' }).click();
+  await editor.click();
+  await page.keyboard.press('Control+z');
+  await expect(editor).toHaveText('');
+  await expect(form.getByLabel('Saved campaign brief')).toHaveCount(0);
+}

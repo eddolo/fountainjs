@@ -41,8 +41,8 @@ jobs:
       - run: pnpm dlx publint@0.3.24
       # Discover all public modules, with Angular checked separately and the
       # stylesheet excluded from JavaScript/TypeScript resolution analysis.
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./styles.css
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./angular/forms ./styles.css
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular ./angular/forms --profile esm-only
       - run: pnpm pack --dry-run
       - name: Verify npm trusted publisher
         if: github.event_name == 'workflow_dispatch'

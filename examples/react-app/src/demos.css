@@ -242,6 +242,11 @@
 .angular-campaign-demo .demo-output { max-height: 760px; }
 .angular-campaign-demo .demo-output pre { min-height: 0; }
 .angular-campaign-status { font-size: 12px; color: #5b536e; margin: 12px 4px; }
+.angular-brief-form { max-width: 1500px; margin: 20px auto 0; background: #eeecf4; border: 1px solid #46415b; border-radius: 18px; }
+.angular-brief-form h2 { margin: 0; color: #282338; font-size: 18px; }
+.angular-brief-form .fountain-editor { min-height: 144px; max-height: 300px; border: 0; }
+.angular-brief-form .demo-controls { margin-top: 12px; }
+.angular-brief-form .demo-output { min-height: 0; overflow: hidden; border-radius: 12px; }
 .angular-campaign-demo .demo-controls label { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
 .angular-campaign-demo .demo-controls input { max-width: 100%; min-width: 0; }
 .angular-campaign-demo .demo-controls input[type=color] { width: 30px; height: 28px; }

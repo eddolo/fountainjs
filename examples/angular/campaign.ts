@@ -3,14 +3,22 @@ import {
   input, signal, provideZonelessChangeDetection, DestroyRef, inject, untracked,
 } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  StarterKit, Plugin, HTMLExporter, MarkdownExporter, canUndo, canRedo, undo, redo,
+  StarterKit, Plugin, Schema, HTMLExporter, MarkdownExporter, canUndo, canRedo, undo, redo,
   toggleMark, toggleQuote, isMarkActive, isInsideNode, selectAll, insertList,
   getActiveMedia, setMediaAttributes, deleteMedia, setMark, unsetMark, setTextAlignment,
   startImageUpload, type ImageUploadTask,
   type Editor, type NodeJSON, type EditorViewOptions,
 } from 'fountainjs-editor';
 import { createFountain, fountainState, FountainEditorDirective } from 'fountainjs-editor/angular';
+import { FountainDocumentField } from 'fountainjs-editor/angular/forms';
+
+const briefSchema = new Schema(StarterKit.schema);
+const sampleBrief: NodeJSON = { type: 'doc', content: [
+  { type: 'paragraph', content: [{ type: 'text', text: 'Review the launch artwork before Friday.' }] },
+] };
 
 /** A local adapter keeps the actual chosen bytes, not a substitute stock asset. */
 function readLocalFile(file: File, signal: AbortSignal): Promise<string> {
@@ -30,7 +38,7 @@ function readLocalFile(file: File, signal: AbortSignal): Promise<string> {
 
 @Component({
   selector: 'fountain-angular-campaign-editor', standalone: true,
-  imports: [FountainEditorDirective], changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FountainEditorDirective, FountainDocumentField, ReactiveFormsModule], changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './campaign-editor.html',
 })
 export class CampaignEditor {
@@ -38,6 +46,22 @@ export class CampaignEditor {
   private readonly pending = new Set<ImageUploadTask>();
   readonly content = input.required<NodeJSON>();
   readonly lifecycle = input.required<(event: 'created' | 'destroyed') => void>();
+  readonly brief = new FormControl<NodeJSON | null>(null, control => {
+    return control.value && briefSchema.nodeFromJSON(control.value).textContent.trim() ? null : { emptyBrief: true };
+  });
+  readonly briefForm = new FormGroup({ brief: this.brief });
+  private readonly briefEvent = toSignal(this.brief.events);
+  readonly briefState = computed(() => {
+    this.briefEvent();
+    return { disabled: this.brief.disabled, showError: this.brief.touched && this.brief.invalid };
+  });
+  readonly briefOptions: EditorViewOptions = {
+    ariaLabel: 'Campaign brief',
+    placeholder: 'Write the review brief…',
+    attributes: { 'aria-describedby': 'campaign-brief-help' },
+  };
+  readonly briefConfig = { schema: StarterKit.schema, plugins: StarterKit.plugins };
+  readonly savedBrief = signal<string | null>(null);
   readonly editor = createFountain(() => ({
     schema: StarterKit.schema, content: this.content(),
     plugins: [...StarterKit.plugins, new Plugin({ props: {
@@ -106,6 +130,14 @@ export class CampaignEditor {
     });
   }
   run(command: (editor: Editor) => unknown): void { const editor = this.editor(); if (editor) command(editor); }
+  saveBrief(): void {
+    if (this.brief.disabled) return;
+    if (this.brief.invalid) { this.brief.markAsTouched(); return; }
+    this.savedBrief.set(JSON.stringify(this.briefForm.getRawValue(), null, 2));
+  }
+  resetBrief(): void { this.brief.reset(); this.savedBrief.set(null); }
+  loadSampleBrief(): void { this.brief.setValue(sampleBrief); }
+  toggleBriefEditing(): void { if (this.brief.disabled) this.brief.enable(); else this.brief.disable(); }
   keepSelection(event: MouseEvent): void { event.preventDefault(); }
   value(event: Event): string { return (event.target as HTMLInputElement).value; }
   applyHighlight(): void { this.run(editor => setMark(editor, 'highlight', { color: this.highlight() })); }

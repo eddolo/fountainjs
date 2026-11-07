@@ -58,7 +58,7 @@ import { mathFilesJourney } from './math-files-journey';
 import { mathPagesJourney } from './math-pages-journey';
 import { vueRunbookJourney } from './vue-runbook-journey';
 import { svelteReportJourney } from './svelte-report-journey';
-import { angularCampaignJourney } from './angular-campaign-journey';
+import { angularBriefFormJourney, angularCampaignJourney } from './angular-campaign-journey';
 import { listNumberingJourney } from './list-numbering-journey';
 import { docxNumberingJourney } from './docx-numbering-journey';
 import { docxControlsJourney } from './docx-controls-journey';
@@ -6954,6 +6954,10 @@ test('publishes semantic selection controls and table interaction in the demo ga
   await expect(page.locator('[data-fountain-path="1"]')).toHaveAttribute('data-fountain-gap', 'before');
   await page.getByRole('button', { name: 'Select all' }).click();
   await expect.poll(() => page.evaluate(() => document.getSelection()?.toString() ?? '')).toContain('Quarterly service report');
+});
+
+test('edits, validates, disables and resets the Angular campaign brief form', async ({ page }, info) => {
+  await angularBriefFormJourney(page, info);
 });
 
 test('runs campaign images, native media and safe embeds through Angular with honest upload boundaries', async ({ page }) => {

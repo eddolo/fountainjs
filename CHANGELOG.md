@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add an optional Angular 22 Reactive Forms document field with portable JSON
+  values, touched state, disabled state, programmatic writes and undo-safe form
+  reset. The Angular campaign demo includes a form you can validate and submit.
+
 - Start editor plugins and connect collaboration only after React commits the
   editor. Keep the live editor across a temporary Suspense fallback and dispose
   it on unmount. The homepage collaboration demo now uses a lazy Suspense

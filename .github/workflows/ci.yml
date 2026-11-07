@@ -44,10 +44,10 @@ jobs:
       - run: pnpm dlx publint@0.3.24
       # Discover published entry points so newly added modules cannot silently
       # miss validation. CSS is an asset; Angular has its separate ESM contract.
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./styles.css
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./angular/forms ./styles.css
       # Angular's documented partial-Ivy distribution is ESM-only. Keep the
       # existing dual-format entries under strict checks; scope this profile.
-      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
+      - run: pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular ./angular/forms --profile esm-only
       - run: pnpm exec vite build --base /fountainjs/
       - run: pnpm pack --dry-run
       # Retain the same mandatory limits while collecting types/unit/package

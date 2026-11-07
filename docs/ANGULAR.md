@@ -42,6 +42,55 @@ provide your own. The directive does not impose toolbar, theme or document CSS.
 Use the ordinary Angular application build/linker, not a TypeScript-only
 transpiler, for the directive and your templates.
 
+## Use Fountain as a form field
+
+For Angular 22 Reactive Forms, import `FountainDocumentField` from
+`fountainjs-editor/angular/forms` and install the matching `@angular/forms`
+version. This optional ESM entry keeps Forms out of the base Angular adapter.
+The component follows Angular's value accessor contract.
+[Angular ControlValueAccessor](https://angular.dev/api/forms/ControlValueAccessor)
+
+```ts
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { StarterKit, type NodeJSON } from 'fountainjs-editor';
+import { FountainDocumentField } from 'fountainjs-editor/angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [FountainDocumentField, ReactiveFormsModule],
+  template: `
+    <fountain-document-field [formControl]="brief"
+      [fountainConfig]="config" [fountainOptions]="options" />
+    <button type="button" (click)="brief.reset()">Clear draft</button>
+  `,
+})
+export class BriefEditor {
+  readonly brief = new FormControl<NodeJSON | null>(null);
+  readonly config = { schema: StarterKit.schema, plugins: StarterKit.plugins };
+  readonly options = { ariaLabel: 'Campaign brief' };
+}
+```
+
+The value is portable document JSON. The field reports accepted document edits
+to Angular. Selection and focus changes preserve the value. Leaving the field
+marks it touched, including when Angular uses `updateOn: 'blur'`. Moving focus
+between controls inside the field keeps it untouched. `setValue()` and
+`reset()` replace the document and clear Fountain's local undo history without
+echoing a user edit. A null value displays the schema's default document.
+`disable()` blocks document edits and focus while still allowing programmatic
+values. The engine is owned by the field, and its DOM view can remount when
+disabling or enabling it.
+
+Keep validators, form submission and persistence in the application. Angular's
+ordinary required validator checks value presence. Use a content validator if
+an empty document should be rejected. This field is designed for local form
+documents. Use the base directive and the application provider lifecycle for a
+live collaborative editing session.
+
+The campaign demo includes a brief form with validation, a JSON submission
+preview, disable and enable controls, a sample value, and reset.
+
 ## Ownership and reactive state
 
 - Call the helpers in an Angular injection context, normally component field

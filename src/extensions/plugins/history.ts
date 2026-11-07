@@ -176,6 +176,7 @@ export function createHistoryPlugin(options: HistoryOptions = {}): Plugin<Histor
     state: {
       init: () => ({ done: [], undone: [] }),
       apply: (transaction, value, oldState) => {
+        if (transaction.getMeta('history$reset') === true) return { done: [], undone: [] };
         const action = transaction.getMeta<'undo' | 'redo'>(HISTORY_ACTION);
         const current = { doc: oldState.doc, selection: oldState.selection };
         const inverse = transaction.docChanged ? inverseMaps(transaction) : [];

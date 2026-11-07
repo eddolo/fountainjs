@@ -7,5 +7,5 @@
     "rootDir": "src/angular", "outDir": "dist/angular", "types": []
   },
   "angularCompilerOptions": { "compilationMode": "partial", "strictTemplates": true },
-  "files": ["src/angular/index.ts"]
+  "files": ["src/angular/index.ts", "src/angular/forms.ts"]
 }

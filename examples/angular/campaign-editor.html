@@ -38,3 +38,26 @@
     <pre><code>{{output()}}</code></pre>
   </section>
 </div>
+<section class="demo-surface angular-brief-form" aria-labelledby="campaign-brief-title">
+  <div class="surface-label"><h2 id="campaign-brief-title">Campaign brief form</h2><i>Angular Reactive Forms</i></div>
+  <p id="campaign-brief-help" class="angular-campaign-status">Enter a brief to save the document as JSON in this demo.</p>
+  <form [formGroup]="briefForm" (ngSubmit)="saveBrief()">
+    <div class="bare-editor">
+      <fountain-document-field formControlName="brief"
+        [fountainConfig]="briefConfig" [fountainOptions]="briefOptions" />
+    </div>
+    @if (briefState().showError) {
+      <p class="angular-campaign-status" role="alert">Write a brief before saving.</p>
+    }
+    <div class="demo-controls" role="group" aria-label="Campaign brief controls">
+      <button type="submit" [disabled]="briefState().disabled">Save brief</button>
+      <button type="button" (click)="resetBrief()">Reset brief</button>
+      <button type="button" (click)="loadSampleBrief()">Load sample brief</button>
+      <button type="button" (click)="toggleBriefEditing()">{{briefState().disabled ? 'Enable brief editing' : 'Disable brief editing'}}</button>
+    </div>
+  </form>
+  @if (savedBrief(); as data) {
+    <p class="angular-campaign-status" role="status">Brief saved for this session.</p>
+    <div class="demo-output"><pre aria-label="Saved campaign brief"><code>{{data}}</code></pre></div>
+  }
+</section>

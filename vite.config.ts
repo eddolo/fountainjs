@@ -35,7 +35,7 @@ export default defineConfig({
       'yjs',
       'rxjs', 'rxjs/operators', 'css-select', 'parse5', 'parse5-htmlparser2-tree-adapter', 'fountainjs-editor/html/inert',
     ],
-    exclude: ['fountainjs-editor/angular', '@angular/core', '@angular/common', '@angular/platform-browser'],
+    exclude: ['fountainjs-editor/angular', 'fountainjs-editor/angular/forms', '@angular/core', '@angular/common', '@angular/forms', '@angular/platform-browser'],
   },
   // This lab explicitly selects the bundled TeX font. Avoid also shipping
   // MathJax's unused NewCM default font through SVG's fallback import.
