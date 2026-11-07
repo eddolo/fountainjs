@@ -65,6 +65,19 @@ it('validates and commits an editor update with auxiliary state and monotonicall
   } finally { pair.destroy(); }
 });
 
+it('acknowledges a replay of already integrated native history without advancing the room', async () => {
+  const pair = await fixture();
+  try {
+    const { epoch } = pair.authority.snapshot();
+    type(pair, ' X ');
+    const request = { epoch, update: wire(pair.document) };
+    const saved = await pair.authority.write(request);
+    expect(saved.revision).toBe(1);
+    expect(await pair.authority.write(request)).toEqual(saved);
+    expect(pair.authority.freeze(saved).revision).toBe(1);
+  } finally { pair.destroy(); }
+});
+
 it.each(['stale', 'frozen'] as const)('rejects %s writes before reading update bytes', async kind => {
   const pair = await fixture();
   try {

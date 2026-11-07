@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep the saved revision when an already-integrated retained Yjs update is
+  retried after a lost reply, including updates to a retired recovery branch.
+
 - Resolve Word footnote IDs and types by namespace and reject IDs shared by a
   separator and an ordinary note. Verify that an edited footnote survives a
   browser download and renders in LibreOffice.

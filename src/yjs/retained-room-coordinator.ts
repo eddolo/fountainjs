@@ -120,6 +120,10 @@ export class CoordinatedRetainedRoom {
     const supplied = request.update;
     if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) fail('invalid-update', 'Invalid retained update size.');
     const bytes = Uint8Array.from(supplied), checkpoint = await applyRetainedRoomUpdate(row.checkpoint, this.schema, this.schemaVersion, bytes);
+    if (checkpoint.manifest.checkpointSha256 === row.checkpoint.manifest.checkpointSha256) {
+      if ((await this.current()).generation !== row.generation) fail('revision-conflict', 'Persistent room changed while acknowledging the replay. Retain edits and retry.');
+      return view({ ...row, checkpoint });
+    }
     return view(await this.commit(row, { checkpoint, revision: this.increment(row) }));
   }
 

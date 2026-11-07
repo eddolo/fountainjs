@@ -26,6 +26,56 @@ test('recovers a lost switch acknowledgement by replaying the durable receipt',a
  await page.getByRole('button',{name:'Retry last switch',exact:true}).click();await expect(page.getByRole('status')).toContainText('Durable switch receipt replayed');const after=await state(page);expect(after.epoch).toBe(ambiguous.epoch);expect(after.revision).toBe(ambiguous.revision);expect(after.lastReplay).toEqual({replayed:true,current:true});expect(after.archive).toEqual(before.active);await type(page,'Active editor',' AFTER retry');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.server).toEqual(saved.active);expect(saved.active).not.toEqual(before.active);await capture(page,info,'final.png');
 });
 
+test('retries live and retired saves after the server commits but the reply is lost', async ({page}, info) => {
+  const saveActive = page.getByRole('button', {name:'Save active edits', exact:true});
+  const retainOld = page.getByRole('button', {name:'Retain old edits', exact:true});
+  const status = page.getByRole('status');
+  const loseCommittedReply = async (action: 'write' | 'retain', button: typeof saveActive) => {
+    const pattern = `**/__handoff/${action}`;
+    let committed: {ok: boolean; value: {revision?: number; branchRevision?: number}} | undefined;
+    let sent: string | null = null;
+    await page.route(pattern, async route => {
+      sent = route.request().postData();
+      const response = await route.fetch();
+      committed = await response.json();
+      await route.abort();
+    }, {times:1});
+    await button.click();
+    await expect(status).toContainText('Request failed');
+    expect(committed?.ok).toBe(true);
+    const retry = page.waitForRequest(pattern);
+    await button.click();
+    expect((await retry).postData()).toBe(sent);
+    return committed!.value;
+  };
+
+  const before = await state(page);
+  await type(page, 'Active editor', ' LIVE retry');
+  const liveReceipt = await loseCommittedReply('write', saveActive);
+  await expect(status).toContainText('durably saved');
+  expect(liveReceipt.revision).toBe(before.revision + 1);
+  const saved = await state(page);
+  expect(saved.revision).toBe(liveReceipt.revision);
+  expect(saved.server).toEqual(saved.active);
+
+  await type(page, 'Offline editor', ' OFFLINE retry');
+  const offline = (await state(page)).offline;
+  await page.getByRole('button', {name:'Switch to fresh room', exact:true}).click();
+  await expect(status).toContainText('Fresh room installed');
+  const active = await state(page);
+  const retiredReceipt = await loseCommittedReply('retain', retainOld);
+  await expect(status).toContainText('Old edits retained separately');
+  expect(retiredReceipt.branchRevision).toBe(1);
+  await expect(page.locator('#report')).toContainText('Retired branch revision: 1');
+  const reopened = await state(page);
+  expect(reopened.revision).toBe(active.revision);
+  expect(reopened.server).toEqual(active.server);
+  expect(reopened.offline).toEqual(offline);
+  await expect(page.getByRole('textbox', {name:'Archive reader', exact:true})).toContainText('OFFLINE retry');
+  await expect(page.getByRole('textbox', {name:'Active editor', exact:true})).toContainText('LIVE retry');
+  await capture(page,info,'lost-write-replies-recovered.png');
+});
+
 test('skips an unhelpful compaction and installs a smaller checkpoint after real edits', async ({page},info) => {
   const original = await state(page);
   const active = page.getByRole('textbox', {name:'Active editor', exact:true});

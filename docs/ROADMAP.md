@@ -72,7 +72,11 @@ remain open. The local migration reference supports explicitly selected nested
 legacy fragments and preserves their original identity through rollback. The
 retained handoff can require measured live-checkpoint savings before installing
 a fresh room with the previous room archived.
-Its recovery demo can save and reopen the offline writer's exact draft
+Retried saves in the retained SQLite reference preserve the current revision
+when the exact native update was already integrated. This also covers the
+retired branch used to recover an offline draft.
+[Lost-reply audit](YJS_RETAINED_HANDOFF_AUDIT.md#retry-a-save-after-losing-the-reply).
+The recovery demo can save and reopen the offline writer's exact draft
 separately from the merged retired branch. The host example can apply an
 author-reviewed plain paragraph, restore its saved formatting, or apply a
 combined formatted paragraph with an exact room revision check.

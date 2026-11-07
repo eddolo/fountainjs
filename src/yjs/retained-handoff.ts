@@ -244,8 +244,25 @@ export class RetainedRoomHandoff {
     if (roomId !== saved.source.checkpoint.manifest.roomId) fail('stale-epoch', 'Late update belongs to another retired room.');
     const archive = await this.ownedArchive(saved);
     const supplied = request.update; if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) fail('invalid-update', 'Invalid late update size.');
-    const checkpoint = await applyRetainedRoomUpdate(archive.branch, this.schema, this.schemaVersion, Uint8Array.from(supplied));
-    if (!await this.repository.compareArchiveBranch(this.key, archiveId, archive.generation, checkpoint)) fail('revision-conflict', 'Retired branch changed; retain the update and retry.');
-    const next = await this.repository.readArchive(this.key, archiveId); this.checkArchive(next); return this.ownedArchive(next);
+    const update = Uint8Array.from(supplied);
+    const checkpoint = await applyRetainedRoomUpdate(archive.branch, this.schema, this.schemaVersion, update);
+    const changed = checkpoint.manifest.checkpointSha256 !== archive.branch.manifest.checkpointSha256;
+    if (changed && await this.repository.compareArchiveBranch(this.key, archiveId, archive.generation, checkpoint)) {
+      const next = await this.repository.readArchive(this.key, archiveId);
+      this.checkArchive(next);
+      return this.ownedArchive(next);
+    }
+    const current = await this.repository.readArchive(this.key, archiveId);
+    this.checkArchive(current);
+    if (current.generation === archive.generation) {
+      if (!changed) return archive;
+    } else {
+      // The racing writer may have committed this very update. Acknowledge
+      // only if validating it against the newer branch leaves all wire state intact.
+      const verified = await this.ownedArchive(current);
+      const merged = await applyRetainedRoomUpdate(verified.branch, this.schema, this.schemaVersion, update);
+      if (merged.manifest.checkpointSha256 === verified.branch.manifest.checkpointSha256) return verified;
+    }
+    return fail('revision-conflict', 'Retired branch changed; retain the update and retry.');
   }
 }

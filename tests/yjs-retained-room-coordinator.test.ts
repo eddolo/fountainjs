@@ -63,6 +63,21 @@ it('refuses duplicate initialization without replacing saved content or epoch', 
   expect(await pair.second.snapshot()).toEqual(pair.initial);
 });
 
+it('acknowledges a durable write retry without rewriting SQLite or invalidating a checked revision', async () => {
+  const pair = await fixture();
+  const { epoch } = pair.initial;
+  pair.document.getMap('host-notes').set('owner', 'Mina');
+  const request = { epoch, update: wire(pair.document) };
+  const saved = await pair.first.write(request);
+  expect(saved.revision).toBe(1);
+  expect(saved.checkpoint.manifest.documentSha256).toBe(pair.checkpoint.manifest.documentSha256);
+  expect(saved.checkpoint.manifest.checkpointSha256).not.toBe(pair.checkpoint.manifest.checkpointSha256);
+  const row = await pair.a.read('project:launch');
+  expect(await pair.second.write(request)).toEqual(saved);
+  expect(await pair.b.read('project:launch')).toEqual(row);
+  expect((await pair.second.freeze(saved)).revision).toBe(1);
+});
+
 it('does not create a missing room implicitly or accept invalid keys and schema versions', async () => {
   const pair = await fixture();
   expect(() => new CoordinatedRetainedRoom(pair.a, '../bad', pair.schema, 'schema-1')).toThrow('key');

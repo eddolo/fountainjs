@@ -100,6 +100,7 @@ export class FencedRetainedRoom {
     const next = await applyRetainedRoomUpdate(source, this.schema, this.schemaVersion, bytes);
     this.writable(epoch);
     if (generation !== this.#generation) failure('revision-conflict', 'Retained room changed during validation; retry against its current state.');
+    if (next.manifest.checkpointSha256 === source.manifest.checkpointSha256) return this.snapshot();
     this.advance();
     this.#checkpoint = next;
     return this.snapshot();

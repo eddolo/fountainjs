@@ -405,6 +405,33 @@ it('does not read late update bytes for a different retired room', async () => {
   expect(getter).not.toHaveBeenCalled(); expect((await pair.a.readArchive(key, moved.operation))!.branchRevision).toBe(0);
 });
 
+it('keeps the saved branch revision when retrying after a lost reply and a newer retired edit', async () => {
+  const pair = await fixture(), peer = await open(pair.checkpoint, pair), moved = await migrate(pair);
+  const request = { archiveId: moved.operation, roomId: pair.checkpoint.manifest.roomId, update: type(pair, ' FIRST ') };
+  const active = await pair.room.snapshot();
+  const saved = await pair.handoff.retainLateUpdate(request);
+  expect(saved.branchRevision).toBe(1);
+  const newer = await pair.second.retainLateUpdate({ ...request, update: type(peer, ' SECOND ') });
+  expect(newer.branchRevision).toBe(2);
+  expect(await pair.handoff.retainLateUpdate(request)).toEqual(newer);
+  expect(await pair.b.readArchive(key, moved.operation)).toEqual(newer);
+  expect(await pair.room.snapshot()).toEqual(active);
+  Y.applyUpdate(pair.document, Y.encodeStateAsUpdate(peer.document));
+  expect(await model(newer.branch, pair)).toEqual(pair.editor.getJSON());
+});
+
+it('acknowledges two connections racing to retain the same offline edit with one branch revision', async () => {
+  const pair = await fixture(), moved = await migrate(pair), held = gate(pair.a, 'compareArchiveBranch');
+  const service = new RetainedRoomHandoff(held.repository, key, pair.schema, version);
+  const request = { archiveId: moved.operation, roomId: pair.checkpoint.manifest.roomId, update: type(pair, ' SAME ') };
+  const pending = service.retainLateUpdate(request);
+  await held.ready;
+  const saved = await pair.second.retainLateUpdate(request).finally(held.release);
+  expect(saved.branchRevision).toBe(1);
+  expect(await pending).toEqual(saved);
+  expect(await pair.b.readArchive(key, moved.operation)).toEqual(saved);
+});
+
 it.each(['invalid-wire', 'different-room', 'missing-dependency'] as const)('does not change either room or archive after a late %s update', async mode => {
   const pair = await fixture(), moved = await migrate(pair); let update: Uint8Array = new Uint8Array([255]);
   if (mode === 'different-room') update = Y.encodeStateAsUpdate(client().document);

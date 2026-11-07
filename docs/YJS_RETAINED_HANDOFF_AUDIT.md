@@ -163,6 +163,33 @@ across Chromium, Firefox and WebKit. TypeScript checking passed. Local
 recordings and captures are under
 `artifacts/retained-compaction-rehearsal-final-20261107/`.
 
+### Retry a save after losing the reply
+
+The in-memory and SQLite retained-room authorities now acknowledge an
+already-integrated update at the current revision. The comparison uses the
+validated checkpoint digest, which includes native Yjs history and auxiliary
+shared data. An edit to auxiliary data still advances the revision even if
+the Fountain document JSON is unchanged. The existing epoch, freeze, and
+expected-revision fences still apply.
+
+The retired branch uses the same checkpoint comparison. If an update loses
+the branch write race, the authority checks the newer branch. It acknowledges
+the retry when the full update is already integrated. A distinct pending edit
+still returns a revision conflict for the caller to retry. A replay avoids
+rewriting the branch or advancing its revision.
+
+Four regressions reproduced the earlier behavior in memory and across
+independent SQLite connections. The recorded browser journey types into the
+active room and the offline editor, drops each reply after the server commits,
+and retries the same payload through the visible controls. Both edits remain
+recoverable and the retired branch has one saved revision.
+
+All 181 focused tests and 27 recorded Chromium, Firefox and WebKit handoff
+journeys passed. The broader Yjs run passed 788 tests and reproduced the six
+default XML adapter failures. The API and TypeScript checks passed, and all
+182 public runtime and CSS files are byte-identical to the preceding build.
+Local recordings are under `artifacts/retained-handoff-replay-matrix-20261107/`.
+
 ### Reproduction
 
 ```powershell
