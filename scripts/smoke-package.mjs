@@ -12,6 +12,8 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { build } from 'vite';
 import { checkMarkdownBlockAtoms } from './fixtures/markdown-block-atoms-check.mjs';
 import { checkRetainedYjs } from './fixtures/yjs-retained-check.mjs';
 import { checkMarkdownEmphasis } from './fixtures/markdown-emphasis-check.mjs';
@@ -503,9 +505,26 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   await checkRetainedYjs(require('fountainjs-editor'), require('fountainjs-editor/experimental/yjs-retained'), require('yjs'), require('fountainjs-editor/yjs'));
 `], { stdio: 'inherit' });
 
-const doctorDirectory = mkdtempSync(join(tmpdir(), 'fountain-doctor-'));
+const smokeDirectory = mkdtempSync(join(tmpdir(), 'fountain-package-smoke-'));
 try {
-  const validConfig = join(doctorDirectory, 'valid.mjs');
+  // Bundling a mark command must drop the unrelated split transaction code.
+  // Removing the emitted pure annotations makes Rolldown retain that code.
+  const entry = join(smokeDirectory, 'mark.mjs');
+  writeFileSync(entry, `export { setMark } from 'fountainjs-editor';\n`);
+  const result = await build({
+    configFile: false,
+    logLevel: 'silent',
+    resolve: { alias: { 'fountainjs-editor': fileURLToPath(import.meta.resolve('fountainjs-editor')) } },
+    build: { write: false, lib: { entry, formats: ['es'], fileName: 'mark' } },
+  });
+  const bundles = Array.isArray(result) ? result : [result];
+  const chunks = bundles.flatMap(bundle => bundle.output.filter(file => file.type === 'chunk'));
+  if (!chunks.some(chunk => chunk.exports.includes('setMark'))
+    || chunks.some(chunk => chunk.code.includes('Node split source content changed.'))) {
+    throw new Error('The ESM mark-command consumer failed to tree-shake unrelated split transactions.');
+  }
+
+  const validConfig = join(smokeDirectory, 'valid.mjs');
   writeFileSync(validConfig, `export default [Object.freeze({
     name: 'package-smoke',
     manifest: Object.freeze({ version: '1.0.0', apiVersion: 1, requires: Object.freeze(['fountain-core']) }),
@@ -513,7 +532,7 @@ try {
   const doctorOutput = execFileSync(process.execPath, ['scripts/create-extension.mjs', 'doctor', validConfig], { encoding: 'utf8' });
   if (!doctorOutput.includes('PASS')) throw new Error('Packed doctor did not report success.');
 
-  const invalidConfig = join(doctorDirectory, 'invalid.mjs');
+  const invalidConfig = join(smokeDirectory, 'invalid.mjs');
   writeFileSync(invalidConfig, `export default [
     Object.freeze({ name: 'package-smoke', manifest: Object.freeze({ version: '1.0.0', apiVersion: 1 }), commands: Object.freeze({ clash: () => true }) }),
     Object.freeze({ name: 'package-smoke-two', manifest: Object.freeze({ version: '1.0.0', apiVersion: 1 }), commands: Object.freeze({ clash: () => true }) }),
@@ -523,7 +542,7 @@ try {
     throw new Error('Packed doctor did not reject a contribution collision.');
   }
 } finally {
-  rmSync(doctorDirectory, { recursive: true, force: true });
+  rmSync(smokeDirectory, { recursive: true, force: true });
 }
 
 console.log('ESM, CommonJS, headless core, AI document tools, conversations, generated media, DOCX interchange, document utilities, full emoji data, React, comments, tracked changes, versions, details, ruby, text style, extension testing, migrations, stable node IDs, table of contents, text integrity, integrity DOM, React integrity, structured attributes, pure-Node HTML, portable widgets, DOM widgets, React widgets, pages, DOM page measurement, page preview, document schema, Yjs, and Web Component package exports loaded successfully.');

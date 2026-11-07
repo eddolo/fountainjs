@@ -859,13 +859,36 @@ including 111/93 KiB raw for the ESM/CommonJS root, 30/25 KiB for the optional
 Yjs adapter, 54/45 KiB for the isolated DOM pagination entry, 7/6 KiB for the
 DOM-free table-of-contents entry, 13/11 KiB for headless integrity, 6/5 KiB for
 its DOM behavior, 12/10 KiB for its optional React inspector, and 270/225 KiB
-for the self-contained server HTML entry. Aggregate ceilings are 1,563/1,300 KiB for all
+for the self-contained server HTML entry. Aggregate ceilings are 1,691.25/1,408.75 KiB for all
 emitted ESM/CommonJS runtime code excluding the isolated full emoji catalogue.
 Gzip sizes are printed by the build but raw sizes are enforced because they are
 deterministic. The self-contained server parser and source-aware browser paste
 pipeline intentionally affect aggregate code; exact per-entry ceilings remain
 independent, so adding a feature cannot hide growth in a consumer-facing package
 surface.
+
+### Compact ESM package output
+
+The library uses Terser for ESM output and preserves pure annotations that
+consumer bundlers use to drop unused code. The size gate measures the same
+files as before. Raw aggregate ESM fell from 1,865.5 to 1,546.0 KiB against
+the existing 1,691.25 KiB limit. All 89 CommonJS runtime files matched the
+baseline byte for byte, including the independently budgeted emoji entry.
+The CommonJS aggregate is 1,547.4 KiB against its 1,408.75 KiB limit.
+[Terser output options](https://terser.org/docs/options/#format-options).
+
+The downstream bundle that imports only `setMark` measured 16,077 bytes,
+compared with 16,162 before this change. A trial that removed annotations
+retained unrelated split-transaction code and measured 118,590 bytes. The
+package smoke check now exercises that import and verifies the unrelated
+code is absent. Both builds emitted source maps for the same number of ESM
+chunks. A thrown `StepMap` error in the compact build mapped back to its
+TypeScript line in Node.
+
+The build, declaration, package, headless, Node/workerd, and performance
+checks passed. The installed tarball passed 39 recorded collaboration workflows
+across Chromium, Firefox and WebKit. The measured library bundling step took
+about six seconds locally, compared with about one second for the prior output.
 
 ## Why small edits stay local
 

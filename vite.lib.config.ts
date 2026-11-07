@@ -1,22 +1,41 @@
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
+import { minify } from 'terser';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [
     react(),
     {
-      name: 'fountain-compact-chunk-names',
+      name: 'fountain-library-output',
       outputOptions(options) {
         const extension = options.format === 'cjs' ? 'cjs' : 'js';
         return {
           ...options,
+          // Terser compacts ESM without stripping downstream tree-shaking annotations.
+          ...(options.format === 'es' ? { minify: false } : {}),
           chunkFileNames({ name }) {
             // The size gate locates the shared HTML entity decoder by this prefix.
             const prefix = name === 'decode' || name === 'markdown-html' ? '[name]-' : '';
             return `${prefix}[hash].${extension}`;
           },
         };
+      },
+      renderChunk: {
+        order: 'post',
+        async handler(code, chunk, options) {
+          if (options.format !== 'es') return;
+          const output = await minify({ [chunk.fileName]: code }, {
+            module: true,
+            ecma: 2022,
+            safari10: true,
+            compress: { passes: 2 },
+            format: { preserve_annotations: true },
+            sourceMap: Boolean(options.sourcemap),
+          });
+          if (output.code === undefined) throw new Error(`Minification did not emit ${chunk.fileName}.`);
+          return { code: output.code, map: output.map };
+        },
       },
     },
   ],

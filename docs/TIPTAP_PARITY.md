@@ -23,8 +23,9 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
 The latest full source run had 4,877 passes and six failures, with no skips.
-Both core entry-size checks now pass. The aggregate ESM and CommonJS builds
-remain 174.3 KiB and 138.7 KiB over their existing limits. Fresh release CI,
+Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
+remains 138.7 KiB over its existing limit. [Package output audit](PERFORMANCE.md#compact-esm-package-output).
+Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The migration reference can select an embedded legacy fragment
 and reopen its original identity through rollback. The retained handoff can
