@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Share retained cursor presence across SQLite connections with an atomic
+  room-session check. Presence leaves the saved document revision intact.
+
 - Let the SQLite collaboration authority open existing rooms under their
   persisted format and provision missing rooms with retained collaboration.
   Unsupported clients are refused before adapter attachment.

@@ -46,8 +46,9 @@ exchange edits over fenced HTTP/SQLite automatically. Offline typing merges into
 the peer's quote after reconnect, a lost write reply retries without duplicate
 text, and a rotated room fences the old writer while its local copy survives
 reload. The local presence channel paints remote cursors and native selections,
-expires silent peers, and clears indicators when the room changes. Production
-deployment, shared presence across processes, load and storage validation remain open.
+expires silent peers, and clears indicators when the room changes. The SQLite
+reference shares presence across processes on one machine. Production
+deployment, multi-host presence, load and storage validation remain open.
 The reference browser releases its old cursor on reload. The three desktop
 engines verify retirement of the old server presence token and a fresh cursor
 after rejoining.

@@ -43,6 +43,18 @@ export const documentProtocol = (checkpoint: Pick<DocumentCheckpoint, 'manifest'
 };
 export const documentRoomId = (value: unknown): value is string => typeof value === 'string' && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(value);
 export const documentRoomFailure = (code: ConstructorParameters<typeof RetainedRoomError>[0], message: string): never => { throw new RetainedRoomError(code, message); };
+/** Header-only fence shared by document polling and transactional presence. */
+export function assertRetainedRoomReader(row: DocumentRoomHeader, expected: DocumentRoomAdmission): void {
+  if (row.epoch !== expected.epoch || expected.protocol !== 'retained' || documentProtocol(row.checkpoint) !== 'retained') {
+    documentRoomFailure('stale-epoch', 'Reader epoch/protocol is stale; reconnect and retain pending edits.');
+  }
+  if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
+  const manifest = row.checkpoint.manifest as RetainedCheckpoint['manifest'];
+  if (expected.key !== row.key || manifest.room !== expected.room || manifest.roomId !== expected.identity
+    || !Number.isSafeInteger(expected.revision) || expected.revision < 0 || expected.revision > row.revision) {
+    documentRoomFailure('invalid-ticket', 'Retained reader does not match the active room.');
+  }
+}
 export function copyDocumentFreeze(ticket: CoordinatedFreeze, key: string): CoordinatedFreeze {
   const owned = ticket && { key: ticket.key, epoch: ticket.epoch, revision: ticket.revision, id: ticket.id, checkpointSha256: ticket.checkpointSha256 };
   if (!owned || owned.key !== key || !documentRoomId(owned.epoch) || !documentRoomId(owned.id) || !Number.isSafeInteger(owned.revision) || owned.revision < 0 || !/^[a-f0-9]{64}$/.test(owned.checkpointSha256)) documentRoomFailure('invalid-ticket', 'Invalid document-room freeze ticket.');
@@ -189,15 +201,7 @@ export class CoordinatedDocumentRoom {
   }
   private async retainedReader(expected: DocumentRoomAdmission): Promise<DocumentRoomHeader> {
     const row = await this.currentHeader();
-    if (row.epoch !== expected.epoch || expected.protocol !== 'retained' || documentProtocol(row.checkpoint) !== 'retained') {
-      documentRoomFailure('stale-epoch', 'Reader epoch/protocol is stale; reconnect and retain pending edits.');
-    }
-    if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
-    const manifest = row.checkpoint.manifest as RetainedCheckpoint['manifest'];
-    if (expected.key !== this.key || manifest.room !== expected.room || manifest.roomId !== expected.identity
-      || !Number.isSafeInteger(expected.revision) || expected.revision < 0 || expected.revision > row.revision) {
-      documentRoomFailure('invalid-ticket', 'Retained reader does not match the active room.');
-    }
+    assertRetainedRoomReader(row, expected);
     return row;
   }
   /** Read-only connection fence. Every later write must still check its epoch;

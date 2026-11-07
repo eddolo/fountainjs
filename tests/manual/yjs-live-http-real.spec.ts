@@ -222,11 +222,15 @@ test('renders a native peer selection without writing a document revision and cl
   const peer = await secondAuthor(page);
   try {
     const before = await serverRevision(page);
+    const primary = page.waitForResponse(response => response.url().endsWith('/presence') && response.ok());
+    const secondary = peer.waitForResponse(response => response.url().endsWith('/presence') && response.ok());
     await selectReport(peer);
     await expect(peerLabel(page)).toHaveText('Grace');
     await expect(peerLabel(page)).toBeVisible();
     await expect(peerSelection(page)).toHaveText('report.');
     await expectCaretEdge(page, 'left');
+    expect((await primary).headers()['x-presence-worker']).toBe('primary');
+    expect((await secondary).headers()['x-presence-worker']).toBe('peer');
     expect(await serverRevision(page)).toBe(before);
     await page.screenshot({ path: info.outputPath('peer-selection-backward.png'), scale: 'css' });
     // Reverse the native endpoints in one operation. The normalized model range

@@ -3,8 +3,9 @@ import type { RetainedRoomRecord } from '../../src/yjs/retained-room-coordinator
 import type { RetainedRoomArchive, RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
-import type { DocumentRoomRecord, DocumentRoomHeader, DocumentCheckpoint } from '../../src/yjs/document-room';
+import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoomRecord, type DocumentRoomHeader, type DocumentCheckpoint } from '../../src/yjs/document-room';
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
+import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
 function roomMetadata(result: Record<string, unknown>, key: string) {
   if (typeof result.metadata !== 'string' || typeof result.generation !== 'string') throw new Error('Invalid SQLite retained room row.');
@@ -19,7 +20,7 @@ function roomMetadata(result: Record<string, unknown>, key: string) {
 export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, CrossFormatRepository {
   private readonly db: DatabaseSync;
   private readonly selectRoomMetadata: StatementSync;
-  constructor(path: string) {
+  constructor(path: string, private readonly presenceNow = Date.now) {
     this.db = new DatabaseSync(path, { timeout: 1_000, allowExtension: false, enableDoubleQuotedStringLiterals: false });
     try {
       this.db.exec(`PRAGMA journal_mode = WAL; PRAGMA synchronous = FULL;
@@ -29,6 +30,13 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
           metadata TEXT NOT NULL CHECK(length(metadata) <= 2097152),
           wire BLOB NOT NULL CHECK(length(wire) BETWEEN 1 AND 67108864)
         ) STRICT;
+        CREATE TABLE IF NOT EXISTS fountain_retained_presence_v1 (
+          peer_id INTEGER PRIMARY KEY AUTOINCREMENT CHECK(peer_id <= 9007199254740991),
+          room_key TEXT NOT NULL, epoch TEXT NOT NULL, token TEXT NOT NULL UNIQUE,
+          seen INTEGER NOT NULL, state TEXT CHECK(state IS NULL OR length(state) <= 16384)
+        ) STRICT;
+        CREATE INDEX IF NOT EXISTS fountain_presence_room_v1 ON fountain_retained_presence_v1 (room_key, epoch, seen);
+        CREATE INDEX IF NOT EXISTS fountain_presence_expiry_v1 ON fountain_retained_presence_v1 (seen);
         CREATE TABLE IF NOT EXISTS fountain_retained_archives_v1 (
           room_key TEXT NOT NULL,
           archive_id TEXT NOT NULL CHECK(length(archive_id) = 36),
@@ -98,6 +106,62 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     if (!result) return undefined;
     const { manifest, ...row } = roomMetadata(result, key);
     return { ...row, checkpoint: { manifest } };
+  }
+
+  private withPresenceFence<T>(lease: DocumentRoomAdmission, action: (now: number) => T): T {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const result = this.selectRoomMetadata.get(lease.key);
+      if (!result) throw new RetainedRoomError('stale-epoch', 'Presence room no longer exists.');
+      const { manifest, ...row } = roomMetadata(result, lease.key);
+      assertRetainedRoomReader({ ...row, checkpoint: { manifest } }, lease);
+      const value = action(this.presenceNow());
+      this.db.exec('COMMIT');
+      return value;
+    } catch (error) {
+      try { this.db.exec('ROLLBACK'); } catch { /* Preserve the original failure. */ }
+      throw error;
+    }
+  }
+
+  /** Host authenticates the actor first. Presence never reads the checkpoint BLOB. */
+  bindPresence(lease: DocumentRoomAdmission): string {
+    return this.withPresenceFence(lease, now => {
+      this.db.prepare('DELETE FROM fountain_retained_presence_v1 WHERE room_key = ? AND (epoch <> ? OR seen <= ?)')
+        .run(lease.key, lease.epoch, now - presenceLeaseMs);
+      this.db.prepare(`DELETE FROM fountain_retained_presence_v1 WHERE peer_id IN (
+        SELECT peer_id FROM fountain_retained_presence_v1 WHERE seen <= ? ORDER BY seen LIMIT 256)`)
+        .run(now - presenceLeaseMs);
+      const count = this.db.prepare('SELECT COUNT(*) AS total FROM fountain_retained_presence_v1 WHERE room_key = ? AND epoch = ?')
+        .get(lease.key, lease.epoch)?.total as number;
+      if (count >= presenceCapacity) throw new Error('Presence capacity exceeded.');
+      const token = crypto.randomUUID();
+      this.db.prepare('INSERT INTO fountain_retained_presence_v1 (room_key, epoch, token, seen) VALUES (?, ?, ?, ?)')
+        .run(lease.key, lease.epoch, token, now);
+      return token;
+    });
+  }
+
+  exchangePresence(lease: DocumentRoomAdmission, token: string, state: PresenceState | null): PresencePeer[] {
+    return this.withPresenceFence(lease, now => {
+      const encoded = encodeRetainedPresence(state);
+      const updated = this.db.prepare(`UPDATE fountain_retained_presence_v1 SET seen = ?, state = ?
+        WHERE room_key = ? AND epoch = ? AND token = ? AND seen > ?`)
+        .run(now, encoded, lease.key, lease.epoch, token, now - presenceLeaseMs);
+      if (updated.changes !== 1) throw new Error('Presence session is no longer active.');
+      const rows = this.db.prepare(`SELECT peer_id, state FROM fountain_retained_presence_v1
+        WHERE room_key = ? AND epoch = ? AND token <> ? AND seen > ? AND state IS NOT NULL ORDER BY peer_id`)
+        .all(lease.key, lease.epoch, token, now - presenceVisibilityMs);
+      return rows.map(row => [-(row.peer_id as number), JSON.parse(row.state as string)]);
+    });
+  }
+
+  leavePresence(key: string, epoch: string, token: string): void {
+    this.db.prepare('DELETE FROM fountain_retained_presence_v1 WHERE room_key = ? AND epoch = ? AND token = ?').run(key, epoch, token);
+  }
+
+  clearRoomPresence(key: string): void {
+    this.db.prepare('DELETE FROM fountain_retained_presence_v1 WHERE room_key = ?').run(key);
   }
 
   private packet(record: DocumentRoomRecord): { metadata: string; wire: Uint8Array } {

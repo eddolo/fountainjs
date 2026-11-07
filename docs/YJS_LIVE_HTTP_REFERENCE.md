@@ -179,9 +179,27 @@ validates full checkpoints when it delivers changed document state, and the
 client retains an accepted checkpoint and reconstructs full bytes for validation.
 The metadata projection avoids materializing the BLOB in Node. SQLite physical
 page reads and multi-client CPU and memory at production scale remain unmeasured.
-Presence is process-local. A real host must
-authenticate the actor and supply or verify their display identity. The reference
-has no deployed process, multi-host presence distribution, production-scale load
-evidence, or production retention and compaction policy.
+Presence uses a separate SQLite table on the same local database. Bind and
+exchange check the active room header and update presence in one transaction.
+These requests read room metadata alone and keep the document checkpoint and
+revision intact. Separate connections use the same cursor state, limits and
+expiry rules. A cursor stops displaying after 2.5 seconds without a heartbeat.
+Its token can resume until the two-minute lease expires. Subsequent binds
+reclaim expired rows and prior epochs. An explicit leave clears only its token
+and epoch.
+
+Shared SQLite presence passed 20 focused source tests and 12 recorded
+Chromium, Firefox and WebKit journeys. The browser checks the two connection
+routes, native selection, explicit leave, reload, expiry, rotation and a
+receiver behind the current revision. The compiled process probe
+`node artifacts/yjs-sqlite-presence-process-20261107.mjs` starts separate Node
+processes to publish and clear the same cursor without changing the document.
+Recordings and the visual review are in
+`artifacts/yjs-sqlite-presence-verified-20261107/`.
+
+A real host must authenticate the actor and supply or verify display identity.
+This is a single-machine SQLite reference. Multi-host presence, production
+heartbeat load, ongoing expired-row cleanup and storage retention policy remain
+open.
 The loopback session token is test infrastructure. The default Yjs adapter still
 has six known structural failures. This reference remains unreleased.

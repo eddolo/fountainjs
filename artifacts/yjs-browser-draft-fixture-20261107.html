@@ -77,6 +77,7 @@ const live = query.has('live');
 const user = query.has('peer')
   ? {id: 'grace', name: 'Grace', color: '#af3e7d'}
   : {id: 'ada', name: 'Ada', color: '#7048e8'};
+const presenceWorker = query.has('peer') ? 'peer' : 'primary';
 const base = composeExtensions([CoreExtension]);
 let client, reader, current, serverModel, drafts, starts = 0, readerRequest = 0;
 let token = sessionStorage.getItem('fountain-draft-audit-session');
@@ -128,7 +129,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
     schemaVersion: version,
     authority: {key: current.key, async bind(lease, signal) {
       if (live) {
-        const accepted = await request('bind-live', {lease}, signal);
+        const accepted = await request('bind-live', {lease,presenceWorker}, signal);
         next.bound = accepted.snapshot;
         next.presenceToken = accepted.token;
       } else next.bound = await request('bind', lease, signal);
@@ -150,8 +151,8 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
       const token = next.presenceToken, epoch = accepted.epoch;
       starts += 1;
       return {lease: next.lease, snapshot: accepted, presence: {
-        exchange: (lease, state, signal) => request('presence', {lease, token, state}, signal),
-        leave: () => request('leave-live', {epoch, token}, AbortSignal.timeout(1_500)),
+        exchange: (lease, state, signal) => request('presence', {lease, token, state,presenceWorker}, signal),
+        leave: () => request('leave-live', {epoch, token,presenceWorker}, AbortSignal.timeout(1_500)),
       }};
     },
     poll: (lease, signal, basis) => request('poll-retained', {lease, basis}, signal),
