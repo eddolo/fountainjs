@@ -76,3 +76,40 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
   expect((await state(page)).archive).toEqual(offline);
   await capture(page,info,'compaction-offline-recovered.png');
 });
+
+test('lets the author compare the merged branch with the exact offline draft', async ({page},info) => {
+  const active = page.getByRole('textbox', {name:'Active editor', exact:true});
+  await active.getByText('Alpha technical note.', {exact:true}).click();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Shift+End');
+  await page.keyboard.insertText('Rewritten online.');
+  await type(page,'Offline editor',' OFFLINE draft');
+  const offline = (await state(page)).offline;
+  await page.getByRole('button', {name:'Switch to fresh room'}).click();
+  await expect(page.getByRole('status')).toContainText('Fresh room installed');
+  const live = (await state(page)).server;
+  await page.route('**/__handoff/retain', route => route.fulfill({
+    status:400, json:{ok:false,error:'Merge unavailable'},
+  }), {times:1});
+  await page.getByRole('button', {name:'Retain old edits'}).click();
+  await expect(page.getByRole('status')).toContainText('Merge unavailable');
+  await page.getByRole('button', {name:'Show saved offline draft'}).click();
+  await expect(page.getByRole('status')).toContainText('Showing the writer’s saved draft');
+  expect((await state(page)).archive).toEqual(offline);
+  await page.getByRole('button', {name:'Retain old edits'}).click();
+  await expect(page.getByRole('status')).toContainText('Old edits retained separately');
+  const merged = (await state(page)).archive;
+  expect(merged).not.toEqual(offline);
+  await expect(page.getByRole('textbox', {name:'Archive reader'})).toContainText('Rewritten online.');
+  await expect(page.getByRole('textbox', {name:'Archive reader'})).toContainText('OFFLINE draft');
+  await capture(page,info,'overlapping-merged-branch.png');
+  await page.getByRole('button', {name:'Show saved offline draft'}).click();
+  await expect(page.getByRole('status')).toContainText('Showing the writer’s saved draft');
+  expect((await state(page)).archive).toEqual(offline);
+  await expect(page.getByRole('textbox', {name:'Archive reader'})).toHaveAttribute('contenteditable','false');
+  await capture(page,info,'exact-offline-draft.png');
+  await page.getByRole('button', {name:'Show merged retired branch'}).click();
+  await expect(page.getByRole('status')).toContainText('Showing the merged retired branch');
+  expect((await state(page)).archive).toEqual(merged);
+  expect((await state(page)).server).toEqual(live);
+});

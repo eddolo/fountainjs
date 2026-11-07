@@ -5,8 +5,9 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, composeExtensions, createEditor, insertText } from '../src';
+import { CoreExtension, Selection, composeExtensions, createEditor, getCollaborationState, insertText } from '../src';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
+import { prepareRetainedAdmission } from '../src/yjs/retained-admission';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { CoordinatedRetainedRoom } from '../src/yjs/retained-room-coordinator';
 import { RetainedRoomHandoff, type RetainedHandoffRepository, type RetainedHandoffPolicy } from '../src/yjs/retained-handoff';
@@ -65,6 +66,7 @@ function gate(base: RetainedHandoffRepository, method: 'installWithArchive' | 'c
     read: base.read.bind(base), create: base.create.bind(base), compareAndSwap: base.compareAndSwap.bind(base),
     readArchive: base.readArchive.bind(base), readRetiredRoom: base.readRetiredRoom.bind(base),
     installWithArchive: base.installWithArchive.bind(base), compareArchiveBranch: base.compareArchiveBranch.bind(base),
+    readRetiredDraft: base.readRetiredDraft.bind(base), createRetiredDraft: base.createRetiredDraft.bind(base),
   };
   // Hold one real storage boundary; all other methods still use independent SQLite connections.
   const original = repository[method] as (...args: any[]) => Promise<any>;
@@ -123,6 +125,46 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const rollback = await pair.second.rollback(await pair.room.freeze(result.snapshot), uuid(), operation, 'retained-branch', policy());
   expect(await model(rollback.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
   expect(rollback.archive.source.checkpoint).toEqual(result.snapshot.checkpoint);
+});
+
+it('keeps the exact offline checkpoint alongside an overlapping retired merge and reopens it through SQLite', async () => {
+  const pair = await fixture();
+  const offlineDocument = new Y.Doc();
+  const admitted = await prepareRetainedAdmission(offlineDocument,pair.checkpoint,pair.schema,version,'fountain');
+  admitted.install('test-admission');
+  const offline = client(offlineDocument,'offline-writer');
+  expect(getCollaborationState(offline.editor)?.status).toBe('connected');
+  const online = await open(pair.checkpoint, pair);
+  online.editor.dispatch(online.editor.createTransaction().replaceText([0, 0], 0, 'Alpha α 😀'.length, 'Rewritten online'));
+  const latest = await pair.room.write({epoch:pair.initial.epoch,update:Y.encodeStateAsUpdate(online.document)});
+  const moved = await migrate(pair);
+  const update = type(offline, 'OFFLINE');
+  const checkpoint = await captureRetainedCheckpoint(offline.document, pair.schema, version);
+  expect(checkpoint.manifest.guid).not.toBe(pair.checkpoint.manifest.guid);
+  const request = {archiveId:moved.operation,draftId:uuid(),roomId:pair.checkpoint.manifest.roomId,checkpoint};
+
+  await expect(pair.handoff.saveRetiredDraft({...request,roomId:'other',get checkpoint(): RetainedCheckpoint {throw new Error('must fence before reading');}})).rejects.toMatchObject({code:'stale-epoch'});
+  await expect(pair.handoff.saveRetiredDraft({...request,checkpoint:moved.result.snapshot.checkpoint})).rejects.toMatchObject({code:'stale-epoch'});
+  const invalid = checkpoint.update;
+  invalid[0] ^= 0xff;
+  await expect(pair.handoff.saveRetiredDraft({...request,checkpoint:{manifest:checkpoint.manifest,update:invalid}})).rejects.toThrow('checksum mismatch');
+  expect(await pair.handoff.readRetiredDraft(request.archiveId,request.draftId)).toBeUndefined();
+  expect(await pair.handoff.saveRetiredDraft(request)).toEqual(checkpoint);
+  expect((await pair.b.readArchive(key, moved.operation))?.branchRevision).toBe(0);
+  const branch = await pair.second.retainLateUpdate({archiveId:moved.operation,roomId:request.roomId,update});
+  expect(await model(branch.branch,pair)).not.toEqual(offline.editor.getJSON());
+  expect(await model(latest.checkpoint,pair)).toEqual(online.editor.getJSON());
+  const reopened = new SQLiteRetainedRoomRepository(pair.path);
+  cleanup.push(() => reopened.close());
+  const service = new RetainedRoomHandoff(reopened,key,pair.schema,version);
+  const saved = (await service.readRetiredDraft(request.archiveId,request.draftId))!;
+  expect(saved.update).toEqual(checkpoint.update);
+  expect(await model(saved,pair)).toEqual(offline.editor.getJSON());
+  saved.update.fill(0);
+  expect(await service.saveRetiredDraft(request)).toEqual(checkpoint);
+  await expect(service.saveRetiredDraft({...request,checkpoint:latest.checkpoint})).rejects.toMatchObject({code:'invalid-ticket'});
+  expect(await service.readRetiredDraft(request.archiveId,request.draftId)).toEqual(checkpoint);
+  expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
 });
 
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {

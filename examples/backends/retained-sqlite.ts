@@ -1,6 +1,7 @@
 import { DatabaseSync, type StatementSync } from 'node:sqlite';
 import type { RetainedRoomRecord } from '../../src/yjs/retained-room-coordinator';
 import type { RetainedRoomArchive, RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
+import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
 import type { DocumentRoomRecord, DocumentRoomHeader, DocumentCheckpoint } from '../../src/yjs/document-room';
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
@@ -44,6 +45,14 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
           PRIMARY KEY (room_key, archive_id)
         ) STRICT;
         CREATE INDEX IF NOT EXISTS fountain_retained_archive_room_v1 ON fountain_retained_archives_v1 (room_key, source_room_id, source_revision DESC);
+        CREATE TABLE IF NOT EXISTS fountain_retained_drafts_v1 (
+          room_key TEXT NOT NULL,
+          archive_id TEXT NOT NULL CHECK(length(archive_id) = 36),
+          draft_id TEXT NOT NULL CHECK(length(draft_id) = 36),
+          manifest TEXT NOT NULL CHECK(length(manifest) <= 2097152),
+          wire BLOB NOT NULL CHECK(length(wire) BETWEEN 1 AND 67108864),
+          PRIMARY KEY(room_key, archive_id, draft_id)
+        ) STRICT;
         CREATE TABLE IF NOT EXISTS fountain_cross_format_archives_v1 (
           room_key TEXT NOT NULL, archive_id TEXT NOT NULL CHECK(length(archive_id) = 36), generation TEXT NOT NULL CHECK(length(generation) = 36),
           source_epoch TEXT NOT NULL CHECK(length(source_epoch) = 36), source_identity TEXT NOT NULL,
@@ -175,6 +184,23 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   async compareArchiveBranch(key: string, id: string, expectedGeneration: string, checkpoint: RetainedRoomRecord['checkpoint']): Promise<boolean> {
     const result = this.db.prepare('UPDATE fountain_retained_archives_v1 SET generation = ?, branch_metadata = ?, branch_wire = ?, branch_revision = branch_revision + 1 WHERE room_key = ? AND archive_id = ? AND generation = ? AND source_room_id = ? AND branch_revision < 9007199254740991')
       .run(globalThis.crypto.randomUUID(), JSON.stringify(checkpoint.manifest), checkpoint.update, key, id, expectedGeneration, checkpoint.manifest.roomId);
+    return result.changes === 1;
+  }
+
+  async readRetiredDraft(key: string, archiveId: string, draftId: string): Promise<RetainedCheckpoint | undefined> {
+    const row = this.db.prepare('SELECT manifest, wire FROM fountain_retained_drafts_v1 WHERE room_key = ? AND archive_id = ? AND draft_id = ?')
+      .get(key, archiveId, draftId);
+    if (!row) return undefined;
+    if (typeof row.manifest !== 'string' || !(row.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retired draft.');
+    return { manifest: JSON.parse(row.manifest), update: Uint8Array.from(row.wire) };
+  }
+
+  async createRetiredDraft(key: string, archiveId: string, draftId: string, checkpoint: RetainedCheckpoint): Promise<boolean> {
+    const result = this.db.prepare(`INSERT INTO fountain_retained_drafts_v1 (room_key, archive_id, draft_id, manifest, wire)
+      SELECT room_key, archive_id, ?, ?, ? FROM fountain_retained_archives_v1
+      WHERE room_key = ? AND archive_id = ? AND source_room_id = ?
+      ON CONFLICT(room_key, archive_id, draft_id) DO NOTHING`)
+      .run(draftId, JSON.stringify(checkpoint.manifest), checkpoint.update, key, archiveId, checkpoint.manifest.roomId);
     return result.changes === 1;
   }
 

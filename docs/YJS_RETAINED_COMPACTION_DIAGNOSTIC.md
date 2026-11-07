@@ -95,8 +95,24 @@ Review of an overlapping-edit experiment found that replacing a whole paragraph
 can re-anchor an offline insertion to its start. The retired branch still
 contains the text, but its placement can differ from the writer's local copy.
 The guarded compaction journey checks exact recovery for independent edits in
-different paragraphs. Overlapping edits still need a separate reconciliation
-workflow.
+different paragraphs.
+
+For overlapping edits, the same-format SQLite reference now lets the writer
+save the original checkpoint separately before attempting a merge. The host
+passes a stable draft ID to `saveRetiredDraft`. The authority checks the old
+room identity, document checksum and complete update, and keeps the supplied
+wire bytes. Retrying the same checkpoint and ID returns the saved copy. A
+different checkpoint with the same ID is refused. The copy survives a merge
+failure and SQLite reopen. The browser offers a read-only choice between that
+draft and the merged retired branch. This gives the author the source needed
+for manual reconciliation. Automatic placement for overlapping edits and
+archive retention policy remain open.
+
+The exact-draft change passed 74 focused source tests and 15 recorded desktop
+browser journeys, including an injected merge failure in each browser. The
+SQLite test reopens the original bytes from a new connection and uses a writer
+admitted with a different local Yjs GUID. Browser recordings and captures are
+under `artifacts/retained-exact-offline-draft-final-20261107/`.
 
 Verification on 2026-11-07 passed 103 focused source cases and 12 recorded
 Chromium, Firefox and WebKit journeys. In the Firefox capture, 25 native

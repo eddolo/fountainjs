@@ -31,6 +31,8 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='migrate'){value=await handoff.migrate(body.ticket,body.operation,{...options,minimumBytesSaved:body.minimumBytesSaved},policy);if(body.dropAcknowledgement){res.destroy();return}}
    else if(action==='rollback')value=await handoff.rollback(body.ticket,body.operation,body.archive,body.restore,policy);
    else if(action==='retain')value=await handoff.retainLateUpdate(body);
+   else if(action==='save-draft')value=await handoff.saveRetiredDraft(body);
+   else if(action==='read-draft')value=await handoff.readRetiredDraft(body.archiveId,body.draftId);
    else if(action==='archive')value=await repository.readArchive(key,body.id);
    else if(action==='close'){sessions.delete(req.headers['x-handoff-session']);value={closed:true}}
    else throw new Error('Unknown fixed test action');

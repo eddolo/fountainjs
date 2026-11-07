@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve an exact offline checkpoint separately from its merged branch in
+  the retained SQLite handoff reference, with a read-only comparison in the demo.
+
 - Add a minimum checkpoint savings guard to the retained SQLite room handoff
   reference. Successful compaction archives the original room. [Compaction reference](docs/YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#guarded-live-checkpoint-compaction).
 

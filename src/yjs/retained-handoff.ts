@@ -1,5 +1,5 @@
 import type { Schema } from '../core/schema';
-import type { RetainedCheckpoint } from './retained-checkpoint';
+import { restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 import { buildRetainedMigrationCandidate, snapshotRetainedMigrationOptions, type RetainedMigrationOptions, type RetainedMigrationCandidate } from './retained-migration';
 import { validateRetainedRoomRecord, type RetainedRoomRepository, type RetainedRoomRecord, type CoordinatedFreeze, type CoordinatedRoomSnapshot } from './retained-room-coordinator';
 import { applyRetainedRoomUpdate, validateRetainedRoomCheckpoint, RetainedRoomError } from './retained-room-store';
@@ -34,6 +34,9 @@ export interface RetainedHandoffRepository extends RetainedRoomRepository {
   installWithArchive(key: string, expectedGeneration: string, next: RetainedRoomRecord, archive: RetainedRoomArchive,
     prerequisite?: { readonly id: string; readonly generation: string }): Promise<boolean>;
   compareArchiveBranch(key: string, id: string, expectedGeneration: string, checkpoint: RetainedCheckpoint): Promise<boolean>;
+  readRetiredDraft(key: string, archiveId: string, draftId: string): Promise<RetainedCheckpoint | undefined>;
+  /** Insert without replacing an existing draft or advancing the retired branch. */
+  createRetiredDraft(key: string, archiveId: string, draftId: string, checkpoint: RetainedCheckpoint): Promise<boolean>;
 }
 export interface RetainedHandoffResult {
   readonly archive: RetainedRoomArchive;
@@ -159,6 +162,51 @@ export class RetainedRoomHandoff {
   /** Privileged host recovery lookup, not a public unauthenticated endpoint. */
   async retiredRoom(roomId: string): Promise<RetainedRoomArchive | undefined> {
     const archive = await this.repository.readRetiredRoom(this.key, roomId); return archive && this.ownedArchive(archive);
+  }
+
+  private async draftSource(archiveId: string, draftId: string): Promise<RetainedCheckpoint> {
+    if (!id(archiveId) || !id(draftId)) fail('invalid-ticket', 'Invalid retired archive or draft ID.');
+    const archive = await this.repository.readArchive(this.key, archiveId);
+    this.checkArchive(archive);
+    return validateRetainedRoomCheckpoint(archive.source.checkpoint, this.schema, this.schemaVersion);
+  }
+
+  private async checkDraft(checkpoint: RetainedCheckpoint, source: RetainedCheckpoint): Promise<RetainedCheckpoint> {
+    const supplied = checkpoint?.update;
+    if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) {
+      fail('invalid-update', 'Invalid retired draft size.');
+    }
+    const update = Uint8Array.from(supplied);
+    const { document, manifest } = await restoreRetainedCheckpoint({ manifest: checkpoint.manifest, update }, this.schema, this.schemaVersion);
+    try {
+      // Admission preserves the writer's local Y.Doc GUID. The shared gate
+      // and namespace identify the retired room across different replicas.
+      if (manifest.roomId !== source.manifest.roomId || manifest.room !== source.manifest.room) {
+        fail('stale-epoch', 'Draft belongs to another retired room.');
+      }
+      if (document.store.pendingStructs || document.store.pendingDs) fail('invalid-update', 'Draft has unresolved update dependencies.');
+      return Object.freeze({ manifest, get update() { return update.slice(); } });
+    } finally { document.destroy(); }
+  }
+
+  /** Keep the writer's exact checkpoint independently of the merged branch. */
+  async saveRetiredDraft(request: { readonly archiveId: string; readonly draftId: string; readonly roomId: string; readonly checkpoint: RetainedCheckpoint }): Promise<RetainedCheckpoint> {
+    const { archiveId, draftId, roomId } = request;
+    const source = await this.draftSource(archiveId, draftId);
+    if (roomId !== source.manifest.roomId) fail('stale-epoch', 'Draft belongs to another retired room.');
+    const checkpoint = await this.checkDraft(request.checkpoint, source);
+    if (await this.repository.createRetiredDraft(this.key, archiveId, draftId, checkpoint)) return checkpoint;
+    const saved = await this.repository.readRetiredDraft(this.key, archiveId, draftId);
+    if (!saved) fail('revision-conflict', 'Retired draft could not be saved. Retry with the same draft ID.');
+    const verified = await this.checkDraft(saved!, source);
+    if (verified.manifest.checkpointSha256 !== checkpoint.manifest.checkpointSha256) fail('invalid-ticket', 'Draft ID belongs to a different checkpoint.');
+    return verified;
+  }
+
+  async readRetiredDraft(archiveId: string, draftId: string): Promise<RetainedCheckpoint | undefined> {
+    const source = await this.draftSource(archiveId, draftId);
+    const checkpoint = await this.repository.readRetiredDraft(this.key, archiveId, draftId);
+    return checkpoint && this.checkDraft(checkpoint, source);
   }
 
   async retainLateUpdate(request: { readonly archiveId: string; readonly roomId: string; readonly update: Uint8Array }): Promise<RetainedRoomArchive> {
