@@ -2,7 +2,7 @@ import type { Schema } from '../core/schema';
 import { restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 import { buildRetainedMigrationCandidate, snapshotRetainedMigrationOptions, type RetainedMigrationOptions, type RetainedMigrationCandidate } from './retained-migration';
 import { validateRetainedRoomRecord, type RetainedRoomRepository, type RetainedRoomRecord, type CoordinatedFreeze, type CoordinatedRoomSnapshot } from './retained-room-coordinator';
-import { applyRetainedRoomUpdate, validateRetainedRoomCheckpoint, RetainedRoomError } from './retained-room-store';
+import { applyRetainedRoomUpdate, validateRetainedRoomCheckpoint, RetainedRoomError, type RetainedRoomVersion } from './retained-room-store';
 
 export interface RetainedHandoffPolicy {
   readonly history: 'reset-with-source-archive';
@@ -48,6 +48,11 @@ const uuid = (): string => globalThis.crypto.randomUUID();
 const id = (value: unknown): value is string => typeof value === 'string' && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(value);
 const fail = (code: ConstructorParameters<typeof RetainedRoomError>[0], message: string): never => { throw new RetainedRoomError(code, message); };
 const validSavings = (value: number): boolean => Number.isSafeInteger(value) && value > 0;
+function minimumSavings(options: RetainedHandoffMigrationOptions): number | undefined {
+  const minimum = options?.minimumBytesSaved;
+  if (minimum !== undefined && !validSavings(minimum)) throw new Error('Minimum saved bytes must be a positive safe integer.');
+  return minimum;
+}
 
 export interface RetainedHandoffMigrationOptions extends RetainedMigrationOptions {
   readonly minimumBytesSaved?: number;
@@ -133,19 +138,44 @@ export class RetainedRoomHandoff {
     return this.result(archive, next, false);
   }
 
-  async migrate(ticket: CoordinatedFreeze, operationId: string, options: RetainedHandoffMigrationOptions, policy: RetainedHandoffPolicy): Promise<RetainedHandoffResult> {
-    const minimumBytesSaved = options?.minimumBytesSaved;
-    if (minimumBytesSaved !== undefined && !validSavings(minimumBytesSaved)) throw new Error('Minimum saved bytes must be a positive safe integer.');
-    ticket = this.ticketCopy(ticket);
-    const migration = snapshotRetainedMigrationOptions(options), ownedPolicy = snapshotRetainedHandoffPolicy(policy);
-    const replay = await this.replay(operationId, ticket, 'migration', ownedPolicy, null, null, minimumBytesSaved); if (replay) return replay;
-    const row = await this.current(); this.frozen(row, ticket);
-    const candidate = await buildRetainedMigrationCandidate(row.checkpoint, this.schema, this.schemaVersion, migration);
+  private async candidate(checkpoint: RetainedCheckpoint, migration: RetainedMigrationOptions, minimumBytesSaved?: number): Promise<RetainedMigrationCandidate> {
+    const candidate = await buildRetainedMigrationCandidate(checkpoint, this.schema, this.schemaVersion, migration);
     const saved = candidate.source.manifest.bytes - candidate.destination.manifest.bytes;
     if (minimumBytesSaved !== undefined && saved < minimumBytesSaved) {
       const change = saved < 0 ? `The candidate is ${-saved} bytes larger` : `The candidate saves ${saved} bytes`;
       fail('insufficient-savings', `${change}. The minimum saving is ${minimumBytesSaved} bytes.`);
     }
+    return candidate;
+  }
+
+  /** Measure a replacement against a saved live revision without blocking writers. */
+  async preflightCompaction(expected: RetainedRoomVersion, options: RetainedHandoffMigrationOptions) {
+    const { epoch, revision } = expected;
+    if (!id(epoch) || !Number.isSafeInteger(revision) || revision < 0) throw new Error('Invalid retained compaction revision.');
+    const minimumBytesSaved = minimumSavings(options);
+    if (minimumBytesSaved === undefined) throw new Error('Compaction requires a minimum saving.');
+    const migration = snapshotRetainedMigrationOptions(options);
+    const row = await this.current();
+    if (row.epoch !== epoch) fail('stale-epoch', 'The requested retained room is no longer active.');
+    if (row.phase !== 'active') fail('frozen', 'The retained room is already frozen.');
+    if (row.revision !== revision || revision === Number.MAX_SAFE_INTEGER) fail('revision-conflict', 'The retained room revision cannot be compacted. Refresh and retry.');
+
+    const candidate = await this.candidate(row.checkpoint, migration);
+    if ((await this.current()).generation !== row.generation) fail('revision-conflict', 'The retained room changed during the compaction check. Refresh and retry.');
+    const { sourceBytes, destinationBytes } = candidate.report;
+    return Object.freeze({
+      epoch, revision, sourceBytes, destinationBytes, minimumBytesSaved,
+      meetsMinimum: sourceBytes - destinationBytes >= minimumBytesSaved,
+    });
+  }
+
+  async migrate(ticket: CoordinatedFreeze, operationId: string, options: RetainedHandoffMigrationOptions, policy: RetainedHandoffPolicy): Promise<RetainedHandoffResult> {
+    const minimumBytesSaved = minimumSavings(options);
+    ticket = this.ticketCopy(ticket);
+    const migration = snapshotRetainedMigrationOptions(options), ownedPolicy = snapshotRetainedHandoffPolicy(policy);
+    const replay = await this.replay(operationId, ticket, 'migration', ownedPolicy, null, null, minimumBytesSaved); if (replay) return replay;
+    const row = await this.current(); this.frozen(row, ticket);
+    const candidate = await this.candidate(row.checkpoint, migration, minimumBytesSaved);
     return this.install(row, candidate.destination, operationId, 'migration', ownedPolicy, null, null, candidate.report, undefined, minimumBytesSaved);
   }
 

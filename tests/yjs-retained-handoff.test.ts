@@ -92,13 +92,37 @@ it('atomically installs an exact fresh-room document with immutable original and
 
 it('keeps the original room and archive inventory intact when compaction cannot meet the requested savings', async () => {
   const pair = await fixture();
+  const before = await pair.a.read(key);
+  const settings = {...options(), minimumBytesSaved: pair.checkpoint.manifest.bytes};
+  const checked = await pair.handoff.preflightCompaction(pair.initial, settings);
+  expect(checked).toEqual({epoch:pair.initial.epoch, revision:pair.initial.revision, sourceBytes:pair.checkpoint.manifest.bytes,
+    destinationBytes:expect.any(Number), minimumBytesSaved:settings.minimumBytesSaved, meetsMinimum:false});
+  expect(await pair.b.read(key)).toEqual(before);
   const ticket = await pair.room.freeze(pair.initial), operation = uuid();
   const frozen = await pair.a.read(key);
-  await expect(pair.handoff.migrate(ticket, operation, {...options(), minimumBytesSaved: pair.checkpoint.manifest.bytes}, policy()))
+  await expect(pair.handoff.preflightCompaction(pair.initial, settings)).rejects.toMatchObject({code:'frozen'});
+  await expect(pair.handoff.migrate(ticket, operation, settings, policy()))
     .rejects.toMatchObject({code:'insufficient-savings'});
   expect(await pair.b.read(key)).toEqual(frozen);
   expect(await pair.b.readArchive(key, operation)).toBeUndefined();
   expect(await pair.other.abort(ticket)).toEqual(pair.initial);
+});
+
+it('refuses a stale compaction check when another writer saves during validation', async () => {
+  const pair = await fixture(), read = pair.a.read.bind(pair.a);
+  const update = type(pair, ' STILL WRITABLE');
+  const reader = vi.spyOn(pair.a, 'read').mockImplementationOnce(read).mockImplementationOnce(async roomKey => {
+    await pair.other.write({epoch:pair.initial.epoch, update});
+    return read(roomKey);
+  });
+  try {
+    await expect(pair.handoff.preflightCompaction(pair.initial, {...options(), minimumBytesSaved:1}))
+      .rejects.toMatchObject({code:'revision-conflict'});
+  } finally { reader.mockRestore(); }
+  const saved = await pair.room.snapshot();
+  expect(saved).toMatchObject({epoch:pair.initial.epoch,revision:1,phase:'active'});
+  expect(await model(saved.checkpoint,pair)).toEqual(pair.editor.getJSON());
+  await expect(pair.room.freeze(pair.initial)).rejects.toMatchObject({code:'revision-conflict'});
 });
 
 it('compacts a long edit history while keeping old writers fenced and both branches recoverable', async () => {
@@ -110,8 +134,12 @@ it('compacts a long edit history while keeping old writers fenced and both branc
     pair.editor.dispatch(pair.editor.createTransaction().replaceText([0, 0], 0, previous.length, next));
   }
   const edited = await pair.room.write({epoch:pair.initial.epoch,update:Y.encodeStateAsUpdate(pair.document)});
-  const ticket = await pair.room.freeze(edited), operation = uuid();
   const settings = {...options(),minimumBytesSaved:1_000};
+  const checked = await pair.handoff.preflightCompaction(edited, settings);
+  expect(checked).toMatchObject({meetsMinimum:true, minimumBytesSaved:1_000});
+  expect(checked.sourceBytes - checked.destinationBytes).toBeGreaterThanOrEqual(1_000);
+  expect(await pair.other.snapshot()).toEqual(edited);
+  const ticket = await pair.room.freeze(checked), operation = uuid();
   const result = await pair.handoff.migrate(ticket, operation, settings, policy());
   expect(result.archive.minimumBytesSaved).toBe(1_000);
   expect(result.archive.source.checkpoint).toEqual(edited.checkpoint);

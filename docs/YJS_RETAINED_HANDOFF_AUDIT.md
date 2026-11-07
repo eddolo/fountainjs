@@ -138,7 +138,32 @@ Host font fallback differs in Windows WebKit. Archive readers correctly hide
 editing-only caption controls. Math and Lean here use source presentation; this
 audit does not claim new KaTeX rendering or live Lean-provider certification.
 
-Reproduction:
+## Checking compaction before freezing a room
+
+The SQLite browser reference now offers **Check compaction** for a saved
+revision and a minimum byte saving. It builds an isolated candidate, verifies
+its content, and reports the current and estimated replacement checkpoint
+sizes. The room stays writable. A concurrent save or freeze invalidates the
+check, and a failed savings check leaves the revision and archive inventory
+intact.
+
+The demo requires a passing check for the current saved revision and threshold
+before a guarded switch. The freeze compares the checked epoch and revision.
+Installation builds a fresh candidate and enforces the threshold again because
+encoded sizes can vary slightly with freshly allocated Yjs identifiers.
+Archiving the retired room preserves its recovery path. The saving applies to
+the active checkpoint, while total storage still includes the archive.
+
+The recorded Firefox fixture went from 11,757 to 8,361 bytes after repeated
+edits. The recovered offline draft still contains the old writer's text. The
+SQLite race test independently confirms that another writer can save during
+validation and that the stale check cannot be used to freeze that revision.
+All 138 focused source tests and 24 recorded headless browser journeys passed
+across Chromium, Firefox and WebKit. TypeScript checking passed. Local
+recordings and captures are under
+`artifacts/retained-compaction-rehearsal-final-20261107/`.
+
+### Reproduction
 
 ```powershell
 node artifacts/build-retained-handoff-20261106.mjs

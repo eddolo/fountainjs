@@ -29,12 +29,17 @@ test('recovers a lost switch acknowledgement by replaying the durable receipt',a
 test('skips an unhelpful compaction and installs a smaller checkpoint after real edits', async ({page},info) => {
   const original = await state(page);
   const active = page.getByRole('textbox', {name:'Active editor', exact:true});
+  const freezes: string[] = [];
+  page.on('request', request => { if (request.url().endsWith('/__handoff/freeze')) freezes.push(request.url()); });
   await page.getByText('Compaction settings', {exact:true}).click();
   const minimum = page.getByLabel('Minimum checkpoint bytes to save');
   await minimum.fill('999999');
-  await page.getByRole('button', {name:'Switch to fresh room'}).click();
+  const check = page.getByRole('button', {name:'Check compaction'});
+  const switchRoom = page.getByRole('button', {name:'Switch to fresh room'});
+  await check.click();
   await expect(page.getByRole('status')).toContainText('Compaction skipped');
-  expect(await state(page)).toMatchObject({epoch:original.epoch,phase:'active',bytes:original.bytes,roomId:original.roomId});
+  expect(await state(page)).toMatchObject({epoch:original.epoch,revision:original.revision,phase:'active',bytes:original.bytes,roomId:original.roomId});
+  expect(freezes).toHaveLength(0);
   await capture(page,info,'compaction-skipped.png');
 
   const quote = 'Keep every accepted edit recoverable.';
@@ -44,6 +49,8 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
     await page.keyboard.press('Shift+End');
     await page.keyboard.insertText(index === 24 ? quote : `Temporary draft ${index}.`);
   }
+  await check.click();
+  await expect(page.getByRole('status')).toContainText('Save your active edits before checking compaction');
   await page.getByRole('button', {name:'Save active edits'}).click();
   await expect(page.getByRole('status')).toContainText('durably saved');
   const grown = await state(page);
@@ -52,8 +59,31 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
   await type(page,'Offline editor',' OFFLINE draft');
   const offline = (await state(page)).offline;
   await minimum.fill('512');
-  await page.getByRole('button', {name:'Switch to fresh room'}).click();
+  await check.click();
+  await expect(page.getByRole('status')).toContainText('Compaction check passed');
+  expect(await state(page)).toMatchObject({epoch:grown.epoch,revision:grown.revision,phase:'active',bytes:grown.bytes});
+  expect(freezes).toHaveLength(0);
+  await capture(page,info,'compaction-checked.png');
+  await minimum.fill('513');
+  await switchRoom.click();
+  await expect(page.getByRole('status')).toContainText('Check compaction for the current saved revision and minimum');
+  expect(freezes).toHaveLength(0);
+  await minimum.fill('512');
+  await check.click();
+  await expect(page.getByRole('status')).toContainText('Compaction check passed');
+  let releaseFreeze = () => {};
+  const freezeGate = new Promise<void>(resolve => { releaseFreeze = resolve; });
+  await page.route('**/__handoff/freeze', async route => {
+    await freezeGate;
+    await route.continue();
+  }, {times:1});
+  try {
+    await switchRoom.click();
+    await expect(page.locator('#active')).toHaveAttribute('inert', '');
+  } finally { releaseFreeze(); }
   await expect(page.getByRole('status')).toContainText('Compacted live checkpoint');
+  await expect(page.locator('#active')).not.toHaveAttribute('inert');
+  expect(freezes).toHaveLength(1);
   const compacted = await state(page);
   expect(grown.bytes - compacted.bytes).toBeGreaterThanOrEqual(512);
   await info.attach('compaction-size', {body:JSON.stringify({before:grown.bytes,after:compacted.bytes}),contentType:'application/json'});

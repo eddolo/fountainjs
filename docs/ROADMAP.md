@@ -24,6 +24,10 @@ The migration reference can also rehearse conversion against a saved legacy
 revision while the room stays open. A failed check leaves the room writable,
 and the live upgrade freezes the specific revision that passed the check.
 [Migration rehearsal](YJS_NAMESPACE_MIGRATION_AUDIT.md#check-a-migration-while-the-room-is-open).
+An existing retained room can also estimate checkpoint savings while it is
+writable. The demo requires a passing check for the saved revision before
+freezing it, and installation checks the actual savings again.
+[Compaction rehearsal](YJS_RETAINED_HANDOFF_AUDIT.md#checking-compaction-before-freezing-a-room).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

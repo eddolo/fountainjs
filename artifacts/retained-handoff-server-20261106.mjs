@@ -27,6 +27,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    if(action==='initialize')value=await room.initialize(body.checkpoint);
    else if(action==='snapshot')value=await room.snapshot();
    else if(action==='write')value=await room.write(body);
+   else if(action==='check-compaction')value=await handoff.preflightCompaction(body,{...options,minimumBytesSaved:body.minimumBytesSaved});
    else if(action==='freeze')value=await room.freeze(body);
    else if(action==='abort')value=await room.abort(body);
    else if(action==='migrate'){value=await handoff.migrate(body.ticket,body.operation,{...options,minimumBytesSaved:body.minimumBytesSaved},policy);if(body.dropAcknowledgement){res.destroy();return}}
