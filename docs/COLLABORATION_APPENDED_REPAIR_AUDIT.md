@@ -1,5 +1,10 @@
 # Collaboration appended-repair audit — 2026-11-07
 
+Follow-up: the [default Yjs history-policy audit](YJS_HISTORY_POLICY_AUDIT.md)
+now verifies and repairs the public XML adapter's history-neutral origin behavior.
+The counts and remaining-history note below describe this preceding checkpoint.
+The six separate default concurrency failures remain open.
+
 Running the unchanged public collaboration suites against the private retained
 adapter exposed a real integration defect: stable-ID repair changed the visible
 editor but did not converge back to a peer without that extension. The shared

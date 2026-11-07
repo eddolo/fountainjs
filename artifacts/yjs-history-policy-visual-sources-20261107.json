@@ -1,0 +1,146 @@
+[
+  {
+    "engine": "chromium",
+    "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+    "kind": "duplicate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-chromium\\video.webm",
+    "durationSeconds": 2.44,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\chromium-duplicate"
+  },
+  {
+    "engine": "chromium",
+    "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+    "kind": "trailing",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-chromium\\video.webm",
+    "durationSeconds": 2.16,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\chromium-trailing"
+  },
+  {
+    "engine": "chromium",
+    "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+    "kind": "offline",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-chromium\\video.webm",
+    "durationSeconds": 2.24,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\chromium-offline"
+  },
+  {
+    "engine": "chromium",
+    "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+    "kind": "local",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-chromium\\video.webm",
+    "durationSeconds": 2.2,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\chromium-local"
+  },
+  {
+    "engine": "chromium",
+    "name": "keeps neutral review metadata through authored undo and remote typing",
+    "kind": "metadata",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-chromium\\video.webm",
+    "durationSeconds": 2.04,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\chromium-metadata"
+  },
+  {
+    "engine": "chromium",
+    "name": "keeps imported source outside undo while later author and peer typing remain editable",
+    "kind": "import",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-chromium\\video.webm",
+    "durationSeconds": 2.16,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\chromium-import"
+  },
+  {
+    "engine": "firefox",
+    "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+    "kind": "duplicate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-firefox\\video.webm",
+    "durationSeconds": 4.48,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\firefox-duplicate"
+  },
+  {
+    "engine": "firefox",
+    "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+    "kind": "trailing",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-firefox\\video.webm",
+    "durationSeconds": 2.64,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\firefox-trailing"
+  },
+  {
+    "engine": "firefox",
+    "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+    "kind": "offline",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-firefox\\video.webm",
+    "durationSeconds": 3,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\firefox-offline"
+  },
+  {
+    "engine": "firefox",
+    "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+    "kind": "local",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-firefox\\video.webm",
+    "durationSeconds": 2.72,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\firefox-local"
+  },
+  {
+    "engine": "firefox",
+    "name": "keeps neutral review metadata through authored undo and remote typing",
+    "kind": "metadata",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-firefox\\video.webm",
+    "durationSeconds": 2.56,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\firefox-metadata"
+  },
+  {
+    "engine": "firefox",
+    "name": "keeps imported source outside undo while later author and peer typing remain editable",
+    "kind": "import",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-firefox\\video.webm",
+    "durationSeconds": 2.48,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\firefox-import"
+  },
+  {
+    "engine": "webkit",
+    "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+    "kind": "duplicate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-webkit\\video.webm",
+    "durationSeconds": 6.52,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\webkit-duplicate"
+  },
+  {
+    "engine": "webkit",
+    "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+    "kind": "trailing",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-webkit\\video.webm",
+    "durationSeconds": 4.76,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\webkit-trailing"
+  },
+  {
+    "engine": "webkit",
+    "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+    "kind": "offline",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-webkit\\video.webm",
+    "durationSeconds": 5.16,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\webkit-offline"
+  },
+  {
+    "engine": "webkit",
+    "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+    "kind": "local",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-webkit\\video.webm",
+    "durationSeconds": 3.56,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\webkit-local"
+  },
+  {
+    "engine": "webkit",
+    "name": "keeps neutral review metadata through authored undo and remote typing",
+    "kind": "metadata",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-webkit\\video.webm",
+    "durationSeconds": 5.96,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\webkit-metadata"
+  },
+  {
+    "engine": "webkit",
+    "name": "keeps imported source outside undo while later author and peer typing remain editable",
+    "kind": "import",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-webkit\\video.webm",
+    "durationSeconds": 5.12,
+    "target": "artifacts\\yjs-history-policy-visual-20261107\\webkit-import"
+  }
+]

@@ -705,11 +705,12 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     }
     this.structuredAttributes?.overlay(update.before);
     this.structuredAttributes?.validate(update.document);
+    const recordHistory = update.transaction.getMeta('addToHistory') !== false;
     const root = this.fragment.get(0);
     const pending: PendingHistorySelection = {
       before: this.relativeSelection(update.beforeSelection, update.before),
     };
-    this.pendingHistory = pending;
+    this.pendingHistory = recordHistory ? pending : undefined;
     try {
       this.document.transact(() => {
         if (!isSharedElement(root)) {
@@ -717,8 +718,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
           this.fragment.insert(0, [createSharedElement(update.document)]);
         } else synchronizeElement(root, update.before, update.document);
         this.structuredAttributes?.synchronize(update.document);
-        pending.after = this.relativeSelection(update.selection, update.document);
-      }, this.localOrigin);
+        if (recordHistory) pending.after = this.relativeSelection(update.selection, update.document);
+      }, recordHistory ? this.localOrigin : this.repairOrigin);
     } finally {
       this.pendingHistory = undefined;
     }

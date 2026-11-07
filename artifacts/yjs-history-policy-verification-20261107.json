@@ -1,0 +1,3050 @@
+{
+  "date": "2026-11-07",
+  "baselineCommit": "6e72b78a",
+  "goalComplete": false,
+  "publication": "Local default XML adapter history-policy fix; no format/default-replacement switch or publication.",
+  "source": [
+    {
+      "path": "src/yjs/index.ts",
+      "bytes": 40416,
+      "sha256": "fd52e017251fa20e2f59cde986e9b33404a1db900a697fde49aad9e6ab42cbad"
+    },
+    {
+      "path": "tests/yjs-history-policy.test.ts",
+      "bytes": 6613,
+      "sha256": "3bcf8c1e02d2e4f797bfb7477a1ab17998bc81770360742107ee8339eef6cb10"
+    },
+    {
+      "path": "tests/manual/yjs-history-policy-real.spec.ts",
+      "bytes": 8471,
+      "sha256": "270a0e3fe79a3bce51a77888271a083b8ad1b95a3d370566a7301d14c43c093b"
+    },
+    {
+      "path": "artifacts/prepare-yjs-history-policy-20261107.mjs",
+      "bytes": 4083,
+      "sha256": "0209d4dd7c8ff3e4076ef1f340b6dd4aa5e11355d80848b5a69c3519363b6d07"
+    },
+    {
+      "path": "artifacts/prepare-yjs-history-policy-node-20261107.mjs",
+      "bytes": 1202,
+      "sha256": "10228e4eaf7db6847e2e98287625bdf7500be5aee25d27deebac0afa944e95de"
+    },
+    {
+      "path": "artifacts/build-yjs-history-policy-20261107.mjs",
+      "bytes": 733,
+      "sha256": "1b8f9e81abc4a953b129244e74a3780066e95888f3780d9d479758127b898a61"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-vite-20261107.config.ts",
+      "bytes": 384,
+      "sha256": "26958eede08f02edb40d18f5a5b60eb412636a86ff32e663dfe51d6aaae19eb7"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-browser-20261107.config.ts",
+      "bytes": 583,
+      "sha256": "67e93f3b16a7f250bfc13b87055f6ade7d87d559541b74f45c20355c59860c7e"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-fixture-20261107.html",
+      "bytes": 7211,
+      "sha256": "61b737d664f94f5e70f89d242d85f0dd923a2095abd85474a60935da34c882b8"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-node-20261107.mjs",
+      "bytes": 5375,
+      "sha256": "8cbc75d81aa35579fdcb16d7a352f1b38af00ff41acbafac9611b8aa13d2d318"
+    },
+    {
+      "path": "artifacts/curate-yjs-history-policy-20261107.mjs",
+      "bytes": 2759,
+      "sha256": "3f14ca3a9d440a5c08e23a3d38db9d4547c5be7525dd00ce8e805beba47295f1"
+    },
+    {
+      "path": "artifacts/run-yjs-history-policy-checks-20261107.ps1",
+      "bytes": 1719,
+      "sha256": "77a0ed7a9e5570a2c9300d444d4c8fb83aea089a846d87544149b13051a3678c"
+    },
+    {
+      "path": "artifacts/verify-yjs-history-policy-20261107.mjs",
+      "bytes": 10510,
+      "sha256": "184bcc471b5a1f009300a276d73699d653e343b99a678e6328d0f140b55faf1b"
+    }
+  ],
+  "before": {
+    "path": "artifacts/yjs-history-policy-before-20261107.json",
+    "bytes": 21689,
+    "sha256": "586330518620ef17685148c4f8773da03662be40097e3652f936a3ea91b9fa65",
+    "passed": 12,
+    "failed": 8,
+    "requiredFailureNames": [
+      "legacy shared history policy keeps neutral metadata through authored undo/redo (reverse: false)",
+      "legacy shared history policy does not undo neutral source text when later authored typing is undone (reverse: false)",
+      "legacy shared history policy replicates remote ID maintenance without creating reviewer undo (reverse: false)",
+      "legacy shared history policy keeps grouped typing together across neutral metadata (reverse: false)",
+      "legacy shared history policy keeps neutral metadata through authored undo/redo (reverse: true)",
+      "legacy shared history policy does not undo neutral source text when later authored typing is undone (reverse: true)",
+      "legacy shared history policy replicates remote ID maintenance without creating reviewer undo (reverse: true)",
+      "legacy shared history policy keeps grouped typing together across neutral metadata (reverse: true)"
+    ]
+  },
+  "fullSource": {
+    "path": "artifacts/yjs-history-policy-full-source-20261107.json",
+    "bytes": 1806290,
+    "sha256": "7f256469dc5ecf958a59ad3f53978115b98e0db992e2ac233cdb0d1a30572c8c",
+    "total": 4725,
+    "passed": 4719,
+    "failed": 6,
+    "skipped": 0,
+    "files": 298,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "passed": 99,
+    "newCases": [
+      "legacy shared history policy keeps neutral metadata through authored undo/redo (reverse: false)",
+      "legacy shared history policy does not undo neutral source text when later authored typing is undone (reverse: false)",
+      "legacy shared history policy replicates remote ID maintenance without creating reviewer undo (reverse: false)",
+      "legacy shared history policy keeps grouped typing together across neutral metadata (reverse: false)",
+      "legacy shared history policy keeps neutral metadata through authored undo/redo (reverse: true)",
+      "legacy shared history policy does not undo neutral source text when later authored typing is undone (reverse: true)",
+      "legacy shared history policy replicates remote ID maintenance without creating reviewer undo (reverse: true)",
+      "legacy shared history policy keeps grouped typing together across neutral metadata (reverse: true)",
+      "legacy shared history policy keeps authored duplicate undoable with local appended maintenance",
+      "legacy shared history policy keeps authored divider undoable with local appended maintenance",
+      "retained shared history policy keeps neutral metadata through authored undo/redo (reverse: false)",
+      "retained shared history policy does not undo neutral source text when later authored typing is undone (reverse: false)",
+      "retained shared history policy replicates remote ID maintenance without creating reviewer undo (reverse: false)",
+      "retained shared history policy keeps grouped typing together across neutral metadata (reverse: false)",
+      "retained shared history policy keeps neutral metadata through authored undo/redo (reverse: true)",
+      "retained shared history policy does not undo neutral source text when later authored typing is undone (reverse: true)",
+      "retained shared history policy replicates remote ID maintenance without creating reviewer undo (reverse: true)",
+      "retained shared history policy keeps grouped typing together across neutral metadata (reverse: true)",
+      "retained shared history policy keeps authored duplicate undoable with local appended maintenance",
+      "retained shared history policy keeps authored divider undoable with local appended maintenance"
+    ]
+  },
+  "checks": [
+    {
+      "log": "artifacts/yjs-history-policy-types-20261107.log",
+      "seconds": 6.311952,
+      "check": "types",
+      "expectedExitCode": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/yjs-history-policy-focused-20261107.log",
+      "seconds": 14.6123832,
+      "check": "focused",
+      "expectedExitCode": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/yjs-history-policy-full-source-20261107.log",
+      "seconds": 344.0394727,
+      "check": "full-source",
+      "expectedExitCode": 1,
+      "exitCode": 1
+    },
+    {
+      "log": "artifacts/yjs-history-policy-build-20261107.log",
+      "seconds": 17.5571552,
+      "check": "build",
+      "expectedExitCode": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/yjs-history-policy-api-20261107.log",
+      "seconds": 1.1196543,
+      "check": "api",
+      "expectedExitCode": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/yjs-history-policy-headless-20261107.log",
+      "seconds": 2.6500024,
+      "check": "headless",
+      "expectedExitCode": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "artifacts/yjs-history-policy-budget-20261107.log",
+      "seconds": 0.8570993,
+      "check": "budget",
+      "expectedExitCode": 1,
+      "exitCode": 1
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/yjs-history-policy-types-20261107.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-focused-20261107.log",
+      "bytes": 131,
+      "sha256": "1b463489923d2e00bcc541e7f80192d6491631e2cd8274e3814cb449e529476f"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-full-source-20261107.log",
+      "bytes": 135,
+      "sha256": "1a03ad6164da76cda1e30f9a8386e5f7a24a777954bb76fbfe1f5ad2d19efeaf"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-build-20261107.log",
+      "bytes": 16081,
+      "sha256": "2b647390b0d67a03a4b1d0d1bffbfb193a5b04f8eb056d4a059d83cc84b2794a"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-api-20261107.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-headless-20261107.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/yjs-history-policy-budget-20261107.log",
+      "bytes": 3896,
+      "sha256": "cdc3e8b753db4e536c1f7140ca0b98e648ed0a0a716abf77ebed129ae3aa71ab"
+    }
+  ],
+  "compiled": {
+    "sourceModules": 193,
+    "publicBuiltEntryNodeCases": 14,
+    "nodes": [
+      {
+        "mode": "es",
+        "publicEntry": "fountainjs-editor/yjs",
+        "passed": 7,
+        "cases": [
+          "remote duplicate IDs are repaired and replicated without reviewer undo",
+          "reviewer undo removes authored typing while preserving the remote duplicate and ID repair",
+          "author undo/redo preserves peer repair identities and exact content",
+          "explicit history-neutral shared metadata survives author undo",
+          "remote atomic divider receives a replicated trailing editable paragraph without reviewer undo",
+          "authored duplicate stays undoable when history-neutral repairs are appended locally",
+          "authored divider stays undoable when history-neutral repairs are appended locally"
+        ],
+        "node": "v24.22.1",
+        "dom": false
+      },
+      {
+        "mode": "cjs",
+        "publicEntry": "fountainjs-editor/yjs",
+        "passed": 7,
+        "cases": [
+          "remote duplicate IDs are repaired and replicated without reviewer undo",
+          "reviewer undo removes authored typing while preserving the remote duplicate and ID repair",
+          "author undo/redo preserves peer repair identities and exact content",
+          "explicit history-neutral shared metadata survives author undo",
+          "remote atomic divider receives a replicated trailing editable paragraph without reviewer undo",
+          "authored duplicate stays undoable when history-neutral repairs are appended locally",
+          "authored divider stays undoable when history-neutral repairs are appended locally"
+        ],
+        "node": "v24.22.1",
+        "dom": false
+      }
+    ]
+  },
+  "browser": {
+    "passed": 18,
+    "protocol": "public XML adapter",
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-chromium\\video.webm",
+        "bytes": 133318,
+        "sha256": "fb7c7e33d12e850fe9c8da157239c50832e6988d8667501745ff66948029221a",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-chromium\\trace.zip",
+          "bytes": 938806,
+          "sha256": "e90b922195622ebdbea19c067cabbba037441ab17fb0da34e1fe8847776eb3cb"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-chromium\\video.webm",
+        "bytes": 67381,
+        "sha256": "e8c5a38e96a0107b80874926de1444394497df4647dd71687c17ba87907d5a30",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-chromium\\trace.zip",
+          "bytes": 952476,
+          "sha256": "5b719699885f7b55a6e432427cab36b04b52324b5d929cc6f59e099ba466f31f"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-chromium\\video.webm",
+        "bytes": 73363,
+        "sha256": "9772b50841134bd4285d0d0b1a38165a758c511e33683bff4ae0aba1b1109716",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-chromium\\trace.zip",
+          "bytes": 770255,
+          "sha256": "0bd7a428b0217f1fad1e6d233c19a9f10d35952342297ff7b9369eecf1a040dd"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-chromium\\video.webm",
+        "bytes": 124558,
+        "sha256": "8b2db94ef5231b29a556ea14eefe734c4308afc0f65249e294cfd14c92ba88d5",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-chromium\\trace.zip",
+          "bytes": 415438,
+          "sha256": "81526b344f62c8e0a4f942052687b0cbb302feb1a253538a28e8426d30627ece"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-chromium\\video.webm",
+        "bytes": 64121,
+        "sha256": "c3a9b33050ef90dce3443e21816d938bfdb686cee493225d83e3a46d59c46b30",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-chromium\\trace.zip",
+          "bytes": 725221,
+          "sha256": "e79a6dff04d056ff9849935a66cef207cc562667aa13e12336ef8e2f64d8935d"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-chromium\\video.webm",
+        "bytes": 66055,
+        "sha256": "7c1bc07a6f4003797cec97fcbe85c29a26d3d4b0ef1c9a1db2cc7b331b4e5110",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-chromium\\trace.zip",
+          "bytes": 697268,
+          "sha256": "a3b1ea6803dd199baf5e8c64d37bb2609d251e3bddd096ad0dd81d1544fc058c"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-firefox\\video.webm",
+        "bytes": 141699,
+        "sha256": "0241a448d50e3cd507ce23a42b1f3316c9c839b123b37b6d6cde6b592abd6495",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-firefox\\trace.zip",
+          "bytes": 1562801,
+          "sha256": "02dfd69512d9005d237f74e645ab1050aca13bc2f645e3119949aadfa65c0ee9"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-firefox\\video.webm",
+        "bytes": 123069,
+        "sha256": "bdadf1f1317e00be6592b4cddffda28ad3b0273da0344dceaabc230afdfb9a71",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-firefox\\trace.zip",
+          "bytes": 1019043,
+          "sha256": "0f2834eb58a16d9d7f7f0a9dd89ac6d9c1c21dc72778d8fdc6e62139e6fc7e44"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-firefox\\video.webm",
+        "bytes": 139548,
+        "sha256": "d19428ccdcc53acd96ba6c130fe16d00d4425129490579a66c8a5003f88e4797",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-firefox\\trace.zip",
+          "bytes": 1321989,
+          "sha256": "a310db53f3c21dc6fa20dc59fa7e2f75278b0c3b0e8e8d2594f09455dc4166f2"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-firefox\\video.webm",
+        "bytes": 138325,
+        "sha256": "4a68517718f21795f443c8ed39a06f4a9d0ab4ddfb860dd1fe854a622dc76539",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-firefox\\trace.zip",
+          "bytes": 1000911,
+          "sha256": "fa60407f139d6c81093c0cbf5cdef57f288a7de06fce4a688be63a34f7480365"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-firefox\\video.webm",
+        "bytes": 120971,
+        "sha256": "ea469c3b232bc17fba4e9e522b0ebe59c9e6c250a6d5f79588d6fa55bcefa7c0",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-firefox\\trace.zip",
+          "bytes": 1074408,
+          "sha256": "244f1808eb362d424cff5897595d31a65bf68d27e4dda7dae70396448ef2f7aa"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-firefox\\video.webm",
+        "bytes": 113539,
+        "sha256": "0becaa50b3882a6aae5f68106338abe6520eec37d63bed59616dd9d9c56dcb43",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-firefox\\trace.zip",
+          "bytes": 903160,
+          "sha256": "78917f248504e5b7419c64c52267fba292581f7997470df98941189713ea34e3"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-webkit\\video.webm",
+        "bytes": 207059,
+        "sha256": "5593a9cd9f7123d289e917c20b4f5daf13dd593fb6d91ee5bb6a74c52319bf78",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-06d14--limited-to-authored-typing-webkit\\trace.zip",
+          "bytes": 1106583,
+          "sha256": "3176b3ff61b77f35a9752493f607a6967fd0da5a7dfa66772e589535a19fad44"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-webkit\\video.webm",
+        "bytes": 164655,
+        "sha256": "f1172b86ec733d6a86c42855f71200fdace03fbdcc12be93642ea8c15ee51353",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-sh-9d4cd-ithout-adding-reviewer-undo-webkit\\trace.zip",
+          "bytes": 636855,
+          "sha256": "c6cb0862bf7246f02fc1a7d65b7bf088cf049fad1e307f197d96627840e51382"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-webkit\\video.webm",
+        "bytes": 191592,
+        "sha256": "14f89401dd199d6a730415de6313e630b6d16a0a2e9e6b246d511f5ec19aba9e",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-re-9ebda--without-losing-either-edit-webkit\\trace.zip",
+          "bytes": 995380,
+          "sha256": "b4c8a565e4c01c30012ff016322d2e8ec738d4b12d84c4ea31b49f10c1ca8bf9"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-webkit\\video.webm",
+        "bytes": 128162,
+        "sha256": "100e25b102f9fc367b048bf30d6e8296d51fc5301e35d863194cd87beea8c5cb",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-17f2f-ailing-repairs-are-appended-webkit\\trace.zip",
+          "bytes": 352132,
+          "sha256": "de601cc6dc4fe9b73f6750e7fb1fe9593b00173207cedf7d7ab7558b0c2507bc"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-webkit\\video.webm",
+        "bytes": 187715,
+        "sha256": "bbbec8f5257d3669e3186aa1c533085c295aa992ba84b86d248dabfaed6c8ef7",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-d7127-ored-undo-and-remote-typing-webkit\\trace.zip",
+          "bytes": 1071235,
+          "sha256": "912acecca96efde2c9b77733ee9ac90dba6e79d2bc6651308f7a372621fa2bdc"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-webkit\\video.webm",
+        "bytes": 170041,
+        "sha256": "20c41baeb3ad85e43e5be6c5d8b464d3f43ec510ec61ee4768a58d64beb6c0d0",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-history-policy-browser-20261107\\yjs-history-policy-real-ke-759e2-peer-typing-remain-editable-webkit\\trace.zip",
+          "bytes": 892608,
+          "sha256": "3275566d8b2d7991890e11103ba6adace68a54bf9618de32f5c0935e3999a8ac"
+        }
+      }
+    ],
+    "reports": [
+      {
+        "project": "chromium",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1cyf3aj056a55b"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1cyf3aj056a55b"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "chromium",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal_rule",
+                  "attrs": {
+                    "nodeId": "incident-divider"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-0850g3n18snu9z"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal_rule",
+                  "attrs": {
+                    "nodeId": "incident-divider"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-0850g3n18snu9z"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "chromium",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. REVIEW OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1r1oyk21i7w41y"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. REVIEW OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1r1oyk21i7w41y"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "chromium",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-16i7wy117hfhn9"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-16i7wy117hfhn9"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "chromium",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro",
+                    "review": "Reviewed 2"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. AUTHOR PEER"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro",
+                    "review": "Reviewed 2"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. AUTHOR PEER"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          }
+        ]
+      },
+      {
+        "project": "chromium",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Imported Shared incident note. REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Imported Shared incident note. REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          }
+        ]
+      },
+      {
+        "project": "firefox",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1cyf3aj056a55b"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1cyf3aj056a55b"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "firefox",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal_rule",
+                  "attrs": {
+                    "nodeId": "incident-divider"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-0850g3n18snu9z"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal_rule",
+                  "attrs": {
+                    "nodeId": "incident-divider"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-0850g3n18snu9z"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "firefox",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1ezpse816nmi44"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1ezpse816nmi44"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "firefox",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-16i7wy117hfhn9"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-16i7wy117hfhn9"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "firefox",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro",
+                    "review": "Reviewed 2"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. AUTHOR PEER"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro",
+                    "review": "Reviewed 2"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. AUTHOR PEER"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          }
+        ]
+      },
+      {
+        "project": "firefox",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Imported Shared incident note. REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Imported Shared incident note. REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          }
+        ]
+      },
+      {
+        "project": "webkit",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1cyf3aj056a55b"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1cyf3aj056a55b"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. NOTE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "webkit",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal_rule",
+                  "attrs": {
+                    "nodeId": "incident-divider"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-0850g3n18snu9z"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                },
+                {
+                  "type": "horizontal_rule",
+                  "attrs": {
+                    "nodeId": "incident-divider"
+                  }
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-0850g3n18snu9z"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "webkit",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1ezpse816nmi44"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-1ezpse816nmi44"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. OFFLINE"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "webkit",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-16i7wy117hfhn9"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "fjs-16i7wy117hfhn9"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note."
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": true
+          }
+        ]
+      },
+      {
+        "project": "webkit",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro",
+                    "review": "Reviewed 2"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. AUTHOR PEER"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro",
+                    "review": "Reviewed 2"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Shared incident note. AUTHOR PEER"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          }
+        ]
+      },
+      {
+        "project": "webkit",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "peers": [
+          {
+            "id": "plain",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Imported Shared incident note. REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": false,
+            "canRedo": true
+          },
+          {
+            "id": "stable",
+            "json": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "intro"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Imported Shared incident note. REVIEW"
+                    }
+                  ]
+                },
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left",
+                    "nodeId": "tail"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep the recovery plan editable."
+                    }
+                  ]
+                }
+              ]
+            },
+            "status": {
+              "status": "connected",
+              "presences": []
+            },
+            "issues": [],
+            "canUndo": true,
+            "canRedo": false
+          }
+        ]
+      }
+    ],
+    "layouts": [
+      {
+        "project": "chromium",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "chromium",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "chromium",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "chromium",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "chromium",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "chromium",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "firefox",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "firefox",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "firefox",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "firefox",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "firefox",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "firefox",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "webkit",
+        "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "webkit",
+        "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "webkit",
+        "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "webkit",
+        "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "webkit",
+        "name": "keeps neutral review metadata through authored undo and remote typing",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      },
+      {
+        "project": "webkit",
+        "name": "keeps imported source outside undo while later author and peer typing remain editable",
+        "viewport": 1440,
+        "overflow": 0,
+        "panes": [
+          688,
+          688
+        ],
+        "height": 1200,
+        "viewportHeight": 1200
+      }
+    ]
+  },
+  "visualReview": {
+    "method": "Final-state contact sheets cover all eighteen journeys; six sampled metadata/import filmstrips and selected complete stage captures. Not full playback or physical-device certification.",
+    "artifacts": [
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-all-final.png",
+        "bytes": 114751,
+        "sha256": "6722101bdd4d7faed92c617368b1d2f67be51abb8f1cba3d9a066bdc32b1b269"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-duplicate-filmstrip.png",
+        "bytes": 267230,
+        "sha256": "e7fe1942f3ae65820ffa58fd8b61ad5ca29a9a2821cffd9ad187cf70c9fc56a2"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-duplicate-final.png",
+        "bytes": 47615,
+        "sha256": "10811a12857aba60bceaa92de36d9bab38cad8ebde79c54f30f4650df80d5314"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-duplicate-repaired.png",
+        "bytes": 47390,
+        "sha256": "4e578deaddb2830570a7760fb6f820e8e93634c9ab5da680c92e156217de49da"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-duplicate.webm",
+        "bytes": 133318,
+        "sha256": "fb7c7e33d12e850fe9c8da157239c50832e6988d8667501745ff66948029221a"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-import-filmstrip.png",
+        "bytes": 240940,
+        "sha256": "0a0e0cd857e33c7c5dd84d59fe475fd77093a1847aebc67472b00bc995a7f268"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-import-final.png",
+        "bytes": 45520,
+        "sha256": "1d0cd3995c3b2421a062d58094b72ddbe05c51ed888d80c5d628fa761d28612d"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-import.webm",
+        "bytes": 66055,
+        "sha256": "7c1bc07a6f4003797cec97fcbe85c29a26d3d4b0ef1c9a1db2cc7b331b4e5110"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-local-filmstrip.png",
+        "bytes": 272610,
+        "sha256": "fc13047602775db03ea1321529f4242d0aea127f6e8ed6db694fe3cde6054040"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-local-final.png",
+        "bytes": 46767,
+        "sha256": "c693367e99c510e42dea3f760fa42e9d16c09513f4332344f712a13943defdb8"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-local.webm",
+        "bytes": 124558,
+        "sha256": "8b2db94ef5231b29a556ea14eefe734c4308afc0f65249e294cfd14c92ba88d5"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-metadata-filmstrip.png",
+        "bytes": 244192,
+        "sha256": "caf91c53b905e2e62ebf251ae3b0a5de69982816fb72bfe6f66baf5fb1e16185"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-metadata-final.png",
+        "bytes": 45976,
+        "sha256": "0b0e7858b6c19f2565d57bf3136c1f57fa0fab303a88fbfa18f52e597b12f85f"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-metadata.webm",
+        "bytes": 64121,
+        "sha256": "c3a9b33050ef90dce3443e21816d938bfdb686cee493225d83e3a46d59c46b30"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-offline-filmstrip.png",
+        "bytes": 245306,
+        "sha256": "39e61a02e9918d9e720256671424341532557c0c945f4fa69dd9b24accb7a03f"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-offline-final.png",
+        "bytes": 48080,
+        "sha256": "4eb84584f8e4677adf32777ddacb9bd98befe566a5a8cfb812759a14b57022fd"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-offline.webm",
+        "bytes": 73363,
+        "sha256": "9772b50841134bd4285d0d0b1a38165a758c511e33683bff4ae0aba1b1109716"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-trailing-divider-repaired.png",
+        "bytes": 47074,
+        "sha256": "2d26311f7afbf2f5ab0b7c9b11b6c04a5abfec46a98ad63d5678b6b03e93db54"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-trailing-filmstrip.png",
+        "bytes": 245108,
+        "sha256": "cb09a2eebff82b268da9126f3105dd719c1010e21500050d688c36f6dbf6eb29"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-trailing-final.png",
+        "bytes": 47256,
+        "sha256": "26679880bc198b5c87ec1b9aa099dfc3de0fe08f65e28e8ada9399760e38031a"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/chromium-trailing.webm",
+        "bytes": 67381,
+        "sha256": "e8c5a38e96a0107b80874926de1444394497df4647dd71687c17ba87907d5a30"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-all-final.png",
+        "bytes": 113789,
+        "sha256": "b2a5d07ed59dbf4e034b6477ed092e73c03a3d9e2dde359ab858ebc9e9d46eee"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-duplicate-filmstrip.png",
+        "bytes": 167068,
+        "sha256": "0b089bfc83caf5ba78b46a5c47273d8130274ccc2c7a2ac809edbcde311746b4"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-duplicate-final.png",
+        "bytes": 52924,
+        "sha256": "867e1595444a9a5871f3e49121db4594fe5fd3104de19574a8d2a5dd81672d36"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-duplicate-repaired.png",
+        "bytes": 52643,
+        "sha256": "23fc67895e4cdb87b39330cec680f5b24bd80527da22bd92b82eff998849323d"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-duplicate.webm",
+        "bytes": 141699,
+        "sha256": "0241a448d50e3cd507ce23a42b1f3316c9c839b123b37b6d6cde6b592abd6495"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-import-filmstrip.png",
+        "bytes": 222841,
+        "sha256": "ede213fd76683db8ae9952c7f735ccf612680c5498cbfc2dcbbffec5ae23d007"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-import-final.png",
+        "bytes": 51328,
+        "sha256": "c4136a08f4c05e18d7449a9898ce907a925ca2cf18b7ec3f66ec10a3505a6625"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-import.webm",
+        "bytes": 113539,
+        "sha256": "0becaa50b3882a6aae5f68106338abe6520eec37d63bed59616dd9d9c56dcb43"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-local-filmstrip.png",
+        "bytes": 250628,
+        "sha256": "eb9c2bc3d82ccb6a6968a6abb7f2a6f045bac1a709ea5521a5a9c63aab2527d2"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-local-final.png",
+        "bytes": 52028,
+        "sha256": "99249e17b5227d9bc0e1cc34017ea2d532f002559594f9afce68c2483c0cc3b8"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-local.webm",
+        "bytes": 138325,
+        "sha256": "4a68517718f21795f443c8ed39a06f4a9d0ab4ddfb860dd1fe854a622dc76539"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-metadata-filmstrip.png",
+        "bytes": 226266,
+        "sha256": "75da14a2ec3633f90d071d58d3d2b29a496bf9e228952ce5823b1a4615bce259"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-metadata-final.png",
+        "bytes": 51193,
+        "sha256": "5c84ab10cc79e2a6ae163549b63cd6f2ba3c2b7b0aeb43494d9bb80da9398ca9"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-metadata.webm",
+        "bytes": 120971,
+        "sha256": "ea469c3b232bc17fba4e9e522b0ebe59c9e6c250a6d5f79588d6fa55bcefa7c0"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-offline-filmstrip.png",
+        "bytes": 268350,
+        "sha256": "995ef68686e9b2f44ca87bfe80cf2f5ab51a943425d50b8dfdcec82f02762ae6"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-offline-final.png",
+        "bytes": 53495,
+        "sha256": "141eb7dad087ef3dbaea81760f1bfc38c9b374fc1cb01d61026129784265be98"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-offline.webm",
+        "bytes": 139548,
+        "sha256": "d19428ccdcc53acd96ba6c130fe16d00d4425129490579a66c8a5003f88e4797"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-trailing-divider-repaired.png",
+        "bytes": 52525,
+        "sha256": "e2c3ca6722375154e33c060a70454cb0503b62f8eea5b5a500518befbe3e69ba"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-trailing-filmstrip.png",
+        "bytes": 241983,
+        "sha256": "95bce02ce1aa9914f340298e6d64a7230420efa361aa611da4df26e4863ec367"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-trailing-final.png",
+        "bytes": 51928,
+        "sha256": "178be4dcc58370fb4843eab77f0924e6a2cc2bd56c690980759a5677730e82b8"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/firefox-trailing.webm",
+        "bytes": 123069,
+        "sha256": "bdadf1f1317e00be6592b4cddffda28ad3b0273da0344dceaabc230afdfb9a71"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-all-final.png",
+        "bytes": 115209,
+        "sha256": "577d88783f1216e5375f641eeaaaa85d6a2390a83bb4d00b59a1e55505ca8008"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-duplicate-filmstrip.png",
+        "bytes": 258902,
+        "sha256": "1a6f24e883c3814d803d4d93db750e880fcd9faea1dfca36b8e5e81faf041522"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-duplicate-final.png",
+        "bytes": 44246,
+        "sha256": "b071f3d51c562abc8bd25dcdb17313d9b7dcf8938b7fa074b594d8014b8fc629"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-duplicate-repaired.png",
+        "bytes": 44676,
+        "sha256": "fc2fcbbf7de806062c7b9fcfa2b611835dd6c170ea44e737a916edf1558a527d"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-duplicate.webm",
+        "bytes": 207059,
+        "sha256": "5593a9cd9f7123d289e917c20b4f5daf13dd593fb6d91ee5bb6a74c52319bf78"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-import-filmstrip.png",
+        "bytes": 206413,
+        "sha256": "88a34b287f350c75a9b0fed7a6ba0cc8e2c0334f83758f4d679fea286f9865a6"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-import-final.png",
+        "bytes": 41958,
+        "sha256": "b36815c8f977079a12614f7fccc8a8a0263ced5ef9c77d45853e425d6804b89e"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-import.webm",
+        "bytes": 170041,
+        "sha256": "20c41baeb3ad85e43e5be6c5d8b464d3f43ec510ec61ee4768a58d64beb6c0d0"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-local-filmstrip.png",
+        "bytes": 158026,
+        "sha256": "bd2ecbc146e8ff6956418dbdfd8266065d2b1e586d561c8569e571fa56316d9c"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-local-final.png",
+        "bytes": 43171,
+        "sha256": "ca0d3044d261ef34aa6244d39e117214fad6b0ace14cfaff426275cb257679f6"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-local.webm",
+        "bytes": 128162,
+        "sha256": "100e25b102f9fc367b048bf30d6e8296d51fc5301e35d863194cd87beea8c5cb"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-metadata-filmstrip.png",
+        "bytes": 224193,
+        "sha256": "6943cef339d21110ccd125708b904fafc0abeedf2a7a292f567e1058f4d42363"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-metadata-final.png",
+        "bytes": 42199,
+        "sha256": "fe693fa4e4f2c7855af21d31c4bb56225dbc045f4eebf8f48f896eb47aeaafc3"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-metadata.webm",
+        "bytes": 187715,
+        "sha256": "bbbec8f5257d3669e3186aa1c533085c295aa992ba84b86d248dabfaed6c8ef7"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-offline-filmstrip.png",
+        "bytes": 231982,
+        "sha256": "296637a255557acfe13e6adb4c457fde8d375278b6d1ae2bfdcac484fbe57968"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-offline-final.png",
+        "bytes": 44819,
+        "sha256": "28fe26ce170131e49ced312411a50c4e1b17dd451457cae6fe8734f8b264ccf3"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-offline.webm",
+        "bytes": 191592,
+        "sha256": "14f89401dd199d6a730415de6313e630b6d16a0a2e9e6b246d511f5ec19aba9e"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-trailing-divider-repaired.png",
+        "bytes": 44006,
+        "sha256": "61f3dfbc47480db2ae8128b96c3d4a7e81ede1eb8824dc1768a1b373245c2b4d"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-trailing-filmstrip.png",
+        "bytes": 207386,
+        "sha256": "35de50eb284c47ffc7568ddbb72a6a7ece1e1480a1bfa4c590ec2bab93036f3b"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-trailing-final.png",
+        "bytes": 43652,
+        "sha256": "5d039537b9322cf380f7eb54c2263d27faafe44e91400f6eb751f13e1237d96a"
+      },
+      {
+        "path": "artifacts/yjs-history-policy-visual-20261107/webkit-trailing.webm",
+        "bytes": 164655,
+        "sha256": "f1172b86ec733d6a86c42855f71200fdace03fbdcc12be93642ea8c15ee51353"
+      }
+    ]
+  },
+  "publicRuntime": {
+    "files": 173,
+    "unchangedFiles": 171,
+    "esmDeltaBytes": 94,
+    "cjsDeltaBytes": 79,
+    "changed": [
+      {
+        "path": "dist/yjs.cjs",
+        "bytes": 25122,
+        "sha256": "5d485efb36af6fa61d210f11e714b6151fe4c976b0cbf0f00da39763bfe7dafc",
+        "beforeBytes": 25043
+      },
+      {
+        "path": "dist/yjs.js",
+        "bytes": 30384,
+        "sha256": "5e40fa833680c10d5405a736bf85a8345b1a9bf9c58786184ef17266bc229d08",
+        "beforeBytes": 30290
+      }
+    ],
+    "budgetFailures": [
+      "- dist/core.js exceeds its budget by 0.1 KiB",
+      "- all ESM runtime code exceeds its budget by 77.4 KiB",
+      "- all CommonJS runtime code exceeds its budget by 61.1 KiB"
+    ],
+    "unchanged": [
+      "src/yjs/retained-adapter.ts",
+      "src/core/editor.ts",
+      "src/extensions/collaboration-core.ts",
+      "tests/yjs-document-range.test.ts",
+      "package.json",
+      "api-surface.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_HISTORY_POLICY_AUDIT.md",
+      "bytes": 5103,
+      "sha256": "1d9bc9b75d1f89ab400b3e4b69f2a0506f0950e111f209a1e0b14bada654ac12"
+    },
+    {
+      "path": "docs/COLLABORATION_APPENDED_REPAIR_AUDIT.md",
+      "bytes": 7211,
+      "sha256": "f4fd32e20c347ed51de97f34ee70e5f2547cb8ee699ca45f2e892c09e621fe49"
+    },
+    {
+      "path": "docs/COLLABORATION.md",
+      "bytes": 16485,
+      "sha256": "08b65dee02c32ecf85d9e6f20a92b071f9cfc63728d99339b5420a467bbfbcf7"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 304585,
+      "sha256": "4cef2fff320ec88a92f72d36a8d4d752a9841cd5534eaaf58077fbb0ee9083b7"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 169779,
+      "sha256": "d7b65fb8149587febb66117cbc8a955cda899d1fa5af4f4a564031c93e86ab19"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 191557,
+      "sha256": "455fdbb059b682dc5ec713be929a3ccc4a8b57e1aaba766d93c6cfdb7a0bf8e7"
+    }
+  ],
+  "open": [
+    "Six separate default-adapter concurrency failures",
+    "Safe retained adoption, provider admission and general fragment mapping",
+    "Production costs, storage growth and compaction",
+    "Current size overruns and full release CI",
+    "Overall parity"
+  ]
+}

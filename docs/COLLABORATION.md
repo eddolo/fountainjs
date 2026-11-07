@@ -22,8 +22,9 @@ transaction, `onLocalUpdate` receives only the appended steps: `before` and
 editor's older pre-remote state. History-neutral repairs retain
 `addToHistory: false`; an authored action followed by maintenance still requests
 history in the combined notification. An adapter implementing its own history
-must honor that distinction. This applies to the shared lifecycle boundary;
-individual adapter history implementations still require verification.
+must honor that distinction. Custom adapters must implement their own history
+policy. The default XML and private retained adapters now pass the
+[shared history-neutral workflow checks](YJS_HISTORY_POLICY_AUDIT.md).
 
 The application still owns the room service, network transport,
 authentication, authorization, encryption policy, persistence, and user
@@ -247,6 +248,21 @@ removes local edits while preserving remote work that arrived later. Relative
 selection metadata restores the local text selection after undo/redo.
 `captureTimeout` defaults to 500 ms; call `closeCollaborationHistory` at a
 semantic boundary or configure the delay when creating the adapter.
+
+For an application update that should be shared but excluded from author undo,
+set the history flag explicitly:
+
+```ts
+editor.dispatch(editor.createTransaction()
+  .setNodeAttrs([0], { review: 'Reviewed' })
+  .setMeta('addToHistory', false))
+```
+
+The default Yjs adapter publishes that change using its untracked repair origin.
+It remains in the document when subsequent authored typing is undone. Automatic
+maintenance appended to an ordinary author action still belongs to that action's
+undo step. See the [history policy audit](YJS_HISTORY_POLICY_AUDIT.md) for the
+verified scope and remaining concurrency failures.
 
 Do not route collaborative keystrokes through the snapshot-based local
 `HistoryExtension` at the same time. Keep local history for non-collaborative

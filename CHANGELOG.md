@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Honor `addToHistory: false` in the default Yjs adapter using its existing
+  untracked repair origin. Neutral imported text, review metadata and remote
+  stable-ID maintenance no longer become authored undo entries; grouped typing
+  and locally appended maintenance retain normal undo/redo behavior. Verify
+  both adapters in shared source regressions and the default adapter in recorded
+  browser workflows and built public package-entry consumers. The six separate
+  offline-concurrency failures remain open. [Audit](docs/YJS_HISTORY_POLICY_AUDIT.md).
+
 - Fix collaboration rebroadcast of appended maintenance: adapters receive only
   repair steps based on the accepted remote document, preserving nested and
   multi-step remote provenance. Preserve authored history intent when composing

@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+let source=await readFile('artifacts/retained-repair-node-20261107.mjs','utf8');
+const from="const Y=await load('yjs'),engine=await load(`./retained-repair-build-20261107/engine.${extension}`),ids=await load(`./retained-repair-build-20261107/node-ids.${extension}`),retained=await load(`./retained-repair-build-20261107/retained-adapter.${extension}`);";
+assert.equal(source.split(from).length-1,1);
+source=source.replace(from,"const Y=await load('yjs'),engine=await load('fountainjs-editor'),ids=await load('fountainjs-editor/node-ids'),collaboration=await load('fountainjs-editor/yjs');");
+source=source.replaceAll('retained.createRetainedYjsCollaborationExtension','collaboration.createYjsCollaborationExtension');
+source=source.replace("const result={mode,passed:cases.length,cases,node:process.version,dom:false}","const result={mode,publicEntry:'fountainjs-editor/yjs',passed:cases.length,cases,node:process.version,dom:false}");
+source=source.replaceAll('artifacts/retained-repair-node-','artifacts/yjs-history-policy-node-');
+await writeFile('artifacts/yjs-history-policy-node-20261107.mjs',source);

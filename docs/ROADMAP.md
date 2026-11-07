@@ -20,13 +20,24 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,699 passes and six failures, with no skips. Three
+The current source suite has 4,719 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, general legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest repair/adoption audit](COLLABORATION_APPENDED_REPAIR_AUDIT.md).
+[latest default-history audit](YJS_HISTORY_POLICY_AUDIT.md).
+
+Default Yjs history policy (2026-11-07, local): the public XML adapter now honors
+history-neutral transactions through its existing repair origin. Eight failing
+cases for neutral metadata/text, remote ID maintenance and grouped typing are
+fixed. All 20 new cases / 99 focused cases, 14 built-public-entry Node checks and
+18 recorded three-engine journeys pass. Complete source has 4,719 passes and the
+same six concurrency failures across 298 files, no skips. Types/build/API/headless
+pass. The Yjs ESM/CJS entries grow 94/79 raw bytes; the other 171 public runtime/CSS
+files stay identical. Three size overruns remain, with limits unchanged. No wire
+format change, retained-adapter adoption, publication or COLLAB-01 promotion.
+[Audit](YJS_HISTORY_POLICY_AUDIT.md).
 
 Repair/adoption follow-up (2026-11-07, local): the unchanged public suites expose
 a retained stable-ID repair that was not replicated. The shared lifecycle now
