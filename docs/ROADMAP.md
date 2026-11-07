@@ -17,6 +17,9 @@ the retained format when provisioning a new room.
 The dual-format client reference verifies the bound reply and checkpoint
 identity before selecting an adapter and mounting an editor.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
+The live reference can run the six concurrency cases against an upgraded
+legacy room, verifying its archive and active identity across reload and undo.
+[Upgrade and live editing audit](YJS_LIVE_HTTP_REFERENCE.md#live-editing-after-upgrading-a-saved-legacy-room).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

@@ -20,6 +20,8 @@
 </style>
 <h1>Recover an unsent Fountain draft</h1>
 <p>Keep a recovery copy on this device. Resume the same shared session or open an older draft separately.</p>
+<p id="migration-summary" hidden></p>
+<button id="upgrade" hidden>Upgrade saved legacy room</button>
 <header id="controls">
   <button id="join">Join shared session</button>
   <button id="leave" hidden>Leave shared session</button>
@@ -47,7 +49,9 @@
 import * as Y from 'yjs';
 import {CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState, connectCollaboration, disconnectCollaboration, toggleQuote, toggleList, setMark, undoCollaboration, redoCollaboration, COLLABORATION_REMOTE_META, COLLABORATION_ORIGIN_META} from './yjs-authority-admission-build-20261107/engine.js';
 import {createRetainedYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/adapter.js';
+import {createYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/legacy-adapter.js';
 import {captureRetainedCheckpoint, restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';
+import {captureLegacyCheckpoint} from './yjs-authority-admission-build-20261107/legacy-checkpoint.js';
 import {prepareRetainedAdmission} from './yjs-authority-admission-build-20261107/admission.js';
 import {openBrowserDrafts, isSameDraftSession, scheduleBrowserDraftAutosave} from '/examples/backends/retained-browser-drafts.ts';
 import {createRetainedHttpProvider} from '/examples/backends/retained-http-provider.ts';
@@ -74,6 +78,7 @@ document.body.classList.toggle('large', query.has('large'));
 if (query.has('structural')) document.querySelectorAll('[data-structural]').forEach(control => { control.hidden = false; });
 const autosaveEnabled = !query.has('manual');
 const live = query.has('live');
+const migrated = query.has('migrated');
 const user = query.has('peer')
   ? {id: 'grace', name: 'Grace', color: '#af3e7d'}
   : {id: 'ada', name: 'Ada', color: '#7048e8'};
@@ -317,16 +322,49 @@ async function listCopies() {
   }
 }
 
+function migrateSavedRoom(source, storageKey) {
+  const upgrade = select('#upgrade');
+  upgrade.hidden = false;
+  select('#message').textContent = 'Legacy room saved. Upgrade it before joining.';
+  return new Promise(resolve => button(upgrade, async () => {
+    const intent = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null')
+      ?? { epoch: source.epoch, operation: crypto.randomUUID() };
+    sessionStorage.setItem(storageKey, JSON.stringify(intent));
+    if (!intent.ticket) {
+      const latest = await request('snapshot');
+      intent.ticket = latest.phase === 'frozen' ? await request('recover-freeze', latest) : await request('freeze');
+      sessionStorage.setItem(storageKey, JSON.stringify(intent));
+    }
+    const replacement = await request('migrate-legacy', { ticket: intent.ticket, operation: intent.operation });
+    try {
+      await request('write', { epoch: source.epoch, protocol: 'legacy', update: source.checkpoint.update });
+      throw new Error('The retired legacy writer was accepted.');
+    } catch (error) { if (error.code !== 'stale-epoch') throw error; }
+    upgrade.hidden = true;
+    resolve(replacement);
+  }));
+}
+
 if (!token) {
   ({token} = await request('open'));
   const doc = new Y.Doc();
-  const seedKit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({document: doc, user})]);
+  const createCollaboration = migrated ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+  const seedKit = composeExtensions([CoreExtension, createCollaboration({document: doc, user})]);
   const seed = createEditor({schema: seedKit.schema, plugins: seedKit.plugins, content: incident()});
-  try { await request('initialize', {checkpoint: await captureRetainedCheckpoint(doc, seed.state.schema, version)}); }
+  const capture = migrated ? captureLegacyCheckpoint : captureRetainedCheckpoint;
+  try { await request('initialize', {checkpoint: await capture(doc, seed.state.schema, version)}); }
   finally { seed.destroy(); doc.destroy(); }
   sessionStorage.setItem('fountain-draft-audit-session', token);
 }
 current = await request('snapshot');
+const migrationKey = 'fountain-draft-audit-migration:' + token;
+if (migrated && current.protocol === 'legacy') current = await migrateSavedRoom(current, migrationKey);
+const migration = migrated ? JSON.parse(sessionStorage.getItem(migrationKey) ?? 'null') : null;
+if (migration) {
+  const summary = select('#migration-summary');
+  summary.hidden = false;
+  summary.textContent = 'Opened the upgraded room. The legacy document remains in its archive.';
+}
 drafts = await openBrowserDrafts('fountain-draft-audit-v1', current.key + ':' + user.id);
 mount(local('Local incident notes.'));
 await refresh();
@@ -372,6 +410,13 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') void client.autosave?.flush().catch(() => undefined);
 });
 select('#message').textContent = 'Ready';
-window.audit = {async snapshot() { return {starts, server: serverModel, model: client.editor.getJSON(), copies: await drafts.list()}; }};
+window.audit = {
+  async snapshot() { return {starts, server: serverModel, model: client.editor.getJSON(), copies: await drafts.list()}; },
+  async migration() {
+    if (!migration) throw new Error('No migration for this session.');
+    const [archive, latest] = await Promise.all([request('migration-record', { epoch: migration.epoch }), request('snapshot')]);
+    return { archive, active: { epoch: latest.epoch, revision: latest.revision, roomId: latest.checkpoint.manifest.roomId } };
+  },
+};
 </script>
 </html>

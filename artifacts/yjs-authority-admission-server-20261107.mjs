@@ -11,6 +11,7 @@ import {CoreExtension,MathExtension,Schema,composeExtensions} from './yjs-author
 import {SQLiteRetainedRoomRepository} from './yjs-authority-admission-build-20261107/sqlite.js';
 import {CoordinatedDocumentRoom} from './yjs-authority-admission-build-20261107/authority.js';
 import {CoordinatedRetainedRoom} from './yjs-authority-admission-build-20261107/coordinator.js';
+import {CrossFormatRoomHandoff} from './yjs-authority-admission-build-20261107/handoff.js';
 import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-authority-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const peerPresenceRepository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite'));
@@ -41,6 +42,22 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    }
    else if(action==='bind-advance'){const snapshot=await room.snapshot(),opened=await restoreRetainedCheckpoint(snapshot.checkpoint,schema,'admission-browser-1'),kit=composeExtensions([CoreExtension,MathExtension,createRetainedYjsCollaborationExtension({document:opened.document,user:{id:'server',name:'Server',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:opened.baseDocument.toJSON()});try{editor.dispatch(editor.createTransaction().insertText([1,0],editor.state.doc.child(1).textContent.length,' ACCEPTED during bind'));await room.write({epoch:snapshot.epoch,protocol:'retained',update:Y.encodeStateAsUpdate(opened.document)});}finally{editor.destroy();opened.document.destroy();}value=await room.admit(body);}
    else if(action==='freeze')value=await room.freeze(await room.snapshot());
+   else if(action==='recover-freeze')value=await room.recoverFrozen(body);
+   else if(action==='migrate-legacy'||action==='migration-record'){
+    const handoff=new CrossFormatRoomHandoff(repository,room.key,schema,'admission-browser-1');
+    if(action==='migrate-legacy'){
+     value=(await handoff.migrateLegacy(body.ticket,body.operation,
+      {history:'reset-with-source-checkpoint',offline:'reconcile-before-activation',externalState:'host-coordinated',migrators:[]},
+      {history:'reset-with-source-archive',offline:'retain-retired-room-branches',externalReceipt:'live-test-handoff'})).snapshot;
+    }else{
+     const archive=await handoff.retiredEpoch(body.epoch);
+     if(!archive)throw new Error('No archived source for this epoch');
+     const {source,destination,branchRevision}=archive;
+     value={id:archive.id,kind:archive.kind,branchRevision,
+      source:{epoch:source.epoch,format:source.checkpoint.manifest.format,modelHash:source.checkpoint.manifest.documentSha256},
+      destination:{epoch:destination.epoch,format:destination.checkpoint.manifest.format,modelHash:destination.checkpoint.manifest.documentSha256,roomId:destination.checkpoint.manifest.roomId}};
+    }
+   }
    else if(action==='abort'){const frozen=await room.snapshot();value=await room.abort(await room.recoverFrozen(frozen));}
    else if(action==='bind-freeze'){await room.freeze(await room.snapshot());value=await room.admit(body);}
    else if(action==='rotate'){const coordinator=new CoordinatedRetainedRoom(repository,room.key,schema,'admission-browser-1'),snapshot=await coordinator.snapshot(),ticket=await coordinator.freeze(snapshot),prepared=await coordinator.prepareResume(ticket);value=await coordinator.commitResume(ticket,prepared);}

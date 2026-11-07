@@ -3,7 +3,9 @@ import { auditCompiledRuntime } from './compiled-runtime-audit';
 import type { NodeJSON } from '../../src';
 
 const build = '/artifacts/yjs-authority-admission-build-20261107';
-auditCompiledRuntime(`${build}/engine.js`, `${build}/adapter.js`, `${build}/checkpoint.js`, `${build}/admission.js`);
+const migrateBeforeEditing = process.env.FOUNTAIN_LIVE_MIGRATED === '1';
+auditCompiledRuntime(`${build}/engine.js`, `${build}/adapter.js`, `${build}/checkpoint.js`, `${build}/admission.js`,
+  ...(migrateBeforeEditing ? [`${build}/legacy-adapter.js`, `${build}/legacy-checkpoint.js`] : []));
 
 const fixture = '/artifacts/yjs-browser-draft-fixture-20261107.html?live';
 const editor = (page: Page) => page.getByRole('textbox', { name: 'Your draft', exact: true });
@@ -30,11 +32,17 @@ async function type(page: Page, suffix: string) {
 }
 
 async function secondAuthor(page: Page) {
-  const token = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
+  const session = await page.evaluate(() => {
+    const token = sessionStorage.getItem('fountain-draft-audit-session')!;
+    return { token, migration: sessionStorage.getItem('fountain-draft-audit-migration:' + token) };
+  });
   const peer = await page.context().newPage();
-  await peer.addInitScript(token => sessionStorage.setItem('fountain-draft-audit-session', token), token);
+  await peer.addInitScript(({ token, migration }) => {
+    sessionStorage.setItem('fountain-draft-audit-session', token);
+    if (migration) sessionStorage.setItem('fountain-draft-audit-migration:' + token, migration);
+  }, session);
   const profile = new URL(page.url()).searchParams;
-  await peer.goto(fixture + '&peer' + ['large', 'structural'].filter(name => profile.has(name)).map(name => '&' + name).join(''));
+  await peer.goto(fixture + '&peer' + ['large', 'structural', 'migrated'].filter(name => profile.has(name)).map(name => '&' + name).join(''));
   await join(peer);
   return peer;
 }
@@ -73,7 +81,13 @@ const serverRevision = (page: Page) => page.evaluate(async () => {
 
 test.beforeEach(async ({ page }, info) => {
   const profile = ['large', 'deadline', 'structural'].filter(name => info.tags.includes('@' + name));
+  if (migrateBeforeEditing) profile.push('migrated');
   await page.goto(fixture + profile.map(name => '&' + name).join(''));
+  if (migrateBeforeEditing) {
+    await expect(page.getByRole('status')).toContainText('Legacy room saved');
+    await page.getByRole('button', { name: 'Upgrade saved legacy room' }).click();
+    await expect(page.locator('#migration-summary')).toContainText('Opened the upgraded room');
+  }
   await join(page);
 });
 
@@ -418,6 +432,18 @@ const readModel = (page: Page) => page.evaluate(async () => {
   return { model, server };
 });
 
+interface MigrationEvidence {
+  readonly archive: {
+    readonly id: string; readonly kind: string; readonly branchRevision: number;
+    readonly source: { readonly epoch: string; readonly format: string; readonly modelHash: string };
+    readonly destination: { readonly epoch: string; readonly format: string; readonly modelHash: string; readonly roomId: string };
+  };
+  readonly active: { readonly epoch: string; readonly revision: number; readonly roomId: string };
+}
+
+const readMigration = (page: Page) => page.evaluate(() =>
+  (window as unknown as { audit: { migration(): Promise<MigrationEvidence> } }).audit.migration());
+
 async function placeAlphaCaret(page: Page, offset: number) {
   await editor(page).getByText('Alpha', { exact: true }).click();
   await page.keyboard.press('Home');
@@ -429,6 +455,17 @@ for (const operation of structureCases) {
     const peer = await secondAuthor(page);
     try {
       const original = (await readModel(page)).model;
+      const initialMigration = migrateBeforeEditing ? await readMigration(page) : undefined;
+      if (initialMigration) {
+        const { archive, active } = initialMigration;
+        expect(archive.kind).toBe('legacy-migration');
+        expect(archive.source.format).toBe('fountain-legacy-checkpoint/1');
+        expect(archive.destination.format).toBe('fountain-retained-checkpoint/1');
+        expect(archive.source.modelHash).toBe(archive.destination.modelHash);
+        expect(archive.source.epoch).not.toBe(active.epoch);
+        expect(archive.branchRevision).toBe(0);
+        expect(active).toMatchObject({ epoch: archive.destination.epoch, roomId: archive.destination.roomId });
+      }
       await page.route(write, offline);
       await page.route(poll, offline);
       await placeAlphaCaret(page, 2);
@@ -486,6 +523,14 @@ for (const operation of structureCases) {
       await peer.getByRole('button', { name: 'Redo shared edit', exact: true }).click();
       await assertRecovered();
       await page.screenshot({ path: info.outputPath('redone-structure.png'), scale: 'css' });
+      if (initialMigration) {
+        const latest = await readMigration(page);
+        expect(latest.archive).toEqual(initialMigration.archive);
+        expect(latest.active).toMatchObject({ epoch: initialMigration.active.epoch, roomId: initialMigration.active.roomId });
+        expect(latest.active.revision).toBeGreaterThan(initialMigration.active.revision);
+        expect(await readMigration(peer)).toEqual(latest);
+        await info.attach('migration-lineage', { body: JSON.stringify(latest, null, 2), contentType: 'application/json' });
+      }
     } finally { await peer.close(); }
   });
 }

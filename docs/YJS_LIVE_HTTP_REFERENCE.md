@@ -134,6 +134,42 @@ all three engines and sampled frames of the paragraph split. Firefox briefly
 showed the earlier tab's presence after reload while its old lease expired.
 Recordings, traces and images are in `artifacts/yjs-live-structural-browser-20261107/`.
 
+### Live editing after upgrading a saved legacy room
+
+The same six journeys can start from a legacy Yjs document saved to SQLite.
+The author clicks **Upgrade saved legacy room**, which archives the frozen
+source and installs a retained room through the cross-format handoff. The
+browser checks that the old epoch can no longer write before starting either
+live session. Both writers then use the existing HTTP provider, IndexedDB
+recovery and the same structural editing and author undo/redo checks.
+
+Each journey verifies that the archived source and its initial replacement
+have identical model digests, including the figure and document metadata.
+After reload and synchronization, both editors and their server readers agree.
+The active room keeps the migration destination's epoch and native identity
+while its revision advances. The retired legacy branch stays at its original
+revision.
+
+```powershell
+$env:FOUNTAIN_LIVE_MIGRATED='1'
+try { pnpm exec playwright test --config artifacts/yjs-live-structural-20261107.config.ts --workers=1 }
+finally { Remove-Item Env:FOUNTAIN_LIVE_MIGRATED }
+```
+
+This exercises one explicitly upgraded room with the retained adapter. The
+public XML adapter still needs the six concurrency cases resolved for hosts
+that continue to use it. The loopback session and operation controls are test
+fixtures. The migration history policy starts a fresh author undo stack.
+
+All 18 upgraded-room journeys passed across Chromium, Firefox, and WebKit,
+with no skips or retries. Visual review covered the recovered quote, split,
+and partial-bold results. Each test attaches the durable migration record
+with both formats, the model digests, and the final live revision. Recordings
+and screenshots are in `artifacts/yjs-live-migrated-structural-browser-20261107/`.
+All six direct-retained Chromium journeys and the type checks also pass.
+The rerun against the default XML adapter still reports 16 passes and the same
+six concurrency failures.
+
 The reference browser host now releases presence on ordinary navigation or
 reload. On `pagehide` it disconnects the current editor and sends the small
 leave request with `keepalive`. A page stored in the back/forward cache keeps
