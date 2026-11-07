@@ -124,14 +124,44 @@ UUID, archives the newer source state, and opens the already committed room.
 The recorded cases use keyboard input during the held reply. One inserts text
 during a migration. The other deletes a character during rollback. Both compare
 the server document, active editor, and retired archive after retry. The source
-remains in the mounted browser editor during this window. Crash-persistent
-cross-format draft recovery and production deployment remain open.
+remains in the mounted browser editor during this window.
 
 All 21 recorded namespace journeys pass across Chromium, Firefox and WebKit,
 and all 120 focused source tests pass. The Chromium capture shows the unsent
 insertion in the still-editable source. The Firefox capture shows the deletion
 in the retired archive beside the reopened legacy document. The fix is in the
 loopback host reference and leaves the default collaboration adapter in place.
+
+## Recovering a saved handoff draft after reload
+
+The loopback demo now uses the shared browser draft store with one IndexedDB
+slot per writer session. Each committed copy contains both native writer
+checkpoints, the source epoch, and the migration or rollback intent. A reload
+restores the original codec and the embedded fragment when one is present.
+The page shows when the local copy has been saved, and opening it sends no
+pending edits to the active room. The browser can reopen its draft if the
+server snapshot request fails, provided the page assets are available.
+
+Before freezing, the demo saves the expected source revision and operation
+UUID. Before submitting migration or rollback, it saves the freeze ticket.
+If the freeze reply was lost, an explicit retry can retrieve the ticket for
+the same frozen epoch and revision. If the protocol switch had already committed,
+retry replays its durable receipt and sends the recovered source checkpoint
+only to the matching retired branch. A local storage failure before freezing
+stops the operation and leaves the server room writable.
+
+33 recorded journeys pass across Chromium, Firefox and WebKit, including
+12 new cases for reload after lost replies and local storage refusal. The
+Chromium captures show both drafts restored with the room snapshot unavailable
+and the retained draft in the archive after rollback. All 11 existing Chromium
+draft workflows, 120 focused source tests, and type checks pass.
+
+This is a same-tab, loopback recovery reference. It covers checkpoints that
+IndexedDB acknowledged before reload. The session token is tab-local, and the
+test server keeps its session routing in memory. Recovery after closing a tab,
+after a server restart, before an autosave commits, or across multiple devices
+requires a durable host session and draft policy. Browser-local history stacks
+are recreated when the editor reopens.
 
 ## Remaining work
 

@@ -45,6 +45,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='snapshot')value=await room.snapshot();
    else if(action==='write')value=await room.write(body);
    else if(action==='freeze')value=await room.freeze(body);
+   else if(action==='recover-frozen')value=await room.recoverFrozen(body);
    else if(action==='migrate'){value=await handoff.migrateLegacy(body.ticket,body.operation,session.nested?nestedOptions(body.destinationRoom):{...options,destinationRoom:body.destinationRoom},policy);if(body.dropAcknowledgement){res.destroy();return}}
    else if(action==='rollback')value=await handoff.rollback(body.ticket,body.operation,body.archive,body.restore,policy);
    else if(action==='retain')value=await handoff.retainLateUpdate(body);

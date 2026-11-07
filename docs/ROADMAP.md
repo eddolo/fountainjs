@@ -39,9 +39,11 @@ combined formatted paragraph with an exact room revision check.
 It can also restore an offline paragraph move into an existing, identifiable
 container while retaining the newer live paragraph.
 The cross-format browser reference keeps edits made while a replacement room
-opens and archives them on retry, including after rollback. Recovery across
-browser reload during that cross-format handoff remains open.
-[Migration audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#edits-while-reconnecting-after-a-protocol-switch).
+opens and archives them on retry, including after rollback. A saved IndexedDB
+draft and operation can now reopen after a same-tab reload, including when the
+freeze, migration or rollback acknowledgement was lost. Durable host session
+routing and production adoption remain open.
+[Migration audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#recovering-a-saved-handoff-draft-after-reload).
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 The latest preview reuses checked structure during ordinary remote typing.
 The 5,000-paragraph benchmark fell from 123.17 ms to 31.49 ms median receive

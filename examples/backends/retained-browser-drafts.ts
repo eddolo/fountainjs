@@ -15,11 +15,11 @@ export interface BrowserDraft {
   } | null;
 }
 
-export interface SavedBrowserDraft extends BrowserDraft {
+export type SavedBrowserDraft<Draft = BrowserDraft> = Draft & {
   readonly scope: string;
   readonly id: string;
   readonly savedAt: number;
-}
+};
 
 function committed(transaction: IDBTransaction): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ function committed(transaction: IDBTransaction): Promise<void> {
 
 /** The application supplies a database name and a stable account/room/author
  * scope. This is origin-local recovery storage, not an authorization boundary. */
-export async function openBrowserDrafts(databaseName: string, scope: string) {
+export async function openBrowserDrafts<Draft extends object = BrowserDraft>(databaseName: string, scope: string) {
   const database = await new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open(databaseName, 1);
     request.onupgradeneeded = () => {
@@ -42,7 +42,7 @@ export async function openBrowserDrafts(databaseName: string, scope: string) {
   });
   database.onversionchange = () => database.close();
 
-  async function write(draft: BrowserDraft, id: string, replace: boolean): Promise<SavedBrowserDraft> {
+  async function write(draft: Draft, id: string, replace: boolean): Promise<SavedBrowserDraft<Draft>> {
     const record = { ...draft, scope, id, savedAt: Date.now() };
     const transaction = database.transaction('drafts', 'readwrite', { durability: 'strict' });
     const store = transaction.objectStore('drafts');
@@ -53,20 +53,19 @@ export async function openBrowserDrafts(databaseName: string, scope: string) {
   }
 
   return {
-    save(draft: BrowserDraft): Promise<SavedBrowserDraft> {
+    save(draft: Draft): Promise<SavedBrowserDraft<Draft>> {
       return write(draft, crypto.randomUUID(), false);
     },
-    /** One rolling copy per mounted editor. Opening another tab, reloading or
-     * explicitly changing sessions never takes ownership of a previous slot. */
-    createAutosaveSlot() {
-      const id = crypto.randomUUID();
-      return (draft: BrowserDraft) => write(draft, id, true);
+    /** By default each mounted editor gets its own rolling copy. Hosts with a
+     * stable writer-session identity can reopen that exact slot after reload. */
+    createAutosaveSlot(id: string = crypto.randomUUID()) {
+      return (draft: Draft) => write(draft, id, true);
     },
-    async list(): Promise<SavedBrowserDraft[]> {
+    async list(): Promise<SavedBrowserDraft<Draft>[]> {
       const transaction = database.transaction('drafts');
       const request = transaction.objectStore('drafts').index('scope').getAll(scope);
       await committed(transaction);
-      return (request.result as SavedBrowserDraft[]).sort((a, b) => b.savedAt - a.savedAt);
+      return (request.result as SavedBrowserDraft<Draft>[]).sort((a, b) => b.savedAt - a.savedAt);
     },
     close(): void { database.close(); },
   };

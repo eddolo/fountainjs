@@ -2,7 +2,39 @@ import {expect,test} from '@playwright/test';
 const errors=new WeakMap<object,string[]>(),state=(page:any)=>page.evaluate(()=>(window as any).audit.snapshot());
 async function capture(page:any,info:any,name:string){await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));const size=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth}));expect(size.height).toBeLessThanOrEqual(size.viewport);expect(size.width).toBeLessThanOrEqual(size.viewportWidth);await page.screenshot({path:info.outputPath(name),fullPage:false,scale:'css'})}
 async function type(page:any,name:string,text:string){await page.getByRole('textbox',{name,exact:true}).click();await page.keyboard.press('Control+Home');await page.keyboard.press('End');await page.keyboard.type(text)}
-test.beforeEach(async({page},info)=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-namespace-fixture-20261107.html'+(info.tags.includes('@nested')?'?nested':''));await expect(page.getByRole('status')).toContainText('Ready');expect((await state(page)).protocol).toBe('legacy');await page.evaluate(()=>{const summary={frames:0,minViewport:innerWidth,minPane:Infinity,maxOverflow:0,invalid:[] as unknown[]};(window as any).auditLayout=summary;function sample(){const widths=[...document.querySelectorAll('.panes>section')].map(element=>element.getBoundingClientRect().width),overflow=document.documentElement.scrollWidth-innerWidth;summary.frames++;summary.minViewport=Math.min(summary.minViewport,innerWidth);summary.minPane=Math.min(summary.minPane,...widths);summary.maxOverflow=Math.max(summary.maxOverflow,overflow);if((widths.some(width=>width<200)||overflow>2)&&summary.invalid.length<20)summary.invalid.push({widths,viewport:innerWidth,overflow});requestAnimationFrame(sample)}sample()})});
+async function sampleLayout(page: import('@playwright/test').Page) {
+  await page.evaluate(() => {
+    const summary = { frames: 0, minViewport: innerWidth, minPane: Infinity, maxOverflow: 0, invalid: [] as unknown[] };
+    (window as any).auditLayout = summary;
+    function sample() {
+      const widths = [...document.querySelectorAll('.panes>section')].map(element => element.getBoundingClientRect().width);
+      const overflow = document.documentElement.scrollWidth - innerWidth;
+      summary.frames++;
+      summary.minViewport = Math.min(summary.minViewport, innerWidth);
+      summary.minPane = Math.min(summary.minPane, ...widths);
+      summary.maxOverflow = Math.max(summary.maxOverflow, overflow);
+      if ((widths.some(width => width < 200) || overflow > 2) && summary.invalid.length < 20) {
+        summary.invalid.push({ widths, viewport: innerWidth, overflow });
+      }
+      requestAnimationFrame(sample);
+    }
+    sample();
+  });
+}
+async function reloadDraft(page: import('@playwright/test').Page) {
+  await expect(page.locator('#draft-status')).toHaveText('Recovery copy saved on this device');
+  await page.reload();
+  await expect(page.getByRole('status')).toContainText('Local recovery copy reopened');
+  await sampleLayout(page);
+}
+async function dropCommittedReply(page: import('@playwright/test').Page, action: string) {
+  await page.route('**/__handoff/' + action, async route => {
+    const response = await route.fetch();
+    expect(response.ok()).toBe(true);
+    await route.abort();
+  }, { times: 1 });
+}
+test.beforeEach(async({page},info)=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-namespace-fixture-20261107.html'+(info.tags.includes('@nested')?'?nested':''));await expect(page.getByRole('status')).toContainText('Ready');expect((await state(page)).protocol).toBe('legacy');await sampleLayout(page)});
 test.afterEach(async({page},info)=>{const result=await state(page),layout=await page.evaluate(()=>(window as any).auditLayout);expect(errors.get(page)).toEqual([]);expect(layout.invalid).toEqual([]);expect(layout.frames).toBeGreaterThan(0);expect(result.protocol).toBe((info.title.startsWith('recovers')||info.title.startsWith('maps'))?'retained':'legacy');expect(result.activeProtocol).toBe(result.protocol);expect(result.activeNamespace).toBe(result.namespace);expect(result.namespace).toBe(result.protocol==='legacy'?'Research / α 😀':info.title.startsWith('maps')?'review-copy':'mapped-paper');await info.attach('cross-format-result',{body:JSON.stringify(result),contentType:'application/json'});await info.attach('layout-samples',{body:JSON.stringify(layout),contentType:'application/json'});await info.attach('runtime-modules',{body:JSON.stringify(await page.evaluate(()=>performance.getEntriesByType('resource').map((entry:any)=>new URL(entry.name).pathname).filter((path:string)=>path.endsWith('.js')||path.startsWith('/src/')))),contentType:'application/json'});await page.evaluate(()=>(window as any).audit.close())});
 
 test('migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits',async({page},info)=>{
@@ -107,6 +139,126 @@ test('keeps a deletion made during rollback admission and archives it on retry',
     expect(reopened.epoch).toBe(waiting.epoch);
     await capture(page, info, 'rollback-archive-after-retry.png');
   } finally { admission.release(); }
+});
+
+test('recovers an embedded legacy draft and a committed migration after reload', { tag: '@nested' }, async ({ page }, info) => {
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  const original = await state(page);
+  await page.getByLabel('Drop migration acknowledgement (test only)').check();
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Request failed');
+  await type(page, 'Active editor', ' Draft after migration');
+  await type(page, 'Offline editor', ' Offline author note');
+  const pending = await state(page);
+  expect(pending.protocol).toBe('retained');
+  expect(pending.activeProtocol).toBe('legacy');
+
+  await page.route('**/__handoff/snapshot', route => route.abort(), { times: 1 });
+  await reloadDraft(page);
+  await expect(status).toContainText('room unavailable');
+  const recovered = await state(page);
+  expect(recovered.active).toEqual(pending.active);
+  expect(recovered.activeNested).toBe(true);
+  expect(recovered.offline).toEqual(pending.offline);
+  expect(recovered.archiveId).toBe(pending.archiveId);
+  expect(recovered.epoch).toBe(pending.epoch);
+  expect(recovered.server).toEqual(original.server);
+  await capture(page, info, 'restored-draft.png');
+
+  await button('Retry last migration').click();
+  await expect(status).toContainText('Durable migration receipt replayed');
+  const connected = await state(page);
+  expect(connected.active).toEqual(original.server);
+  expect(connected.archive).toEqual(pending.active);
+  expect(connected.epoch).toBe(pending.epoch);
+  expect(connected.revision).toBe(pending.revision);
+  await capture(page, info, 'migrated-after-reload.png');
+});
+
+test('recovers the same frozen source after reload when the freeze reply was lost', async ({ page }) => {
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  const original = await state(page);
+  await dropCommittedReply(page, 'freeze');
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Request failed');
+  await type(page, 'Active editor', ' Draft while frozen');
+  const frozen = await state(page);
+  expect(frozen.phase).toBe('frozen');
+  expect(frozen.epoch).toBe(original.epoch);
+
+  await reloadDraft(page);
+  expect((await state(page)).active).toEqual(frozen.active);
+  await button('Retry last migration').click();
+  await expect(status).toContainText('Legacy room migrated');
+  const connected = await state(page);
+  expect(connected.archive).toEqual(frozen.active);
+  expect(connected.archiveId).toBe(frozen.archiveId);
+  expect(connected.server).toEqual(original.server);
+  expect(connected.revision).toBe(frozen.revision + 1);
+});
+
+test('recovers from local storage failure before letting migration freeze a room', async ({ page }) => {
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  const draftStatus = page.locator('#draft-status');
+  let freezes = 0;
+  page.on('request', request => {
+    if (new URL(request.url()).pathname === '/__handoff/freeze') freezes++;
+  });
+  await page.evaluate(() => {
+    const put = IDBObjectStore.prototype.put;
+    IDBObjectStore.prototype.put = () => { throw new DOMException('Test storage unavailable', 'QuotaExceededError'); };
+    (window as any).restoreDraftStorage = () => { IDBObjectStore.prototype.put = put; };
+  });
+
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Request failed');
+  await expect(draftStatus).toContainText('Test storage unavailable');
+  const pending = await state(page);
+  expect(pending.phase).toBe('active');
+  await button('Retry last migration').click();
+  await expect(button('Retry last migration')).toBeEnabled();
+  await expect(status).toContainText('Request failed');
+  expect(freezes).toBe(0);
+
+  await page.evaluate(() => (window as any).restoreDraftStorage());
+  await button('Retry last migration').click();
+  await expect(status).toContainText('Legacy room migrated');
+  expect(freezes).toBe(1);
+  const connected = await state(page);
+  expect(connected.archiveId).toBe(pending.archiveId);
+  expect(connected.server).toEqual(pending.server);
+});
+
+test('keeps a retained draft across reload after a committed rollback loses its reply', async ({ page }, info) => {
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  const original = await state(page);
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Legacy room migrated');
+  await dropCommittedReply(page, 'rollback');
+  await button('Rollback with archive').click();
+  await expect(status).toContainText('Request failed');
+  await type(page, 'Active editor', ' Draft after rollback');
+  const pending = await state(page);
+  expect(pending.protocol).toBe('legacy');
+  expect(pending.activeProtocol).toBe('retained');
+
+  await reloadDraft(page);
+  const recovered = await state(page);
+  expect(recovered.active).toEqual(pending.active);
+  expect(recovered.activeProtocol).toBe('retained');
+  expect(recovered.server).toEqual(original.server);
+  await button('Retry last rollback').click();
+  await expect(status).toContainText('Rollback committed to legacy');
+  const connected = await state(page);
+  expect(connected.active).toEqual(original.server);
+  expect(connected.archive).toEqual(pending.active);
+  expect(connected.epoch).toBe(pending.epoch);
+  expect(connected.revision).toBe(pending.revision);
+  await capture(page, info, 'rolled-back-after-reload.png');
 });
 
 test('maps an explicit author-selected destination and refuses invalid input before freezing',async({page},info)=>{
