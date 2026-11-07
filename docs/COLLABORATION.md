@@ -5,9 +5,25 @@ FountainJS collaboration has two layers:
 1. The framework-neutral `createCollaborationExtension` owns editor lifecycle,
    validated remote transactions, connection state, normalized presence,
    accessible remote decorations, and collaborative-history commands.
-2. The optional `fountainjs-editor/yjs` entry owns conflict-free shared state,
+2. The optional `fountainjs-editor/yjs` entry owns Yjs shared state,
    relative cursor positions, and origin-aware undo. It has a `yjs` peer
    dependency and is not loaded by the root package.
+
+Current local reliability status (2026-11-07): six required tests still expose
+offline typing conflicts with structural/formatting edits in the default XML
+adapter. The retained replacement is private and experimental; its successful
+cases do not constitute a public fix or default switch. See the
+[latest repair/adoption audit](COLLABORATION_APPENDED_REPAIR_AUDIT.md).
+
+For adapter authors, normal remote updates are not sent back as local updates.
+When an extension explicitly requests rebroadcast of an appended maintenance
+transaction, `onLocalUpdate` receives only the appended steps: `before` and
+`transaction.originalDoc` are the accepted incoming document, rather than the
+editor's older pre-remote state. History-neutral repairs retain
+`addToHistory: false`; an authored action followed by maintenance still requests
+history in the combined notification. An adapter implementing its own history
+must honor that distinction. This applies to the shared lifecycle boundary;
+individual adapter history implementations still require verification.
 
 The application still owns the room service, network transport,
 authentication, authorization, encryption policy, persistence, and user

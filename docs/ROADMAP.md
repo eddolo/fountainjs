@@ -20,13 +20,28 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,688 passes and six failures, with no skips. Three
+The current source suite has 4,699 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, general legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest cross-format handoff audit](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
+[latest repair/adoption audit](COLLABORATION_APPENDED_REPAIR_AUDIT.md).
+
+Repair/adoption follow-up (2026-11-07, local): the unchanged public suites expose
+a retained stable-ID repair that was not replicated. The shared lifecycle now
+rebroadcasts only appended steps from the accepted remote base, and composed
+notifications preserve authored history intent. The private retained adapter
+keeps independent repairs out of author undo. All 11 new / 130 focused cases,
+14 compiled Node checks and 12 recorded three-engine journeys pass. Complete
+source has 4,699 passes and the same six default failures across 297 files, no
+skips. The test-only replacement diagnostic improves 35/43 to 36/43; seven wire,
+initialization or diagnostic differences remain visible. Types/build/API/headless
+pass after a runtime-identical declaration repair. Public runtime grows about
+1.3 KiB ESM / 1.1 KiB CJS; three size overruns remain, with limits unchanged.
+Provider admission, legacy history-neutral behavior, general fragment mapping,
+production costs and safe adoption remain open. No default switch, publication
+or COLLAB-01 promotion. [Audit](COLLABORATION_APPENDED_REPAIR_AUDIT.md).
 
 Atomic legacy/retained handoff (2026-11-07, local): one persistent live row now
 supports compatible XML-room migration and explicit rollback, archiving both

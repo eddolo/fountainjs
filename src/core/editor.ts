@@ -32,6 +32,9 @@ function composeAppliedTransactions(initialState: EditorState, transactions: rea
     if (transaction.storedMarksSet) combined.setStoredMarks(transaction.storedMarks);
     transaction.getMetaEntries().forEach(([key, value]) => combined.setMeta(key, value));
   });
+  // Appended maintenance must not erase the originating author's history intent
+  // in the combined notification consumed by external collaboration histories.
+  combined.setMeta('addToHistory', transactions.some(transaction => transaction.docChanged && transaction.getMeta('addToHistory') !== false));
   return combined;
 }
 

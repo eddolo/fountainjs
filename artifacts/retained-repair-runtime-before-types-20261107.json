@@ -1,0 +1,46 @@
+[
+  {
+    "path": "artifacts/retained-repair-build-20261107/collaboration-5OiPqwa5.js",
+    "sha256": "d5065c41cf747a1e9891ee16ca47284fdf1da333d7713ef2a4dae468b270cc8a"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/collaboration-CK9BQcVi.cjs",
+    "sha256": "6a12952894e764fcf82a9aca2ad16f923522afa4fc56bf0a93c4749bdcb15c25"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/engine.cjs",
+    "sha256": "b6a14e4c12772d87f597be369d316d9b3386eeb7fde69e4fa3ee8a1bd803c7eb"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/engine.js",
+    "sha256": "7b8a337e5a4230ceed45254dc0a2d848973986fbf1091e449d2606a11ea89da0"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/extension-CoCIfoDA.js",
+    "sha256": "d4ab12120b6ec4a9bdc0e93f24d57f050d09812729bc28a96968bdbc4096d503"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/extension-D3hlglmg.cjs",
+    "sha256": "fc2dc5f06487bc644231996b7a54a84a9f5a4665c676a2736f1f8b0b9f435a8a"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/node-ids.cjs",
+    "sha256": "6be28f540c3bbde156354a787682be7bab789bb328a1f060520ff11aa4cdae8a"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/node-ids.js",
+    "sha256": "70529fe69ed82a2cd2e00643ff66c3a473dabad939706244500752310c418fc3"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/retained-adapter.cjs",
+    "sha256": "4ed69ddae4440d4317ce274ccf60510ad114c4bd161d851a6c49011795e292d1"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/retained-adapter.js",
+    "sha256": "fae4e6cdf798252f4a16319a6edbdb2b6176c8c3031144444ae9bff648e0f502"
+  },
+  {
+    "path": "artifacts/retained-repair-build-20261107/styles.css",
+    "sha256": "5c97d3c40fea4bcbabb6f2a8ff55f9ec251727e7bbde41f915e10a54a7d64aa7"
+  }
+]

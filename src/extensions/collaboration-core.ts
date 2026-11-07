@@ -14,6 +14,7 @@ import {
   type NodeJSON,
   type Transaction,
 } from '../core';
+import { Transaction as RepairTransaction } from '../core';
 import { defineExtension, type FountainExtension } from './extension';
 
 export type CollaborationStatus = 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error';
@@ -120,6 +121,7 @@ interface CollaborationRuntime {
   connected: boolean;
   destroyed: boolean;
   readonly destroyedAdapters: WeakSet<CollaborationAdapter>;
+  inboundTransaction?: Transaction;
 }
 
 const STATE_META = 'fountain$collaborationState';
@@ -218,6 +220,29 @@ function preserveTextSelection(editor: Editor, next: Node): AnySelection | undef
   } catch { return undefined; }
 }
 
+function dispatchRemote(runtime: CollaborationRuntime, transaction: Transaction): boolean {
+  const previous = runtime.inboundTransaction;
+  runtime.inboundTransaction = transaction;
+  try { return runtime.editor.dispatch(transaction); }
+  finally { runtime.inboundTransaction = previous; }
+}
+
+/** The adapter already owns the incoming state. Only appended repairs are new
+ * local work; replaying the remote prefix loses provenance in strict adapters. */
+function localRepairTransaction(incoming: Transaction, combined: Transaction): Transaction {
+  if (combined.originalDoc !== incoming.originalDoc || combined.steps.length < incoming.steps.length
+    || !incoming.steps.every((step, index) => combined.steps[index] === step)) {
+    throw new Error('Appended collaboration repair has an unrelated remote prefix.');
+  }
+  const repair = new RepairTransaction(incoming.doc, incoming.selection, incoming.storedMarks);
+  combined.steps.slice(incoming.steps.length).forEach(step => repair.step(step));
+  if (!repair.doc.eq(combined.doc)) throw new Error('Appended collaboration repair changed its resulting document.');
+  repair.setSelection(combined.selection);
+  if (combined.storedMarksSet) repair.setStoredMarks(combined.storedMarks);
+  combined.getMetaEntries().forEach(([key, value]) => repair.setMeta(key, value));
+  return repair;
+}
+
 function applyRemoteDocument(
   runtime: CollaborationRuntime,
   context: CollaborationAdapterContext,
@@ -234,7 +259,7 @@ function applyRemoteDocument(
     const selection = options.selection ?? (next.eq(currentDocument) ? undefined : preserveTextSelection(runtime.editor, next));
     if (next.eq(currentDocument)) {
       if (!selection || selection.eq(runtime.editor.state.selection)) return false;
-      return runtime.editor.dispatch(runtime.editor.state.createTransaction()
+      return dispatchRemote(runtime, runtime.editor.state.createTransaction()
         .setSelection(selection)
         .setMeta(COLLABORATION_REMOTE_META, true)
         .setMeta(COLLABORATION_ORIGIN_META, options.origin)
@@ -246,7 +271,7 @@ function applyRemoteDocument(
       .setMeta(COLLABORATION_ORIGIN_META, options.origin)
       .setMeta('addToHistory', false);
     if (selection) transaction.setSelection(selection);
-    return runtime.editor.dispatch(transaction);
+    return dispatchRemote(runtime, transaction);
   } catch (error) {
     context.setStatus('error', {
       message: error instanceof Error ? error.message : String(error),
@@ -277,7 +302,7 @@ function applyRemoteTransaction(
       .setMeta(COLLABORATION_REMOTE_META, true)
       .setMeta(COLLABORATION_ORIGIN_META, options.origin)
       .setMeta('addToHistory', false);
-    return editor.dispatch(transaction);
+    return dispatchRemote(runtime, transaction);
   } catch (error) {
     context.setStatus('error', {
       message: error instanceof Error ? error.message : String(error),
@@ -546,13 +571,17 @@ export function createCoreCollaborationExtension(
           const rebroadcastRepair = transaction.getMeta(REBROADCAST_APPEND_TRANSACTION_META) === true;
           if (runtime.connected && transaction.docChanged
             && (transaction.getMeta(COLLABORATION_REMOTE_META) !== true || rebroadcastRepair)) {
-            contain(runtime, () => activeAdapter.onLocalUpdate?.({
-              before: transaction.originalDoc,
-              document: state.doc,
-              beforeSelection: transaction.originalSelection,
-              selection: state.selection,
-              transaction,
-            }), generation);
+            contain(runtime, () => {
+              const outgoing = rebroadcastRepair && transaction.getMeta(COLLABORATION_REMOTE_META) === true && runtime.inboundTransaction
+                ? localRepairTransaction(runtime.inboundTransaction, transaction) : transaction;
+              return activeAdapter.onLocalUpdate?.({
+                before: outgoing.originalDoc,
+                document: state.doc,
+                beforeSelection: outgoing.originalSelection,
+                selection: state.selection,
+                transaction: outgoing,
+              });
+            }, generation);
           }
           if (runtime.connected && (transaction.docChanged || transaction.selectionSet)) {
             contain(runtime, () => activeAdapter.onLocalSelection?.(state.doc, state.selection), generation);

@@ -9,6 +9,36 @@ import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborati
 import { createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter } from '../src/yjs/retained-adapter';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { retainedNameKey } from '../src/yjs/retained-nodes';
+import { createStableNodeIdsExtension, inspectStableNodeIds } from '../src/node-ids';
+import { createTrailingEditableBlockExtension } from '../src';
+
+for(const kind of ['duplicate','divider'] as const)it(`keeps an authored ${kind} undoable when history-neutral repairs are appended locally`,()=>{
+  const document=new Y.Doc(),kit=composeExtensions([CoreExtension,createStableNodeIdsExtension(),createTrailingEditableBlockExtension(),createRetainedYjsCollaborationExtension({document,captureTimeout:0,user:{id:'author',name:'Author',color:'#7048e8'}})]);
+  const editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:{type:'doc',content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Original'}]}]}});
+  try{
+    const initial=editor.getJSON(),node=kind==='duplicate'?editor.state.doc.child(0):editor.state.schema.node('horizontal_rule');
+    expect(editor.dispatch(editor.createTransaction().replace(1,1,[node]))).toBe(true);expect(inspectStableNodeIds(editor.state.doc)).toEqual([]);
+    const authored=editor.getJSON();expect(undoCollaboration(editor)).toBe(true);expect(editor.getJSON()).toEqual(initial);
+    expect(redoCollaboration(editor)).toBe(true);expect(editor.getJSON()).toEqual(authored);expect(getCollaborationState(editor)?.status).toBe('connected');
+  }finally{editor.destroy();document.destroy();}
+});
+
+for(const reverse of [false,true])it(`rebroadcasts remote stable-ID repairs without replaying the inbound document (reverse: ${reverse})`,()=>{
+  const base:NodeJSON={type:'doc',content:[{type:'paragraph',attrs:{nodeId:'shared-id'},content:[{type:'text',text:'Shared'}]}]};
+  const legacyDoc=new Y.Doc(),stableDoc=new Y.Doc();
+  const make=(document:Y.Doc,stable:boolean)=>{const kit=composeExtensions([CoreExtension,...(stable?[createStableNodeIdsExtension()]:[]),createRetainedYjsCollaborationExtension({document,captureTimeout:0,user:{id:stable?'stable':'plain',name:'Author',color:'#a855f7'}})]);return createEditor({schema:kit.schema,plugins:kit.plugins,content:base});};
+  const plain=make(legacyDoc,false);Y.applyUpdate(stableDoc,Y.encodeStateAsUpdate(legacyDoc));const stable=make(stableDoc,true);
+  const sync=()=>{const a=Y.encodeStateAsUpdate(legacyDoc),b=Y.encodeStateAsUpdate(stableDoc);if(reverse){Y.applyUpdate(stableDoc,a);Y.applyUpdate(legacyDoc,b);}else{Y.applyUpdate(legacyDoc,b);Y.applyUpdate(stableDoc,a);}};
+  try{
+    expect(plain.dispatch(plain.createTransaction().replace(1,1,[plain.state.doc.child(0)]))).toBe(true);
+    sync();sync();expect(plain.getJSON()).toEqual(stable.getJSON());expect(inspectStableNodeIds(stable.state.doc)).toEqual([]);
+    expect(stable.state.doc.child(0).attrs.nodeId).toBe('shared-id');expect(stable.state.doc.child(1).attrs.nodeId).toMatch(/^fjs-/);
+    expect(getCollaborationState(stable)?.status).toBe('connected');expect(getCollaborationState(plain)?.status).toBe('connected');
+    expect(undoCollaboration(stable)).toBe(false);
+    expect(undoCollaboration(plain)).toBe(true);sync();sync();expect(plain.getJSON()).toEqual(stable.getJSON());expect(stable.state.doc.childCount).toBe(1);
+    expect(redoCollaboration(plain)).toBe(true);sync();sync();expect(plain.getJSON()).toEqual(stable.getJSON());expect(inspectStableNodeIds(stable.state.doc)).toEqual([]);
+  }finally{plain.destroy();stable.destroy();legacyDoc.destroy();stableDoc.destroy();}
+});
 
 const source: NodeJSON = { type: 'doc', attrs: { audit: 'root' }, content: [
   { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] }, { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } },
@@ -37,6 +67,19 @@ function peers(content = source, extensions: Parameters<typeof composeExtensions
     expect(left.getJSON()).toEqual(right.getJSON());
   }, destroy: () => { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); } };
 }
+
+for(const reverse of [false,true])it(`preserves a history-neutral shared update through author undo/redo (reverse: ${reverse})`,()=>{
+  const pair=peers();try{
+    pair.left.dispatch(pair.left.createTransaction().setNodeAttrs([0],{review:'first'}).setMeta('addToHistory',false));pair.sync(reverse);
+    expect(undoCollaboration(pair.left)).toBe(false);
+    pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0,0],2)));expect(insertText(pair.left,'X')).toBe(true);
+    pair.left.dispatch(pair.left.createTransaction().setNodeAttrs([0],{review:'second'}).setMeta('addToHistory',false));pair.sync(reverse);
+    expect(undoCollaboration(pair.left)).toBe(true);pair.sync(reverse);
+    expect(pair.left.state.doc.child(0).textContent).toBe('Alpha');expect(pair.left.state.doc.child(0).attrs.review).toBe('second');
+    expect(redoCollaboration(pair.left)).toBe(true);pair.sync(reverse);
+    expect(pair.left.state.doc.child(0).textContent).toBe('AlXpha');expect(pair.left.state.doc.child(0).attrs.review).toBe('second');
+  }finally{pair.destroy();}
+});
 
 for (const reverse of [false, true]) it('reflects observer metadata without undoing it with the author edit (reverse exchange: ' + reverse + ')', () => {
   const pair = peers();

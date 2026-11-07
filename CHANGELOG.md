@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Fix collaboration rebroadcast of appended maintenance: adapters receive only
+  repair steps based on the accepted remote document, preserving nested and
+  multi-step remote provenance. Preserve authored history intent when composing
+  notifications with neutral repairs; the private retained adapter now excludes
+  independent repair writes from author undo. Add source, compiled Node and
+  recorded browser regressions for stable IDs, offline typing and trailing
+  paragraphs. The public default adapter's six concurrency failures and safe
+  replacement adoption remain open. [Audit](docs/COLLABORATION_APPENDED_REPAIR_AUDIT.md).
+
 - Add private atomic legacy/retained migration and reversible rollback through
   one persistent live-room authority. Archive source and replacement state,
   reject stale writers, retain late updates in their source protocol, and commit

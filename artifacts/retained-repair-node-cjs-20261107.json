@@ -1,0 +1,15 @@
+{
+  "mode": "cjs",
+  "passed": 7,
+  "cases": [
+    "remote duplicate IDs are repaired and replicated without reviewer undo",
+    "reviewer undo removes authored typing while preserving the remote duplicate and ID repair",
+    "author undo/redo preserves peer repair identities and exact content",
+    "explicit history-neutral shared metadata survives author undo",
+    "remote atomic divider receives a replicated trailing editable paragraph without reviewer undo",
+    "authored duplicate stays undoable when history-neutral repairs are appended locally",
+    "authored divider stays undoable when history-neutral repairs are appended locally"
+  ],
+  "node": "v24.22.1",
+  "dom": false
+}

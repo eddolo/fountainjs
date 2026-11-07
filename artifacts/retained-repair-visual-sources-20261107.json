@@ -1,0 +1,98 @@
+[
+  {
+    "engine": "chromium",
+    "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+    "kind": "duplicate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-share-ead66--limited-to-authored-typing-chromium\\video.webm",
+    "durationSeconds": 2.08,
+    "target": "artifacts\\retained-repair-visual-20261107\\chromium-duplicate"
+  },
+  {
+    "engine": "chromium",
+    "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+    "kind": "trailing",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-share-50845-ithout-adding-reviewer-undo-chromium\\video.webm",
+    "durationSeconds": 2.16,
+    "target": "artifacts\\retained-repair-visual-20261107\\chromium-trailing"
+  },
+  {
+    "engine": "chromium",
+    "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+    "kind": "offline",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-repai-89672--without-losing-either-edit-chromium\\video.webm",
+    "durationSeconds": 2.44,
+    "target": "artifacts\\retained-repair-visual-20261107\\chromium-offline"
+  },
+  {
+    "engine": "chromium",
+    "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+    "kind": "local",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-keeps-a6211-ailing-repairs-are-appended-chromium\\video.webm",
+    "durationSeconds": 1.84,
+    "target": "artifacts\\retained-repair-visual-20261107\\chromium-local"
+  },
+  {
+    "engine": "firefox",
+    "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+    "kind": "duplicate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-share-ead66--limited-to-authored-typing-firefox\\video.webm",
+    "durationSeconds": 4.04,
+    "target": "artifacts\\retained-repair-visual-20261107\\firefox-duplicate"
+  },
+  {
+    "engine": "firefox",
+    "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+    "kind": "trailing",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-share-50845-ithout-adding-reviewer-undo-firefox\\video.webm",
+    "durationSeconds": 3.08,
+    "target": "artifacts\\retained-repair-visual-20261107\\firefox-trailing"
+  },
+  {
+    "engine": "firefox",
+    "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+    "kind": "offline",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-repai-89672--without-losing-either-edit-firefox\\video.webm",
+    "durationSeconds": 2.48,
+    "target": "artifacts\\retained-repair-visual-20261107\\firefox-offline"
+  },
+  {
+    "engine": "firefox",
+    "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+    "kind": "local",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-keeps-a6211-ailing-repairs-are-appended-firefox\\video.webm",
+    "durationSeconds": 2.36,
+    "target": "artifacts\\retained-repair-visual-20261107\\firefox-local"
+  },
+  {
+    "engine": "webkit",
+    "name": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+    "kind": "duplicate",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-share-ead66--limited-to-authored-typing-webkit\\video.webm",
+    "durationSeconds": 6.28,
+    "target": "artifacts\\retained-repair-visual-20261107\\webkit-duplicate"
+  },
+  {
+    "engine": "webkit",
+    "name": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+    "kind": "trailing",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-share-50845-ithout-adding-reviewer-undo-webkit\\video.webm",
+    "durationSeconds": 5.8,
+    "target": "artifacts\\retained-repair-visual-20261107\\webkit-trailing"
+  },
+  {
+    "engine": "webkit",
+    "name": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+    "kind": "offline",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-repai-89672--without-losing-either-edit-webkit\\video.webm",
+    "durationSeconds": 5.92,
+    "target": "artifacts\\retained-repair-visual-20261107\\webkit-offline"
+  },
+  {
+    "engine": "webkit",
+    "name": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+    "kind": "local",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\retained-repair-browser-20261107\\retained-repair-real-keeps-a6211-ailing-repairs-are-appended-webkit\\video.webm",
+    "durationSeconds": 3.4,
+    "target": "artifacts\\retained-repair-visual-20261107\\webkit-local"
+  }
+]
