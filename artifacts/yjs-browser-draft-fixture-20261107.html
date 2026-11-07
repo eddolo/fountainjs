@@ -43,35 +43,44 @@ import {createRetainedYjsCollaborationExtension} from './yjs-authority-admission
 import {captureRetainedCheckpoint, restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';
 import {prepareRetainedAdmission} from './yjs-authority-admission-build-20261107/admission.js';
 import {openBrowserDrafts, isSameDraftSession, scheduleBrowserDraftAutosave} from '/examples/backends/retained-browser-drafts.ts';
+import {createRetainedHttpProvider} from '/examples/backends/retained-http-provider.ts';
 
 const version = 'admission-browser-1';
 const select = selector => document.querySelector(selector);
 const local = text => ({type: 'doc', content: [{type: 'paragraph', content: [{type: 'text', text}]}]});
 const query = new URLSearchParams(location.search);
 const autosaveEnabled = !query.has('manual');
+const live = query.has('live');
 const user = query.has('peer')
   ? {id: 'grace', name: 'Grace', color: '#af3e7d'}
   : {id: 'ada', name: 'Ada', color: '#7048e8'};
 const base = composeExtensions([CoreExtension]);
-let client, reader, current, serverModel, drafts, starts = 0;
+let client, reader, current, serverModel, drafts, starts = 0, readerRequest = 0;
 let token = sessionStorage.getItem('fountain-draft-audit-session');
 
 async function request(action, body = {}, signal) {
   const response = await fetch('/__admission/' + action, {
     method: 'POST', signal, headers: {'Content-Type': 'application/json', 'X-Admission-Session': token ?? ''},
     body: JSON.stringify(body, (_key, value) => value instanceof Uint8Array ? {__wire: btoa(Array.from(value, byte => String.fromCharCode(byte)).join(''))} : value),
+  }).catch(error => {
+    signal?.throwIfAborted();
+    throw Object.assign(new Error('The authority could not be reached.', {cause: error}), {code: 'network'});
   });
   const reply = await response.json();
-  if (!reply.ok) throw new Error(reply.error);
+  if (!reply.ok) throw Object.assign(new Error(reply.error), {code: reply.code});
   if (reply.value?.checkpoint) reply.value.checkpoint.update = Uint8Array.from(atob(reply.value.checkpoint.update.__wire), byte => byte.charCodeAt(0));
   return reply.value;
 }
 
-async function refresh() {
-  current = await request('snapshot');
-  const restored = await restoreRetainedCheckpoint(current.checkpoint, client.editor.state.schema, version);
-  serverModel = restored.baseDocument.toJSON();
+async function refresh(receipt) {
+  const sequence = ++readerRequest;
+  const snapshot = receipt ?? await request('snapshot');
+  const restored = await restoreRetainedCheckpoint(snapshot.checkpoint, client.editor.state.schema, version);
+  const model = restored.baseDocument.toJSON();
   restored.document.destroy();
+  if (sequence !== readerRequest) return;
+  current = snapshot;
+  serverModel = model;
   reader?.view.destroy();
   reader?.editor.destroy();
   const editor = createEditor({schema: base.schema, content: serverModel, editable: false});
@@ -96,7 +105,29 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
       return snapshot;
     },
   };
-  const provider = {async connect() {
+  const provider = live ? createRetainedHttpProvider({
+    document: doc,
+    bound() {
+      const accepted = next.bound;
+      const manifest = accepted.checkpoint.manifest;
+      next.lease = {key: accepted.key, epoch: accepted.epoch, revision: accepted.revision, protocol: 'retained', room: manifest.room, identity: manifest.roomId};
+      starts += 1;
+      return {lease: next.lease, snapshot: accepted};
+    },
+    poll: (lease, signal) => request('poll-retained', lease, signal),
+    write: (lease, update, signal) => request('write', {epoch: lease.epoch, protocol: lease.protocol, update}, signal),
+    async merge(checkpoint, signal) {
+      const candidate = await prepareRetainedAdmission(doc, checkpoint, next.editor.state.schema, version, 'fountain');
+      signal.throwIfAborted();
+      candidate.install('http-live-sync');
+    },
+    onSnapshot(snapshot) { if (client === next) void refresh(snapshot).catch(() => undefined); },
+    onStatus(status, error) {
+      if (client !== next) return;
+      next.transportStatus = [status, error?.message].filter(Boolean).join(' · ');
+      select('#connection').textContent = next.transportStatus;
+    },
+  }) : {async connect() {
     const accepted = next.bound;
     const candidate = await prepareRetainedAdmission(doc, accepted.checkpoint, next.editor.state.schema, version, 'fountain');
     if (next.signal.aborted) return;
@@ -136,7 +167,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   select('#edit-title').textContent = detached ? 'Detached recovery copy' : 'Your draft';
   const render = () => {
     const state = getCollaborationState(editor);
-    select('#connection').textContent = detached ? 'Local only' : [state?.status, state?.error?.message].filter(Boolean).join(' · ');
+    select('#connection').textContent = detached ? 'Local only' : next.transportStatus ?? [state?.status, state?.error?.message].filter(Boolean).join(' · ');
   };
   editor.subscribe(render);
   render();
@@ -274,6 +305,7 @@ button(select('#send'), async () => {
   await refresh();
   select('#message').textContent = 'Changes saved on the server.';
 });
+select('#send').hidden = live;
 button(select('#rotate'), async () => { await request('rotate'); await refresh(); await listCopies(); select('#message').textContent = 'Server session rotated.'; });
 button(select('#choose'), async () => {
   await refresh();

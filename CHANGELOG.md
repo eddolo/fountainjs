@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a local HTTP/SQLite reference for the retained collaboration preview.
+  It demonstrates automatic edit exchange, offline catch-up, write retry and
+  retired-session draft recovery. The revision-aware polling method belongs
+  to the internal room authority. [Transport reference](docs/YJS_LIVE_HTTP_REFERENCE.md).
+
 - Preserve blocked Markdown URI autolinks as inactive data when the import
   policy and inert anchor extension are enabled. The safe HTML reader keeps
   the addresses non-clickable. The explicit complete-file source profile

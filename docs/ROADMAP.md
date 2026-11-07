@@ -30,6 +30,14 @@ Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).
 
+Live retained transport reference (2026-11-07, local). Two browser authors now
+exchange edits over fenced HTTP/SQLite automatically. Offline typing merges into
+the peer's quote after reconnect, a lost write reply retries without duplicate
+text, and a rotated room fences the old writer while its local copy survives
+reload. Nine recorded three-engine journeys pass. Production deployment,
+presence transport, load and storage validation remain open.
+[Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
+
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies
 survive reload. A same-session draft resumes through the normal admission checks
 and keeps its unsent text when a peer has wrapped the paragraph in a quote.

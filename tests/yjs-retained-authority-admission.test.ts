@@ -22,6 +22,23 @@ function contract(pair:Awaited<ReturnType<typeof fixture>>,load=()=>pair.room.sn
 async function rotate(pair:Awaited<ReturnType<typeof fixture>>){const snapshot=await pair.coordinator.snapshot(),ticket=await pair.coordinator.freeze(snapshot),prepared=await pair.coordinator.prepareResume(ticket);return pair.coordinator.commitResume(ticket,prepared);}
 function unreadable(snapshot:DocumentRoomSnapshot){const bytes=vi.fn(()=>{throw new Error('Checkpoint bytes must not be read');}),checkpoint={manifest:snapshot.checkpoint.manifest,get update(){return bytes();}} as DocumentRoomSnapshot['checkpoint'];return {snapshot:{...snapshot,checkpoint},bytes};}
 
+it('suppresses unchanged retained checkpoints and fences reads across freeze and rotation', async () => {
+  const pair = await fixture();
+  const lease = { key, epoch: pair.initial.epoch, revision: 0, protocol: 'retained' as const, room: 'fountain', identity: pair.checkpoint.manifest.roomId };
+  expect(await pair.room.pollRetained(lease)).toBeNull();
+  await expect(pair.room.pollRetained({ ...lease, identity: 'wrong' })).rejects.toMatchObject({ code: 'invalid-ticket' });
+  await expect(pair.room.pollRetained({ ...lease, revision: 1 })).rejects.toMatchObject({ code: 'invalid-ticket' });
+  pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'New '));
+  const latest = await pair.other.write({ epoch: lease.epoch, protocol: lease.protocol, update: Y.encodeStateAsUpdate(pair.document) });
+  expect(await pair.room.pollRetained(lease)).toEqual(latest);
+  expect(await pair.room.pollRetained({ ...lease, revision: latest.revision })).toBeNull();
+  const frozen = await pair.other.freeze(latest);
+  await expect(pair.room.pollRetained(lease)).rejects.toMatchObject({ code: 'frozen' });
+  await pair.other.abort(await pair.other.recoverFrozen(frozen));
+  await rotate(pair);
+  await expect(pair.room.pollRetained(lease)).rejects.toMatchObject({ code: 'stale-epoch' });
+});
+
 it('binds an immutable validated session before starting the provider',async()=>{
  const pair=await fixture(),leases:any[]=[],provider={connect:vi.fn(),disconnect:vi.fn()},admission=contract(pair,undefined,async lease=>{expect(provider.connect).not.toHaveBeenCalled();expect(Object.isFrozen(lease)).toBe(true);leases.push(lease);await (pair.room as any).admit(lease);}),client=make('Template',{provider,admission});await settled(client.editor);expect(leases).toEqual([{key,epoch:pair.initial.epoch,revision:0,protocol:'retained',room:'fountain',identity:pair.checkpoint.manifest.roomId}]);expect(provider.connect).toHaveBeenCalledTimes(1);expect(client.editor.getJSON()).toEqual(pair.editor.getJSON());
 });

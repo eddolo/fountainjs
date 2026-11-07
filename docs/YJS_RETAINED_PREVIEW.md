@@ -87,6 +87,10 @@ validate/apply that catch-up state with an untracked remote origin before report
 initial synchronization complete. See the recorded HTTP/SQLite reference in the
 [authority-admission audit](YJS_AUTHORITY_ADMISSION_AUDIT.md).
 
+The [live HTTP transport reference](YJS_LIVE_HTTP_REFERENCE.md) also shows
+automatic edit exchange after binding, retry after a dropped reply, and
+recovery when a room refuses an old session.
+
 Typing while admission is pending is retained locally. If it conflicts with the
 loaded state, admission reports an error instead of overwriting it. Cancellation
 prevents late callbacks from installing state or starting transport. An epoch

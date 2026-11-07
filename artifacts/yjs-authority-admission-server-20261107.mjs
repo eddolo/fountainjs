@@ -24,6 +24,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='snapshot')value=await room.snapshot();
    else if(action==='write')value=await room.write(body);
    else if(action==='bind')value=await room.admit(body);
+   else if(action==='poll-retained')value=await room.pollRetained(body);
    else if(action==='bind-advance'){const snapshot=await room.snapshot(),opened=await restoreRetainedCheckpoint(snapshot.checkpoint,schema,'admission-browser-1'),kit=composeExtensions([CoreExtension,MathExtension,createRetainedYjsCollaborationExtension({document:opened.document,user:{id:'server',name:'Server',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:opened.baseDocument.toJSON()});try{editor.dispatch(editor.createTransaction().insertText([1,0],editor.state.doc.child(1).textContent.length,' ACCEPTED during bind'));await room.write({epoch:snapshot.epoch,protocol:'retained',update:Y.encodeStateAsUpdate(opened.document)});}finally{editor.destroy();opened.document.destroy();}value=await room.admit(body);}
    else if(action==='freeze')value=await room.freeze(await room.snapshot());
    else if(action==='abort'){const frozen=await room.snapshot();value=await room.abort(await room.recoverFrozen(frozen));}
@@ -32,7 +33,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='close'){sessions.delete(req.headers['x-admission-session']);value={closed:true};}
    else throw new Error('Unknown fixed test action');
   }res.end(encode({ok:true,value}));
- }catch(error){res.statusCode=400;res.end(encode({ok:false,error:error.message}));}
+ }catch(error){res.statusCode=400;res.end(encode({ok:false,error:error.message,code:error.code}));}
  })}}]});
 await server.listen();let closing=false;async function close(){if(closing)return;closing=true;await server.close();repository.close();if(dirname(resolve(temporary))!==resolve(tmpdir())||!basename(temporary).startsWith('fountain-authority-browser-'))throw new Error('Unsafe cleanup target');await rm(temporary,{recursive:true,force:true});}
 process.on('SIGTERM',()=>void close());process.on('SIGINT',()=>void close());

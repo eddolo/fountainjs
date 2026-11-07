@@ -134,6 +134,22 @@ export class CoordinatedDocumentRoom {
     return existingSnapshot(winner);
   }
   async snapshot(): Promise<DocumentRoomSnapshot> { const row = await this.current(), checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection); return documentSnapshot({ ...row, checkpoint: checked.checkpoint }); }
+  /** Revision-aware read for a bound retained transport. An idle client gets no
+   * checkpoint. The durable row still fences epoch, protocol and phase. */
+  async pollRetained(lease: DocumentRoomAdmission): Promise<DocumentRoomSnapshot | null> {
+    const expected = { ...lease };
+    const row = await this.current();
+    if (row.epoch !== expected.epoch || expected.protocol !== 'retained' || documentProtocol(row.checkpoint) !== 'retained') {
+      documentRoomFailure('stale-epoch', 'Reader epoch/protocol is stale; reconnect and retain pending edits.');
+    }
+    if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
+    const manifest = (row.checkpoint as RetainedCheckpoint).manifest;
+    if (expected.key !== this.key || manifest.room !== expected.room || manifest.roomId !== expected.identity
+      || !Number.isSafeInteger(expected.revision) || expected.revision < 0 || expected.revision > row.revision) {
+      documentRoomFailure('invalid-ticket', 'Retained reader does not match the active room.');
+    }
+    return expected.revision === row.revision ? null : this.admit(expected);
+  }
   /** Read-only connection fence. Every later write must still check its epoch;
    * this receipt does not reserve an active room or grant authorization. */
   async admit(request: DocumentRoomAdmission): Promise<DocumentRoomSnapshot> {

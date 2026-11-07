@@ -7,9 +7,11 @@ server=once(server,"const origin=","import {CoordinatedRetainedRoom} from './yjs
 server=once(server,"import {createServer} from 'vite';","import {createServer} from 'vite';\nimport * as Y from 'yjs';\nimport {createEditor} from './yjs-authority-admission-build-20261107/engine.js';\nimport {createRetainedYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/adapter.js';\nimport {restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';");
 server=once(server,"else if(action==='write')value=await room.write(body);",`else if(action==='write')value=await room.write(body);
    else if(action==='bind')value=await room.admit(body);
+   else if(action==='poll-retained')value=await room.pollRetained(body);
    else if(action==='bind-advance'){const snapshot=await room.snapshot(),opened=await restoreRetainedCheckpoint(snapshot.checkpoint,schema,'admission-browser-1'),kit=composeExtensions([CoreExtension,MathExtension,createRetainedYjsCollaborationExtension({document:opened.document,user:{id:'server',name:'Server',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:opened.baseDocument.toJSON()});try{editor.dispatch(editor.createTransaction().insertText([1,0],editor.state.doc.child(1).textContent.length,' ACCEPTED during bind'));await room.write({epoch:snapshot.epoch,protocol:'retained',update:Y.encodeStateAsUpdate(opened.document)});}finally{editor.destroy();opened.document.destroy();}value=await room.admit(body);}
    else if(action==='freeze')value=await room.freeze(await room.snapshot());
    else if(action==='abort'){const frozen=await room.snapshot();value=await room.abort(await room.recoverFrozen(frozen));}
    else if(action==='bind-freeze'){await room.freeze(await room.snapshot());value=await room.admit(body);}
    else if(action==='rotate'){const coordinator=new CoordinatedRetainedRoom(repository,room.key,schema,'admission-browser-1'),snapshot=await coordinator.snapshot(),ticket=await coordinator.freeze(snapshot),prepared=await coordinator.prepareResume(ticket);value=await coordinator.commitResume(ticket,prepared);}`);
+server=once(server,'error:error.message','error:error.message,code:error.code');
 await writeFile('artifacts/yjs-authority-admission-server-20261107.mjs',server);
