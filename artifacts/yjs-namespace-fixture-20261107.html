@@ -250,10 +250,7 @@ try{
 document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='hidden')void autosave.flush().catch(()=>undefined);
 });
-function dropAdmittedRoot(){
- autosave.stop();
- if(active.fragment?.parent)active.doc.getMap('research-folder').delete('body');
- else active.doc.getXmlFragment(active.namespace).delete(0,1);
+function showCollaborationFailure(){
  const collaboration=getCollaborationState(active.editor);
  message.textContent=collaboration?.error?.message??'No collaboration error';
  document.querySelector('#draft-status').textContent='New edits are only in this editor. Download a copy before leaving.';
@@ -261,9 +258,43 @@ function dropAdmittedRoot(){
  document.querySelector('#download-local').hidden=false;
  return collaboration?.status;
 }
+function dropAdmittedRoot(){
+ autosave.stop();
+ if(active.fragment?.parent)active.doc.getMap('research-folder').delete('body');
+ else active.doc.getXmlFragment(active.namespace).delete(0,1);
+ return showCollaborationFailure();
+}
+let repairedUpdate;
+function receiveMalformedUpdate(){
+ autosave.stop();
+ const peer=new Y.Doc();
+ const receive=()=>Y.applyUpdate(active.doc,Y.encodeStateAsUpdate(peer,Y.encodeStateVector(active.doc)),'test-remote-peer');
+ try{
+  Y.applyUpdate(peer,Y.encodeStateAsUpdate(active.doc));
+  if(active.protocol==='legacy'){
+   const fragment=active.fragment?.parent?peer.getMap('research-folder').get('body'):peer.getXmlFragment(active.namespace);
+   const block=fragment.get(0).get(0),type=block.getAttribute('fountain:type');
+   block.setAttribute('fountain:type','invalid-peer-block');
+   receive();
+   block.setAttribute('fountain:type',type);
+  }else{
+   const root=peer.getMap(active.namespace+'-nodes:root'),field='attr:006200610064';
+   root.set(field,'{');
+   receive();
+   root.delete(field);
+  }
+  repairedUpdate=Y.encodeStateAsUpdate(peer,Y.encodeStateVector(active.doc));
+ }finally{peer.destroy();}
+ return showCollaborationFailure();
+}
+function receiveRepairedUpdate(){
+ Y.applyUpdate(active.doc,repairedUpdate,'test-remote-peer');
+ repairedUpdate=undefined;
+ return showCollaborationFailure();
+}
 document.querySelector('#download-local').addEventListener('click',()=>{
  downloadDocumentFile(document,'recovered-draft.fountain.json',JSON.stringify(active.editor.getJSON(),null,2),'application/json');
 });
 window.audit={snapshot:async()=>{const server=await request('snapshot'),restored=await codec(server.checkpoint).restore(server.checkpoint,schema,version);try{const folder=restored.document.share.get('research-folder');return {folderTitle:folder?.get('title'),folderRoom:folder?.get('documentRoom'),nestedFragment:server.checkpoint.manifest.fragment,activeNested:Boolean(active.fragment?.parent),offline:original.editor.getJSON(),active:active.editor.getJSON(),archive:archived?.editor.getJSON(),server:restored.baseDocument.toJSON(),epoch:server.epoch,revision:server.revision,namespace:server.checkpoint.manifest.room,activeNamespace:active.namespace,archiveNamespace:archived?.namespace,phase:server.phase,protocol:server.protocol,activeProtocol:active.protocol,archiveProtocol:archived?.protocol,archiveId,rollbackArchiveId,lastReplay}}finally{restored.document.destroy()}},batch:(id,revision)=>request('batch',{id,revision}),close:()=>{autosave.stop();drafts.close();return request('close')}};
-Object.assign(window.audit,{dropAdmittedRoot,localRoomWire:()=>encode(Y.encodeStateAsUpdate(active.doc))});
+Object.assign(window.audit,{dropAdmittedRoot,receiveMalformedUpdate,receiveRepairedUpdate,localRoomWire:()=>encode(Y.encodeStateAsUpdate(active.doc))});
 </script></html>

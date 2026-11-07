@@ -109,6 +109,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private roomFailure(message: string): Error {
+    if (this.roomConflict) return this.roomConflict;
     if (!this.roomId) return new Error(message);
     const error = new Error(`${message} Preserve the local draft and replace the collaboration session.`);
     this.roomConflict = error;
@@ -173,7 +174,8 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private readonly sharedChanged = (transaction: Y.Transaction): void => {
-    if (!this.context || !this.store || this.roomConflict || transaction.origin === this.origin || transaction.origin === this.repair) return;
+    const context = this.context;
+    if (!context || !this.store || this.roomConflict || transaction.origin === this.origin || transaction.origin === this.repair) return;
     const changed = new Set<unknown>(transaction.changedParentTypes.keys());
     if (![this.fragment, ...this.store.observed, ...(this.structured ? [this.structured.map] : [])].some(type => changed.has(type))) return;
     try {
@@ -186,8 +188,13 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       const value = this.canonical(transaction);
       const selection = restoreSelection(this.store, value, bookmark ?? this.localSelection);
       this.apply(value, selection, transaction.origin);
-      this.context.setStatus('connected'); this.presences();
-    } catch (error) { this.error(error); }
+    } catch (error) {
+      if (this.context === context) this.error(this.roomFailure(error instanceof Error ? error.message : String(error)));
+      return;
+    }
+    if (this.context !== context || this.roomConflict) return;
+    context.setStatus('connected');
+    this.awarenessChanged();
   };
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {

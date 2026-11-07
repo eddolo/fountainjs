@@ -87,6 +87,12 @@ the current editor JSON before replacing the adapter with one bound to the
 verified room. The host still controls the underlying transport and must
 check room identity before routing updates.
 
+An established editor also suspends shared editing if its schema or a host
+transaction filter rejects an incoming document update. The transport may
+already hold the raw Yjs update. Keep the visible draft as Fountain JSON and
+open a fresh session from verified data. A repair delivered by the peer or
+a provider status change leaves the original editor draft available.
+
 For a local experiment, create one editor with the retained extension and an empty
 `Y.Doc`, then copy `Y.encodeStateAsUpdate(seedDoc)` into a second empty `Y.Doc`
 **before** creating its editor. After that, exchange Yjs updates normally. Keep

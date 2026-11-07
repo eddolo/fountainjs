@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Suspend shared writes, undo and presence when a mounted Yjs editor cannot
+  apply a peer document update. Keep the local draft editable while the host
+  opens a fresh collaboration session.
+
 - Assemble DOCX package relationships and manifests once per export, bringing
   the CommonJS DOCX entry below its size limit.
 

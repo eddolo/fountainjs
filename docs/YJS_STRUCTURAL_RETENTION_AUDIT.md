@@ -5,6 +5,34 @@ certification of collaboration parity. The separate native-focus repair is
 [draft PR #22](https://github.com/eddolo/fountainjs/pull/22); this unfinished
 structural work is not part of that PR or an npm/site release.
 
+## Rejected document update recovery
+
+In both adapters, an invalid document update previously left shared undo
+enabled and allowed subsequent typing to modify Yjs even while the editor
+reported an error. The retained adapter also returned to connected when a
+peer repaired the data. The legacy adapter could report connected when a host
+transaction filter declined the inbound edit.
+
+A mounted adapter now treats a failed document projection or application as
+a session error. It suspends shared writes and history, clears shared presence,
+and preserves the editable local draft. The peer may send a repaired update
+to the underlying Y.Doc. That repair leaves the failed editor session stopped.
+The host can reopen a verified session separately. The original raw update
+may have reached Yjs before the editor rejected it.
+
+The recorded migration reference types before and after the failure, applies
+a genuine Yjs repair from a second document, and downloads the exact visible
+draft as Fountain JSON. The saved SQLite revision and model remain intact.
+The browser run covers both an embedded legacy XML room and a retained room.
+
+All 12 recorded Chromium, Firefox and WebKit recovery journeys passed.
+The broad Yjs source run passed 801 tests and reproduced the six known
+legacy concurrency failures. The built ESM and CommonJS package checks
+and TypeScript passed. The declaration snapshot adds one private method
+name to the legacy class in each module format. The aggregate CommonJS
+build is 146.1 KiB over its current limit. The DOCX entry and ESM
+aggregate remain within their limits.
+
 ## Incompatible room recovery
 
 The November 7 protocol-conflict repair covers a separate failure during

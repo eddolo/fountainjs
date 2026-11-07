@@ -441,10 +441,12 @@ test('moves a nested research document and rolls back to the same embedded fragm
   await capture(page,info,'nested-rollback.png');
 });
 
-for (const protocol of ['legacy', 'retained'] as const) {
-  const title = protocol === 'legacy'
-    ? 'keeps the draft when the admitted embedded legacy fragment is detached'
-    : 'recovers a local draft when the admitted retained root disappears';
+for (const [protocol, failure, title] of [
+  ['legacy', 'root', 'keeps the draft when the admitted embedded legacy fragment is detached'],
+  ['retained', 'root', 'recovers a local draft when the admitted retained root disappears'],
+  ['legacy', 'update', 'keeps the local legacy draft after an invalid update and peer repair'],
+  ['retained', 'update', 'recovers the local retained draft after an invalid update and peer repair'],
+] as const) {
   test(title, {tag:'@nested'}, async ({page}, info) => {
     const status = page.getByRole('status');
     if (protocol === 'retained') {
@@ -455,12 +457,21 @@ for (const protocol of ['legacy', 'retained'] as const) {
     const editor = page.getByRole('textbox', {name:'Active editor', exact:true});
     await type(page, 'Active editor', ' LOCAL draft');
     await expect(editor).toContainText('LOCAL draft');
-    expect(await page.evaluate(() => (window as any).audit.dropAdmittedRoot())).toBe('error');
-    await expect(status).toContainText('The admitted room root changed');
+    const rejected = await page.evaluate(kind => {
+      const audit = (window as any).audit;
+      return kind === 'root' ? audit.dropAdmittedRoot() : audit.receiveMalformedUpdate();
+    }, failure);
+    expect(rejected).toBe('error');
+    await expect(status).toContainText('Preserve the local draft');
     const receivedWire = await page.evaluate(() => (window as any).audit.localRoomWire());
     await type(page, 'Active editor', ' STILL local');
     await expect(editor).toContainText('LOCAL draft STILL local');
     expect(await page.evaluate(() => (window as any).audit.localRoomWire())).toBe(receivedWire);
+    if (failure === 'update') {
+      expect(await page.evaluate(() => (window as any).audit.receiveRepairedUpdate())).toBe('error');
+      expect(await page.evaluate(() => (window as any).audit.localRoomWire())).not.toBe(receivedWire);
+      await expect(editor).toContainText('LOCAL draft STILL local');
+    }
     const after = await state(page);
     expect(after.revision).toBe(before.revision);
     expect(after.server).toEqual(before.server);
@@ -472,6 +483,6 @@ for (const protocol of ['legacy', 'retained'] as const) {
     const destination = info.outputPath(download.suggestedFilename());
     await download.saveAs(destination);
     expect(JSON.parse(await readFile(destination, 'utf8'))).toEqual(after.active);
-    await capture(page, info, 'admitted-root-draft.png');
+    await capture(page, info, failure === 'root' ? 'admitted-root-draft.png' : 'malformed-update-draft.png');
   });
 }

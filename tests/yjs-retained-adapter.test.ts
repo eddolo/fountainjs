@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection, RangeSelection, Selection, composeExtensions, createEditor,
+import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection, Plugin, RangeSelection, Selection, composeExtensions, createEditor,
   canRedoCollaboration, canUndoCollaboration, createCollaborationExtension, defineExtension, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
   redoCollaboration, replaceCollaborationAdapter, splitBlock, setMark, toggleList, toggleQuote, undoCollaboration, moveBlock,
   type NodeJSON } from '../src';
@@ -388,6 +388,68 @@ it('makes an older adapter refuse a retained room without overwriting it', () =>
   const old = createEditor({ schema: kit.schema, plugins: kit.plugins, content: source });
   try { expect(getCollaborationState(old)?.status).toBe('error'); expect(Y.encodeStateVector(document)).toEqual(state); expect(fresh.editor.getText()).toBe('Retained'); }
   finally { old.destroy(); fresh.editor.destroy(); document.destroy(); }
+});
+
+it.each(['retained', 'legacy'] as const)('preserves a local draft after a malformed %s update is repaired by a peer', kind => {
+  const document = new Y.Doc(), peer = new Y.Doc();
+  const factory = kind === 'legacy' ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+  const listeners = new Set<(status: string | { status?: string }) => void>();
+  const provider: YjsProvider = { connect: vi.fn(), disconnect: vi.fn(),
+    on: (_event, listener) => { listeners.add(listener); }, off: (_event, listener) => { listeners.delete(listener); } };
+  const kit = composeExtensions([CoreExtension, factory({ document, provider, captureTimeout: 0, user: { id: 'local', name: 'Local', color: '#7048e8' } })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: source });
+  try {
+    editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Shared '));
+    expect(canUndoCollaboration(editor)).toBe(true);
+    Y.applyUpdate(peer, Y.encodeStateAsUpdate(document));
+    const receive = () => Y.applyUpdate(document, Y.encodeStateAsUpdate(peer, Y.encodeStateVector(document)), 'remote-provider');
+    const block = kind === 'legacy' ? (peer.getXmlFragment('fountain').get(0) as Y.XmlElement).get(0) as Y.XmlElement : undefined;
+    const attrs = peer.getMap('fountain-nodes:root');
+    const attribute = 'attr:' + retainedNameKey('bad');
+    if (block) block.setAttribute('fountain:type', 'unknown');
+    else attrs.set(attribute, '{');
+    receive();
+    expect(getCollaborationState(editor)).toMatchObject({ status: 'error', error: { recoverable: true } });
+    expect(canUndoCollaboration(editor)).toBe(false);
+    expect(undoCollaboration(editor)).toBe(false);
+    const invalid = Y.encodeStateAsUpdate(document);
+    for (const listener of listeners) listener('connected');
+    expect(getCollaborationState(editor)?.status).toBe('error');
+    editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Local draft '));
+    expect(Y.encodeStateAsUpdate(document)).toEqual(invalid);
+    if (block) block.setAttribute('fountain:type', 'paragraph');
+    else attrs.delete(attribute);
+    receive();
+    expect(editor.state.doc.child(0).textContent).toBe('Local draft Shared Alpha');
+    expect(getCollaborationState(editor)?.error?.message).toContain('Preserve the local draft');
+    const repaired = Y.encodeStateAsUpdate(document);
+    expect(reconnectCollaboration(editor)).toBe(false);
+    expect(provider.connect).toHaveBeenCalledTimes(1);
+    expect(Y.encodeStateAsUpdate(document)).toEqual(repaired);
+  } finally { editor.destroy(); document.destroy(); peer.destroy(); }
+});
+
+it.each(['retained', 'legacy'] as const)('stops %s synchronization when a host rejects a remote transaction', kind => {
+  const document = new Y.Doc(), peer = new Y.Doc();
+  const factory = kind === 'legacy' ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+  const make = (document: Y.Doc, guarded = false) => {
+    const kit = composeExtensions([CoreExtension, factory({ document, user: { id: 'author', name: 'Author', color: '#7048e8' } })]);
+    const filter = new Plugin({ filterTransaction: transaction => transaction.getMeta('fountain$collaborationRemote') !== true });
+    return createEditor({ schema: kit.schema, plugins: guarded ? [...kit.plugins, filter] : kit.plugins, content: source });
+  };
+  const editor = make(document, true);
+  Y.applyUpdate(peer, Y.encodeStateAsUpdate(document));
+  const remote = make(peer);
+  try {
+    remote.dispatch(remote.createTransaction().insertText([0, 0], 0, 'Remote '));
+    Y.applyUpdate(document, Y.encodeStateAsUpdate(peer, Y.encodeStateVector(document)), 'remote-provider');
+    expect(editor.state.doc.child(0).textContent).toBe('Alpha');
+    expect(getCollaborationState(editor)?.error?.message).toContain('Preserve the local draft');
+    const rejected = Y.encodeStateAsUpdate(document);
+    editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Private '));
+    expect(editor.state.doc.child(0).textContent).toBe('Private Alpha');
+    expect(Y.encodeStateAsUpdate(document)).toEqual(rejected);
+  } finally { editor.destroy(); remote.destroy(); document.destroy(); peer.destroy(); }
 });
 
 it.each(['retained', 'legacy'] as const)('detects conflicting offline initialization against a %s peer without discarding either root', kind => {

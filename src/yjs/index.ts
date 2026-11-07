@@ -515,7 +515,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private readonly onSharedChange = (events: readonly Y.YEvent<any>[], transaction: Y.Transaction): void => {
-    if (!this.context
+    const context = this.context;
+    if (!context
       || this.initializationConflict
       || transaction.origin === this.localOrigin
       || transaction.origin === this.repairOrigin
@@ -533,28 +534,36 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         const selection = relativeSelection
           ? this.resolveRelativeSelection(relativeSelection, incremental.doc)
           : undefined;
-        this.context.applyRemoteTransaction(incremental, { selection, origin: transaction.origin });
-        this.context.setStatus('connected');
-        this.publishPresences();
-        return;
+        if (!context.applyRemoteTransaction(incremental, { selection, origin: transaction.origin })) {
+          throw new Error('Editor rejected the shared transaction.');
+        }
+      } else {
+        const base = context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
+        const document = this.structuredAttributes
+          ? context.editor.state.schema.nodeFromJSON(this.structuredAttributes.overlay(base))
+          : base;
+        if (this.structuredAttributes && !base.eq(document)) this.repairCanonicalDocument(base, document);
+        const selection = relativeSelection
+          ? this.resolveRelativeSelection(relativeSelection, document)
+          : undefined;
+        const state = context.editor.state;
+        if (!context.applyRemoteDocument(document, { selection, origin: transaction.origin })
+          && (!state.doc.eq(document) || selection && !state.selection.eq(selection))) {
+          throw new Error('Editor rejected the shared document or selection.');
+        }
       }
-      const base = this.context.editor.state.schema.nodeFromJSON(readSharedDocument(this.fragment));
-      const document = this.structuredAttributes
-        ? this.context.editor.state.schema.nodeFromJSON(this.structuredAttributes.overlay(base))
-        : base;
-      if (this.structuredAttributes && !base.eq(document)) this.repairCanonicalDocument(base, document);
-      const selection = relativeSelection
-        ? this.resolveRelativeSelection(relativeSelection, document)
-        : undefined;
-      this.context.applyRemoteDocument(document, { selection, origin: transaction.origin });
-      this.context.setStatus('connected');
-      this.publishPresences();
     } catch (error) {
-      this.context.setStatus('error', {
-        message: error instanceof Error ? error.message : String(error),
+      if (this.context !== context) return;
+      const message = error instanceof Error ? error.message : String(error);
+      context.setStatus('error', {
+        message: this.roomFailure(message).message,
         recoverable: true,
       });
+      return;
     }
+    if (this.context !== context || this.initializationConflict) return;
+    context.setStatus('connected');
+    this.onAwarenessChange();
   };
 
   private readonly onAwarenessChange = (): void => {
@@ -800,20 +809,29 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
     const incompatible = length === 1 ? !isSharedElement(this.fragment.get(0))
       : length > 1 && !this.fragment.toArray().every(isSharedElement);
     if (replaced || incompatible || this.preserveConcurrentRoots && length > 1) {
-      this.initializationConflict = replaced
-        ? 'The admitted room root changed. Preserve the local draft and replace the collaboration session.'
+      throw this.roomFailure(replaced
+        ? 'The admitted room root changed.'
         : incompatible
-        ? 'Incompatible shared root; refusing legacy writes. Preserve the local draft and replace the collaboration session.'
-        : 'The room has conflicting initial roots. Preserve the local draft and replace the collaboration session.';
+        ? 'Incompatible shared root; refusing legacy writes.'
+        : 'The room has conflicting initial roots.');
+    }
+  }
+
+  private roomFailure(message: string): Error {
+    if (!this.initializationConflict) {
+      this.initializationConflict = `${message} Preserve the local draft and replace the collaboration session.`;
       directionIdentityReleases.get(this)?.();
       directionIdentityReleases.delete(this);
       if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
       this.presenceTimer = undefined;
       this.pendingPresence = undefined;
-      if (this.publishedPresenceSignature !== undefined) this.awareness?.setLocalStateField(this.awarenessField, null);
+      if (this.publishedPresenceSignature !== undefined) {
+        this.publishedPresenceSignature = undefined;
+        this.awareness?.setLocalStateField(this.awarenessField, null);
+      }
       this.context?.setPresences([]);
-      throw new Error(this.initializationConflict);
     }
+    return new Error(this.initializationConflict);
   }
 
   private repairCanonicalDocument(before: Node, after: Node): void {

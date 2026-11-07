@@ -22,6 +22,9 @@ select retained storage and pass the six structural cases after durable reopen.
 Bound adapters also verify the admitted native root at mount and stop shared
 editing if that root is replaced or an embedded XML fragment is detached.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
+Both adapters now preserve the local draft and suspend shared editing when
+the mounted editor rejects a peer's document update.
+[Rejected-update audit](YJS_STRUCTURAL_RETENTION_AUDIT.md#rejected-document-update-recovery).
 The live reference can run the six concurrency cases against an upgraded
 legacy room, verifying its archive and active identity across reload and undo.
 [Upgrade and live editing audit](YJS_LIVE_HTTP_REFERENCE.md#live-editing-after-upgrading-a-saved-legacy-room).
@@ -66,8 +69,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 145.7 KiB over its existing limit.
-[Package size evidence](PERFORMANCE.md#docx-package-assembly).
+pass. The CommonJS aggregate is 146.1 KiB over its existing limit.
+[Package size evidence](YJS_STRUCTURAL_RETENTION_AUDIT.md#rejected-document-update-recovery).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested
