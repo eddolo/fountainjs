@@ -33,10 +33,11 @@ products remain future work. [Parity ledger](TIPTAP_PARITY.md).
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies
 survive reload. A same-session draft resumes through the normal admission checks
 and keeps its unsent text when a peer has wrapped the paragraph in a quote.
-Retired or pre-admission copies open in a separate local editor. A failed save
-keeps the current editor intact. Eighteen recorded Chromium, Firefox and WebKit
-journeys pass with visual review. Automatic saves and production rollout remain
-open. [Draft recovery audit](YJS_BROWSER_DRAFT_RECOVERY_AUDIT.md).
+Retired or pre-admission copies open in a separate local editor. The host example
+now automatically saves one rolling copy per editor, captures undo and typing
+after a refusal, and isolates copies across tabs. An aborted write leaves the
+previous copy intact and can be retried. Storage retention and production rollout
+remain open. [Draft recovery audit](YJS_BROWSER_DRAFT_RECOVERY_AUDIT.md).
 
 First-room provisioning reference (2026-11-07, local). Two concurrent requests
 can prepare independent checkpoints and load the same durable room selected by

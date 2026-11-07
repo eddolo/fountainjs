@@ -93,10 +93,11 @@ prevents late callbacks from installing state or starting transport. An epoch
 change on reconnect requires an explicit fresh session and draft recovery.
 
 The [browser draft reference](YJS_BROWSER_DRAFT_RECOVERY_AUDIT.md) shows how a
-host can save recovery copies in IndexedDB before switching sessions. A saved
-copy from the same session can pass through ordinary admission after reload.
-Pre-admission and retired-session drafts reopen separately as editable local
-copies. This is an explicit recovery workflow in the host example.
+host can keep a rolling recovery copy in IndexedDB, including before switching
+sessions. A saved copy from the same session can pass through ordinary admission
+after reload. Pre-admission and retired-session drafts reopen separately as
+editable local copies. Opening or resuming a saved draft requires an explicit
+choice in the host example.
 
 ## Checkpoints and limits
 
@@ -111,8 +112,8 @@ independent initialization, legacy XML data, subdocuments and nonportable wire
 values are refused. Existing XML rooms need the separately audited migration and
 rollback workflow; this entry intentionally exports no migration/admin service.
 
-Remaining adoption work includes deployed transport and provisioning, automatic
-draft persistence and cross-session reconciliation, multi-host authority, history/metadata growth and compaction,
+Remaining adoption work includes deployed transport and provisioning, draft
+retention and cross-session reconciliation, multi-host authority, history and metadata growth and compaction,
 broader application integration, and full release CI. Recorded desktop-engine
 journeys are not physical mobile/IME or assistive-technology certification.
 

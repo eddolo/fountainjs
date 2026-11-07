@@ -19,8 +19,10 @@ async function type(page: Page, suffix: string) {
   await expect(editor(page)).toContainText(suffix.trim());
 }
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/artifacts/yjs-browser-draft-fixture-20261107.html');
+const fixture = '/artifacts/yjs-browser-draft-fixture-20261107.html';
+
+test.beforeEach(async ({ page }, info) => {
+  await page.goto(fixture + (info.tags.includes('@autosave') ? '' : '?manual'));
   await expect(status(page)).toHaveText('Ready');
 });
 
@@ -61,7 +63,7 @@ test('merges recovered typing into a quote saved by another author before resume
   const peer = await page.context().newPage();
   try {
     await peer.addInitScript(token => sessionStorage.setItem('fountain-draft-audit-session', token), token);
-    await peer.goto('/artifacts/yjs-browser-draft-fixture-20261107.html?peer');
+    await peer.goto(fixture + '?manual&peer');
     await expect(status(peer)).toHaveText('Ready');
     await expect(peer.getByText('No recovery copies yet.')).toBeVisible();
     await click(peer, 'Join shared session');
@@ -116,7 +118,7 @@ test('keeps pre-admission typing as a separate draft without native room bytes',
   await expect(page.locator('#connection')).toHaveText('connected');
   await page.reload();
   await expect(status(page)).toHaveText('Ready');
-  await expect(page.getByText('Local draft made before joining')).toBeVisible();
+  await expect(page.getByText('Local-only draft')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Resume this session' })).toHaveCount(0);
   await click(page, 'Open local copy');
   await expect(editor(page)).toContainText('Before joining.');
@@ -172,4 +174,127 @@ test('rechecks the authority if a displayed resume option becomes stale', async 
   expect((await snapshot(page)).model).toEqual(saved.model);
   expect((await snapshot(page)).server).toEqual(saved.server);
   await page.screenshot({ path: info.outputPath('stale-offer.png') });
+});
+
+test('automatic recovery updates one rolling copy and survives reload without clicking save', { tag: '@autosave' }, async ({ page }, info) => {
+  await click(page, 'Join shared session');
+  await expect(page.locator('#connection')).toHaveText('connected');
+  await expect(page.locator('#autosave')).toHaveText('Automatic recovery is on.');
+  expect((await snapshot(page)).copies).toHaveLength(0);
+  await type(page, ' First burst.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const first = (await snapshot(page)).copies[0];
+  await type(page, ' Latest burst.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const edited = await snapshot(page);
+  expect(edited.copies).toHaveLength(1);
+  expect(edited.copies[0].id).toBe(first.id);
+  expect(edited.copies[0].model).toEqual(edited.model);
+  expect(edited.copies[0].source?.checkpoint.update.length).toBeGreaterThan(0);
+  await page.reload();
+  await expect(status(page)).toHaveText('Ready');
+  await click(page, 'Resume this session');
+  await expect(page.locator('#connection')).toHaveText('connected');
+  await expect(editor(page)).toContainText('First burst. Latest burst.');
+  expect((await snapshot(page)).server).toEqual(edited.server);
+  await page.screenshot({ path: info.outputPath('autosave-resumed.png'), scale: 'css' });
+});
+
+test('automatic recovery keeps the last committed draft when the next write aborts and retries the latest edit', { tag: '@autosave' }, async ({ page }, info) => {
+  await type(page, ' First local draft.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const first = (await snapshot(page)).copies[0];
+  await page.evaluate(() => {
+    const original = IDBObjectStore.prototype.put;
+    IDBObjectStore.prototype.put = function (...args: Parameters<typeof original>) {
+      const request = original.apply(this, args);
+      this.transaction.abort();
+      return request;
+    };
+    window.addEventListener('allow-recovery-write', () => { IDBObjectStore.prototype.put = original; }, { once: true });
+  });
+  await type(page, ' New pending content.');
+  await expect(page.locator('#autosave')).toContainText('Automatic recovery save failed');
+  expect((await snapshot(page)).copies).toEqual([first]);
+  await page.screenshot({ path: info.outputPath('autosave-aborted.png'), scale: 'css' });
+  await page.evaluate(() => window.dispatchEvent(new Event('allow-recovery-write')));
+  await click(page, 'Retry automatic save');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const retried = await snapshot(page);
+  expect(retried.copies).toHaveLength(1);
+  expect(retried.copies[0].id).toBe(first.id);
+  expect(retried.copies[0].model).toEqual(retried.model);
+  await page.reload();
+  await expect(status(page)).toHaveText('Ready');
+  await click(page, 'Open local copy');
+  await expect(editor(page)).toContainText('First local draft. New pending content.');
+});
+
+test('automatic recovery gives two tabs under the same author separate slots', { tag: '@autosave' }, async ({ page }, info) => {
+  const token = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
+  const other = await page.context().newPage();
+  try {
+    await other.addInitScript(token => sessionStorage.setItem('fountain-draft-audit-session', token), token);
+    await other.goto(fixture);
+    await expect(status(other)).toHaveText('Ready');
+    await type(page, ' From the first tab.');
+    await type(other, ' From the second tab.');
+    await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+    await expect(other.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+    const { copies } = await snapshot(page);
+    expect(copies).toHaveLength(2);
+    expect(new Set(copies.map(copy => copy.id)).size).toBe(2);
+    expect(copies.map(copy => copy.model)).toEqual(expect.arrayContaining([(await snapshot(page)).model, (await snapshot(other)).model]));
+  } finally { await other.close(); }
+  await page.reload();
+  await expect(status(page)).toHaveText('Ready');
+  await expect(page.getByRole('button', { name: 'Open local copy' })).toHaveCount(2);
+  await page.screenshot({ path: info.outputPath('autosave-two-tabs.png'), scale: 'css' });
+});
+
+test('automatic recovery records local Yjs undo instead of reviving the undone text after reload', { tag: '@autosave' }, async ({ page }, info) => {
+  await click(page, 'Join shared session');
+  await expect(page.locator('#connection')).toHaveText('connected');
+  const before = (await snapshot(page)).model;
+  await type(page, ' Undo this unsent typing.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const old = (await snapshot(page)).copies[0];
+  await click(page, 'Undo shared edit');
+  await expect(editor(page)).not.toContainText('Undo this unsent typing.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const after = (await snapshot(page)).copies[0];
+  expect(after.id).toBe(old.id);
+  expect(after.model).toEqual(before);
+  expect(after.model).not.toEqual(old.model);
+  await page.reload();
+  await expect(status(page)).toHaveText('Ready');
+  await click(page, 'Resume this session');
+  await expect(page.locator('#connection')).toHaveText('connected');
+  expect((await snapshot(page)).model).toEqual(before);
+  await page.screenshot({ path: info.outputPath('autosave-undo.png'), scale: 'css' });
+});
+
+test('automatic recovery keeps typing made after a retired writer is disconnected', { tag: '@autosave' }, async ({ page }, info) => {
+  await click(page, 'Join shared session');
+  await expect(page.locator('#connection')).toHaveText('connected');
+  await type(page, ' Before the refusal.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const native = (await snapshot(page)).copies[0];
+  await click(page, 'Rotate server session');
+  await click(page, 'Send editor changes');
+  await expect(status(page)).toContainText('stale');
+  await type(page, ' After the refusal.');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  const edited = await snapshot(page);
+  expect(edited.copies[0].id).toBe(native.id);
+  expect(edited.copies[0].source?.diverged).toBe(true);
+  expect(edited.copies[0].source?.checkpoint).toEqual(native.source?.checkpoint);
+  await page.reload();
+  await expect(status(page)).toHaveText('Ready');
+  await expect(page.getByRole('button', { name: 'Resume this session' })).toHaveCount(0);
+  await click(page, 'Open local copy');
+  await expect(editor(page)).toContainText('Before the refusal. After the refusal.');
+  expect((await snapshot(page)).model).toEqual(edited.model);
+  expect((await snapshot(page)).server).toEqual(edited.server);
+  await page.screenshot({ path: info.outputPath('autosave-after-refusal.png'), scale: 'css' });
 });

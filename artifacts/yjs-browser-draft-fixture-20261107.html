@@ -12,19 +12,25 @@
   h2 { margin-top: 0; font-size: 19px; }
   .fountain-editor { padding: 12px; min-height: 135px; border: 1px solid #ded7eb; border-radius: 5px; }
   #copies { margin-top: 16px; }
+  #records > div + div { margin-top: 14px; padding-top: 10px; border-top: 1px solid #ded7eb; }
+  #records time { margin-inline-start: 8px; color: #625975; font-size: 14px; }
+  #records p { overflow-wrap: anywhere; }
   #message { min-height: 24px; }
 </style>
 <h1>Recover an unsent Fountain draft</h1>
-<p>Save a recovery copy on this device. Resume the same shared session or open an older draft separately.</p>
+<p>Keep a recovery copy on this device. Resume the same shared session or open an older draft separately.</p>
 <header id="controls">
   <button id="join">Join shared session</button>
   <button id="save">Save recovery copy</button>
+  <button id="retry-autosave" hidden>Retry automatic save</button>
   <button id="quote">Toggle quote</button>
+  <button id="undo">Undo shared edit</button>
   <button id="send">Send editor changes</button>
   <button id="rotate">Rotate server session</button>
   <button id="choose">Keep a copy and open shared</button>
 </header>
 <p role="status" id="message">Opening…</p>
+<p id="autosave" aria-live="polite" hidden></p>
 <div class="panes">
   <section><h2 id="edit-title">Your draft</h2><p id="connection"></p><div id="editing"></div></section>
   <section><h2>Saved on the server</h2><div id="reader"></div></section>
@@ -32,16 +38,18 @@
 <section id="copies"><h2>Recovery copies on this device</h2><div id="records"></div></section>
 <script type="module">
 import * as Y from 'yjs';
-import {CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState, connectCollaboration, disconnectCollaboration, toggleQuote} from './yjs-authority-admission-build-20261107/engine.js';
+import {CoreExtension, EditorView, composeExtensions, createEditor, getCollaborationState, connectCollaboration, disconnectCollaboration, toggleQuote, undoCollaboration, COLLABORATION_REMOTE_META, COLLABORATION_ORIGIN_META} from './yjs-authority-admission-build-20261107/engine.js';
 import {createRetainedYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/adapter.js';
 import {captureRetainedCheckpoint, restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';
 import {prepareRetainedAdmission} from './yjs-authority-admission-build-20261107/admission.js';
-import {openBrowserDrafts, isSameDraftSession} from '/examples/backends/retained-browser-drafts.ts';
+import {openBrowserDrafts, isSameDraftSession, scheduleBrowserDraftAutosave} from '/examples/backends/retained-browser-drafts.ts';
 
 const version = 'admission-browser-1';
 const select = selector => document.querySelector(selector);
 const local = text => ({type: 'doc', content: [{type: 'paragraph', content: [{type: 'text', text}]}]});
-const user = new URLSearchParams(location.search).has('peer')
+const query = new URLSearchParams(location.search);
+const autosaveEnabled = !query.has('manual');
+const user = query.has('peer')
   ? {id: 'grace', name: 'Grace', color: '#af3e7d'}
   : {id: 'ada', name: 'Ada', color: '#7048e8'};
 const base = composeExtensions([CoreExtension]);
@@ -71,6 +79,7 @@ async function refresh() {
 }
 
 function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
+  client?.autosave?.stop();
   client?.view.destroy();
   client?.editor.destroy();
   client?.doc.destroy();
@@ -101,6 +110,29 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   next.savedModel = editor.state.doc;
   next.view = new EditorView(select('#editing'), editor, {ariaLabel: 'Your draft'});
   client = next;
+  if (autosaveEnabled) {
+    const write = drafts.createAutosaveSlot();
+    select('#autosave').hidden = false;
+    select('#autosave').textContent = 'Automatic recovery is on.';
+    select('#retry-autosave').hidden = true;
+    next.autosave = scheduleBrowserDraftAutosave(async () => {
+      const {model, value} = await captureDraft(next);
+      await write(value);
+      next.savedModel = model;
+      if (client === next) void listCopies().catch(() => undefined);
+    }, (status, error) => {
+      if (client !== next) return;
+      select('#autosave').textContent = status === 'pending' ? 'Saving a recovery copy…'
+        : status === 'saved' ? 'Recovery copy saved automatically.'
+        : 'Automatic recovery save failed. ' + error.message;
+      select('#retry-autosave').hidden = status !== 'failed';
+    });
+    editor.subscribe((_state, transaction) => {
+      const authored = !transaction.getMeta(COLLABORATION_REMOTE_META)
+        || transaction.getMeta(COLLABORATION_ORIGIN_META) instanceof Y.UndoManager;
+      if (transaction.docChanged && authored) next.autosave.changed();
+    });
+  }
   select('#edit-title').textContent = detached ? 'Detached recovery copy' : 'Your draft';
   const render = () => {
     const state = getCollaborationState(editor);
@@ -110,24 +142,32 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   render();
 }
 
-async function saveCopy() {
-  const active = client;
+async function captureDraft(active) {
   const {editor, doc, lease} = active;
   const model = editor.state.doc;
   const checkpoint = lease ? await captureRetainedCheckpoint(doc, editor.state.schema, version, lease.room) : null;
+  let source = null;
   if (checkpoint) {
     const verified = await restoreRetainedCheckpoint(checkpoint, editor.state.schema, version);
     try {
-      if (!verified.baseDocument.eq(model)) throw new Error('Native draft and visible text disagree. Keep the current editor open.');
+      source = verified.baseDocument.eq(model) ? {lease, checkpoint} : {lease, checkpoint, diverged: true};
     } finally { verified.document.destroy(); }
   }
-  await drafts.save({schemaVersion: version, model: model.toJSON(), source: checkpoint ? {lease, checkpoint} : null});
+  return {model, value: {schemaVersion: version, model: model.toJSON(), source}};
+}
+
+async function saveCopy() {
+  const active = client;
+  const {model, value} = await captureDraft(active);
+  await drafts.save(value);
+  const {editor} = active;
   if (active !== client || !model.eq(editor.state.doc)) throw new Error('The draft changed while saving. Save its latest version before switching.');
   active.savedModel = model;
   select('#message').textContent = 'Recovery copy saved on this device.';
 }
 
 async function preserveCurrentEdits() {
+  await client.autosave?.flush();
   if (!client.savedModel.eq(client.editor.state.doc)) await saveCopy();
 }
 
@@ -148,13 +188,24 @@ function button(node, action) {
 
 async function listCopies() {
   const records = select('#records');
-  records.replaceChildren();
   const copies = await drafts.list();
+  records.replaceChildren();
   if (!copies.length) records.textContent = 'No recovery copies yet.';
   for (const draft of copies) {
     const row = document.createElement('div');
     const description = document.createElement('p');
-    description.textContent = !draft.source ? 'Local draft made before joining' : isSameDraftSession(draft, current) ? 'Draft from this session' : 'Draft from a previous session';
+    const label = document.createElement('span');
+    label.textContent = !draft.source || draft.source.diverged ? 'Local-only draft' : isSameDraftSession(draft, current) ? 'Draft from this session' : 'Draft from a previous session';
+    const timestamp = document.createElement('time');
+    const date = new Date(draft.savedAt);
+    timestamp.dateTime = date.toISOString();
+    timestamp.textContent = date.toLocaleString();
+    description.append(label, timestamp);
+    const preview = document.createElement('p');
+    try {
+      const text = client.editor.state.schema.nodeFromJSON(draft.model).textContent;
+      preview.textContent = text.length > 120 ? text.slice(0, 120) + '…' : text;
+    } catch { preview.textContent = 'Preview unavailable for this schema.'; }
     const open = document.createElement('button');
     open.textContent = 'Open local copy';
     button(open, async () => {
@@ -167,7 +218,7 @@ async function listCopies() {
       await listCopies();
       select('#message').textContent = 'Opened separately. The shared document was not changed.';
     });
-    row.append(description, open);
+    row.append(description, preview, open);
     if (isSameDraftSession(draft, current)) {
       const resume = document.createElement('button');
       resume.textContent = 'Resume this session';
@@ -213,7 +264,9 @@ button(select('#join'), () => {
   connectCollaboration(client.editor);
 });
 button(select('#save'), async () => { await saveCopy(); await listCopies(); });
+button(select('#retry-autosave'), async () => { await client.autosave?.flush(); });
 button(select('#quote'), () => { toggleQuote(client.editor); });
+button(select('#undo'), () => { undoCollaboration(client.editor); });
 button(select('#send'), async () => {
   if (getCollaborationState(client.editor)?.status !== 'connected' || !client.lease) throw new Error('Join an active session before sending edits.');
   try { await request('write', {epoch: client.lease.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(client.doc)}); }
@@ -224,11 +277,15 @@ button(select('#send'), async () => {
 button(select('#rotate'), async () => { await request('rotate'); await refresh(); await listCopies(); select('#message').textContent = 'Server session rotated.'; });
 button(select('#choose'), async () => {
   await refresh();
-  await saveCopy();
+  if (client.autosave) await preserveCurrentEdits();
+  else await saveCopy();
   assertCurrentSaved();
   mount(serverModel);
   connectCollaboration(client.editor);
   await listCopies();
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') void client.autosave?.flush().catch(() => undefined);
 });
 select('#message').textContent = 'Ready';
 window.audit = {async snapshot() { return {starts, server: serverModel, model: client.editor.getJSON(), copies: await drafts.list()}; }};
