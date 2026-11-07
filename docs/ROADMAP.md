@@ -45,6 +45,9 @@ checkpoint response. A bad delta fell back to a freshly fenced full response.
 The SQLite reference reads metadata alone for idle polls and presence checks,
 including when the receiver is behind. Changed document responses still pass
 full validation and a generation check before delivery.
+Established document requests now time out and retry transient failures with
+jittered backoff while keeping local edits available.
+Both adapters also discard an older queued cursor after a newer one is sent.
 [Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
 
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies

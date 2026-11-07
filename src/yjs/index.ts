@@ -880,6 +880,9 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   private writeLocalPresence(value: Readonly<Record<string, unknown>>, signature: string): void {
     if (!this.awareness || !this.context) return;
+    if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
+    this.presenceTimer = undefined;
+    this.pendingPresence = undefined;
     this.awareness.setLocalStateField(this.awarenessField, value);
     this.publishedPresenceSignature = signature;
     this.lastPresenceAt = Date.now();

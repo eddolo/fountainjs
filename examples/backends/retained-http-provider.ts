@@ -18,6 +18,7 @@ interface BoundTransport {
 
 interface RetainedHttpOptions {
   readonly document: Y.Doc;
+  readonly requestTimeoutMs?: number;
   readonly bound: () => BoundTransport;
   readonly poll: (lease: RetainedAdmissionLease, signal: AbortSignal, basis?: RetainedDeltaBasis) => Promise<RetainedHttpReceipt | null>;
   readonly write: (lease: RetainedAdmissionLease, update: Uint8Array, signal: AbortSignal, basis: RetainedDeltaBasis) => Promise<RetainedHttpReceipt>;
@@ -44,13 +45,40 @@ function checkpointFor(snapshot: DocumentRoomSnapshot, lease: RetainedAdmissionL
 
 function retryable(error: unknown): boolean {
   const code = (error as { code?: string } | null)?.code;
-  return code === 'network' || code === 'revision-conflict';
+  return code === 'network' || code === 'revision-conflict' || code === 'timeout';
+}
+
+async function requestWithDeadline<T>(session: AbortSignal, timeoutMs: number, request: (signal: AbortSignal) => Promise<T>): Promise<T> {
+  session.throwIfAborted();
+  const timeout = AbortSignal.timeout(timeoutMs);
+  const signal = AbortSignal.any([session, timeout]);
+  let abort!: () => void;
+  const stopped = new Promise<never>((_resolve, reject) => {
+    abort = () => reject(signal.reason);
+    signal.addEventListener('abort', abort, { once: true });
+  });
+  try {
+    const pending = Promise.resolve().then(() => {
+      signal.throwIfAborted();
+      return request(signal);
+    });
+    const value = await Promise.race([stopped, pending]);
+    signal.throwIfAborted();
+    return value;
+  } catch (error) {
+    if (!session.aborted && timeout.aborted) {
+      throw Object.assign(new Error('The authority request timed out. Local changes were retained.', { cause: error }), { code: 'timeout' });
+    }
+    throw error;
+  } finally { signal.removeEventListener('abort', abort); }
 }
 
 /** Application-owned reference provider. It never connects before authority
  * binding. Keep the adapter mounted during a network failure so edits stay in
  * the Y.Doc. Only the transport stops when the authority retires that session. */
 export function createRetainedHttpProvider(options: RetainedHttpOptions) {
+  const timeoutMs = options.requestTimeoutMs ?? 5_000;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 60_000) throw new TypeError('Invalid retained HTTP request timeout.');
   let controller: AbortController | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const document = options.document;
@@ -80,6 +108,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     let base: RetainedCheckpoint;
     let basis: RetainedDeltaBasis;
     let edited = 0, acknowledged = 0;
+    let retryCount = 0;
     let running = false;
     let presenceRequest: AbortController | undefined;
     let lastPresenceRequest = Number.NEGATIVE_INFINITY;
@@ -120,9 +149,10 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       const writing = sending > acknowledged;
       let delay: number | undefined;
       try {
-        const receipt = writing
-          ? await options.write(lease, Y.encodeStateAsUpdate(document, basis.vector), signal, basis)
-          : await options.poll(lease, signal, basis);
+        const update = writing ? Y.encodeStateAsUpdate(document, basis.vector) : undefined;
+        const receipt = await requestWithDeadline(signal, timeoutMs, requestSignal => update
+          ? options.write(lease, update, requestSignal, basis)
+          : options.poll(lease, requestSignal, basis));
         signal.throwIfAborted();
         if (!receipt && writing) throw new Error('The authority returned no write acknowledgement. Local changes were retained.');
         if (receipt) {
@@ -133,7 +163,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
             signal.throwIfAborted();
             // Fall back once to a newly fenced full receipt. An invalid or
             // empty fallback must never acknowledge the outgoing edit.
-            const full = await options.poll(lease, signal);
+            const full = await requestWithDeadline(signal, timeoutMs, requestSignal => options.poll(lease, requestSignal));
             if (!full || 'baseUpdateSha256' in full) throw error;
             snapshot = full;
           }
@@ -150,12 +180,15 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
           }
         }
         acknowledged = sending;
+        retryCount = 0;
         options.onStatus('connected');
         exchangePresence();
       } catch (error) {
         if (signal.aborted) return;
         if (retryable(error)) {
-          delay = 500;
+          const ceiling = 500 * 2 ** retryCount;
+          retryCount = Math.min(retryCount + 1, 4);
+          delay = Math.ceil(ceiling * (0.75 + 0.25 * Math.random()));
           presenceRequest?.abort();
           presence.replace([]);
           options.onStatus('reconnecting', error);
@@ -177,7 +210,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       onUpdate = (_bytes, _origin, _document, transaction) => {
         if (!transaction.local) return;
         edited += 1;
-        if (!running && edited === acknowledged + 1) schedule(75);
+        if (!running && retryCount === 0 && edited === acknowledged + 1) schedule(75);
       };
       document.on('update', onUpdate);
       options.onStatus('connected');

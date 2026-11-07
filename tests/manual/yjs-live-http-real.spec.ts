@@ -39,6 +39,12 @@ async function secondAuthor(page: Page) {
 
 const offline = (route: Route) => route.abort('internetdisconnected');
 
+function gate() {
+  let release!: () => void;
+  const promise = new Promise<void>(resolve => { release = resolve; });
+  return { promise, release };
+}
+
 async function selectReport(page: Page) {
   await editor(page).click();
   await page.keyboard.press('End');
@@ -64,7 +70,7 @@ const serverRevision = (page: Page) => page.evaluate(async () => {
 });
 
 test.beforeEach(async ({ page }, info) => {
-  await page.goto(fixture + (info.tags.includes('@large') ? '&large' : ''));
+  await page.goto(fixture + (info.tags.includes('@large') ? '&large' : '') + (info.tags.includes('@deadline') ? '&deadline' : ''));
   await join(page);
 });
 
@@ -84,7 +90,7 @@ test('exchanges typing and structural changes automatically after a connection i
     await page.screenshot({ path: info.outputPath('offline-draft.png'), scale: 'css' });
     await page.unroute(write, offline);
     await page.unroute(poll, offline);
-    await expect(connection(page)).toHaveText('connected');
+    await expect(connection(page)).toHaveText('connected', { timeout: 12_000 });
     const expected = 'Shared incident report. From Grace. Offline from Ada.';
     await expect(editor(page).locator('blockquote')).toHaveText(expected);
     await expect(editor(peer).locator('blockquote')).toHaveText(expected);
@@ -110,6 +116,79 @@ test('retries a committed write after the reply is lost without duplicating text
   await page.screenshot({ path: info.outputPath('lost-reply.png'), scale: 'css' });
 });
 
+test('times out a stalled committed write and ignores its late reply', { tag: '@deadline' }, async ({ page }, info) => {
+  let writes = 0;
+  let committed = false;
+  const release = gate();
+  const lateReply = gate();
+  const allowRetry = gate();
+  await page.route(write, async route => {
+    if (++writes !== 1) {
+      await allowRetry.promise;
+      return route.continue();
+    }
+    try {
+      const response = await route.fetch();
+      expect(await response.json()).toMatchObject({ ok: true });
+      committed = true;
+      await release.promise;
+      // The browser already aborted this request. Playwright may refuse to
+      // deliver the held response when the route is eventually released.
+      await route.fulfill({ response }).catch(() => undefined);
+    } finally { lateReply.release(); }
+  });
+  try {
+    await editor(page).click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' First note.');
+    await expect.poll(() => committed).toBe(true);
+    await page.keyboard.insertText(' Second note.');
+    await expect(connection(page)).toContainText('request timed out');
+    await expect(editor(page)).toHaveText('Shared incident report. First note. Second note.');
+    await page.screenshot({ path: info.outputPath('write-timed-out.png'), scale: 'css' });
+    allowRetry.release();
+    await expect(server(page)).toHaveText('Shared incident report. First note. Second note.');
+    await expect(connection(page)).toHaveText('connected');
+    expect(writes).toBeGreaterThanOrEqual(2);
+    release.release();
+    await lateReply.promise;
+    await expect(server(page)).toHaveText('Shared incident report. First note. Second note.');
+    await expect(connection(page)).toHaveText('connected');
+    await page.screenshot({ path: info.outputPath('write-timeout-recovered.png'), scale: 'css' });
+  } finally { release.release(); allowRetry.release(); }
+});
+
+test('retries concurrent writers against the durable authority until both edits are shared', { tag: '@deadline' }, async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  const arrived = new Set<Page>();
+  const race = gate();
+  let conflicts = 0;
+  try {
+    for (const author of [page, peer]) {
+      await author.route(write, async route => {
+        if (arrived.has(author)) return route.continue();
+        arrived.add(author);
+        if (arrived.size === 2) race.release();
+        await race.promise;
+        const response = await route.fetch();
+        if ((await response.json()).code === 'revision-conflict') conflicts += 1;
+        await route.fulfill({ response });
+      });
+      await editor(author).click();
+      await author.keyboard.press('End');
+    }
+    await Promise.all([page.keyboard.insertText(' [ADA]'), peer.keyboard.insertText(' [GRACE]')]);
+    await expect.poll(() => conflicts).toBeGreaterThan(0);
+    const combined = /^Shared incident report\.(?: \[ADA\] \[GRACE\]| \[GRACE\] \[ADA\])$/;
+    await expect(editor(page)).toHaveText(combined);
+    await expect(editor(peer)).toHaveText(combined);
+    await expect(server(page)).toHaveText(combined);
+    await expect(server(peer)).toHaveText(combined);
+    expect(await editor(page).textContent()).toBe(await editor(peer).textContent());
+    await page.screenshot({ path: info.outputPath('concurrent-writes-merged.png'), scale: 'css' });
+  } finally { race.release(); await peer.close(); }
+});
+
 test('stops a retired transport and reopens its locally saved typing after reload', async ({ page }, info) => {
   const peer = await secondAuthor(page);
   try {
@@ -121,7 +200,7 @@ test('stops a retired transport and reopens its locally saved typing after reloa
     await expect(peer.getByRole('status')).toHaveText('Server session rotated.');
     await page.unroute(write, offline);
     await page.unroute(poll, offline);
-    await expect(connection(page)).toContainText('stale');
+    await expect(connection(page)).toContainText('stale', { timeout: 12_000 });
     await type(page, ' Still local afterwards.');
     await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
     await expect(server(peer)).toHaveText('Shared incident report.');

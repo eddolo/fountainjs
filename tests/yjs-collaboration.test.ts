@@ -2,6 +2,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
+import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import {
   CoreExtension,
   Selection,
@@ -98,6 +99,34 @@ class MemoryAwareness implements YjsAwareness {
   emit(): void { this.listeners.forEach((listener) => listener()); }
   get listenerCount(): number { return this.listeners.size; }
 }
+
+it.each([
+  { name: 'default adapter', createExtension: createYjsCollaborationExtension },
+  { name: 'retained adapter', createExtension: createRetainedYjsCollaborationExtension },
+])('$name does not publish a queued older cursor after a newer cursor has been sent', ({ createExtension }) => {
+  vi.useFakeTimers();
+  vi.setSystemTime(1_000);
+  const ydoc = new Y.Doc();
+  const awareness = new AwarenessNetwork().create(ydoc.clientID);
+  const kit = composeExtensions([CoreExtension, createExtension({ document: ydoc, awareness, user: ada, presenceThrottleMs: 32 })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: document('Alpha') });
+  try {
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+    expect(awareness.writes).toBe(1);
+    // The clock passed the throttle window before the queued timer ran.
+    vi.setSystemTime(1_032);
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 4)));
+    expect(awareness.writes).toBe(2);
+    const latest = awareness.getLocalState();
+    vi.advanceTimersByTime(32);
+    expect(awareness.writes).toBe(2);
+    expect(awareness.getLocalState()).toEqual(latest);
+  } finally {
+    editor.destroy();
+    ydoc.destroy();
+    vi.useRealTimers();
+  }
+});
 
 describe('optional Yjs collaboration adapter', () => {
   it('synchronizes marks carried by inline atom nodes', () => {

@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep a queued awareness update from overwriting a newer cursor in either Yjs
+  adapter when the throttle timer runs late. [Transport reference](docs/YJS_LIVE_HTTP_REFERENCE.md).
+
 - Read room metadata alone for idle polling and presence in the retained
   SQLite reference. Changed documents keep the existing checkpoint and
   generation verification. [Transport reference](docs/YJS_LIVE_HTTP_REFERENCE.md).

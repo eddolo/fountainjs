@@ -62,6 +62,20 @@ editors cancels the old transport, including a request waiting to merge. Retryin
 a native update after a lost reply preserves one copy of the edit. The current
 server may record an extra revision for the retry.
 
+Each established document request has a five-second default deadline, including
+a full-checkpoint fallback. An expired request is aborted and its late reply is
+ignored. Transient network errors, deadlines and revision conflicts retry with
+jitter and an increasing delay capped at eight seconds. Local typing remains
+available without restarting that wait. A verified response resets the backoff.
+Initial admission is a separate host operation.
+
+The recorded failure cases hold a write reply after its server commit, type
+again while the request waits, and release the stale reply after the retry has
+saved both notes. The demo reader shows the last confirmed server snapshot
+while a response is pending. A separate case releases two writes together,
+observes a real SQLite revision conflict, and verifies each author's text
+appears once in both editors and in the saved document.
+
 ## Presence
 
 The host [presence reference](../examples/backends/retained-http-presence.ts)
@@ -79,6 +93,16 @@ leave from a retired epoch cannot clear a new room's presence. The registry is
 bounded to 64 presence leases per room and 16,384 UTF-16 code units of JSON per peer
 state. An unused lease is reclaimed after two minutes of silence, after which
 that tab needs a new admission to publish presence again.
+
+The broader deadline audit also caught a cursor ordering race. When the throttle
+window had elapsed but the queued timer had yet to run, either adapter could
+send a new selection and then send an older queued one. Publishing now clears
+the pending timer. The regression tests reproduce the old order by moving the
+clock past the throttle window before running the timer.
+The fixed build passed 99 focused tests and all 30 recorded journeys across
+Chromium, Firefox and WebKit, with zero retries or skips. Type checks passed.
+Build, declaration, headless and packed-package checks passed. The same four
+raw-size gates remain over their existing limits.
 
 ## Recorded browser proof
 
@@ -112,14 +136,14 @@ the internal polling method in the ESM and CommonJS room-authority declarations.
 
 ## Deployment boundaries
 
-This reference uses periodic HTTP polling with fixed delays. The server still
+This reference uses periodic HTTP polling. The server still
 validates full checkpoints when it delivers changed document state, and the
 client retains an accepted checkpoint and reconstructs full bytes for validation.
 The metadata projection avoids materializing the BLOB in Node. SQLite physical
 page reads and multi-client CPU and memory at production scale remain unmeasured.
 Presence is process-local. A real host must
 authenticate the actor and supply or verify their display identity. The reference
-has no deployed process, deadline for document requests, multi-host presence
-distribution, load evidence, or production retention and compaction policy.
+has no deployed process, multi-host presence distribution, production-scale load
+evidence, or production retention and compaction policy.
 The loopback session token is test infrastructure. The default Yjs adapter still
 has six known structural failures. This reference remains unreleased.

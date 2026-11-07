@@ -272,6 +272,8 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private publish(value: Record<string, unknown>, signature: string): void {
+    if (this.presenceTimer !== undefined) clearTimeout(this.presenceTimer);
+    this.presenceTimer = undefined; this.pendingPresence = undefined;
     this.published = signature; this.lastPresence = Date.now(); this.awareness()?.setLocalStateField(this.field, value);
   }
   private presences(): void {

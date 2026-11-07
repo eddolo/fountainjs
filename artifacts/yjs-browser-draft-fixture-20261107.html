@@ -71,14 +71,18 @@ let client, reader, current, serverModel, drafts, starts = 0, readerRequest = 0;
 let token = sessionStorage.getItem('fountain-draft-audit-session');
 
 async function request(action, body = {}, signal) {
+  const networkFailure = error => {
+    signal?.throwIfAborted();
+    throw Object.assign(new Error('The authority could not be reached.', {cause: error}), {code: 'network'});
+  };
   const response = await fetch('/__admission/' + action, {
     method: 'POST', signal, headers: {'Content-Type': 'application/json', 'X-Admission-Session': token ?? ''},
     body: JSON.stringify(body, (_key, value) => value instanceof Uint8Array ? {__wire: btoa(Array.from(value, byte => String.fromCharCode(byte)).join(''))} : value),
-  }).catch(error => {
-    signal?.throwIfAborted();
-    throw Object.assign(new Error('The authority could not be reached.', {cause: error}), {code: 'network'});
+  }).catch(networkFailure);
+  const reply = await response.json().catch(error => {
+    if (error instanceof SyntaxError) throw error;
+    return networkFailure(error);
   });
-  const reply = await response.json();
   if (!reply.ok) throw Object.assign(new Error(reply.error), {code: reply.code});
   const wire = value => Uint8Array.from(atob(value.__wire), byte => byte.charCodeAt(0));
   const checkpoint = reply.value?.checkpoint ?? reply.value?.snapshot?.checkpoint;
@@ -126,6 +130,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   };
   const provider = live ? createRetainedHttpProvider({
     document: doc,
+    requestTimeoutMs: query.has('deadline') ? 1_200 : undefined,
     bound() {
       const accepted = next.bound;
       const manifest = accepted.checkpoint.manifest;
