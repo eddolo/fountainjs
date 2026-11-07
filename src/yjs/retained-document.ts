@@ -183,8 +183,23 @@ export class RetainedDocumentStore {
   private frameTransaction?: Y.Transaction;
   private frameStamp?: string;
   private frameGuard?: () => boolean;
+  private readonly remoteFrameKey = Symbol('retained-remote-frame');
+
+  private soleCleanup(transaction: Y.Transaction): boolean {
+    // Yjs queues observer writes before the earlier afterTransaction returns.
+    const queue = this.document._transactionCleanups;
+    return queue?.length === 1 && queue[0] === transaction;
+  }
+
   private readonly sharedFrameChanged = (transaction: Y.Transaction): void => {
+    // Remote formatting can schedule an empty Yjs cleanup transaction.
+    if (!transaction.changed.size && !transaction.deleteSet.clients.size
+      && transaction.beforeState.size === transaction.afterState.size
+      && [...transaction.afterState].every(([client, clock]) => transaction.beforeState.get(client) === clock)) return;
     this.sharedRevision = {};
+    if (this.frameCurrent && this.frame && !transaction.local && this.soleCleanup(transaction)) {
+      transaction.meta.set(this.remoteFrameKey, this.frame);
+    }
     try {
       this.frameCurrent = this.frameTransaction === transaction && this.frameStamp === this.text.writeVersion(transaction) && this.frameGuard?.() === true;
     } catch { this.frameCurrent = false; }
@@ -368,6 +383,21 @@ export class RetainedDocumentStore {
     if (this.metadata.get('version') !== VERSION || this.metadata.get('seeded') !== true) throw new Error('Retained document is not initialized.');
     const frame = this.acquireFrame(), result = this.normalizeFrame(frame, validate);
     this.frame = frame; this.frameCurrent = revision === this.sharedRevision;
+    return result;
+  }
+
+  readAfterRemote(transaction: Y.Transaction): Node {
+    const previous = this.frame;
+    const eligible = transaction.meta.get(this.remoteFrameKey) === previous;
+    transaction.meta.delete(this.remoteFrameKey);
+    if (!previous || !eligible || !this.soleCleanup(transaction)) return this.read();
+    const partitions = this.text.refreshRemotePartitions(transaction, previous.partitions);
+    if (!partitions || !this.soleCleanup(transaction)) return this.read();
+    const frame = { ...previous, partitions };
+    const result = this.normalizeFrame(frame, true);
+    if (!this.soleCleanup(transaction)) return this.read();
+    this.frame = frame;
+    this.frameCurrent = true;
     return result;
   }
 

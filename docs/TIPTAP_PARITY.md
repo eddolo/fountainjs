@@ -24,12 +24,16 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks now pass. The aggregate ESM and CommonJS builds
-remain 172.6 KiB and 137.3 KiB over their existing limits. Fresh release CI,
+remain 174.3 KiB and 138.7 KiB over their existing limits. Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The migration reference can select an embedded legacy fragment
 and reopen its original identity through rollback. The retained handoff can
 require measured live-checkpoint savings before activating a smaller room.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
+The latest preview reuses checked structure during ordinary remote typing.
+The 5,000-paragraph benchmark fell from 123.17 ms to 31.49 ms median receive
+time and the installed preview passed 39 recorded desktop browser workflows.
+[Installed package audit](YJS_RETAINED_PACKAGE_AUDIT.md#receiving-remote-text-edits).
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Roadmap](ROADMAP.md).
 

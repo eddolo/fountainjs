@@ -119,8 +119,8 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     if (this.pendingHistory.after) event.stackItem.meta.set(AFTER, this.pendingHistory.after);
   };
 
-  private canonical(): Node {
-    const store = this.store!, base = store.read();
+  private canonical(transaction?: Y.Transaction): Node {
+    const store = this.store!, base = transaction ? store.readAfterRemote(transaction) : store.read();
     if (!this.structured) return base;
     const value = store.schema.nodeFromJSON(this.structured.overlay(base));
     if (!base.eq(value)) {
@@ -157,7 +157,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       const bookmark = manager && item && !item.meta.has(REDUNDANT_UNDO)
         ? item.meta.get(manager.undoing ? BEFORE : AFTER) as RetainedSelection | undefined
         : undefined;
-      const value = this.canonical();
+      const value = this.canonical(transaction);
       const selection = restoreSelection(this.store, value, bookmark ?? this.localSelection);
       this.apply(value, selection, transaction.origin);
       this.context.setStatus('connected'); this.presences();

@@ -133,3 +133,31 @@ The WebKit split capture shows matching paragraphs and the retained figure.
 The refreshed full source run passed 4,877 tests across 309 files, with six
 failures and zero skips. All six are the required default-adapter structural
 cases. Both aggregate build-size checks remain over their existing limits.
+
+### Receiving remote text edits
+
+The preview can reuse the checked document structure across remote edits to
+existing text streams. It validates the touched streams and normalizes and
+schema-checks the full model. Changes to the node graph, style registry or
+partition owners, a missing expected partition, or a queued observer write
+use the full read.
+The shortcut depends on Yjs's internal cleanup queue and falls back if the
+queue is unavailable. Empty formatting cleanups preserve the checked frame
+only when the client clocks and deletion set confirm there was no change.
+
+A compiled two-peer Node benchmark alternated three runs per build and timed
+the last 11 of 13 remote keystrokes per run. The final document JSON and Yjs
+update bytes matched between the builds.
+
+| Paragraphs | Median receive time before | Median receive time after |
+| ---: | ---: | ---: |
+| 1,000 | 22.08 ms | 5.81 ms |
+| 5,000 | 123.17 ms | 31.49 ms |
+
+320 focused tests pass. The installed tarball passes 56 Node checks across ESM
+and CommonJS on Yjs 13.6.0 and 13.6.32, both NodeNext type examples on each
+version, and 39 recorded Chromium, Firefox and WebKit workflows on 13.6.32.
+The WebKit reopen capture shows the same saved draft and figure in both panes.
+The public declaration check covers 441 files. A separate rerun reproduces all
+six known default-adapter failures. Both core entries fit their limits. The
+aggregate output remains 174.3 KiB ESM and 138.7 KiB CommonJS over the limits.

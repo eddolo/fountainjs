@@ -987,3 +987,53 @@ it.each([false, true])('orders separate split families around unchanged siblings
     expect(Y.encodeStateAsUpdate(pair.left.doc)).toEqual(Y.encodeStateAsUpdate(pair.right.doc));
   } finally { pair.destroy(); }
 });
+
+it.each(['text only', 'type observer', 'transaction observer', 'new style'] as const)('reads a remote text edit with %s', kind => {
+  const pair = peers();
+  const reader = kind === 'new style' ? pair.left : pair.right;
+  const writer = kind === 'new style' ? pair.right : pair.left;
+  const project = vi.spyOn(reader.store.nodes, 'project');
+  const stream = [...reader.doc.getMap('candidate-text:texts').values()][0] as Y.Text;
+  let result: ReturnType<RetainedDocumentStore['read']> | undefined;
+  let observed = false;
+  const annotate = () => {
+    if (observed) return;
+    observed = true;
+    reader.store.nodes.setAttribute('root', 'observer', kind);
+  };
+  const onAfter = (transaction: Y.Transaction) => {
+    if (!transaction.local) result = reader.store.readAfterRemote(transaction);
+  };
+  try {
+    if (kind === 'type observer') stream.observe(annotate);
+    if (kind === 'transaction observer') reader.doc.on('afterTransaction', annotate);
+    reader.doc.on('afterTransaction', onAfter);
+
+    expect(writer.editor.dispatch(writer.editor.createTransaction().insertText([0, 0], 2, 'X'))).toBe(true);
+    writer.apply();
+    Y.applyUpdate(reader.doc, Y.encodeStateAsUpdate(writer.doc), 'transport');
+    if (kind === 'text only') {
+      const vector = Y.encodeStateVector(reader.doc);
+      expect(writer.editor.dispatch(writer.editor.createTransaction().insertText([0, 0], 3, 'Y'))).toBe(true);
+      writer.apply();
+      Y.applyUpdate(reader.doc, Y.encodeStateAsUpdate(writer.doc, vector), 'transport');
+    }
+
+    expect(result?.child(0).textContent).toBe(kind === 'text only' ? 'AlXYpha' : 'AlXpha');
+    expect(result?.child(1).toJSON()).toEqual(reader.editor.state.doc.child(1).toJSON());
+    if (kind === 'text only') {
+      expect(project).not.toHaveBeenCalled();
+      expect(result?.attrs.observer).toBeUndefined();
+    } else {
+      expect(project).toHaveBeenCalledOnce();
+      expect(result?.attrs.observer).toBe(kind === 'new style' ? undefined : kind);
+    }
+    expect(reader.store.read().toJSON()).toEqual(result?.toJSON());
+  } finally {
+    if (kind === 'type observer') stream.unobserve(annotate);
+    if (kind === 'transaction observer') reader.doc.off('afterTransaction', annotate);
+    reader.doc.off('afterTransaction', onAfter);
+    project.mockRestore();
+    pair.destroy();
+  }
+});

@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Speed up ordinary remote typing in the retained Yjs preview by reusing the
+  checked document structure. Continue full reads for structural changes and
+  queued observer writes.
+
 - Reduce retained room setup and split ordering work. Restore checkpoint
   compatibility with Yjs 13.6.0 while continuing to refuse subdocument state.
 

@@ -349,6 +349,37 @@ export class RetainedTextStore {
     } };
   }
 
+  refreshRemotePartitions(transaction: Y.Transaction, previous: ReadonlyMap<string, RetainedTextPartition>): ReadonlyMap<string, RetainedTextPartition> | undefined {
+    const streams = new Set<string>();
+    for (const [type, keys] of transaction.changed) {
+      if (!(type instanceof Y.Text) || type.parent !== this.texts || keys.size !== 1 || !keys.has(null)) return;
+      const id = type._item?.parentSub;
+      if (!validId(id) || this.texts.get(id) !== type) return;
+      streams.add(id);
+    }
+    if (!streams.size) return;
+    this.assertLive();
+    const pending = new Set<string>();
+    const visibleStreams = new Set<string>();
+    for (const [id, partition] of previous) {
+      if (!streams.has(partition.streamId)) continue;
+      pending.add(id);
+      visibleStreams.add(partition.streamId);
+    }
+    if (visibleStreams.size !== streams.size) return;
+    const partitions = new Map(previous);
+    for (const id of streams) {
+      for (const entry of this.scan(id, this.readStream(id))) {
+        const old = previous.get(entry.id);
+        if (!old) continue;
+        if (old.streamId !== id) return;
+        partitions.set(entry.id, entry);
+        pending.delete(entry.id);
+      }
+    }
+    return pending.size ? undefined : partitions;
+  }
+
   /** Insert clocks alone miss deletions. Compare both public transaction facts. */
   writeVersion(transaction: Y.Transaction): string {
     let deleted = 0;
