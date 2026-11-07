@@ -73,6 +73,67 @@ it('opens a newly provisioned retained room at the newer bound revision', async 
   expect(bound.fragment).toBeUndefined();
 });
 
+it.each(['insertion', 'deletion'] as const)('acknowledges a replayed %s without advancing or rewriting the room', async edit => {
+  const pair = await fixture();
+  const initial = await pair.room.initialize(pair.checkpoint);
+  const tx = pair.editor.createTransaction();
+  if (edit === 'insertion') tx.insertText([0, 0], 0, 'New: ');
+  else tx.replaceText([0, 0], 0, 1, '');
+  pair.editor.dispatch(tx);
+  const update = Y.encodeStateAsUpdate(pair.document, Y.encodeStateVectorFromUpdate(pair.checkpoint.update));
+  const request = { epoch: initial.epoch, protocol: 'retained' as const, update };
+  const saved = await pair.room.write(request);
+  expect(saved.revision).toBe(initial.revision + 1);
+  expect(saved.checkpoint.manifest.updateSha256).not.toBe(initial.checkpoint.manifest.updateSha256);
+  const persisted = await pair.first.readDocument(key);
+  const replay = await pair.peer.write(request);
+  expect(replay).toEqual(saved);
+  expect(await pair.second.readDocument(key)).toEqual(persisted);
+});
+
+it('advances the revision for a shared-state change with an identical document projection', async () => {
+  const pair = await fixture();
+  const initial = await pair.room.initialize(pair.checkpoint);
+  pair.document.getMap('host-review').set('state', 'approved');
+  const saved = await pair.room.write({ epoch: initial.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(pair.document) });
+  expect(saved.checkpoint.manifest.documentSha256).toBe(initial.checkpoint.manifest.documentSha256);
+  expect(saved.checkpoint.manifest.checkpointSha256).not.toBe(initial.checkpoint.manifest.checkpointSha256);
+  expect(saved.revision).toBe(initial.revision + 1);
+});
+
+it.each(['edit', 'freeze'] as const)('fences a replay if another authority commits a concurrent %s', async change => {
+  const pair = await fixture();
+  const initial = await pair.room.initialize(pair.checkpoint);
+  pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'Saved: '));
+  const request = { epoch: initial.epoch, protocol: 'retained' as const, update: Y.encodeStateAsUpdate(pair.document) };
+  const saved = await pair.room.write(request);
+  const reached = deferred<void>(), release = deferred<void>();
+  const read = pair.first.readDocumentHeader.bind(pair.first);
+  vi.spyOn(pair.first, 'readDocumentHeader').mockImplementation(async roomKey => {
+    reached.resolve();
+    await release.promise;
+    return read(roomKey);
+  });
+  const replay = pair.room.write(request);
+  try {
+    await Promise.race([reached.promise, replay.then(() => { throw new Error('Replay returned without fencing the room.'); })]);
+    if (change === 'freeze') await pair.peer.freeze(saved);
+    else {
+      pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'Later: '));
+      await pair.peer.write({ ...request, update: Y.encodeStateAsUpdate(pair.document) });
+    }
+  } finally { release.resolve(); }
+  await expect(replay).rejects.toMatchObject({ code: 'revision-conflict' });
+  const current = await pair.peer.snapshot();
+  if (change === 'freeze') {
+    expect(current.phase).toBe('frozen');
+    await expect(pair.peer.write(request)).rejects.toMatchObject({ code: 'frozen' });
+  } else {
+    expect(current.revision).toBe(saved.revision + 1);
+    expect(await pair.peer.write(request)).toEqual(current);
+  }
+});
+
 it('selects the stored legacy adapter and returns the original embedded fragment', async () => {
   const pair = await fixture();
   const document = new Y.Doc();

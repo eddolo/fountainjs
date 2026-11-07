@@ -223,8 +223,14 @@ export class CoordinatedDocumentRoom {
     const epoch = request.epoch, protocol = request.protocol, row = await this.current();
     if (epoch !== row.epoch || protocol !== documentProtocol(row.checkpoint)) documentRoomFailure('stale-epoch', 'Writer epoch/protocol is stale; reconnect and retain pending edits.');
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
-    if (row.revision >= Number.MAX_SAFE_INTEGER) documentRoomFailure('revision-conflict', 'Document revision capacity exceeded.');
     const checkpoint = await applyDocumentRoomUpdate(row.checkpoint, this.schema, this.schemaVersion, this.projection, request.update);
+    if (protocol === 'retained' && checkpoint.manifest.checkpointSha256 === row.checkpoint.manifest.checkpointSha256) {
+      // An already integrated update is a read acknowledgement. Check the
+      // same generation fence a writing CAS would require before returning it.
+      if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed while acknowledging the replay. Retain pending edits and retry.');
+      return documentSnapshot({ ...row, checkpoint });
+    }
+    if (row.revision >= Number.MAX_SAFE_INTEGER) documentRoomFailure('revision-conflict', 'Document revision capacity exceeded.');
     return documentSnapshot(await this.commit(row, { checkpoint, revision: row.revision + 1 }));
   }
   async freeze(expected: RetainedRoomVersion): Promise<CoordinatedFreeze> {

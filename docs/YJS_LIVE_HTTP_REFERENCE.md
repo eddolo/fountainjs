@@ -58,9 +58,12 @@ checks. The browser cases include local recovery after an empty acknowledgement.
 An established transport keeps the editor and its native local history mounted
 through a transient request failure. On a stale epoch or frozen room the
 transport stops. The editor can keep saving a local recovery draft. Switching
-editors cancels the old transport, including a request waiting to merge. Retrying
-a native update after a lost reply preserves one copy of the edit. The current
-server may record an extra revision for the retry.
+editors cancels the old transport, including a request waiting to merge.
+Retrying a committed retained update after a lost reply preserves one copy of
+the edit and one durable revision. The authority acknowledges a replay only
+when the validated checkpoint digest is identical, including native history
+and auxiliary shared state. The current storage generation must still match.
+A concurrent edit or freeze makes that acknowledgement stale.
 
 Each established document request has a five-second default deadline, including
 a full-checkpoint fallback. An expired request is aborted and its late reply is
@@ -220,6 +223,8 @@ An advancing revision can belong to another author. Before clearing a pending
 write, the client checks that the full or reconstructed server checkpoint
 includes the sent Yjs clocks and deletion ranges. This applies to the full
 poll fallback after a corrupted delta as well as to ordinary write receipts.
+At the same revision, the returned checkpoint must also match the previously
+accepted digest.
 If the checkpoint lacks the edit, the client keeps it queued and retries with
 the existing backoff. The checkpoint still passes the existing room identity
 and integrity checks before it can update the editor. Checking deletion ranges
@@ -236,6 +241,15 @@ and server-reader captures were inspected for both edits.
 ```powershell
 pnpm exec playwright test --config artifacts/yjs-live-http-20261107.config.ts --workers=1 --grep 'corrupt write receipt|delta is corrupted|reply is lost|no acknowledgement' --output artifacts/yjs-write-receipt-recovery-20261107
 ```
+
+The replay follow-up drops a reply after the authority commits an insertion
+or a deletion. It checks that both requests complete with one saved revision
+and that the draft and saved reader agree. Separate SQLite connections test
+a concurrent edit or freeze, and a shared-state-only change still advances
+the revision. Both replay tests reproduced the extra revision before the fix.
+All 81 focused tests and 21 recorded Chromium, Firefox and WebKit journeys
+pass. The WebKit insertion and deletion captures were visually reviewed.
+Recordings are in `artifacts/yjs-retained-idempotent-replay-20261107/`.
 
 ## Deployment boundaries
 

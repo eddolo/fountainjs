@@ -102,6 +102,8 @@ jittered backoff while keeping local edits available.
 The client verifies that a write receipt contains the sent insertions and
 deletions before clearing the pending edit, even when a fallback checkpoint
 has advanced because another author wrote to the room.
+The retained authority acknowledges a replay without creating an extra durable
+revision when the complete validated checkpoint and storage generation match.
 Both adapters also discard an older queued cursor after a newer one is sent.
 The retained live workflow now has 18 recorded browser checks for all six
 default-adapter structural cases across offline autosave, reload, resume, undo

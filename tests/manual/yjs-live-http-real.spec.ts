@@ -122,22 +122,31 @@ test('exchanges typing and structural changes automatically after a connection i
   } finally { await peer.close(); }
 });
 
-test('retries a committed write after the reply is lost without duplicating text', async ({ page }, info) => {
-  let lost = 0;
-  await page.route(write, async route => {
-    if (lost) return route.continue();
-    const response = await route.fetch();
-    expect(await response.json()).toMatchObject({ok: true});
-    lost += 1;
-    await route.abort('connectionreset');
+for (const edit of ['insertion', 'deletion'] as const) {
+  test(`retries a committed ${edit} after the reply is lost with exactly one durable revision`, async ({ page }, info) => {
+    const before = await serverRevision(page);
+    let writes = 0;
+    await page.route(write, async route => {
+      if (++writes !== 1) return route.continue();
+      const response = await route.fetch();
+      const reply = await response.json();
+      expect(reply.ok).toBe(true);
+      expect((reply.value.snapshot ?? reply.value).revision).toBe(before + 1);
+      await route.abort('connectionreset');
+    });
+    await editor(page).click();
+    await page.keyboard.press('End');
+    if (edit === 'insertion') await page.keyboard.insertText(' Keep exactly once.');
+    else await page.keyboard.press('Backspace');
+    const expected = edit === 'insertion' ? 'Shared incident report. Keep exactly once.' : 'Shared incident report';
+    await expect.poll(() => writes).toBe(2);
+    await expect(server(page)).toHaveText(expected);
+    await expect(editor(page)).toHaveText(expected);
+    await expect(connection(page)).toHaveText('connected');
+    expect(await serverRevision(page)).toBe(before + 1);
+    await page.screenshot({ path: info.outputPath(`lost-reply-${edit}.png`), scale: 'css' });
   });
-  await type(page, ' Keep exactly once.');
-  await expect.poll(() => lost).toBe(1);
-  await expect(server(page)).toHaveText('Shared incident report. Keep exactly once.');
-  await expect(editor(page)).toHaveText('Shared incident report. Keep exactly once.');
-  await expect(connection(page)).toHaveText('connected');
-  await page.screenshot({ path: info.outputPath('lost-reply.png'), scale: 'css' });
-});
+}
 
 test('times out a stalled committed write and ignores its late reply', { tag: '@deadline' }, async ({ page }, info) => {
   let writes = 0;

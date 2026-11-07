@@ -150,6 +150,9 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
 
     async function accept(snapshot: DocumentRoomSnapshot, sent?: Uint8Array) {
       const checkpoint = checkpointFor(snapshot, lease);
+      if (sent && snapshot.revision === lease.revision && checkpoint.manifest.checkpointSha256 !== base.manifest.checkpointSha256) {
+        throw new Error('The authority changed the checkpoint without advancing its revision. Local changes were retained.');
+      }
       const bytes = checkpoint.update;
       if (!(bytes instanceof Uint8Array) || bytes.length !== checkpoint.manifest.bytes || !bytes.length || bytes.length > 64 * 1024 * 1024) {
         throw new Error('Invalid checkpoint update length.');
@@ -198,7 +201,6 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
             snapshot = full;
           }
           signal.throwIfAborted();
-          if (writing && snapshot.revision <= lease.revision) throw new Error('The authority did not advance the write revision. Local changes were retained.');
           const beforeMerge = edited;
           try { await accept(snapshot, update); }
           catch (error) {

@@ -58,3 +58,37 @@ it('backs off repeated failures without typing resetting the retry timer', async
     document.destroy();
   }
 });
+
+it('refuses a write receipt that changes the checkpoint under the same revision', async () => {
+  const document = new Y.Doc();
+  const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({
+    document, user: { id: 'ada', name: 'Ada', color: '#7048e8' },
+  })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const checkpoint = await captureRetainedCheckpoint(document, editor.state.schema, 'transport-test');
+  const lease = { key: 'room', epoch: crypto.randomUUID(), revision: 0, protocol: 'retained' as const,
+    room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
+  const snapshot = { key: lease.key, epoch: lease.epoch, revision: 0, phase: 'active' as const, protocol: lease.protocol, checkpoint };
+  const write = vi.fn<() => Promise<typeof snapshot>>();
+  const merge = vi.fn(async () => {});
+  const onStatus = vi.fn();
+  const provider = createRetainedHttpProvider({
+    document, bound: () => ({ lease, snapshot }), poll: async () => null, write, merge, onStatus,
+  });
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  try {
+    await provider.connect();
+    editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Pending brief'));
+    write.mockResolvedValue({ ...snapshot, checkpoint: await captureRetainedCheckpoint(document, editor.state.schema, 'transport-test') });
+    await vi.advanceTimersByTimeAsync(75);
+    expect(write).toHaveBeenCalledOnce();
+    expect(merge).toHaveBeenCalledOnce();
+    expect(onStatus).toHaveBeenLastCalledWith('disconnected', expect.objectContaining({ message: expect.stringContaining('without advancing its revision') }));
+    expect(editor.getText()).toBe('Pending brief');
+  } finally {
+    provider.disconnect();
+    vi.useRealTimers();
+    editor.destroy();
+    document.destroy();
+  }
+});
