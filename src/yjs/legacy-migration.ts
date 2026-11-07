@@ -43,16 +43,17 @@ export async function buildLegacyMigrationCandidate(checkpoint: LegacyCheckpoint
   const policy = snapshotLegacyMigrationOptions(options), settings = snapshotLegacyProjection(projection);
   const restored = await restoreLegacyCheckpoint(checkpoint, schema, schemaVersion, settings), source = restored.checkpoint, from = restored.document, document = restored.baseDocument;
   const target = new Y.Doc({ gc: from.gc }), sourceRoom = source.manifest.room, room = policy.destinationRoom ?? sourceRoom, prefix = `legacy-${crypto.randomUUID()}`; let sequence = 0, active = true, store: RetainedDocumentStore | undefined;
+  const reservedRoot = source.manifest.fragment ? undefined : sourceRoom;
   try {
     if (!/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,193}$/.test(room)) throw new Error('Legacy source requires an explicit retained destinationRoom namespace.');
     store = new RetainedDocumentStore(target, room, schema, () => `${prefix}:${++sequence}`); store.seed(document);
     const gate = new Y.XmlElement('fountain-retained-room'); gate.setAttribute('format', 'fountain-retained-document/3'); gate.setAttribute('room', `r-${crypto.randomUUID()}`); target.getXmlFragment(room).insert(0, [gate]);
     const core = new Set(target.share.keys()), owners = new Map<string, string>();
     for (const migrator of policy.migrators) for (const name of migrator.roots) {
-      if (typeof name !== 'string' || name === sourceRoom || !from.share.has(name) || core.has(name) || owners.has(name)) throw new Error(`Missing, reserved or duplicate legacy migration root: ${String(name)}`);
+      if (typeof name !== 'string' || name === reservedRoot || !from.share.has(name) || core.has(name) || owners.has(name)) throw new Error(`Missing, reserved or duplicate legacy migration root: ${String(name)}`);
       owners.set(name, migrator.name);
     }
-    const unclaimed = [...from.share.keys()].filter(name => name !== sourceRoom && !owners.has(name));
+    const unclaimed = [...from.share.keys()].filter(name => name !== reservedRoot && !owners.has(name));
     if (unclaimed.length) throw new Error(`Unclaimed legacy migration roots: ${unclaimed.join(', ')}. Source retained.`);
     const checks: Array<() => void> = [], counts = { textAnchors: 0, selections: 0, nodeIdentities: 0 }, live = () => { if (!active) throw new Error('Legacy migration context expired.'); };
     const context: RetainedMigrationContext = Object.freeze({ source: from, target, document,

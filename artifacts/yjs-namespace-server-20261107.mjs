@@ -11,6 +11,22 @@ import {CrossFormatRoomHandoff} from './yjs-namespace-build-20261107/handoff.js'
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-cross-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:Buffer.from(value).toString('base64')}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?new Uint8Array(Buffer.from(value.__wire,'base64')):value);
 const options={history:'reset-with-source-checkpoint',offline:'reconcile-before-activation',externalState:'host-coordinated',migrators:[]},policy={history:'reset-with-source-archive',offline:'retain-retired-room-branches',externalReceipt:'test-loopback-coordination'};
+function nestedOptions(destinationRoom) {
+ const name='research-folder';
+ return {...options,destinationRoom,migrators:[{
+  name:'research-folder-to-document-reference',roots:[name],
+  migrate({source,target}) {
+   const folder=source.getMap(name);
+   if(folder.size!==2 || typeof folder.get('title')!=='string' || !folder.get('body')) throw new Error('Unexpected research folder shape');
+   target.getMap(name).set('title',folder.get('title'));
+   target.getMap(name).set('documentRoom',destinationRoom);
+  },
+  verify({source,target}) {
+   const folder=target.getMap(name);
+   if(folder.size!==2 || folder.get('title')!==source.getMap(name).get('title') || folder.get('documentRoom')!==destinationRoom) throw new Error('Research folder metadata changed');
+  },
+ }]};
+}
 const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'node_modules/.vite-yjs-namespace',optimizeDeps:{entries:['artifacts/yjs-namespace-fixture-20261107.html'],include:['yjs']},server:{watch:null,open:false,host:'127.0.0.1',port:4195,strictPort:true},plugins:[{name:'test-cross-format',configureServer(server){server.middlewares.use(async(req,res,next)=>{
  if(!req.url?.startsWith('/__handoff/'))return next();
  res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json');
@@ -19,7 +35,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
   const buffers=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>4*1024*1024)throw new Error('Test request too large');buffers.push(chunk)}const body=decode(Buffer.concat(buffers).toString('utf8')),action=req.url.slice('/__handoff/'.length);
   let value;
   if(action==='open'){
-   const token=crypto.randomUUID(),key='test:'+crypto.randomUUID();sessions.set(token,{key,room:new CoordinatedDocumentRoom(repository,key,schema,'browser-schema-1'),handoff:new CrossFormatRoomHandoff(repository,key,schema,'browser-schema-1')});value={token};
+   const token=crypto.randomUUID(),key='test:'+crypto.randomUUID();sessions.set(token,{key,nested:body.nested===true,room:new CoordinatedDocumentRoom(repository,key,schema,'browser-schema-1'),handoff:new CrossFormatRoomHandoff(repository,key,schema,'browser-schema-1')});value={token};
   }else{
    const session=sessions.get(req.headers['x-handoff-session']);if(!session)throw new Error('Unknown test session');
    const {key,room,handoff}=session;
@@ -27,7 +43,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='snapshot')value=await room.snapshot();
    else if(action==='write')value=await room.write(body);
    else if(action==='freeze')value=await room.freeze(body);
-   else if(action==='migrate'){value=await handoff.migrateLegacy(body.ticket,body.operation,{...options,destinationRoom:body.destinationRoom},policy);if(body.dropAcknowledgement){res.destroy();return}}
+   else if(action==='migrate'){value=await handoff.migrateLegacy(body.ticket,body.operation,session.nested?nestedOptions(body.destinationRoom):{...options,destinationRoom:body.destinationRoom},policy);if(body.dropAcknowledgement){res.destroy();return}}
    else if(action==='rollback')value=await handoff.rollback(body.ticket,body.operation,body.archive,body.restore,policy);
    else if(action==='retain')value=await handoff.retainLateUpdate(body);
    else if(action==='batch')value=await handoff.retiredBatch(body.id,body.revision);

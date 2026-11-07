@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Recover explicitly selected embedded Yjs fragments in the legacy migration
+  reference. The source archive preserves the original fragment identity and
+  host container for rollback. [Migration audit](docs/YJS_NAMESPACE_MIGRATION_AUDIT.md#embedded-legacy-documents).
+
 - Add `preserveConcurrentRoots` to the legacy Yjs adapter. When enabled, peers
   that initialized independently keep their shared roots and local drafts for
   review. [Collaboration guide](docs/COLLABORATION.md#preserve-conflicting-room-roots).

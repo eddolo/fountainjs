@@ -24,8 +24,9 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,802 passes and six failures, with no skips. Four
 raw-size limits are exceeded in the preview build. Complete fresh release CI,
-retained history/storage growth and compaction, nested-fragment migration and
-safe adapter adoption remain open.
+retained history/storage growth and compaction, and safe adapter adoption
+remain open. The migration reference can select an embedded legacy fragment
+and reopen its original identity through rollback.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Roadmap](ROADMAP.md).

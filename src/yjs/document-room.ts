@@ -59,7 +59,7 @@ export async function validateDocumentCheckpoint(checkpoint: DocumentCheckpoint,
   }
   const restored = await restoreLegacyCheckpoint(checkpoint as LegacyCheckpoint, schema, schemaVersion, projection);
   try {
-    const root = restored.document.getXmlFragment(restored.manifest.room).get(0), reference = Y.createRelativePositionFromTypeIndex(root as Y.XmlElement, 0).type;
+    const reference = Y.createRelativePositionFromTypeIndex(restored.reader.root, 0).type;
     if (!reference) throw new Error('Legacy source has no native root identity.');
     assertLegacyCheckpointState(restored.document, restored.checkpoint);
     return { checkpoint: restored.checkpoint, protocol: 'legacy', identity: `yjs-${reference.client}-${reference.clock}` };
@@ -74,7 +74,7 @@ export async function applyDocumentRoomUpdate(source: DocumentCheckpoint, schema
     const restored = await restoreLegacyCheckpoint(before.checkpoint as LegacyCheckpoint, schema, schemaVersion, projection);
     try {
       Y.applyUpdate(restored.document, bytes);
-      const next = await captureLegacyCheckpoint(restored.document, schema, schemaVersion, projection, restored.manifest.room), checked = await validateDocumentCheckpoint(next, schema, schemaVersion, projection);
+      const next = await captureLegacyCheckpoint(restored.document, schema, schemaVersion, projection, restored.manifest.room, restored.reader.fragment), checked = await validateDocumentCheckpoint(next, schema, schemaVersion, projection);
       if (checked.identity !== before.identity) throw new Error('Legacy update replaced the authoritative XML root identity.');
       return checked.checkpoint;
     } finally { restored.document.destroy(); }

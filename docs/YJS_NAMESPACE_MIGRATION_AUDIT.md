@@ -77,12 +77,40 @@ raw-size overruns remain: core ESM 0.1 KiB, aggregate ESM 77.4 KiB and aggregate
 CommonJS 61.1 KiB. Acceptance limits and the six required regressions are unchanged.
 No publication, acceptance-limit change or public retained-adapter adoption occurs.
 
+## Embedded legacy documents
+
+Pass the integrated `Y.XmlFragment` as the sixth argument to
+`captureLegacyCheckpoint` when the editor document lives inside a shared map
+or array. The room name still names the migration and supplies the default
+structured-attribute namespace. The manifest checksums the fragment's native
+Yjs identity along with the complete source wire update. Array index changes
+therefore do not redirect restore or later writes. Missing, foreign, deleted
+and replaced handles fail closed. Existing top-level checkpoints retain their
+original manifest shape. Readers that predate the optional fragment field must
+be upgraded to open new embedded checkpoints.
+
+Each host root still needs an explicit migrator and verifier, including the
+container around the selected document and any unrelated top-level document.
+The research-folder example carries its title and the new retained namespace
+into a folder record. The original embedded XML, original folder, and late
+legacy edits stay in the source archive, and rollback reopens the same native
+fragment for further editing. The host owns the folder-to-document reference
+mapping. Use an explicit destination when the selected room name is invalid or
+would collide with a host root.
+
+The three focused source suites passed 120 cases. The full namespace browser
+suite passed 15 recorded journeys in Chromium, Firefox and WebKit, including
+three embedded-document handoffs against SQLite. The recordings and screenshots
+are in `artifacts/yjs-nested-fragment-full-browser-20261107/`. Visual review of
+the Firefox migration and rollback captures confirmed that the offline draft
+and the retained edits appeared in their expected panes. Build, types, API,
+headless and packed-package smoke checks passed. The four raw-size overruns
+remain with their existing limits.
+
 ## Remaining work
 
-Nested fragment handles remain explicitly refused: the new regression proves
-that a nested selection cannot accidentally migrate an unrelated default room.
-Nested locators, provider initialization/admission, production costs, archive/raw
-retention and compaction, external coordination and safe adoption remain open.
+Production costs, archive/raw retention and compaction, external coordination
+and safe adoption remain open.
 The six ordinary default-adapter concurrency failures and full editor parity are
 not resolved by namespace mapping. COLLAB-01 stays Partial.
 

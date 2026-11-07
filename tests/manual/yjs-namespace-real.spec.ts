@@ -2,7 +2,7 @@ import {expect,test} from '@playwright/test';
 const errors=new WeakMap<object,string[]>(),state=(page:any)=>page.evaluate(()=>(window as any).audit.snapshot());
 async function capture(page:any,info:any,name:string){await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));const size=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth}));expect(size.height).toBeLessThanOrEqual(size.viewport);expect(size.width).toBeLessThanOrEqual(size.viewportWidth);await page.screenshot({path:info.outputPath(name),fullPage:false,scale:'css'})}
 async function type(page:any,name:string,text:string){await page.getByRole('textbox',{name,exact:true}).click();await page.keyboard.press('Control+Home');await page.keyboard.press('End');await page.keyboard.type(text)}
-test.beforeEach(async({page})=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-namespace-fixture-20261107.html');await expect(page.getByRole('status')).toContainText('Ready');expect((await state(page)).protocol).toBe('legacy');await page.evaluate(()=>{const summary={frames:0,minViewport:innerWidth,minPane:Infinity,maxOverflow:0,invalid:[] as unknown[]};(window as any).auditLayout=summary;function sample(){const widths=[...document.querySelectorAll('.panes>section')].map(element=>element.getBoundingClientRect().width),overflow=document.documentElement.scrollWidth-innerWidth;summary.frames++;summary.minViewport=Math.min(summary.minViewport,innerWidth);summary.minPane=Math.min(summary.minPane,...widths);summary.maxOverflow=Math.max(summary.maxOverflow,overflow);if((widths.some(width=>width<200)||overflow>2)&&summary.invalid.length<20)summary.invalid.push({widths,viewport:innerWidth,overflow});requestAnimationFrame(sample)}sample()})});
+test.beforeEach(async({page},info)=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-namespace-fixture-20261107.html'+(info.tags.includes('@nested')?'?nested':''));await expect(page.getByRole('status')).toContainText('Ready');expect((await state(page)).protocol).toBe('legacy');await page.evaluate(()=>{const summary={frames:0,minViewport:innerWidth,minPane:Infinity,maxOverflow:0,invalid:[] as unknown[]};(window as any).auditLayout=summary;function sample(){const widths=[...document.querySelectorAll('.panes>section')].map(element=>element.getBoundingClientRect().width),overflow=document.documentElement.scrollWidth-innerWidth;summary.frames++;summary.minViewport=Math.min(summary.minViewport,innerWidth);summary.minPane=Math.min(summary.minPane,...widths);summary.maxOverflow=Math.max(summary.maxOverflow,overflow);if((widths.some(width=>width<200)||overflow>2)&&summary.invalid.length<20)summary.invalid.push({widths,viewport:innerWidth,overflow});requestAnimationFrame(sample)}sample()})});
 test.afterEach(async({page},info)=>{const result=await state(page),layout=await page.evaluate(()=>(window as any).auditLayout);expect(errors.get(page)).toEqual([]);expect(layout.invalid).toEqual([]);expect(layout.frames).toBeGreaterThan(0);expect(result.protocol).toBe((info.title.startsWith('recovers')||info.title.startsWith('maps'))?'retained':'legacy');expect(result.activeProtocol).toBe(result.protocol);expect(result.activeNamespace).toBe(result.namespace);expect(result.namespace).toBe(result.protocol==='legacy'?'Research / α 😀':info.title.startsWith('maps')?'review-copy':'mapped-paper');await info.attach('cross-format-result',{body:JSON.stringify(result),contentType:'application/json'});await info.attach('layout-samples',{body:JSON.stringify(layout),contentType:'application/json'});await info.attach('runtime-modules',{body:JSON.stringify(await page.evaluate(()=>performance.getEntriesByType('resource').map((entry:any)=>new URL(entry.name).pathname).filter((path:string)=>path.endsWith('.js')||path.startsWith('/src/')))),contentType:'application/json'});await page.evaluate(()=>(window as any).audit.close())});
 
 test('migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits',async({page},info)=>{
@@ -31,4 +31,40 @@ test('maps an explicit author-selected destination and refuses invalid input bef
  const before=await state(page);await page.getByLabel('Retained destination namespace',{exact:true}).fill('bad space');await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Invalid explicit destination');const refused=await state(page);expect(refused.epoch).toBe(before.epoch);expect(refused.revision).toBe(before.revision);expect(refused.phase).toBe('active');expect(refused.server).toEqual(before.server);
  await page.getByLabel('Retained destination namespace',{exact:true}).fill('review-copy');await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Legacy room migrated');const moved=await state(page);expect(moved.namespace).toBe('review-copy');expect(moved.activeNamespace).toBe('review-copy');expect(moved.archiveNamespace).toBe('Research / α 😀');expect(moved.active).toEqual(before.active);
  await type(page,'Active editor',' MAPPED edit');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.active).toEqual(saved.server);await capture(page,info,'final.png');
+});
+
+test('moves a nested research document and rolls back to the same embedded fragment', {tag:'@nested'}, async ({page},info) => {
+  const original = await state(page);
+  expect(original.activeNested).toBe(true);
+  expect(original.folderTitle).toBe('Physics review');
+  expect(original.nestedFragment).toMatchObject({client:expect.any(Number),clock:expect.any(Number)});
+  await type(page,'Offline editor',' OFFLINE draft');
+  const offline = (await state(page)).offline;
+  await page.getByRole('button',{name:'Migrate legacy room'}).click();
+  await expect(page.getByRole('status')).toContainText('Legacy room migrated');
+  const moved = await state(page);
+  expect(moved.active).toEqual(original.active);
+  expect(moved.activeNested).toBe(false);
+  expect(moved.folderTitle).toBe(original.folderTitle);
+  expect(moved.folderRoom).toBe('mapped-paper');
+  await page.getByRole('button',{name:'Retain offline edits'}).click();
+  await expect(page.getByRole('status')).toContainText('Offline edits retained separately');
+  await expect(page.getByRole('textbox',{name:'Archive reader'})).toContainText('OFFLINE draft');
+  await capture(page,info,'nested-moved.png');
+  await type(page,'Active editor',' RETAINED edit');
+  await page.getByRole('button',{name:'Save active edits'}).click();
+  await expect(page.getByRole('status')).toContainText('durably saved');
+  await page.getByRole('button',{name:'Rollback with archive'}).click();
+  await expect(page.getByRole('status')).toContainText('Rollback committed to legacy');
+  const restored = await state(page);
+  expect(restored.activeNested).toBe(true);
+  expect(restored.nestedFragment).toEqual(original.nestedFragment);
+  expect(restored.folderTitle).toBe(original.folderTitle);
+  expect(restored.server).toEqual(offline);
+  await expect(page.getByRole('textbox',{name:'Archive reader'})).toContainText('RETAINED edit');
+  await type(page,'Active editor',' AFTER rollback');
+  await page.getByRole('button',{name:'Save active edits'}).click();
+  await expect(page.getByRole('status')).toContainText('durably saved');
+  expect((await state(page)).nestedFragment).toEqual(original.nestedFragment);
+  await capture(page,info,'nested-rollback.png');
 });

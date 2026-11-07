@@ -14,9 +14,13 @@ export class LegacyDocumentReader {
   readonly document: Node;
   readonly paths = new Map<Y.AbstractType<any>, readonly number[]>();
   readonly identities = new Map<string, readonly number[]>();
-  constructor(readonly source: Y.Doc, readonly room: string, readonly schema: Schema, structured?: LegacyStructuredOptions) {
-    const fragment = source.share.get(room);
+  readonly fragment: Y.XmlFragment;
+  readonly root: Y.XmlElement;
+  constructor(readonly source: Y.Doc, readonly room: string, readonly schema: Schema, structured?: LegacyStructuredOptions, selectedFragment?: Y.XmlFragment) {
+    const fragment = selectedFragment ?? source.share.get(room);
     if (!(fragment instanceof Y.XmlFragment) || fragment.constructor !== Y.XmlFragment || fragment.length !== 1 || !element(fragment.get(0))) throw new Error('Legacy checkpoint requires exactly one declared XML document root.');
+    this.fragment = fragment;
+    this.root = fragment.get(0) as Y.XmlElement;
     let nodes = 0, characters = 0;
     const read = (node: Y.XmlElement, path: readonly number[], depth: number): NodeJSON => {
       if (++nodes > 100_000 || depth > 100) throw new Error('Legacy document exceeds node/depth bounds.');
@@ -46,7 +50,7 @@ export class LegacyDocumentReader {
       }
       return { type, ...(Object.keys(attrs).length ? { attrs } : {}), ...(marks?.length ? { marks } : {}), ...(children.length ? { content: children.map((child, index) => { if (!element(child)) throw new Error('Invalid legacy child.'); return read(child, [...path, index], depth + 1); }) } : {}) };
     };
-    const raw = read(fragment.get(0) as Y.XmlElement, [], 0), base = schema.nodeFromJSON(raw);
+    const raw = read(this.root, [], 0), base = schema.nodeFromJSON(raw);
     if (base.type !== schema.topNodeType) throw new Error('Legacy root is not the schema document.');
     // Schema factories may add defaults, but cannot drop/rewrite supplied data.
     const preserve = (before: NodeJSON, after: Node): void => {

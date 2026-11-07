@@ -13,7 +13,7 @@ import {buildLegacyMigrationCandidate,type LegacyMigrationOptions} from '../src/
 import {retainedStructuredRootMigrator,type RetainedRootMigrator} from '../src/yjs/retained-migration';
 import {restoreRetainedCheckpoint,type RetainedCheckpoint} from '../src/yjs/retained-checkpoint';
 import {RetainedDocumentStore} from '../src/yjs/retained-document';
-import {CoordinatedDocumentRoom} from '../src/yjs/document-room';
+import {applyDocumentRoomUpdate,CoordinatedDocumentRoom} from '../src/yjs/document-room';
 import {CrossFormatRoomHandoff} from '../src/yjs/cross-format-handoff';
 import {SQLiteRetainedRoomRepository} from '../examples/backends/retained-sqlite';
 import {defineStructuredAttribute,setStructuredAttribute} from '../src/structured-attributes';
@@ -95,4 +95,68 @@ it('owns the authoritative destination setting before awaiting repository reads'
 });
 it('refuses a nested fragment instead of selecting an unrelated top-level default',async()=>{
  const document=new Y.Doc(),fragment=new Y.XmlFragment();document.getMap('container').set('body',fragment);document.getXmlFragment('fountain');const kit=composeExtensions([CoreExtension,createYjsCollaborationExtension({document,fragment,user:{id:'nested',name:'Nested',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Nested source'}]}]}});cleanup.push(()=>{editor.destroy();document.destroy();});expect(getCollaborationState(editor)?.status).toBe('connected');const before=Y.encodeStateAsUpdate(document);await expect(captureLegacyCheckpoint(document,editor.state.schema,version,{},'container')).rejects.toThrow('declared XML document root');expect(Y.encodeStateAsUpdate(document)).toEqual(before);
+});
+
+function nestedSource() {
+  const document = new Y.Doc({gc:false}), siblings = document.getArray('container'), fragment = new Y.XmlFragment();
+  siblings.insert(0, ['host setting', fragment]);
+  const decoy = document.getXmlFragment('fountain');
+  const kit = composeExtensions([CoreExtension, MathExtension, createYjsCollaborationExtension({document, fragment, user:{id:'nested',name:'Nested',color:'#7048e8'}})]);
+  const editor = createEditor({schema:kit.schema, plugins:kit.plugins, content});
+  const decoyKit = composeExtensions([CoreExtension, MathExtension, createYjsCollaborationExtension({document, fragment:decoy, user:{id:'decoy',name:'Decoy',color:'#7048e8'}})]);
+  const decoyEditor = createEditor({schema:decoyKit.schema, plugins:decoyKit.plugins, content:{type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Different document'}]}]}});
+  cleanup.push(() => { decoyEditor.destroy(); editor.destroy(); document.destroy(); });
+  const capture = () => captureLegacyCheckpoint(document, editor.state.schema, version, {}, 'fountain', fragment);
+  return {document, editor, schema:editor.state.schema, siblings, fragment, decoy, capture};
+}
+
+it('reopens the exact nested fragment across array shifts with an unrelated default document present', async () => {
+  const pair = nestedSource(), checkpoint = await pair.capture();
+  expect(checkpoint.manifest.fragment).toBeDefined();
+  expect(checkpoint.update).toEqual(Y.encodeStateAsUpdate(pair.document));
+  const restored = await restoreLegacyCheckpoint(checkpoint, pair.schema, version);
+  cleanup.push(() => restored.document.destroy());
+  expect(restored.reader.fragment).toBe(restored.document.getArray('container').get(1));
+  expect(restored.baseDocument.toJSON()).toEqual(pair.editor.getJSON());
+  expect(restored.document.getXmlFragment('fountain').toString()).toContain('Different document');
+  restored.document.getArray('container').insert(0, ['another setting']);
+  const shifted = await captureLegacyCheckpoint(restored.document, pair.schema, version, {}, 'fountain', restored.reader.fragment);
+  expect(shifted.manifest.fragment).toEqual(checkpoint.manifest.fragment);
+  expect(shifted.manifest.documentSha256).toBe(checkpoint.manifest.documentSha256);
+  const changed = {manifest:{...checkpoint.manifest,fragment:{...checkpoint.manifest.fragment!,clock:0}},update:checkpoint.update};
+  await expect(restoreLegacyCheckpoint(changed, pair.schema, version)).rejects.toThrow('checksum mismatch');
+});
+
+it('refuses foreign, detached, and mismatched top-level handles without altering the source', async () => {
+  const pair = nestedSource(), other = new Y.Doc();
+  cleanup.push(() => other.destroy());
+  const before = Y.encodeStateAsUpdate(pair.document);
+  for (const fragment of [other.getXmlFragment('fountain'), new Y.XmlFragment(), pair.decoy]) {
+    await expect(captureLegacyCheckpoint(pair.document, pair.schema, version, {}, 'other', fragment)).rejects.toThrow('integrated nested XML fragment');
+  }
+  expect(Y.encodeStateAsUpdate(pair.document)).toEqual(before);
+  pair.siblings.delete(1);
+  await expect(pair.capture()).rejects.toThrow('detached');
+});
+
+it('requires explicit migration of the host roots around a nested source', async () => {
+  const pair = nestedSource(), checkpoint = await pair.capture();
+  await expect(buildLegacyMigrationCandidate(checkpoint, pair.schema, version, options(target))).rejects.toThrow(/Unclaimed legacy migration roots.*container.*fountain/);
+  expect(Y.encodeStateAsUpdate(pair.document)).toEqual(checkpoint.update);
+});
+
+it('preserves the nested identity during writes and refuses replacement even with garbage collection disabled', async () => {
+  const pair = nestedSource(), checkpoint = await pair.capture();
+  pair.siblings.insert(0, ['new host setting']);
+  pair.editor.dispatch(pair.editor.createTransaction().insertText([0,0], 0, 'Offline '));
+  const update = await applyDocumentRoomUpdate(checkpoint, pair.schema, version, {}, Y.encodeStateAsUpdate(pair.document)) as LegacyCheckpoint;
+  expect(update.manifest.fragment).toEqual(checkpoint.manifest.fragment);
+  const reopened = await restoreLegacyCheckpoint(update, pair.schema, version);
+  cleanup.push(() => reopened.document.destroy());
+  expect(reopened.baseDocument.child(0).textContent).toBe('Offline Alpha α 😀');
+  const replacement = pair.fragment.clone();
+  pair.siblings.delete(2);
+  pair.siblings.insert(2, [replacement]);
+  await expect(applyDocumentRoomUpdate(update, pair.schema, version, {}, Y.encodeStateAsUpdate(pair.document))).rejects.toMatchObject({code:'invalid-update'});
+  expect(update.manifest.fragment).toEqual(checkpoint.manifest.fragment);
 });
