@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add private atomic legacy/retained migration and reversible rollback through
+  one persistent live-room authority. Archive source and replacement state,
+  reject stale writers, retain late updates in their source protocol, and commit
+  exact checksummed raw batches together with recovery branches. Durable retry
+  and recorded clients preserve pending edits after lost acknowledgements and
+  unsaved drafts on historical receipt replay. General fragment mapping, the
+  six default-adapter concurrency failures, production storage costs and safe
+  adoption remain open. See the [cross-format audit](docs/YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
+
 - Add private read-only decoding and full-wire recovery archives for existing
   public-adapter XML rooms, plus verified retained-engine conversion candidates.
   Preserve technical source, metadata, application IDs, explicit auxiliary roots

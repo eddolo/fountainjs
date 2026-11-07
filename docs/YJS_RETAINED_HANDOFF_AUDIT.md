@@ -1,5 +1,10 @@
 # Persistent fresh-room handoff and rollback — 2026-11-06
 
+Follow-up (2026-11-07): a separate [cross-format authority](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md)
+now supports compatible legacy XML sources, reversible protocol changes and
+atomic raw late-batch recovery. This earlier retained-only API/evidence remains
+separate; default-adapter adoption and general fragment mapping remain open.
+
 This private backend reference extends the [verified migration candidate](YJS_RETAINED_MIGRATION_CANDIDATE_AUDIT.md)
 with an actual atomic destination installation. It retains the source and late
 old-room edits, and can roll back while archiving accepted destination edits.

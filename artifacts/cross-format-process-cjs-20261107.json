@@ -1,0 +1,25 @@
+{
+  "mode": "cjs",
+  "passed": 9,
+  "cases": [
+    "kill between live-row write and archive insertion rolls back the SQLite transaction (storage oracle)",
+    "kill after migration commit leaves the fresh room and complete original archive durable",
+    "writer validated in another process before freeze cannot overwrite the migrated room",
+    "reopen and retry a lost migration acknowledgement does not install or rotate twice",
+    "kill after late-batch commit preserves exact checksum-verified raw operations and the branch together",
+    "old writer is fenced before byte access and its batch is retained only in a retired branch",
+    "kill after rollback commit preserves the old pending branch and archives all accepted fresh-room edits",
+    "rollback acknowledgement retry is idempotent and both prior writer epochs stay fenced",
+    "superseded migration receipt cannot reinstall its destination or rewrite the immutable original"
+  ],
+  "protocols": [
+    "legacy",
+    "retained",
+    "legacy"
+  ],
+  "node": "v24.22.1",
+  "dom": false,
+  "workers": 5,
+  "finalRevision": 3,
+  "checkpointSha256": "27b0c793005313eed0ce6ff7e19f19ae835bfd926cb41af2b40354ce64c25d95"
+}

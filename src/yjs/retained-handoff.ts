@@ -42,7 +42,7 @@ export interface RetainedHandoffResult {
 const uuid = (): string => globalThis.crypto.randomUUID();
 const id = (value: unknown): value is string => typeof value === 'string' && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(value);
 const fail = (code: ConstructorParameters<typeof RetainedRoomError>[0], message: string): never => { throw new RetainedRoomError(code, message); };
-function policyCopy(value: RetainedHandoffPolicy): RetainedHandoffPolicy {
+export function snapshotRetainedHandoffPolicy(value: RetainedHandoffPolicy): RetainedHandoffPolicy {
   const history = value?.history, offline = value?.offline, externalReceipt = value?.externalReceipt;
   if (history !== 'reset-with-source-archive' || offline !== 'retain-retired-room-branches' || typeof externalReceipt !== 'string'
     || !externalReceipt.trim() || externalReceipt.length > 1_000 || /[\u0000-\u001f\u007f]/.test(externalReceipt)) throw new Error('Handoff requires explicit history/offline policy and a host coordination receipt.');
@@ -74,7 +74,7 @@ export class RetainedRoomHandoff {
     if (!archive || archive.key !== this.key || !id(archive.id) || !id(archive.generation) || !['migration', 'rollback'].includes(archive.kind)
       || !Number.isSafeInteger(archive.branchRevision) || archive.branchRevision < 0) throw new Error('Invalid or missing retained archive.');
     validateRetainedRoomRecord(archive.source, this.key, this.schemaVersion); validateRetainedRoomRecord(archive.destination, this.key, this.schemaVersion);
-    policyCopy(archive.policy);
+    snapshotRetainedHandoffPolicy(archive.policy);
     if (archive.source.phase !== 'frozen' || archive.destination.phase !== 'active' || archive.source.epoch === archive.destination.epoch
       || archive.destination.revision !== archive.source.revision + 1 || archive.source.checkpoint.manifest.room !== archive.destination.checkpoint.manifest.room
       || archive.branch.manifest.roomId !== archive.source.checkpoint.manifest.roomId || archive.branch.manifest.guid !== archive.source.checkpoint.manifest.guid
@@ -119,7 +119,7 @@ export class RetainedRoomHandoff {
 
   async migrate(ticket: CoordinatedFreeze, operationId: string, options: RetainedMigrationOptions, policy: RetainedHandoffPolicy): Promise<RetainedHandoffResult> {
     ticket = this.ticketCopy(ticket); options = snapshotRetainedMigrationOptions(options);
-    const ownedPolicy = policyCopy(policy), replay = await this.replay(operationId, ticket, 'migration', ownedPolicy, null, null); if (replay) return replay;
+    const ownedPolicy = snapshotRetainedHandoffPolicy(policy), replay = await this.replay(operationId, ticket, 'migration', ownedPolicy, null, null); if (replay) return replay;
     const row = await this.current(); this.frozen(row, ticket);
     const candidate = await buildRetainedMigrationCandidate(row.checkpoint, this.schema, this.schemaVersion, options);
     return this.install(row, candidate.destination, operationId, 'migration', ownedPolicy, null, null, candidate.report);
@@ -127,7 +127,7 @@ export class RetainedRoomHandoff {
 
   async rollback(ticket: CoordinatedFreeze, operationId: string, archiveId: string, restore: 'frozen-source' | 'retained-branch', policy: RetainedHandoffPolicy): Promise<RetainedHandoffResult> {
     ticket = this.ticketCopy(ticket);
-    const ownedPolicy = policyCopy(policy); if (!id(archiveId) || !['frozen-source', 'retained-branch'].includes(restore)) throw new Error('Invalid rollback selection.');
+    const ownedPolicy = snapshotRetainedHandoffPolicy(policy); if (!id(archiveId) || !['frozen-source', 'retained-branch'].includes(restore)) throw new Error('Invalid rollback selection.');
     const replay = await this.replay(operationId, ticket, 'rollback', ownedPolicy, archiveId, restore); if (replay) return replay;
     const row = await this.current(); this.frozen(row, ticket); const saved = await this.repository.readArchive(this.key, archiveId); this.checkArchive(saved);
     const archived = await this.ownedArchive(saved);

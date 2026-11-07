@@ -11,6 +11,7 @@ export interface RetainedRoomRecord extends RetainedRoomVersion {
   readonly lastResume: RetainedResumeReceipt | null;
   readonly checkpoint: RetainedCheckpoint;
 }
+export type CoordinatedRecord<Checkpoint extends { readonly manifest: { readonly schemaVersion: string } }> = Omit<RetainedRoomRecord, 'checkpoint'> & { readonly checkpoint: Checkpoint };
 export interface RetainedResumeReceipt {
   readonly freezeId: string;
   readonly preparationId: string;
@@ -44,7 +45,7 @@ const fail = (code: ConstructorParameters<typeof RetainedRoomError>[0], message:
 const view = (row: RetainedRoomRecord): CoordinatedRoomSnapshot => Object.freeze({ key: row.key, epoch: row.epoch, revision: row.revision, phase: row.phase, checkpoint: row.checkpoint });
 
 /** Private shared metadata check; checkpoint validation is a separate boundary. */
-export function validateRetainedRoomRecord(row: RetainedRoomRecord | undefined, key: string, schemaVersion: string): asserts row is RetainedRoomRecord {
+export function validateCoordinatedRoomRecord<Checkpoint extends { readonly manifest: { readonly schemaVersion: string } }>(row: CoordinatedRecord<Checkpoint> | undefined, key: string, schemaVersion: string): asserts row is CoordinatedRecord<Checkpoint> {
   if (!row) throw new Error('Coordinated room does not exist.');
   if (row.key !== key || !validId(row.epoch) || !validId(row.generation) || !Number.isSafeInteger(row.revision) || row.revision < 0
     || !['active', 'frozen'].includes(row.phase) || row.phase === 'active' && (row.freezeId !== null || row.preparationId !== null)
@@ -54,6 +55,11 @@ export function validateRetainedRoomRecord(row: RetainedRoomRecord | undefined, 
   if (receipt !== null && (!receipt || !validId(receipt.freezeId) || !validId(receipt.preparationId) || !validId(receipt.sourceEpoch) || !validId(receipt.targetEpoch)
     || receipt.sourceEpoch === receipt.targetEpoch || receipt.targetEpoch !== row.epoch || !Number.isSafeInteger(receipt.sourceRevision) || receipt.sourceRevision < 0
     || receipt.targetRevision !== receipt.sourceRevision + 1 || receipt.targetRevision > row.revision || !/^[a-f0-9]{64}$/.test(receipt.checkpointSha256))) throw new Error('Invalid coordinated resume receipt.');
+}
+
+export function validateRetainedRoomRecord(row: RetainedRoomRecord | undefined, key: string, schemaVersion: string): asserts row is RetainedRoomRecord {
+  validateCoordinatedRoomRecord(row, key, schemaVersion);
+  if (row.checkpoint.manifest.format !== 'fountain-retained-checkpoint/1') fail('stale-epoch', 'Room no longer uses the retained protocol; reconnect explicitly.');
 }
 
 /** Private provider reference. All instances coordinate through persistent CAS;

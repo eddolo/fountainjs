@@ -1,0 +1,74 @@
+[
+  {
+    "engine": "chromium",
+    "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+    "kind": "migration",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-chromium\\video.webm",
+    "durationSeconds": 4.12,
+    "target": "artifacts\\cross-format-visual-20261107\\chromium-migration"
+  },
+  {
+    "engine": "chromium",
+    "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-chromium\\video.webm",
+    "durationSeconds": 2.92,
+    "target": "artifacts\\cross-format-visual-20261107\\chromium-original"
+  },
+  {
+    "engine": "chromium",
+    "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-chromium\\video.webm",
+    "durationSeconds": 3.08,
+    "target": "artifacts\\cross-format-visual-20261107\\chromium-lost-ack"
+  },
+  {
+    "engine": "firefox",
+    "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+    "kind": "migration",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-firefox\\video.webm",
+    "durationSeconds": 6.72,
+    "target": "artifacts\\cross-format-visual-20261107\\firefox-migration"
+  },
+  {
+    "engine": "firefox",
+    "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-firefox\\video.webm",
+    "durationSeconds": 4.8,
+    "target": "artifacts\\cross-format-visual-20261107\\firefox-original"
+  },
+  {
+    "engine": "firefox",
+    "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-firefox\\video.webm",
+    "durationSeconds": 3.84,
+    "target": "artifacts\\cross-format-visual-20261107\\firefox-lost-ack"
+  },
+  {
+    "engine": "webkit",
+    "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+    "kind": "migration",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-webkit\\video.webm",
+    "durationSeconds": 12.36,
+    "target": "artifacts\\cross-format-visual-20261107\\webkit-migration"
+  },
+  {
+    "engine": "webkit",
+    "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+    "kind": "original",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-webkit\\video.webm",
+    "durationSeconds": 7.16,
+    "target": "artifacts\\cross-format-visual-20261107\\webkit-original"
+  },
+  {
+    "engine": "webkit",
+    "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+    "kind": "lost-ack",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-webkit\\video.webm",
+    "durationSeconds": 8.96,
+    "target": "artifacts\\cross-format-visual-20261107\\webkit-lost-ack"
+  }
+]

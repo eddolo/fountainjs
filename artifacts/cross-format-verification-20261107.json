@@ -1,0 +1,3686 @@
+{
+  "date": "2026-11-07",
+  "baselineCommit": "0d677569",
+  "goalComplete": false,
+  "publication": "Local private compatible-room migration/recovery only; no default switch or publication.",
+  "source": [
+    {
+      "path": "src/yjs/document-room.ts",
+      "bytes": 10339,
+      "sha256": "5ac4117854f379ed93794f914413fc40297c9ca1ea4252c24739616f8d3b88cf"
+    },
+    {
+      "path": "src/yjs/cross-format-handoff.ts",
+      "bytes": 15333,
+      "sha256": "542ec6c3d8d9ae6939c1f58b4b16f309de787dc3174677655a9f6f19cf5ebecc"
+    },
+    {
+      "path": "src/yjs/retained-room-coordinator.ts",
+      "bytes": 11853,
+      "sha256": "67742196c06dad0a002dd767eb4a8747f021629e5751e0a4145388f8e77c4b94"
+    },
+    {
+      "path": "src/yjs/retained-handoff.ts",
+      "bytes": 13905,
+      "sha256": "e664d279a0e5d80d6f29ef6fa1c830d501f128a42e9ae5f49f47d65408f909d9"
+    },
+    {
+      "path": "examples/backends/retained-sqlite.ts",
+      "bytes": 21317,
+      "sha256": "a825ae4fc9f78122f798402cd736a51537aca815667467b1cb45f8cc6d78295e"
+    },
+    {
+      "path": "tests/yjs-cross-format-handoff.test.ts",
+      "bytes": 35416,
+      "sha256": "a5637d62a688350fd251057a49076316ff2487c81b057c0c728a2bcf80bfdd17"
+    },
+    {
+      "path": "tests/manual/cross-format-real.spec.ts",
+      "bytes": 9105,
+      "sha256": "de4ea70cf0fb1f7362bccf959f008c472ae9a3c52b952619c2b029c020d6afd8"
+    },
+    {
+      "path": "artifacts/build-cross-format-20261107.mjs",
+      "bytes": 1077,
+      "sha256": "dd8abc78d6da2908635b964878706d78d8303c956336a44fc4acaeac96647e6b"
+    },
+    {
+      "path": "artifacts/prepare-cross-format-audit-20261107.mjs",
+      "bytes": 6229,
+      "sha256": "50ee900f0190d4b49180afb9473e562d593afbb7bb676813977e363914eec110"
+    },
+    {
+      "path": "artifacts/cross-format-fixture-20261107.html",
+      "bytes": 11560,
+      "sha256": "6fba4014601cc572c2eb191cb469069353c11a9f6b4134f64ca2ec13c2e7e861"
+    },
+    {
+      "path": "artifacts/cross-format-server-20261107.mjs",
+      "bytes": 4472,
+      "sha256": "50cffd45102fda583f44701d53974ad6d04e910bea80640f126e88e938ec7891"
+    },
+    {
+      "path": "artifacts/cross-format-browser-20261107.config.ts",
+      "bytes": 676,
+      "sha256": "f4b568f8307d0a1fc4ae8ba26d73aa22f995f6c1b887853e7fe55849c0c509e5"
+    },
+    {
+      "path": "artifacts/cross-format-process-20261107.mjs",
+      "bytes": 12336,
+      "sha256": "50ecc8f5958afbb7ae163f6df7652c4c7e17ac45691c4a98ab4965756db0a35e"
+    },
+    {
+      "path": "artifacts/curate-cross-format-20261107.mjs",
+      "bytes": 1960,
+      "sha256": "1f41f94ff14974deb0db93f5ac4970ba83dbfab87efb319fea2928578a63bc43"
+    },
+    {
+      "path": "artifacts/run-cross-format-checks-20261107.ps1",
+      "bytes": 1796,
+      "sha256": "29b1892775dc687af415216795dd757f873320be7db3f5749e16af7cbce89bd4"
+    },
+    {
+      "path": "artifacts/verify-cross-format-20261107.mjs",
+      "bytes": 10175,
+      "sha256": "ab4c72977dac864bb74ba9b36d21fc26d84031320a70a5e2efae014c115fdbe7"
+    }
+  ],
+  "fullSource": {
+    "path": "artifacts/cross-format-full-source-20261107.json",
+    "bytes": 1795292,
+    "sha256": "d151cd6a3b6f6b928df3660ceb64a65e42b6316e40b09c3504be765227a3db8d",
+    "total": 4694,
+    "passed": 4688,
+    "failed": 6,
+    "skipped": 0,
+    "files": 296,
+    "requiredFailures": [
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (quote)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (bullet)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (ordered)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline typing when another peer wraps its paragraph (task)"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "preserves offline character order when another peer applies a partial text mark"
+      },
+      {
+        "file": "tests/yjs-document-range.test.ts",
+        "name": "keeps offline typing on its original side of a concurrent paragraph split"
+      }
+    ]
+  },
+  "focused": {
+    "passed": 236,
+    "newCases": [
+      "uses one persisted live row for old and new protocols and archives the exact original atomically",
+      "accepts real legacy edits before migration and never allows a plain CAS to change protocols",
+      "rejects an incorrect epoch before reading update bytes",
+      "rejects an incorrect protocol before reading update bytes",
+      "rejects an incorrect frozen before reading update bytes",
+      "keeps the original legacy row intact after invalid-wire rejection",
+      "keeps the original legacy row intact after foreign-wire rejection",
+      "keeps the original legacy row intact after missing-dependency rejection",
+      "keeps the original legacy row intact after root-replacement rejection",
+      "does not install from an active source",
+      "does not install from an prepared source",
+      "does not install from an stale-ticket source",
+      "leaves an unclaimed auxiliary root and frozen original untouched after conversion refusal",
+      "rolls back the live format flip when archive insertion fails after the live SQL update",
+      "rejects a prevalidated legacy writer after another authority commits the format switch",
+      "rejects a candidate whose frozen source was aborted and frozen again during conversion",
+      "admits exactly one competing migration and permits an explicit idempotent replay",
+      "retains late old-format data in its original codec, never in the live retained room",
+      "preserves concurrent old-source batches through branch CAS and explicit retry",
+      "rolls back to the legacy frozen-source and archives all accepted retained edits",
+      "rolls back to the legacy source-branch and archives all accepted retained edits",
+      "can undo a cross-format rollback without discarding newer legacy edits",
+      "fences branch changes after rollback validation and preserves the frozen current room on refusal",
+      "replays a lost acknowledgement after restart without rotating twice or overwriting later retained edits",
+      "rejects operation UUID reuse with a different ticket",
+      "rejects operation UUID reuse with a different receipt",
+      "rejects operation UUID reuse with a different kind",
+      "does not allow operation UUID reuse between retained and cross-format archive APIs",
+      "refuses corrupt archived source_wire before changing any authoritative or branch bytes",
+      "refuses corrupt archived destination_wire before changing any authoritative or branch bytes",
+      "refuses corrupt archived branch_wire before changing any authoritative or branch bytes",
+      "owns ticket, options and policy before the first storage await",
+      "recovers a persistent legacy freeze without unfreezing, rejects duplicate initialization, and can abort explicitly",
+      "retains late retained-format edits after rollback and restores that branch while archiving newer legacy edits",
+      "requires explicit host coordination policy before any format change",
+      "carries actual granular widget state through migration, retained edits and cross-format rollback",
+      "retains exact raw legacy operations even when concurrent old-format wrapping can hide their intent",
+      "commits neither a branch replacement nor a receipt if raw batch insertion fails",
+      "detects raw batch corruption independently of the merged recovery checkpoint",
+      "can recover exact operations even if the independently merged branch checkpoint is corrupt"
+    ]
+  },
+  "checks": [
+    {
+      "log": "artifacts/cross-format-types-20261107.log",
+      "check": "types",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 10.6166892
+    },
+    {
+      "log": "artifacts/cross-format-focused-20261107.log",
+      "check": "focused",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 26.5312265
+    },
+    {
+      "log": "artifacts/cross-format-full-source-20261107.log",
+      "check": "full-source",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "seconds": 428.1615028
+    },
+    {
+      "log": "artifacts/cross-format-build-20261107.log",
+      "check": "build",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 18.255067
+    },
+    {
+      "log": "artifacts/cross-format-api-20261107.log",
+      "check": "api",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 1.1229864
+    },
+    {
+      "log": "artifacts/cross-format-headless-20261107.log",
+      "check": "headless",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "seconds": 1.6549693
+    },
+    {
+      "log": "artifacts/cross-format-budget-20261107.log",
+      "check": "budget",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "seconds": 1.094767
+    }
+  ],
+  "logs": [
+    {
+      "path": "artifacts/cross-format-types-20261107.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/cross-format-focused-20261107.log",
+      "bytes": 125,
+      "sha256": "d4fd2edd37ea31d12e9373cda6d6b3b6445df01420850aa5c3400e69ee4f9eec"
+    },
+    {
+      "path": "artifacts/cross-format-full-source-20261107.log",
+      "bytes": 129,
+      "sha256": "389f9650e042945ae74084c8cf0b7eb9c6e6e9a85b848a351989b23e52ecb7a8"
+    },
+    {
+      "path": "artifacts/cross-format-build-20261107.log",
+      "bytes": 15898,
+      "sha256": "c23db33efb9c1d4772fb2d77ef517be5a825b3c91ef03a1d2931f698d6d520dc"
+    },
+    {
+      "path": "artifacts/cross-format-api-20261107.log",
+      "bytes": 97,
+      "sha256": "213e24cc7c376bd3c37a09b3f52940a21e90016ebe93b3df0e291a27d095428e"
+    },
+    {
+      "path": "artifacts/cross-format-headless-20261107.log",
+      "bytes": 132,
+      "sha256": "c2c74ba6cb32058f390f9cc1ba98573c7c3b2285afedecb8f94dbe1689047872"
+    },
+    {
+      "path": "artifacts/cross-format-budget-20261107.log",
+      "bytes": 3896,
+      "sha256": "be518a88e3b034933718340d61c20f2ce596eb03945b941bccc1705249c2ad42"
+    }
+  ],
+  "compiled": {
+    "sourceModules": 204,
+    "nodeCases": 18,
+    "nodes": [
+      {
+        "mode": "es",
+        "passed": 9,
+        "cases": [
+          "kill between live-row write and archive insertion rolls back the SQLite transaction (storage oracle)",
+          "kill after migration commit leaves the fresh room and complete original archive durable",
+          "writer validated in another process before freeze cannot overwrite the migrated room",
+          "reopen and retry a lost migration acknowledgement does not install or rotate twice",
+          "kill after late-batch commit preserves exact checksum-verified raw operations and the branch together",
+          "old writer is fenced before byte access and its batch is retained only in a retired branch",
+          "kill after rollback commit preserves the old pending branch and archives all accepted fresh-room edits",
+          "rollback acknowledgement retry is idempotent and both prior writer epochs stay fenced",
+          "superseded migration receipt cannot reinstall its destination or rewrite the immutable original"
+        ],
+        "protocols": [
+          "legacy",
+          "retained",
+          "legacy"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "workers": 5,
+        "finalRevision": 3,
+        "checkpointSha256": "2b0bda625d0d50b52cf7e2c39ca3cea2f642199931cff50a7ad8a95d80029eac"
+      },
+      {
+        "mode": "cjs",
+        "passed": 9,
+        "cases": [
+          "kill between live-row write and archive insertion rolls back the SQLite transaction (storage oracle)",
+          "kill after migration commit leaves the fresh room and complete original archive durable",
+          "writer validated in another process before freeze cannot overwrite the migrated room",
+          "reopen and retry a lost migration acknowledgement does not install or rotate twice",
+          "kill after late-batch commit preserves exact checksum-verified raw operations and the branch together",
+          "old writer is fenced before byte access and its batch is retained only in a retired branch",
+          "kill after rollback commit preserves the old pending branch and archives all accepted fresh-room edits",
+          "rollback acknowledgement retry is idempotent and both prior writer epochs stay fenced",
+          "superseded migration receipt cannot reinstall its destination or rewrite the immutable original"
+        ],
+        "protocols": [
+          "legacy",
+          "retained",
+          "legacy"
+        ],
+        "node": "v24.22.1",
+        "dom": false,
+        "workers": 5,
+        "finalRevision": 3,
+        "checkpointSha256": "27b0c793005313eed0ce6ff7e19f19ae835bfd926cb41af2b40354ce64c25d95"
+      }
+    ]
+  },
+  "browser": {
+    "passed": 9,
+    "scope": "Actual legacy/retained editors and HTTP/SQLite protocol authority; pending edits, rollback, historical receipt and read-only recovery archive.",
+    "recordings": [
+      {
+        "project": "chromium",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-chromium\\video.webm",
+        "bytes": 214858,
+        "sha256": "5d2c1fcaca853269057a35e7402a4b64ccb68b956b5149d81d77cb4d886c5991",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-chromium\\trace.zip",
+          "bytes": 2920374,
+          "sha256": "3b6bf5ca42091580fb63ca9db2671c36ef5ce35f4a5b1bc61304380b5b1070b5"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-chromium\\video.webm",
+        "bytes": 176744,
+        "sha256": "ee11dce18301f729c0825e890ada64df6143624a8647b0454dcd0873d84fe001",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-chromium\\trace.zip",
+          "bytes": 1705381,
+          "sha256": "650165fc1eb2dace8b358ff0f20406e4cedbff103f4b1313867e892b2def4a53"
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-chromium\\video.webm",
+        "bytes": 114583,
+        "sha256": "cce2f9c0f30a83171553ac56a1828160297b1b67ba3152ce1599ca77f8a62d99",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-chromium\\trace.zip",
+          "bytes": 1941227,
+          "sha256": "dc11851850905b7bf269fc2f850c6ee3084a726ba656c5a156e074160ecd1ffe"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-firefox\\video.webm",
+        "bytes": 371268,
+        "sha256": "18fa697cb2a68cd6b53814d1d12231cadb18b6f94ecc59cec5472daf0c779fff",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-firefox\\trace.zip",
+          "bytes": 4710881,
+          "sha256": "74761c46248e4588652f95db43ad9ba03b38c4e683fb94c1715d3a3a5cc8d564"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-firefox\\video.webm",
+        "bytes": 227198,
+        "sha256": "e6aad97eeaafac9e19e33c559180e2706c7251959aa93ccc9de106eb8ed2d798",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-firefox\\trace.zip",
+          "bytes": 2890727,
+          "sha256": "c9af7c027615d760ac56929bc8cb5d005309c6cd662fe211af6a87ecf0f7c707"
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-firefox\\video.webm",
+        "bytes": 212099,
+        "sha256": "a175ce913cbcd82babefb88f6c307abadce07c25c0a9c0f79cc302d7e29c3f74",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-firefox\\trace.zip",
+          "bytes": 2459630,
+          "sha256": "06d5d969eeadf7659359dd7e7b0cfa72f6bfc72d670b8e9351f90e27f1bb2967"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-webkit\\video.webm",
+        "bytes": 436221,
+        "sha256": "ded278b987d4d0a63105c7507ca944b51ef1ce886c75cab3caeab4ce68fb5c5d",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-migrates-ed558-le-archiving-retained-edits-webkit\\trace.zip",
+          "bytes": 2723301,
+          "sha256": "9c30c74304df2e2b1bb96dca1d71e62db5025d34b63bb54ea8b06e5ba98800c9"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-webkit\\video.webm",
+        "bytes": 244439,
+        "sha256": "7769022662f94a6ec32b3f6b2a1eef8378c09a2b0000997323bff09a2afd1962",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-restores-08806--the-replaced-retained-room-webkit\\trace.zip",
+          "bytes": 1685969,
+          "sha256": "ea95bc923194e70cf1d62cdc9127144a2b15f2b63af933f50d04400e896598da"
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-webkit\\video.webm",
+        "bytes": 298460,
+        "sha256": "45b6321c736a6cc821bd1ef7afdd12bcdfebd65aee8ff8c5b4947ca8bc302fee",
+        "trace": {
+          "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\cross-format-browser-20261107\\cross-format-real-recovers-40fcb-ng-made-before-reconnection-webkit\\trace.zip",
+          "bytes": 2028671,
+          "sha256": "97a786eb80a4d14f389fe005f781e1a960b8e1a6c494f823cff7a50f7db4e063"
+        }
+      }
+    ],
+    "layouts": [
+      {
+        "project": "chromium",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "frames": 153,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "frames": 77,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "chromium",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "frames": 101,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "frames": 216,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "frames": 153,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "firefox",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "frames": 122,
+        "minViewport": 1440,
+        "minPane": 453.33331298828125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "frames": 270,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "frames": 129,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      },
+      {
+        "project": "webkit",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "frames": 168,
+        "minViewport": 1440,
+        "minPane": 453.328125,
+        "maxOverflow": 0,
+        "invalid": []
+      }
+    ],
+    "reports": [
+      {
+        "project": "chromium",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending UNSAVED after rollback"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. NEW accepted"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending UNSAVED after rollback"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "d90688b6-9830-49c4-b881-73782d8b5618",
+        "revision": 6,
+        "protocol": "legacy",
+        "activeProtocol": "legacy",
+        "archiveProtocol": "retained",
+        "archiveId": "5f9bf8d6-1ef3-4c8e-9111-b0c73ae825cb",
+        "rollbackArchiveId": "8315f942-5f80-49ed-bb6a-d2df9f6670b7",
+        "lastReplay": {
+          "replayed": true,
+          "current": false
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD branch"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. NEW branch"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "e0192193-9c32-4fd5-b34c-d32f3393b9d8",
+        "revision": 4,
+        "protocol": "legacy",
+        "activeProtocol": "legacy",
+        "archiveProtocol": "retained",
+        "archiveId": "812bd9d3-6968-4f20-a387-29df0a9da698",
+        "rollbackArchiveId": "d9e74ba2-feea-49a5-bf9f-8f76ef423fdf",
+        "lastReplay": {
+          "replayed": false,
+          "current": true
+        }
+      },
+      {
+        "project": "chromium",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. AFTER retry"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. PENDING after lost ack"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. AFTER retry"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "b6e1f7c5-729e-4464-84f9-533adb7f848b",
+        "revision": 3,
+        "protocol": "retained",
+        "activeProtocol": "retained",
+        "archiveProtocol": "legacy",
+        "archiveId": "2218187d-ea6a-4c92-9a35-a23b8e0ce1fa",
+        "lastReplay": {
+          "replayed": true,
+          "current": true
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending UNSAVED after rollback"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. NEW accepted"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending UNSAVED after rollback"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "50cff404-f4e7-4d6a-bb22-2ff3206f9294",
+        "revision": 6,
+        "protocol": "legacy",
+        "activeProtocol": "legacy",
+        "archiveProtocol": "retained",
+        "archiveId": "fbde3c1d-348f-4cc6-a8e7-bf3445acbcf1",
+        "rollbackArchiveId": "1f5a3f73-92d1-4794-b948-9ad0d2c26c88",
+        "lastReplay": {
+          "replayed": true,
+          "current": false
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD branch"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. NEW branch"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "3386c055-2a7e-4604-b198-89b5844c6bdc",
+        "revision": 4,
+        "protocol": "legacy",
+        "activeProtocol": "legacy",
+        "archiveProtocol": "retained",
+        "archiveId": "ad8ab90b-88b5-44ef-b86b-4001ace362c8",
+        "rollbackArchiveId": "0ca73779-7e3e-4b4b-b6f8-1dffe2522a77",
+        "lastReplay": {
+          "replayed": false,
+          "current": true
+        }
+      },
+      {
+        "project": "firefox",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. AFTER retry"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. PENDING after lost ack"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. AFTER retry"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "8487200f-9b3d-486f-8263-f81a7a21ee9d",
+        "revision": 3,
+        "protocol": "retained",
+        "activeProtocol": "retained",
+        "archiveProtocol": "legacy",
+        "archiveId": "ced76ee0-ba00-4d21-a613-374a2f77dde8",
+        "lastReplay": {
+          "replayed": true,
+          "current": true
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending UNSAVED after rollback"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. NEW accepted"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD pending UNSAVED after rollback"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "96b1d5f7-66cb-4f47-bbfe-4b3cdc05268f",
+        "revision": 6,
+        "protocol": "legacy",
+        "activeProtocol": "legacy",
+        "archiveProtocol": "retained",
+        "archiveId": "fe727436-30e0-4c84-a1f8-fa7418951d51",
+        "rollbackArchiveId": "48bb7526-7ad6-4f70-af73-f94f09e20193",
+        "lastReplay": {
+          "replayed": true,
+          "current": false
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. OLD branch"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. NEW branch"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "454dd74b-bb46-43ca-b51e-16638a9d43ee",
+        "revision": 4,
+        "protocol": "legacy",
+        "activeProtocol": "legacy",
+        "archiveProtocol": "retained",
+        "archiveId": "33ff3b36-ed98-4afb-933e-e75a1b7c83ab",
+        "rollbackArchiveId": "f57fe916-721b-4b50-b415-b66661928d61",
+        "lastReplay": {
+          "replayed": false,
+          "current": true
+        }
+      },
+      {
+        "project": "webkit",
+        "name": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+        "offline": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note."
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "active": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. AFTER retry"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "archive": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. PENDING after lost ack"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "server": {
+          "type": "doc",
+          "attrs": {
+            "metadata": {
+              "title": "Migration paper"
+            }
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "align": "left",
+                "nodeId": "intro"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Alpha technical note. AFTER retry"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "attrs": {
+                    "align": "left"
+                  },
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Keep every accepted edit recoverable."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "image_super",
+              "attrs": {
+                "src": "/tests/fixtures/cross-container-figure.png",
+                "alt": "Original figure",
+                "title": "",
+                "width": "100%",
+                "height": "auto",
+                "align": "center",
+                "srcset": "",
+                "sizes": "",
+                "loading": "lazy",
+                "decoding": "async",
+                "caption": "",
+                "nodeId": "figure"
+              }
+            },
+            {
+              "type": "math_block",
+              "attrs": {
+                "latex": "x^2+y^2",
+                "ariaLabel": "",
+                "label": "eq:one"
+              }
+            },
+            {
+              "type": "code_block",
+              "attrs": {
+                "language": "lean",
+                "lineNumbers": true
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "example : 1 + 1 = 2 := by decide"
+                }
+              ]
+            }
+          ]
+        },
+        "epoch": "6f53f92d-d81f-409d-8eea-a706bbe77b59",
+        "revision": 3,
+        "protocol": "retained",
+        "activeProtocol": "retained",
+        "archiveProtocol": "legacy",
+        "archiveId": "67638e78-1370-453c-98d8-408f907dce71",
+        "lastReplay": {
+          "replayed": true,
+          "current": true
+        }
+      }
+    ]
+  },
+  "visualReview": {
+    "method": "All nine sampled filmstrips and selected complete stage screenshots; not full playback or physical-device certification.",
+    "artifacts": [
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-lost-ack-filmstrip.png",
+        "bytes": 338899,
+        "sha256": "57de5520a964327c1ff15dc6f9a97797738c52935e176e9c37089dd2d922dd2d"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-lost-ack-final.png",
+        "bytes": 73815,
+        "sha256": "201feaac90b7a7409238e8c023fb34014719a229a304ee71cc7d3cac0ee1c4fa"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-lost-ack-lost-ack.png",
+        "bytes": 69061,
+        "sha256": "e25effdf84336eca87de149df665fb655a7b21dd442f7d66c42814be2f8c2dab"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-lost-ack.webm",
+        "bytes": 114583,
+        "sha256": "cce2f9c0f30a83171553ac56a1828160297b1b67ba3152ce1599ca77f8a62d99"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-migration-branches.png",
+        "bytes": 73857,
+        "sha256": "7720b2b9f4904149cf6bf923221f322654e14b148e3f32b04e5f16b2613696e0"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-migration-filmstrip.png",
+        "bytes": 315981,
+        "sha256": "aa5bbbb0d904a2457c3d806889f329ea84015861137ccf2864eb25477c81be7f"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-migration-final.png",
+        "bytes": 78249,
+        "sha256": "9fa01d7769dfa221d9e732e6a00d23f24621e11f2d497794240d6a5d65683f8b"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-migration-rollback.png",
+        "bytes": 74780,
+        "sha256": "3dc3006b647d3840c96fec8ea57598fd0b78167460073211143c20b10062ed90"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-migration.webm",
+        "bytes": 214858,
+        "sha256": "5d2c1fcaca853269057a35e7402a4b64ccb68b956b5149d81d77cb4d886c5991"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-original-filmstrip.png",
+        "bytes": 326100,
+        "sha256": "c857244167c045796dc228993ca31c65c8f69ae0b7c72d1b42240b69972b3214"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-original-final.png",
+        "bytes": 74209,
+        "sha256": "b07d9460f126f3a71eb31d07112df6090f742eed7291f7802ee2794b271c4053"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/chromium-original.webm",
+        "bytes": 176744,
+        "sha256": "ee11dce18301f729c0825e890ada64df6143624a8647b0454dcd0873d84fe001"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-lost-ack-filmstrip.png",
+        "bytes": 356546,
+        "sha256": "0f2dd55e14017d397f3ad62ab6b6061d402b924463a36371e957b398619e23d3"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-lost-ack-final.png",
+        "bytes": 81397,
+        "sha256": "8ab730a077450c4d99517adad9794cbdc04382b59abc6443cbd52b7ebc6e4ae6"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-lost-ack-lost-ack.png",
+        "bytes": 78016,
+        "sha256": "1e17c8acfd81c43a231071406725ce0443d264e3d713ca3c5eee19020b0a7fc1"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-lost-ack.webm",
+        "bytes": 212099,
+        "sha256": "a175ce913cbcd82babefb88f6c307abadce07c25c0a9c0f79cc302d7e29c3f74"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-migration-branches.png",
+        "bytes": 81874,
+        "sha256": "9cf525cb789773de37ebb4c33853c9c47b5b3d483418e4e559007bade2913b17"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-migration-filmstrip.png",
+        "bytes": 388534,
+        "sha256": "74916c0469ca9dedeb7a6190b769a24c02e5f20f030bd61219fabed1eafd6989"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-migration-final.png",
+        "bytes": 88338,
+        "sha256": "c130205a187335924ff7a05fd5650a131b448fa92e0c745a0c82dc6ea87de1ca"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-migration-rollback.png",
+        "bytes": 81588,
+        "sha256": "761dd10a7c2845e5fc01a5effc5e5a3ec99153fe1936e211dd692727602cad23"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-migration.webm",
+        "bytes": 371268,
+        "sha256": "18fa697cb2a68cd6b53814d1d12231cadb18b6f94ecc59cec5472daf0c779fff"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-original-filmstrip.png",
+        "bytes": 271329,
+        "sha256": "22a1dc5868c9688464ef5c95b66793bda10d124d88177b4cd96a928ea7631d4a"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-original-final.png",
+        "bytes": 80642,
+        "sha256": "900687850d083f6e47a450b72da27f1b4f3473f14bbb97b1d0a81a6403a2ba7c"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/firefox-original.webm",
+        "bytes": 227198,
+        "sha256": "e6aad97eeaafac9e19e33c559180e2706c7251959aa93ccc9de106eb8ed2d798"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-lost-ack-filmstrip.png",
+        "bytes": 285275,
+        "sha256": "cf8eb07c0310fb92d98e10a10dee554b2f567332b8be8234d595422cebc3a551"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-lost-ack-final.png",
+        "bytes": 75327,
+        "sha256": "bc96278dc9a2a7bb2dcdede9007742a442c19e9d5489d49a43110e5d0c7b7efc"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-lost-ack-lost-ack.png",
+        "bytes": 67073,
+        "sha256": "3b84eab5d635c2937ce5e5fce08d61487ca33ee4cf145074acf32a0ad89a3f00"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-lost-ack.webm",
+        "bytes": 298460,
+        "sha256": "45b6321c736a6cc821bd1ef7afdd12bcdfebd65aee8ff8c5b4947ca8bc302fee"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-migration-branches.png",
+        "bytes": 75531,
+        "sha256": "073f92363c718990b0c0da8bebc6aae6ba69fcdfe79166d4d1531d948cd63057"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-migration-filmstrip.png",
+        "bytes": 366567,
+        "sha256": "2aa2ccf017898fb7194eed0b7848b782043ece9539f6cb44708b5184be4f6c02"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-migration-final.png",
+        "bytes": 79731,
+        "sha256": "6c928617fec01130cd0163037b50adf72cac16fa6786531b7d591af0f3d29231"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-migration-rollback.png",
+        "bytes": 76011,
+        "sha256": "030fe89d3f745f105aa85c938a8f9a0eab6541a58ac887a360ddcdef4e814e95"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-migration.webm",
+        "bytes": 436221,
+        "sha256": "ded278b987d4d0a63105c7507ca944b51ef1ce886c75cab3caeab4ce68fb5c5d"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-original-filmstrip.png",
+        "bytes": 260115,
+        "sha256": "0e97115358df42c390baaa840a0e9d71496800227c5b7158732c2d300f7cfdb7"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-original-final.png",
+        "bytes": 75207,
+        "sha256": "69557e22e7032bfeb359b6c369c7dc13e0aa50f61fb2b7676cda141b027db976"
+      },
+      {
+        "path": "artifacts/cross-format-visual-20261107/webkit-original.webm",
+        "bytes": 244439,
+        "sha256": "7769022662f94a6ec32b3f6b2a1eef8378c09a2b0000997323bff09a2afd1962"
+      }
+    ]
+  },
+  "invariants": {
+    "publicRuntimeAndCssByteIdentical": 171,
+    "unchanged": [
+      "src/yjs/index.ts",
+      "package.json",
+      "scripts/check-build-budgets.mjs"
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/YJS_CROSS_FORMAT_HANDOFF_AUDIT.md",
+      "bytes": 7931,
+      "sha256": "2056255164c8a5d0876bf6a209263dbe816aa037e2a2ff6e78328f8d721c52eb"
+    },
+    {
+      "path": "docs/YJS_LEGACY_MIGRATION_AUDIT.md",
+      "bytes": 9360,
+      "sha256": "d99ffa2da2f50b9ffe5d7c5bea34996159e5880e6a5d7a35cff81aa9599b9cfa"
+    },
+    {
+      "path": "docs/YJS_RETAINED_HANDOFF_AUDIT.md",
+      "bytes": 9188,
+      "sha256": "3957d0b71f266dddba9df04f2e88bdb0639469514b106556d26cc87d7862e920"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 302729,
+      "sha256": "203df729fcfb412e20cd831abe554bdf268966fd4324c49df5ebe44e76c9701c"
+    },
+    {
+      "path": "docs/TIPTAP_PARITY.md",
+      "bytes": 167923,
+      "sha256": "451d68682cbbeacef7d35812aeb4467661efbb76c35f6029414f8c2aaa73fda4"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 190367,
+      "sha256": "11c9da88f8cf1849ca106b0f36e511ca059f8e8e64661715d11cff897385c5f4"
+    }
+  ],
+  "open": [
+    "Six default-adapter failures and safe adoption",
+    "General fragment namespace/nested-locator mapping beyond compatible named XML rooms",
+    "Cross-format semantic reconciliation and actual host/provider coordination",
+    "Crash-persistent client outbox",
+    "Production archive/raw-log retention, compaction and large-room costs",
+    "Three size overruns and fresh complete release CI",
+    "Overall parity"
+  ]
+}

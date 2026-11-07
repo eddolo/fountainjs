@@ -1,6 +1,6 @@
 # FountainJS opportunity roadmap
 
-## Current programme status — 2026-11-06
+## Current programme status — 2026-11-07
 
 The capability ledger has 61 Delivered rows, eight Partial rows and two Host
 boundary rows. These count bounded capability contracts, not percentage
@@ -20,13 +20,28 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,648 passes and six failures, with no skips. Three
+The current source suite has 4,688 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
-growth and compaction, legacy migration and safe adapter adoption remain open.
+growth and compaction, general legacy migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest legacy-conversion audit](YJS_LEGACY_MIGRATION_AUDIT.md).
+[latest cross-format handoff audit](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
+
+Atomic legacy/retained handoff (2026-11-07, local): one persistent live row now
+supports compatible XML-room migration and explicit rollback, archiving both
+source and replacement edits. Epoch/protocol and generation checks fence old
+writers; durable operation replay cannot reinstall historical destinations.
+Late batches stay in their source codec, with exact checksummed bytes and branch
+updates committed together. Recorded clients retain pending edits before view
+replacement after lost acknowledgements and preserve unsaved same-epoch drafts.
+All 40 new / 236 focused cases, 18 compiled Node/process checks and nine recorded
+three-engine journeys pass. Complete source has 4,688 passes and the same six
+default failures across 296 files, no skips. Public runtime/CSS remains identical;
+three size overruns remain. General fragment mapping, semantic reconciliation,
+production archive/compaction costs and safe adoption remain open. No public
+adapter switch, limits change, publication or COLLAB-01 promotion.
+[Audit](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
 
 Existing XML-room conversion (2026-11-06, local): a strict read-only decoder
 archives full old-format wire/root state without connecting or repairing the

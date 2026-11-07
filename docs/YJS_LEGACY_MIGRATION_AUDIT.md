@@ -1,5 +1,10 @@
 # Existing XML-room conversion — 2026-11-06
 
+Follow-up (2026-11-07): the [cross-format handoff audit](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md)
+adds atomic authority, rollback and exact late-batch recovery for compatible
+named rooms. The original evidence and remaining general-fragment/adoption limits
+below describe this earlier conversion-only checkpoint.
+
 This private conversion path reads documents produced by the current public
 `YjsCollaborationAdapter`, archives their complete original shared state, and
 builds a separately verified retained-engine candidate. It closes a necessary
