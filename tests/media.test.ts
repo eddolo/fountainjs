@@ -24,6 +24,7 @@ import {
   startAssetUpload,
   undo,
 } from '../src';
+import { ServerHTMLImporter } from '../src/html/server';
 
 function mediaNode(editor: ReturnType<typeof createEditor>, kind: string) {
   return editor.state.doc.content.find((node) => node.type.name === kind);
@@ -164,6 +165,7 @@ describe('first-party production media extension', () => {
     expect(html).not.toContain('javascript:');
 
     const restored = HTMLImporter.parse(html, editor.state.schema);
+    expect(ServerHTMLImporter.parse(html, editor.state.schema).toJSON()).toEqual(restored.toJSON());
     expect(restored.content.map((node) => node.type.name)).toEqual(['audio', 'video', 'file_attachment', 'embed']);
     expect(restored.child(0).attrs).toMatchObject({ title: 'Audio story', loop: true, controlsList: 'nodownload' });
     expect(restored.child(0).attrs.tracks).toEqual([{ src: 'https://cdn.example.com/story.vtt', kind: 'captions', srclang: 'en', label: 'English', default: true }]);
@@ -172,8 +174,11 @@ describe('first-party production media extension', () => {
     expect(restored.child(3).attrs).toMatchObject({ provider: 'vimeo', allowFullscreen: true });
     expect(MarkdownExporter.export(editor.state)).toContain('[Audio: Audio story](https://cdn.example.com/story.ogg)');
 
-    const escalated = HTMLImporter.parse('<figure data-fountain-media="embed" data-provider="vimeo"><iframe src="https://player.vimeo.com/video/12345678" title="Untrusted permissions" allow="clipboard-write" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe></figure>', editor.state.schema);
-    expect(escalated.content.some((node) => node.type.name === 'embed')).toBe(false);
+    const unsafeEmbed = '<figure data-fountain-media="embed" data-provider="vimeo"><iframe src="https://player.vimeo.com/video/12345678" title="Untrusted permissions" allow="clipboard-write" sandbox="allow-scripts allow-same-origin allow-presentation"></iframe></figure>';
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) {
+      const escalated = importer.parse(unsafeEmbed, editor.state.schema);
+      expect(escalated.content.some((node) => node.type.name === 'embed')).toBe(false);
+    }
 
     const imageFile = createEditor({
       schema: StarterKit.schema,

@@ -890,6 +890,24 @@ checks passed. The installed tarball passed 39 recorded collaboration workflows
 across Chromium, Firefox and WebKit. The measured library bundling step took
 about six seconds locally, compared with about one second for the prior output.
 
+### Shared HTML import projection
+
+The browser and server HTML importers share projection for images, playback,
+attachments, embeds, emoji, and basic mark normalization. Native DOM handling,
+the server parser, and the server's loss reporting stay with their respective
+importers. The shared code takes element attributes and queries without a
+browser DOM dependency. Both importers preserve the same media round trips
+and reject the same untrusted embed permissions in the focused suite.
+
+The aggregate decreased from 1,547.4 to 1,544.0 KiB for CommonJS and from
+1,546.0 to 1,542.1 KiB for ESM. The CommonJS aggregate remains 135.2 KiB
+above its limit.
+
+All 180 focused tests and 15 recorded Chromium, Firefox and WebKit workflows
+passed. Browser review included the pasted research note and the reopened
+reader after an HTML-to-Markdown handoff. The package, headless, Node/workerd,
+Markdown conformance and performance checks also passed.
+
 ## Why small edits stay local
 
 - Schema validation memoizes successfully validated immutable subtrees in a

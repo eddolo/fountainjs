@@ -1,4 +1,4 @@
-import type { Mark, Node } from '../schema';
+import type { Attributes, Mark, Node, Schema } from '../schema';
 
 // Import-only provenance: CSS reassertions are not authored emphasis elements.
 // Weak membership retains neither a document nor its source tree.
@@ -51,4 +51,53 @@ export function relativeHTMLContent(content: readonly Node[], inherited: readonl
     if (marks.length !== node.marks.length) result = result.withMarks(marks);
     return result;
   });
+}
+
+const HAS_EMOJI = /\p{Extended_Pictographic}/u;
+
+export function unicodeEmojiName(value: string): string {
+  return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
+}
+
+export function textNodes(value: string, schema: Schema, marks: readonly Mark[]): Node[] {
+  if (!value || !schema.nodes.emoji || !HAS_EMOJI.test(value)) return value ? [schema.text(value, marks)] : [];
+  const segments = typeof Intl.Segmenter === 'function'
+    ? Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(value), (part) => part.segment)
+    : Array.from(value);
+  const result: Node[] = [];
+  let pending = '';
+  const flush = () => {
+    if (pending) result.push(schema.text(pending, marks));
+    pending = '';
+  };
+  segments.forEach((segment) => {
+    if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
+    flush();
+    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment }, [], undefined, marks)); }
+    catch { result.push(schema.text(segment, marks)); }
+  });
+  flush();
+  return result;
+}
+
+export function addMark(marks: Mark[], mark: Mark): void {
+  if (!marks.some((candidate) => candidate.type === mark.type)) marks.push(mark);
+}
+
+export function addSchemaMark(marks: Mark[], schema: Schema, name: string, attrs: Attributes = {}): void {
+  const type = schema.marks[name];
+  if (!type || marks.some((mark) => mark.type === type)) return;
+  try { marks.push(type.create(attrs)); }
+  catch { /* Invalid imported attributes leave the content unmarked. */ }
+}
+
+export function colorValue(value: string): string | null {
+  const normalized = value.trim().toLowerCase();
+  const hex = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(normalized)?.[1];
+  if (hex) return `#${hex.length === 3 ? Array.from(hex, (part) => `${part}${part}`).join('') : hex}`;
+  const rgb = /^rgba?\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})(?:\s*[,/]\s*(?:1(?:\.0+)?|100%))?\s*\)$/i.exec(normalized);
+  if (!rgb) return null;
+  const values = rgb.slice(1, 4).map(Number);
+  if (values.some((part) => part < 0 || part > 255)) return null;
+  return `#${values.map((part) => part.toString(16).padStart(2, '0')).join('')}`;
 }

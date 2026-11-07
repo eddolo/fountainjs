@@ -25,7 +25,8 @@ import {
 import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { importedHTMLLinkURL } from '../core/importers/html-link-url';
-import { explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from '../core/importers/html-marks';
+import { addMark, addSchemaMark, colorValue, textNodes, unicodeEmojiName, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from '../core/importers/html-marks';
+import { embedNode, fileNode, htmlImageAttributes, htmlImageDimensions, playbackNode } from '../core/importers/html-media';
 import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource, renderedLinkDestination } from '../core/link-destination';
 import { importHTMLComment } from '../core/html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow';
@@ -49,7 +50,6 @@ type RawParent = Htmlparser2TreeAdapterMap['parentNode'];
 type RawElement = Htmlparser2TreeAdapterMap['element'];
 type ParseRule = HTMLParseRule | DOMParseRule;
 
-const HAS_EMOJI = /\p{Extended_Pictographic}/u;
 const DEFAULT_LIMITS = Object.freeze({
   maxInputBytes: 1_048_576,
   maxNodes: 50_000,
@@ -508,31 +508,6 @@ function reportRuleFailure(context: ImportContext, rule: ParseRule, contribution
   });
 }
 
-function unicodeEmojiName(value: string): string {
-  return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
-}
-
-function textNodes(value: string, schema: Schema, marks: readonly Mark[]): FountainNode[] {
-  if (!value || !schema.nodes.emoji || !HAS_EMOJI.test(value)) return value ? [schema.text(value, marks)] : [];
-  const segments = typeof Intl.Segmenter === 'function'
-    ? Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(value), (part) => part.segment)
-    : Array.from(value);
-  const result: FountainNode[] = [];
-  let pending = '';
-  const flush = () => {
-    if (pending) result.push(schema.text(pending, marks));
-    pending = '';
-  };
-  segments.forEach((segment) => {
-    if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
-    flush();
-    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment }, [], undefined, marks)); }
-    catch { result.push(schema.text(segment, marks)); }
-  });
-  flush();
-  return result;
-}
-
 function parseRulePriority(rule: ParseRule): number {
   return Number.isFinite(rule.priority) ? Number(rule.priority) : 50;
 }
@@ -626,17 +601,6 @@ function ruleContentElement(
   }
 }
 
-function addMark(marks: Mark[], mark: Mark): void {
-  if (!marks.some((candidate) => candidate.type === mark.type)) marks.push(mark);
-}
-
-function addSchemaMark(marks: Mark[], schema: Schema, name: string, attrs: Attributes = {}): void {
-  const type = schema.marks[name];
-  if (!type || marks.some((mark) => mark.type === type)) return;
-  try { marks.push(type.create(attrs)); }
-  catch { /* Invalid imported attributes leave the content unmarked. */ }
-}
-
 function configuredMarks(element: SourceElement, schema: Schema, context: ImportContext): Mark[] {
   const matches: Array<{
     type: MarkType;
@@ -660,17 +624,6 @@ function configuredMarks(element: SourceElement, schema: Schema, context: Import
     catch { reportRuleFailure(context, rule, `mark:${type.name}`, 'attributes did not satisfy the mark schema'); }
   });
   return result;
-}
-
-function colorValue(value: string): string | null {
-  const normalized = value.trim().toLowerCase();
-  const hex = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(normalized)?.[1];
-  if (hex) return `#${hex.length === 3 ? Array.from(hex, (part) => `${part}${part}`).join('') : hex}`;
-  const rgb = /^rgba?\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})(?:\s*[,/]\s*(?:1(?:\.0+)?|100%))?\s*\)$/i.exec(normalized);
-  if (!rgb) return null;
-  const values = rgb.slice(1, 4).map(Number);
-  if (values.some((part) => part < 0 || part > 255)) return null;
-  return `#${values.map((part) => part.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function configuredNode(
@@ -975,13 +928,6 @@ function inlineChildren(
   return result;
 }
 
-function imageSize(value: string, fallback: string): string {
-  const normalized = value.trim();
-  if (/^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw|vh))$/.test(normalized)) return normalized;
-  if (/^\d+(?:\.\d+)?$/.test(normalized) && Number(normalized) > 0) return `${normalized}px`;
-  return fallback;
-}
-
 function imageNode(
   image: SourceElement,
   schema: Schema,
@@ -1000,125 +946,17 @@ function imageNode(
   }
   if (!schema.nodes[type]) return null;
   const blockImage = type === 'image_super';
-  const width = imageSize(
-    container?.style.width
-      || container?.style.maxWidth
-      || image.style.width
-      || image.getAttribute('width')
-      || '',
-    blockImage ? '100%' : 'auto',
-  );
-  const height = imageSize(image.style.height || image.getAttribute('height') || '', blockImage ? 'auto' : '1em');
+  const dimensions = htmlImageDimensions(image, blockImage, container);
   const captionElement = blockImage ? container?.querySelector(':scope > figcaption') ?? null : null;
   const richCaption = Boolean(captionElement && (container?.getAttribute('data-fountain-rich-caption') === 'true' || captionElement.children.length));
   const caption = richCaption && captionElement ? inlineChildren(captionElement, schema, [], context) : [];
   try {
     return schema.node(type, {
       src,
-      alt: image.getAttribute('alt') ?? '',
-      title: image.getAttribute('title') ?? '',
-      width,
-      height,
-      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
-      srcset: image.getAttribute('srcset') ?? '',
-      sizes: image.getAttribute('sizes') ?? '',
-      loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
-      decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '')
-        ? image.getAttribute('decoding')
-        : 'async',
+      ...htmlImageAttributes(image, container),
+      ...dimensions,
       ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
     }, caption, undefined, marks);
-  } catch { return null; }
-}
-
-function mediaTracks(element: SourceElement): readonly Record<string, unknown>[] {
-  return element.querySelectorAll(':scope > track').flatMap((track) => {
-    const src = track.getAttribute('src') ?? '';
-    const kind = track.getAttribute('kind') ?? '';
-    if (!isSafeURL(src) || !['subtitles', 'captions', 'descriptions', 'chapters', 'metadata'].includes(kind)) return [];
-    return [{
-      src,
-      kind,
-      srclang: track.getAttribute('srclang') ?? '',
-      label: track.getAttribute('label') ?? '',
-      default: track.hasAttribute('default'),
-    }];
-  });
-}
-
-function mediaSizeFromElement(element: SourceElement, fallback: string): string {
-  return imageSize(element.style.width || element.getAttribute('width') || '', fallback);
-}
-
-function playbackNode(
-  element: SourceElement,
-  schema: Schema,
-  kind: 'audio' | 'video',
-  container?: SourceElement,
-): FountainNode | null {
-  const type = schema.nodes[kind];
-  const src = element.getAttribute('src') ?? element.querySelector('source')?.getAttribute('src') ?? '';
-  if (!type || !isSafeURL(src)) return null;
-  const crossOrigin = element.getAttribute('crossorigin') ?? '';
-  const common = {
-    src,
-    title: element.getAttribute('title') ?? '',
-    caption: container?.querySelector(':scope > figcaption')?.textContent ?? '',
-    controls: element.hasAttribute('controls'),
-    autoplay: element.hasAttribute('autoplay'),
-    loop: element.hasAttribute('loop'),
-    muted: element.hasAttribute('muted'),
-    preload: ['none', 'metadata', 'auto'].includes(element.getAttribute('preload') ?? '')
-      ? element.getAttribute('preload')
-      : 'metadata',
-    controlsList: element.getAttribute('controlslist') ?? '',
-    crossOrigin: ['', 'anonymous', 'use-credentials'].includes(crossOrigin) ? crossOrigin : '',
-    disableRemotePlayback: element.hasAttribute('disableremoteplayback'),
-    tracks: mediaTracks(element),
-  };
-  try {
-    return type.create(kind === 'video' ? {
-      ...common,
-      poster: element.getAttribute('poster') ?? '',
-      width: mediaSizeFromElement(container ?? element, '100%'),
-      height: imageSize(element.style.height || element.getAttribute('height') || '', 'auto'),
-      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
-      playsInline: element.hasAttribute('playsinline'),
-    } : common);
-  } catch { return null; }
-}
-
-function fileNode(element: SourceElement, schema: Schema, container?: SourceElement): FountainNode | null {
-  const src = element.getAttribute('href') ?? '';
-  if (!schema.nodes.file_attachment || !isSafeURL(src)) return null;
-  try {
-    return schema.node('file_attachment', {
-      src,
-      name: element.dataset.name || element.textContent.trim() || 'Download file',
-      mimeType: element.dataset.mimeType ?? '',
-      size: Math.max(0, Number(element.dataset.size) || 0),
-      description: container?.querySelector(':scope > figcaption')?.textContent ?? '',
-      downloadName: element.getAttribute('download') ?? '',
-    });
-  } catch { return null; }
-}
-
-function embedNode(element: SourceElement, schema: Schema, container?: SourceElement): FountainNode | null {
-  const src = element.getAttribute('src') ?? '';
-  if (!schema.nodes.embed || !isSafeURL(src)) return null;
-  try {
-    return schema.node('embed', {
-      src,
-      provider: container?.dataset.provider ?? '',
-      title: element.getAttribute('title')?.trim() || 'Embedded content',
-      caption: container?.querySelector(':scope > figcaption')?.textContent ?? '',
-      width: mediaSizeFromElement(container ?? element, '100%'),
-      height: imageSize(element.style.height || element.getAttribute('height') || '', '360px'),
-      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
-      allow: element.getAttribute('allow') ?? '',
-      sandbox: element.getAttribute('sandbox') ?? '',
-      allowFullscreen: element.hasAttribute('allowfullscreen'),
-    });
   } catch { return null; }
 }
 

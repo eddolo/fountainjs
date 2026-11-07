@@ -13,7 +13,8 @@ import {
 import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { importedHTMLLinkURL } from './html-link-url';
-import { explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from './html-marks';
+import { addMark, addSchemaMark, colorValue, textNodes, unicodeEmojiName, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from './html-marks';
+import { embedNode, fileNode, htmlImageAttributes, htmlImageDimensions, playbackNode } from './html-media';
 import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource } from '../link-destination';
 import { importHTMLComment } from '../html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
@@ -30,33 +31,6 @@ import { htmlOrderedListStart } from './html-list';
 import { importDefinitionList } from './html-definition-list';
 import { parseMathExpressionJSON } from '../math-expression';
 import { readHTMLDocumentPageSettings } from './html-page-settings';
-
-const HAS_EMOJI = /\p{Extended_Pictographic}/u;
-
-function unicodeEmojiName(value: string): string {
-  return `unicode-${Array.from(value).map((character) => character.codePointAt(0)?.toString(16)).join('-')}`;
-}
-
-function textNodes(value: string, schema: Schema, marks: readonly Mark[]): FountainNode[] {
-  if (!value || !schema.nodes.emoji || !HAS_EMOJI.test(value)) return value ? [schema.text(value, marks)] : [];
-  const segments = typeof Intl.Segmenter === 'function'
-    ? Array.from(new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(value), (part) => part.segment)
-    : Array.from(value);
-  const result: FountainNode[] = [];
-  let pending = '';
-  const flush = () => {
-    if (pending) result.push(schema.text(pending, marks));
-    pending = '';
-  };
-  segments.forEach((segment) => {
-    if (!HAS_EMOJI.test(segment)) { pending += segment; return; }
-    flush();
-    try { result.push(schema.node('emoji', { name: unicodeEmojiName(segment), emoji: segment }, [], undefined, marks)); }
-    catch { result.push(schema.text(segment, marks)); }
-  });
-  flush();
-  return result;
-}
 
 type BrowserParseRule = DOMParseRule | HTMLParseRule;
 
@@ -90,17 +64,6 @@ function ruleContentElement(element: HTMLElement, rule: BrowserParseRule): HTMLE
   catch { return null; }
 }
 
-function addMark(marks: Mark[], mark: Mark): void {
-  if (!marks.some((candidate) => candidate.type === mark.type)) marks.push(mark);
-}
-
-function addSchemaMark(marks: Mark[], schema: Schema, name: string, attrs: Attributes = {}): void {
-  const type = schema.marks[name];
-  if (!type || marks.some((mark) => mark.type === type)) return;
-  try { marks.push(type.create(attrs)); }
-  catch { /* Invalid imported attributes leave the content unmarked. */ }
-}
-
 function configuredMarks(element: HTMLElement, schema: Schema): Mark[] {
   const matches: Array<{ type: MarkType; rule: BrowserParseRule; order: number }> = [];
   Object.values(schema.marks).forEach((type, order) => {
@@ -118,17 +81,6 @@ function configuredMarks(element: HTMLElement, schema: Schema): Mark[] {
     catch { /* Invalid extension attributes decline this rule. */ }
   });
   return result;
-}
-
-function colorValue(value: string): string | null {
-  const normalized = value.trim().toLowerCase();
-  const hex = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(normalized)?.[1];
-  if (hex) return `#${hex.length === 3 ? Array.from(hex, (part) => `${part}${part}`).join('') : hex}`;
-  const rgb = /^rgba?\(\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})(?:\s*[,/]\s*(?:1(?:\.0+)?|100%))?\s*\)$/i.exec(normalized);
-  if (!rgb) return null;
-  const values = rgb.slice(1, 4).map(Number);
-  if (values.some((part) => part < 0 || part > 255)) return null;
-  return `#${values.map((part) => part.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function configuredNode(
@@ -337,13 +289,6 @@ function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[]
     return mergeHTMLMarks(nextMarks, marks, tag);
 }
 
-function imageSize(value: string, fallback: string): string {
-  const normalized = value.trim();
-  if (/^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw|vh))$/.test(normalized)) return normalized;
-  if (/^\d+(?:\.\d+)?$/.test(normalized) && Number(normalized) > 0) return `${normalized}px`;
-  return fallback;
-}
-
 function imageNode(
   image: HTMLImageElement,
   schema: Schema,
@@ -354,117 +299,17 @@ function imageNode(
   const src = image.getAttribute('src') ?? '';
   if (!isSafeURL(src, { allowDataImage: true }) || !schema.nodes[type]) return null;
   const block = type === 'image_super';
-  const width = imageSize(
-    container?.style.width || container?.style.maxWidth || image.style.width || image.getAttribute('width') || '',
-    block ? '100%' : 'auto',
-  );
-  const height = imageSize(image.style.height || image.getAttribute('height') || '', block ? 'auto' : '1em');
+  const dimensions = htmlImageDimensions(image, block, container);
   const captionElement = block ? container?.querySelector<HTMLElement>(':scope > figcaption') ?? null : null;
   const richCaption = Boolean(captionElement && (container?.dataset.fountainRichCaption === 'true' || captionElement.children.length));
   const caption = richCaption && captionElement ? inlineChildren(captionElement, schema) : [];
   try {
     return schema.node(type, {
       src,
-      alt: image.alt,
-      title: image.title,
-      width,
-      height,
-      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
-      srcset: image.getAttribute('srcset') ?? '',
-      sizes: image.getAttribute('sizes') ?? '',
-      loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
-      decoding: ['auto', 'sync', 'async'].includes(image.getAttribute('decoding') ?? '') ? image.getAttribute('decoding') : 'async',
+      ...htmlImageAttributes(image, container),
+      ...dimensions,
       ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
     }, caption, undefined, marks);
-  } catch { return null; }
-}
-
-function mediaTracks(element: HTMLMediaElement): readonly Record<string, unknown>[] {
-  return Array.from(element.querySelectorAll(':scope > track')).flatMap((track) => {
-    const src = track.getAttribute('src') ?? '';
-    const kind = track.getAttribute('kind') ?? '';
-    if (!isSafeURL(src) || !['subtitles', 'captions', 'descriptions', 'chapters', 'metadata'].includes(kind)) return [];
-    return [{
-      src,
-      kind,
-      srclang: track.getAttribute('srclang') ?? '',
-      label: track.getAttribute('label') ?? '',
-      default: track.hasAttribute('default'),
-    }];
-  });
-}
-
-function mediaSizeFromElement(element: HTMLElement, fallback: string): string {
-  return imageSize(element.style.width || element.getAttribute('width') || '', fallback);
-}
-
-function playbackNode(
-  element: HTMLMediaElement,
-  schema: Schema,
-  kind: 'audio' | 'video',
-  container?: HTMLElement,
-): FountainNode | null {
-  const type = schema.nodes[kind];
-  const src = element.getAttribute('src') ?? element.querySelector('source')?.getAttribute('src') ?? '';
-  if (!type || !isSafeURL(src)) return null;
-  const crossOrigin = element.getAttribute('crossorigin') ?? '';
-  const common = {
-    src,
-    title: element.getAttribute('title') ?? '',
-    caption: container?.querySelector(':scope > figcaption')?.textContent ?? '',
-    controls: element.hasAttribute('controls'),
-    autoplay: element.hasAttribute('autoplay'),
-    loop: element.hasAttribute('loop'),
-    muted: element.hasAttribute('muted'),
-    preload: ['none', 'metadata', 'auto'].includes(element.getAttribute('preload') ?? '') ? element.getAttribute('preload') : 'metadata',
-    controlsList: element.getAttribute('controlslist') ?? '',
-    crossOrigin: ['', 'anonymous', 'use-credentials'].includes(crossOrigin) ? crossOrigin : '',
-    disableRemotePlayback: element.hasAttribute('disableremoteplayback'),
-    tracks: mediaTracks(element),
-  };
-  try {
-    return type.create(kind === 'video' ? {
-      ...common,
-      poster: element.getAttribute('poster') ?? '',
-      width: mediaSizeFromElement(container ?? element, '100%'),
-      height: imageSize(element.style.height || element.getAttribute('height') || '', 'auto'),
-      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
-      playsInline: element.hasAttribute('playsinline'),
-    } : common);
-  } catch { return null; }
-}
-
-function fileNode(element: HTMLAnchorElement, schema: Schema, container?: HTMLElement): FountainNode | null {
-  const src = element.getAttribute('href') ?? '';
-  if (!schema.nodes.file_attachment || !isSafeURL(src)) return null;
-  try {
-    return schema.node('file_attachment', {
-      src,
-      name: element.dataset.name || element.textContent?.trim() || 'Download file',
-      mimeType: element.dataset.mimeType ?? '',
-      size: Math.max(0, Number(element.dataset.size) || 0),
-      description: container?.querySelector(':scope > figcaption')?.textContent ?? '',
-      downloadName: element.getAttribute('download') ?? '',
-    });
-  } catch { return null; }
-}
-
-function embedNode(element: HTMLIFrameElement, schema: Schema, container?: HTMLElement): FountainNode | null {
-  const src = element.getAttribute('src') ?? '';
-  if (!schema.nodes.embed || !isSafeURL(src)) return null;
-  try {
-    return schema.node('embed', {
-      src,
-      provider: container?.dataset.provider ?? '',
-      title: element.getAttribute('title')?.trim() || 'Embedded content',
-      caption: container?.querySelector(':scope > figcaption')?.textContent ?? '',
-      width: mediaSizeFromElement(container ?? element, '100%'),
-      height: imageSize(element.style.height || element.getAttribute('height') || '', '360px'),
-      align: ['left', 'center', 'right'].includes(container?.dataset.align ?? '') ? container?.dataset.align : 'center',
-      allow: element.getAttribute('allow') ?? '',
-      sandbox: element.getAttribute('sandbox') ?? '',
-      allowFullscreen: element.hasAttribute('allowfullscreen'),
-    });
   } catch { return null; }
 }
 
