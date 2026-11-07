@@ -107,6 +107,36 @@ and the retained edits appeared in their expected panes. Build, types, API,
 headless and packed-package smoke checks passed. The four raw-size overruns
 remain with their existing limits.
 
+## Check a migration while the room is open
+
+`CrossFormatRoomHandoff.preflightLegacy({ epoch, revision }, options)` checks
+one saved revision. It runs the same isolated conversion and root verifiers as
+the real migration, compares the document digest, and returns the checked
+source digest, namespace mapping, auxiliary roots, and rehearsal byte sizes.
+It rechecks the storage generation after conversion. A concurrent edit or
+freeze makes the check stale. The isolated candidate is discarded and its
+temporary native identity stays private.
+
+Use **Check saved migration** in the browser reference to run this without
+saving unsent edits, freezing the room, or creating an archive. The migration
+button saves local edits and checks that newer revision before attempting a
+freeze. The final operation still needs host authorization, the exact frozen
+checkpoint, and an atomic archive installation. A rehearsal receipt only
+describes the revision that was checked. Repeat the check when the room or
+configuration changes.
+
+The embedded-document journey first selects a destination that collides with
+its folder root. The check and migration both refuse it before freezing. The
+author can save another edit, choose an available destination, and inspect the
+report before the switch. Both the new editor and the read-only source archive
+show the saved edit after migration.
+
+All 124 focused source tests and 39 recorded browser journeys pass across
+Chromium, Firefox and WebKit. The SQLite tests include another writer advancing
+the revision, a concurrent freeze and abort, and refusal to freeze a stale
+checked revision. Before-and-after captures were reviewed. Recordings are in
+`artifacts/yjs-migration-preflight-full-browser-20261107/`.
+
 ## Edits while reconnecting after a protocol switch
 
 The HTTP/SQLite browser reference previously saved the old editor's Yjs update,

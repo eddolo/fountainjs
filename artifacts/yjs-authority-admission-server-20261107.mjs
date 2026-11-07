@@ -41,13 +41,15 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
     }else{presence.leavePresence(room.key,body.epoch,body.token);value=null;}
    }
    else if(action==='bind-advance'){const snapshot=await room.snapshot(),opened=await restoreRetainedCheckpoint(snapshot.checkpoint,schema,'admission-browser-1'),kit=composeExtensions([CoreExtension,MathExtension,createRetainedYjsCollaborationExtension({document:opened.document,user:{id:'server',name:'Server',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:opened.baseDocument.toJSON()});try{editor.dispatch(editor.createTransaction().insertText([1,0],editor.state.doc.child(1).textContent.length,' ACCEPTED during bind'));await room.write({epoch:snapshot.epoch,protocol:'retained',update:Y.encodeStateAsUpdate(opened.document)});}finally{editor.destroy();opened.document.destroy();}value=await room.admit(body);}
-   else if(action==='freeze')value=await room.freeze(await room.snapshot());
+   else if(action==='freeze')value=await room.freeze(body.epoch===undefined?await room.snapshot():body);
    else if(action==='recover-freeze')value=await room.recoverFrozen(body);
-   else if(action==='migrate-legacy'||action==='migration-record'){
+   else if(action==='preflight-legacy'||action==='migrate-legacy'||action==='migration-record'){
     const handoff=new CrossFormatRoomHandoff(repository,room.key,schema,'admission-browser-1');
-    if(action==='migrate-legacy'){
+    const options={history:'reset-with-source-checkpoint',offline:'reconcile-before-activation',externalState:'host-coordinated',migrators:[]};
+    if(action==='preflight-legacy') value=await handoff.preflightLegacy(body,options);
+    else if(action==='migrate-legacy'){
      value=(await handoff.migrateLegacy(body.ticket,body.operation,
-      {history:'reset-with-source-checkpoint',offline:'reconcile-before-activation',externalState:'host-coordinated',migrators:[]},
+      options,
       {history:'reset-with-source-archive',offline:'retain-retired-room-branches',externalReceipt:'live-test-handoff'})).snapshot;
     }else{
      const archive=await handoff.retiredEpoch(body.epoch);

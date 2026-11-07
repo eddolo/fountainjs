@@ -139,7 +139,10 @@ Recordings, traces and images are in `artifacts/yjs-live-structural-browser-2026
 The same six journeys can start from a legacy Yjs document saved to SQLite.
 The author clicks **Upgrade saved legacy room**, which archives the frozen
 source and installs a retained room through the cross-format handoff. The
-browser checks that the old epoch can no longer write before starting either
+browser first rehearses the saved legacy revision and passes that exact epoch
+and revision to the freeze request. If the revision advances, the freeze is
+refused and the room stays writable. The browser checks that the old epoch
+can no longer write before starting either
 live session. Both writers then use the existing HTTP provider, IndexedDB
 recovery and the same structural editing and author undo/redo checks.
 
@@ -166,6 +169,9 @@ with no skips or retries. Visual review covered the recovered quote, split,
 and partial-bold results. Each test attaches the durable migration record
 with both formats, the model digests, and the final live revision. Recordings
 and screenshots are in `artifacts/yjs-live-migrated-structural-browser-20261107/`.
+The rehearsal follow-up reran all 18 journeys and verified that the freeze
+request matched the exact saved epoch and revision returned by the check.
+Those recordings are in `artifacts/yjs-migration-preflight-live-final-20261107/`.
 All six direct-retained Chromium journeys and the type checks also pass.
 The rerun against the default XML adapter still reports 16 passes and the same
 six concurrency failures.

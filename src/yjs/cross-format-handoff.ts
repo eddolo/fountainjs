@@ -2,6 +2,7 @@ import type { Schema } from '../core/schema';
 import { checkpointWire } from './retained-checkpoint';
 import type { CoordinatedFreeze } from './retained-room-coordinator';
 import { validateCoordinatedRoomRecord } from './retained-room-coordinator';
+import type { RetainedRoomVersion } from './retained-room-store';
 import { snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 import { buildLegacyMigrationCandidate, snapshotLegacyMigrationOptions, type LegacyMigrationCandidate, type LegacyMigrationOptions } from './legacy-migration';
 import { snapshotRetainedHandoffPolicy, type RetainedHandoffPolicy } from './retained-handoff';
@@ -36,6 +37,12 @@ export interface CrossFormatBatch {
 export interface CrossFormatHandoffResult {
   readonly archive: CrossFormatArchive; readonly snapshot: DocumentRoomSnapshot;
   readonly replayed: boolean; readonly current: boolean;
+}
+export interface LegacyMigrationPreflight extends RetainedRoomVersion {
+  readonly key: string;
+  readonly sourceCheckpointSha256: string;
+  readonly documentSha256: string;
+  readonly report: Omit<LegacyMigrationCandidate['report'], 'destinationRoomId' | 'activation'>;
 }
 
 /** Private administrative boundary. Host authorization and external coordination
@@ -91,6 +98,30 @@ export class CrossFormatRoomHandoff {
     this.check(archive);
     if (!await this.repository.installCrossArchive(this.key, row.generation, next, archive, prerequisite)) fail('revision-conflict', 'Source or archived branch changed; no cross-format installation committed.');
     return this.result(archive, next, false);
+  }
+  /** Rehearse conversion against a live revision. The result is evidence for
+   * the operator and does not authorize, freeze or prepare the actual switch. */
+  async preflightLegacy(expected: RetainedRoomVersion, options: LegacyMigrationOptions): Promise<LegacyMigrationPreflight> {
+    const { epoch, revision } = expected;
+    if (!validId(epoch) || !Number.isSafeInteger(revision) || revision < 0) throw new Error('Invalid legacy migration revision.');
+    options = snapshotLegacyMigrationOptions(options);
+    const row = await this.current();
+    if (row.epoch !== epoch || documentProtocol(row.checkpoint) !== 'legacy') fail('stale-epoch', 'The requested legacy room is no longer active.');
+    if (row.phase !== 'active') fail('frozen', 'The legacy room is already frozen.');
+    if (row.revision !== revision) fail('revision-conflict', 'The legacy room changed. Refresh before checking migration.');
+    if (revision === Number.MAX_SAFE_INTEGER) fail('revision-conflict', 'Document revision capacity exceeded.');
+
+    const candidate = await buildLegacyMigrationCandidate(row.checkpoint as LegacyCheckpoint, this.schema, this.schemaVersion, options, this.projection);
+    const current = this.repository.readDocumentHeader ? await this.repository.readDocumentHeader(this.key) : await this.current();
+    validateCoordinatedRoomRecord(current, this.key, this.schemaVersion);
+    if (current.generation !== row.generation) fail('revision-conflict', 'The legacy room changed during the migration check. Refresh and retry.');
+    const { destinationRoomId: _identity, activation: _activation, ...report } = candidate.report;
+    return Object.freeze({
+      key: row.key, epoch, revision,
+      sourceCheckpointSha256: candidate.source.manifest.checkpointSha256,
+      documentSha256: candidate.source.manifest.documentSha256,
+      report: Object.freeze(report),
+    });
   }
   async migrateLegacy(ticket: CoordinatedFreeze, operation: string, options: LegacyMigrationOptions, policy: RetainedHandoffPolicy): Promise<CrossFormatHandoffResult> {
     ticket = copyDocumentFreeze(ticket, this.key); options = snapshotLegacyMigrationOptions(options); policy = snapshotRetainedHandoffPolicy(policy);

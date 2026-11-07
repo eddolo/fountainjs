@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><title>Cross-format room handoff audit</title><link rel="stylesheet" href="/artifacts/yjs-namespace-build-20261107/styles.css">
 <style>body{margin:24px;background:#f5f3ff;color:#19152f;font:16px system-ui}h1{margin-bottom:8px}button,select{font:inherit;padding:8px 10px;border:1px solid #c5bce6;border-radius:6px;background:white}button{cursor:pointer}header{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.panes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}.panes>section{min-width:0;background:white;border:1px solid #c5bce6;border-radius:12px;overflow:hidden}h2{font-size:19px;padding:16px;margin:0}pre{padding:12px;margin:12px 0;max-height:180px;overflow:auto;font:13px monospace;background:#efecfa;white-space:pre-wrap}.fountain-editor{min-height:440px;padding:20px}.fountain-editor img{max-width:100%;max-height:90px;object-fit:contain}#message{min-height:28px;margin:18px 0}label{display:flex;gap:6px;align-items:center}</style>
 <h1>Live protocol migration · recoverable handoff</h1><p>Actual Node/SQLite authority. Legacy → retained → legacy. Pending old-protocol edits stay separately recoverable.</p>
-<header><button id="retained-only">Try retained-only join</button><label>Retained destination namespace <input id="destination" value="mapped-paper" aria-label="Retained destination namespace"></label><button id="save">Save active edits</button><button id="migrate">Migrate legacy room</button><button id="retry" disabled>Retry last migration</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain offline edits</button><label>Rollback source <select id="restore"><option value="source-branch">Pending source branch</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><button id="retry-rollback" disabled>Retry last rollback</button><label><input id="drop" type="checkbox">Drop migration acknowledgement (test only)</label></header>
+<header><button id="retained-only">Try retained-only join</button><label>Retained destination namespace <input id="destination" value="mapped-paper" aria-label="Retained destination namespace"></label><button id="save">Save active edits</button><button id="preflight">Check saved migration</button><button id="migrate">Migrate legacy room</button><button id="retry" disabled>Retry last migration</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain offline edits</button><label>Rollback source <select id="restore"><option value="source-branch">Pending source branch</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><button id="retry-rollback" disabled>Retry last rollback</button><label><input id="drop" type="checkbox">Drop migration acknowledgement (test only)</label></header>
 <div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2></section></div>
 <script type="module">
 import * as Y from 'yjs';
@@ -106,12 +106,28 @@ async function finishMigration(retry){
  message.textContent=!result.current?'Historical receipt replayed · current room unchanged'
   :retry&&result.replayed?'Durable migration receipt replayed · source edits preserved':'Legacy room migrated to retained · source edits preserved';
 }
-action('migrate',async()=>{
+function selectedDestination(){
  const destinationRoom=document.querySelector('#destination').value;
  if(!/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,193}$/.test(destinationRoom))throw new Error('Invalid explicit destination namespace');
  if(active.protocol!=='legacy')throw new Error('Only legacy sources can be migrated');
+ return destinationRoom;
+}
+action('preflight',async()=>{
+ const destinationRoom=selectedDestination();
+ let checked;
+ try{checked=await request('preflight',{expected:{epoch:current.epoch,revision:current.revision},destinationRoom});}
+ catch(error){report('Migration check refused for '+destinationRoom);throw error;}
+ const plan=checked.report,roots=plan.auxiliaryRoots.map(root=>root.name).join(', ')||'none';
+ message.textContent='Migration check passed · legacy room stays open for editing';
+ report('Checked saved revision '+checked.revision+': '+plan.sourceRoom+' → '+plan.destinationRoom+'\n'+
+  'Document content matches · auxiliary roots: '+roots+'\nLegacy '+plan.sourceBytes+' bytes · retained rehearsal '+plan.destinationBytes+' bytes');
+});
+action('migrate',async()=>{
+ const destinationRoom=selectedDestination();
  current=await request('write',{epoch:active.epoch,protocol:active.protocol,update:Y.encodeStateAsUpdate(active.doc)});
- migration={expected:{epoch:current.epoch,revision:current.revision},operation:crypto.randomUUID(),destinationRoom};
+ const expected={epoch:current.epoch,revision:current.revision};
+ await request('preflight',{expected,destinationRoom});
+ migration={expected,operation:crypto.randomUUID(),destinationRoom};
  archiveId=migration.operation;
  await finishMigration(false);
 });

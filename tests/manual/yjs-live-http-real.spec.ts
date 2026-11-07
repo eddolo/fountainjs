@@ -85,8 +85,14 @@ test.beforeEach(async ({ page }, info) => {
   await page.goto(fixture + profile.map(name => '&' + name).join(''));
   if (migrateBeforeEditing) {
     await expect(page.getByRole('status')).toContainText('Legacy room saved');
+    const preflight = page.waitForResponse('**/__admission/preflight-legacy');
+    const freeze = page.waitForRequest('**/__admission/freeze');
     await page.getByRole('button', { name: 'Upgrade saved legacy room' }).click();
     await expect(page.locator('#migration-summary')).toContainText('Opened the upgraded room');
+    const checked = await preflight;
+    expect(checked.ok()).toBe(true);
+    const { epoch, revision } = (await checked.json()).value;
+    expect((await freeze).postDataJSON()).toEqual({ epoch, revision });
   }
   await join(page);
 });

@@ -298,6 +298,44 @@ test('maps an explicit author-selected destination and refuses invalid input bef
  await type(page,'Active editor',' MAPPED edit');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.active).toEqual(saved.server);await capture(page,info,'final.png');
 });
 
+test('maps an embedded room after rehearsing it and refuses a conflicting destination without freezing', { tag: '@nested' }, async ({ page }, info) => {
+  const initial = await state(page);
+  const destination = page.getByLabel('Retained destination namespace', { exact: true });
+  const status = page.getByRole('status');
+  const preflight = page.getByRole('button', { name: 'Check saved migration' });
+  const migrate = page.getByRole('button', { name: 'Migrate legacy room', exact: true });
+  let freezes = 0;
+  await page.route('**/__handoff/freeze', route => { freezes++; return route.continue(); });
+
+  await destination.fill('research-folder');
+  await preflight.click();
+  await expect(status).toContainText('reserved or duplicate legacy migration root: research-folder');
+  expect(await state(page)).toEqual(initial);
+  await migrate.click();
+  await expect(status).toContainText('reserved or duplicate legacy migration root: research-folder');
+  expect(freezes).toBe(0);
+  expect(await state(page)).toMatchObject({ phase: 'active', epoch: initial.epoch, protocol: 'legacy', archive: initial.archive });
+
+  await type(page, 'Active editor', ' Rehearsed before migration.');
+  await page.getByRole('button', { name: 'Save active edits' }).click();
+  await expect(status).toContainText('Active edits durably saved');
+  const saved = await state(page);
+  await destination.fill('review-copy');
+  await preflight.click();
+  await expect(status).toContainText('legacy room stays open for editing');
+  await expect(page.locator('#report')).toContainText('auxiliary roots: research-folder');
+  await expect(page.locator('#report')).toContainText('Research / α 😀 → review-copy');
+  expect(await state(page)).toEqual(saved);
+  expect(freezes).toBe(0);
+  await capture(page, info, 'migration-check.png');
+
+  await migrate.click();
+  await expect(status).toContainText('Legacy room migrated');
+  expect(freezes).toBe(1);
+  expect(await state(page)).toMatchObject({ phase: 'active', protocol: 'retained', namespace: 'review-copy', server: saved.server, active: saved.active });
+  await capture(page, info, 'migrated-after-check.png');
+});
+
 test('moves a nested research document and rolls back to the same embedded fragment', {tag:'@nested'}, async ({page},info) => {
   const original = await state(page);
   expect(original.activeNested).toBe(true);

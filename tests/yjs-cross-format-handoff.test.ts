@@ -73,6 +73,61 @@ it('accepts real legacy edits before migration and never allows a plain CAS to c
   expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
 });
 
+it('rehearses the exact saved legacy revision without freezing, archiving or exposing a candidate identity', async () => {
+  const pair = await fixture();
+  const before = await pair.a.readDocument(key);
+  const checked = await pair.handoff.preflightLegacy(pair.initial, { ...options(), destinationRoom: 'review-copy' });
+  expect(checked).toMatchObject({
+    key, epoch: pair.initial.epoch, revision: pair.initial.revision,
+    sourceCheckpointSha256: pair.checkpoint.manifest.checkpointSha256,
+    documentSha256: pair.checkpoint.manifest.documentSha256,
+    report: { sourceRoom: 'fountain', destinationRoom: 'review-copy', sourceBytes: pair.checkpoint.manifest.bytes },
+  });
+  expect(checked.report).not.toHaveProperty('destinationRoomId');
+  expect(checked).not.toHaveProperty('checkpoint');
+  expect(await pair.b.readDocument(key)).toEqual(before);
+  expect(await pair.b.readRetiredEpoch(key, pair.initial.epoch)).toBeUndefined();
+  const edited = await pair.other.write({ epoch: pair.initial.epoch, protocol: 'legacy', update: type(pair, 'AFTER') });
+  await expect(pair.handoff.preflightLegacy(checked, options())).rejects.toMatchObject({ code: 'revision-conflict' });
+  await expect(pair.room.freeze(checked)).rejects.toMatchObject({ code: 'revision-conflict' });
+  expect((await pair.room.snapshot()).phase).toBe('active');
+  const fresh = await pair.handoff.preflightLegacy(edited, options());
+  expect(fresh.documentSha256).not.toBe(checked.documentSha256);
+  expect((await pair.room.freeze(fresh)).checkpointSha256).toBe(fresh.sourceCheckpointSha256);
+});
+
+it('reports unclaimed data before the room stops accepting edits', async () => {
+  const pair = await fixture();
+  pair.document.getMap('unclaimed').set('comment', 'Preserve me');
+  const accepted = await pair.room.write({ epoch: pair.initial.epoch, protocol: 'legacy', update: Y.encodeStateAsUpdate(pair.document) });
+  await expect(pair.handoff.preflightLegacy(accepted, options())).rejects.toThrow('Unclaimed legacy migration roots: unclaimed');
+  expect(await pair.other.snapshot()).toEqual(accepted);
+  const later = await pair.other.write({ epoch: pair.initial.epoch, protocol: 'legacy', update: type(pair, 'STILL LIVE') });
+  expect(later.phase).toBe('active');
+  expect(later.revision).toBe(accepted.revision + 1);
+});
+
+it.each(['write', 'freeze and abort'] as const)('refuses preflight when another authority performs a %s during conversion', async action => {
+  const pair = await fixture();
+  let entered!: () => void, release!: () => void;
+  const atFence = new Promise<void>(resolve => { entered = resolve; });
+  const proceed = new Promise<void>(resolve => { release = resolve; });
+  const read = pair.a.readDocumentHeader.bind(pair.a);
+  vi.spyOn(pair.a, 'readDocumentHeader').mockImplementation(async roomKey => {
+    entered();
+    await proceed;
+    return read(roomKey);
+  });
+  const check = pair.handoff.preflightLegacy(pair.initial, options());
+  try {
+    await atFence;
+    if (action === 'write') await pair.other.write({ epoch: pair.initial.epoch, protocol: 'legacy', update: type(pair, 'RACE') });
+    else await pair.other.abort(await pair.other.freeze(pair.initial));
+  } finally { release(); }
+  await expect(check).rejects.toMatchObject({ code: 'revision-conflict' });
+  expect((await pair.other.snapshot()).phase).toBe('active');
+});
+
 it.each(['epoch', 'protocol', 'frozen'] as const)('rejects an incorrect %s before reading update bytes', async kind => {
   const pair = await fixture(); if (kind === 'frozen') await pair.room.freeze(pair.initial); const getter = vi.fn(() => { throw new Error('Unread'); });
   await expect(pair.other.write({ epoch: kind === 'epoch' ? uuid() : pair.initial.epoch, protocol: kind === 'protocol' ? 'retained' : 'legacy', get update() { return getter(); } })).rejects.toMatchObject({ code: kind === 'frozen' ? 'frozen' : 'stale-epoch' }); expect(getter).not.toHaveBeenCalled();

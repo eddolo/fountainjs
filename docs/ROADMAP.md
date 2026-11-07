@@ -20,6 +20,10 @@ identity before selecting an adapter and mounting an editor.
 The live reference can run the six concurrency cases against an upgraded
 legacy room, verifying its archive and active identity across reload and undo.
 [Upgrade and live editing audit](YJS_LIVE_HTTP_REFERENCE.md#live-editing-after-upgrading-a-saved-legacy-room).
+The migration reference can also rehearse conversion against a saved legacy
+revision while the room stays open. A failed check leaves the room writable,
+and the live upgrade freezes the specific revision that passed the check.
+[Migration rehearsal](YJS_NAMESPACE_MIGRATION_AUDIT.md#check-a-migration-while-the-room-is-open).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

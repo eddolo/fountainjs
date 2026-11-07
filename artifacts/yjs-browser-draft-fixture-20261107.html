@@ -332,7 +332,13 @@ function migrateSavedRoom(source, storageKey) {
     sessionStorage.setItem(storageKey, JSON.stringify(intent));
     if (!intent.ticket) {
       const latest = await request('snapshot');
-      intent.ticket = latest.phase === 'frozen' ? await request('recover-freeze', latest) : await request('freeze');
+      if (latest.epoch !== intent.epoch) throw new Error('The saved upgrade belongs to a different room session.');
+      if (latest.phase === 'frozen') intent.ticket = await request('recover-freeze', latest);
+      else {
+        const expected = { epoch: latest.epoch, revision: latest.revision };
+        await request('preflight-legacy', expected);
+        intent.ticket = await request('freeze', expected);
+      }
       sessionStorage.setItem(storageKey, JSON.stringify(intent));
     }
     const replacement = await request('migrate-legacy', { ticket: intent.ticket, operation: intent.operation });
