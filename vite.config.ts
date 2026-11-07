@@ -32,6 +32,7 @@ export default defineConfig({
       // archive/HTML adapters are otherwise discovered after first import.
       // A cold trace records these three triggering a draft-destroying reload.
       'docx-preview', 'fflate', 'entities/decode',
+      'yjs',
       'rxjs', 'rxjs/operators', 'css-select', 'parse5', 'parse5-htmlparser2-tree-adapter', 'fountainjs-editor/html/inert',
     ],
     exclude: ['fountainjs-editor/angular', '@angular/core', '@angular/common', '@angular/platform-browser'],

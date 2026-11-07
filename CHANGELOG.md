@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Show the retained Yjs preview on the homepage with separate room documents,
+  simulated offline edits, quote merging, and author-specific undo.
+
 - Skip redundant formatting history in the retained Yjs preview when a peer
   has already deleted the affected text.
 

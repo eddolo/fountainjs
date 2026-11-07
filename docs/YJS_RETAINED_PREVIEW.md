@@ -27,6 +27,33 @@ tests. The preview uses `fountain-retained-document/3` for collaboration and
 document JSON. The public beta API and stored-data migration rules apply to this
 entry. [Release policy](RELEASES.md).
 
+## Try the homepage preview
+
+The local website build uses the package preview entry in the homepage's
+collaboration section. Launch and Planning are seeded independently. Each
+starts with one authoritative in-memory document whose Yjs update is copied to
+the second peer before it joins. Switching swaps the adapters on the existing
+editor views. Returning to a room brings back its document edits.
+
+Select **Pause document sync**, type into a paragraph as Ada, click the same
+paragraph in Grace's editor, and choose **Toggle quote**. Select **Resume
+document sync** to merge both changes. Ada's Undo removes her typing while
+Grace's quote stays in both editors. The pause control also hides peer cursors
+and requires a merge before switching rooms. The threaded comments panel uses
+its own in-memory store.
+
+The production website build passed 15 recorded desktop workflows across
+Chromium, Firefox and WebKit, plus two mobile-emulation merge workflows. The
+desktop suite checks switching, cursor overlays, author history, concurrent
+settings changes, and comments. The mobile checks verify the headline phrase
+fits on one line and the page has no horizontal overflow. A narrow Safari
+capture and a desktop capture were visually inspected.
+
+The demo imports its chunk before mounting the editor hooks. A React Suspense
+mount during development exposed a separate lifecycle problem where the hook's
+abandoned-render timer disposed an editor before commit. General Suspense
+lifecycle support remains open.
+
 ## Initialize once, then join
 
 One authority must create the room once. Do not let several disconnected clients
