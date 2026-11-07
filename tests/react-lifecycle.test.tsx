@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 
-import { StrictMode } from 'react';
+import { StrictMode, Suspense } from 'react';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { describe, expect, it, vi } from 'vitest';
@@ -10,6 +10,7 @@ import {
   createCollaborationExtension,
   createEditor,
   type CollaborationAdapter,
+  type Editor,
   type ExternalPasteReport,
 } from '../src';
 import { FountainEditor, useFountain } from '../src/react';
@@ -17,6 +18,55 @@ import { FountainEditor, useFountain } from '../src/react';
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('React editor lifecycle', () => {
+  it('starts collaboration only after Suspense reveals the editor and retains the editor across another hide', async () => {
+    const connect = vi.fn(), disconnect = vi.fn(), destroy = vi.fn();
+    const kit = composeExtensions([CoreExtension, createCollaborationExtension({ adapter: () => ({ connect, disconnect, destroy }) })]);
+    const mount = document.body.appendChild(document.createElement('div'));
+    const root = createRoot(mount);
+    let current: Editor | undefined;
+    let waiting: Promise<void> | undefined;
+    const suspend = () => {
+      let resolve!: () => void;
+      waiting = new Promise<void>(done => { resolve = done; });
+      return () => { waiting = undefined; resolve(); };
+    };
+    function Gate() {
+      if (waiting) throw waiting;
+      return null;
+    }
+    function Harness() {
+      const editor = useFountain({ schema: kit.schema, plugins: kit.plugins });
+      current = editor;
+      return <><FountainEditor editor={editor} ariaLabel="Suspended editor" /><Gate /></>;
+    }
+    const render = () => root.render(<StrictMode><Suspense fallback={<p>Loading editor</p>}><Harness /></Suspense></StrictMode>);
+    try {
+      const reveal = suspend();
+      await act(async () => render());
+      expect(mount.textContent).toBe('Loading editor');
+      expect(connect).not.toHaveBeenCalled();
+      await act(async () => { reveal(); });
+      expect(mount.querySelector('[aria-label="Suspended editor"]')).not.toBeNull();
+      expect(connect).toHaveBeenCalledOnce();
+      const editor = current!;
+      await act(async () => { editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Saved text')); });
+
+      const showAgain = suspend();
+      await act(async () => render());
+      expect(mount.textContent).toContain('Loading editor');
+      expect(disconnect).not.toHaveBeenCalled();
+      await act(async () => { showAgain(); });
+      expect(current).toBe(editor);
+      expect(mount.querySelector('[aria-label="Suspended editor"]')?.textContent).toBe('Saved text');
+      expect(connect).toHaveBeenCalledOnce();
+    } finally {
+      await act(async () => root.unmount());
+      mount.remove();
+    }
+    expect(disconnect).toHaveBeenCalledOnce();
+    expect(destroy).toHaveBeenCalledOnce();
+  });
+
   it('forwards source-aware paste policy to the framework-neutral view', async () => {
     const reports: ExternalPasteReport[] = [];
     const editor = createEditor({ schema: composeExtensions([CoreExtension]).schema });

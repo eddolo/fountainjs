@@ -7,6 +7,12 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Start editor plugins and connect collaboration only after React commits the
+  editor. Keep the live editor across a temporary Suspense fallback and dispose
+  it on unmount. The homepage collaboration demo now uses a lazy Suspense
+  boundary. Direct `Editor` construction and `createEditor` still start
+  plugins immediately.
+
 - Speed up ordinary remote typing in the retained Yjs preview by reusing the
   checked document structure. Continue full reads for structural changes and
   queued observer writes.

@@ -59,6 +59,13 @@ time and the installed preview passed 39 recorded desktop browser workflows.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).
 
+React lifecycle follow-up (2026-11-07, local). A suspended editor no longer
+starts plugins or opens collaboration connections before commit. A committed
+editor keeps its document and provider through a temporary Suspense fallback.
+The homepage collaboration demo now uses a lazy Suspense boundary. Its
+recorded slow-load journey checks that both editors open, share an edit and
+honor author undo. [React API](API.md#react).
+
 Live retained transport reference (2026-11-07, local). Two browser authors now
 exchange edits over fenced HTTP/SQLite automatically. Offline typing merges into
 the peer's quote after reconnect, a lost write reply retries without duplicate

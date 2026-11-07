@@ -2565,9 +2565,11 @@ Import React bindings from `fountainjs-editor/react`:
 - `createReactNodeView(Component, options?)` and `ReactNodeViewProps`
 
 `useFountain(config)` creates one editor for the component lifetime. Its config
-is constructor input rather than reactive props. In development Strict Mode,
-duplicate render probes share that one pending editor; abandoned renders and
-the final unmount destroy it exactly once. To switch a live collaboration room,
+is constructor input. The initial document is available during rendering.
+Plugin `onCreate` hooks run after React commits, so an abandoned render or an
+editor waiting for Suspense never connects a provider. Strict Mode effect
+replay and a temporary Suspense fallback keep the committed editor alive.
+Unmounting destroys it. To switch a live collaboration room,
 document, or provider, keep the editor and call `replaceCollaborationAdapter`
 instead of expecting a changed config object to reconstruct the hook.
 

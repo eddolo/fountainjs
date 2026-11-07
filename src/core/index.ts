@@ -4,7 +4,7 @@ export * from './selection';
 export * from './plugin';
 export * from './decoration';
 export * from './state';
-export * from './editor';
+export { Editor, createEditor, type EditorConfig, type StateChangeCallback, type CommandBatchOptions } from './editor';
 export * from './commands';
 export * from './image';
 export * from './structure-commands';

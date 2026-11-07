@@ -42,13 +42,21 @@ export class Editor {
   private currentState: EditorState;
   private readonly subscribers = new Set<StateChangeCallback>();
   private destroyed = false;
+  private started = false;
   private commandBatch?: CommandBatch;
   readonly editable: boolean;
 
-  constructor(state: EditorState, private readonly onUpdate?: EditorConfig['onUpdate'], editable = true) {
+  constructor(state: EditorState, private readonly onUpdate?: EditorConfig['onUpdate'], editable = true, deferStart?: (start: () => void) => void) {
     this.currentState = state;
     this.editable = editable;
-    state.plugins.forEach((plugin) => plugin.spec.props?.onCreate?.(this));
+    if (deferStart) deferStart(() => this.start());
+    else this.start();
+  }
+
+  private start(): void {
+    if (this.destroyed || this.started) return;
+    this.started = true;
+    this.currentState.plugins.forEach((plugin) => plugin.spec.props?.onCreate?.(this));
   }
 
   get state(): EditorState { return this.currentState; }
@@ -141,7 +149,7 @@ export class Editor {
 
   destroy(): void {
     if (this.destroyed) return;
-    this.currentState.plugins.forEach((plugin) => plugin.spec.props?.onDestroy?.(this));
+    if (this.started) this.currentState.plugins.forEach((plugin) => plugin.spec.props?.onDestroy?.(this));
     this.subscribers.clear();
     this.destroyed = true;
   }
@@ -151,14 +159,24 @@ export class Editor {
   }
 }
 
-export function createEditor(config: EditorConfig): Editor {
-  if (config.state) return new Editor(config.state, config.onUpdate, config.editable);
+function editorState(config: EditorConfig): EditorState {
+  if (config.state) return config.state;
   const schema = new Schema(config.schema);
   const doc = config.content instanceof Node
     ? config.content
     : config.content
       ? schema.nodeFromJSON(config.content)
       : undefined;
-  const state = EditorState.create({ schema, doc, plugins: config.plugins });
-  return new Editor(state, config.onUpdate, config.editable);
+  return EditorState.create({ schema, doc, plugins: config.plugins });
+}
+
+export function createEditor(config: EditorConfig): Editor {
+  return new Editor(editorState(config), config.onUpdate, config.editable);
+}
+
+/** Framework renderers can prepare a model without starting external services. */
+export function prepareEditor(config: EditorConfig): { editor: Editor; start: () => void } {
+  let start!: () => void;
+  const editor = new Editor(editorState(config), config.onUpdate, config.editable, activate => { start = activate; });
+  return { editor, start };
 }

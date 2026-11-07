@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AIConversationController,
   AIController,
@@ -380,24 +380,20 @@ const competitors = [
   },
 ] as const;
 
-function CollaborationPreview() {
-  const [Demo, setDemo] = useState<typeof import('./CollaborationDemo').default>();
-  const [failed, setFailed] = useState(false);
-  useEffect(() => {
-    let active = true;
-    void import('./CollaborationDemo').then(
-      ({ default: loaded }) => { if (active) setDemo(() => loaded); },
-      () => { if (active) setFailed(true); },
-    );
-    return () => { active = false; };
-  }, []);
-
-  if (Demo) return <Demo />;
+function CollaborationPlaceholder({ failed = false }: { failed?: boolean }) {
   return (
     <section id="collaboration" className="collaboration-demo" aria-busy={!failed}>
       {failed ? 'The collaboration demo could not load. Reload the page to try again.' : 'Loading the collaboration demo…'}
     </section>
   );
+}
+
+const LazyCollaborationDemo = lazy(() => import('./CollaborationDemo').catch(() => ({
+  default: () => <CollaborationPlaceholder failed />,
+})));
+
+function CollaborationPreview() {
+  return <Suspense fallback={<CollaborationPlaceholder />}><LazyCollaborationDemo /></Suspense>;
 }
 
 function TrackedChangesDemo() {

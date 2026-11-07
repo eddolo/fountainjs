@@ -1,5 +1,34 @@
 import { expect, test } from '@playwright/test';
 
+test('opens the lazy collaboration demo after a slow module load and shares typing', async ({ page }, info) => {
+  let release!: () => void;
+  const pending = new Promise<void>(resolve => { release = resolve; });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.route('**/*CollaborationDemo*', async route => {
+    await pending;
+    await route.continue();
+  }, { times: 1 });
+  try {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByText('Loading the collaboration demo…')).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Ada collaborative editor' })).toHaveCount(0);
+    release();
+    const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
+    const right = page.getByRole('textbox', { name: 'Grace collaborative editor' });
+    await expect(left).toContainText('Shared launch note');
+    await expect(right).toContainText('Shared launch note');
+    await left.getByText('Shared launch note', { exact: true }).click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' after loading');
+    await expect(right).toContainText('Shared launch note after loading');
+    await page.getByRole('button', { name: 'Undo Ada' }).click();
+    await expect(right).not.toContainText('after loading');
+    expect(errors).toEqual([]);
+    await page.locator('#collaboration').screenshot({ path: info.outputPath('resumed-collaboration.png') });
+  } finally { release(); }
+});
+
 test('runs the public two-editor collaboration demo with presence and author-local undo', async ({ page }) => {
   await page.goto('/');
   const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });

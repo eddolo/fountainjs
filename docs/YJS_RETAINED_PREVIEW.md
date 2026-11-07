@@ -56,10 +56,21 @@ mounted editors and clears the open draft. The Launch and Planning panels
 were inspected in WebKit. The comments source suite verifies late snapshots,
 writes, and mapped-anchor results from a retired provider.
 
-The demo imports its chunk before mounting the editor hooks. A React Suspense
-mount during development exposed a separate lifecycle problem where the hook's
-abandoned-render timer disposed an editor before commit. General Suspense
-lifecycle support remains open.
+The homepage lazily loads the collaboration demo in a React Suspense boundary.
+The hook can read its initial document during rendering. Editor plugin startup
+waits for React to commit, so a suspended or discarded render leaves providers
+untouched. A committed editor keeps its state across a temporary Suspense
+fallback and cleans up its provider on unmount.
+
+The React lifecycle regression verifies that a suspended descendant opens no
+provider and that hiding an already committed editor preserves its document.
+The production demo's slow-load journey holds the collaboration module request,
+checks the visible loading state, and then exercises shared typing and author
+undo. The desktop suite includes room switching, offline merging and scoped
+comments. All 21 recorded Chromium, Firefox and WebKit journeys and 60 focused
+React and collaboration tests passed. A WebKit capture was reviewed after
+both editors returned to the shared heading. Recordings and screenshots are under
+`artifacts/react-suspense-demo-20261107/`.
 
 ## Initialize once, then join
 

@@ -1,50 +1,18 @@
-import { useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { createEditor, type Editor, type EditorConfig, type EditorState } from '../core';
-
-interface PendingEditor {
-  readonly editor: Editor;
-  mounts: number;
-}
-
-/*
- * React deliberately evaluates state initializers twice during a development
- * Strict Mode mount. Editors run plugin lifecycle hooks during construction, so
- * creating both values would connect an adapter that React immediately throws
- * away. useId identifies the logical hook across those render probes. The
- * short-lived cache is removed after commit and also destroys an editor from an
- * abandoned render that never reaches an effect.
- */
-const pendingEditors = new WeakMap<EditorConfig['schema'], Map<string, PendingEditor>>();
-
-function acquireEditor(id: string, config: EditorConfig): PendingEditor {
-  let pending = pendingEditors.get(config.schema);
-  if (!pending) {
-    pending = new Map();
-    pendingEditors.set(config.schema, pending);
-  }
-  const existing = pending.get(id);
-  if (existing && !existing.editor.isDestroyed) return existing;
-  const entry: PendingEditor = { editor: createEditor(config), mounts: 0 };
-  pending.set(id, entry);
-  setTimeout(() => {
-    if (pending?.get(id) === entry) pending.delete(id);
-    if (entry.mounts === 0 && !entry.editor.isDestroyed) entry.editor.destroy();
-  }, 0);
-  return entry;
-}
+import { useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react';
+import { type Editor, type EditorConfig, type EditorState } from '../core';
+import { prepareEditor } from '../core/editor';
 
 export function useFountain(config: EditorConfig): Editor {
-  const id = useId();
-  const [entry] = useState(() => acquireEditor(id, config));
-  const mounts = useRef(entry.mounts);
-  useLayoutEffect(() => {
-    mounts.current += 1;
-    entry.mounts += 1;
+  const [entry] = useState(() => ({ ...prepareEditor(config), mounts: 0 }));
+  useLayoutEffect(entry.start, [entry]);
+  useEffect(() => {
+    entry.mounts++;
     return () => {
-      mounts.current -= 1;
-      entry.mounts -= 1;
+      entry.mounts--;
+      // Strict Mode replays effects synchronously. Suspense can hide layout
+      // effects while retaining the passive effect and the live editor.
       queueMicrotask(() => {
-        if (mounts.current === 0 && entry.mounts === 0 && !entry.editor.isDestroyed) entry.editor.destroy();
+        if (entry.mounts === 0) entry.editor.destroy();
       });
     };
   }, [entry]);
