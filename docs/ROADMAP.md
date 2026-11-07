@@ -37,8 +37,8 @@ text, and a rotated room fences the old writer while its local copy survives
 reload. The local presence channel paints remote cursors and native selections,
 expires silent peers, and clears indicators when the room changes. Production
 deployment, shared presence across processes, load and storage validation remain open.
-Backward native text selections highlight correctly for peers, with the remote
-caret currently painted at the wrong end.
+Native backward and forward selections publish the active end to peers, including
+when the native endpoints reverse over the same highlighted text.
 [Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
 
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies

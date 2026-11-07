@@ -15,6 +15,7 @@ import {
   type Transaction,
 } from '../core';
 import { getNodeAtPath } from '../core/transaction/path';
+import { registerViewSelection } from '../core/view-selection';
 
 function parsePath(element: HTMLElement): number[] {
   return (element.dataset.fountainTextPath ?? '').split('.').filter(Boolean).map(Number);
@@ -62,12 +63,20 @@ export class SelectionHandler {
   private pendingModelSync = false;
   private pendingFocusSelection = false;
   #domSyncRequested = false;
+  #releaseViewSelection: () => void;
 
   constructor(
     private readonly editor: Editor,
     private readonly dom: HTMLElement,
     private readonly shouldStopEvent?: (event: Event) => boolean,
   ) {
+    this.#releaseViewSelection = registerViewSelection(editor, (selection, transaction) => {
+      const backward = transaction ? this.mappedBackwardSelection(transaction) : (this as SelectionHandler & DirectionState)._b;
+      if (!backward?.eq(selection)) return selection;
+      const doc = transaction?.doc ?? editor.state.doc;
+      return new RangeSelection(doc, textPointToPosition(doc, backward.endPath, backward.to),
+        textPointToPosition(doc, backward.path, backward.from));
+    });
     document.addEventListener('selectionchange', this.onSelectionChange);
     dom.addEventListener('focus', this.onHostFocus);
     dom.addEventListener('pointerdown', this.onPointerDown);
@@ -278,6 +287,8 @@ export class SelectionHandler {
   }
 
   capture(allowGapMovement = false): AnySelection | null {
+    const direction = this as SelectionHandler & DirectionState;
+    const wasBackward = direction._b?.eq(this.editor.state.selection) ?? false;
     const selection = this.read(allowGapMovement);
     if (!selection) {
       const native = document.getSelection();
@@ -297,7 +308,7 @@ export class SelectionHandler {
         } catch { /* A replaced DOM block must not redirect typing. */ }
       }
     }
-    if (selection && !selection.eq(this.editor.state.selection)) {
+    if (selection && (!selection.eq(this.editor.state.selection) || wasBackward !== Boolean(direction._b?.eq(selection)))) {
       this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
     }
     return selection;
@@ -323,13 +334,18 @@ export class SelectionHandler {
   /** @internal Carry native direction only through the transaction's actual
    * mapped range. A fresh explicit selection does not inherit an unrelated drag. */
   mapTransactionSelection(transaction: Transaction): void {
-    const direction = this as SelectionHandler & DirectionState, backward = direction._b;
-    if (!backward) return;
+    const direction = this as SelectionHandler & DirectionState;
+    direction._b = this.mappedBackwardSelection(transaction);
+  }
+
+  private mappedBackwardSelection(transaction: Transaction): Selection | undefined {
+    const backward = (this as SelectionHandler & DirectionState)._b;
+    if (!backward) return undefined;
     if (transaction.docChanged && backward.eq(transaction.originalSelection)) {
       const mapped = mapSelection(backward, transaction.originalDoc, transaction.doc, transaction.mapping);
-      if (mapped.kind === 'text' && !mapped.isCollapsed && mapped.eq(transaction.selection)) direction._b = mapped;
-      else delete direction._b;
-    } else if (!backward.eq(transaction.selection)) delete direction._b;
+      return mapped.kind === 'text' && !mapped.isCollapsed && mapped.eq(transaction.selection) ? mapped : undefined;
+    }
+    return backward.eq(transaction.selection) ? backward : undefined;
   }
 
   /** A committed selection must reach the DOM before incidental native
@@ -508,6 +524,7 @@ export class SelectionHandler {
   }
 
   destroy(): void {
+    this.#releaseViewSelection();
     document.removeEventListener('selectionchange', this.onSelectionChange);
     this.dom.removeEventListener('focus', this.onHostFocus);
     this.dom.removeEventListener('pointerdown', this.onPointerDown);

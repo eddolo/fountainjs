@@ -49,12 +49,17 @@ use keyboard selection, explicit leave, interrupted heartbeats and room rotation
 All 15 recorded Chromium, Firefox and WebKit journeys passed with one worker
 and zero retries or skips. The presence and authority suites passed 34 focused
 tests. Type checks passed.
-Visual review found an existing direction gap. When the author selects text
-backward, the remote highlight covers the right text but the caret is painted
-at the end of the range. `src/view/selection-handler.ts` keeps ordinary backward
-direction in view-local state and publishes a normalized text `Selection`.
-The retained adapter therefore receives ordered endpoints. The presence channel
-preserves the selection it receives. Direction needs a separate editor fix.
+Visual review initially found a backward caret at the wrong end of the range.
+The view now supplies directed anchor and focus positions to collaboration for
+its ordinary backward text selections. Editing commands keep their normalized
+text selection. The browser scenario reverses the native endpoints with the
+same selected text, checks the rendered caret at each edge, and checks the
+backward caret again after the other author inserts text ahead of the range.
+The direction repair passed all 15 recorded journeys again and 159 focused
+selection and collaboration tests. Build, type, API, headless and packed-package
+checks passed. The default structural matrix reproduces its six prior failures.
+Four raw-size gates remain over budget. The direction repair adds approximately
+0.9 KiB aggregate ESM and 0.8 KiB CommonJS to the preceding build.
 The preceding transport-only checkpoint passed 78 focused authority,
 provisioning and handoff tests, eleven Chromium recovery regressions, and the
 build, packed-package smoke and headless checks. Its declaration audit records

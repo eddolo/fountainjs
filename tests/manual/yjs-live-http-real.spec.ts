@@ -46,6 +46,14 @@ async function selectReport(page: Page) {
   await expect.poll(() => page.evaluate(() => document.getSelection()?.toString())).toBe('report.');
 }
 
+async function expectCaretEdge(page: Page, edge: 'left' | 'right') {
+  await expect.poll(() => page.evaluate(edge => {
+    const highlight = document.querySelector('.fountain-collaboration-selection')?.getBoundingClientRect();
+    const caret = document.querySelector('.fountain-collaboration-caret')?.getBoundingClientRect();
+    return Boolean(highlight && caret && Math.abs(highlight[edge] - caret.left) < 4);
+  }, edge)).toBe(true);
+}
+
 const serverRevision = (page: Page) => page.evaluate(async () => {
   const response = await fetch('/__admission/snapshot', {
     method: 'POST', body: '{}', headers: {
@@ -136,14 +144,35 @@ test('renders a native peer selection without writing a document revision and cl
     await expect(peerLabel(page)).toHaveText('Grace');
     await expect(peerLabel(page)).toBeVisible();
     await expect(peerSelection(page)).toHaveText('report.');
+    await expectCaretEdge(page, 'left');
     expect(await serverRevision(page)).toBe(before);
-    await page.screenshot({ path: info.outputPath('peer-selection.png'), scale: 'css' });
+    await page.screenshot({ path: info.outputPath('peer-selection-backward.png'), scale: 'css' });
+    // Reverse the native endpoints in one operation. The normalized model range
+    // is identical and the transport still has to publish its new focus.
+    await peer.evaluate(() => {
+      const native = document.getSelection()!;
+      native.setBaseAndExtent(native.focusNode!, native.focusOffset, native.anchorNode!, native.anchorOffset);
+    });
+    await expect(peerSelection(page)).toHaveText('report.');
+    await expectCaretEdge(page, 'right');
+    expect(await serverRevision(page)).toBe(before);
+    await page.screenshot({ path: info.outputPath('peer-selection-forward.png'), scale: 'css' });
+    await selectReport(peer);
+    await expectCaretEdge(page, 'left');
+    await editor(page).click();
+    await page.keyboard.press('Home');
+    await page.keyboard.type('Updated: ');
+    await expect(editor(peer)).toContainText('Updated: Shared incident report.');
+    await expect(peerSelection(page)).toHaveText('report.');
+    await expectCaretEdge(page, 'left');
+    const afterEdit = await serverRevision(page);
+    expect(afterEdit).toBeGreaterThan(before);
     const leave = peer.waitForResponse(response => response.url().endsWith('/leave-live'));
     await peer.getByRole('button', { name: 'Leave shared session' }).click();
     expect((await leave).ok()).toBe(true);
     await expect(peerLabel(page)).toHaveCount(0);
     await expect(peerSelection(page)).toHaveCount(0);
-    expect(await serverRevision(page)).toBe(before);
+    expect(await serverRevision(page)).toBe(afterEdit);
     await page.screenshot({ path: info.outputPath('peer-left.png'), scale: 'css' });
   } finally { await peer.close(); }
 });

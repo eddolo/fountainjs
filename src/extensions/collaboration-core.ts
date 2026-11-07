@@ -15,6 +15,7 @@ import {
   type Transaction,
 } from '../core';
 import { Transaction as RepairTransaction } from '../core';
+import { viewSelection } from '../core/view-selection';
 import { defineExtension, type FountainExtension } from './extension';
 
 export type CollaborationStatus = 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error';
@@ -404,7 +405,10 @@ function start(runtime: CollaborationRuntime, reconnecting = false): boolean {
       void result.then(() => {
         if (!runtime.destroyed && runtime.connected && runtime.generation === generation
           && runtime.adapter === adapter && runtime.context === context
-          && collaborationKey.get(runtime.editor.state)?.status !== 'error') context.setStatus('connected');
+          && collaborationKey.get(runtime.editor.state)?.status !== 'error') {
+          context.setStatus('connected');
+          contain(runtime, () => adapter.onLocalSelection?.(runtime.editor.state.doc, viewSelection(runtime.editor)), generation);
+        }
       }).catch((error) => {
         if (!runtime.destroyed && runtime.generation === generation
           && runtime.adapter === adapter && runtime.context === context) {
@@ -418,7 +422,7 @@ function start(runtime: CollaborationRuntime, reconnecting = false): boolean {
         }
       });
     } else if (collaborationKey.get(runtime.editor.state)?.status !== 'error') context.setStatus('connected');
-    contain(runtime, () => adapter.onLocalSelection?.(runtime.editor.state.doc, runtime.editor.state.selection), generation);
+    contain(runtime, () => adapter.onLocalSelection?.(runtime.editor.state.doc, viewSelection(runtime.editor)), generation);
     return true;
   } catch (error) {
     runtime.connected = false;
@@ -584,7 +588,7 @@ export function createCoreCollaborationExtension(
             }, generation);
           }
           if (runtime.connected && (transaction.docChanged || transaction.selectionSet)) {
-            contain(runtime, () => activeAdapter.onLocalSelection?.(state.doc, state.selection), generation);
+            contain(runtime, () => activeAdapter.onLocalSelection?.(state.doc, viewSelection(editor, state.selection, transaction)), generation);
           }
         });
         runtimes.set(editor, runtime);

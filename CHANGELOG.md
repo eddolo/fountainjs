@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve the active end of native backward text selections in collaboration.
+  A peer's caret follows the selection direction even when the highlighted
+  text stays the same. [Browser audit](docs/YJS_LIVE_HTTP_REFERENCE.md).
+
 - Add a local HTTP/SQLite reference for the retained collaboration preview.
   It demonstrates automatic edit exchange, offline catch-up, write retry and
   retired-session draft recovery. The revision-aware polling method belongs
