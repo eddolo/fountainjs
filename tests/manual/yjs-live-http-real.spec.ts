@@ -392,6 +392,66 @@ test('keeps local typing when the write response has no acknowledgement', async 
   await page.screenshot({ path: info.outputPath('write-unacknowledged.png'), scale: 'css' });
 });
 
+for (const edit of ['insert', 'delete'] as const) {
+  test(`retries an uncommitted ${edit} after a corrupt write receipt and a newer peer revision`, { tag: '@large' }, async ({ page }, info) => {
+    const peer = await secondAuthor(page);
+    const intercepted = gate();
+    const peerSaved = gate();
+    let writes = 0;
+    let fullPolls = 0;
+    let peerSnapshot: Record<string, unknown>;
+    const paragraph = (author: Page) => editor(author).locator('p').first();
+    const published = (author: Page) => server(author).locator('p').first();
+    try {
+      const before = await serverRevision(page);
+      await page.route(poll, route => {
+        if (!route.request().postDataJSON().basis) fullPolls++;
+        return route.continue();
+      });
+      await page.route(write, async route => {
+        if (++writes !== 1) return route.continue();
+        intercepted.release();
+        await peerSaved.promise;
+        if (!peerSnapshot) return route.abort();
+        await route.fulfill({ json: { ok: true, value: {
+          baseUpdateSha256: '0'.repeat(64), snapshot: peerSnapshot, delta: { __wire: 'AA==' },
+        } } });
+      });
+
+      await paragraph(page).click();
+      await page.keyboard.press('End');
+      if (edit === 'insert') await page.keyboard.insertText(' Ada');
+      else await page.keyboard.press('Backspace');
+      await intercepted.promise;
+      await paragraph(peer).click();
+      await peer.keyboard.press('Home');
+      await peer.keyboard.insertText('Grace: ');
+      await expect(published(peer)).toHaveText('Grace: Shared incident report.');
+      expect(await serverRevision(peer)).toBeGreaterThan(before);
+      peerSnapshot = await peer.evaluate(async () => {
+        const response = await fetch('/__admission/snapshot', { method: 'POST', body: '{}', headers: {
+          'Content-Type': 'application/json', 'X-Admission-Session': sessionStorage.getItem('fountain-draft-audit-session')!,
+        } });
+        const { checkpoint: _checkpoint, ...snapshot } = (await response.json()).value;
+        return snapshot;
+      });
+      peerSaved.release();
+
+      const combined = edit === 'insert' ? 'Grace: Shared incident report. Ada' : 'Grace: Shared incident report';
+      await expect(paragraph(peer)).toHaveText(combined);
+      await expect(paragraph(page)).toHaveText(combined);
+      await expect(published(page)).toHaveText(combined);
+      await expect(connection(page)).toHaveText('connected');
+      expect(fullPolls).toBe(1);
+      expect(writes).toBeGreaterThanOrEqual(2);
+      await page.screenshot({ path: info.outputPath(`${edit}-recovered-after-peer-write.png`), scale: 'css' });
+    } finally {
+      peerSaved.release();
+      await peer.close();
+    }
+  });
+}
+
 test('delivers presence while the receiving editor is behind the current document revision', async ({ page }, info) => {
   const peer = await secondAuthor(page);
   try {

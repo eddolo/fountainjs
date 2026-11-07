@@ -37,10 +37,32 @@ function assertReceiptScope(snapshot: Omit<DocumentRoomSnapshot, 'checkpoint'>, 
 function checkpointFor(snapshot: DocumentRoomSnapshot, lease: RetainedAdmissionLease): RetainedCheckpoint {
   assertReceiptScope(snapshot, lease);
   const checkpoint = snapshot.checkpoint as RetainedCheckpoint;
-  if (checkpoint.manifest.room !== lease.room || checkpoint.manifest.roomId !== lease.identity) {
+  if (checkpoint.manifest.format !== 'fountain-retained-checkpoint/1'
+    || checkpoint.manifest.room !== lease.room || checkpoint.manifest.roomId !== lease.identity) {
     throw new Error('Transport received a different native room. Local changes were retained.');
   }
   return checkpoint;
+}
+
+function containsSentUpdate(bytes: Uint8Array, vector: Uint8Array, sent: Uint8Array): boolean {
+  const state = Y.decodeStateVector(vector);
+  const update = Y.decodeUpdate(sent);
+  if (update.structs.some(({ id, length }) => (state.get(id.client) ?? 0) < id.clock + length)) return false;
+  if (!update.ds.clients.size) return true;
+
+  // A state vector alone cannot acknowledge a deletion. Yjs encodes the
+  // checkpoint's delete ranges in increasing order, merging adjacent ranges.
+  const deletes = Y.decodeUpdate(bytes).ds.clients;
+  for (const [client, pending] of update.ds.clients) {
+    const accepted = deletes.get(client) ?? [];
+    let index = 0;
+    for (const { clock, len } of pending) {
+      while (index < accepted.length && accepted[index].clock + accepted[index].len <= clock) index++;
+      const range = accepted[index];
+      if (!range || range.clock > clock || range.clock + range.len < clock + len) return false;
+    }
+  }
+  return true;
 }
 
 function retryable(error: unknown): boolean {
@@ -126,12 +148,20 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       }).finally(() => { presenceRequest = undefined; });
     }
 
-    async function accept(snapshot: DocumentRoomSnapshot) {
+    async function accept(snapshot: DocumentRoomSnapshot, sent?: Uint8Array) {
       const checkpoint = checkpointFor(snapshot, lease);
+      const bytes = checkpoint.update;
+      if (!(bytes instanceof Uint8Array) || bytes.length !== checkpoint.manifest.bytes || !bytes.length || bytes.length > 64 * 1024 * 1024) {
+        throw new Error('Invalid checkpoint update length.');
+      }
+      const vector = Y.encodeStateVectorFromUpdate(bytes);
+      if (sent && !containsSentUpdate(bytes, vector, sent)) {
+        throw Object.assign(new Error('The authority checkpoint is missing the sent edit. Retrying local changes.'), { code: 'revision-conflict' });
+      }
       await options.merge(checkpoint, signal);
       signal.throwIfAborted();
       base = checkpoint;
-      basis = { updateSha256: checkpoint.manifest.updateSha256, vector: Y.encodeStateVectorFromUpdate(checkpoint.update) };
+      basis = { updateSha256: checkpoint.manifest.updateSha256, vector };
       lease = { ...lease, revision: snapshot.revision };
       options.onSnapshot?.(snapshot);
     }
@@ -170,7 +200,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
           signal.throwIfAborted();
           if (writing && snapshot.revision <= lease.revision) throw new Error('The authority did not advance the write revision. Local changes were retained.');
           const beforeMerge = edited;
-          try { await accept(snapshot); }
+          try { await accept(snapshot, update); }
           catch (error) {
             if (beforeMerge === edited || signal.aborted) throw error;
             // The verified merge candidate was invalidated by another local edit.

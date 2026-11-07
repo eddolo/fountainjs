@@ -208,6 +208,29 @@ provisioning and handoff tests, eleven Chromium recovery regressions, and the
 build, packed-package smoke and headless checks. Its declaration audit records
 the internal polling method in the ESM and CommonJS room-authority declarations.
 
+## Verifying that a write was saved
+
+An advancing revision can belong to another author. Before clearing a pending
+write, the client checks that the full or reconstructed server checkpoint
+includes the sent Yjs clocks and deletion ranges. This applies to the full
+poll fallback after a corrupted delta as well as to ordinary write receipts.
+If the checkpoint lacks the edit, the client keeps it queued and retries with
+the existing backoff. The checkpoint still passes the existing room identity
+and integrity checks before it can update the editor. Checking deletion ranges
+can require decoding the full checkpoint on a write acknowledgement.
+
+The recorded browser regression drops Ada's first write, lets Grace advance
+the room, then returns a corrupt delta to Ada. It checks that both editors and
+the persisted reader eventually show both authors' edits. Inserting text and
+deleting a character run as separate journeys. Both regressions reproduce in
+Chromium before the fix. The recovery and surrounding transport checks passed
+15 recorded journeys across Chromium, Firefox and WebKit. The Chromium editor
+and server-reader captures were inspected for both edits.
+
+```powershell
+pnpm exec playwright test --config artifacts/yjs-live-http-20261107.config.ts --workers=1 --grep 'corrupt write receipt|delta is corrupted|reply is lost|no acknowledgement' --output artifacts/yjs-write-receipt-recovery-20261107
+```
+
 ## Deployment boundaries
 
 This reference uses periodic HTTP polling. The server still

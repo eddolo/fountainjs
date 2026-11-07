@@ -80,6 +80,9 @@ including when the receiver is behind. Changed document responses still pass
 full validation and a generation check before delivery.
 Established document requests now time out and retry transient failures with
 jittered backoff while keeping local edits available.
+The client verifies that a write receipt contains the sent insertions and
+deletions before clearing the pending edit, even when a fallback checkpoint
+has advanced because another author wrote to the room.
 Both adapters also discard an older queued cursor after a newer one is sent.
 The retained live workflow now has 18 recorded browser checks for all six
 default-adapter structural cases across offline autosave, reload, resume, undo
