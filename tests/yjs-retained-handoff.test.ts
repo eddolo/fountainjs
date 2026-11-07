@@ -13,6 +13,7 @@ import { CoordinatedRetainedRoom } from '../src/yjs/retained-room-coordinator';
 import { RetainedRoomHandoff, type RetainedHandoffRepository, type RetainedHandoffPolicy } from '../src/yjs/retained-handoff';
 import { type RetainedMigrationOptions } from '../src/yjs/retained-migration';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
+import { RetainedTextRecovery } from '../examples/backends/retained-text-recovery';
 
 const cleanup: Array<() => void> = [];
 afterEach(() => { while (cleanup.length) cleanup.pop()!(); });
@@ -165,6 +166,34 @@ it('keeps the exact offline checkpoint alongside an overlapping retired merge an
   await expect(service.saveRetiredDraft({...request,checkpoint:latest.checkpoint})).rejects.toMatchObject({code:'invalid-ticket'});
   expect(await service.readRetiredDraft(request.archiveId,request.draftId)).toEqual(checkpoint);
   expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
+});
+
+it('applies a reviewed paragraph only to its checked live revision and leaves the saved draft intact', async () => {
+  const pair = await fixture(), moved = await migrate(pair);
+  type(pair,'OFFLINE');
+  const draft = await captureRetainedCheckpoint(pair.document,pair.schema,version);
+  const draftId = uuid(), request = {archiveId:moved.operation,draftId,nodeId:'intro'};
+  await pair.handoff.saveRetiredDraft({...request,roomId:draft.manifest.roomId,checkpoint:draft});
+  const service = new RetainedTextRecovery(pair.a,key,pair.schema,version);
+  const review = await service.preview(request);
+  expect(review).toMatchObject({currentText:'Alpha α 😀',draftText:'AlOFFLINEpha α 😀'});
+  const concurrent = await open(moved.result.snapshot.checkpoint,pair);
+  concurrent.editor.dispatch(concurrent.editor.createTransaction().insertText([1,0,0], 0, 'Peer note. '));
+  const newer = await pair.other.write({epoch:review.epoch,update:Y.encodeStateAsUpdate(concurrent.document)});
+  await expect(service.apply(review,'Reviewed text')).rejects.toMatchObject({code:'revision-conflict'});
+  expect(await pair.room.snapshot()).toEqual(newer);
+  const fresh = await service.preview(request);
+  const saved = await service.apply(fresh,'Reviewed text');
+  expect(saved.revision).toBe(newer.revision+1);
+  const expected = concurrent.editor.createTransaction().replaceText([0,0],0,'Alpha α 😀'.length,'Reviewed text').doc;
+  expect(await model(saved.checkpoint,pair)).toEqual(expected.toJSON());
+  expect(await pair.handoff.readRetiredDraft(request.archiveId,draftId)).toEqual(draft);
+  await expect(pair.room.write({epoch:review.epoch,expectedRevision:review.revision,get update():Uint8Array {throw new Error('stale payload read');}}))
+    .rejects.toMatchObject({code:'revision-conflict'});
+  const ticket = await pair.room.freeze(saved);
+  const resumed = await pair.room.commitResume(ticket,await pair.room.prepareResume(ticket));
+  expect((await service.preview(request)).epoch).toBe(resumed.epoch);
+  await expect(service.apply(fresh,'Old review')).rejects.toMatchObject({code:'revision-conflict'});
 });
 
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {

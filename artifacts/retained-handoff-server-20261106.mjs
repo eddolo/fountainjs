@@ -8,6 +8,7 @@ import {CoreExtension,MathExtension,Schema,composeExtensions} from './retained-h
 import {SQLiteRetainedRoomRepository} from './retained-handoff-build-20261106/sqlite.js';
 import {CoordinatedRetainedRoom} from './retained-handoff-build-20261106/coordinator.js';
 import {RetainedRoomHandoff} from './retained-handoff-build-20261106/handoff.js';
+import {RetainedTextRecovery} from './retained-handoff-build-20261106/text-recovery.js';
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-handoff-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:Buffer.from(value).toString('base64')}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?new Uint8Array(Buffer.from(value.__wire,'base64')):value);
 const options={history:'reset-with-source-checkpoint',offline:'reconcile-before-activation',externalState:'host-coordinated',migrators:[]},policy={history:'reset-with-source-archive',offline:'retain-retired-room-branches',externalReceipt:'test-loopback-coordination'};
@@ -33,6 +34,8 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='retain')value=await handoff.retainLateUpdate(body);
    else if(action==='save-draft')value=await handoff.saveRetiredDraft(body);
    else if(action==='read-draft')value=await handoff.readRetiredDraft(body.archiveId,body.draftId);
+   else if(action==='preview-text')value=await new RetainedTextRecovery(repository,key,schema,'browser-schema-1').preview(body);
+   else if(action==='resolve-text')value=await new RetainedTextRecovery(repository,key,schema,'browser-schema-1').apply(body.review,body.replacement);
    else if(action==='archive')value=await repository.readArchive(key,body.id);
    else if(action==='close'){sessions.delete(req.headers['x-handoff-session']);value={closed:true}}
    else throw new Error('Unknown fixed test action');

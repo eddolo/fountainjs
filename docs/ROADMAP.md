@@ -30,7 +30,8 @@ legacy fragments and preserves their original identity through rollback. The
 retained handoff can require measured live-checkpoint savings before installing
 a fresh room with the previous room archived.
 Its recovery demo can save and reopen the offline writer's exact draft
-separately from the merged retired branch.
+separately from the merged retired branch. The host example can apply an
+author-reviewed plain paragraph with an exact room revision check.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).

@@ -111,9 +111,12 @@ export class CoordinatedRetainedRoom {
     return view({ ...row, checkpoint: await validateRetainedRoomCheckpoint(row.checkpoint, this.schema, this.schemaVersion) });
   }
 
-  async write(request: { readonly epoch: string; readonly update: Uint8Array }): Promise<CoordinatedRoomSnapshot> {
-    const epoch = request.epoch, row = await this.current();
+  async write(request: { readonly epoch: string; readonly expectedRevision?: number; readonly update: Uint8Array }): Promise<CoordinatedRoomSnapshot> {
+    const { epoch, expectedRevision } = request, row = await this.current();
     this.writable(row, epoch);
+    if (expectedRevision !== undefined && expectedRevision !== row.revision) {
+      fail('revision-conflict', 'The reviewed room revision changed. Review the latest document before applying.');
+    }
     const supplied = request.update;
     if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) fail('invalid-update', 'Invalid retained update size.');
     const bytes = Uint8Array.from(supplied), checkpoint = await applyRetainedRoomUpdate(row.checkpoint, this.schema, this.schemaVersion, bytes);

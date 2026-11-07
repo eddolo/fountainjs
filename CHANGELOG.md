@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add manual review of an offline paragraph in the retained SQLite reference.
+  Applying the author's replacement is conditional on the reviewed revision.
+
 - Preserve an exact offline checkpoint separately from its merged branch in
   the retained SQLite handoff reference, with a read-only comparison in the demo.
 

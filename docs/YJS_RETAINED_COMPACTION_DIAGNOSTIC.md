@@ -108,6 +108,25 @@ draft and the merged retired branch. This gives the author the source needed
 for manual reconciliation. Automatic placement for overlapping edits and
 archive retention policy remain open.
 
+The SQLite host example can also preview an identifiable plain paragraph from
+the saved draft alongside its current version and apply an author-written
+replacement. It verifies that the handoff destination is still the active
+room and uses the same epoch, revision and compare-and-swap checks as other
+room writes. Unsaved editor changes prevent applying from the demo. A newer
+server revision requires reviewing again, and refreshing the review keeps any
+replacement text the author already entered. The draft remains read only and
+available for later comparison. This workflow handles one paragraph with a
+single unformatted text run and a unique node ID. Structured and formatted
+reconciliation, automatic overlapping placement, and archive storage policy
+remain open. Host authorization governs who can preview and apply.
+
+Paragraph review passed 75 focused source cases and the 15-journey desktop
+handoff suite. A final focused rerun passed in Chromium, Firefox and WebKit.
+The browser records an unsaved-edit refusal, a stale server revision, a fresh
+review that preserves the proposed text, and an accepted replacement that
+keeps the saved draft available. Captures and recordings are under
+`artifacts/retained-reviewed-recovery-final-20261107/`.
+
 The exact-draft change passed 74 focused source tests and 15 recorded desktop
 browser journeys, including an injected merge failure in each browser. The
 SQLite test reopens the original bytes from a new connection and uses a writer
