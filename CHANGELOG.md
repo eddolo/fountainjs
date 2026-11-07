@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reduce retained room setup and split ordering work. Restore checkpoint
+  compatibility with Yjs 13.6.0 while continuing to refuse subdocument state.
+
 - Swap comment providers on mounted editors and scope homepage discussions to
   their own rooms. Late callbacks and writes from the old provider stay out of
   the replacement editor state.

@@ -246,16 +246,20 @@ export class RetainedDocumentStore {
   }
 
   private orderedChildren(raw: RetainedNodeProjection, partitions: ReadonlyMap<string, RetainedTextPartition>, placements: ReadonlyMap<string, SplitPlacement>): readonly RetainedNodeProjection[] {
-    const result = [...raw.content], families = new Map<string, { index: number; node: RetainedNodeProjection; rank: number; stream: string }[]>();
+    if (!placements.size || !raw.content.some(child => placements.has(child.id))) return raw.content;
+    const result = [...raw.content], indexes = new Map(result.map((node, index) => [node.id, index]));
+    const families = new Map<string, { index: number; node: RetainedNodeProjection; rank: number; stream: string }[]>();
     for (let index = 0; index < result.length; index++) {
       const node = result[index], placement = placements.get(node.id);
-      if (!placement || !result.some(child => child.id === placement.root)) continue;
+      if (!placement || !indexes.has(placement.root)) continue;
       const partition = partitions.get(placement.partition)!, entries = families.get(placement.root) ?? [];
       entries.push({ index, node, rank: partition.from, stream: partition.streamId }); families.set(placement.root, entries);
     }
     for (const [root, entries] of families) {
       if (new Set(entries.map(entry => entry.stream)).size !== 1) throw new Error('Retained split family crosses text streams.');
-      const rootIndex = result.findIndex(child => child.id === root), slots = [rootIndex, ...entries.map(entry => entry.index)].sort((a, b) => a - b);
+      // A root that also participates in another family may have moved.
+      const rootIndex = placements.has(root) ? result.findIndex(child => child.id === root) : indexes.get(root)!;
+      const slots = [rootIndex, ...entries.map(entry => entry.index)].sort((a, b) => a - b);
       const nodes = [result[rootIndex], ...entries.sort((a, b) => a.rank - b.rank || (a.node.id < b.node.id ? -1 : 1)).map(entry => entry.node)];
       slots.forEach((slot, index) => { result[slot] = nodes[index]; });
     }

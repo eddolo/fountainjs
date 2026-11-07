@@ -94,3 +94,42 @@ Node/workerd runtime checks pass. A fresh installation of the tarball passes
 Chromium, Firefox and WebKit journeys. Screenshots of the six concurrent
 edits in each engine show both editors displaying the same document. The
 Chromium reopen capture shows the downloaded draft and figure in both panes.
+
+### Clock and split-order costs
+
+Retained text writes read the local Yjs clock directly. The live projection
+guard compares peer clocks and deletion counts without encoding a state
+vector. Ordinary document reads skip sibling ordering work when there are
+no split families. Parents with split families index sibling IDs once.
+Families that share a member keep the existing dynamic root lookup.
+
+A compiled Node diagnostic used a 600-paragraph room, alternating three
+baseline and three candidate trials. The 1,024-client case carries one
+auxiliary Yjs record per synthetic past client. Each trial runs 18 local
+inserts and times the final 15 dispatches. Document JSON and complete Yjs
+updates match byte for byte across builds for each client count.
+
+| Prior client IDs | Initialization before → after | Edit median before → after |
+| --- | ---: | ---: |
+| 1 | 63.90 → 53.92 ms | 3.12 → 3.61 ms |
+| 1,024 | 209.46 → 56.42 ms | 4.31 → 3.44 ms |
+
+These timings cover the diagnostic workload. They do not certify 1,024
+simultaneously active editors or solve retained history growth. In a separate
+24-case probe, mixed previous and current builds converge and preserve author
+undo/redo in both seed and exchange orders. The performance build passed
+39 installed-package browser workflows across Chromium, Firefox and WebKit.
+
+The minimum supported Yjs 13.6.0 exposed a checkpoint failure because it
+does not export the ContentDoc constructor. The guard now checks the stored
+Y.Doc value, which also detects deleted subdocuments retained with GC disabled.
+The final packed build passes 64 pure-Node checks across ESM and CommonJS
+with Yjs 13.6.0 and 13.6.32, including checkpoint capture, reopening, and
+rejection of live and retained-deleted subdocuments. Nine recorded desktop
+browser journeys installed the final tarball with Yjs 13.6.0 and covered
+offline quote/split edits, history, room switching, and reopening a download.
+The WebKit split capture shows matching paragraphs and the retained figure.
+
+The refreshed full source run passed 4,877 tests across 309 files, with six
+failures and zero skips. All six are the required default-adapter structural
+cases. Both aggregate build-size checks remain over their existing limits.

@@ -174,7 +174,7 @@ export class RetainedTextStore {
     this.observed = Object.freeze([...this.scope, this.metadata, this.styles]);
   }
 
-  private clock(): number { return Y.decodeStateVector(Y.encodeStateVector(this.document)).get(this.document.clientID) ?? 0; }
+  private clock(): number { return Y.getState(this.document.store, this.document.clientID); }
 
   private provenance(value: Readonly<Record<string, string>>, seedStyles?: Set<string>): readonly number[] {
     const encoded = styleEncoding(value);
@@ -353,7 +353,12 @@ export class RetainedTextStore {
   writeVersion(transaction: Y.Transaction): string {
     let deleted = 0;
     for (const ranges of transaction.deleteSet.clients.values()) for (const range of ranges) deleted += range.len;
-    return `${[...Y.encodeStateVector(this.document)].join(',')}/${deleted}`;
+    // This stamp is compared only within one document. The live clocks catch
+    // nested writes that are not yet reflected in the transaction's afterState.
+    const store = this.document.store;
+    let clocks = '';
+    for (const client of store.clients.keys()) clocks += `${client}:${Y.getState(store, client)},`;
+    return `${clocks}/${deleted}`;
   }
 
   /** One synchronous read, not a cache that can outlive pending Yjs edits. */

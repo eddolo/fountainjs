@@ -22,9 +22,9 @@ exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
-The latest full source run had 4,802 passes and six failures, with no skips.
+The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks now pass. The aggregate ESM and CommonJS builds
-remain 172.4 KiB and 137.2 KiB over their existing limits. Fresh release CI,
+remain 172.6 KiB and 137.3 KiB over their existing limits. Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The migration reference can select an embedded legacy fragment
 and reopen its original identity through rollback. The retained handoff can

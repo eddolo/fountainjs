@@ -968,3 +968,22 @@ for (const reverse of [false, true]) it.each([false, true])(`orders concurrent c
     expect(left.content.slice(0, 3).map(node => node.textContent)).toEqual(['Al', 'ph', 'a']);
   } finally { pair.destroy(); }
 });
+
+it.each([false, true])('orders separate split families around unchanged siblings after exchange (reverse: %s)', reverse => {
+  const content: NodeJSON = { type: 'doc', content: ['Alpha', 'Between', 'Gamma', 'After'].map(text => ({
+    type: 'paragraph', content: [{ type: 'text', text }],
+  })) };
+  const pair = peers(content);
+  try {
+    for (const [peer, path] of [[pair.left, [0, 0]], [pair.right, [2, 0]]] as const) {
+      peer.editor.dispatch(peer.editor.createTransaction().setSelection(Selection.cursor(path, 2)));
+      expect(splitBlock(peer.editor)).toBe(true);
+      peer.apply();
+    }
+    pair.sync(reverse);
+    const left = pair.left.store.read(), right = pair.right.store.read();
+    expect(left.toJSON()).toEqual(right.toJSON());
+    expect(left.content.map(node => node.textContent)).toEqual(['Al', 'pha', 'Between', 'Ga', 'mma', 'After']);
+    expect(Y.encodeStateAsUpdate(pair.left.doc)).toEqual(Y.encodeStateAsUpdate(pair.right.doc));
+  } finally { pair.destroy(); }
+});

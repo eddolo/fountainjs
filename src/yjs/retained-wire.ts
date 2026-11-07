@@ -38,10 +38,12 @@ export function assertRetainedWireData(document: Y.Doc): void {
     else if (content instanceof Y.ContentAny) for (const value of content.arr) any(value);
     // Format/embed/JSON payloads use JSON encoding and retain escaped units.
     else if (content instanceof Y.ContentFormat) assertRetainedWireString(content.key);
-    else if (content instanceof Y.ContentDoc) throw new Error('Retained checkpoint does not include subdocument state.');
     else if (content instanceof Y.ContentType) {
       if (content.type instanceof Y.XmlElement) assertRetainedWireString(content.type.nodeName);
       else if (content.type instanceof Y.XmlHook) assertRetainedWireString(content.type.hookName);
+    } else if (!(content instanceof Y.ContentDeleted) && content.getContent()[0] instanceof Y.Doc) {
+      // Older supported Yjs releases expose the stored document without exporting ContentDoc.
+      throw new Error('Retained checkpoint does not include subdocument state.');
     }
   }
 }

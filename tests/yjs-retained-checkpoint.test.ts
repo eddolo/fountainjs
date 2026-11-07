@@ -10,8 +10,8 @@ const content = { type: 'doc', attrs: { title: 'Checkpoint', nested: { source: t
   { type: 'paragraph', attrs: { nodeId: 'intro' }, content: [{ type: 'text', text: 'Alpha' }] },
   { type: 'image_super', attrs: { nodeId: 'figure', src: '/figure.png', alt: 'Retained figure' } },
 ] };
-function fixture() {
-  const document = new Y.Doc(), kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({ document, captureTimeout: 0, user: { id: 'Ada', name: 'Ada', color: '#7048e8' } })]);
+function fixture(gc = true) {
+  const document = new Y.Doc({ gc }), kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({ document, captureTimeout: 0, user: { id: 'Ada', name: 'Ada', color: '#7048e8' } })]);
   const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
   return { document, editor, schema: editor.state.schema, destroy() { editor.destroy(); document.destroy(); } };
 }
@@ -102,10 +102,16 @@ it('refuses capture from a caller-owned open transaction', async () => {
   } finally { pair.destroy(); }
 });
 
-it('refuses nested subdocuments rather than pretending their state is archived', async () => {
-  const pair = fixture(), child = new Y.Doc();
+it.each([false, true])('refuses nested subdocuments, including deleted uncollected items (%s)', async deleted => {
+  const pair = fixture(!deleted), child = new Y.Doc();
   try {
-    child.getText('data').insert(0, 'Not part of parent wire state'); pair.document.getMap('host').set('child', child);
+    child.getText('data').insert(0, 'Not part of parent wire state');
+    const host = pair.document.getMap('host');
+    host.set('child', child);
+    if (deleted) {
+      host.delete('child');
+      expect(pair.document.getSubdocs().size).toBe(0);
+    }
     await expect(captureRetainedCheckpoint(pair.document, pair.schema, 'schema-1')).rejects.toThrow('subdocument');
   } finally { pair.destroy(); child.destroy(); }
 });
