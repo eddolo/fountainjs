@@ -3,6 +3,7 @@ import type { YjsAwareness } from '../../src/yjs';
 export type PresenceState = Record<string, unknown>;
 export type PresencePeer = readonly [number, PresenceState];
 export const presenceVisibilityMs = 2_500;
+export const presenceRenewalMs = 1_000;
 export const presenceLeaseMs = 120_000;
 export const presenceCapacity = 64;
 

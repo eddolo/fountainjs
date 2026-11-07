@@ -180,13 +180,25 @@ client retains an accepted checkpoint and reconstructs full bytes for validation
 The metadata projection avoids materializing the BLOB in Node. SQLite physical
 page reads and multi-client CPU and memory at production scale remain unmeasured.
 Presence uses a separate SQLite table on the same local database. Bind and
-exchange check the active room header and update presence in one transaction.
-These requests read room metadata alone and keep the document checkpoint and
-revision intact. Separate connections use the same cursor state, limits and
-expiry rules. A cursor stops displaying after 2.5 seconds without a heartbeat.
+cursor writes check the active room header in the same transaction. An
+unchanged cursor can read peers in a read-only transaction until its one-second
+renewal is due. Cursor changes, clearing a cursor, and due renewals start a
+separate write transaction and check the room and token again. These requests
+read room metadata alone and keep the document checkpoint and revision intact.
+Separate connections use the same cursor state, limits and expiry rules. A
+cursor stops displaying 2.5 seconds after its last persisted heartbeat.
 Its token can resume until the two-minute lease expires. Subsequent binds
 reclaim expired rows and prior epochs. An explicit leave clears only its token
 and epoch.
+
+With eight steady peers exchanging presence every 350 ms for 60 rounds,
+SQLite recorded 160 presence row updates across 480 requests. A separate
+connection can hold the writer lock while an unchanged heartbeat reads peer
+state. The freeze-race test changes the room between read and write and checks
+that the pending cursor write is refused. These are controlled local checks.
+This change passed 23 focused source tests, the 12 recorded presence journeys
+across Chromium, Firefox and WebKit, and the separate-process probe. Updated
+captures and recordings are in `artifacts/yjs-sqlite-presence-read-browser-20261107/`.
 
 Shared SQLite presence passed 20 focused source tests and 12 recorded
 Chromium, Firefox and WebKit journeys. The browser checks the two connection

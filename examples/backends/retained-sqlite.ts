@@ -5,7 +5,7 @@ import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
 import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoomRecord, type DocumentRoomHeader, type DocumentCheckpoint } from '../../src/yjs/document-room';
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
-import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
+import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceRenewalMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
 function roomMetadata(result: Record<string, unknown>, key: string) {
   if (typeof result.metadata !== 'string' || typeof result.generation !== 'string') throw new Error('Invalid SQLite retained room row.');
@@ -108,8 +108,8 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     return { ...row, checkpoint: { manifest } };
   }
 
-  private withPresenceFence<T>(lease: DocumentRoomAdmission, action: (now: number) => T): T {
-    this.db.exec('BEGIN IMMEDIATE');
+  private withPresenceFence<T>(lease: DocumentRoomAdmission, mode: 'read' | 'write', action: (now: number) => T): T {
+    this.db.exec(mode === 'read' ? 'BEGIN' : 'BEGIN IMMEDIATE');
     try {
       const result = this.selectRoomMetadata.get(lease.key);
       if (!result) throw new RetainedRoomError('stale-epoch', 'Presence room no longer exists.');
@@ -126,7 +126,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
 
   /** Host authenticates the actor first. Presence never reads the checkpoint BLOB. */
   bindPresence(lease: DocumentRoomAdmission): string {
-    return this.withPresenceFence(lease, now => {
+    return this.withPresenceFence(lease, 'write', now => {
       this.db.prepare('DELETE FROM fountain_retained_presence_v1 WHERE room_key = ? AND (epoch <> ? OR seen <= ?)')
         .run(lease.key, lease.epoch, now - presenceLeaseMs);
       this.db.prepare(`DELETE FROM fountain_retained_presence_v1 WHERE peer_id IN (
@@ -142,17 +142,32 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     });
   }
 
+  private visiblePresence(lease: DocumentRoomAdmission, token: string, now: number): PresencePeer[] {
+    const rows = this.db.prepare(`SELECT peer_id, state FROM fountain_retained_presence_v1
+      WHERE room_key = ? AND epoch = ? AND token <> ? AND seen > ? AND state IS NOT NULL ORDER BY peer_id`)
+      .all(lease.key, lease.epoch, token, now - presenceVisibilityMs);
+    return rows.map(row => [-(row.peer_id as number), JSON.parse(row.state as string)]);
+  }
+
   exchangePresence(lease: DocumentRoomAdmission, token: string, state: PresenceState | null): PresencePeer[] {
-    return this.withPresenceFence(lease, now => {
-      const encoded = encodeRetainedPresence(state);
-      const updated = this.db.prepare(`UPDATE fountain_retained_presence_v1 SET seen = ?, state = ?
+    const encoded = encodeRetainedPresence(state);
+    const visible = this.withPresenceFence(lease, 'read', now => {
+      const peer = this.db.prepare(`SELECT seen, state FROM fountain_retained_presence_v1
+        WHERE room_key = ? AND epoch = ? AND token = ? AND seen > ?`)
+        .get(lease.key, lease.epoch, token, now - presenceLeaseMs);
+      if (!peer) throw new Error('Presence session is no longer active.');
+      return peer.state === encoded && now - (peer.seen as number) < presenceRenewalMs
+        ? this.visiblePresence(lease, token, now) : null;
+    });
+    if (visible) return visible;
+    // Start a separate write transaction and fence again. Another worker may
+    // have retired the room or removed this token since the read snapshot.
+    return this.withPresenceFence(lease, 'write', now => {
+      const updated = this.db.prepare(`UPDATE fountain_retained_presence_v1 SET seen = MAX(seen, ?), state = ?
         WHERE room_key = ? AND epoch = ? AND token = ? AND seen > ?`)
         .run(now, encoded, lease.key, lease.epoch, token, now - presenceLeaseMs);
       if (updated.changes !== 1) throw new Error('Presence session is no longer active.');
-      const rows = this.db.prepare(`SELECT peer_id, state FROM fountain_retained_presence_v1
-        WHERE room_key = ? AND epoch = ? AND token <> ? AND seen > ? AND state IS NOT NULL ORDER BY peer_id`)
-        .all(lease.key, lease.epoch, token, now - presenceVisibilityMs);
-      return rows.map(row => [-(row.peer_id as number), JSON.parse(row.state as string)]);
+      return this.visiblePresence(lease, token, now);
     });
   }
 

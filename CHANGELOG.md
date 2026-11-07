@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Serve unchanged SQLite cursor heartbeats without taking the writer lock
+  between renewals. Cursor changes and token expiry retain their room fence.
+
 - Share retained cursor presence across SQLite connections with an atomic
   room-session check. Presence leaves the saved document revision intact.
 
