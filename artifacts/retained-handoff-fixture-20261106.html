@@ -2,6 +2,7 @@
 <style>body{margin:24px;background:#f5f3ff;color:#19152f;font:16px system-ui}h1{margin-bottom:8px}button,select{font:inherit;padding:8px 10px;border:1px solid #c5bce6;border-radius:6px;background:white}button{cursor:pointer}header{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.panes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}.panes>section{min-width:0;background:white;border:1px solid #c5bce6;border-radius:12px;overflow:hidden}h2{font-size:19px;padding:16px;margin:0}pre{padding:12px;margin:12px 0;max-height:180px;overflow:auto;font:13px monospace;background:#efecfa;white-space:pre-wrap}.fountain-editor{min-height:440px;padding:20px}.fountain-editor img{max-width:100%;max-height:90px;object-fit:contain}#message{min-height:28px;margin:18px 0}label{display:flex;gap:6px;align-items:center}</style>
 <h1>Persistent room switch · recovery audit</h1><p>Actual Node/SQLite authority. Old-room edits are retained separately for review; rollback also archives the replaced room.</p>
 <header><button id="save">Save active edits</button><button id="migrate">Switch to fresh room</button><button id="retry" disabled>Retry last switch</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain old edits</button><label>Rollback source <select id="restore"><option value="retained-branch">Retained old edits</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><label><input id="drop" type="checkbox">Drop switch acknowledgement (test only)</label></header>
+<details><summary>Compaction settings</summary><p>A smaller checkpoint resets live undo. The original room stays available for recovery.</p><label for="minimum">Minimum checkpoint bytes to save</label><input id="minimum" type="number" min="1" step="1" placeholder="Optional"></details>
 <div id="message" role="status">Opening…</div><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · original room</h2></section><section id="active"><h2>Active room · authoritative</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2></section></div>
 <script type="module">
 import * as Y from 'yjs';
@@ -12,19 +13,50 @@ const version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Rec
 let token,current,original,active,archived,migration,rollbackReceipt,archiveId,lastReplay;const message=document.querySelector('#message');
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
 async function request(action,body={}){const response=await fetch('/__handoff/'+action,{method:'POST',headers:{'Content-Type':'application/json',...(token?{'X-Handoff-Session':token}:{})},body:encode(body)}),result=decode(await response.text());if(!result.ok){const error=new Error(result.error);error.code=result.code;throw error}return result.value}
-const shortcuts=new Plugin({props:{handleKeyDown:(editor,event)=>!event.altKey&&!event.isComposing&&(event.ctrlKey||event.metaKey)&&['z','y'].includes(event.key.toLowerCase())?(event.key.toLowerCase()==='y'||event.shiftKey?redoCollaboration(editor):undoCollaboration(editor)):false}});
+const shortcuts=new Plugin({props:{handleKeyDown(editor,event){
+ const key=event.key.toLowerCase();
+ if(event.altKey||event.isComposing||!(event.ctrlKey||event.metaKey)||!['z','y'].includes(key)) return false;
+ if(key==='y'||event.shiftKey) redoCollaboration(editor);
+ else undoCollaboration(editor);
+ return true;
+}}});
 function mount(doc,id,previous){if(previous){previous.view.destroy();previous.editor.destroy();previous.doc.destroy();previous.host.remove()}const host=document.createElement('div');document.querySelector('#'+id).append(host);const kit=composeExtensions([CoreExtension,MathExtension,createRetainedYjsCollaborationExtension({document:doc,captureTimeout:0,user:{id,name:id,color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:[...kit.plugins,shortcuts],content,editable:id!=='archive'}),view=new EditorView(host,editor,{ariaLabel:id==='offline'?'Offline editor':id==='active'?'Active editor':'Archive reader'});return {doc,host,editor,view}}
 async function reopen(checkpoint,id,previous){const restored=await restoreRetainedCheckpoint(checkpoint,original.editor.state.schema,version);return mount(restored.document,id,previous)}
 function report(text){document.querySelector('#report').textContent=text+'\nLive revision: '+current.revision+' · '+current.phase+'\nRoom identity: '+current.checkpoint.manifest.roomId+'\nMigration archive: '+(archiveId??'none')}
 function action(id,run){document.querySelector('#'+id).onclick=async()=>{const button=document.querySelector('#'+id);button.disabled=true;try{await run()}catch(error){message.textContent='Request failed: '+error.message+' · original editor retained; retry explicitly'}finally{button.disabled=false}}}
 async function install(result){current=result.snapshot;active=await reopen(current.checkpoint,'active',active);lastReplay={replayed:result.replayed,current:result.current};report((result.replayed?'Replayed durable receipt':'Atomic switch committed')+' · current='+result.current)}
 action('save',async()=>{current=await request('write',{epoch:current.epoch,update:Y.encodeStateAsUpdate(active.doc)});message.textContent='Active edits durably saved';report('Accepted active edit')});
-action('migrate',async()=>{current=await request('write',{epoch:current.epoch,update:Y.encodeStateAsUpdate(active.doc)});migration={ticket:await request('freeze',current),operation:crypto.randomUUID()};archiveId=migration.operation;for(const id of ['retry','old','retain','rollback'])document.querySelector('#'+id).disabled=false;const result=await request('migrate',{...migration,dropAcknowledgement:document.querySelector('#drop').checked});await install(result);archived=await reopen(result.archive.source.checkpoint,'archive',archived);message.textContent='Fresh room installed · offline writer remains in the original room'});
+action('migrate',async()=>{
+ const minimum=document.querySelector('#minimum'), minimumBytesSaved=minimum.value===''?undefined:minimum.valueAsNumber;
+ if(minimumBytesSaved!==undefined && (!Number.isSafeInteger(minimumBytesSaved) || minimumBytesSaved<1)) throw new Error('Enter a positive whole number of bytes');
+ current=await request('write',{epoch:current.epoch,update:Y.encodeStateAsUpdate(active.doc)});
+ const attempt={ticket:await request('freeze',current),operation:crypto.randomUUID(),minimumBytesSaved};
+ const enableRecovery=()=>{
+  migration=attempt;
+  archiveId=attempt.operation;
+  for(const id of ['retry','old','retain','rollback'])document.querySelector('#'+id).disabled=false;
+ };
+ let result;
+ try { result=await request('migrate',{...attempt,dropAcknowledgement:document.querySelector('#drop').checked}); }
+ catch(error){
+  if(error.code!=='insufficient-savings'){enableRecovery();throw error}
+  current=await request('abort',attempt.ticket);
+  message.textContent='Compaction skipped · the original room is still active';
+  report(error.message);
+  return;
+ }
+ enableRecovery();
+ await install(result);
+ archived=await reopen(result.archive.source.checkpoint,'archive',archived);
+ if(minimumBytesSaved===undefined){message.textContent='Fresh room installed · offline writer remains in the original room';return}
+ const before=result.archive.source.checkpoint.manifest.bytes, after=result.snapshot.checkpoint.manifest.bytes;
+ message.textContent=`Compacted live checkpoint from ${before} to ${after} bytes. Original archived.`;
+});
 action('retry',async()=>{const result=await request('migrate',migration);await install(result);if(result.current){archived=await reopen(result.archive.source.checkpoint,'archive',archived);document.querySelector('#archive-title').textContent='Recovery archive · original preserved'}message.textContent=lastReplay.current?'Durable switch receipt replayed · no second installation':'Historical receipt replayed · current room unchanged'});
 action('old',async()=>{try{await request('write',{epoch:initialEpoch,update:Y.encodeStateAsUpdate(original.doc)});throw new Error('Unexpected stale acceptance')}catch(error){if(error.code!=='stale-epoch')throw error;message.textContent='Old writer rejected · pending edits remain in the offline editor'}});
 action('retain',async()=>{const result=await request('retain',{archiveId,roomId:originalRoomId,update:Y.encodeStateAsUpdate(original.doc)});archived=await reopen(result.branch,'archive',archived);document.querySelector('#archive-title').textContent='Retired branch · old edits retained';message.textContent='Old edits retained separately · active room unchanged';report('Retired branch revision: '+result.branchRevision)});
 action('rollback',async()=>{current=await request('write',{epoch:current.epoch,update:Y.encodeStateAsUpdate(active.doc)});const ticket=await request('freeze',current);rollbackReceipt=await request('rollback',{ticket,operation:crypto.randomUUID(),archive:archiveId,restore:document.querySelector('#restore').value});await install(rollbackReceipt);archived=await reopen(rollbackReceipt.archive.source.checkpoint,'archive',archived);document.querySelector('#archive-title').textContent='Replaced room · new edits archived';message.textContent='Rollback committed · replaced room preserved in its own archive'});
 let initialEpoch,originalRoomId;
 try{token=(await request('open')).token;original=mount(new Y.Doc(),'offline');const checkpoint=await captureRetainedCheckpoint(original.doc,original.editor.state.schema,version);current=await request('initialize',{checkpoint});initialEpoch=current.epoch;originalRoomId=checkpoint.manifest.roomId;active=await reopen(current.checkpoint,'active');report('Original room initialized');message.textContent='Ready · edit offline or active, then switch rooms'}catch(error){message.textContent='Opening failed: '+error.message;throw error}
-window.audit={snapshot:async()=>{const server=await request('snapshot'),restored=await restoreRetainedCheckpoint(server.checkpoint,original.editor.state.schema,version);try{return {offline:original.editor.getJSON(),active:active.editor.getJSON(),archive:archived?.editor.getJSON(),server:restored.baseDocument.toJSON(),epoch:server.epoch,revision:server.revision,roomId:server.checkpoint.manifest.roomId,originalRoomId,archiveId,rollbackArchiveId:rollbackReceipt?.archive.id,lastReplay}}finally{restored.document.destroy()}},close:()=>request('close')};
+window.audit={snapshot:async()=>{const server=await request('snapshot'),restored=await restoreRetainedCheckpoint(server.checkpoint,original.editor.state.schema,version);try{return {offline:original.editor.getJSON(),active:active.editor.getJSON(),archive:archived?.editor.getJSON(),server:restored.baseDocument.toJSON(),epoch:server.epoch,revision:server.revision,phase:server.phase,bytes:server.checkpoint.manifest.bytes,roomId:server.checkpoint.manifest.roomId,originalRoomId,archiveId,rollbackArchiveId:rollbackReceipt?.archive.id,lastReplay}}finally{restored.document.destroy()}},close:()=>request('close')};
 </script></html>

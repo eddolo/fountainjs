@@ -25,3 +25,54 @@ test('recovers a lost switch acknowledgement by replaying the durable receipt',a
  const before=await state(page);await page.getByLabel('Drop switch acknowledgement (test only)').check();await page.getByRole('button',{name:'Switch to fresh room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Request failed');const ambiguous=await state(page);expect(ambiguous.epoch).not.toBe(before.epoch);expect(ambiguous.server).toEqual(before.server);expect(ambiguous.active).toEqual(before.active);await capture(page,info,'lost-ack.png');
  await page.getByRole('button',{name:'Retry last switch',exact:true}).click();await expect(page.getByRole('status')).toContainText('Durable switch receipt replayed');const after=await state(page);expect(after.epoch).toBe(ambiguous.epoch);expect(after.revision).toBe(ambiguous.revision);expect(after.lastReplay).toEqual({replayed:true,current:true});expect(after.archive).toEqual(before.active);await type(page,'Active editor',' AFTER retry');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.server).toEqual(saved.active);expect(saved.active).not.toEqual(before.active);await capture(page,info,'final.png');
 });
+
+test('skips an unhelpful compaction and installs a smaller checkpoint after real edits', async ({page},info) => {
+  const original = await state(page);
+  const active = page.getByRole('textbox', {name:'Active editor', exact:true});
+  await page.getByText('Compaction settings', {exact:true}).click();
+  const minimum = page.getByLabel('Minimum checkpoint bytes to save');
+  await minimum.fill('999999');
+  await page.getByRole('button', {name:'Switch to fresh room'}).click();
+  await expect(page.getByRole('status')).toContainText('Compaction skipped');
+  expect(await state(page)).toMatchObject({epoch:original.epoch,phase:'active',bytes:original.bytes,roomId:original.roomId});
+  await capture(page,info,'compaction-skipped.png');
+
+  const quote = 'Keep every accepted edit recoverable.';
+  await active.getByText(quote, {exact:true}).click();
+  for (let index = 0; index <= 24; index += 1) {
+    await page.keyboard.press('Home');
+    await page.keyboard.press('Shift+End');
+    await page.keyboard.insertText(index === 24 ? quote : `Temporary draft ${index}.`);
+  }
+  await page.getByRole('button', {name:'Save active edits'}).click();
+  await expect(page.getByRole('status')).toContainText('durably saved');
+  const grown = await state(page);
+  expect(grown.active).toEqual(original.active);
+  expect(grown.bytes).toBeGreaterThan(original.bytes + 512);
+  await type(page,'Offline editor',' OFFLINE draft');
+  const offline = (await state(page)).offline;
+  await minimum.fill('512');
+  await page.getByRole('button', {name:'Switch to fresh room'}).click();
+  await expect(page.getByRole('status')).toContainText('Compacted live checkpoint');
+  const compacted = await state(page);
+  expect(grown.bytes - compacted.bytes).toBeGreaterThanOrEqual(512);
+  await info.attach('compaction-size', {body:JSON.stringify({before:grown.bytes,after:compacted.bytes}),contentType:'application/json'});
+  expect(compacted.roomId).not.toBe(original.roomId);
+  expect(compacted.server).toEqual(original.active);
+  await capture(page,info,'compaction-savings.png');
+  const paragraph = active.getByText('Alpha technical note.', {exact:true});
+  await paragraph.click();
+  await page.keyboard.press('Control+z');
+  await expect(paragraph).toBeVisible();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' New session.');
+  await expect(active).toContainText('New session.');
+  await page.keyboard.press('Control+z');
+  await expect(paragraph).toBeVisible();
+  await page.getByRole('button', {name:'Try old writer'}).click();
+  await expect(page.getByRole('status')).toContainText('Old writer rejected');
+  await page.getByRole('button', {name:'Retain old edits'}).click();
+  await expect(page.getByRole('textbox', {name:'Archive reader'})).toContainText('OFFLINE draft');
+  expect((await state(page)).archive).toEqual(offline);
+  await capture(page,info,'compaction-offline-recovered.png');
+});

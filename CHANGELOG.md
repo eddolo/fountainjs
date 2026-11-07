@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add a minimum checkpoint savings guard to the retained SQLite room handoff
+  reference. Successful compaction archives the original room. [Compaction reference](docs/YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#guarded-live-checkpoint-compaction).
+
 - Recover explicitly selected embedded Yjs fragments in the legacy migration
   reference. The source archive preserves the original fragment identity and
   host container for rollback. [Migration audit](docs/YJS_NAMESPACE_MIGRATION_AUDIT.md#embedded-legacy-documents).

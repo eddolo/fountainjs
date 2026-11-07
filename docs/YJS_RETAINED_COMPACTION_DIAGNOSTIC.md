@@ -69,9 +69,43 @@ writer fence. Old updates must never be sent to the new authoritative room.
   schema differences and concurrent checkpoint attempts before exposing a
   migration or compaction command.
 
-The private retained adapter remains experimental and COLLAB-01 stays Partial.
-This is boundary evidence for that work, not delivery of online compaction,
-bounded storage, history-preserving migration or production adoption.
+## Guarded live-checkpoint compaction
+
+The local SQLite handoff reference accepts `minimumBytesSaved` on
+`RetainedRoomHandoff.migrate`. Set a positive whole-byte threshold alongside the
+existing explicit history and offline policies. The authority builds a candidate
+from the exact frozen revision, checks the original and replacement checkpoint
+sizes, and installs the smaller room atomically with the source archive only
+when it meets the threshold. The threshold is part of the durable receipt and
+must match when retrying the same operation ID.
+
+`insufficient-savings` leaves the original room frozen and creates no archive.
+The host can abort that exact ticket to resume the same room and writer epoch.
+The browser reference does this on a confirmed refusal. A lost acknowledgement
+still goes through the original receipt replay path.
+
+The live room starts with fresh CRDT identities and empty author undo. An old
+writer's edits can be retained in a separate source branch. The same handoff
+supports rolling back to that branch or the frozen source while archiving the
+replaced room. The byte threshold covers the live checkpoint. The archives
+still consume disk space, and the host still needs an archive retention policy.
+COLLAB-01 remains Partial.
+
+Review of an overlapping-edit experiment found that replacing a whole paragraph
+can re-anchor an offline insertion to its start. The retired branch still
+contains the text, but its placement can differ from the writer's local copy.
+The guarded compaction journey checks exact recovery for independent edits in
+different paragraphs. Overlapping edits still need a separate reconciliation
+workflow.
+
+Verification on 2026-11-07 passed 103 focused source cases and 12 recorded
+Chromium, Firefox and WebKit journeys. In the Firefox capture, 25 native
+paragraph replacements increased the retained history before compaction took
+the live checkpoint from 11,647 to 8,257 bytes. The demo shows the original
+room still active after a refusal, the smaller room after an accepted switch,
+and the offline draft intact in the retired branch. It also checks that new
+edits in the smaller room can be undone. Recordings and screenshots are under
+`artifacts/retained-guarded-compaction-verified-20261107/`.
 
 Reproduce after building the audit runtime:
 

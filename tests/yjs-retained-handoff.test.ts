@@ -86,6 +86,45 @@ it('atomically installs an exact fresh-room document with immutable original and
   expect((await pair.b.readArchive(key, moved.operation))!.source.checkpoint).toEqual(pair.checkpoint);
 });
 
+it('keeps the original room and archive inventory intact when compaction cannot meet the requested savings', async () => {
+  const pair = await fixture();
+  const ticket = await pair.room.freeze(pair.initial), operation = uuid();
+  const frozen = await pair.a.read(key);
+  await expect(pair.handoff.migrate(ticket, operation, {...options(), minimumBytesSaved: pair.checkpoint.manifest.bytes}, policy()))
+    .rejects.toMatchObject({code:'insufficient-savings'});
+  expect(await pair.b.read(key)).toEqual(frozen);
+  expect(await pair.b.readArchive(key, operation)).toBeUndefined();
+  expect(await pair.other.abort(ticket)).toEqual(pair.initial);
+});
+
+it('compacts a long edit history while keeping old writers fenced and both branches recoverable', async () => {
+  const pair = await fixture();
+  const originalText = pair.editor.state.doc.child(0).textContent;
+  for (let index = 0; index <= 32; index += 1) {
+    const previous = pair.editor.state.doc.child(0).textContent;
+    const next = index === 32 ? originalText : `Temporary draft ${index}.`;
+    pair.editor.dispatch(pair.editor.createTransaction().replaceText([0, 0], 0, previous.length, next));
+  }
+  const edited = await pair.room.write({epoch:pair.initial.epoch,update:Y.encodeStateAsUpdate(pair.document)});
+  const ticket = await pair.room.freeze(edited), operation = uuid();
+  const settings = {...options(),minimumBytesSaved:1_000};
+  const result = await pair.handoff.migrate(ticket, operation, settings, policy());
+  expect(result.archive.minimumBytesSaved).toBe(1_000);
+  expect(result.archive.source.checkpoint).toEqual(edited.checkpoint);
+  expect(edited.checkpoint.manifest.bytes - result.snapshot.checkpoint.manifest.bytes).toBeGreaterThanOrEqual(1_000);
+  expect(await model(result.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
+  expect((await pair.second.migrate(ticket, operation, settings, policy())).replayed).toBe(true);
+  await expect(pair.second.migrate(ticket, operation, options(), policy())).rejects.toMatchObject({code:'invalid-ticket'});
+  await expect(pair.second.migrate(ticket, operation, {...settings,minimumBytesSaved:999}, policy())).rejects.toMatchObject({code:'invalid-ticket'});
+  const late = type(pair, 'OFFLINE');
+  await expect(pair.room.write({epoch:edited.epoch,update:late})).rejects.toMatchObject({code:'stale-epoch'});
+  const branch = await pair.second.retainLateUpdate({archiveId:operation,roomId:edited.checkpoint.manifest.roomId,update:late});
+  expect(await model(branch.branch, pair)).toEqual(pair.editor.getJSON());
+  const rollback = await pair.second.rollback(await pair.room.freeze(result.snapshot), uuid(), operation, 'retained-branch', policy());
+  expect(await model(rollback.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
+  expect(rollback.archive.source.checkpoint).toEqual(result.snapshot.checkpoint);
+});
+
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {
   const pair = await fixture(), ticket = await pair.room.freeze(pair.initial), operation = uuid();
   if (mode === 'active') await pair.room.abort(ticket);

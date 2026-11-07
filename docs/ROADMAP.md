@@ -26,7 +26,9 @@ The latest full source run had 4,802 passes and six failures, with no skips. Fou
 raw-size limits are exceeded in the preview build. Complete fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested
-legacy fragments and preserves their original identity through rollback.
+legacy fragments and preserves their original identity through rollback. The
+retained handoff can require measured live-checkpoint savings before installing
+a fresh room with the previous room archived.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. [Parity ledger](TIPTAP_PARITY.md).

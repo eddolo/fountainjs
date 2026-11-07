@@ -27,7 +27,8 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='snapshot')value=await room.snapshot();
    else if(action==='write')value=await room.write(body);
    else if(action==='freeze')value=await room.freeze(body);
-   else if(action==='migrate'){value=await handoff.migrate(body.ticket,body.operation,options,policy);if(body.dropAcknowledgement){res.destroy();return}}
+   else if(action==='abort')value=await room.abort(body);
+   else if(action==='migrate'){value=await handoff.migrate(body.ticket,body.operation,{...options,minimumBytesSaved:body.minimumBytesSaved},policy);if(body.dropAcknowledgement){res.destroy();return}}
    else if(action==='rollback')value=await handoff.rollback(body.ticket,body.operation,body.archive,body.restore,policy);
    else if(action==='retain')value=await handoff.retainLateUpdate(body);
    else if(action==='archive')value=await repository.readArchive(key,body.id);

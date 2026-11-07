@@ -2,7 +2,7 @@ import * as Y from 'yjs';
 import type { Schema } from '../core/schema';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 
-export type RetainedRoomErrorCode = 'closed' | 'stale-epoch' | 'frozen' | 'revision-conflict' | 'invalid-ticket' | 'invalid-update';
+export type RetainedRoomErrorCode = 'closed' | 'stale-epoch' | 'frozen' | 'revision-conflict' | 'invalid-ticket' | 'invalid-update' | 'insufficient-savings';
 export class RetainedRoomError extends Error {
   constructor(readonly code: RetainedRoomErrorCode, message: string, options?: ErrorOptions) { super(message, options); }
 }
