@@ -13,6 +13,20 @@ function documentWithLayout(layout: 'fixed' | 'auto') {
 }
 
 describe('portable table layout', () => {
+  it.each(['left', 'center', 'right'] as const)('preserves physical %s placement in HTML and reports pipe-Markdown loss', placement => {
+    const table = documentWithLayout('fixed').child(0);
+    const doc = schema.node('doc', {}, [schema.node('table', { ...table.attrs, placement, dir: 'rtl' }, table.content)]);
+    const html = HTMLExporter.export(doc, { document: false });
+    const root = document.createElement('div');
+    root.innerHTML = html;
+    const rendered = root.querySelector('table')!;
+    expect(rendered.style.marginLeft).toBe(placement === 'left' ? '0px' : 'auto');
+    expect(rendered.style.marginRight).toBe(placement === 'right' ? '0px' : 'auto');
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON());
+    expect(MarkdownExporter.exportWithReport(doc).losses.some(loss => loss.detail.includes('Whole-table placement'))).toBe(true);
+    expect(MarkdownExporter.exportWithReport(doc, { tableFormat: 'html' }).markdown).toContain(`data-fountain-table-placement="${placement}"`);
+  });
+
   it.each(['fixed', 'auto'] as const)('retains %s mode through browser and DOM-free HTML', layout => {
     const doc = documentWithLayout(layout);
     const html = HTMLExporter.export(doc, { document: false });

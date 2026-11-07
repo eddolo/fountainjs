@@ -10,6 +10,18 @@ function source(width: string, extra = '') {
   return zipSync({ 'word/document.xml': strToU8(`<w:document xmlns:w="${W}"><w:body><w:tbl><w:tblPr>${width}</w:tblPr><w:tblGrid><w:gridCol w:w="1800"/></w:tblGrid><w:tr>${extra}<w:tc><w:p><w:r><w:t>Source content</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>`) });
 }
 describe('native preferred table width bridge', () => {
+  it('keeps whole-table and row alignment separate and ignores foreign declarations', () => {
+    const input = source('<w:jc w:val="left"/><x:jc xmlns:x="urn:foreign" x:val="center"/>',
+      '<w:trPr><w:jc w:val="right"/></w:trPr>');
+    const result = importDOCX(input, schema);
+    expect(result.document.child(0).attrs).toMatchObject({ placement: 'left', preferredWidth: { unit: 'auto' } });
+    expect(result.report.issues).toContainEqual(expect.objectContaining({ code: 'table-row-placement-not-imported', path: [0, 0] }));
+    const invalid = importDOCX(source('<w:jc w:val="both"/>'), schema);
+    expect(invalid.document.child(0).attrs.placement).toBeUndefined();
+    expect(invalid.report.issues).toContainEqual(expect.objectContaining({ code: 'unsupported-table-placement', path: [0] }));
+    expect(importDOCX(source(''), schema).document.child(0).attrs.placement).toBeUndefined();
+  });
+
   it.each([
     ['dxa', '3600', { unit: 'pt', value: 180 }],
     ['dxa', '0', { unit: 'pt', value: 0 }],

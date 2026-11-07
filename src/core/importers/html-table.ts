@@ -2,7 +2,7 @@ import type { Attributes, Node, Schema } from '../schema';
 import { readTableAppearance } from '../table-appearance';
 import { tableBackground } from '../table-background';
 import { readTableCellWidths } from '../table-column-width';
-import { readTableLayout, readTableRow } from '../table-layout';
+import { readTableLayout, readTablePlacement, readTableRow } from '../table-layout';
 import { readContainerDirection, readTextAlignmentAttributes, readTextDirection } from '../text-direction';
 
 /** Native table row order: header, body/direct rows, footer; stable within each. */
@@ -82,5 +82,6 @@ export function projectHTMLTable<E extends TableElement>(element: E, schema: Sch
     const node = schema.node('table_row', attrs, cells);
     return source.inheritRowMarks(row, node);
   });
-  return schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows);
+  const placement = schema.nodes.table?.spec.attrs?.placement ? readTablePlacement(element) : {};
+  return schema.node('table', { ...readTableLayout(element), ...placement, ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows);
 }

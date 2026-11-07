@@ -22,6 +22,16 @@ function fixture(styles: string, tablePr = '<w:tblStyle w:val="Child"/>', cellPr
 }
 
 describe('inherited Word table style appearance', () => {
+  it('retains inherited table placement and honors a direct override', () => {
+    const styles = style('Base', '<w:tblPr><w:jc w:val="center"/></w:tblPr>') + style('Child', '', 'Base');
+    expect(importDOCX(fixture(styles), schema).document.child(0).attrs.placement).toBe('center');
+    const imported = importDOCX(fixture(styles, '<w:tblStyle w:val="Child"/><w:jc w:val="right"/>'), schema);
+    expect(imported.document.child(0).attrs.placement).toBe('right');
+    const exported = exportDOCX(imported.document);
+    expect(strFromU8(unzipSync(exported.bytes)['word/document.xml']!)).toContain('<w:jc w:val="right"/>');
+    expect(importDOCX(exported.bytes, schema).document.child(0).attrs.placement).toBe('right');
+  });
+
   it('retains letter-spacing marks and attributes in full expected native font/mark order', () => {
     const source = { type: 'paragraph', attrs: { emphasis: 'explicit' }, content: [{ type: 'text', text: 'Title', marks: [
       { type: 'font_family', attrs: { family: 'Arial' } }, { type: 'font_size', attrs: { size: '20pt' } },

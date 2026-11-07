@@ -33,11 +33,12 @@ CAPTION_PHRASES = ["Figure 1 Probe positions in the two vessels",
                    "Figure 2 Cooling curves over thirty minutes"]
 SECOND_PAGE_PHRASES = ["Model and measurements", "Newton cooling model", "Half cooling time",
                        "The rate constants are 0.08 and 0.04 per minute.", "Recorded temperatures"]
-LAYOUT_PHRASES = PARAGRAPH_PHRASES + CAPTION_PHRASES + SECOND_PAGE_PHRASES
+TABLE_PHRASE = "Water temperature in degrees C"
+LAYOUT_PHRASES = PARAGRAPH_PHRASES + CAPTION_PHRASES + SECOND_PAGE_PHRASES + [TABLE_PHRASE]
 HEADER_PHRASE = "Cooling study 2026"
 
 
-def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES, header_page=None):
+def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES, page_override=None):
     bbox = run([str(pdftotext), "-bbox-layout", str(pdf), "-"], destination)
     document = ET.fromstring(bbox)
     pages = [item for item in document.iter() if item.tag.rsplit("}", 1)[-1] == "page"]
@@ -45,7 +46,7 @@ def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES, hea
         raise RuntimeError("No independently extracted PDF page coordinates.")
     result = {}
     for phrase in phrases:
-        page_index = header_page if header_page is not None else int(phrase in SECOND_PAGE_PHRASES)
+        page_index = page_override if page_override is not None else int(phrase in SECOND_PAGE_PHRASES or phrase == TABLE_PHRASE)
         if page_index >= len(pages):
             raise RuntimeError(f"Missing independent PDF page {page_index + 1}.")
         words = [item for item in pages[page_index].iter() if item.tag.rsplit("}", 1)[-1] == "word"]
@@ -62,7 +63,7 @@ def paragraph_positions(pdf, destination, pdftotext, phrases=LAYOUT_PHRASES, hea
 
 def header_positions(pdf, folder, pdftotext, label):
     return [paragraph_positions(pdf, folder / f"{label}-header-{page + 1}-bbox.txt",
-                                pdftotext, [HEADER_PHRASE], header_page=page)[HEADER_PHRASE]
+                                pdftotext, [HEADER_PHRASE], page_override=page)[HEADER_PHRASE]
             for page in range(2)]
 
 
@@ -175,10 +176,17 @@ if any(abs(delta["x"] + 18.1) > 0.01 or abs(delta["y"]) > 0.01 for delta in head
 header_deltas = position_deltas(results["source"]["headerPositions"], results["exported"]["headerPositions"], range(2))
 header_check = {"phrase": HEADER_PHRASE, "tolerancePt": 0.01, "deltasPtByPageIndex": header_deltas,
                 "negativeControl": {"retainedPreRepairPDF": str(header_control), "deltasPtByPageIndex": header_negative}}
+table_before = {name: paragraph_positions(header_control / name / f"{name}.pdf",
+                native / f"table-control-{name}-bbox.txt", tools["pdftotext"], [TABLE_PHRASE])
+                for name in ["source", "exported"]}
+table_negative = position_deltas(table_before["source"], table_before["exported"], [TABLE_PHRASE])
+if abs(table_negative[TABLE_PHRASE]["x"] - 0.25) > 0.01 or abs(table_negative[TABLE_PHRASE]["y"]) > 0.01:
+    raise RuntimeError("The retained table-placement control did not exhibit its known drift.")
 layout_check = {"scope": LAYOUT_PHRASES, "tolerancePt": 0.01, "deltasPt": deltas,
                 "negativeControl": {"retainedPreRepairPDF": str(control), "deltasPt": negative, "correctlyRejected": True},
                 "captionNegativeControl": {"retainedPreRepairPDF": str(caption_control), "deltasPt": caption_negative, "correctlyRejected": True},
-                "mathNegativeControl": {"retainedPreRepairPDF": str(math_control), "deltasPt": math_negative, "correctlyRejected": True}}
+                "mathNegativeControl": {"retainedPreRepairPDF": str(math_control), "deltasPt": math_negative, "correctlyRejected": True},
+                "tableNegativeControl": {"retainedPreRepairPDF": str(header_control), "deltasPt": table_negative, "correctlyRejected": True}}
 (root / "paragraph-position-report.json").write_text(json.dumps(layout_check, indent=2) + "\n", encoding="utf-8")
 (root / "header-position-report.json").write_text(json.dumps(header_check, indent=2) + "\n", encoding="utf-8")
 if any(abs(value) > 0.01 for delta in deltas.values() for value in delta.values()):

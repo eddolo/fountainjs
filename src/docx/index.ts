@@ -9,7 +9,7 @@ import { isSafeURL } from '../core/url';
 import { INLINE_DRAWING_SIDES, isInlineDrawingDistances, type InlineDrawingDistances } from '../core/image-drawing';
 import { tableBackground } from '../core/table-background';
 import { TableMap } from '../core/table-map';
-import { tableRowRepeats } from '../core/table-layout';
+import { isTablePlacement, tableRowRepeats } from '../core/table-layout';
 import { normalizeFontFamily, normalizeFontSize, normalizeLetterSpacing } from '../text-style/values';
 import { PAGE_SETTING_LENGTHS, readDocumentPageSettings, type DocumentPageSettings } from '../core/page-settings';
 import { isParagraphLayout, PARAGRAPH_BORDER_SIDES, type ParagraphLayout } from '../core/paragraph-layout';
@@ -1121,6 +1121,11 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   const properties = inherited?.table ? mergeWordTableProperties('tblPr', [inherited.table, directProperties]) : directProperties;
   const appearance = readWordTableAppearance(properties, false, warnAppearance);
   const preferredWidth = readWordTableWidth(properties, warnAppearance);
+  const placementElement = readWordTableProperty([properties], 'jc', warnAppearance);
+  const placement = placementElement && wordPageAttribute(placementElement, 'val');
+  const placementSpec = schema.nodes.table?.spec.attrs?.placement;
+  if (placementElement && !isTablePlacement(placement)) warnAppearance('unsupported-table-placement', 'Word table alignment must be left, center or right; the grid and cell content remain.');
+  else if (placement !== undefined && !placementSpec) warnAppearance('table-placement-not-imported', 'The receiving schema cannot retain whole-table placement; cell content remains.');
   if (styleId && !media.styles) warnAppearance('table-style-appearance-unresolved', 'The associated Word table style has no available internal style definitions; direct appearance remains.');
   const spacing = wordStyleChild(properties, 'tblCellSpacing');
   if (spacing && wordPageAttribute(spacing, 'w') !== '0') warnAppearance('table-cell-spacing-not-imported', 'Nonzero Word table cell spacing is not represented by the collapsed-border view.');
@@ -1170,6 +1175,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
       return margin && cell ? { ...cell, children: [margin] } : undefined;
     });
     if (wordStyleChild(exceptions, 'tblW')) issues.push({ code: 'table-row-width-exception-not-imported', severity: 'warning', message: 'Row-specific preferred table widths cannot be represented by one whole-table preference.', path: [...path, rowIndex] });
+    if (readWordTableProperty([offsetProperties, exceptions], 'jc', warnRow)) warnRow('table-row-placement-not-imported', 'Row-specific alignment cannot be represented by whole-table placement.');
     if (['tblBorders', 'tblCellMar', 'tblCellSpacing'].some(name => wordStyleChild(exceptions, name))) issues.push({
       code: 'table-row-appearance-exception-not-imported', severity: 'warning',
       message: 'Word row-level border, margin or spacing exceptions are not represented by the direct table/cell appearance profile.', path: [...path, rowIndex],
@@ -1266,7 +1272,8 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   if (layout && !schema.nodes.table?.spec.attrs?.layout) issues.push({ code: 'table-layout-not-imported', severity: 'warning', message: 'The host table schema cannot represent fixed/automatic layout; the grid remains.', path });
   if (!schema.nodes.table?.spec.attrs?.appearance) warnAppearance('table-appearance-not-imported', 'The receiving table schema cannot distinguish source appearance from application defaults.');
   if (preferredWidth && !schema.nodes.table?.spec.attrs?.preferredWidth) warnAppearance('table-preferred-width-not-imported', 'The receiving table schema cannot represent the preferred width; cell grid and content remain.');
-  return schema.node('table', { layout, ...(schema.nodes.table?.spec.attrs?.preferredWidth ? { preferredWidth } : {}), ...(schema.nodes.table?.spec.attrs?.appearance ? { appearance } : {}) }, rowNodes.length ? rowNodes : [schema.node('table_row', {}, [schema.node('table_cell', {}, [schema.node('paragraph')])])]);
+  return schema.node('table', { layout, ...(placementSpec && isTablePlacement(placement) ? { placement } : {}),
+    ...(schema.nodes.table?.spec.attrs?.preferredWidth ? { preferredWidth } : {}), ...(schema.nodes.table?.spec.attrs?.appearance ? { appearance } : {}) }, rowNodes.length ? rowNodes : [schema.node('table_row', {}, [schema.node('table_cell', {}, [schema.node('paragraph')])])]);
 }
 
 function relationshipMap(root: XMLElement | undefined): ReadonlyMap<string, ImportedRelationship> {
@@ -2269,7 +2276,9 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
     : '<w:tblBorders><w:top w:val="single" w:sz="6" w:color="C9C2D8"/><w:left w:val="single" w:sz="6" w:color="C9C2D8"/><w:bottom w:val="single" w:sz="6" w:color="C9C2D8"/><w:right w:val="single" w:sz="6" w:color="C9C2D8"/><w:insideH w:val="single" w:sz="6" w:color="D9D3E5"/><w:insideV w:val="single" w:sz="6" w:color="D9D3E5"/></w:tblBorders><w:tblCellMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar>';
   // OOXML ordering places tblLayout between borders and cell margins.
   const appearanceXML = appearance.replace(/(?=<w:tblCellMar>)/, layoutXML) + (appearance.includes('<w:tblCellMar>') ? '' : layoutXML);
-  return `<w:tbl><w:tblPr>${tableWidth}${appearanceXML}</w:tblPr>${grid}${rows}</w:tbl>`;
+  const placement = node.attrs.placement;
+  const justification = isTablePlacement(placement) ? `<w:jc w:val="${placement}"/>` : '';
+  return `<w:tbl><w:tblPr>${tableWidth}${justification}${appearanceXML}</w:tblPr>${grid}${rows}</w:tbl>`;
 }
 
 function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote: QuoteProjection = false, list?: ExportList, definition?: DefinitionLayout): string {

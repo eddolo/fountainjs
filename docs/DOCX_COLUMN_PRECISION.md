@@ -1,5 +1,9 @@
 # Fractional table-column retention (unmerged)
 
+The subsequent native audit restores the scientific fixture's centered table
+placement and repeated header positions. This document records the earlier
+width checkpoint. [Native audit](DOCX_NATIVE_AUDIT.md#whole-table-placement-2026-11-07).
+
 Word stores column widths in twentieths of a point; Fountain stores CSS pixels.
 The retained scientific paper declares three 3312-unit columns (220.8 px each).
 The previous bridge rounded these to 221 px and emitted 3315 units, enlarging the

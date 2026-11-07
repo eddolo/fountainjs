@@ -9,6 +9,22 @@ export const tableLayoutAttribute = {
   validate: (value: unknown) => value === undefined || value === 'auto' || value === 'fixed',
 };
 
+export function isTablePlacement(value: unknown): value is 'left' | 'center' | 'right' {
+  return value === 'left' || value === 'center' || value === 'right';
+}
+
+export const tablePlacementAttribute = {
+  default: undefined,
+  validate: (value: unknown) => value === undefined || isTablePlacement(value),
+};
+
+const TABLE_PLACEMENT_DATA = 'data-fountain-table-placement';
+
+export function readTablePlacement(element: { getAttribute(name: string): string | null }): Attributes {
+  const value = element.getAttribute(TABLE_PLACEMENT_DATA) ?? element.getAttribute('align')?.trim().toLowerCase();
+  return isTablePlacement(value) ? { placement: value } : {};
+}
+
 export function readTableRow(element: { getAttribute(name: string): string | null }): Attributes {
   const value = element.getAttribute('data-fountain-repeat-header');
   return value === 'true' || value === 'false' ? { repeatHeader: value === 'true' } : {};
@@ -51,8 +67,13 @@ export function readTableLayout(element: { getAttribute(name: string): string | 
 export function tableDOMSpec(node: Node): DOMOutputSpec {
   const preferred = tablePreferredWidthDOMAttributes(node.attrs.preferredWidth);
   const paint = tableAppearanceDOMAttributes(node.attrs.appearance);
-  const combinedStyle = [paint.style, preferred.style].filter(Boolean).join(';');
-  const appearance = { ...paint, ...preferred, ...textDirectionDOMAttributes(node.attrs), ...(combinedStyle ? { style: combinedStyle } : {}) };
+  const placement = node.attrs.placement;
+  const placed = isTablePlacement(placement);
+  const margins = placed ? `margin-left:${placement === 'left' ? '0' : 'auto'};margin-right:${placement === 'right' ? '0' : 'auto'}` : '';
+  const preference = node.attrs.preferredWidth;
+  const combinedStyle = [paint.style, preferred.style, margins].filter(Boolean).join(';');
+  const appearance = { ...paint, ...preferred, ...textDirectionDOMAttributes(node.attrs),
+    ...(placed ? { [TABLE_PLACEMENT_DATA]: placement } : {}), ...(combinedStyle ? { style: combinedStyle } : {}) };
   const style = appearance.style ? `${appearance.style};` : '';
   if (node.attrs.layout !== 'fixed' && node.attrs.layout !== 'auto') return ['table', appearance, ['tbody', 0]];
   if (node.attrs.layout === 'auto') return ['table', { ...appearance, 'data-fountain-table-layout': 'auto', style: `${style}table-layout:auto` }, ['tbody', 0]];
@@ -60,7 +81,6 @@ export function tableDOMSpec(node: Node): DOMOutputSpec {
   const widths = Array.from({ length: map.width }, (_, column) => map.columnWidth(column));
   const complete = widths.length > 0 && widths.every(width => width !== null);
   const width = complete ? widths.reduce<number>((sum, item) => sum + item!, 0) : undefined;
-  const preference = node.attrs.preferredWidth;
   const followsGrid = !preferred.style || (isTablePreferredWidth(preference) && preference.unit === 'pt'
     && width !== undefined && Math.abs(preference.value * 4 / 3 - width) < 1e-6);
   return ['table', { ...appearance, 'data-fountain-table-layout': 'fixed',

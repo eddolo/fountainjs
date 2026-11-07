@@ -230,6 +230,9 @@ function reportNodeAttributes(
   if (name === 'table' && node.attrs.preferredWidth !== undefined && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent preferred table width.');
   }
+  if (name === 'table' && node.attrs.placement !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Whole-table placement is not represented by pipe Markdown; use HTML table output to retain it.');
+  }
   if (name === 'table_row' && node.attrs.repeatHeader !== undefined && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent explicit row repetition. Use HTML tables to retain it.');
   }

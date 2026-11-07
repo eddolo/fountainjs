@@ -1,5 +1,30 @@
 # Independent native DOCX audit
 
+## Whole-table placement 2026 11 07
+
+The source declares center placement in `w:tblPr/w:jc`. The earlier Fountain
+download kept the same column widths and omitted that declaration. A controlled
+copy changes only the table alignment in `word/document.xml`. LibreOffice then
+restores the source's table position. Before repair the merged header fill
+started at 57.90 pt rather than 57.60 pt, and the header text started 0.25 pt
+farther right. [Word table alignment values](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tablerowalignmentvalues?view=openxml-3.0.1).
+
+The table's optional `placement` attribute records left, center or right.
+Direct Word properties override inherited table styles. The editor and safe
+HTML project placement as horizontal margins. Pipe Markdown reports the loss
+and HTML table output retains it. Row-specific alignment still produces a
+located warning. Table indentation, floating layout and native RTL table flow
+remain separate work.
+
+All 714 focused tests passed. In three recorded Chromium, Firefox and WebKit
+journeys, an author edits the merged header, undoes the edit, downloads the
+DOCX, and reopens both DOCX and HTML. LibreOffice renders each actual download
+with the source's painted header rectangle and text position. The Poppler
+gate includes the retained 0.25 pt text-shift control. The WebKit editor and
+the Chromium source and export page containing the table were visually checked.
+Package and python-docx checks passed. Aggregate CommonJS remains 148.2 KiB over
+budget and the DOCX CommonJS entry is 2.0 KiB over budget.
+
 ## Inline drawing distances 2026 11 07
 
 Fountain was adding four explicit zero distances to drawings even when Word's

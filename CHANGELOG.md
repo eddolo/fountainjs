@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve Word's whole-table left, center and right placement through editing,
+  safe HTML and native DOCX export, separately from cell text alignment.
+
 - Preserve Word inline drawing distances and omitted sides through DOCX, JSON
   and safe HTML. The scientific DOCX fixture's repeated header now matches its
   original logo and text positions in LibreOffice.

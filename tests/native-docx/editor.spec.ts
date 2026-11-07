@@ -60,7 +60,16 @@ test('edits the independent scientific Word source and downloads the native audi
     await editor.locator('[data-fountain-math]').nth(index).scrollIntoViewIfNeeded();
     await editor.screenshot({ path: resolve(root, `editor-equation-${index + 1}.png`) });
   }
-  await editor.locator('table').scrollIntoViewIfNeeded();
+  const table = editor.locator('table');
+  await table.scrollIntoViewIfNeeded();
+  await expect(table).toHaveAttribute('data-fountain-table-placement', 'center');
+  const tableHeader = table.locator('td,th').first().locator('p');
+  await expect(tableHeader).toHaveText('Water temperature in degrees C');
+  await tableHeader.click(); await page.keyboard.press('End'); await page.keyboard.type(' edited');
+  await expect(tableHeader).toHaveText('Water temperature in degrees C edited');
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(tableHeader).toHaveText('Water temperature in degrees C');
+  await expect(table).toHaveAttribute('data-fountain-table-placement', 'center');
   await editor.screenshot({ path: resolve(root, 'editor-table.png') });
   const ending = editor.locator('p').filter({ hasText: 'END OF REPORT' });
   await ending.click(); await page.keyboard.press('End'); await page.keyboard.type(' Checked in Fountain.');
@@ -85,6 +94,7 @@ test('edits the independent scientific Word source and downloads the native audi
     .evaluate(element => getComputedStyle(element).fontFamily)).toBe('Calibri');
   await expect(reopened.locator('img')).toHaveCount(3);
   await expect(reopened.locator('[data-fountain-math]')).toHaveCount(2);
+  await expect(reopened.locator('table')).toHaveAttribute('data-fountain-table-placement', 'center');
   const reopenedListGeometry = await listGeometry(reopened);
   expect(reopenedListGeometry.relativeTextIndent).toBeCloseTo(24, 1);
   expect(reopenedListGeometry.relativeTextIndent).toBeCloseTo(importedListGeometry.relativeTextIndent, 1);
@@ -102,6 +112,7 @@ test('edits the independent scientific Word source and downloads the native audi
     await expect(reader.locator('body')).toContainText('END OF REPORT Checked in Fountain.');
     await expect(reader.locator('img')).toHaveCount(3);
     await expect(reader.locator('img[data-fountain-docx-inline-distances="{}"]')).toHaveCount(3);
+    await expect(reader.locator('table')).toHaveAttribute('data-fountain-table-placement', 'center');
     for (let index = 0; index < 3; index++) {
       await reader.locator('img').nth(index).scrollIntoViewIfNeeded();
       await expect.poll(() => reader.locator('img').nth(index).evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
