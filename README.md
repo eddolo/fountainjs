@@ -79,6 +79,11 @@ disappears.
 npm install fountainjs-editor
 ```
 
+For a complete project, download the plain JavaScript or React starter from
+the [developer guide](https://eddolo.github.io/fountainjs/developers.html#starters).
+The source is in [examples/starters](examples/starters). Each project uses the
+published beta and has its own run instructions.
+
 React is an optional peer dependency. Install `react` and `react-dom` only when importing `fountainjs-editor/react`.
 Yjs is also optional. Install `yjs` only when importing
 `fountainjs-editor/yjs` for real-time collaboration.

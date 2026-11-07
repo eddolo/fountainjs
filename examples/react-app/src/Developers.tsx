@@ -1,4 +1,5 @@
 import { SitePageLink } from './SitePageLink';
+import { StarterDownload } from './StarterDownload';
 
 const composeExample = `import {
   CoreExtension,
@@ -596,6 +597,7 @@ controller.subscribe(snapshot => {
 })`;
 
 const toc = [
+  ['starters', 'Starter projects'],
   ['mental-model', 'Mental model'],
   ['system-map', 'System map'],
   ['document-model', 'Document model'],
@@ -629,7 +631,7 @@ function Developers() {
           <p className="dev-kicker">FOUNTAINJS DEVELOPER GUIDE</p>
           <h1>Understand the engine.<br /><em>Then make it yours.</em></h1>
           <p>This is the implementation map for people integrating FountainJS, writing extensions, reviewing the code, or contributing to the project. It follows a real edit from browser input to validated JSON and explains where every layer can be replaced.</p>
-          <div className="dev-hero__actions"><a href="#mental-model">Start with the mental model ↓</a><a href="https://github.com/eddolo/fountainjs">Browse source ↗</a></div>
+          <div className="dev-hero__actions"><a href="#starters">Download a starter ↓</a><a href="https://github.com/eddolo/fountainjs">Browse source ↗</a></div>
         </div>
         <div className="dev-hero__facts" aria-label="Project facts">
           <span><b>0</b> runtime dependencies</span>
@@ -642,11 +644,31 @@ function Developers() {
       <div className="dev-layout">
         <aside className="dev-toc">
           <p>ON THIS PAGE</p>
-          <nav>{toc.map(([id, label], index) => <a href={`#${id}`} key={id}><b>{String(index + 1).padStart(2, '0')}</b>{label}</a>)}</nav>
+          <nav>{toc.map(([id, label], index) => <a href={`#${id}`} key={id}><b>{String(index).padStart(2, '0')}</b>{label}</a>)}</nav>
           <a className="dev-toc__api" href="https://github.com/eddolo/fountainjs/blob/master/docs/API.md">API reference ↗</a>
         </aside>
 
         <article className="dev-content">
+          <section className="dev-section" id="starters">
+            <p className="dev-label">00 · START HERE</p>
+            <h2>Run your first editor.</h2>
+            <p>Download and extract a starter. Use Node.js 20.19+ or 22.12+, then run <code>npm install</code> and <code>npm run dev</code> in the extracted folder. Both projects pin the published <code>0.4.0-beta.2</code> package.</p>
+            <div className="dev-starters">
+              <article id="starter-plain-dom">
+                <h3>Plain JavaScript</h3>
+                <p>Mount an editor with <code>EditorView</code>. Insert an editable callout, undo it, and inspect the document JSON.</p>
+                <StarterDownload kind="plain-dom" label="Download plain DOM starter" />
+                <a href="./demos/plain-dom-notes.html">Explore the plain DOM demo →</a>
+              </article>
+              <article id="starter-react">
+                <h3>React</h3>
+                <p>Use <code>useFountain</code> and <code>FountainComposer</code> to edit with the supplied toolbar and read each change as JSON.</p>
+                <StarterDownload kind="react" label="Download React starter" />
+                <a href="./demos/react-article.html">Explore the React demo →</a>
+              </article>
+            </div>
+          </section>
+
           <section className="dev-section" id="mental-model">
             <p className="dev-label">01 · MENTAL MODEL</p>
             <h2>A document engine with adapters around it.</h2>

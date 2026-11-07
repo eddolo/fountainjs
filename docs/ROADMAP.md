@@ -38,6 +38,12 @@ exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
+The developer guide now offers downloadable plain DOM and React starters
+paired with the live demos. Both pin the published beta and run outside the
+repository. The plain DOM starter includes a custom editable callout and
+the React starter shows toolbar edits in portable JSON. Independent
+time-to-first-editor and time-to-first-extension comparisons remain open.
+
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
 remains 131.3 KiB over its existing limit after sharing more HTML conversion

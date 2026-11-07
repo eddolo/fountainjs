@@ -31,6 +31,13 @@
 .dev-section > p:not(.dev-label), .dev-two-column p { max-width: 850px; color: #625d6d; font-size: 15px; line-height: 1.82; }
 .dev-section .dev-lead { color: #282438; font-size: 20px; line-height: 1.65; }
 .dev-section p code, .dev-mini-grid code { padding: 2px 5px; color: #5e43cc; background: #eee9ff; border-radius: 4px; font-size: .88em; }
+.dev-starters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-top: 24px; }
+.dev-starters article { display: flex; flex-direction: column; align-items: flex-start; padding: 20px; border: 1px solid #d8d3ca; border-radius: 12px; background: white; scroll-margin-top: 100px; }
+.dev-starters h3 { margin-top: 0; }
+.dev-starters p { color: #625d6d; font-size: 14px; line-height: 1.65; }
+.dev-starters p:first-of-type { flex: 1; }
+.dev-starters button { min-height: 44px; padding: 8px 12px; color: white; background: #5034bb; border: 0; border-radius: 7px; font: inherit; cursor: pointer; }
+.dev-starters a { display: block; margin-top: 12px; color: #5034bb; text-decoration: underline; }
 .dev-principles { display: grid; grid-template-columns: repeat(3, 1fr); margin: 44px 0; border-top: 1px solid #d8d3ca; border-left: 1px solid #d8d3ca; }
 .dev-principles article { min-height: 185px; padding: 22px; border-right: 1px solid #d8d3ca; border-bottom: 1px solid #d8d3ca; }
 .dev-principles b { display: block; margin-bottom: 35px; font-size: 14px; }

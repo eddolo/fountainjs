@@ -747,6 +747,7 @@ function Runtime({ demo }: { demo: DemoDefinition }) {
 
 function DemoPage() {
   const demo = getDemo(document.body.dataset.demo);
+  const starter = demo.slug === 'react-article' ? 'react' : demo.slug === 'plain-dom-notes' ? 'plain-dom' : null;
   const previous = demo.index > 1 ? demo.index - 2 : 9;
   const next = demo.index < 10 ? demo.index : 0;
 
@@ -773,7 +774,7 @@ function DemoPage() {
 
     <section className="single-demo__details">
       <div className="demo-capabilities"><p>CAPABILITIES IN THIS PAGE</p>{demo.capabilities.map((capability, index) => <article key={capability}><b>0{index + 1}</b><span>{capability}</span></article>)}</div>
-      <div className="host-recipe"><p>{demo.host.toUpperCase()} INTEGRATION RECIPE</p><pre tabIndex={0} role="region" aria-label={`${demo.host} integration code`}><code>{demo.code}</code></pre><span>This code documents the real boundary used by the live example. Product storage, authentication, and deployment remain host-owned.</span></div>
+      <div className="host-recipe"><p>{demo.host.toUpperCase()} INTEGRATION RECIPE</p><pre tabIndex={0} role="region" aria-label={`${demo.host} integration code`}><code>{demo.code}</code></pre><span>This code documents the real boundary used by the live example. Product storage, authentication, and deployment remain host-owned. {starter && <a href={`../developers.html#starter-${starter}`}>Get the {demo.host} starter →</a>}</span></div>
     </section>
 
     <nav className="demo-pagination" aria-label="Other demos">
