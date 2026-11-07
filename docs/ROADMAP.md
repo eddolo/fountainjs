@@ -20,13 +20,28 @@ CommonMark is also unfinished: the default semantic profile is 563/652 and the
 strongest explicit body profile is 635/652; source retention is a separate
 promise. DOCX/PDF have bounded supported workflows; ODT/EPUB remain unclaimed.
 
-The current source suite has 4,747 passes and six failures, with no skips. Three
+The current source suite has 4,773 passes and six failures, with no skips. Three
 raw-size limits are exceeded. Complete fresh release CI, retained history/storage
 growth and compaction, nested-fragment migration and safe adapter adoption remain open.
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 Native UI renderers, transcription, full forms and notebook/terminal/workspace
 products remain future work. See the [parity ledger](TIPTAP_PARITY.md) and
-[latest namespace-migration audit](YJS_NAMESPACE_MIGRATION_AUDIT.md).
+[latest client-admission audit](YJS_RETAINED_ADMISSION_AUDIT.md).
+
+Retained client admission (2026-11-07, local): an opt-in private checkpoint
+loader validates an authoritative existing room before provider connection or
+client seeding. Stage the full same-room offline merge in isolation; refuse
+independent room identities and changed source state. Preserve a draft typed
+while joining across errors/retry, requiring explicit resolution; cancellation
+and retired requests cannot revive or overwrite a newer session. All 26 new /
+92 focused cases, 12 compiled ESM/CommonJS Node checks and nine recorded
+three-engine HTTP/SQLite journeys pass. Complete source has 4,773 passes and the
+same six failures across 300 files, no skips. Types/build/API/headless pass; all
+173 public runtime/CSS files stay identical and the same three size overruns
+remain. First-room provisioning, epoch-bound live transport, frozen-room access,
+durable draft reconciliation, production costs and safe adoption remain open.
+No default switch, public export, publication or COLLAB-01 promotion.
+[Audit](YJS_RETAINED_ADMISSION_AUDIT.md).
 
 Explicit legacy namespace mapping (2026-11-07, local): preserve the exact named
 XML source, including Unicode/spaces or an explicitly selected empty root, while

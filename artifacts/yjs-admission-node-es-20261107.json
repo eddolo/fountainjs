@@ -1,0 +1,14 @@
+{
+  "mode": "es",
+  "passed": 6,
+  "cases": [
+    "validated authoritative checkpoint precedes provider start without client seed",
+    "two independently empty clients share one native root and converge author edits",
+    "pending local draft remains visible and cannot be overwritten on implicit retry",
+    "cancelled admission cannot seed or revive a disconnected client",
+    "independent room conflicts preserve both source documents",
+    "checksum failure does not import authoritative bytes or replace the draft"
+  ],
+  "node": "v24.22.1",
+  "dom": false
+}

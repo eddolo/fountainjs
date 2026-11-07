@@ -1,5 +1,10 @@
 # Explicit legacy namespace migration — 2026-11-07
 
+Client follow-up: [retained checkpoint admission](YJS_RETAINED_ADMISSION_AUDIT.md)
+validates an authoritative snapshot before a joining client starts its provider,
+preserving pending local drafts. Epoch-bound transport and public adoption remain
+open; the namespace evidence below describes its own earlier checkpoint.
+
 The private migration path can now archive and convert named top-level XML rooms
 whose names are not valid retained storage namespaces. The host supplies an
 explicit `destinationRoom`; the source is never silently renamed or replaced.

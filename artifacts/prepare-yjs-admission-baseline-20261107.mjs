@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+const folder='artifacts/yjs-admission-baseline-20261107',archive=folder+'.tar';
+await mkdir(folder,{recursive:true});execFileSync('git',['archive','--format=tar',`--output=${archive}`,'b0af7a48','src']);execFileSync('tar',['-xf',archive,'-C',folder]);
+const source=await readFile('tests/yjs-retained-admission.test.ts','utf8'),marker="it.each([{schemaVersion:version,load:null}";assert.equal(source.split(marker).length,2);
+const test=source.slice(0,source.indexOf(marker)).replace("import {prepareRetainedAdmission} from '../src/yjs/retained-admission';\n",'').trimEnd()+'\n';assert(!test.includes('prepareRetainedAdmission'));
+await writeFile('artifacts/yjs-admission-baseline-20261107.test.ts',test);
+await writeFile('artifacts/yjs-admission-baseline-20261107.config.ts',`import {defineConfig} from 'vitest/config';
+import {resolve} from 'node:path';
+export default defineConfig({resolve:{alias:[{find:/^\\.\\.\\/src(?=\\/|$)/,replacement:resolve('${folder}/src')}]},test:{environment:'node',include:['artifacts/yjs-admission-baseline-20261107.test.ts']}});
+`);
+console.log('Prepared the original eighteen cases against source archived from b0af7a48.');

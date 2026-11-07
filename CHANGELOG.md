@@ -7,6 +7,15 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add private retained-room admission from an authoritative existing checkpoint
+  before provider connection. Validate and stage the full same-room offline
+  merge, preserve a pending local draft across refusal/retry, and abort retired
+  requests without reviving or disconnecting another session. Keep legacy and
+  independently initialized source rooms intact on conflict. Verify pure-Node
+  ESM/CommonJS and recorded HTTP/SQLite browser workflows. The default adapter
+  remains unchanged; safe public adoption and its six concurrency failures are
+  still open. [Audit](docs/YJS_RETAINED_ADMISSION_AUDIT.md).
+
 - Add explicit private legacy-room namespace mapping for retained migration.
   Preserve original Unicode/spaced or explicitly empty top-level XML names in
   recovery checkpoints; require a compatible host-selected destination when

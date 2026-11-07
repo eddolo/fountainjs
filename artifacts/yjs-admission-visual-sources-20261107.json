@@ -1,0 +1,74 @@
+[
+  {
+    "engine": "chromium",
+    "name": "two delayed clients join one authoritative room and edit without duplicate seeds",
+    "kind": "join",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-two-del-5c632-dit-without-duplicate-seeds-chromium\\video.webm",
+    "durationSeconds": 3.68,
+    "target": "artifacts\\yjs-admission-visual-20261107\\chromium-join"
+  },
+  {
+    "engine": "chromium",
+    "name": "preserves a typed pending draft until the author explicitly chooses the shared document",
+    "kind": "draft",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-preserv-f45b1-chooses-the-shared-document-chromium\\video.webm",
+    "durationSeconds": 3.48,
+    "target": "artifacts\\yjs-admission-visual-20261107\\chromium-draft"
+  },
+  {
+    "engine": "chromium",
+    "name": "cancels a pending join without a late response reviving it and reconnects explicitly",
+    "kind": "cancel",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-cancels-6418e-t-and-reconnects-explicitly-chromium\\video.webm",
+    "durationSeconds": 3.56,
+    "target": "artifacts\\yjs-admission-visual-20261107\\chromium-cancel"
+  },
+  {
+    "engine": "firefox",
+    "name": "two delayed clients join one authoritative room and edit without duplicate seeds",
+    "kind": "join",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-two-del-5c632-dit-without-duplicate-seeds-firefox\\video.webm",
+    "durationSeconds": 7.72,
+    "target": "artifacts\\yjs-admission-visual-20261107\\firefox-join"
+  },
+  {
+    "engine": "firefox",
+    "name": "preserves a typed pending draft until the author explicitly chooses the shared document",
+    "kind": "draft",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-preserv-f45b1-chooses-the-shared-document-firefox\\video.webm",
+    "durationSeconds": 3.88,
+    "target": "artifacts\\yjs-admission-visual-20261107\\firefox-draft"
+  },
+  {
+    "engine": "firefox",
+    "name": "cancels a pending join without a late response reviving it and reconnects explicitly",
+    "kind": "cancel",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-cancels-6418e-t-and-reconnects-explicitly-firefox\\video.webm",
+    "durationSeconds": 3.64,
+    "target": "artifacts\\yjs-admission-visual-20261107\\firefox-cancel"
+  },
+  {
+    "engine": "webkit",
+    "name": "two delayed clients join one authoritative room and edit without duplicate seeds",
+    "kind": "join",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-two-del-5c632-dit-without-duplicate-seeds-webkit\\video.webm",
+    "durationSeconds": 9.8,
+    "target": "artifacts\\yjs-admission-visual-20261107\\webkit-join"
+  },
+  {
+    "engine": "webkit",
+    "name": "preserves a typed pending draft until the author explicitly chooses the shared document",
+    "kind": "draft",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-preserv-f45b1-chooses-the-shared-document-webkit\\video.webm",
+    "durationSeconds": 6.88,
+    "target": "artifacts\\yjs-admission-visual-20261107\\webkit-draft"
+  },
+  {
+    "engine": "webkit",
+    "name": "cancels a pending join without a late response reviving it and reconnects explicitly",
+    "kind": "cancel",
+    "video": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\yjs-admission-browser-20261107\\yjs-admission-real-cancels-6418e-t-and-reconnects-explicitly-webkit\\video.webm",
+    "durationSeconds": 5.72,
+    "target": "artifacts\\yjs-admission-visual-20261107\\webkit-cancel"
+  }
+]

@@ -7,6 +7,13 @@ import type { YjsCollaborationExtensionOptions } from './index';
 import { RetainedDocumentStore, validateRetainedDocument } from './retained-document';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore } from './structured-attributes';
+import { prepareRetainedAdmission, type RetainedAdmission } from './retained-admission';
+
+export interface RetainedYjsCollaborationExtensionOptions extends YjsCollaborationExtensionOptions {
+  /** Validate an authoritative existing-room snapshot before starting transport.
+   * Without this opt-in, isolated local/offline initialization is unchanged. */
+  readonly admission?: RetainedAdmission;
+}
 
 const GATE = 'fountain-retained-room', FORMAT = 'fountain-retained-document/3';
 const BEFORE = Symbol('retained-selection-before'), AFTER = Symbol('retained-selection-after');
@@ -59,8 +66,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private readonly throttle: number;
   private readonly field: string;
   private destroyed = false;
+  private readonly admission?: RetainedAdmission;
+  private admissionController?: AbortController;
+  private joining = false;
+  private joinBaseline?: Node;
 
-  constructor(private readonly options: YjsCollaborationExtensionOptions) {
+  constructor(private readonly options: RetainedYjsCollaborationExtensionOptions) {
     if (!(options?.document instanceof Y.Doc)) throw new TypeError('Yjs needs a Y.Doc.');
     if (options.fragment !== undefined && (!(options.fragment instanceof Y.XmlFragment) || options.fragment.doc !== options.document)) throw new TypeError('Yjs needs a fragment belonging to its Y.Doc.');
     if (options.fragmentName !== undefined && typeof options.fragmentName !== 'string'
@@ -73,6 +84,11 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     if (!/^[\w.-]{1,100}$/.test(this.field) || !Number.isFinite(this.throttle) || this.throttle < 0 || this.throttle > 1_000
       || options.captureTimeout !== undefined && (!Number.isFinite(options.captureTimeout) || options.captureTimeout < 0)) throw new TypeError('Invalid retained collaboration timing or awareness options.');
     if (options.structuredAttributes) this.structured = new YjsStructuredAttributeStore(options.document, options.structuredAttributes, `${this.room}:structured-attributes`);
+    if (options.admission !== undefined) {
+      const schemaVersion = options.admission?.schemaVersion, load = options.admission?.load;
+      if (typeof schemaVersion !== 'string' || !schemaVersion.trim() || schemaVersion.length > 200 || /[\u0000-\u001f\u007f]/.test(schemaVersion) || typeof load !== 'function') throw new TypeError('Invalid retained admission contract.');
+      this.admission = Object.freeze({ schemaVersion, load });
+    }
   }
 
   private gate(): string {
@@ -137,7 +153,40 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     if (this.destroyed || this.context) throw new Error('Retained adapter is destroyed or already connected.');
+    if (this.admission) {
+      this.context = context; this.joining = true; this.joinBaseline ??= context.editor.state.doc;
+      const controller = new AbortController(); this.admissionController = controller;
+      return this.admit(context, controller);
+    }
+    return this.attach(context);
+  }
+
+  private async admit(context: CollaborationAdapterContext, controller: AbortController): Promise<void> {
+    const current = () => !controller.signal.aborted && !this.destroyed && this.context === context;
+    let attaching = false;
+    try {
+      const checkpoint = await this.admission!.load(controller.signal);
+      if (!current()) return;
+      const candidate = await prepareRetainedAdmission(this.options.document, checkpoint, context.editor.state.schema, this.admission!.schemaVersion, this.room);
+      if (!current()) return;
+      if (!context.editor.state.doc.eq(this.joinBaseline!) && !context.editor.state.doc.eq(candidate.document)) throw new Error('Unresolved local draft made while joining; draft preserved. Resolve it explicitly before reconnecting.');
+      candidate.install(this.origin); if (!current()) return;
+      this.joining = false; attaching = true;
+      await this.attach(context, false);
+      if (current()) { this.admissionController = undefined; this.joinBaseline = undefined; }
+    } catch (error) {
+      // attach() and the generic lifecycle own transport failures. A rejected
+      // retired request must never disconnect a newer session on this adapter.
+      if (attaching) throw error;
+      if (!current()) return;
+      try { const cleanup = this.disconnect(); if (cleanup) void cleanup.catch(() => undefined); } catch { /* Preserve the admission failure. */ }
+      throw error;
+    }
+  }
+
+  private attach(context: CollaborationAdapterContext, allowSeed = true): void | Promise<void> {
     const fresh = this.fragment.length === 0 && this.options.document.getMap(`${this.room}:document`).size === 0;
+    if (fresh && !allowSeed) throw new Error('Admission requires an already initialized retained room.');
     if (!fresh) this.roomId = this.gate();
     validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
     this.context = context;
@@ -173,6 +222,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   disconnect(): void | Promise<void> {
+    const pending = this.admissionController; this.admissionController = undefined; this.joining = false; pending?.abort();
     if (!this.context && !this.providerActive) return;
     const published = this.published !== undefined;
     this.options.document.off('afterTransaction', this.sharedChanged); this.awareness()?.off('change', this.awarenessChanged);
@@ -184,7 +234,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
-    if (!this.context || !this.store) return;
+    if (!this.context || !this.store || this.joining) return;
     this.gate(); this.structured?.overlay(update.before); this.structured?.validate(update.document);
     const recordHistory = update.transaction.getMeta('addToHistory') !== false;
     this.pendingHistory = recordHistory ? { before: retainSelection(this.store, update.before, update.beforeSelection) } : undefined;
@@ -197,7 +247,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalSelection(document: Node, selection: AnySelection): void {
-    if (!this.context || !this.store) return;
+    if (!this.context || !this.store || this.joining) return;
     this.localSelection = retainSelection(this.store, document, selection);
     if (!this.awareness()) return;
     const value = { user: this.localUser, selection: this.localSelection }, signature = JSON.stringify(value);
@@ -233,15 +283,17 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   undo(): boolean {
+    if (this.joining) return false;
     const item = this.manager?.undoStack.at(-1); if (!item) return false;
     this.restoring = item.meta.get(BEFORE); try { return Boolean(this.manager!.undo()); } finally { this.restoring = undefined; }
   }
   redo(): boolean {
+    if (this.joining) return false;
     const item = this.manager?.redoStack.at(-1); if (!item) return false;
     this.restoring = item.meta.get(AFTER); try { return Boolean(this.manager!.redo()); } finally { this.restoring = undefined; }
   }
-  canUndo(): boolean { return this.manager?.canUndo() ?? false; }
-  canRedo(): boolean { return this.manager?.canRedo() ?? false; }
+  canUndo(): boolean { return !this.joining && (this.manager?.canUndo() ?? false); }
+  canRedo(): boolean { return !this.joining && (this.manager?.canRedo() ?? false); }
   stopCapturing(): void { this.manager?.stopCapturing(); }
   destroy(): void {
     if (this.destroyed) return;
@@ -251,6 +303,6 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 }
 
-export function createRetainedYjsCollaborationExtension(options: YjsCollaborationExtensionOptions) {
+export function createRetainedYjsCollaborationExtension(options: RetainedYjsCollaborationExtensionOptions) {
   return createCollaborationExtension({ autoConnect: options.autoConnect, adapter: () => new RetainedYjsCollaborationAdapter(options) });
 }
