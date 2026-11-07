@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Swap comment providers on mounted editors and scope homepage discussions to
+  their own rooms. Late callbacks and writes from the old provider stay out of
+  the replacement editor state.
+
 - Show the retained Yjs preview on the homepage with separate room documents,
   simulated offline edits, quote merging, and author-specific undo.
 

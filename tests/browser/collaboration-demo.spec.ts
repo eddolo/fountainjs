@@ -199,6 +199,45 @@ test('merges nested collaborative settings through the public two-editor demo', 
   await expect(controls.getByText('Compact · 3 filters', { exact: true })).toBeVisible();
 });
 
+test('keeps threads in their room and clears the open draft without remounting the editors', async ({ page }, info) => {
+  await page.goto('/');
+  const panel = page.getByLabel('Shared review');
+  const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const right = page.getByRole('textbox', { name: 'Grace collaborative editor' });
+  const seeded = 'Could we make the provider boundary even clearer?';
+  await expect(panel).toContainText(seeded);
+  await left.evaluate(element => { (globalThis as any).__fountainRoomEditor = element; });
+  await panel.getByRole('button', { name: 'New comment', exact: true }).click();
+  await panel.getByRole('textbox', { name: 'New comment', exact: true }).fill('Unsubmitted launch draft');
+
+  await page.getByRole('button', { name: 'Switch both editors to Planning room' }).click();
+  await expect(panel).toContainText('0 threads · connected');
+  await expect(panel).not.toContainText(seeded);
+  await expect(panel.getByRole('textbox', { name: 'New comment', exact: true })).toHaveCount(0);
+  await expect(left.locator('[data-fountain-comment-thread]')).toHaveCount(0);
+  await expect(right.locator('[data-fountain-comment-thread]')).toHaveCount(0);
+
+  await panel.getByRole('button', { name: 'New comment', exact: true }).click();
+  await panel.getByLabel('Comment target').selectOption('document');
+  await panel.getByRole('textbox', { name: 'New comment', exact: true }).fill('Planning-only decision');
+  await panel.getByRole('button', { name: 'Create thread' }).click();
+  await expect(panel).toContainText('Planning-only decision');
+  await expect(page.locator('[data-collaboration-editor="grace"]')).toContainText('1 threads');
+  await panel.screenshot({ path: info.outputPath('planning-discussion.png') });
+
+  await page.getByRole('button', { name: 'Switch both editors to Launch room' }).click();
+  await expect(panel).toContainText(seeded);
+  await expect(panel).not.toContainText('Planning-only decision');
+  await expect(left.locator('[data-fountain-comment-thread="demo-thread-review"]').first()).toBeVisible();
+  await expect(right.locator('[data-fountain-comment-thread="demo-thread-review"]').first()).toBeVisible();
+  expect(await left.evaluate(element => element === (globalThis as any).__fountainRoomEditor)).toBe(true);
+  await panel.screenshot({ path: info.outputPath('launch-discussion.png') });
+
+  await page.getByRole('button', { name: 'Switch both editors to Planning room' }).click();
+  await expect(panel).toContainText('Planning-only decision');
+  await expect(panel).not.toContainText(seeded);
+});
+
 test('runs shared threaded comments through the public provider-neutral review panel', async ({ page }) => {
   await page.goto('/');
   const panel = page.getByLabel('Shared review');

@@ -300,6 +300,16 @@ client in the room must still use a compatible Fountain schema.
 as functions and composed commands. Destroying the editor unsubscribes state,
 disconnects the adapter, calls its optional `destroy`, and removes listeners.
 
+Use `replaceCommentsAdapter(editor, next, { connect: false })` when changing
+documents on a mounted editor. Replace the document before calling
+`connectComments(editor)` so the new threads load against the new document.
+If the document stays in place, omit `connect` to preserve the current
+connection intent. The handoff clears the old threads, selection, pending
+state, and queued anchor writes. A retired provider's callbacks and operation
+results cannot update the replacement. An old write already sent to storage
+may still finish there. If its success arrives after the handoff, the original
+caller receives an adapter-changed error.
+
 For product tests, use `InMemoryCommentsStore` to connect two editors without a
 network. Test server authorization separately, then exercise one real adapter
 route for initial load, create/reply, a conflict, reconnect, and deletion. The

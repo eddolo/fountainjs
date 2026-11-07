@@ -24,6 +24,7 @@ import {
   hoverCommentThreads,
   reattachCommentThread,
   reduceCommentOperation,
+  replaceCommentsAdapter,
   removeComment,
   removeCommentThread,
   selectCommentThread,
@@ -33,7 +34,9 @@ import {
   toggleCommentReaction,
   unselectCommentThread,
   updateComment,
+  type CommentAdapterResult,
   type CommentAuthor,
+  type CommentThread,
   type CommentsAdapter,
   type CommentsAdapterContext,
 } from '../src/comments';
@@ -241,6 +244,98 @@ describe('provider-independent threaded comments', () => {
     expect(canComment(editor, 'reply', created.id)).toBe(false);
     await expect(addComment(editor, created.id, { content: 'Denied.' })).rejects.toThrow('permission denied');
     expect(getCommentsState(editor)?.threads[0]?.comments).toHaveLength(1);
+  });
+
+  it.each(['resolve', 'reject'])('isolates late %s and snapshots from a replaced adapter', async (outcome) => {
+    let oldContext!: CommentsAdapterContext;
+    let oldThread!: CommentThread;
+    let finishOld!: () => void;
+    let finishNew!: () => void;
+    let finishConnect!: () => void;
+    const disconnect = vi.fn(async () => { throw new Error('Late disconnect failure'); });
+    const destroy = vi.fn();
+    const previous: CommentsAdapter = {
+      connect: (context) => {
+        oldContext = context;
+        return new Promise<void>((resolve) => { finishConnect = resolve; });
+      },
+      disconnect,
+      destroy,
+      apply: (operation) => new Promise<CommentAdapterResult>((resolve, reject) => {
+        if (operation.type !== 'create-thread') throw new Error('Unexpected operation');
+        oldThread = operation.thread;
+        finishOld = () => outcome === 'resolve' ? resolve({ thread: oldThread }) : reject(new Error('Old write failed'));
+      }),
+    };
+    const next: CommentsAdapter = {
+      connect: (context) => context.replaceThreads([]),
+      apply: (operation) => new Promise<CommentAdapterResult>((resolve) => {
+        finishNew = () => resolve(reduceCommentOperation([], operation));
+      }),
+    };
+    const kit = composeExtensions([CoreExtension, createCommentsExtension({
+      adapter: () => previous, user: { id: 'ada', name: 'Ada' },
+    })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: { type: 'doc', content: [paragraph('Old document')] } });
+    try {
+      const old = createCommentThread(editor, { type: 'document', threadId: 'same-id', content: 'Old room' });
+      const discarded = expect(old).rejects.toThrow(outcome === 'resolve' ? 'adapter changed' : 'Old write failed');
+      expect(getCommentsState(editor)?.pendingThreadIds).toEqual(['same-id']);
+
+      expect(replaceCommentsAdapter(editor, next, { connect: false })).toBe(true);
+      expect(getCommentsState(editor)).toMatchObject({ status: 'disconnected', threads: [], pendingThreadIds: [] });
+      editor.dispatch(editor.createTransaction().replace(0, 1, [editor.state.schema.nodeFromJSON(paragraph('New document'))]));
+      expect(connectComments(editor)).toBe(true);
+      const active = createCommentThread(editor, { type: 'document', threadId: 'same-id', content: 'New room' });
+
+      finishConnect();
+      oldContext.replaceThreads([oldThread]);
+      oldContext.setStatus('error', 'Old provider');
+      finishOld();
+      await discarded;
+      expect(disconnect).toHaveBeenCalledOnce();
+      expect(destroy).toHaveBeenCalledOnce();
+      expect(getCommentsState(editor)).toMatchObject({ status: 'connected', threads: [], pendingThreadIds: ['same-id'] });
+
+      finishNew();
+      await active;
+      expect(getCommentsState(editor)).toMatchObject({
+        status: 'connected', threads: [{ comments: [{ content: 'New room' }] }], pendingThreadIds: [],
+      });
+    } finally {
+      editor.destroy();
+    }
+  });
+
+  it('drops a delayed mapped-anchor receipt after switching stores', async () => {
+    const store = new InMemoryCommentsStore();
+    const backing = store.createAdapter();
+    let finishMapped: (() => void) | undefined;
+    const previous: CommentsAdapter = {
+      ...backing,
+      apply: (operation) => {
+        if (operation.type !== 'update-anchor') return backing.apply(operation);
+        const result = reduceCommentOperation(store.snapshot, operation);
+        return new Promise<CommentAdapterResult>(resolve => { finishMapped = () => resolve(result); });
+      },
+    };
+    const kit = composeExtensions([CoreExtension, createCommentsExtension({
+      adapter: () => previous, user: { id: 'ada', name: 'Ada' },
+    })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: { type: 'doc', content: [paragraph('Original')] } });
+    try {
+      expect(selectText(editor, [0, 0], 1, 4)).toBe(true);
+      await createCommentThread(editor, { content: 'Old text anchor' });
+      editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Prefix '));
+      expect(finishMapped).toBeTypeOf('function');
+      expect(replaceCommentsAdapter(editor, new InMemoryCommentsStore().createAdapter())).toBe(true);
+      finishMapped!();
+      await Promise.resolve();
+      expect(getCommentsState(editor)).toMatchObject({ status: 'connected', threads: [], pendingThreadIds: [] });
+      expect(store.snapshot).toHaveLength(1);
+    } finally {
+      editor.destroy();
+    }
   });
 
   it('contains adapter failures, validates hostile snapshots, and supports explicit lifecycle', async () => {

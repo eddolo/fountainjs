@@ -4,7 +4,7 @@ import {
   CoreExtension, canRedoCollaboration, canUndoCollaboration, composeExtensions, createEditor,
   defineExtension, getCollaborationState, replaceCollaborationAdapter, selectText, toggleQuote,
 } from 'fountainjs-editor';
-import { InMemoryCommentsStore, createCommentThread, createCommentsExtension, getCommentsState } from 'fountainjs-editor/comments';
+import { InMemoryCommentsStore, connectComments, createCommentThread, createCommentsExtension, getCommentsState, replaceCommentsAdapter } from 'fountainjs-editor/comments';
 import {
   createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter,
 } from 'fountainjs-editor/experimental/yjs-retained';
@@ -166,7 +166,7 @@ function createSession(room: DemoRoom) {
     awareness.setPaused(false);
   };
 
-  return { leftDocument, rightDocument, awareness, content, connectTransport, disconnectTransport, resume };
+  return { leftDocument, rightDocument, awareness, content, comments: new InMemoryCommentsStore(), connectTransport, disconnectTransport, resume };
 }
 
 function authorOptions(session: ReturnType<typeof createSession>, user: typeof ada | typeof grace) {
@@ -177,12 +177,11 @@ function authorOptions(session: ReturnType<typeof createSession>, user: typeof a
 export default function CollaborationDemo() {
   const room = useMemo(() => {
     const sessions = { launch: createSession('launch'), planning: createSession('planning') };
-    const comments = new InMemoryCommentsStore();
     const kit = (author: typeof ada | typeof grace) => composeExtensions([
       CoreExtension,
       collaborationSettingsExtension,
       createRetainedYjsCollaborationExtension(authorOptions(sessions.launch, author)),
-      createCommentsExtension({ adapter: () => comments.createAdapter(), user: { id: author.id, name: author.name } }),
+      createCommentsExtension({ adapter: () => sessions.launch.comments.createAdapter(), user: { id: author.id, name: author.name } }),
     ]);
     return { sessions, leftKit: kit(ada), rightKit: kit(grace) };
   }, []);
@@ -205,8 +204,12 @@ export default function CollaborationDemo() {
   const switchRoom = () => {
     const nextRoom = activeRoom === 'launch' ? 'planning' : 'launch';
     const session = room.sessions[nextRoom];
+    replaceCommentsAdapter(left, session.comments.createAdapter(), { connect: false });
+    replaceCommentsAdapter(right, session.comments.createAdapter(), { connect: false });
     const leftOpened = replaceCollaborationAdapter(left, new RetainedYjsCollaborationAdapter(authorOptions(session, ada)));
     const rightOpened = replaceCollaborationAdapter(right, new RetainedYjsCollaborationAdapter(authorOptions(session, grace)));
+    if (leftOpened) connectComments(left);
+    if (rightOpened) connectComments(right);
     if (leftOpened && rightOpened) setActiveRoom(nextRoom);
   };
 
@@ -305,10 +308,10 @@ export default function CollaborationDemo() {
         <div>
           <span>THREADED COMMENTS</span>
           <h3>Discussion is portable too.</h3>
-          <p>The document, comment store, and interface are separate modules. This demo shares the same thread across both editors; select content to add an inline or block thread, reply, react, resolve, archive, or reattach an orphan.</p>
+          <p>The document, comment store, and interface are separate modules. Each room shares its threads between both editors; select content to add an inline or block thread, reply, react, resolve, archive, or reattach an orphan.</p>
           <p>The included in-memory adapter powers this page. Production apps replace it with REST, a database, a CRDT, or another authenticated store—and enforce permissions there.</p>
         </div>
-        <FountainComments editor={left} title="Shared review" onError={(error) => console.error(error)} />
+        <FountainComments key={activeRoom} editor={left} title="Shared review" onError={(error) => console.error(error)} />
       </div>
       <div className="collaboration-demo__boundary">
         <code>fountainjs-editor/experimental/yjs-retained</code>

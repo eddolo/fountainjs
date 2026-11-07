@@ -201,8 +201,8 @@ export type CommentEvent =
 
 interface CommentsRuntime {
   readonly editor: Editor;
-  readonly adapter: CommentsAdapter;
-  readonly context: CommentsAdapterContext;
+  adapter: CommentsAdapter;
+  adapterEpoch: number;
   readonly user: CommentAuthor;
   readonly permissions: CommentPermissions;
   readonly idFactory: NonNullable<CommentsExtensionOptions['idFactory']>;
@@ -655,11 +655,19 @@ function emit(runtime: CommentsRuntime, event: CommentEvent): void {
   });
 }
 
+function hasAdapter(runtime: CommentsRuntime, epoch: number): boolean {
+  return !runtime.destroyed && runtime.adapterEpoch === epoch;
+}
+
 function contain(runtime: CommentsRuntime, operation: () => void | Promise<void>): void {
+  const epoch = runtime.adapterEpoch;
+  const failed = (error: unknown) => {
+    if (hasAdapter(runtime, epoch)) reportError(runtime, error);
+  };
   try {
     const result = operation();
-    if (result && typeof result.then === 'function') void result.catch((error) => reportError(runtime, error));
-  } catch (error) { reportError(runtime, error); }
+    if (result && typeof result.then === 'function') void result.catch(failed);
+  } catch (error) { failed(error); }
 }
 
 function reportError(runtime: CommentsRuntime, error: unknown, recoverable = true): CommentsError {
@@ -770,23 +778,32 @@ async function runOperation(
   thread?: CommentThread,
   comment?: CommentMessage,
 ): Promise<CommentThread | undefined> {
+  const { adapter, adapterEpoch } = runtime;
   if (!allowed(runtime, action, thread, comment)) throw new Error(`Comment permission denied: ${action}.`);
   const threadId = operationThreadId(operation);
+  const requireAdapter = () => {
+    if (!hasAdapter(runtime, adapterEpoch)) throw new Error('Comments adapter changed.');
+  };
+  requireAdapter();
   withPending(runtime, threadId, true);
   try {
-    const result = await runtime.adapter.apply(operation);
+    requireAdapter();
+    const result = await adapter.apply(operation);
+    requireAdapter();
     const next = applyAdapterResult(runtime, result);
+    requireAdapter();
     if (runtime.connected && commentsKey.get(runtime.editor.state)?.status === 'error') {
       setStatus(runtime, 'connected');
+      requireAdapter();
     }
     if (operation.type === 'create-thread' && next) emit(runtime, { type: 'thread-created', thread: next });
     else if (operation.type === 'remove-thread') emit(runtime, { type: 'thread-removed', threadId });
     else if (next) emit(runtime, { type: 'thread-updated', thread: next, operation: operation.type });
     return next;
   } catch (error) {
-    reportError(runtime, error);
+    if (hasAdapter(runtime, adapterEpoch)) reportError(runtime, error);
     throw error;
-  } finally { withPending(runtime, threadId, false); }
+  } finally { if (hasAdapter(runtime, adapterEpoch)) withPending(runtime, threadId, false); }
 }
 
 function operationBase(runtime: CommentsRuntime): CommentOperationBase {
@@ -999,42 +1016,55 @@ export function hoverCommentThreads(editor: Editor, threadIds: readonly string[]
   return changed;
 }
 
+function sendMappedAnchor(runtime: CommentsRuntime, threadId: string, anchor: CommentAnchor): void {
+  const { adapter, adapterEpoch } = runtime;
+  contain(runtime, async () => {
+    const operation: CommentOperation = Object.freeze({
+      ...operationBase(runtime), type: 'update-anchor', threadId, anchor, reason: 'mapped',
+    });
+    if (!hasAdapter(runtime, adapterEpoch)) return;
+    const result = await adapter.apply(operation);
+    if (hasAdapter(runtime, adapterEpoch)) applyAdapterResult(runtime, result);
+  });
+}
+
 function start(runtime: CommentsRuntime, reconnecting = false): boolean {
   if (runtime.destroyed || runtime.connected) return false;
   runtime.connected = true;
   const generation = ++runtime.generation;
+  const adapter = runtime.adapter;
+  const current = () => !runtime.destroyed && runtime.connected && runtime.generation === generation;
   setStatus(runtime, reconnecting ? 'reconnecting' : 'connecting');
+  if (!current()) return false;
+  const failed = (error: unknown) => {
+    if (!current()) return;
+    runtime.connected = false;
+    contain(runtime, () => adapter.disconnect?.());
+    if (!runtime.destroyed && runtime.generation === generation) reportError(runtime, error);
+  };
   try {
-    const result = runtime.adapter.connect(runtime.context);
+    const result = adapter.connect({
+      editor: runtime.editor,
+      replaceThreads: (threads) => { if (current()) replaceThreads(runtime, threads); },
+      setStatus: (status, error) => { if (current()) setStatus(runtime, status, error); },
+    });
     const finish = () => {
-      if (runtime.destroyed || !runtime.connected || runtime.generation !== generation) return;
+      if (!current()) return;
       setStatus(runtime, 'connected');
+      if (!current()) return;
       const queued = [...runtime.queuedAnchors.entries()];
       runtime.queuedAnchors.clear();
-      queued.forEach(([threadId, anchor]) => {
+      for (const [threadId, anchor] of queued) {
+        if (!current()) break;
         const thread = commentsKey.get(runtime.editor.state)?.threads.find((candidate) => candidate.id === threadId);
-        if (!thread) return;
-        contain(runtime, async () => {
-          const operation: CommentOperation = Object.freeze({
-            ...operationBase(runtime), type: 'update-anchor', threadId, anchor, reason: 'mapped',
-          });
-          applyAdapterResult(runtime, await runtime.adapter.apply(operation));
-        });
-      });
+        if (thread) sendMappedAnchor(runtime, threadId, anchor);
+      }
     };
-    if (result && typeof result.then === 'function') {
-      void result.then(finish).catch((error) => {
-        if (runtime.generation !== generation) return;
-        runtime.connected = false;
-        contain(runtime, () => runtime.adapter.disconnect?.());
-        reportError(runtime, error);
-      });
-    } else finish();
+    if (result && typeof result.then === 'function') void result.then(finish).catch(failed);
+    else finish();
     return true;
   } catch (error) {
-    runtime.connected = false;
-    contain(runtime, () => runtime.adapter.disconnect?.());
-    reportError(runtime, error);
+    failed(error);
     return false;
   }
 }
@@ -1065,26 +1095,52 @@ export function reconnectComments(editor: Editor): boolean {
   return start(runtime, true);
 }
 
+/** Change comment stores on a mounted editor. Pass connect: false before replacing its document. */
+export function replaceCommentsAdapter(
+  editor: Editor,
+  adapter: CommentsAdapter,
+  options: { readonly connect?: boolean } = {},
+): boolean {
+  const runtime = runtimes.get(editor);
+  if (!runtime || runtime.destroyed || !adapter || typeof adapter.connect !== 'function' || typeof adapter.apply !== 'function') return false;
+  if (adapter === runtime.adapter) return options.connect === true && start(runtime);
+
+  const previous = runtime.adapter;
+  const wasConnected = runtime.connected;
+  runtime.connected = false;
+  runtime.generation += 1;
+  const epoch = ++runtime.adapterEpoch;
+  runtime.adapter = adapter;
+  runtime.queuedAnchors.clear();
+  runtime.anchorSnapshot = new Map();
+  // Old callbacks have lost authority before either provider sees the switch.
+  try {
+    if (wasConnected) void previous.disconnect?.()?.catch(() => undefined);
+  } catch { /* Retired provider errors do not belong to the replacement. */ }
+  try { previous.destroy?.(); } catch { /* Retired provider errors do not belong to the replacement. */ }
+  if (!hasAdapter(runtime, epoch)) return false;
+  setState(editor, stateSnapshot());
+  if (!hasAdapter(runtime, epoch)) return false;
+  return (options.connect ?? wasConnected) ? start(runtime) : true;
+}
+
 function mappedAnchorChanges(runtime: CommentsRuntime, state: CommentsState, transaction: Transaction): void {
   const previous = runtime.anchorSnapshot;
   runtime.anchorSnapshot = new Map(state.threads.map((thread) => [thread.id, thread.anchor]));
   if (!transaction.docChanged || transaction.getMeta(STATE_META)) return;
+  const epoch = runtime.adapterEpoch;
   state.threads.forEach((thread) => {
+    if (!hasAdapter(runtime, epoch)) return;
     const before = previous.get(thread.id);
     if (!before || sameAnchor(before, thread.anchor)) return;
     if (before.status !== thread.anchor.status) {
       emit(runtime, { type: thread.anchor.status === 'orphaned' ? 'anchor-orphaned' : 'anchor-restored', thread });
     }
-    if (transaction.getMeta('fountain$collaborationRemote') === true) return;
+    if (!hasAdapter(runtime, epoch) || transaction.getMeta('fountain$collaborationRemote') === true) return;
     runtime.queuedAnchors.set(thread.id, thread.anchor);
     if (!runtime.connected) return;
     runtime.queuedAnchors.delete(thread.id);
-    contain(runtime, async () => {
-      const operation: CommentOperation = Object.freeze({
-        ...operationBase(runtime), type: 'update-anchor', threadId: thread.id, anchor: thread.anchor, reason: 'mapped',
-      });
-      applyAdapterResult(runtime, await runtime.adapter.apply(operation));
-    });
+    sendMappedAnchor(runtime, thread.id, thread.anchor);
   });
 }
 
@@ -1131,16 +1187,10 @@ export function createCommentsExtension(options: CommentsExtensionOptions): Foun
           }) }));
           return;
         }
-        let runtime: CommentsRuntime;
-        const context: CommentsAdapterContext = {
-          editor,
-          replaceThreads: (threads) => replaceThreads(runtime, threads),
-          setStatus: (status, error) => setStatus(runtime, status, error),
-        };
-        runtime = {
+        const runtime: CommentsRuntime = {
           editor,
           adapter,
-          context,
+          adapterEpoch: 0,
           user,
           permissions: options.permissions ?? {},
           idFactory,
@@ -1178,6 +1228,7 @@ export function createCommentsExtension(options: CommentsExtensionOptions): Foun
       connectComments,
       disconnectComments,
       reconnectComments,
+      replaceCommentsAdapter,
       selectCommentThread,
       unselectCommentThread,
     },

@@ -39,8 +39,9 @@ Select **Pause document sync**, type into a paragraph as Ada, click the same
 paragraph in Grace's editor, and choose **Toggle quote**. Select **Resume
 document sync** to merge both changes. Ada's Undo removes her typing while
 Grace's quote stays in both editors. The pause control also hides peer cursors
-and requires a merge before switching rooms. The threaded comments panel uses
-its own in-memory store.
+and requires a merge before switching rooms. Each room has a separate
+in-memory comment store. Switching closes an unsubmitted comment draft.
+Posted threads and anchors return when their room is reopened.
 
 The production website build passed 15 recorded desktop workflows across
 Chromium, Firefox and WebKit, plus two mobile-emulation merge workflows. The
@@ -48,6 +49,12 @@ desktop suite checks switching, cursor overlays, author history, concurrent
 settings changes, and comments. The mobile checks verify the headline phrase
 fits on one line and the page has no horizontal overflow. A narrow Safari
 capture and a desktop capture were visually inspected.
+
+The room comment workflow passes in Chromium, Firefox, WebKit, and both
+mobile emulations. It restores posted threads and inline anchors in both
+mounted editors and clears the open draft. The Launch and Planning panels
+were inspected in WebKit. The comments source suite verifies late snapshots,
+writes, and mapped-anchor results from a retired provider.
 
 The demo imports its chunk before mounting the editor hooks. A React Suspense
 mount during development exposed a separate lifecycle problem where the hook's
