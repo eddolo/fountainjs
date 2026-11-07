@@ -1,4 +1,5 @@
-import type { Attributes, Node, Schema } from '../schema';
+import { readImageCaptionAttributes, readImageParagraphAttributes } from '../image-caption';
+import type { Attributes, Mark, Node, Schema } from '../schema';
 import { isSafeURL } from '../url';
 
 interface MediaChild {
@@ -15,6 +16,12 @@ interface MediaElement extends MediaChild {
   querySelectorAll(selector: string): ArrayLike<MediaChild>;
 }
 
+interface FigureElement extends MediaElement {
+  readonly tagName: string;
+  readonly children: ArrayLike<unknown>;
+  matches(selector: string): boolean;
+}
+
 function mediaSize(value: string, fallback: string): string {
   const normalized = value.trim();
   if (/^(?:auto|\d+(?:\.\d+)?(?:px|%|rem|em|vw|vh))$/.test(normalized)) return normalized;
@@ -27,14 +34,14 @@ function mediaAlignment(container?: MediaElement): string {
   return ['left', 'center', 'right'].includes(align) ? align : 'center';
 }
 
-export function htmlImageDimensions(image: MediaElement, block: boolean, container?: MediaElement) {
+function htmlImageDimensions(image: MediaElement, block: boolean, container?: MediaElement) {
   return {
     width: mediaSize(container?.style.width || container?.style.maxWidth || image.style.width || image.getAttribute('width') || '', block ? '100%' : 'auto'),
     height: mediaSize(image.style.height || image.getAttribute('height') || '', block ? 'auto' : '1em'),
   };
 }
 
-export function htmlImageAttributes(image: MediaElement, container?: MediaElement): Attributes {
+function htmlImageAttributes(image: MediaElement, container?: MediaElement): Attributes {
   const decoding = image.getAttribute('decoding') ?? '';
   return {
     alt: image.getAttribute('alt') ?? '',
@@ -45,6 +52,54 @@ export function htmlImageAttributes(image: MediaElement, container?: MediaElemen
     loading: image.getAttribute('loading') === 'eager' ? 'eager' : 'lazy',
     decoding: ['auto', 'sync', 'async'].includes(decoding) ? decoding : 'async',
   };
+}
+
+export function projectImage<E extends FigureElement>(
+  image: E, schema: Schema, type: 'image_super' | 'inline_image',
+  inlineCaption: (caption: E) => Node[], container?: E, marks: readonly Mark[] = [], rejectURL?: () => void,
+): Node | null {
+  const src = image.getAttribute('src') ?? '';
+  if (!isSafeURL(src, { allowDataImage: true })) {
+    rejectURL?.();
+    return null;
+  }
+  if (!schema.nodes[type]) return null;
+  const block = type === 'image_super';
+  const dimensions = htmlImageDimensions(image, block, container);
+  const caption = block ? container?.querySelector(':scope > figcaption') as E | null | undefined : null;
+  const rich = caption && (container?.getAttribute('data-fountain-rich-caption') === 'true' || caption.children.length > 0);
+  const content = rich ? inlineCaption(caption) : [];
+  try {
+    return schema.node(type, {
+      src,
+      ...htmlImageAttributes(image, container),
+      ...dimensions,
+      ...(block ? { caption: rich ? '' : caption?.textContent ?? '', ...readImageCaptionAttributes(caption ?? null), ...readImageParagraphAttributes(image) } : {}),
+    }, content, undefined, marks);
+  } catch { return null; }
+}
+
+export function projectMediaFigure<E extends FigureElement>(
+  figure: E, children: readonly E[], hasExtraText: boolean, schema: Schema, image: (element: E) => Node | null,
+): Node | null {
+  if (hasExtraText) return null;
+  const kind = figure.getAttribute('data-fountain-media');
+  const playback = kind === 'audio' || kind === 'video';
+  const imageFigure = !playback && kind !== 'file' && kind !== 'embed';
+  const selector = playback ? kind : kind === 'file' ? 'a[data-fountain-file]' : kind === 'embed' ? 'iframe' : 'img';
+  const media = children.filter(child => child.matches(selector));
+  if (media.length !== 1) return null;
+  const element = media[0];
+  const captions = children.filter(child => child.tagName.toLowerCase() === 'figcaption');
+  if (captions.length > 1 || !imageFigure && captions[0]?.children.length) return null;
+  const previews = kind === 'file' ? children.filter(child => child.matches('img.fountain-file__preview')
+    && child.getAttribute('src') === element.getAttribute('href')
+    && child.getAttribute('alt') === `Preview of ${element.getAttribute('data-name')}`) : [];
+  if (previews.length > 1 || children.some(child => child !== element && child !== captions[0] && child !== previews[0])) return null;
+  if (playback) return playbackNode(element, schema, kind, figure);
+  if (kind === 'file') return fileNode(element, schema, figure);
+  if (kind === 'embed') return embedNode(element, schema, figure);
+  return image(element);
 }
 
 function mediaTracks(element: MediaElement): readonly Record<string, unknown>[] {

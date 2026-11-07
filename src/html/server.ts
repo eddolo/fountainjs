@@ -1,9 +1,5 @@
 import { readListLayout } from '../core/list-layout';
-import { readTableCellWidths as tableCellWidths } from '../core/table-column-width';
 import { compile as compileSelector, selectAll } from 'css-select';
-import { readImageCaptionAttributes, readImageParagraphAttributes } from '../core/image-caption';
-import { readTableLayout, readTableRow } from '../core/table-layout';
-import { readTableAppearance } from '../core/table-appearance';
 import { parse as parseDocument, parseFragment, type ParserError } from 'parse5';
 import {
   adapter as htmlparser2Adapter,
@@ -26,15 +22,14 @@ import { matchesContentExpression } from '../core/schema/content-expression';
 import { isSafeURL } from '../core/url';
 import { importedHTMLLinkURL } from '../core/importers/html-link-url';
 import { addMark, addSchemaMark, colorValue, textNodes, unicodeEmojiName, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from '../core/importers/html-marks';
-import { embedNode, fileNode, htmlImageAttributes, htmlImageDimensions, playbackNode } from '../core/importers/html-media';
+import { embedNode, fileNode, playbackNode, projectImage, projectMediaFigure } from '../core/importers/html-media';
 import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource, renderedLinkDestination } from '../core/link-destination';
 import { importHTMLComment } from '../core/html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow';
-import { tableBackground } from '../core/table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../core/explicit-emphasis';
 import { readParagraphLayout } from '../core/paragraph-layout';
 import { readTextAlignmentAttributes, readTextDirection, readContainerDirection, readSharedDirectionSource } from '../core/text-direction';
-import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from '../core/importers/html-table';
+import { projectHTMLTable } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
 import { preformattedContent } from '../core/importers/html-preformatted';
 import { importDefinitionList } from '../core/importers/html-definition-list';
@@ -49,6 +44,12 @@ type SelectorCache = Map<string, (node: RawNode) => boolean>;
 type RawParent = Htmlparser2TreeAdapterMap['parentNode'];
 type RawElement = Htmlparser2TreeAdapterMap['element'];
 type ParseRule = HTMLParseRule | DOMParseRule;
+
+const TABLE_PROJECTION_MESSAGES = {
+  'row-order': 'Table rows were placed in native header/body/footer order. Source row-group order and repeat-on-print behavior are not retained.',
+  'zero-rowspan': 'Zero rowspan was resolved to the remaining source row-group rows. The imported span is explicit, not a live row-group rule.',
+  'span-limit': 'Table spans above the supported 100-row/column limit were clamped; table geometry may differ.',
+};
 
 const DEFAULT_LIMITS = Object.freeze({
   maxInputBytes: 1_048_576,
@@ -936,28 +937,12 @@ function imageNode(
   container?: SourceElement,
   marks: readonly Mark[] = [],
 ): FountainNode | null {
-  const src = image.getAttribute('src') ?? '';
-  if (!isSafeURL(src, { allowDataImage: true })) {
+  return projectImage(image, schema, type, caption => inlineChildren(caption, schema, [], context), container, marks, () => {
     reportOnce(context, {
       code: 'rejected-url',
       message: 'Images with missing or unsafe source URLs were omitted.',
     });
-    return null;
-  }
-  if (!schema.nodes[type]) return null;
-  const blockImage = type === 'image_super';
-  const dimensions = htmlImageDimensions(image, blockImage, container);
-  const captionElement = blockImage ? container?.querySelector(':scope > figcaption') ?? null : null;
-  const richCaption = Boolean(captionElement && (container?.getAttribute('data-fountain-rich-caption') === 'true' || captionElement.children.length));
-  const caption = richCaption && captionElement ? inlineChildren(captionElement, schema, [], context) : [];
-  try {
-    return schema.node(type, {
-      src,
-      ...htmlImageAttributes(image, container),
-      ...dimensions,
-      ...(blockImage ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
-    }, caption, undefined, marks);
-  } catch { return null; }
+  });
 }
 
 function alignment(element: SourceElement, direction: Readonly<Attributes>): Attributes {
@@ -1260,46 +1245,13 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
     return [reportStructuralDirection(element, schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items), context, schema)];
   }
   if (tag === 'figure') {
-    const mediaType = element.getAttribute('data-fountain-media');
-    const selector = mediaType === 'audio' || mediaType === 'video' ? mediaType
-      : mediaType === 'file' ? 'a[data-fountain-file]' : mediaType === 'embed' ? 'iframe' : 'img';
     const children = element.childNodes;
-    const media = children.filter((child): child is SourceElement => child.kind === 'element' && child.matches(selector));
-    const captions = children.filter((child): child is SourceElement => child.kind === 'element' && child.tagName === 'figcaption');
-    const previews = mediaType === 'file' ? children.filter((child): child is SourceElement => child.kind === 'element'
-      && child.matches('img.fountain-file__preview') && child.getAttribute('src') === media[0]?.getAttribute('href')
-      && child.getAttribute('alt') === `Preview of ${media[0]?.getAttribute('data-name')}`) : [];
-    const fallback = () => {
-      reportOnce(context, { code: 'unmapped-block-wrapper', message: 'A figure could not be represented as one media node with its supported caption. Its supported descendants were imported in order; figure grouping and wrapper attributes were not preserved.' });
-      return blockChildren(element, schema, context);
-    };
-    const imageFigure = !['audio', 'video', 'file', 'embed'].includes(mediaType ?? '');
-    // Images own editable inline caption content. Other media nodes remain
-    // atomic and may consume only a plain caption string.
-    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || (!imageFigure && captions.some(caption => caption.children.length))
-      || children.some(child => child.kind === 'text' ? /[^\t\n\f\r ]/u.test(child.textContent) : child.kind === 'element' && child !== media[0] && !captions.includes(child) && !previews.includes(child))) return fallback();
-    if (mediaType === 'audio') {
-      const media = element.querySelector(':scope > audio');
-      const node = media ? playbackNode(media, schema, 'audio', element) : null;
-      return node ? [node] : fallback();
-    }
-    if (mediaType === 'video') {
-      const media = element.querySelector(':scope > video');
-      const node = media ? playbackNode(media, schema, 'video', element) : null;
-      return node ? [node] : fallback();
-    }
-    if (mediaType === 'file') {
-      const link = element.querySelector(':scope > a[data-fountain-file]');
-      const node = link ? fileNode(link, schema, element) : null;
-      return node ? [node] : fallback();
-    }
-    if (mediaType === 'embed') {
-      const frame = element.querySelector(':scope > iframe');
-      const node = frame ? embedNode(frame, schema, element) : null;
-      return node ? [node] : fallback();
-    }
-    const image = imageNode(media[0]!, schema, 'image_super', context, element);
-    return image ? [image] : fallback();
+    const hasExtraText = children.some(child => child.kind === 'text' && /[^\t\n\f\r ]/u.test(child.textContent));
+    const node = projectMediaFigure(element, children.filter(child => child.kind === 'element'), hasExtraText, schema,
+      image => imageNode(image, schema, 'image_super', context, element));
+    if (node) return [node];
+    reportOnce(context, { code: 'unmapped-block-wrapper', message: 'A figure could not be represented as one media node with its supported caption. Its supported descendants were imported in order; figure grouping and wrapper attributes were not preserved.' });
+    return blockChildren(element, schema, context);
   }
   if (tag === 'table') {
     const captions = element.querySelectorAll(':scope > caption').flatMap(caption => {
@@ -1307,53 +1259,22 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       const blocks = blockChildren(caption, schema, context);
       return blocks.length ? blocks : [paragraph(caption, schema, context)];
     });
-    const sourceRows = element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr');
-    const remaining = remainingHTMLTableRows(sourceRows, row => row.raw.parent);
-    const orderedRows = orderedHTMLTableRows(sourceRows, row => row.raw.parent && 'name' in row.raw.parent ? row.raw.parent.name : '');
-    if (orderedRows.some((row, index) => row !== sourceRows[index])) reportOnce(context, {
-      code: 'block-html-projection',
-      message: 'Table rows were placed in native header/body/footer order. Source row-group order and repeat-on-print behavior are not retained.',
+    const table = projectHTMLTable(element, schema, {
+      rows: element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'),
+      groupKey: row => row.raw.parent,
+      groupName: row => row.raw.parent && 'name' in row.raw.parent ? row.raw.parent.name : '',
+      cells: row => row.children,
+      blocks: (cell, attrs) => blockChildren(cell, schema, context, attrs),
+      paragraph: cell => paragraph(cell, schema, context, true),
+      inheritRowMarks: (row, node) => {
+        const marked = inheritElementMarks(row, [node], schema, context);
+        const parent = row.raw.parent;
+        return parent && parent !== element.raw && htmlparser2Adapter.isElementNode(parent)
+          ? inheritElementMarks(row.parentElement!, marked, schema, context)[0] : marked[0];
+      },
+      report: issue => reportOnce(context, { code: 'block-html-projection', message: TABLE_PROJECTION_MESSAGES[issue] }),
     });
-    const rows = orderedRows.map((row) => {
-      const node = schema.node(
-      'table_row',
-      { ...readTableRow(row), ...readContainerDirection(row, schema) },
-      row.children.filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
-        const columnSpan = htmlTableSpan(cell.getAttribute('colspan'));
-        const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
-        const resolvedRows = rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1;
-        const colspan = Math.max(1, Math.min(100, columnSpan ?? 1));
-        const rowspan = Math.max(1, Math.min(100, resolvedRows));
-        if (rowSpan === 0) reportOnce(context, {
-          code: 'block-html-projection',
-          message: 'Zero rowspan was resolved to the remaining source row-group rows. The imported span is explicit, not a live row-group rule.',
-        });
-        if (resolvedRows > 100 || (columnSpan ?? 1) > 100) reportOnce(context, {
-          code: 'block-html-projection', message: 'Table spans above the supported 100-row/column limit were clamped; table geometry may differ.',
-        });
-        const dir = readTextDirection(cell, schema, true);
-        const content = blockChildren(cell, schema, context, { ...alignment(cell, dir), ...dir });
-        return schema.node(
-          cell.tagName === 'th' ? 'table_header' : 'table_cell',
-          {
-            colspan,
-            rowspan,
-            colwidth: tableCellWidths(cell, colspan),
-            background: tableBackground(cell.style.backgroundColor),
-            ...readTableAppearance(cell, true),
-            ...readContainerDirection(cell, schema),
-            ...(cell.tagName === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
-          },
-          content.length ? content : [paragraph(cell, schema, context, true)],
-        );
-      }),
-      );
-      const marked = inheritElementMarks(row, [node], schema, context);
-      const parent = row.raw.parent;
-      return parent && parent !== element.raw && htmlparser2Adapter.isElementNode(parent)
-        ? inheritElementMarks(row.parentElement!, marked, schema, context)[0] : marked[0];
-    });
-    return [...captions, ...rows.length ? [reportStructuralDirection(element, schema.node('table', { ...readTableLayout(element), ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows), context, schema)] : []];
+    return table ? [...captions, reportStructuralDirection(element, table, context, schema)] : captions;
   }
   if (tag === 'img') {
     const image = imageNode(element, schema, 'image_super', context);

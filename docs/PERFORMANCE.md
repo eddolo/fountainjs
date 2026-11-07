@@ -908,6 +908,25 @@ passed. Browser review included the pasted research note and the reopened
 reader after an HTML-to-Markdown handoff. The package, headless, Node/workerd,
 Markdown conformance and performance checks also passed.
 
+### Shared figure and table conversion
+
+Browser paste and headless HTML import now share figure recognition, rich
+image captions, and table row and cell projection. Each importer still uses
+its own parser, and headless import still reports when the schema cannot keep
+a figure wrapper, caption association, row order or span. Native cell
+direction, widths, marks and zero-rowspan grouping remain covered.
+
+The raw build changed from 1,545.0 to 1,543.0 KiB for CommonJS and from
+1,548.8 to 1,546.7 KiB for ESM. The CommonJS aggregate still exceeds its
+limit by 134.2 KiB. The limit remains 1,408.75 KiB.
+
+The focused source suite passed 176 cases. Fifteen recorded headless
+Chromium, Firefox and WebKit workflows passed, including native rich paste,
+caption and figure conversion, and a downloaded table reopened in the reader.
+The Firefox reader capture and a frame from the Chromium figure-conversion
+recording were reviewed. The build, declaration, package, headless, Node,
+workerd, Markdown conformance and performance checks passed.
+
 ## Why small edits stay local
 
 - Schema validation memoizes successfully validated immutable subtrees in a

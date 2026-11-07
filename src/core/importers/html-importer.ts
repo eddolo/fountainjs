@@ -1,5 +1,4 @@
 import { readListLayout } from '../list-layout';
-import { readTableCellWidths as tableCellWidths } from '../table-column-width';
 import {
   Mark,
   Node as FountainNode,
@@ -14,19 +13,15 @@ import { matchesContentExpression } from '../schema/content-expression';
 import { isSafeURL } from '../url';
 import { importedHTMLLinkURL } from './html-link-url';
 import { addMark, addSchemaMark, colorValue, textNodes, unicodeEmojiName, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from './html-marks';
-import { embedNode, fileNode, htmlImageAttributes, htmlImageDimensions, playbackNode } from './html-media';
+import { embedNode, fileNode, playbackNode, projectImage, projectMediaFigure } from './html-media';
 import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource } from '../link-destination';
 import { importHTMLComment } from '../html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
-import { tableBackground } from '../table-background';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
 import { readParagraphLayout } from '../paragraph-layout';
 import { preformattedContent } from './html-preformatted';
 import { readTextAlignmentAttributes, readTextDirection, readContainerDirection } from '../text-direction';
-import { readImageCaptionAttributes, readImageParagraphAttributes } from '../image-caption';
-import { readTableLayout, readTableRow } from '../table-layout';
-import { readTableAppearance } from '../table-appearance';
-import { htmlTableSpan, orderedHTMLTableRows, remainingHTMLTableRows } from './html-table';
+import { projectHTMLTable } from './html-table';
 import { htmlOrderedListStart } from './html-list';
 import { importDefinitionList } from './html-definition-list';
 import { parseMathExpressionJSON } from '../math-expression';
@@ -290,27 +285,13 @@ function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[]
 }
 
 function imageNode(
-  image: HTMLImageElement,
+  image: HTMLElement,
   schema: Schema,
   type: 'image_super' | 'inline_image',
   container?: HTMLElement,
   marks: readonly Mark[] = [],
 ): FountainNode | null {
-  const src = image.getAttribute('src') ?? '';
-  if (!isSafeURL(src, { allowDataImage: true }) || !schema.nodes[type]) return null;
-  const block = type === 'image_super';
-  const dimensions = htmlImageDimensions(image, block, container);
-  const captionElement = block ? container?.querySelector<HTMLElement>(':scope > figcaption') ?? null : null;
-  const richCaption = Boolean(captionElement && (container?.dataset.fountainRichCaption === 'true' || captionElement.children.length));
-  const caption = richCaption && captionElement ? inlineChildren(captionElement, schema) : [];
-  try {
-    return schema.node(type, {
-      src,
-      ...htmlImageAttributes(image, container),
-      ...dimensions,
-      ...(block ? { caption: richCaption ? '' : captionElement?.textContent ?? '', ...readImageCaptionAttributes(captionElement), ...readImageParagraphAttributes(image) } : {}),
-    }, caption, undefined, marks);
-  } catch { return null; }
+  return projectImage(image, schema, type, caption => inlineChildren(caption, schema), container, marks);
 }
 
 function alignment(element: Element, direction: Readonly<Attributes>): Attributes {
@@ -494,77 +475,30 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
     return [schema.node(listType, { ...readContainerDirection(element, schema), ...(!isTask && schema.nodes[listType]?.spec.attrs?.layout ? readListLayout(element) : {}), ...(tag === 'ol' ? { start: start >= 0 ? start : 1 } : {}) }, items)];
   }
   if (tag === 'figure') {
-    const mediaType = element.getAttribute('data-fountain-media');
-    const selector = mediaType === 'audio' || mediaType === 'video' ? mediaType
-      : mediaType === 'file' ? 'a[data-fountain-file]' : mediaType === 'embed' ? 'iframe' : 'img';
-    const media = Array.from(element.children).filter(child => child.matches(selector));
-    const captions = Array.from(element.children).filter(child => child.tagName.toLowerCase() === 'figcaption');
-    const previews = mediaType === 'file' ? Array.from(element.children).filter(child => child.matches('img.fountain-file__preview')
-      && child.getAttribute('src') === media[0]?.getAttribute('href')
-      && child.getAttribute('alt') === `Preview of ${media[0]?.getAttribute('data-name')}`) : [];
-    const fallback = () => blockChildren(element as HTMLElement, schema);
-    const imageFigure = !['audio', 'video', 'file', 'embed'].includes(mediaType ?? '');
-    // Images own editable inline caption content. Other media nodes remain
-    // atomic and may consume only a plain caption string.
-    if (media.length !== 1 || captions.length > 1 || previews.length > 1 || (!imageFigure && captions.some(caption => caption.children.length))
-      || Array.from(element.childNodes).some(child => child.nodeType === 3 ? /[^\t\n\f\r ]/u.test(child.textContent ?? '') : child.nodeType === 1 && child !== media[0] && !captions.includes(child as Element) && !previews.includes(child as Element))) return fallback();
-    if (mediaType === 'audio') {
-      const media = element.querySelector<HTMLAudioElement>(':scope > audio');
-      const node = media ? playbackNode(media, schema, 'audio', element as HTMLElement) : null;
-      return node ? [node] : fallback();
-    }
-    if (mediaType === 'video') {
-      const media = element.querySelector<HTMLVideoElement>(':scope > video');
-      const node = media ? playbackNode(media, schema, 'video', element as HTMLElement) : null;
-      return node ? [node] : fallback();
-    }
-    if (mediaType === 'file') {
-      const link = element.querySelector<HTMLAnchorElement>(':scope > a[data-fountain-file]');
-      const node = link ? fileNode(link, schema, element as HTMLElement) : null;
-      return node ? [node] : fallback();
-    }
-    if (mediaType === 'embed') {
-      const frame = element.querySelector<HTMLIFrameElement>(':scope > iframe');
-      const node = frame ? embedNode(frame, schema, element as HTMLElement) : null;
-      return node ? [node] : fallback();
-    }
-    const image = imageNode(media[0] as HTMLImageElement, schema, 'image_super', element as HTMLElement);
-    return image ? [image] : fallback();
+    const figure = element as HTMLElement;
+    const hasExtraText = Array.from(figure.childNodes).some(child => child.nodeType === 3 && /[^\t\n\f\r ]/u.test(child.textContent ?? ''));
+    const node = projectMediaFigure(figure, Array.from(figure.children) as HTMLElement[], hasExtraText, schema,
+      image => imageNode(image, schema, 'image_super', figure));
+    return node ? [node] : blockChildren(figure, schema);
   }
   if (tag === 'table') {
     const captions = Array.from(element.querySelectorAll(':scope > caption')).flatMap(caption => {
       const blocks = blockChildren(caption as HTMLElement, schema);
       return blocks.length ? blocks : [paragraph(caption, schema)];
     });
-    const sourceRows = Array.from(element.querySelectorAll(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr'));
-    const remaining = remainingHTMLTableRows(sourceRows, row => row.parentElement);
-    const rows = orderedHTMLTableRows(sourceRows, row => row.parentElement?.tagName ?? '').map((row) => {
-      const node = schema.node('table_row', { ...readTableRow(row), ...readContainerDirection(row, schema) },
-      Array.from(row.children).filter((cell) => /^(td|th)$/i.test(cell.tagName)).map((cell) => {
-        const colspan = Math.max(1, Math.min(100, htmlTableSpan(cell.getAttribute('colspan')) ?? 1));
-        const rowSpan = htmlTableSpan(cell.getAttribute('rowspan'));
-        const rowspan = Math.max(1, Math.min(100, rowSpan === 0 ? remaining.get(row)! : rowSpan ?? 1));
-        const dir = readTextDirection(cell, schema, true);
-        const content = blockChildren(cell as HTMLElement, schema, { ...alignment(cell, dir), ...dir });
-        return schema.node(
-          cell.tagName.toLowerCase() === 'th' ? 'table_header' : 'table_cell',
-          {
-            colspan,
-            rowspan,
-            colwidth: tableCellWidths(cell, colspan),
-            background: tableBackground((cell as HTMLElement).style.backgroundColor),
-            ...readTableAppearance(cell, true),
-            ...readContainerDirection(cell, schema),
-            ...(cell.tagName.toLowerCase() === 'th' ? { scope: cell.getAttribute('scope') || 'col' } : {}),
-          },
-          content.length ? content : [paragraph(cell, schema, true)],
-        );
-      }),
-      );
-      const marked = inheritElementMarks(row, [node], schema);
-      return row.parentElement && row.parentElement !== element ? inheritElementMarks(row.parentElement, marked, schema)[0] : marked[0];
+    const table = projectHTMLTable(element as HTMLElement, schema, {
+      rows: Array.from(element.querySelectorAll<HTMLElement>(':scope > tbody > tr, :scope > thead > tr, :scope > tfoot > tr, :scope > tr')),
+      groupKey: row => row.parentElement,
+      groupName: row => row.parentElement?.tagName ?? '',
+      cells: row => Array.from(row.children) as HTMLElement[],
+      blocks: (cell, attrs) => blockChildren(cell, schema, attrs),
+      paragraph: cell => paragraph(cell, schema, true),
+      inheritRowMarks: (row, node) => {
+        const marked = inheritElementMarks(row, [node], schema);
+        return row.parentElement && row.parentElement !== element ? inheritElementMarks(row.parentElement, marked, schema)[0] : marked[0];
+      },
     });
-    return [...captions, ...rows.length ? [schema.node('table', { ...readTableLayout(element as HTMLElement), ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows)] : []];
+    return table ? [...captions, table] : captions;
   }
   if (tag === 'img') {
     const image = imageNode(element as HTMLImageElement, schema, 'image_super');
