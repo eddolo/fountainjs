@@ -40,8 +40,8 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks and the ESM aggregate pass. The CommonJS aggregate
-remains 134.2 KiB over its existing limit after sharing HTML figure and table
-conversion. [Package output audit](PERFORMANCE.md#shared-figure-and-table-conversion).
+remains 131.3 KiB over its existing limit after sharing more HTML conversion
+code. [Package output audit](PERFORMANCE.md#shared-inline-html-conversion).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested

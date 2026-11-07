@@ -927,6 +927,26 @@ The Firefox reader capture and a frame from the Chromium figure-conversion
 recording were reviewed. The build, declaration, package, headless, Node,
 workerd, Markdown conformance and performance checks passed.
 
+### Shared inline HTML conversion
+
+Browser and headless HTML import now use the same projection for formatting,
+link destination validation, LaTeX, mentions, and emoji. Each importer still
+owns its parser and custom rules. The server keeps its diagnostics for
+omitted anchors, invalid link metadata, normalized destinations, and
+rejected URLs. Markdown's protected inline atoms and fallback marks stay
+with the server import path.
+
+The raw aggregate fell from 1,543.0 to 1,540.1 KiB for CommonJS and from
+1,546.7 to 1,543.8 KiB for ESM. CommonJS remains 131.3 KiB over its existing
+limit. Both core entries and the ESM aggregate meet their existing limits.
+
+The focused source suite passed 286 cases. All 15 recorded Chromium,
+Firefox and WebKit workflows passed, covering native paste, safe and
+rejected links, edited and reopened HTML, and the headless LaTeX demo.
+The Chromium rejection report and reopened links were visually inspected.
+Package, public declaration, headless, Node, workerd, CommonMark and
+performance checks passed.
+
 ## Why small edits stay local
 
 - Schema validation memoizes successfully validated immutable subtrees in a

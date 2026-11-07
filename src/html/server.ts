@@ -19,11 +19,9 @@ import {
   type Schema,
 } from '../core/schema';
 import { matchesContentExpression } from '../core/schema/content-expression';
-import { isSafeURL } from '../core/url';
-import { importedHTMLLinkURL } from '../core/importers/html-link-url';
-import { addMark, addSchemaMark, colorValue, textNodes, unicodeEmojiName, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from '../core/importers/html-marks';
+import { textNodes, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, projectHTMLFormatting, projectHTMLLink, type HTMLLinkProjectionIssue } from '../core/importers/html-marks';
+import { projectHTMLInlineAtom, projectHTMLMath } from '../core/importers/html-inline-atoms';
 import { embedNode, fileNode, playbackNode, projectImage, projectMediaFigure } from '../core/importers/html-media';
-import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource, renderedLinkDestination } from '../core/link-destination';
 import { importHTMLComment } from '../core/html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../core/html-flow';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../core/explicit-emphasis';
@@ -33,7 +31,6 @@ import { projectHTMLTable } from '../core/importers/html-table';
 import { htmlOrderedListStart } from '../core/importers/html-list';
 import { preformattedContent } from '../core/importers/html-preformatted';
 import { importDefinitionList } from '../core/importers/html-definition-list';
-import { parseMathExpressionJSON } from '../core/math-expression';
 import { readHTMLDocumentPageSettings } from '../core/importers/html-page-settings';
 import type { DocumentPageSettings } from '../core/page-settings';
 import type { MarkdownHTMLFlowBlockSource, MarkdownHTMLFlowContext, MarkdownHTMLFlowSegment, MarkdownHTMLFlowTextBlockSource, MarkdownHTMLInlineSegment, MarkdownHTMLParagraphContext } from '../core/importers/markdown-importer';
@@ -734,94 +731,39 @@ function configuredRuby(
   } catch { return base; }
 }
 
+const HTML_LINK_ISSUES = {
+  'html-carrier': { code: 'invalid-rule-result', contribution: 'mark:link',
+    message: 'An invalid or mismatched HTML link source carrier was ignored; the visible destination remains authoritative.' },
+  'native-carrier': { code: 'invalid-rule-result', contribution: 'mark:link',
+    message: 'An invalid or mismatched native link source carrier was ignored; the visible destination remains authoritative.' },
+  normalized: { code: 'normalized-link-url',
+    message: 'Link destination data was normalized without HTML-source navigation support in the declared schema; original browser behavior is not retained. Inspect the destination before following it.' },
+  'normalized-with-source': { code: 'normalized-link-url',
+    message: 'Link control data is stored percent-encoded with a bound HTML-source spelling that preserves browser navigation. Inspect the stored and rendered destinations before following it.' },
+  'invalid-normalized': { code: 'invalid-rule-result', contribution: 'mark:link',
+    message: 'A normalized link destination did not satisfy the declared link schema; readable content was retained unlinked.' },
+  rejected: { code: 'rejected-url', message: 'Unsafe link URLs were omitted; readable link text was retained.' },
+} satisfies Record<HTMLLinkProjectionIssue, ServerHTMLImportIssue>;
+
 function elementMarks(child: SourceElement, schema: Schema, marks: readonly Mark[], context: ImportContext, reportUnknown: boolean): Mark[] {
   const tag = child.tagName;
-  const layoutProjection = child.hasAttribute('data-fountain-paragraph-layout');
-  const fontContext = readParagraphLayout(child).layout as { fontFamily?: string; fontSize?: number } | undefined;
-  const nextMarks: Mark[] = [];
-  const customMarks = configuredMarks(child, schema, context)
-    .filter(mark => !layoutProjection || !['highlight', 'line_height'].includes(mark.type.name))
-    .filter(mark => !(mark.type.name === 'font_family' && fontContext?.fontFamily !== undefined)
-      && !(mark.type.name === 'font_size' && fontContext?.fontSize !== undefined));
-  customMarks.forEach((mark) => addMark(nextMarks, mark));
-  const markName = ({
-    strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike',
-    del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript',
-  } as Record<string, string>)[tag];
-  if (reportUnknown && !customMarks.length && tag !== 'span' && tag !== 'a' && !(markName && schema.marks[markName])) reportOnce(context, {
+  const { marks: local, hasConfiguredMarks, nativeMark } = projectHTMLFormatting(child, tag, schema,
+    () => configuredMarks(child, schema, context));
+  if (reportUnknown && !hasConfiguredMarks && tag !== 'span' && tag !== 'a' && !(nativeMark && schema.marks[nativeMark])) reportOnce(context, {
     code: 'unmapped-inline-element',
     message: 'Unmapped inline HTML elements were removed. Readable descendant content was retained, but their identity, attributes, and behavior were not preserved.',
   });
-  // The built-in link mark owns navigation, not HTML bookmark identity or
-  // non-hyperlink anchor wrappers. Accepted custom projections own their own
-  // contract; configured inline nodes have already returned before this path.
-  if (reportUnknown && tag === 'a' && !customMarks.length
-    && (!child.hasAttribute('href') || !schema.marks.link || child.hasAttribute('id') || child.hasAttribute('name'))) reportOnce(context, {
-    code: 'unmapped-inline-element', contribution: 'element:a',
-    message: 'An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark.',
-  });
-  if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
-    color: colorValue(child.style.backgroundColor ?? '') ?? '#fff3a3',
-  });
-  else if (markName) addSchemaMark(nextMarks, schema, markName);
-  const weight = (child.style.fontWeight ?? '').toLowerCase();
-  if (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500) addSchemaMark(nextMarks, schema, 'strong');
-  if ((child.style.fontStyle ?? '').toLowerCase() === 'italic') addSchemaMark(nextMarks, schema, 'em');
-  const decoration = `${child.style.textDecoration ?? ''} ${child.style.textDecorationLine ?? ''}`.toLowerCase();
-  if (decoration.includes('underline')) addSchemaMark(nextMarks, schema, 'underline');
-  if (decoration.includes('line-through')) addSchemaMark(nextMarks, schema, 'strike');
-  const color = colorValue(child.style.color ?? '');
-  if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
-  const background = colorValue(child.style.backgroundColor ?? '');
-  // Cell fills belong to the cell, not to movable text inside it.
-  if (background && !layoutProjection && tag !== 'td' && tag !== 'th') addSchemaMark(nextMarks, schema, 'highlight', { color: background });
-  nextMarks.forEach(mark => {
-    if (mark.type.name === 'em' && !['em', 'i'].includes(tag) && (child.style.fontStyle ?? '').toLowerCase() === 'italic'
-      || mark.type.name === 'strong' && !['strong', 'b'].includes(tag) && (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500)) rememberCSSEmphasis(mark);
-  });
-  if (tag === 'a' && schema.marks.link) {
-    const originalHref = child.getAttribute('href') ?? '';
-    const carrier = child.getAttribute('data-fountain-link-href');
-    const HTMLCarrier = child.getAttribute('data-fountain-html-href');
-    const nativeHTMLSource = carrier === null ? restoredHTMLLinkSource(originalHref, HTMLCarrier) : null;
-    const restored = HTMLCarrier === null ? restoredLinkDestination(originalHref, carrier) : null;
-    const source = nativeHTMLSource ?? originalHref;
-    const href = nativeHTMLSource !== null ? importedHTMLLinkURL(source) : restored ?? importedHTMLLinkURL(source);
-    const htmlHref = restored === null && schema.marks.link.spec.attrs?.htmlHref
-      && needsHTMLLinkSource(source) ? source : undefined;
-    if (HTMLCarrier !== null && nativeHTMLSource === null) reportOnce(context, {
-      code: 'invalid-rule-result', contribution: 'mark:link',
-      message: 'An invalid or mismatched HTML link source carrier was ignored; the visible destination remains authoritative.',
+  // The built-in link mark owns navigation. Registered projections may also
+  // own named anchors and bookmarks.
+  if (tag === 'a') {
+    if (reportUnknown && !hasConfiguredMarks
+      && (!child.hasAttribute('href') || !schema.marks.link || child.hasAttribute('id') || child.hasAttribute('name'))) reportOnce(context, {
+      code: 'unmapped-inline-element', contribution: 'element:a',
+      message: 'An HTML anchor wrapper, bookmark identity or unsupported navigation was omitted. Readable descendants and supported link formatting remain; named-anchor references are not preserved by the built-in link mark.',
     });
-    if (carrier !== null && restored === null) reportOnce(context, {
-      code: 'invalid-rule-result', contribution: 'mark:link',
-      message: 'An invalid or mismatched native link source carrier was ignored; the visible destination remains authoritative.',
-    });
-    if (child.hasAttribute('href')) {
-      if (href !== null) {
-        addSchemaMark(nextMarks, schema, 'link', {
-          href, title: child.getAttribute('title') ?? '',
-          target: child.getAttribute('target') === '_self' ? '_self' : '_blank',
-          ...(htmlHref === undefined ? {} : { htmlHref }),
-        });
-        if (restored === null && nativeHTMLSource === null && (href !== originalHref || renderedLinkDestination(href, htmlHref) !== href)
-          && nextMarks.some(mark => mark.type.name === 'link' && mark.attrs.href === href)) reportOnce(context, {
-          code: 'normalized-link-url',
-          message: htmlHref === undefined
-            ? 'Link destination data was normalized without HTML-source navigation support in the declared schema; original browser behavior is not retained. Inspect the destination before following it.'
-            : 'Link control data is stored percent-encoded with a bound HTML-source spelling that preserves browser navigation. Inspect the stored and rendered destinations before following it.',
-        });
-        else if (href !== originalHref && !nextMarks.some(mark => mark.type.name === 'link')) reportOnce(context, {
-          code: 'invalid-rule-result', contribution: 'mark:link',
-          message: 'A normalized link destination did not satisfy the declared link schema; readable content was retained unlinked.',
-        });
-      }
-      else reportOnce(context, {
-        code: 'rejected-url', message: 'Unsafe link URLs were omitted; readable link text was retained.',
-      });
-    }
+    projectHTMLLink(child, schema, local, issue => reportOnce(context, { ...HTML_LINK_ISSUES[issue] }));
   }
-  return mergeHTMLMarks(nextMarks, marks, tag);
+  return mergeHTMLMarks(local, marks, tag);
 }
 
 function inlineChildren(
@@ -886,42 +828,8 @@ function inlineChildren(
       if (image) result.push(image);
       return;
     }
-    if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
-      const latex = child.getAttribute('data-latex') ?? child.textContent;
-      const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
-      const expression = parseMathExpressionJSON(child.getAttribute('data-fountain-math-expression'));
-      try { result.push(schema.node('inline_math', { latex, ariaLabel, expression }, [], undefined, atomMarks)); }
-      catch { if (latex) result.push(schema.text(latex, marks)); }
-      return;
-    }
-    if (child.hasAttribute('data-fountain-mention') && schema.nodes.mention) {
-      const id = child.getAttribute('data-id') ?? '';
-      const href = child.getAttribute('href') ?? '';
-      try {
-        result.push(schema.node('mention', {
-          id,
-          label: child.getAttribute('data-label') ?? '',
-          trigger: child.getAttribute('data-trigger') ?? '@',
-          kind: child.getAttribute('data-kind') ?? 'mention',
-          href: href && isSafeURL(href) ? href : '',
-        }, [], undefined, atomMarks));
-      } catch { result.push(...textNodes(child.textContent, schema, marks)); }
-      return;
-    }
-    if (child.hasAttribute('data-fountain-emoji') && schema.nodes.emoji) {
-      const emoji = child.getAttribute('data-emoji') ?? '';
-      const fallback = child.getAttribute('data-fallback-image')
-        ?? child.querySelector('img')?.getAttribute('src')
-        ?? '';
-      try {
-        result.push(schema.node('emoji', {
-          name: child.getAttribute('data-name') ?? unicodeEmojiName(emoji),
-          emoji,
-          fallbackImage: fallback && isSafeURL(fallback, { allowDataImage: true }) ? fallback : '',
-        }, [], undefined, atomMarks));
-      } catch { result.push(...textNodes(emoji || child.textContent, schema, marks)); }
-      return;
-    }
+    const atom = projectHTMLInlineAtom(child, schema, atomMarks, marks);
+    if (atom) { result.push(...atom); return; }
     const nextMarks = elementMarks(child, schema, marks, context, true);
     result.push(...inlineChildren(child, schema, nextMarks, context));
   });
@@ -1133,13 +1041,8 @@ function projectBlock(element: SourceElement, schema: Schema, context: ImportCon
       return [reportStructuralDirection(element, list, context, schema)];
     }
   }
-  if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
-    const latex = element.getAttribute('data-latex') ?? element.textContent;
-    const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
-    const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
-    try { return [schema.node('math_block', { latex, ariaLabel, expression, ...readParagraphLayout(element) })]; }
-    catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
-  }
+  const math = projectHTMLMath(element, schema, 'block');
+  if (math) return math;
   if (/^h[1-6]$/.test(tag)) {
     const dir = readTextDirection(element, schema);
     const content = inlineChildren(element, schema, [], context);

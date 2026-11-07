@@ -10,11 +10,9 @@ import {
   type Schema,
 } from '../schema';
 import { matchesContentExpression } from '../schema/content-expression';
-import { isSafeURL } from '../url';
-import { importedHTMLLinkURL } from './html-link-url';
-import { addMark, addSchemaMark, colorValue, textNodes, unicodeEmojiName, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, rememberCSSEmphasis } from './html-marks';
+import { textNodes, explicitHTMLEmphasis, mergeHTMLBlockMarks, mergeHTMLMarks, relativeHTMLContent, projectHTMLFormatting, projectHTMLLink } from './html-marks';
+import { projectHTMLInlineAtom, projectHTMLMath } from './html-inline-atoms';
 import { embedNode, fileNode, playbackNode, projectImage, projectMediaFigure } from './html-media';
-import { restoredLinkDestination, restoredHTMLLinkSource, needsHTMLLinkSource } from '../link-destination';
 import { importHTMLComment } from '../html-comment';
 import { importHTMLAnonymousFlow, restoreHTMLFlowCaret } from '../html-flow';
 import { readExplicitEmphasis, readExplicitQuoteAppearance } from '../explicit-emphasis';
@@ -24,7 +22,6 @@ import { readTextAlignmentAttributes, readTextDirection, readContainerDirection 
 import { projectHTMLTable } from './html-table';
 import { htmlOrderedListStart } from './html-list';
 import { importDefinitionList } from './html-definition-list';
-import { parseMathExpressionJSON } from '../math-expression';
 import { readHTMLDocumentPageSettings } from './html-page-settings';
 
 type BrowserParseRule = DOMParseRule | HTMLParseRule;
@@ -189,42 +186,8 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
       if (image) result.push(image);
       return;
     }
-    if (child.getAttribute('data-fountain-math') === 'inline' && schema.nodes.inline_math) {
-      const latex = child.getAttribute('data-latex') ?? child.textContent ?? '';
-      const ariaLabel = child.getAttribute('data-math-aria-label') ?? '';
-      const expression = parseMathExpressionJSON(child.getAttribute('data-fountain-math-expression'));
-      try { result.push(schema.node('inline_math', { latex, ariaLabel, expression }, [], undefined, marks)); }
-      catch { if (latex) result.push(schema.text(latex, marks)); }
-      return;
-    }
-    if (child.hasAttribute('data-fountain-mention') && schema.nodes.mention) {
-      const id = child.getAttribute('data-id') ?? '';
-      const href = child.getAttribute('href') ?? '';
-      try {
-        result.push(schema.node('mention', {
-          id,
-          label: child.getAttribute('data-label') ?? '',
-          trigger: child.getAttribute('data-trigger') ?? '@',
-          kind: child.getAttribute('data-kind') ?? 'mention',
-          href: href && isSafeURL(href) ? href : '',
-        }, [], undefined, marks));
-      } catch { result.push(...textNodes(child.textContent ?? '', schema, marks)); }
-      return;
-    }
-    if (child.hasAttribute('data-fountain-emoji') && schema.nodes.emoji) {
-      const emoji = child.getAttribute('data-emoji') ?? '';
-      const fallback = child.getAttribute('data-fallback-image')
-        ?? child.querySelector('img')?.getAttribute('src')
-        ?? '';
-      try {
-        result.push(schema.node('emoji', {
-          name: child.getAttribute('data-name') ?? unicodeEmojiName(emoji),
-          emoji,
-          fallbackImage: fallback && isSafeURL(fallback, { allowDataImage: true }) ? fallback : '',
-        }, [], undefined, marks));
-      } catch { result.push(...textNodes(emoji || child.textContent || '', schema, marks)); }
-      return;
-    }
+    const atom = projectHTMLInlineAtom(child, schema, marks);
+    if (atom) { result.push(...atom); return; }
     result.push(...inlineChildren(child, schema, elementMarks(child, schema, marks), literalText));
   });
   if (!result.length && marks.length) result.push(schema.text('', marks));
@@ -233,55 +196,10 @@ function inlineChildren(parent: globalThis.Node, schema: Schema, marks: readonly
 
 /** The same inline-format rules apply to a block and to an inline wrapper. */
 function elementMarks(child: HTMLElement, schema: Schema, marks: readonly Mark[] = []): Mark[] {
-    const tag = child.tagName.toLowerCase();
-    const layoutProjection = child.hasAttribute('data-fountain-paragraph-layout');
-    const fontContext = readParagraphLayout(child).layout as { fontFamily?: string; fontSize?: number } | undefined;
-    const nextMarks: Mark[] = [];
-    configuredMarks(child, schema).filter(mark => !layoutProjection || !['highlight', 'line_height'].includes(mark.type.name))
-      .filter(mark => !(mark.type.name === 'font_family' && fontContext?.fontFamily !== undefined)
-        && !(mark.type.name === 'font_size' && fontContext?.fontSize !== undefined))
-      .forEach((mark) => addMark(nextMarks, mark));
-    const markName = ({ strong: 'strong', b: 'strong', em: 'em', i: 'em', u: 'underline', s: 'strike', del: 'strike', code: 'code', mark: 'highlight', sub: 'subscript', sup: 'superscript' } as Record<string, string>)[tag];
-    if (markName === 'highlight') addSchemaMark(nextMarks, schema, markName, {
-      color: colorValue(child.style.backgroundColor) ?? '#fff3a3',
-    });
-    else if (markName) addSchemaMark(nextMarks, schema, markName);
-    const weight = child.style.fontWeight.toLowerCase();
-    if (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500) addSchemaMark(nextMarks, schema, 'strong');
-    if (child.style.fontStyle.toLowerCase() === 'italic') addSchemaMark(nextMarks, schema, 'em');
-    const decoration = `${child.style.textDecoration} ${child.style.textDecorationLine}`.toLowerCase();
-    if (decoration.includes('underline')) addSchemaMark(nextMarks, schema, 'underline');
-    if (decoration.includes('line-through')) addSchemaMark(nextMarks, schema, 'strike');
-    const color = colorValue(child.style.color);
-    if (color) addSchemaMark(nextMarks, schema, 'text_color', { color });
-    const background = colorValue(child.style.backgroundColor);
-    // Cell fills belong to the cell, not to movable text inside it.
-    if (background && !layoutProjection && tag !== 'td' && tag !== 'th') addSchemaMark(nextMarks, schema, 'highlight', { color: background });
-    nextMarks.forEach(mark => {
-      if (mark.type.name === 'em' && !['em', 'i'].includes(tag) && child.style.fontStyle.toLowerCase() === 'italic'
-        || mark.type.name === 'strong' && !['strong', 'b'].includes(tag) && (weight === 'bold' || weight === 'bolder' || Number(weight) >= 500)) rememberCSSEmphasis(mark);
-    });
-    if (tag === 'a' && schema.marks.link) {
-      const originalHref = child.getAttribute('href') ?? '';
-      const HTMLCarrier = child.getAttribute('data-fountain-html-href');
-      const literalCarrier = child.getAttribute('data-fountain-link-href');
-      const nativeHTMLSource = literalCarrier === null ? restoredHTMLLinkSource(originalHref, HTMLCarrier) : null;
-      const literalSource = HTMLCarrier === null ? restoredLinkDestination(originalHref, literalCarrier) : null;
-      const source = nativeHTMLSource ?? originalHref;
-      const href = nativeHTMLSource !== null ? importedHTMLLinkURL(source) : literalSource ?? importedHTMLLinkURL(source);
-      const htmlHref = literalSource === null && schema.marks.link.spec.attrs?.htmlHref
-        && needsHTMLLinkSource(source) ? source : undefined;
-      const anchor = child as HTMLAnchorElement;
-      if (child.hasAttribute('href') && href !== null) {
-        addSchemaMark(nextMarks, schema, 'link', {
-          href,
-          title: anchor.title,
-          target: anchor.target === '_self' ? '_self' : '_blank',
-          ...(htmlHref === undefined ? {} : { htmlHref }),
-        });
-      }
-    }
-    return mergeHTMLMarks(nextMarks, marks, tag);
+  const tag = child.tagName.toLowerCase();
+  const local = projectHTMLFormatting(child, tag, schema, () => configuredMarks(child, schema)).marks;
+  if (tag === 'a') projectHTMLLink(child, schema, local);
+  return mergeHTMLMarks(local, marks, tag);
 }
 
 function imageNode(
@@ -433,13 +351,8 @@ function projectBlock(element: Element, schema: Schema): FountainNode[] {
       item => configuredNode(item, schema, false), undefined, item => readContainerDirection(item, schema));
     if (list) return [list];
   }
-  if (element.getAttribute('data-fountain-math') === 'block' && schema.nodes.math_block) {
-    const latex = element.getAttribute('data-latex') ?? element.textContent ?? '';
-    const ariaLabel = element.getAttribute('data-math-aria-label') ?? '';
-    const expression = parseMathExpressionJSON(element.getAttribute('data-fountain-math-expression'));
-    try { return [schema.node('math_block', { latex, ariaLabel, expression, ...readParagraphLayout(element) })]; }
-    catch { return latex ? [schema.node('paragraph', {}, [schema.text(latex)])] : []; }
-  }
+  const math = projectHTMLMath(element, schema, 'block');
+  if (math) return math;
   if (/^h[1-6]$/.test(tag)) {
     const dir = readTextDirection(element, schema);
     const content = inlineChildren(element, schema);
