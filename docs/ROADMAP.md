@@ -34,8 +34,11 @@ Live retained transport reference (2026-11-07, local). Two browser authors now
 exchange edits over fenced HTTP/SQLite automatically. Offline typing merges into
 the peer's quote after reconnect, a lost write reply retries without duplicate
 text, and a rotated room fences the old writer while its local copy survives
-reload. Nine recorded three-engine journeys pass. Production deployment,
-presence transport, load and storage validation remain open.
+reload. The local presence channel paints remote cursors and native selections,
+expires silent peers, and clears indicators when the room changes. Production
+deployment, shared presence across processes, load and storage validation remain open.
+Backward native text selections highlight correctly for peers, with the remote
+caret currently painted at the wrong end.
 [Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
 
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies

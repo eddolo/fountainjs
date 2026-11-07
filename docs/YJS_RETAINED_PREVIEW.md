@@ -89,7 +89,8 @@ initial synchronization complete. See the recorded HTTP/SQLite reference in the
 
 The [live HTTP transport reference](YJS_LIVE_HTTP_REFERENCE.md) also shows
 automatic edit exchange after binding, retry after a dropped reply, and
-recovery when a room refuses an old session.
+recovery when a room refuses an old session. It includes an ephemeral peer
+cursor and selection channel fenced to the active room epoch.
 
 Typing while admission is pending is retained locally. If it conflicts with the
 loaded state, admission reports an error instead of overwriting it. Cancellation

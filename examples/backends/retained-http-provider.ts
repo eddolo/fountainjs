@@ -2,10 +2,17 @@ import * as Y from 'yjs';
 import type { DocumentRoomSnapshot } from '../../src/yjs/document-room';
 import type { RetainedAdmissionLease } from '../../src/yjs/retained-admission';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
+import { createRetainedHttpAwareness, type PresencePeer, type PresenceState } from './retained-http-presence';
+
+interface BoundPresence {
+  readonly exchange: (lease: RetainedAdmissionLease, state: PresenceState | null, signal: AbortSignal) => Promise<readonly PresencePeer[]>;
+  readonly leave: () => Promise<void>;
+}
 
 interface BoundTransport {
   readonly lease: RetainedAdmissionLease;
   readonly snapshot: DocumentRoomSnapshot;
+  readonly presence?: BoundPresence;
 }
 
 interface RetainedHttpOptions {
@@ -42,7 +49,9 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
   let controller: AbortController | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const document = options.document;
+  const presence = createRetainedHttpAwareness(document.clientID);
   let onUpdate: ((_bytes: Uint8Array, _origin: unknown, _document: Y.Doc, transaction: Y.Transaction) => void) | undefined;
+  let leavePresence: (() => Promise<void>) | undefined;
 
   function disconnect() {
     controller?.abort();
@@ -50,6 +59,9 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     clearTimeout(timer);
     if (onUpdate) document.off('update', onUpdate);
     onUpdate = undefined;
+    presence.replace([]);
+    if (leavePresence) void leavePresence().catch(() => undefined);
+    leavePresence = undefined;
   }
 
   async function connect() {
@@ -58,10 +70,26 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     controller = session;
     const { signal } = session;
     const bound = options.bound();
+    leavePresence = bound.presence?.leave;
     let lease = bound.lease;
     let vector: Uint8Array;
     let edited = 0, acknowledged = 0;
     let running = false;
+    let presenceRequest: AbortController | undefined;
+    let lastPresenceRequest = Number.NEGATIVE_INFINITY;
+
+    function exchangePresence() {
+      if (!bound.presence || presenceRequest || performance.now() - lastPresenceRequest < 350) return;
+      const request = new AbortController();
+      presenceRequest = request;
+      lastPresenceRequest = performance.now();
+      const deadline = AbortSignal.any([signal, request.signal, AbortSignal.timeout(1_500)]);
+      void bound.presence.exchange(lease, presence.local(), deadline).then(peers => {
+        if (!deadline.aborted) presence.replace(peers);
+      }, () => {
+        if (!signal.aborted) presence.replace([]);
+      }).finally(() => { presenceRequest = undefined; });
+    }
 
     async function accept(snapshot: DocumentRoomSnapshot) {
       const checkpoint = checkpointFor(snapshot, lease);
@@ -101,10 +129,13 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
         }
         acknowledged = sending;
         options.onStatus('connected');
+        exchangePresence();
       } catch (error) {
         if (signal.aborted) return;
         if (retryable(error)) {
           delay = 500;
+          presenceRequest?.abort();
+          presence.replace([]);
           options.onStatus('reconnecting', error);
         } else {
           disconnect();
@@ -128,6 +159,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       };
       document.on('update', onUpdate);
       options.onStatus('connected');
+      exchangePresence();
       schedule(edited > acknowledged ? 75 : 400);
     } catch (error) {
       if (controller === session) disconnect();
@@ -135,5 +167,5 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     }
   }
 
-  return { connect, disconnect };
+  return { awareness: presence.awareness, connect, disconnect };
 }

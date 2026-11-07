@@ -10,6 +10,9 @@ const connection = (page: Page) => page.locator('#connection');
 const server = (page: Page) => page.locator('#reader');
 const write = '**/__admission/write';
 const poll = '**/__admission/poll-retained';
+const presence = '**/__admission/presence';
+const peerLabel = (page: Page) => page.locator('.fountain-collaboration-caret > span');
+const peerSelection = (page: Page) => page.locator('#editing .fountain-collaboration-selection');
 
 async function join(page: Page) {
   await expect(page.getByRole('status')).toHaveText('Ready');
@@ -35,6 +38,22 @@ async function secondAuthor(page: Page) {
 }
 
 const offline = (route: Route) => route.abort('internetdisconnected');
+
+async function selectReport(page: Page) {
+  await editor(page).click();
+  await page.keyboard.press('End');
+  for (let index = 0; index < 7; index += 1) await page.keyboard.press('Shift+ArrowLeft');
+  await expect.poll(() => page.evaluate(() => document.getSelection()?.toString())).toBe('report.');
+}
+
+const serverRevision = (page: Page) => page.evaluate(async () => {
+  const response = await fetch('/__admission/snapshot', {
+    method: 'POST', body: '{}', headers: {
+      'Content-Type': 'application/json', 'X-Admission-Session': sessionStorage.getItem('fountain-draft-audit-session')!,
+    },
+  });
+  return (await response.json()).value.revision as number;
+});
 
 test.beforeEach(async ({ page }) => {
   await page.goto(fixture);
@@ -106,5 +125,48 @@ test('stops a retired transport and reopens its locally saved typing after reloa
     await expect(editor(page)).toHaveText('Shared incident report. Unsent before rotation. Still local afterwards.');
     await expect(server(page)).toHaveText('Shared incident report.');
     await page.screenshot({ path: info.outputPath('retired-recovered.png'), scale: 'css' });
+  } finally { await peer.close(); }
+});
+
+test('renders a native peer selection without writing a document revision and clears it on leave', async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  try {
+    const before = await serverRevision(page);
+    await selectReport(peer);
+    await expect(peerLabel(page)).toHaveText('Grace');
+    await expect(peerLabel(page)).toBeVisible();
+    await expect(peerSelection(page)).toHaveText('report.');
+    expect(await serverRevision(page)).toBe(before);
+    await page.screenshot({ path: info.outputPath('peer-selection.png'), scale: 'css' });
+    const leave = peer.waitForResponse(response => response.url().endsWith('/leave-live'));
+    await peer.getByRole('button', { name: 'Leave shared session' }).click();
+    expect((await leave).ok()).toBe(true);
+    await expect(peerLabel(page)).toHaveCount(0);
+    await expect(peerSelection(page)).toHaveCount(0);
+    expect(await serverRevision(page)).toBe(before);
+    await page.screenshot({ path: info.outputPath('peer-left.png'), scale: 'css' });
+  } finally { await peer.close(); }
+});
+
+test('expires a silent peer and keeps old presence out of a rotated session', async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  try {
+    await selectReport(peer);
+    await expect(peerSelection(page)).toHaveText('report.');
+    await peer.route(presence, offline);
+    await expect(peerLabel(page)).toHaveCount(0, { timeout: 7_000 });
+    await expect(peerSelection(page)).toHaveCount(0);
+    await peer.unroute(presence, offline);
+    await expect(peerSelection(page)).toHaveText('report.');
+    await page.getByRole('button', { name: 'Rotate server session' }).click();
+    await expect(page.getByRole('status')).toHaveText('Server session rotated.');
+    await expect(connection(page)).toHaveText(/disconnected.*(stale|frozen)/);
+    await expect(peerLabel(page)).toHaveCount(0);
+    await expect(connection(peer)).toHaveText(/disconnected.*(stale|frozen)/);
+    await page.getByRole('button', { name: 'Keep a copy and open shared' }).click();
+    await expect(connection(page)).toHaveText('connected');
+    await expect(peerLabel(page)).toHaveCount(0);
+    await expect(peerSelection(page)).toHaveCount(0);
+    await page.screenshot({ path: info.outputPath('presence-rotated.png'), scale: 'css' });
   } finally { await peer.close(); }
 });

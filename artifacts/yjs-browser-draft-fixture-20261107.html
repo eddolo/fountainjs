@@ -21,6 +21,7 @@
 <p>Keep a recovery copy on this device. Resume the same shared session or open an older draft separately.</p>
 <header id="controls">
   <button id="join">Join shared session</button>
+  <button id="leave" hidden>Leave shared session</button>
   <button id="save">Save recovery copy</button>
   <button id="retry-autosave" hidden>Retry automatic save</button>
   <button id="quote">Toggle quote</button>
@@ -68,7 +69,8 @@ async function request(action, body = {}, signal) {
   });
   const reply = await response.json();
   if (!reply.ok) throw Object.assign(new Error(reply.error), {code: reply.code});
-  if (reply.value?.checkpoint) reply.value.checkpoint.update = Uint8Array.from(atob(reply.value.checkpoint.update.__wire), byte => byte.charCodeAt(0));
+  const checkpoint = reply.value?.checkpoint ?? reply.value?.snapshot?.checkpoint;
+  if (checkpoint) checkpoint.update = Uint8Array.from(atob(checkpoint.update.__wire), byte => byte.charCodeAt(0));
   return reply.value;
 }
 
@@ -96,7 +98,11 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   const admission = {
     schemaVersion: version,
     authority: {key: current.key, async bind(lease, signal) {
-      next.bound = await request('bind', lease, signal);
+      if (live) {
+        const accepted = await request('bind-live', {lease}, signal);
+        next.bound = accepted.snapshot;
+        next.presenceToken = accepted.token;
+      } else next.bound = await request('bind', lease, signal);
       next.signal = signal;
     }},
     async load(signal) {
@@ -111,8 +117,12 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
       const accepted = next.bound;
       const manifest = accepted.checkpoint.manifest;
       next.lease = {key: accepted.key, epoch: accepted.epoch, revision: accepted.revision, protocol: 'retained', room: manifest.room, identity: manifest.roomId};
+      const token = next.presenceToken, epoch = accepted.epoch;
       starts += 1;
-      return {lease: next.lease, snapshot: accepted};
+      return {lease: next.lease, snapshot: accepted, presence: {
+        exchange: (lease, state, signal) => request('presence', {lease, token, state}, signal),
+        leave: () => request('leave-live', {epoch, token}, AbortSignal.timeout(1_500)),
+      }};
     },
     poll: (lease, signal) => request('poll-retained', lease, signal),
     write: (lease, update, signal) => request('write', {epoch: lease.epoch, protocol: lease.protocol, update}, signal),
@@ -293,6 +303,11 @@ await listCopies();
 button(select('#join'), () => {
   if (client.detached || !client.savedModel.eq(client.editor.state.doc)) throw new Error('Keep a copy before replacing this local draft.');
   connectCollaboration(client.editor);
+});
+select('#leave').hidden = !live;
+button(select('#leave'), () => {
+  client.transportStatus = undefined;
+  disconnectCollaboration(client.editor);
 });
 button(select('#save'), async () => { await saveCopy(); await listCopies(); });
 button(select('#retry-autosave'), async () => { await client.autosave?.flush(); });
