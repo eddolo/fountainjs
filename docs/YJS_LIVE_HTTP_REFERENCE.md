@@ -76,7 +76,8 @@ The recorded failure cases hold a write reply after its server commit, type
 again while the request waits, and release the stale reply after the retry has
 saved both notes. The demo reader shows the last confirmed server snapshot
 while a response is pending. A separate case releases two writes together,
-observes a real SQLite revision conflict, and verifies each author's text
+uses a loopback-only barrier immediately before the SQLite compare-and-swap,
+observes a real revision conflict, and verifies each author's text
 appears once in both editors and in the saved document.
 
 ## Presence
@@ -310,6 +311,40 @@ into separate directories, then run the read profile.
 
 ```powershell
 node artifacts/benchmark-yjs-authority-write-20261107.mjs artifacts/yjs-authority-read-baseline-20261107 artifacts/yjs-authority-admission-build-20261107 read
+```
+
+## Concurrent changed polls
+
+Overlapping polls on the same room authority can share one full SQLite read
+and checkpoint verification when their saved generation matches. Every poll
+checks its own lease before joining and fences the storage generation again
+before returning. A newer write or freeze makes the old result stale. The
+shared result is discarded when verification settles, so a later poll reads
+storage again. Other authority processes perform their own verification.
+
+With eight overlapping readers on one local SQLite authority, the median
+time to serve the group fell from 240.78 ms to 29.37 ms for 250 paragraphs
+and from 988.98 ms to 119.32 ms for 1,000 paragraphs. The group ran three
+SHA-256 operations instead of 24. Each build served 16 measured groups per
+document size after warm-up. All readers received the exact checkpoint of
+the saved edit. This profile measures the local authority. HTTP request
+scheduling, per-recipient delta encoding and multi-process load are outside
+the measurement.
+
+The SQLite regression confirms that eight overlapping polls read the full
+checkpoint once and each checks its own lease and final storage generation.
+It also covers a concurrent write and a freeze on another SQLite connection.
+The browser journey starts one writer and two readers, holds both poll
+requests until the edit is saved, then checks the same text in both readers
+and their saved views. The Firefox capture was visually reviewed.
+All 74 focused tests and 15 recorded Chromium, Firefox and WebKit journeys
+passed. Recordings are in `artifacts/yjs-authority-fanout-browser-20261107/`.
+
+Build the authority fixture at baseline `48367e0a` and at this change, then
+run the read profile with eight readers.
+
+```powershell
+node artifacts/benchmark-yjs-authority-write-20261107.mjs artifacts/yjs-authority-fanout-baseline-20261107 artifacts/yjs-authority-admission-build-20261107 read 8
 ```
 
 ## Deployment boundaries

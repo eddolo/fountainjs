@@ -5,9 +5,12 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import * as Y from 'yjs';
 
-const [baselinePath, candidatePath, operation = 'write'] = process.argv.slice(2);
+const [baselinePath, candidatePath, operation = 'write', count = '1'] = process.argv.slice(2);
 assert(baselinePath && candidatePath, 'Pass the baseline and candidate authority build directories.');
 assert(operation === 'read' || operation === 'write', 'Choose read or write.');
+const readers = Number(count);
+assert(Number.isInteger(readers) && readers >= 1 && readers <= 16 && (operation === 'read' || readers === 1),
+  'Pass a reader count between 1 and 16 for the read profile.');
 const version = 'write-benchmark-1';
 const key = 'bench:retained-write';
 const user = { id: 'author', name: 'Author', color: '#7048e8' };
@@ -51,11 +54,13 @@ async function measure(api, blocks) {
       if (operation === 'read') saved = await write();
       digests = 0;
       const start = performance.now();
-      const next = await (operation === 'read' ? room.pollRetained(lease) : write());
+      const next = await (operation === 'read'
+        ? Promise.all(Array.from({ length: readers }, () => room.pollRetained(lease)))
+        : write());
       if (edit >= warmup) { times.push(performance.now() - start); digestCounts.push(digests); }
       assert(next);
-      if (operation === 'read') assert.deepEqual(next, saved);
-      saved = next;
+      if (Array.isArray(next)) assert.deepEqual(next, Array(readers).fill(saved));
+      else saved = next;
       lease = { ...lease, revision: saved.revision };
       assert.equal(saved.revision, edit + 1);
     }
@@ -94,4 +99,4 @@ for (const blocks of [250, 1_000]) {
   assert.equal(new Set([...before, ...after].map(run => run.documentSha256)).size, 1);
   results.push({ blocks, baseline: summarize(before), candidate: summarize(after) });
 }
-console.log(JSON.stringify({ runtime: process.version, operation, warmupOperationsPerRun: warmup, results }, null, 2));
+console.log(JSON.stringify({ runtime: process.version, operation, readers, warmupOperationsPerRun: warmup, results }, null, 2));

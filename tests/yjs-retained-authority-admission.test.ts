@@ -79,6 +79,58 @@ it('rejects a freeze committed on another connection between the full read and i
   await expect(pair.room.admit(lease)).rejects.toMatchObject({ code: 'revision-conflict' });
 });
 
+it('shares one full read for concurrent changed polls and rechecks every reader', async () => {
+  const pair = await fixture();
+  const lease = { key, epoch: pair.initial.epoch, revision: 0, protocol: 'retained' as const, room: 'fountain', identity: pair.checkpoint.manifest.roomId };
+  pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'New '));
+  const latest = await pair.other.write({ epoch: lease.epoch, protocol: lease.protocol, update: Y.encodeStateAsUpdate(pair.document) });
+  const full = vi.spyOn(pair.a, 'readDocument');
+  const headers = vi.spyOn(pair.a, 'readDocumentHeader');
+  const polls = Array.from({ length: 8 }, () => pair.room.pollRetained(lease));
+  const invalid = expect(pair.room.pollRetained({ ...lease, identity: 'wrong' })).rejects.toMatchObject({ code: 'invalid-ticket' });
+  const snapshots = await Promise.all(polls);
+  await invalid;
+  expect(snapshots).toEqual(Array(8).fill(latest));
+  expect(full).toHaveBeenCalledOnce();
+  expect(headers).toHaveBeenCalledTimes(17);
+  snapshots[0]!.checkpoint.update.fill(0);
+  expect(snapshots[1]!.checkpoint.update).toEqual(latest.checkpoint.update);
+
+  await expect(pair.room.pollRetained(lease)).resolves.toEqual(latest);
+  expect(full).toHaveBeenCalledTimes(2);
+});
+
+it.each(['write', 'freeze'] as const)('refuses all shared poll results after a concurrent %s', async action => {
+  const pair = await fixture();
+  const lease = { key, epoch: pair.initial.epoch, revision: 0, protocol: 'retained' as const, room: 'fountain', identity: pair.checkpoint.manifest.roomId };
+  const save = async (text: string) => {
+    pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, text));
+    return pair.other.write({ epoch: lease.epoch, protocol: lease.protocol, update: Y.encodeStateAsUpdate(pair.document) });
+  };
+  const latest = await save('First ');
+  let entered!: () => void, release!: () => void;
+  const atFence = new Promise<void>(resolve => { entered = resolve; });
+  const proceed = new Promise<void>(resolve => { release = resolve; });
+  const read = pair.a.readDocument.bind(pair.a);
+  vi.spyOn(pair.a, 'readDocument').mockImplementationOnce(async roomKey => {
+    const row = await read(roomKey);
+    entered();
+    await proceed;
+    return row;
+  });
+  const polls = Promise.allSettled(Array.from({ length: 4 }, () => pair.room.pollRetained(lease)));
+  try {
+    await atFence;
+    if (action === 'write') {
+      const newer = await save('Later ');
+      await expect(pair.room.pollRetained(lease)).resolves.toEqual(newer);
+    } else await pair.other.freeze(latest);
+  } finally { release(); }
+  expect(await polls).toEqual(Array(4).fill({ status: 'rejected', reason: expect.objectContaining({ code: 'revision-conflict' }) }));
+  if (action === 'write') expect((await pair.room.pollRetained(lease))?.revision).toBe(latest.revision + 1);
+  else await expect(pair.room.pollRetained(lease)).rejects.toMatchObject({ code: 'frozen' });
+});
+
 it('binds an immutable validated session before starting the provider',async()=>{
  const pair=await fixture(),leases:any[]=[],provider={connect:vi.fn(),disconnect:vi.fn()},admission=contract(pair,undefined,async lease=>{expect(provider.connect).not.toHaveBeenCalled();expect(Object.isFrozen(lease)).toBe(true);leases.push(lease);await (pair.room as any).admit(lease);}),client=make('Template',{provider,admission});await settled(client.editor);expect(leases).toEqual([{key,epoch:pair.initial.epoch,revision:0,protocol:'retained',room:'fountain',identity:pair.checkpoint.manifest.roomId}]);expect(provider.connect).toHaveBeenCalledTimes(1);expect(client.editor.getJSON()).toEqual(pair.editor.getJSON());
 });

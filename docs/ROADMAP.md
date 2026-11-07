@@ -110,6 +110,9 @@ from 569.05 ms to 289.82 ms.
 The changed-read path serves the verified checkpoint bytes directly. Median
 authority read time fell from 283.67 ms to 118.36 ms for the same document
 size in the local SQLite benchmark.
+Overlapping changed polls on one authority share the full checkpoint check
+when they target the same storage generation. The eight-reader 1,000-paragraph
+benchmark fell from 988.98 ms to 119.32 ms for the group.
 Both adapters also discard an older queued cursor after a newer one is sent.
 The retained live workflow now has 18 recorded browser checks for all six
 default-adapter structural cases across offline autosave, reload, resume, undo

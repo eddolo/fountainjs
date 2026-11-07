@@ -105,6 +105,7 @@ export async function applyDocumentRoomUpdate(source: DocumentCheckpoint, schema
  * Every write must pass this authority; epochs/protocol labels are not auth. */
 export class CoordinatedDocumentRoom {
   readonly projection: LegacyProjectionOptions;
+  private pendingRetainedRead?: { readonly generation: string; readonly result: Promise<DocumentRoomRecord> };
   constructor(private readonly repository: DocumentRoomRepository, readonly key: string, private readonly schema: Schema, private readonly schemaVersion: string, projection: LegacyProjectionOptions = {}) {
     if (typeof key !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,193}$/.test(key)) throw new Error('Invalid document-room key.');
     this.projection = snapshotLegacyProjection(projection);
@@ -193,8 +194,31 @@ export class CoordinatedDocumentRoom {
    * checkpoint. The durable row still fences epoch, protocol and phase. */
   async pollRetained(lease: DocumentRoomAdmission): Promise<DocumentRoomSnapshot | null> {
     const expected = { ...lease };
-    const row = await this.retainedReader(expected);
-    return expected.revision === row.revision ? null : this.admit(expected);
+    const header = await this.retainedReader(expected);
+    if (expected.revision === header.revision) return null;
+    const checked = await this.sharedRetainedRead(header.generation);
+    assertRetainedRoomReader(checked, expected);
+    if ((await this.currentHeader()).generation !== checked.generation) {
+      documentRoomFailure('revision-conflict', 'Authority changed during poll verification; retry explicitly.');
+    }
+    return documentSnapshot(checked);
+  }
+  private sharedRetainedRead(generation: string): Promise<DocumentRoomRecord> {
+    const pending = this.pendingRetainedRead;
+    if (pending?.generation === generation) return pending.result;
+    const verify = async () => {
+      const row = await this.current();
+      if (row.generation !== generation) documentRoomFailure('revision-conflict', 'Authority changed before loading the poll checkpoint.');
+      const checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection);
+      return { ...row, checkpoint: checked.checkpoint };
+    };
+    // Share only the in-flight work for this generation. A settled result
+    // never substitutes for a fresh database read.
+    const result: Promise<DocumentRoomRecord> = verify().finally(() => {
+      if (this.pendingRetainedRead?.result === result) this.pendingRetainedRead = undefined;
+    });
+    this.pendingRetainedRead = { generation, result };
+    return result;
   }
   /** Presence carries no document bytes, even when the receiver is behind. */
   async fenceRetainedPresence(lease: DocumentRoomAdmission): Promise<void> {

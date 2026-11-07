@@ -202,7 +202,7 @@ test('retries concurrent writers against the durable authority until both edits 
         arrived.add(author);
         if (arrived.size === 2) race.release();
         await race.promise;
-        const response = await route.fetch();
+        const response = await route.fetch({ headers: { ...route.request().headers(), 'x-admission-overlap': '1' } });
         if ((await response.json()).code === 'revision-conflict') conflicts += 1;
         await route.fulfill({ response });
       });
@@ -343,6 +343,43 @@ test('expires a silent peer and keeps old presence out of a rotated session', as
     await expect(peerSelection(page)).toHaveCount(0);
     await page.screenshot({ path: info.outputPath('presence-rotated.png'), scale: 'css' });
   } finally { await peer.close(); }
+});
+
+test('delivers one saved revision to overlapping readers', async ({ page }, info) => {
+  const first = await secondAuthor(page);
+  const second = await secondAuthor(page);
+  const readers = [first, second];
+  const ready = new Set<Page>();
+  const release = gate();
+  try {
+    const before = await serverRevision(page);
+    for (const reader of readers) {
+      await reader.route(poll, async route => {
+        ready.add(reader);
+        await release.promise;
+        await route.continue();
+      }, { times: 1 });
+    }
+    await expect.poll(() => ready.size).toBe(readers.length);
+    await editor(page).click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' Available to both readers.');
+    const expected = 'Shared incident report. Available to both readers.';
+    await expect(server(page)).toHaveText(expected);
+    expect(await serverRevision(page)).toBe(before + 1);
+    for (const reader of readers) await expect(editor(reader)).toHaveText('Shared incident report.');
+    release.release();
+
+    await Promise.all(readers.map(async reader => {
+      await expect(editor(reader)).toHaveText(expected);
+      await expect(server(reader)).toHaveText(expected);
+      await expect(connection(reader)).toHaveText('connected');
+    }));
+    await first.screenshot({ path: info.outputPath('overlapping-readers.png'), scale: 'css' });
+  } finally {
+    release.release();
+    await Promise.all(readers.map(reader => reader.close()));
+  }
 });
 
 test('sends small receipts for a long document and falls back when a delta is corrupted', { tag: '@large' }, async ({ page }, info) => {

@@ -15,6 +15,32 @@ import {CrossFormatRoomHandoff} from './yjs-authority-admission-build-20261107/h
 import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-authority-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const peerPresenceRepository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite'));
+const waitingWriters = new Map();
+function pairedWriter(room) {
+  // Test only. Hold both writes immediately before their actual SQLite CAS.
+  const storage = {
+    readDocument: repository.readDocument.bind(repository),
+    readDocumentHeader: repository.readDocumentHeader.bind(repository),
+    createDocument: repository.createDocument.bind(repository),
+    async compareDocument(key, generation, next) {
+      const release = waitingWriters.get(key);
+      if (release) release();
+      else await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          waitingWriters.delete(key);
+          reject(new Error('The paired write did not reach the storage fence.'));
+        }, 3000);
+        waitingWriters.set(key, () => {
+          clearTimeout(timer);
+          waitingWriters.delete(key);
+          resolve();
+        });
+      });
+      return repository.compareDocument(key, generation, next);
+    },
+  };
+  return new CoordinatedDocumentRoom(storage, room.key, schema, 'admission-browser-1');
+}
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:Buffer.from(value).toString('base64')}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?new Uint8Array(Buffer.from(value.__wire,'base64')):value);
 const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'node_modules/.vite-yjs-authority-admission-20261107',optimizeDeps:{entries:['artifacts/yjs-authority-admission-fixture-20261107.html'],include:['yjs']},server:{watch:null,open:false,host:'127.0.0.1',port:4195,strictPort:true},plugins:[{name:'admission-test',configureServer(server){server.middlewares.use(async(req,res,next)=>{
  if(!req.url?.startsWith('/__admission/'))return next();res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json');
@@ -25,7 +51,10 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
   else{const room=sessions.get(req.headers['x-admission-session']);if(!room)throw new Error('Unknown test session');
    if(action==='initialize')value=await room.initialize(body.checkpoint);
    else if(action==='snapshot')value=await room.snapshot();
-   else if(action==='write')value=retainedHttpReceipt(await room.write(body),body.basis);
+   else if(action==='write'){
+    const writer=req.headers['x-admission-overlap']==='1'?pairedWriter(room):room;
+    value=retainedHttpReceipt(await writer.write(body),body.basis);
+   }
    else if(action==='bind')value=await room.admit(body);
    else if(action==='poll-retained'){const snapshot=await room.pollRetained(body.lease??body);value=snapshot&&retainedHttpReceipt(snapshot,body.basis);}
    else if(action==='bind-live'||action==='presence'||action==='leave-live'){

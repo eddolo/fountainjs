@@ -6,7 +6,37 @@ let server=(await readFile('artifacts/yjs-admission-server-20261107.mjs','utf8')
 server=once(server,"const origin=","import {CoordinatedRetainedRoom} from './yjs-authority-admission-build-20261107/coordinator.js';\nimport {CrossFormatRoomHandoff} from './yjs-authority-admission-build-20261107/handoff.js';\nimport {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';\nconst origin=");
 server=once(server,'sessions=new Map();',"sessions=new Map();\nconst peerPresenceRepository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite'));");
 server=once(server,"import {createServer} from 'vite';","import {createServer} from 'vite';\nimport * as Y from 'yjs';\nimport {createEditor} from './yjs-authority-admission-build-20261107/engine.js';\nimport {createRetainedYjsCollaborationExtension} from './yjs-authority-admission-build-20261107/adapter.js';\nimport {restoreRetainedCheckpoint} from './yjs-authority-admission-build-20261107/checkpoint.js';");
-server=once(server,"else if(action==='write')value=await room.write(body);",`else if(action==='write')value=retainedHttpReceipt(await room.write(body),body.basis);
+server=once(server,'const encode=',`const waitingWriters = new Map();
+function pairedWriter(room) {
+  // Test only. Hold both writes immediately before their actual SQLite CAS.
+  const storage = {
+    readDocument: repository.readDocument.bind(repository),
+    readDocumentHeader: repository.readDocumentHeader.bind(repository),
+    createDocument: repository.createDocument.bind(repository),
+    async compareDocument(key, generation, next) {
+      const release = waitingWriters.get(key);
+      if (release) release();
+      else await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          waitingWriters.delete(key);
+          reject(new Error('The paired write did not reach the storage fence.'));
+        }, 3000);
+        waitingWriters.set(key, () => {
+          clearTimeout(timer);
+          waitingWriters.delete(key);
+          resolve();
+        });
+      });
+      return repository.compareDocument(key, generation, next);
+    },
+  };
+  return new CoordinatedDocumentRoom(storage, room.key, schema, 'admission-browser-1');
+}
+const encode=`);
+server=once(server,"else if(action==='write')value=await room.write(body);",`else if(action==='write'){
+    const writer=req.headers['x-admission-overlap']==='1'?pairedWriter(room):room;
+    value=retainedHttpReceipt(await writer.write(body),body.basis);
+   }
    else if(action==='bind')value=await room.admit(body);
    else if(action==='poll-retained'){const snapshot=await room.pollRetained(body.lease??body);value=snapshot&&retainedHttpReceipt(snapshot,body.basis);}
    else if(action==='bind-live'||action==='presence'||action==='leave-live'){
