@@ -39,6 +39,9 @@ expires silent peers, and clears indicators when the room changes. Production
 deployment, shared presence across processes, load and storage validation remain open.
 Native backward and forward selections publish the active end to peers, including
 when the native endpoints reverse over the same highlighted text.
+Changed room responses now use verified deltas when smaller. The 49-paragraph
+browser fixture measured 1,699-byte edit receipts against a roughly 161 KB full
+checkpoint response. A bad delta fell back to a freshly fenced full response.
 [Live HTTP audit](YJS_LIVE_HTTP_REFERENCE.md).
 
 Browser draft recovery reference (2026-11-07, local). IndexedDB recovery copies

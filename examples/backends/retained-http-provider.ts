@@ -3,6 +3,7 @@ import type { DocumentRoomSnapshot } from '../../src/yjs/document-room';
 import type { RetainedAdmissionLease } from '../../src/yjs/retained-admission';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { createRetainedHttpAwareness, type PresencePeer, type PresenceState } from './retained-http-presence';
+import { restoreRetainedHttpReceipt, type RetainedDeltaBasis, type RetainedHttpReceipt } from './retained-http-delta';
 
 interface BoundPresence {
   readonly exchange: (lease: RetainedAdmissionLease, state: PresenceState | null, signal: AbortSignal) => Promise<readonly PresencePeer[]>;
@@ -18,18 +19,22 @@ interface BoundTransport {
 interface RetainedHttpOptions {
   readonly document: Y.Doc;
   readonly bound: () => BoundTransport;
-  readonly poll: (lease: RetainedAdmissionLease, signal: AbortSignal) => Promise<DocumentRoomSnapshot | null>;
-  readonly write: (lease: RetainedAdmissionLease, update: Uint8Array, signal: AbortSignal) => Promise<DocumentRoomSnapshot>;
+  readonly poll: (lease: RetainedAdmissionLease, signal: AbortSignal, basis?: RetainedDeltaBasis) => Promise<RetainedHttpReceipt | null>;
+  readonly write: (lease: RetainedAdmissionLease, update: Uint8Array, signal: AbortSignal, basis: RetainedDeltaBasis) => Promise<RetainedHttpReceipt>;
   readonly merge: (checkpoint: RetainedCheckpoint, signal: AbortSignal) => Promise<void>;
   readonly onStatus: (status: 'connected' | 'reconnecting' | 'disconnected', error?: unknown) => void;
   readonly onSnapshot?: (snapshot: DocumentRoomSnapshot) => void;
 }
 
-function checkpointFor(snapshot: DocumentRoomSnapshot, lease: RetainedAdmissionLease): RetainedCheckpoint {
+function assertReceiptScope(snapshot: Omit<DocumentRoomSnapshot, 'checkpoint'>, lease: RetainedAdmissionLease): void {
   if (snapshot.key !== lease.key || snapshot.epoch !== lease.epoch || snapshot.protocol !== lease.protocol
     || snapshot.phase !== 'active' || !Number.isSafeInteger(snapshot.revision) || snapshot.revision < lease.revision) {
     throw new Error('Transport received a stale or incompatible room. Local changes were retained.');
   }
+}
+
+function checkpointFor(snapshot: DocumentRoomSnapshot, lease: RetainedAdmissionLease): RetainedCheckpoint {
+  assertReceiptScope(snapshot, lease);
   const checkpoint = snapshot.checkpoint as RetainedCheckpoint;
   if (checkpoint.manifest.room !== lease.room || checkpoint.manifest.roomId !== lease.identity) {
     throw new Error('Transport received a different native room. Local changes were retained.');
@@ -72,7 +77,8 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     const bound = options.bound();
     leavePresence = bound.presence?.leave;
     let lease = bound.lease;
-    let vector: Uint8Array;
+    let base: RetainedCheckpoint;
+    let basis: RetainedDeltaBasis;
     let edited = 0, acknowledged = 0;
     let running = false;
     let presenceRequest: AbortController | undefined;
@@ -95,7 +101,8 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       const checkpoint = checkpointFor(snapshot, lease);
       await options.merge(checkpoint, signal);
       signal.throwIfAborted();
-      vector = Y.encodeStateVectorFromUpdate(checkpoint.update);
+      base = checkpoint;
+      basis = { updateSha256: checkpoint.manifest.updateSha256, vector: Y.encodeStateVectorFromUpdate(checkpoint.update) };
       lease = { ...lease, revision: snapshot.revision };
       options.onSnapshot?.(snapshot);
     }
@@ -110,13 +117,28 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       if (signal.aborted) return;
       running = true;
       const sending = edited;
+      const writing = sending > acknowledged;
       let delay: number | undefined;
       try {
-        const snapshot = sending > acknowledged
-          ? await options.write(lease, Y.encodeStateAsUpdate(document, vector), signal)
-          : await options.poll(lease, signal);
+        const receipt = writing
+          ? await options.write(lease, Y.encodeStateAsUpdate(document, basis.vector), signal, basis)
+          : await options.poll(lease, signal, basis);
         signal.throwIfAborted();
-        if (snapshot) {
+        if (!receipt && writing) throw new Error('The authority returned no write acknowledgement. Local changes were retained.');
+        if (receipt) {
+          assertReceiptScope('baseUpdateSha256' in receipt ? receipt.snapshot : receipt, lease);
+          let snapshot: DocumentRoomSnapshot;
+          try { snapshot = await restoreRetainedHttpReceipt(receipt, base); }
+          catch (error) {
+            signal.throwIfAborted();
+            // Fall back once to a newly fenced full receipt. An invalid or
+            // empty fallback must never acknowledge the outgoing edit.
+            const full = await options.poll(lease, signal);
+            if (!full || 'baseUpdateSha256' in full) throw error;
+            snapshot = full;
+          }
+          signal.throwIfAborted();
+          if (writing && snapshot.revision <= lease.revision) throw new Error('The authority did not advance the write revision. Local changes were retained.');
           const beforeMerge = edited;
           try { await accept(snapshot); }
           catch (error) {

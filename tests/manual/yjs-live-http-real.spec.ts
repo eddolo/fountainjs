@@ -32,7 +32,7 @@ async function secondAuthor(page: Page) {
   const token = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
   const peer = await page.context().newPage();
   await peer.addInitScript(token => sessionStorage.setItem('fountain-draft-audit-session', token), token);
-  await peer.goto(fixture + '&peer');
+  await peer.goto(fixture + '&peer' + (new URL(page.url()).searchParams.has('large') ? '&large' : ''));
   await join(peer);
   return peer;
 }
@@ -63,8 +63,8 @@ const serverRevision = (page: Page) => page.evaluate(async () => {
   return (await response.json()).value.revision as number;
 });
 
-test.beforeEach(async ({ page }) => {
-  await page.goto(fixture);
+test.beforeEach(async ({ page }, info) => {
+  await page.goto(fixture + (info.tags.includes('@large') ? '&large' : ''));
   await join(page);
 });
 
@@ -198,4 +198,66 @@ test('expires a silent peer and keeps old presence out of a rotated session', as
     await expect(peerSelection(page)).toHaveCount(0);
     await page.screenshot({ path: info.outputPath('presence-rotated.png'), scale: 'css' });
   } finally { await peer.close(); }
+});
+
+test('sends small receipts for a long document and falls back when a delta is corrupted', { tag: '@large' }, async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  try {
+    const fullSize = await page.evaluate(async () => {
+      const response = await fetch('/__admission/snapshot', {
+        method: 'POST', body: '{}', headers: {
+          'Content-Type': 'application/json', 'X-Admission-Session': sessionStorage.getItem('fountain-draft-audit-session')!,
+        },
+      });
+      return (await response.arrayBuffer()).byteLength;
+    });
+    expect(fullSize).toBeGreaterThan(25_000);
+    const outbound = page.waitForResponse(async response => response.url().endsWith('/write') && Boolean((await response.json()).value?.delta));
+    const inbound = peer.waitForResponse(async response => response.url().endsWith('/poll-retained') && Boolean((await response.json()).value?.delta));
+    await editor(page).getByText('Shared incident report.', { exact: true }).click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' New field note.');
+    const outgoingSize = (await (await outbound).body()).byteLength;
+    const incomingSize = (await (await inbound).body()).byteLength;
+    expect(outgoingSize).toBeLessThan(fullSize / 10);
+    expect(incomingSize).toBeLessThan(fullSize / 10);
+    await expect(editor(peer)).toContainText('New field note.');
+
+    let corrupted = 0;
+    let fallback = 0;
+    await peer.route(poll, async route => {
+      const body = route.request().postDataJSON();
+      if (corrupted && !body.basis) fallback += 1;
+      if (corrupted || !body.basis) return route.continue();
+      const response = await route.fetch();
+      const reply = await response.json();
+      if (!reply.value?.delta) return route.fulfill({ response });
+      corrupted += 1;
+      reply.value.baseUpdateSha256 = '0'.repeat(64);
+      await route.fulfill({ response, json: reply });
+    });
+    await page.keyboard.insertText(' Recovery checked.');
+    await expect(editor(peer)).toContainText('New field note. Recovery checked.');
+    await expect(server(peer)).toContainText('New field note. Recovery checked.');
+    await expect(connection(peer)).toHaveText('connected');
+    expect(corrupted).toBe(1);
+    expect(fallback).toBe(1);
+    await info.attach('receipt-bytes', { body: JSON.stringify({ fullSize, outgoingSize, incomingSize }), contentType: 'application/json' });
+    await peer.screenshot({ path: info.outputPath('delta-recovered.png'), scale: 'css' });
+  } finally { await peer.close(); }
+});
+
+test('keeps local typing when the write response has no acknowledgement', async ({ page }, info) => {
+  const before = await serverRevision(page);
+  await page.route(write, route => route.fulfill({ json: { ok: true, value: null } }));
+  await type(page, ' Unacknowledged field note.');
+  await expect(connection(page)).toContainText('no write acknowledgement');
+  await expect(page.locator('#autosave')).toHaveText('Recovery copy saved automatically.');
+  expect(await serverRevision(page)).toBe(before);
+  await page.reload();
+  await expect(page.getByRole('status')).toHaveText('Ready');
+  await page.getByRole('button', { name: 'Open local copy' }).click();
+  await expect(editor(page)).toHaveText('Shared incident report. Unacknowledged field note.');
+  await expect(server(page)).toHaveText('Shared incident report.');
+  await page.screenshot({ path: info.outputPath('write-unacknowledged.png'), scale: 'css' });
 });

@@ -7,8 +7,31 @@ An edit made during a request stays pending for the next exchange. Incoming
 checkpoints pass through the retained adapter's validated merge before the
 provider advances the revision. The private `pollRetained` read returns no
 checkpoint if the room revision is unchanged. It still checks the active phase,
-protocol, epoch, namespace and native identity. Changed revisions return a
-verified checkpoint. Writes use the existing fenced SQLite authority.
+protocol, epoch, namespace and native identity. Writes use the existing fenced
+SQLite authority.
+
+## Incremental receipts
+
+After initial admission, the [HTTP receipt codec](../examples/backends/retained-http-delta.ts)
+can send a smaller Yjs delta with the authoritative manifest. The client uses
+its last accepted server checkpoint as the base, separately from its live
+document and unsent edits. It reconstructs the exact bytes in an isolated Y.Doc,
+checks the length and checksum, and passes the result through the existing
+checkpoint and merge validation. A missing or incompatible base requests one
+fresh full receipt through the same authority fence. A write still needs an
+acknowledgement at a newer revision. Empty replies leave the edit recoverable
+locally. Initial joins, small savings and unsupported bases use full receipts.
+
+In the recorded 49-paragraph fixture, the full checkpoint response body was
+160,496–160,624 bytes. Both the write acknowledgement and the peer's read response were
+1,699 bytes for the same small edit, about 99% smaller. The numbers measure
+uncompressed JSON response bodies for this fixture. The test also corrupts the
+base identifier, checks the single full fallback, and verifies the text in the
+peer editor and server reader.
+
+The incremental receipt audit passed 21 recorded journeys across Chromium,
+Firefox and WebKit, 36 focused codec, presence and authority tests, and type
+checks. The browser cases include local recovery after an empty acknowledgement.
 
 An established transport keeps the editor and its native local history mounted
 through a transient request failure. On a stale epoch or frozen room the
@@ -67,12 +90,13 @@ the internal polling method in the ESM and CommonJS room-authority declarations.
 
 ## Deployment boundaries
 
-This reference uses periodic HTTP polling with fixed delays and sends a full
-validated checkpoint for each changed server revision. Polling, checkpoint
-validation, full checkpoint responses and SQLite reads have not been load-tested
-for large rooms or many editors. Presence is process-local. A real host must
+This reference uses periodic HTTP polling with fixed delays. The server still
+validates full checkpoints, and the client retains an accepted checkpoint and
+reconstructs full bytes for validation. Polling, validation, SQLite reads and
+client memory have not been load-tested for large rooms or many editors.
+Presence is process-local. A real host must
 authenticate the actor and supply or verify their display identity. The reference
 has no deployed process, deadline for document requests, multi-host presence
 distribution, load evidence, or production retention and compaction policy.
-The loopback session token is test infrastructure. The default Yjs adapter still has six known structural
-failures. This reference adds no public package entry and remains unreleased.
+The loopback session token is test infrastructure. The default Yjs adapter still
+has six known structural failures. This reference remains unreleased.

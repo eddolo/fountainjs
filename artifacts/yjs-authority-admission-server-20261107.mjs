@@ -12,6 +12,7 @@ import {SQLiteRetainedRoomRepository} from './yjs-authority-admission-build-2026
 import {CoordinatedDocumentRoom} from './yjs-authority-admission-build-20261107/authority.js';
 import {CoordinatedRetainedRoom} from './yjs-authority-admission-build-20261107/coordinator.js';
 import {createRetainedPresenceRegistry} from '../examples/backends/retained-http-presence.ts';
+import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';
 const presence=createRetainedPresenceRegistry();
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-authority-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:Buffer.from(value).toString('base64')}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?new Uint8Array(Buffer.from(value.__wire,'base64')):value);
@@ -24,9 +25,9 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
   else{const room=sessions.get(req.headers['x-admission-session']);if(!room)throw new Error('Unknown test session');
    if(action==='initialize')value=await room.initialize(body.checkpoint);
    else if(action==='snapshot')value=await room.snapshot();
-   else if(action==='write')value=await room.write(body);
+   else if(action==='write')value=retainedHttpReceipt(await room.write(body),body.basis);
    else if(action==='bind')value=await room.admit(body);
-   else if(action==='poll-retained')value=await room.pollRetained(body);
+   else if(action==='poll-retained'){const snapshot=await room.pollRetained(body.lease??body);value=snapshot&&retainedHttpReceipt(snapshot,body.basis);}
    else if(action==='bind-live'){const snapshot=await room.admit(body.lease);value={snapshot,token:presence.bind(room.key,snapshot.epoch)};}
    else if(action==='presence'){await room.pollRetained(body.lease);value=presence.exchange(room.key,body.lease.epoch,body.token,body.state);}
    else if(action==='leave-live'){presence.leave(room.key,body.epoch,body.token);value=null;}

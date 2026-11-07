@@ -11,6 +11,7 @@
   section { min-width: 0; padding: 20px; border: 1px solid #ccc3df; border-radius: 12px; background: white; }
   h2 { margin-top: 0; font-size: 19px; }
   .fountain-editor { padding: 12px; min-height: 135px; border: 1px solid #ded7eb; border-radius: 5px; }
+  .large .fountain-editor { max-height: 240px; overflow: auto; }
   #copies { margin-top: 16px; }
   #records > div + div { margin-top: 14px; padding-top: 10px; border-top: 1px solid #ded7eb; }
   #records time { margin-inline-start: 8px; color: #625975; font-size: 14px; }
@@ -49,7 +50,17 @@ import {createRetainedHttpProvider} from '/examples/backends/retained-http-provi
 const version = 'admission-browser-1';
 const select = selector => document.querySelector(selector);
 const local = text => ({type: 'doc', content: [{type: 'paragraph', content: [{type: 'text', text}]}]});
+const incident = () => {
+  const seed = local('Shared incident report.');
+  if (query.has('large')) {
+    for (let index = 1; index <= 48; index += 1) {
+      seed.content.push(...local(`Incident ${index}. ` + 'Record the scope, verified impact, and owner of each follow-up action. '.repeat(9)).content);
+    }
+  }
+  return seed;
+};
 const query = new URLSearchParams(location.search);
+document.body.classList.toggle('large', query.has('large'));
 const autosaveEnabled = !query.has('manual');
 const live = query.has('live');
 const user = query.has('peer')
@@ -69,8 +80,10 @@ async function request(action, body = {}, signal) {
   });
   const reply = await response.json();
   if (!reply.ok) throw Object.assign(new Error(reply.error), {code: reply.code});
+  const wire = value => Uint8Array.from(atob(value.__wire), byte => byte.charCodeAt(0));
   const checkpoint = reply.value?.checkpoint ?? reply.value?.snapshot?.checkpoint;
-  if (checkpoint) checkpoint.update = Uint8Array.from(atob(checkpoint.update.__wire), byte => byte.charCodeAt(0));
+  if (checkpoint) checkpoint.update = wire(checkpoint.update);
+  if (reply.value?.delta) reply.value.delta = wire(reply.value.delta);
   return reply.value;
 }
 
@@ -124,8 +137,8 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
         leave: () => request('leave-live', {epoch, token}, AbortSignal.timeout(1_500)),
       }};
     },
-    poll: (lease, signal) => request('poll-retained', lease, signal),
-    write: (lease, update, signal) => request('write', {epoch: lease.epoch, protocol: lease.protocol, update}, signal),
+    poll: (lease, signal, basis) => request('poll-retained', {lease, basis}, signal),
+    write: (lease, update, signal, basis) => request('write', {epoch: lease.epoch, protocol: lease.protocol, update, basis}, signal),
     async merge(checkpoint, signal) {
       const candidate = await prepareRetainedAdmission(doc, checkpoint, next.editor.state.schema, version, 'fountain');
       signal.throwIfAborted();
@@ -290,7 +303,7 @@ if (!token) {
   ({token} = await request('open'));
   const doc = new Y.Doc();
   const seedKit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({document: doc, user})]);
-  const seed = createEditor({schema: seedKit.schema, plugins: seedKit.plugins, content: local('Shared incident report.')});
+  const seed = createEditor({schema: seedKit.schema, plugins: seedKit.plugins, content: incident()});
   try { await request('initialize', {checkpoint: await captureRetainedCheckpoint(doc, seed.state.schema, version)}); }
   finally { seed.destroy(); doc.destroy(); }
   sessionStorage.setItem('fountain-draft-audit-session', token);
