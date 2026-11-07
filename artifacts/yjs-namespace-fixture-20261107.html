@@ -10,6 +10,7 @@ import {createYjsCollaborationExtension} from '/artifacts/yjs-namespace-build-20
 import {createRetainedYjsCollaborationExtension} from '/artifacts/yjs-namespace-build-20261107/retained-adapter.js';
 import {captureRetainedCheckpoint,restoreRetainedCheckpoint} from '/artifacts/yjs-namespace-build-20261107/checkpoint.js';
 import {captureLegacyCheckpoint,restoreLegacyCheckpoint} from '/artifacts/yjs-namespace-build-20261107/legacy-checkpoint.js';
+import {openBoundYjsRoom} from '/artifacts/yjs-namespace-build-20261107/bound-room.js';
 import {openBrowserDrafts,scheduleBrowserDraftAutosave} from '/examples/backends/retained-browser-drafts.ts';
 const sourceRoom='Research / α 😀',version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Migration paper'}},content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha technical note.'}]},{type:'blockquote',content:[{type:'paragraph',content:[{type:'text',text:'Keep every accepted edit recoverable.'}]}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Original figure'}},{type:'math_block',attrs:{latex:'x^2+y^2',label:'eq:one'}},{type:'code_block',attrs:{language:'lean'},content:[{type:'text',text:'example : 1 + 1 = 2 := by decide'}]}]};
 const nested=new URLSearchParams(location.search).has('nested');
@@ -23,16 +24,15 @@ async function request(action,body={}){const response=await fetch('/__handoff/'+
 const shortcuts=new Plugin({props:{handleKeyDown:(editor,event)=>!event.altKey&&!event.isComposing&&(event.ctrlKey||event.metaKey)&&['z','y'].includes(event.key.toLowerCase())?(event.key.toLowerCase()==='y'||event.shiftKey?redoCollaboration(editor):undoCollaboration(editor)):false}});
 function mount(doc,id,previous,model,protocol='legacy',epoch,namespace=sourceRoom,fragment){if(previous){previous.view.destroy();previous.editor.destroy();previous.doc.destroy();previous.host.remove()}const host=document.createElement('div');document.querySelector('#'+id).append(host);const extension=id==='archive'?null:(protocol==='legacy'?createYjsCollaborationExtension:createRetainedYjsCollaborationExtension)({document:doc,fragmentName:namespace,...(protocol==='legacy'?{preserveConcurrentRoots:true}:{}),...(fragment?{fragment}:{}),captureTimeout:0,user:{id,name:id,color:'#7048e8'}}),kit=composeExtensions([CoreExtension,MathExtension,...(extension?[extension]:[])]),editor=createEditor({schema:kit.schema,plugins:[...kit.plugins,shortcuts],content:model??content,editable:id!=='archive'}),view=new EditorView(host,editor,{ariaLabel:id==='offline'?'Offline editor':id==='active'?'Active editor':'Archive reader'});if(id==='active')document.querySelector('#active-title').textContent='Active editor · '+protocol+' protocol';return {doc,host,editor,view,protocol,epoch,namespace,fragment}}
 function codec(checkpoint){if(checkpoint.manifest.format==='fountain-legacy-checkpoint/1')return {protocol:'legacy',restore:restoreLegacyCheckpoint};if(checkpoint.manifest.format==='fountain-retained-checkpoint/1')return {protocol:'retained',restore:restoreRetainedCheckpoint};throw new Error('Unknown checkpoint protocol')}
-async function reopen(checkpoint,id,previous,epoch,beforeMount){
+async function reopen(checkpoint,id,previous,epoch){
  const selected=codec(checkpoint),restored=await selected.restore(checkpoint,schema,version);
- try{beforeMount?.()}catch(error){restored.document.destroy();throw error}
  return mount(restored.document,id,previous,restored.baseDocument.toJSON(),selected.protocol,epoch,checkpoint.manifest.room,restored.reader?.fragment);
 }
 async function openActive(snapshot,previous,beforeMount){
- const offer=await request('join',{protocols:['legacy','retained']});
- if(offer.snapshot.epoch!==snapshot.epoch||offer.snapshot.protocol!==snapshot.protocol) throw new Error('Room changed before opening the editor');
- const bound=await request('admit',offer.admission);
- return reopen(bound.checkpoint,'active',previous,bound.epoch,beforeMount);
+ const {document,baseDocument,fragment,lease}=await openBoundYjsRoom({schema,schemaVersion:version,expected:snapshot,
+  open:()=>request('join',{protocols:['legacy','retained']}),admit:offer=>request('admit',offer)});
+ try{beforeMount?.()}catch(error){document.destroy();throw error}
+ return mount(document,'active',previous,baseDocument.toJSON(),lease.protocol,lease.epoch,lease.room,fragment);
 }
 function report(text){document.querySelector('#report').textContent=text+'\nLast acknowledged protocol: '+current.protocol+' · revision '+current.revision+' · '+current.phase+'\nWriter epoch: '+active.epoch+'\nActive namespace: '+active.namespace+'\nMigration archive: '+(archiveId??'none')}
 function captureWriter(writer){

@@ -163,6 +163,36 @@ after a server restart, before an autosave commits, or across multiple devices
 requires a durable host session and draft policy. Browser-local history stacks
 are recreated when the editor reopens.
 
+## Validating the room before mounting the editor
+
+The [host opener](../examples/backends/bound-yjs-room.ts) first requests a
+metadata-only offer for the expected room key and, when supplied, its epoch,
+protocol, and minimum revision. The admission reply must stay in that room and
+epoch, keep the selected protocol, be active, and meet the offered revision.
+It may carry a newer revision committed between the two requests. Wrong
+metadata, namespace, or checkpoint format is refused before reading update
+bytes. The isolated restore checks the schema and digests, then verifies native
+identity using the legacy XML root or retained room ID. A canceled or rejected
+restore never reaches the editor. The caller owns the accepted Y.Doc.
+
+The browser demo uses the verified lease to select the adapter and preserves
+an embedded XML fragment for a legacy room. Its delayed mount guard still
+protects edits made during a handoff. Tests simulate a mismatched epoch in a
+real HTTP reply, an unrelated valid checkpoint in the same namespace for each
+protocol, and cancellation before reading bytes. They also open a newly
+provisioned retained room after another writer advances its revision. The
+host authorizes requests and fences later writes. This reference uses the
+existing experimental and legacy adapters.
+
+The full namespace run passed 36 recorded Chromium, Firefox and WebKit
+workflows. After moving the shared identity helper into a private module, the
+six targeted browser checks passed again, as did all 174 focused source tests.
+In the final WebKit captures the
+author edits the original room after refusal, then the note appears in the
+retired archive when the verified replacement opens. The package build, all
+441 tracked declarations, and the headless boundary pass. The aggregate size
+gate still reports the existing 174.3 KiB ESM and 138.7 KiB CommonJS overruns.
+
 ## Remaining work
 
 Production costs, archive/raw retention and compaction, external coordination

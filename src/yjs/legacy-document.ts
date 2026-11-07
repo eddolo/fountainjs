@@ -1,6 +1,7 @@
 import * as Y from 'yjs';
 import { RangeSelection, Selection, nodeRangeAtPath, resolveDocumentPoint, selectionAtPosition, textPointToPosition, type AnySelection, type Node, type NodeJSON, type Schema } from '../core';
 import { validateRetainedDocument } from './retained-document';
+import { legacyNodeIdentity } from './legacy-node-identity';
 import { YjsStructuredAttributeStore, type YjsStructuredAttributesOptions } from './structured-attributes';
 
 export type LegacyStructuredOptions = Omit<YjsStructuredAttributesOptions, 'map'>;
@@ -25,9 +26,7 @@ export class LegacyDocumentReader {
     const read = (node: Y.XmlElement, path: readonly number[], depth: number): NodeJSON => {
       if (++nodes > 100_000 || depth > 100) throw new Error('Legacy document exceeds node/depth bounds.');
       this.paths.set(node, Object.freeze([...path]));
-      const reference = Y.createRelativePositionFromTypeIndex(node, 0).type;
-      if (!reference) throw new Error('Legacy node has no stable shared identity.');
-      this.identities.set(`yjs-${reference.client}-${reference.clock}`, Object.freeze([...path]));
+      this.identities.set(legacyNodeIdentity(node), Object.freeze([...path]));
       const metadata = node.getAttributes(), type = metadata['fountain:type'], attrs: Record<string, unknown> = {}; let marks: NodeJSON['marks'];
       if (typeof type !== 'string' || !type || Object.keys(metadata).length > 1_000) throw new Error('Invalid legacy node metadata.');
       for (const [name, value] of Object.entries(metadata)) {

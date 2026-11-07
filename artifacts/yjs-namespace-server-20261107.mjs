@@ -40,7 +40,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    const session=sessions.get(req.headers['x-handoff-session']);if(!session)throw new Error('Unknown test session');
    const {key,room,handoff}=session;
    if(action==='initialize')value=await room.initialize(body.checkpoint);
-   else if(action==='join')value=await room.openForEditing({protocols:body.protocols,loadCheckpoint(){throw new Error('This fixture initializes its legacy source explicitly');}});
+   else if(action==='join')value=(await room.openForEditing({protocols:body.protocols,loadCheckpoint(){throw new Error('This fixture initializes its legacy source explicitly');}})).admission;
    else if(action==='admit')value=await room.admit(body);
    else if(action==='snapshot')value=await room.snapshot();
    else if(action==='write')value=await room.write(body);

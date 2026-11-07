@@ -2,6 +2,7 @@ import * as Y from 'yjs';
 import type { Schema } from '../core/schema';
 import type { RetainedCheckpoint } from './retained-checkpoint';
 import { captureLegacyCheckpoint, restoreLegacyCheckpoint, assertLegacyCheckpointState, snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
+import { legacyNodeIdentity } from './legacy-node-identity';
 import { applyRetainedRoomUpdate, validateRetainedRoomCheckpoint, RetainedRoomError, type RetainedRoomVersion } from './retained-room-store';
 import { validateCoordinatedRoomRecord, type CoordinatedRecord, type CoordinatedFreeze } from './retained-room-coordinator';
 
@@ -78,10 +79,8 @@ export async function validateDocumentCheckpoint(checkpoint: DocumentCheckpoint,
   }
   const restored = await restoreLegacyCheckpoint(checkpoint as LegacyCheckpoint, schema, schemaVersion, projection);
   try {
-    const reference = Y.createRelativePositionFromTypeIndex(restored.reader.root, 0).type;
-    if (!reference) throw new Error('Legacy source has no native root identity.');
     assertLegacyCheckpointState(restored.document, restored.checkpoint);
-    return { checkpoint: restored.checkpoint, protocol: 'legacy', identity: `yjs-${reference.client}-${reference.clock}` };
+    return { checkpoint: restored.checkpoint, protocol: 'legacy', identity: legacyNodeIdentity(restored.reader.root) };
   } finally { restored.document.destroy(); }
 }
 export async function applyDocumentRoomUpdate(source: DocumentCheckpoint, schema: Schema, schemaVersion: string, projection: LegacyProjectionOptions, supplied: Uint8Array): Promise<DocumentCheckpoint> {

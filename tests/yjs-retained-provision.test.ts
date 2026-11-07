@@ -11,6 +11,7 @@ import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { captureRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
+import { openBoundYjsRoom } from '../examples/backends/bound-yjs-room';
 
 const key = 'project:first-document';
 const version = 'schema-1';
@@ -53,6 +54,94 @@ async function fixture() {
   const peer = new CoordinatedDocumentRoom(second, key, starter.schema, version);
   return { ...starter, checkpoint, first, second, room, peer };
 }
+
+it('opens a newly provisioned retained room at the newer bound revision', async () => {
+  const pair = await fixture();
+  const bound = await openBoundYjsRoom({
+    expected: { key }, schema: pair.schema, schemaVersion: version,
+    open: async () => (await pair.room.openForEditing({ protocols: ['legacy', 'retained'], loadCheckpoint: () => pair.checkpoint })).admission,
+    admit: async offer => {
+      pair.editor.dispatch(pair.editor.createTransaction().insertText([0, 0], 0, 'New: '));
+      await pair.peer.write({ epoch: offer.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(pair.document) });
+      return pair.room.admit(offer);
+    },
+  });
+  cleanups.push(() => bound.document.destroy());
+  expect(bound.lease).toMatchObject({ key, protocol: 'retained', revision: 1, identity: pair.checkpoint.manifest.roomId });
+  expect(Object.isFrozen(bound.lease)).toBe(true);
+  expect(bound.baseDocument.textContent).toBe('New: Canonical starter');
+  expect(bound.fragment).toBeUndefined();
+});
+
+it('selects the stored legacy adapter and returns the original embedded fragment', async () => {
+  const pair = await fixture();
+  const document = new Y.Doc();
+  const fragment = new Y.XmlFragment();
+  document.getMap('folder').set('page', fragment);
+  const kit = composeExtensions([CoreExtension, createYjsCollaborationExtension({ document, fragment, user })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: pair.editor.getJSON() });
+  cleanups.push(() => { editor.destroy(); document.destroy(); });
+  const saved = await pair.room.initialize(await captureLegacyCheckpoint(document, pair.schema, version, {}, 'Original / α', fragment));
+  const loadCheckpoint = vi.fn(() => pair.checkpoint);
+  const bound = await openBoundYjsRoom({
+    expected: saved, schema: pair.schema, schemaVersion: version,
+    open: async () => (await pair.room.openForEditing({ protocols: ['legacy', 'retained'], loadCheckpoint })).admission,
+    admit: offer => pair.peer.admit(offer),
+  });
+  cleanups.push(() => bound.document.destroy());
+  expect(loadCheckpoint).not.toHaveBeenCalled();
+  expect(bound.lease).toMatchObject({ key, epoch: saved.epoch, protocol: 'legacy', room: 'Original / α' });
+  expect(bound.fragment).toBe(bound.document.getMap('folder').get('page'));
+  expect(bound.baseDocument.toJSON()).toEqual(editor.getJSON());
+});
+
+it.each(['epoch', 'protocol', 'key', 'phase', 'revision'] as const)('refuses a mismatched %s in the bound reply before reading checkpoint bytes', async field => {
+  const pair = await fixture();
+  const opened = await pair.room.openForEditing({ protocols: ['retained'], loadCheckpoint: () => pair.checkpoint });
+  const readBytes = vi.fn(() => opened.snapshot.checkpoint.update);
+  const reply = { ...opened.snapshot, checkpoint: { manifest: pair.checkpoint.manifest, get update() { return readBytes(); } } };
+  const wrong = { epoch: crypto.randomUUID(), protocol: 'legacy', key: 'other-room', phase: 'frozen', revision: -1 };
+  await expect(openBoundYjsRoom({
+    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, open: async () => opened.admission,
+    admit: async () => ({ ...reply, [field]: wrong[field] }),
+  })).rejects.toThrow('reply does not match');
+  expect(readBytes).not.toHaveBeenCalled();
+});
+
+it.each(['legacy', 'retained'] as const)('refuses a valid but foreign %s checkpoint for the same namespace', async protocol => {
+  const pair = await fixture();
+  const legacy = protocol === 'legacy';
+  const original = legacy ? seed('Original', 'fountain', true) : pair;
+  const foreign = seed('Unrelated', 'fountain', legacy);
+  const capture = (source: ReturnType<typeof seed>) => legacy
+    ? captureLegacyCheckpoint(source.document, source.schema, version)
+    : captureRetainedCheckpoint(source.document, source.schema, version);
+  await pair.room.initialize(await capture(original));
+  const opened = await pair.room.openForEditing({ protocols: [protocol], loadCheckpoint: () => pair.checkpoint });
+  const checkpoint = await capture(foreign);
+  await expect(openBoundYjsRoom({
+    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, open: async () => opened.admission,
+    admit: async () => ({ ...opened.snapshot, checkpoint }),
+  })).rejects.toThrow('native identity changed');
+});
+
+it('discards a delayed admission after cancellation before reading its wire data', async () => {
+  const pair = await fixture();
+  const opened = await pair.room.openForEditing({ protocols: ['retained'], loadCheckpoint: () => pair.checkpoint });
+  const controller = new AbortController();
+  const started = deferred<void>();
+  const response = deferred<typeof opened.snapshot>();
+  const readBytes = vi.fn(() => opened.snapshot.checkpoint.update);
+  const result = openBoundYjsRoom({
+    expected: opened.snapshot, schema: pair.schema, schemaVersion: version, signal: controller.signal,
+    open: async () => opened.admission, admit: () => { started.resolve(); return response.promise; },
+  });
+  await started.promise;
+  controller.abort();
+  response.resolve({ ...opened.snapshot, checkpoint: { manifest: pair.checkpoint.manifest, get update() { return readBytes(); } } });
+  await expect(result).rejects.toMatchObject({ name: 'AbortError' });
+  expect(readBytes).not.toHaveBeenCalled();
+});
 
 it('returns one durable identity to simultaneous first joins through separate database connections', async () => {
   const pair = await fixture();

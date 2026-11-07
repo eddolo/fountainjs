@@ -14,6 +14,9 @@ paragraph splitting. The retained replacement is available as an experimental
 entry in the unreleased local package. Safe production adoption remains open.
 The SQLite reference can open an existing room in its stored format and use
 the retained format when provisioning a new room.
+The dual-format client reference verifies the bound reply and checkpoint
+identity before selecting an adapter and mounting an editor.
+[Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

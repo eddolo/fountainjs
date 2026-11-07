@@ -102,6 +102,37 @@ test('recovers edits made while the replacement room admission reply is in fligh
   } finally { admission.release(); }
 });
 
+test('recovers from an admission reply for a different epoch without swapping editors', async ({ page }, info) => {
+  const before = await state(page);
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  await page.route('**/__handoff/admit', async route => {
+    const response = await route.fetch();
+    expect(response.ok()).toBe(true);
+    const reply = await response.json();
+    reply.value.epoch = before.epoch;
+    await route.fulfill({ response, json: reply });
+  }, { times: 1 });
+
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Room admission reply does not match');
+  const waiting = await state(page);
+  expect(waiting.protocol).toBe('retained');
+  expect(waiting.activeProtocol).toBe('legacy');
+  expect(waiting.active).toEqual(before.active);
+  await type(page, 'Active editor', ' Preserved after refusal');
+  const pending = (await state(page)).active;
+  await capture(page, info, 'foreign-epoch-refused.png');
+
+  await button('Retry last migration').click();
+  await expect(status).toContainText('Durable migration receipt replayed');
+  const restored = await state(page);
+  expect(restored.epoch).toBe(waiting.epoch);
+  expect(restored.active).toEqual(before.server);
+  expect(restored.archive).toEqual(pending);
+  await capture(page, info, 'verified-room-reopened.png');
+});
+
 test('keeps a deletion made during rollback admission and archives it on retry', async ({ page }, info) => {
   const before = await state(page);
   const button = (name: string) => page.getByRole('button', { name, exact: true });
