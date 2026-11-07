@@ -33,10 +33,11 @@ export async function validateRetainedRoomCheckpoint(checkpoint: RetainedCheckpo
 export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema: Schema, schemaVersion: string, bytes: Uint8Array): Promise<RetainedCheckpoint> {
   const restored = await restoreRetainedCheckpoint(source, schema, schemaVersion);
   try {
+    complete(restored.document);
     Y.applyUpdate(restored.document, bytes);
     complete(restored.document);
-    const next = await captureRetainedCheckpoint(restored.document, schema, schemaVersion, source.manifest.room);
-    if (next.manifest.roomId !== source.manifest.roomId) throw new Error('Shared room identity changed.');
+    const next = await captureRetainedCheckpoint(restored.document, schema, schemaVersion, restored.manifest.room);
+    if (next.manifest.roomId !== restored.manifest.roomId) throw new Error('Shared room identity changed.');
     return next;
   } catch (cause) { throw new RetainedRoomError('invalid-update', 'Retained update rejected; authoritative state was not changed.', { cause }); }
   finally { restored.document.destroy(); }

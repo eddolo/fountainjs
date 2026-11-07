@@ -104,6 +104,9 @@ deletions before clearing the pending edit, even when a fallback checkpoint
 has advanced because another author wrote to the room.
 The retained authority acknowledges a replay without creating an extra durable
 revision when the complete validated checkpoint and storage generation match.
+The durable write path restores and validates the saved checkpoint once. In a
+single-machine SQLite benchmark, median write time for 1,000 paragraphs fell
+from 569.05 ms to 289.82 ms.
 Both adapters also discard an older queued cursor after a newer one is sent.
 The retained live workflow now has 18 recorded browser checks for all six
 default-adapter structural cases across offline autosave, reload, resume, undo

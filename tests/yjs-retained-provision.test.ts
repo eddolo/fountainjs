@@ -6,10 +6,10 @@ import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, composeExtensions, createEditor } from '../src';
 import { createYjsCollaborationExtension } from '../src/yjs';
-import { CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
+import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
-import { captureRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
+import { captureRetainedCheckpoint, restoreRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
 import { openBoundYjsRoom } from '../examples/backends/bound-yjs-room';
 
@@ -99,6 +99,25 @@ it('advances the revision for a shared-state change with an identical document p
   expect(saved.checkpoint.manifest.documentSha256).toBe(initial.checkpoint.manifest.documentSha256);
   expect(saved.checkpoint.manifest.checkpointSha256).not.toBe(initial.checkpoint.manifest.checkpointSha256);
   expect(saved.revision).toBe(initial.revision + 1);
+});
+
+it.each(['insertion', 'deletion'] as const)('refuses an incomplete source even when a write supplies the missing dependency for a pending %s', async kind => {
+  const pair = await fixture();
+  const restored = await restoreRetainedCheckpoint(pair.checkpoint, pair.schema, version);
+  cleanups.push(() => restored.document.destroy());
+  const updates: Uint8Array[] = [];
+  pair.document.on('update', update => updates.push(update));
+  const text = [...pair.document.getMap('fountain-text:texts').values()][0] as Y.Text;
+  text.insert(2, 'X');
+  if (kind === 'insertion') text.insert(3, 'Y');
+  else text.delete(2, 1);
+  Y.applyUpdate(restored.document, updates[1]!);
+  expect(kind === 'insertion' ? restored.document.store.pendingStructs : restored.document.store.pendingDs).toBeTruthy();
+  const incomplete = await captureRetainedCheckpoint(restored.document, pair.schema, version);
+  await expect(applyDocumentRoomUpdate(incomplete, pair.schema, version, {}, updates[0]!))
+    .rejects.toMatchObject({ code: 'invalid-update' });
+  const complete = await applyDocumentRoomUpdate(pair.checkpoint, pair.schema, version, {}, Y.encodeStateAsUpdate(pair.document));
+  expect(complete.manifest.updateSha256).not.toBe(pair.checkpoint.manifest.updateSha256);
 });
 
 it.each(['edit', 'freeze'] as const)('fences a replay if another authority commits a concurrent %s', async change => {

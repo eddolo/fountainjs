@@ -251,6 +251,34 @@ All 81 focused tests and 21 recorded Chromium, Firefox and WebKit journeys
 pass. The WebKit insertion and deletion captures were visually reviewed.
 Recordings are in `artifacts/yjs-retained-idempotent-replay-20261107/`.
 
+## Durable write validation cost
+
+The retained write path validates the saved checkpoint during the same restore
+it uses to stage the update. It rejects unresolved dependencies both before
+and after applying the update. The resulting checkpoint is still validated and
+hashed before committing it to SQLite.
+
+In the local Node 24 SQLite benchmark, median write time fell from 150.75 ms
+to 75.51 ms for 250 paragraphs and from 569.05 ms to 289.82 ms for 1,000
+paragraphs. Both runs applied the same edits and produced the same document
+digest. Each write used six SHA-256 operations, down from twelve. Each build
+had 16 measured writes per size after warm-up. These are single-machine
+authority times. The workload still validates the whole document and does not
+measure network latency or concurrent production load.
+
+All 162 focused tests and 24 recorded Chromium, Firefox and WebKit journeys
+passed. Removing the pre-update dependency check made both malformed-source
+regressions fail, for a pending insertion and a pending deletion. The Firefox
+reconnect capture shows the offline text inside the quote in both the editor
+and saved reader. Recordings are in `artifacts/yjs-authority-write-browser-20261107/`.
+
+Build the authority fixture from baseline `cef36844` and from this change
+into separate directories. Run the benchmark against the two compiled builds.
+
+```powershell
+node artifacts/benchmark-yjs-authority-write-20261107.mjs artifacts/yjs-authority-write-baseline-20261107 artifacts/yjs-authority-admission-build-20261107
+```
+
 ## Deployment boundaries
 
 This reference uses periodic HTTP polling. The server still

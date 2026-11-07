@@ -87,8 +87,10 @@ export async function applyDocumentRoomUpdate(source: DocumentCheckpoint, schema
   if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) documentRoomFailure('invalid-update', 'Invalid document update size.');
   const bytes = Uint8Array.from(supplied);
   try {
+    // The retained writer validates the original checkpoint as it restores
+    // the isolated document it will edit. Reuse that one restore.
+    if (documentProtocol(source) === 'retained') return await applyRetainedRoomUpdate(source as RetainedCheckpoint, schema, schemaVersion, bytes);
     const before = await validateDocumentCheckpoint(source, schema, schemaVersion, projection);
-    if (before.protocol === 'retained') return await applyRetainedRoomUpdate(before.checkpoint as RetainedCheckpoint, schema, schemaVersion, bytes);
     const restored = await restoreLegacyCheckpoint(before.checkpoint as LegacyCheckpoint, schema, schemaVersion, projection);
     try {
       Y.applyUpdate(restored.document, bytes);
