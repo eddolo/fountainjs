@@ -29,6 +29,7 @@ export interface CrossFormatRepository extends DocumentRoomRepository {
   installCrossArchive(key: string, expectedGeneration: string, next: DocumentRoomRecord, archive: CrossFormatArchive, prerequisite?: { readonly id: string; readonly generation: string }): Promise<boolean>;
   compareCrossBranch(key: string, id: string, expectedGeneration: string, checkpoint: DocumentCheckpoint, batch: { readonly update: Uint8Array; readonly sha256: string }): Promise<boolean>;
   readCrossBatch(key: string, archiveId: string, revision: number): Promise<CrossFormatBatch | undefined>;
+  findCrossBatch(key: string, archiveId: string, sha256: string): Promise<CrossFormatBatch | undefined>;
 }
 export interface CrossFormatBatch {
   readonly key: string; readonly archiveId: string; readonly sourceEpoch: string;
@@ -148,24 +149,51 @@ export class CrossFormatRoomHandoff {
     if (saved.source.epoch !== epoch) fail('stale-epoch', 'Late batch belongs to another retired writer epoch.');
     const archive = await this.owned(saved), supplied = request.update;
     if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) fail('invalid-update', 'Invalid retired batch size.');
-    const update = Uint8Array.from(supplied), checkpoint = await applyDocumentRoomUpdate(archive.branch, this.schema, this.schemaVersion, this.projection, update), sha256 = await checkpointWire.digest(update);
+    const update = Uint8Array.from(supplied), sha256 = await checkpointWire.digest(update);
+    const replay = await this.replayBatch(archive, sha256, update);
+    if (replay) return replay;
+    const checkpoint = await applyDocumentRoomUpdate(archive.branch, this.schema, this.schemaVersion, this.projection, update);
     // Preserve the original received operations too. A legacy CRDT merge can
     // hide old-client intent even when its projected document remains valid.
-    if (!await this.repository.compareCrossBranch(this.key, id, archive.generation, checkpoint, { update, sha256 })) fail('revision-conflict', 'Retired source branch changed; retain the batch and retry.');
+    if (!await this.repository.compareCrossBranch(this.key, id, archive.generation, checkpoint, { update, sha256 })) {
+      const committed = await this.replayBatch(archive, sha256, update);
+      if (committed) return committed;
+      fail('revision-conflict', 'Retired source branch changed; retain the batch and retry.');
+    }
     const next = await this.repository.readCrossArchive(this.key, id); this.check(next); return this.owned(next);
   }
+
+  private async replayBatch(previous: CrossFormatArchive, sha256: string, update: Uint8Array): Promise<CrossFormatArchive | undefined> {
+    const batch = await this.repository.findCrossBatch(this.key, previous.id, sha256);
+    if (!batch) return undefined;
+    const archive = await this.repository.readCrossArchive(this.key, previous.id);
+    this.check(archive);
+    const accepted = await this.verifyBatch(archive, batch, batch.revision);
+    const bytes = accepted.update;
+    if (accepted.sourceEpoch !== previous.source.epoch || accepted.sha256 !== sha256
+      || bytes.length !== update.length || !bytes.every((byte, index) => byte === update[index])) {
+      throw new Error('Retired batch replay does not match the accepted operations.');
+    }
+    return archive.generation === previous.generation ? previous : this.owned(archive);
+  }
+
   /** Privileged recovery of exact accepted operations, independent of the
    * merged branch's projection. Not an automatic cross-format conflict merge. */
   async retiredBatch(archiveId: string, revision: number): Promise<CrossFormatBatch> {
     if (!validId(archiveId) || !Number.isSafeInteger(revision) || revision < 1) throw new Error('Invalid retired batch selection.');
     const archive = await this.repository.readCrossArchive(this.key, archiveId); this.check(archive);
     const batch = await this.repository.readCrossBatch(this.key, archiveId, revision);
-    if (!batch || batch.key !== this.key || batch.archiveId !== archiveId || batch.revision !== revision || revision > archive.branchRevision || batch.sourceEpoch !== archive.source.epoch
+    return this.verifyBatch(archive, batch, revision);
+  }
+
+  private async verifyBatch(archive: CrossFormatArchive, batch: CrossFormatBatch | undefined, revision: number): Promise<CrossFormatBatch> {
+    if (!batch || batch.key !== this.key || batch.archiveId !== archive.id || batch.revision !== revision
+      || !Number.isSafeInteger(revision) || revision < 1 || revision > archive.branchRevision || batch.sourceEpoch !== archive.source.epoch
       || typeof batch.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(batch.sha256)) throw new Error('Missing or incompatible retired batch.');
     const supplied = batch.update;
     if (!(supplied instanceof Uint8Array) || !supplied.length || supplied.length > 64 * 1024 * 1024) throw new Error('Invalid retained raw batch.');
     const update = Uint8Array.from(supplied);
     if (await checkpointWire.digest(update) !== batch.sha256) throw new Error('Retired batch checksum mismatch.');
-    return Object.freeze({ key: this.key, archiveId, sourceEpoch: batch.sourceEpoch, revision, sha256: batch.sha256, get update() { return update.slice(); } });
+    return Object.freeze({ key: this.key, archiveId: archive.id, sourceEpoch: batch.sourceEpoch, revision, sha256: batch.sha256, get update() { return update.slice(); } });
   }
 }

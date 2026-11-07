@@ -59,6 +59,49 @@ test('recovers a lost migration acknowledgement and archives typing made before 
  await type(page,'Active editor',' AFTER retry');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.server).toEqual(saved.active);expect(saved.archive).toEqual(pending);const raw=await page.evaluate(async(id:string)=>{const batch=await (window as any).audit.batch(id,1);return {revision:batch.revision,sha256:batch.sha256,bytes:batch.update.length}},saved.archiveId);expect(raw.revision).toBe(1);expect(raw.sha256).toMatch(/^[a-f0-9]{64}$/);expect(raw.bytes).toBeGreaterThan(0);await info.attach('retired-raw-batch',{body:JSON.stringify(raw),contentType:'application/json'});await capture(page,info,'final.png');
 });
 
+test('recovers a lost offline archive acknowledgement after reloading without appending twice', async ({ page }, info) => {
+  await page.getByRole('button', {name:'Migrate legacy room', exact:true}).click();
+  await expect(page.getByRole('status')).toContainText('Legacy room migrated');
+  await type(page, 'Offline editor', ' SAVED OFFLINE');
+  const before = await state(page);
+  await expect(page.locator('#draft-status')).toHaveText('Recovery copy saved on this device');
+  await dropCommittedReply(page, 'retain');
+  const retain = page.getByRole('button', {name:'Retain offline edits', exact:true});
+  await retain.click();
+  await expect(page.getByRole('status')).toContainText('Request failed');
+  const readBatch = (revision: number) => page.evaluate(({id, revision}) => (window as any).audit.batch(id, revision), {id:before.archiveId, revision});
+  const migration = await readBatch(1);
+  const first = await readBatch(migration.revision + 1);
+  expect(first.sha256).not.toBe(migration.sha256);
+
+  await reloadDraft(page);
+  expect((await state(page)).offline).toEqual(before.offline);
+  await type(page, 'Offline editor', ' NEWER DRAFT');
+  const newer = (await state(page)).offline;
+  await retain.click();
+  await expect(page.getByRole('status')).toContainText('newer offline edits still need saving');
+  await expect(page.locator('#report')).toContainText('Retired branch revision: ' + first.revision);
+  const after = await state(page);
+  expect(after.archive).toEqual(before.offline);
+  expect(after.offline).toEqual(newer);
+  expect(after.server).toEqual(before.server);
+  expect(after.active).toEqual(before.active);
+  expect(await readBatch(first.revision)).toEqual(first);
+  const missing = await page.evaluate(async ({id, revision}) => {
+    try { await (window as any).audit.batch(id, revision); return null; }
+    catch (error) { return (error as Error).message; }
+  }, {id:before.archiveId, revision:first.revision + 1});
+  expect(missing).toContain('Missing or incompatible retired batch');
+  await capture(page, info, 'retired-batch-recovered-once.png');
+
+  await retain.click();
+  await expect(page.locator('#report')).toContainText('Retired branch revision: ' + (first.revision + 1));
+  expect((await state(page)).archive).toEqual(newer);
+  expect((await state(page)).server).toEqual(before.server);
+  expect((await readBatch(first.revision + 1)).sha256).not.toBe(first.sha256);
+  await capture(page, info, 'newer-offline-draft-saved.png');
+});
+
 async function holdAdmission(page: import('@playwright/test').Page) {
   let release!: () => void;
   const held = new Promise<void>(resolve => { release = resolve; });

@@ -17,6 +17,7 @@ const nested=new URLSearchParams(location.search).has('nested');
 const schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema);
 const sessionKey='fountain-handoff:'+location.pathname+location.search;
 let token,current,original,active,archived,migration,rollback,rollbackArchiveId,archiveId,visibleArchiveId,lastReplay,initialEpoch,pendingArchive;
+let offlineBatch;
 let drafts,autosave;
 const message=document.querySelector('#message');
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
@@ -40,7 +41,10 @@ function captureWriter(writer){
   ? captureLegacyCheckpoint(writer.doc,schema,version,{},writer.namespace,writer.fragment)
   : captureRetainedCheckpoint(writer.doc,schema,version,writer.namespace);
 }
-function watchWriter(writer){writer.doc.on('update',autosave.changed);}
+function watchWriter(writer){writer.doc.on('update',()=>{
+ if(writer===original&&offlineBatch)offlineBatch.changed=true;
+ autosave.changed();
+});}
 async function persistOperation(){autosave.changed();await autosave.flush();}
 function setControlsBusy(busy){
  for(const button of document.querySelectorAll('header button'))button.disabled=busy;
@@ -133,7 +137,24 @@ action('migrate',async()=>{
 });
 action('retry',()=>finishMigration(true));
 action('old',async()=>{try{await request('write',{epoch:initialEpoch,protocol:'legacy',update:Y.encodeStateAsUpdate(original.doc)});throw new Error('Unexpected stale acceptance')}catch(error){if(error.code!=='stale-epoch')throw error;message.textContent='Old writer rejected · pending edits remain in the offline editor'}});
-action('retain',async()=>{const result=await request('retain',{archiveId,sourceEpoch:initialEpoch,update:Y.encodeStateAsUpdate(original.doc)});archived=await reopen(result.branch,'archive',archived);visibleArchiveId=result.id;await persistOperation();document.querySelector('#archive-title').textContent='Retired legacy branch · offline edits retained';message.textContent='Offline edits retained separately · active room unchanged';report('Retired branch revision: '+result.branchRevision)});
+action('retain',async()=>{
+ if(!offlineBatch||offlineBatch.archiveId!==archiveId||offlineBatch.acknowledged&&offlineBatch.changed){
+  offlineBatch={archiveId,sourceEpoch:initialEpoch,update:Y.encodeStateAsUpdate(original.doc),acknowledged:false,changed:false};
+ }
+ // Keep the exact outgoing bytes through reload and later offline edits.
+ await persistOperation();
+ const {archiveId:target,sourceEpoch,update}=offlineBatch;
+ const result=await request('retain',{archiveId:target,sourceEpoch,update});
+ offlineBatch.acknowledged=true;
+ archived=await reopen(result.branch,'archive',archived);
+ visibleArchiveId=result.id;
+ await persistOperation();
+ document.querySelector('#archive-title').textContent='Retired legacy branch · offline edits retained';
+ message.textContent=offlineBatch.changed
+  ?'Offline edits retained separately · newer offline edits still need saving'
+  :'Offline edits retained separately · active room unchanged';
+ report('Retired branch revision: '+result.branchRevision);
+});
 async function finishRollback(){
  const result=await submitOperation('rollback',rollback);
  await install(result);
@@ -165,7 +186,7 @@ async function seedRoom(){
  active=await openActive(current);
 }
 async function reopenSession(saved){
- ({initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId}=saved);
+ ({initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch}=saved);
  original=await reopen(saved.offline,'offline',undefined,initialEpoch);
  active=await reopen(saved.writer.checkpoint,'active',undefined,saved.writer.epoch);
  current=saved.acknowledged;
@@ -194,7 +215,7 @@ try{
   const [checkpoint,offline]=await Promise.all([captureWriter(writer),captureWriter(original)]);
   if(writer!==active)throw new Error('Editor changed during draft capture');
   const {key,epoch,revision,phase,protocol}=current;
-  await write({writer:{epoch:writer.epoch,checkpoint},offline,initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,
+  await write({writer:{epoch:writer.epoch,checkpoint},offline,initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,
    acknowledged:{key,epoch,revision,phase,protocol}});
  },(status,error)=>{
   document.querySelector('#draft-status').textContent=status==='saved'?'Recovery copy saved on this device'

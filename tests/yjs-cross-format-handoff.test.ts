@@ -53,7 +53,7 @@ async function migrate(pair: Awaited<ReturnType<typeof fixture>>) { const ticket
 function gate(base: CrossFormatRepository, method: 'installCrossArchive' | 'compareCrossBranch' | 'compareDocument' | 'readCrossArchive' = 'installCrossArchive') {
   let release!: () => void, reached!: () => void;
   const waiting = new Promise<void>(resolve => { release = resolve; }), ready = new Promise<void>(resolve => { reached = resolve; });
-  const repository: CrossFormatRepository = { readDocument: base.readDocument.bind(base), createDocument: base.createDocument.bind(base), compareDocument: base.compareDocument.bind(base), readCrossArchive: base.readCrossArchive.bind(base), readRetiredEpoch: base.readRetiredEpoch.bind(base), installCrossArchive: base.installCrossArchive.bind(base), compareCrossBranch: base.compareCrossBranch.bind(base), readCrossBatch: base.readCrossBatch.bind(base) };
+  const repository: CrossFormatRepository = { readDocument: base.readDocument.bind(base), createDocument: base.createDocument.bind(base), compareDocument: base.compareDocument.bind(base), readCrossArchive: base.readCrossArchive.bind(base), readRetiredEpoch: base.readRetiredEpoch.bind(base), installCrossArchive: base.installCrossArchive.bind(base), compareCrossBranch: base.compareCrossBranch.bind(base), readCrossBatch: base.readCrossBatch.bind(base), findCrossBatch: base.findCrossBatch.bind(base) };
   const original = repository[method] as (...args: any[]) => Promise<any>; (repository as any)[method] = async (...args: any[]) => { reached(); await waiting; return original(...args); }; return { repository, ready, release };
 }
 
@@ -248,7 +248,11 @@ it('recovers a persistent legacy freeze without unfreezing, rejects duplicate in
 
 it('retains late retained-format edits after rollback and restores that branch while archiving newer legacy edits', async () => {
   const pair = await fixture(), moved = await migrate(pair), fresh = await open(moved.result.snapshot.checkpoint, pair), accepted = await pair.room.write({ epoch: moved.result.snapshot.epoch, protocol: 'retained', update: type(fresh, 'NEW') }), ticket = await pair.room.freeze(accepted);
-  const rolled = await pair.handoff.rollback(ticket, uuid(), moved.operation, 'frozen-source', policy()), branch = await pair.handoff.retainLateUpdate({ archiveId: rolled.archive.id, sourceEpoch: accepted.epoch, update: type(fresh, 'LATE-NEW') }); expect(branch.branch.manifest.format).toBe('fountain-retained-checkpoint/1');
+  const rolled = await pair.handoff.rollback(ticket, uuid(), moved.operation, 'frozen-source', policy());
+  const request = { archiveId: rolled.archive.id, sourceEpoch: accepted.epoch, update: type(fresh, 'LATE-NEW') };
+  const branch = await pair.handoff.retainLateUpdate(request);
+  expect(branch.branch.manifest.format).toBe('fountain-retained-checkpoint/1');
+  expect(await pair.second.retainLateUpdate(request)).toEqual(branch);
   const old = await open(rolled.snapshot.checkpoint, pair, 'Old-peer'), oldAccepted = await pair.room.write({ epoch: rolled.snapshot.epoch, protocol: 'legacy', update: type(old, 'AFTER-ROLLBACK') }), nextTicket = await pair.room.freeze(oldAccepted), restored = await pair.second.rollback(nextTicket, uuid(), rolled.archive.id, 'source-branch', policy());
   expect(restored.snapshot.protocol).toBe('retained'); expect(await model(restored.snapshot.checkpoint, pair)).toEqual(fresh.editor.getJSON()); expect(await model(restored.archive.source.checkpoint, pair)).toEqual(old.editor.getJSON()); expect((await pair.b.readCrossArchive(key, rolled.archive.id))!.source.checkpoint).toEqual(accepted.checkpoint);
 });
@@ -287,10 +291,60 @@ it('commits neither a branch replacement nor a receipt if raw batch insertion fa
   db.exec('DROP TRIGGER fail_batch'); await pair.handoff.retainLateUpdate({ archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update }); expect((await pair.second.retiredBatch(moved.operation, 1)).update).toEqual(update);
 });
 
+it('acknowledges an exact retired batch retry after a later distinct batch without appending again', async () => {
+  const pair = await fixture(), peer = await open(pair.checkpoint, pair), moved = await migrate(pair);
+  const request = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'FIRST') };
+  await pair.handoff.retainLateUpdate(request);
+  const newer = await pair.second.retainLateUpdate({ ...request, update: type(peer, 'SECOND') });
+  const retry = await pair.handoff.retainLateUpdate(request);
+  expect(retry).toEqual(newer);
+  expect((await pair.second.retiredBatch(moved.operation, 1)).update).toEqual(request.update);
+  expect(await pair.a.readCrossBatch(key, moved.operation, 3)).toBeUndefined();
+  expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
+});
+
+it('acknowledges two racing submissions of the same retired batch with one stored revision', async () => {
+  const pair = await fixture(), moved = await migrate(pair), held = gate(pair.a, 'compareCrossBranch');
+  const service = new CrossFormatRoomHandoff(held.repository, key, pair.schema, version);
+  const request = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'SAME') };
+  const pending = service.retainLateUpdate(request);
+  await held.ready;
+  let saved;
+  try { saved = await pair.second.retainLateUpdate(request); }
+  finally { held.release(); }
+  await expect(pending).resolves.toEqual(saved);
+  expect(saved.branchRevision).toBe(1);
+  expect(await pair.a.readCrossBatch(key, moved.operation, 2)).toBeUndefined();
+});
+
+it('opens older archives with duplicate batch rows and preserves their historical revisions', async () => {
+  const pair = await fixture(), moved = await migrate(pair);
+  const request = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'OLD BATCH') };
+  await pair.handoff.retainLateUpdate(request);
+  const db = new DatabaseSync(pair.path);
+  cleanup.push(() => db.close());
+  db.exec('DROP INDEX fountain_cross_format_batch_digest_v1');
+  db.prepare(`INSERT INTO fountain_cross_format_batches_v1 (room_key, archive_id, revision, source_epoch, sha256, wire)
+    SELECT room_key, archive_id, 2, source_epoch, sha256, wire FROM fountain_cross_format_batches_v1
+    WHERE room_key = ? AND archive_id = ? AND revision = 1`).run(key, moved.operation);
+  db.prepare('UPDATE fountain_cross_format_archives_v1 SET branch_revision = 2, generation = ? WHERE room_key = ? AND archive_id = ?')
+    .run(uuid(), key, moved.operation);
+  const reopened = new SQLiteRetainedRoomRepository(pair.path);
+  cleanup.push(() => reopened.close());
+  const service = new CrossFormatRoomHandoff(reopened, key, pair.schema, version);
+  expect((await service.retiredBatch(moved.operation, 2)).update).toEqual(request.update);
+  expect((await service.retainLateUpdate(request)).branchRevision).toBe(2);
+  expect(await reopened.readCrossBatch(key, moved.operation, 3)).toBeUndefined();
+});
+
 it('detects raw batch corruption independently of the merged recovery checkpoint', async () => {
-  const pair = await fixture(), moved = await migrate(pair); await pair.handoff.retainLateUpdate({ archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'LATE') });
+  const pair = await fixture(), moved = await migrate(pair);
+  const request = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'LATE') };
+  const saved = await pair.handoff.retainLateUpdate(request);
   const db = new DatabaseSync(pair.path); cleanup.push(() => db.close()); db.prepare('UPDATE fountain_cross_format_batches_v1 SET wire = ? WHERE room_key = ? AND archive_id = ? AND revision = 1').run(new Uint8Array([255]), key, moved.operation);
   await expect(pair.handoff.retiredBatch(moved.operation, 1)).rejects.toThrow('checksum'); await expect(pair.handoff.retiredBatch(moved.operation, 2)).rejects.toThrow('Missing'); expect((await pair.room.snapshot()).protocol).toBe('retained');
+  await expect(pair.second.retainLateUpdate(request)).rejects.toThrow('checksum');
+  expect(await pair.a.readCrossArchive(key, moved.operation)).toEqual(saved);
 });
 
 it('can recover exact operations even if the independently merged branch checkpoint is corrupt', async () => {

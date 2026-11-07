@@ -28,6 +28,10 @@ An existing retained room can also estimate checkpoint savings while it is
 writable. The demo requires a passing check for the saved revision before
 freezing it, and installation checks the actual savings again.
 [Compaction rehearsal](YJS_RETAINED_HANDOFF_AUDIT.md#checking-compaction-before-freezing-a-room).
+The cross-format reference acknowledges exact retries of archived offline
+batches. The browser demo keeps a pending batch through reload and preserves
+newer local edits for a separate save.
+[Offline batch recovery](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md#durable-recovery-behavior).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

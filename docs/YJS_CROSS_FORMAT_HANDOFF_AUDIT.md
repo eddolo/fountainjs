@@ -56,6 +56,23 @@ replacement. A failed insert rolls both back. Raw recovery verifies the checksum
 and returns owned bytes; it remains possible when the merged branch wire is
 corrupt, provided archive metadata and the raw record remain valid.
 
+An exact retry looks up the saved batch within the same archive. The authority
+checks the writer epoch, revision, checksum and bytes before acknowledging it.
+A second writer can race the same batch and receive the already committed
+archive state. Distinct bytes still require a successful branch comparison.
+The SQLite digest index is additive. Older archives with duplicate receipts
+keep their original revision numbers and raw records.
+
+The namespace demo saves the exact outgoing offline batch in IndexedDB
+before sending it. If the acknowledgement is lost, a reload can retry those
+same bytes. Newer edits remain in the offline editor and are archived by the
+next explicit save. The active room keeps its own document.
+
+This follow-up passed 143 focused source tests and 12 recorded journeys in
+Chromium, Firefox and WebKit. The lost-reply journey distinguishes the
+initial migration archive entry, the retried offline batch and the later
+draft, which is only added after its own save.
+
 Keeping original bytes matters: the known legacy concurrency bugs can hide an
 offline edit in the merged projection. A raw archive preserves accepted
 operations for explicit recovery; it is not a semantic conflict-resolution fix.
