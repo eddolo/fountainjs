@@ -15,6 +15,9 @@ entry in the unreleased local package. Safe production adoption remains open.
 Retained checkpoints now reopen a redone quote with another author's offline
 text and keep the room eligible to receive later peer updates.
 [Checkpoint recovery](YJS_RETAINED_CHECKPOINT_AUDIT.md#capture-after-undo-and-redo).
+Both adapters refuse to initialize an empty shared fragment with unresolved
+Yjs updates. Recovery leaves the draft available when the complete room opens
+in a separate session. [Startup recovery](YJS_RETAINED_PREVIEW.md#initialize-once-then-join).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
@@ -28,8 +31,7 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 The latest full source run had 5,004 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
 pass. Sharing repeated strings and class property names removed 43.0 KiB of
-raw CommonJS. The aggregate is 113.2 KiB over its existing limit after the
-DOCX package-image repair. The CommonJS
+raw CommonJS. The aggregate is 113.6 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,

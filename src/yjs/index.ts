@@ -567,6 +567,9 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     this.context = context;
     this.assertInitialization();
+    if (!this.fragment.length && (this.document.store.pendingStructs || this.document.store.pendingDs)) {
+      throw this.roomFailure('Cannot initialize a room with unresolved update dependencies.');
+    }
     this.structuredAttributes?.validate(context.editor.state.doc);
     if (!this.observing) {
       this.fragment.observeDeep(this.onSharedChange);

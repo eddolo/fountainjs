@@ -519,6 +519,50 @@ it('keeps legacy documents untouched and reports an incompatible room', () => {
   } finally { legacy.destroy(); next.destroy(); document.destroy(); }
 });
 
+it.each([
+  ['legacy', 'insert'], ['legacy', 'delete'], ['retained', 'insert'], ['retained', 'delete'],
+] as const)('does not seed %s storage from an incomplete %s update', (protocol, operation) => {
+  const factory = protocol === 'legacy' ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+  const original = new Y.Doc(), joining = new Y.Doc();
+  const provider = { connect: vi.fn() };
+  const make = (document: Y.Doc, text: string, transport?: YjsProvider) => {
+    const kit = composeExtensions([CoreExtension, factory({
+      document, provider: transport, user: { id: 'author', name: 'Author', color: '#7048e8' },
+    })]);
+    return createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+    } });
+  };
+  const author = make(original, 'Alpha');
+  const initial = Y.encodeStateAsUpdate(original);
+  const vector = Y.encodeStateVector(original);
+  author.dispatch(author.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+  expect(operation === 'insert' ? insertText(author, 'X') : deleteBackward(author)).toBe(true);
+  Y.applyUpdate(joining, Y.encodeStateAsUpdate(original, vector));
+  expect(operation === 'insert' ? joining.store.pendingStructs : joining.store.pendingDs).not.toBeNull();
+  const staged = Y.encodeStateAsUpdate(joining);
+  const waiting = make(joining, 'My draft', provider);
+  try {
+    expect(getCollaborationState(waiting)?.error?.message).toContain('unresolved update dependencies');
+    expect(provider.connect).not.toHaveBeenCalled();
+    expect(Y.encodeStateAsUpdate(joining)).toEqual(staged);
+    waiting.dispatch(waiting.createTransaction().setSelection(Selection.cursor([0, 0], 8)));
+    expect(insertText(waiting, '!')).toBe(true);
+    Y.applyUpdate(joining, initial);
+    expect(joining.store.pendingStructs).toBeNull();
+    expect(joining.store.pendingDs).toBeNull();
+    expect(reconnectCollaboration(waiting)).toBe(false);
+    expect(waiting.state.doc.textContent).toBe('My draft!');
+    expect(joining.getXmlFragment('fountain').length).toBe(1);
+
+    const recovered = make(joining, 'Unused fallback', provider);
+    try {
+      expect(provider.connect).toHaveBeenCalledOnce();
+      expect(recovered.getJSON()).toEqual(author.getJSON());
+    } finally { recovered.destroy(); }
+  } finally { waiting.destroy(); author.destroy(); joining.destroy(); original.destroy(); }
+});
+
 it('uses no browser globals for the connected adapter and removes awareness subscriptions on destroy', () => {
   const pair = peers();
   expect(typeof globalThis.document).toBe('undefined'); expect(typeof globalThis.window).toBe('undefined'); expect(pair.listeners.size).toBe(2);

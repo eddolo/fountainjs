@@ -107,6 +107,18 @@ each initialize an empty room, even from identical initial JSON. Their native
 identities differ; merging those independently seeded rooms is refused rather
 than selecting a winner and losing the other document.
 
+An empty shared fragment can also be waiting for missing Yjs updates. Both
+adapters refuse to seed it if Yjs has unresolved insertions or deletions.
+The provider stays disconnected and the editor remains available as a local
+draft. Once the initial state arrives, keep a copy of the draft and open a
+separate session with the complete room. Reconnecting the refused adapter
+keeps the draft in place.
+
+Four Node regressions cover out-of-order insertions and deletions. Six
+recorded browser journeys cover both protocols, continued typing, a refused
+retry and a separate recovery session. Run them after `pnpm build` with
+`pnpm exec playwright test --config playwright.yjs-incomplete-room.config.ts`.
+
 If incompatible room data reaches an established legacy or retained editor,
 the session stays in error. It clears shared presence and suspends shared
 writes, undo and redo. The editor can still hold new local text. Removing the

@@ -241,6 +241,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private attach(context: CollaborationAdapterContext, allowSeed = true): void | Promise<void> {
     const fresh = this.fragment.length === 0 && this.options.document.getMap(`${this.room}:document`).size === 0;
     if (fresh && !allowSeed) throw new Error('Admission requires an already initialized retained room.');
+    const { store } = this.options.document;
+    if (fresh && (store.pendingStructs || store.pendingDs)) {
+      // Retrying this adapter after the missing bytes arrive would replace the draft.
+      this.roomConflict = new Error('Cannot initialize a room with unresolved update dependencies. Preserve the local draft and replace the collaboration session.');
+      throw this.roomConflict;
+    }
     if (!fresh || admittedRoomRoots.has(this.fragment)) this.roomId = this.gate();
     validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
     this.context = context;

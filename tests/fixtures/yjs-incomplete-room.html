@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open an incomplete collaboration room</title>
+<link rel="stylesheet" href="/dist/styles.css">
+<style>
+  body { max-width: 800px; margin: 48px auto; padding: 0 20px; font: 16px/1.5 system-ui, sans-serif; }
+  section { margin: 20px 0; padding: 16px; border: 1px solid #cbc6dd; border-radius: 8px; }
+  section .fountain-editor { min-height: 100px; }
+</style>
+<h1>Open an incomplete collaboration room</h1>
+<p id="protocol"></p>
+<p id="status" role="status"></p>
+<button id="receive" type="button">Receive the missing room data</button>
+<button id="retry" type="button" disabled>Retry the draft session</button>
+<button id="open" type="button" disabled>Open the recovered room separately</button>
+<section aria-label="Local draft"><h2>Local draft</h2><div id="draft"></div></section>
+<section aria-label="Recovered shared room"><h2>Recovered shared room</h2><div id="recovered"></div></section>
+<p id="starts">Transport connections: 0</p>
+<script type="module">
+  import * as Y from 'yjs';
+  import { CoreExtension, EditorView, Selection, composeExtensions, createEditor, getCollaborationState,
+    insertText, reconnectCollaboration } from 'fountainjs-editor';
+  import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs';
+  import { createRetainedYjsCollaborationExtension } from 'fountainjs-editor/experimental/yjs-retained';
+
+  const legacy = new URLSearchParams(location.search).get('protocol') === 'legacy';
+  document.querySelector('#protocol').textContent = legacy ? 'Legacy XML room' : 'Retained room';
+  const factory = legacy ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+  const create = (document, text, provider) => {
+    const kit = composeExtensions([CoreExtension, factory({
+      document, provider, user: { id: 'author', name: 'Author', color: '#7048e8' },
+    })]);
+    return createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+    } });
+  };
+  let starts = 0;
+  const provider = { connect() { document.querySelector('#starts').textContent = 'Transport connections: ' + ++starts; } };
+  const source = new Y.Doc(), joining = new Y.Doc();
+  const author = create(source, 'Shared incident notes.');
+  const initial = Y.encodeStateAsUpdate(source), vector = Y.encodeStateVector(source);
+  author.dispatch(author.createTransaction().setSelection(Selection.cursor([0, 0], 22)));
+  insertText(author, ' Reviewed.');
+  Y.applyUpdate(joining, Y.encodeStateAsUpdate(source, vector));
+  const waiting = create(joining, 'My local notes.', provider);
+  new EditorView(document.querySelector('#draft'), waiting, { ariaLabel: 'Local draft editor' });
+  const status = document.querySelector('#status');
+  const report = () => { status.textContent = getCollaborationState(waiting).error?.message ?? 'Draft session connected.'; };
+  report();
+
+  const receive = document.querySelector('#receive'), retry = document.querySelector('#retry'), open = document.querySelector('#open');
+  receive.onclick = () => {
+    Y.applyUpdate(joining, initial);
+    receive.disabled = true;
+    retry.disabled = open.disabled = false;
+    status.textContent = 'Room data is complete. Open it separately to preserve the draft.';
+  };
+  retry.onclick = () => { reconnectCollaboration(waiting); report(); };
+  open.onclick = () => {
+    const recovered = create(joining, 'Unused fallback.', provider);
+    new EditorView(document.querySelector('#recovered'), recovered, { ariaLabel: 'Recovered shared editor' });
+    open.disabled = true;
+    status.textContent = 'Shared room opened. The local draft is still available.';
+  };
+</script>
+</html>
