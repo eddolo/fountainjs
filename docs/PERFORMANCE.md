@@ -919,6 +919,11 @@ instead of 204,424. The newer `yjs/room` entry loads 201,359 bytes at import,
 with the legacy adapter still deferred. These measurements exclude peers and
 describe startup file size. They do not measure editor or import latency.
 
+The compact retained identity encoding adds about 0.1 KiB to the aggregate
+CommonJS build, which remains 149.3 KiB over its existing limit. It reduces
+saved collaboration data for structural edits.
+[Wire size comparison](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#smaller-private-identities).
+
 A fresh install of the local tarball passed 15 room and collaboration checks
 in each format, including a module-load check after mounting a retained room.
 All 153 focused source checks and 54 recorded migration, rollback and recovery

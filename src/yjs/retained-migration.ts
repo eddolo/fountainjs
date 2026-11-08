@@ -3,6 +3,7 @@ import type { Node, Schema } from '../core/schema';
 import { assertRetainedCheckpointState, captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 import { validateRetainedRoomCheckpoint } from './retained-room-store';
 import { RetainedDocumentStore } from './retained-document';
+import { retainedIdentityAllocator } from './retained-nodes';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore, type YjsStructuredAttributesOptions } from './structured-attributes';
 
@@ -94,8 +95,8 @@ export async function buildRetainedMigrationCandidate(checkpoint: RetainedCheckp
   try {
     metadata(from, room);
     sourceStore = new RetainedDocumentStore(from, room, schema, () => { throw new Error('Migration source cannot allocate identities.'); });
-    const document = sourceStore.read(), prefix = `m-${globalThis.crypto.randomUUID()}`; let sequence = 0;
-    targetStore = new RetainedDocumentStore(target, room, schema, () => `${prefix}:${++sequence}`);
+    const document = sourceStore.read();
+    targetStore = new RetainedDocumentStore(target, room, schema, retainedIdentityAllocator(globalThis.crypto.randomUUID()));
     targetStore.seed(document);
     const gate = new Y.XmlElement('fountain-retained-room'); gate.setAttribute('format', 'fountain-retained-document/3'); gate.setAttribute('room', `r-${globalThis.crypto.randomUUID()}`);
     target.getXmlFragment(room).insert(0, [gate]);

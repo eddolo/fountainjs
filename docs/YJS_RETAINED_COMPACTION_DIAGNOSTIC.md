@@ -235,3 +235,29 @@ In the Firefox compaction and recovery run, the saved live checkpoint used
 for 18,959 stored payload bytes. This separates the live compaction result from
 the storage kept for recovery. The report excludes SQLite file overhead and
 does not apply a retention policy.
+
+### Smaller private identities
+
+New retained node, text and placement identities use a base-36 representation
+of the complete controller UUID and a base-36 counter. Previously stored IDs,
+room gate IDs, application node IDs and wire format versions keep their
+existing meanings. Fresh migration candidates use the same allocator.
+
+The compiled Node comparison used the same Yjs client ID, controller UUID
+and document fixture in both builds. It measured the canonical V1 update
+without archive compression.
+
+| Workload | Previous | Compact |
+| --- | ---: | ---: |
+| Fresh document with 240 paragraphs | 426,112 B | 361,948 B |
+| Growth from 128 moves in a six-paragraph document | 63,800 B | 51,832 B |
+
+Both builds kept the same number of private identities and the same portable
+document. Mixed-version pairs started from each build, moved a paragraph while
+the other author typed offline, exchanged updates, independently undid and
+redid the edits, and reopened the resulting checkpoint in the other build.
+The comparison passed in ESM and CommonJS. All 390 focused source tests and
+nine recorded Chromium, Firefox and WebKit handoff journeys passed. The
+declaration snapshot changes reflect two private adapter fields.
+These measurements concern structural metadata. Per-keystroke text provenance
+and the need for a long-session compaction policy remain.

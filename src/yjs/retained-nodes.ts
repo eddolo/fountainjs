@@ -8,6 +8,13 @@ const UNSAFE = new Set(['__proto__', 'constructor', 'prototype']);
 const MAX_NODES = 100_000;
 const MAX_REFERENCES = 1_000_000;
 
+/** Compact private node, placement and text IDs without discarding UUID bits. */
+export function retainedIdentityAllocator(uuid: string): () => string {
+  const prefix = `i-${BigInt(`0x${uuid.replaceAll('-', '')}`).toString(36)}:`;
+  let sequence = 0;
+  return () => prefix + (sequence++).toString(36);
+}
+
 interface Placement { readonly parent: string; readonly token: string }
 interface Reference { readonly id: string; readonly token: string }
 export interface RetainedTextLayout { readonly field: string; readonly empty: boolean }

@@ -24,7 +24,7 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 149.2 KiB over its existing limit.
+pass. The CommonJS aggregate is 149.3 KiB over its existing limit.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption

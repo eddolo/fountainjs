@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reduce retained Yjs checkpoint growth from block moves using shorter
+  private identifiers. Existing rooms and application node IDs stay readable.
+
 - Keep the original stable ID when an editor pastes a copy before its source.
   The collaboration demo gives offline copies distinct IDs and keeps its
   settings controls attached to the original card.

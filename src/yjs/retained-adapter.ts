@@ -5,6 +5,7 @@ import { createCollaborationExtension, type CollaborationAdapter, type Collabora
   type CollaborationLocalUpdate, type CollaborationPresence, type CollaborationUser } from '../extensions/collaboration';
 import type { YjsCollaborationExtensionOptions } from './index';
 import { RetainedDocumentStore, validateRetainedDocument } from './retained-document';
+import { retainedIdentityAllocator } from './retained-nodes';
 import { removesOnlyDuplicateProvenance } from './retained-text';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore } from './structured-attributes';
@@ -20,7 +21,6 @@ export interface RetainedYjsCollaborationExtensionOptions extends Omit<YjsCollab
 const GATE = 'fountain-retained-room', FORMAT = 'fountain-retained-document/3';
 const BEFORE = Symbol('retained-selection-before'), AFTER = Symbol('retained-selection-after');
 const REDUNDANT_UNDO = Symbol('retained-redundant-undo');
-const uuid = () => `r-${globalThis.crypto.randomUUID()}`;
 
 function user(value: CollaborationUser): CollaborationUser {
   if (!value || typeof value.id !== 'string' || !/^[\w.:@/-]{1,200}$/.test(value.id)
@@ -51,8 +51,8 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private readonly origin = Object.freeze({ fountain: 'retained-local' });
   private readonly repair = Object.freeze({ fountain: 'retained-repair' });
   private readonly structured?: YjsStructuredAttributeStore;
-  private readonly prefix = uuid();
-  private sequence = 0;
+  private readonly roomSeed = globalThis.crypto.randomUUID();
+  private readonly allocateIdentity = retainedIdentityAllocator(this.roomSeed);
   private context?: CollaborationAdapterContext;
   private store?: RetainedDocumentStore;
   private manager?: Y.UndoManager;
@@ -245,12 +245,14 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     this.context = context;
     try {
       this.options.document.transact(() => {
-        this.store ??= new RetainedDocumentStore(this.options.document, this.room, context.editor.state.schema, () => `${this.prefix}-${this.sequence++}`, this.origin);
+        this.store ??= new RetainedDocumentStore(this.options.document, this.room, context.editor.state.schema, this.allocateIdentity, this.origin);
         if (this.store.schema !== context.editor.state.schema) throw new Error('Retained adapter belongs to another editor schema.');
         if (fresh) {
           this.store.seed(context.editor.state.doc); this.structured?.synchronize(context.editor.state.doc);
-          const gate = new Y.XmlElement(GATE); gate.setAttribute('format', FORMAT); gate.setAttribute('room', this.prefix);
-          this.fragment.insert(0, [gate]); this.roomId = this.prefix;
+          const gate = new Y.XmlElement(GATE);
+          const roomId = `r-${this.roomSeed}`;
+          gate.setAttribute('format', FORMAT); gate.setAttribute('room', roomId);
+          this.fragment.insert(0, [gate]); this.roomId = roomId;
         } else this.structured?.initialize(this.store.read());
       }, this.origin);
       const value = this.canonical(), selection = restoreSelection(this.store!, value, this.localSelection);

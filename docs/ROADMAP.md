@@ -52,6 +52,10 @@ the exact checkpoint. Live checkpoint growth and archive retention policy
 remain open. [Cold archive storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#cold-sqlite-archive-storage).
 The SQLite reference and handoff demo report the live checkpoint and retained
 archive, draft and batch bytes separately. [Room storage report](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#measuring-room-storage).
+Shorter private IDs reduce raw structural-history growth. The 128-move probe
+used 51,832 bytes of additional state, down from 63,800, and mixed-version
+editors preserved offline typing and author history.
+[Identity encoding evidence](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#smaller-private-identities).
 The cross-format reference acknowledges exact retries of archived offline
 batches. The browser demo keeps a pending batch through reload and preserves
 newer local edits for a separate save.
@@ -93,7 +97,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 149.2 KiB over its existing limit. Retained
+pass. The CommonJS aggregate is 149.3 KiB over its existing limit. Retained
 rooms now defer the legacy adapter, reducing the room entry's initial load by
 about 20 KiB in both formats.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
