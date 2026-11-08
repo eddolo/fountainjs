@@ -128,6 +128,18 @@ jobs:
           path: artifacts/yjs-incomplete-room-browser/
           if-no-files-found: warn
           retention-days: 7
+      - name: Review and recover offline drafts across room migration
+        run: >-
+          pnpm exec playwright test --config artifacts/yjs-namespace-browser-20261107.config.ts
+          --grep 'recovers a saved legacy paragraph|recovers the exact embedded offline draft|keeps a retained draft across reload'
+          --reporter=list --output artifacts/yjs-migration-recovery-ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: collaboration-migration-recovery-evidence
+          path: artifacts/yjs-migration-recovery-ci/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Compiled native presence and retained-document regressions
         run: pnpm exec playwright test --config artifacts/cursor-navigation-browser-20261106.config.ts
       - uses: actions/upload-artifact@v4

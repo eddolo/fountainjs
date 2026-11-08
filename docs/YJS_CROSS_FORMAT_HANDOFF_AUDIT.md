@@ -154,6 +154,10 @@ test also verifies that review can apply inside a live quote. This workflow
 covers identifiable text-only paragraphs. Other node types and automatic
 cross-format reconciliation remain open.
 
+The shared browser CI runs this review alongside two exact-draft reload
+journeys for migration and rollback. It retains the traces and videos. npm
+release staging requires this same CI on the tagged commit.
+
 ### Earlier handoff evidence
 
 - **40 new source cases / 236 focused cases pass.** They cover actual legacy and
