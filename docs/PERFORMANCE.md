@@ -892,6 +892,33 @@ about six seconds locally, compared with about one second for the prior output.
 
 ### CommonJS growth and retained room startup
 
+#### Sharing repeated CommonJS property keys
+
+The build now shares repeated names in ordinary property accesses and object
+definitions. It preserves the actual property keys and receivers, CommonJS
+export assignments and direct module member reads, optional accesses, and
+prototype and module marker keys.
+
+Against the same source built with the previous transform, the CommonJS
+aggregate fell from 1,558,878 to 1,439,094 bytes. It passes the unchanged
+1,442,560-byte limit with 3,466 bytes of headroom. The 91 ESM runtime files
+were byte-identical. Fresh Node imports loaded 46,805 fewer Fountain bytes
+from the root, 25,068 fewer from headless core, 42,897 fewer from React and
+11,192 fewer from DOCX. The sum of the individually gzipped CommonJS chunks
+increased by 6,858 bytes. These are package-file measurements.
+
+In seven alternating CommonJS process pairs, the median for parsing 300 HTML
+paragraphs moved from 10.66 to 11.01 ms. The median for an insert/delete pair
+in a 2,000-paragraph document moved from 0.060 to 0.065 ms. These local
+measurements cover two workloads.
+
+The packed consumer, public declarations, Node and workerd runtime checks,
+and existing performance gates passed. The focused Node 20.19.5 CommonJS
+consumer exercised the root, core, HTML, DOCX and collaboration room entries.
+The full smoke harness uses a Node 24 loader hook unavailable in Node 20.
+A compiled CommonJS browser consumer preserved edits and bold formatting
+through DOCX export and reopen in Chromium, Firefox, and WebKit.
+
 #### Sharing repeated CommonJS string values
 
 The library build now shares repeated literal values within individual

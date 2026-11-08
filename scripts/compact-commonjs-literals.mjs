@@ -6,6 +6,8 @@ const expressionParents = new Set([
   'LogicalExpression', 'Property', 'ReturnStatement', 'VariableDeclarator',
 ]);
 
+const staticKeys = new Set(['__proto__', '__esModule', 'configurable', 'enumerable', 'writable']);
+
 function literalValue(node) {
   if (node.type === 'Literal' && typeof node.value === 'string') return node.value;
   if (node.type === 'TemplateLiteral' && !node.expressions.length) return node.quasis[0].value.cooked;
@@ -21,33 +23,58 @@ function canShare(node, parent, code) {
     : !/require|resolve|defineProperty|eval/iu.test(callee);
 }
 
-function shareableUse(node, parent, inClass, code) {
+function isModuleRead(node, moduleBindings) {
+  if (node.type === 'Identifier') return moduleBindings.has(node.name);
+  if (node.type === 'MemberExpression') return isModuleRead(node.object, moduleBindings);
+  if (node.type !== 'CallExpression') return false;
+  const callee = node.callee;
+  return callee.type === 'Identifier' ? callee.name === 'require'
+    : callee.type === 'MemberExpression' && callee.object.type === 'Identifier' && callee.object.name === 'module';
+}
+
+function shareableUse(node, parent, moduleBindings, code) {
   const value = literalValue(node);
   if (value?.length >= 8 && canShare(node, parent, code)) {
     return { value, start: node.start, end: node.end, member: false };
   }
-  if (inClass && node.type === 'MemberExpression' && !node.computed && !node.optional
-    && node.object.type === 'ThisExpression' && node.property.type === 'Identifier'
-    && node.property.name.length >= 7 && code[node.property.start - 1] === '.') {
+  if (node.type === 'MemberExpression' && !node.computed && !node.optional
+    && node.object.type !== 'Super' && node.property.type === 'Identifier'
+    && !isModuleRead(node.object, moduleBindings)
+    && !staticKeys.has(node.property.name)
+    && node.property.name.length >= 5 && code[node.property.start - 1] === '.') {
     return { value: node.property.name, start: node.property.start - 1, end: node.property.end, member: true };
+  }
+  if (node.type === 'Property' && parent?.type === 'ObjectExpression'
+    && !node.computed && !node.shorthand && node.key.type === 'Identifier'
+    && node.key.name.length >= 6 && !staticKeys.has(node.key.name)) {
+    return { value: node.key.name, start: node.key.start, end: node.key.end, member: true };
   }
 }
 
-/** Share string values and repeated `this` property names inside class bodies. */
+/** Share repeated string values and member names within each CommonJS chunk. */
 export function compactCommonJsLiterals(code) {
   const tree = parseAst(code);
+  const moduleBindings = new Set(['exports', 'module', 'require', 'Object', 'Reflect']);
+  for (const statement of tree.body) {
+    if (statement.type !== 'VariableDeclaration') continue;
+    for (const { id, init } of statement.declarations) {
+      // Keep direct reads from loaded modules statically visible to bundlers.
+      if (id.type === 'Identifier' && init && /\brequire\s*\(/u.test(code.slice(init.start, init.end))) {
+        moduleBindings.add(id.name);
+      }
+    }
+  }
   const literals = new Map();
-  function visit(node, parent, inClass = false) {
-    const use = shareableUse(node, parent, inClass, code);
+  function visit(node, parent) {
+    const use = shareableUse(node, parent, moduleBindings, code);
     if (use) {
       const uses = literals.get(use.value) ?? [];
       uses.push(use);
       literals.set(use.value, uses);
     }
-    const inClassBody = inClass || node.type === 'ClassBody';
     for (const child of Object.values(node)) {
-      if (child?.type) visit(child, node, inClassBody);
-      else if (Array.isArray(child)) for (const item of child) if (item?.type) visit(item, node, inClassBody);
+      if (child?.type) visit(child, node);
+      else if (Array.isArray(child)) for (const item of child) if (item?.type) visit(item, node);
     }
   }
   visit(tree);

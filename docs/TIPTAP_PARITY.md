@@ -29,10 +29,10 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
 The latest full source run had 5,004 passes and six failures, with no skips.
-Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. Sharing repeated strings and class property names removed 43.0 KiB of
-raw CommonJS. The aggregate is 113.6 KiB over its existing limit. The CommonJS
-root defers three optional AI modules and loads 35.1 KiB less at startup.
+The current build passes every existing size limit. Sharing repeated property
+names reduced aggregate raw CommonJS from 1,522.3 to 1,405.4 KiB, below the
+1,408.8 KiB cap. The CommonJS root loads about 46 KiB less in a fresh Node
+process, while the separately gzipped chunks grew by 6.7 KiB in total.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption

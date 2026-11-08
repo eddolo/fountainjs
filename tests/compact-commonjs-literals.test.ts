@@ -47,3 +47,38 @@ exports.longRepeatedMemberName = new Reader().exercise();`;
   runInNewContext(compacted.code, { exports });
   expect(exports.longRepeatedMemberName).toEqual([3, 3]);
 });
+
+it('shares ordinary object members while retaining receivers, definitions and static exports', () => {
+  const original = `"use strict";
+const dependency = require("fixture");
+const record = {
+  __proto__: { inherited: true },
+  get longRepeatedProperty() { return this.counter; },
+  set longRepeatedProperty(value) { this.counter = value; },
+  longRepeatedMethod() { return this.longRepeatedProperty; },
+};
+record.longRepeatedProperty = 2;
+record.longRepeatedProperty++;
+const result = [record.longRepeatedMethod(), record.longRepeatedMethod(),
+  dependency.longRepeatedMethod(), require("fixture").longRepeatedMethod()];
+const remove = delete record.longRepeatedMethod;
+exports.longRepeatedMethod = record.longRepeatedMethod;
+module.exports.longRepeatedProperty = record.longRepeatedProperty;
+Object.defineProperty(exports, "getter", { enumerable: true, get: () => record.longRepeatedProperty });
+exports.result = [result, remove, record.inherited, Object.keys(record), Object.keys(exports)];`;
+  const compacted = compactCommonJsLiterals(original);
+  expect(compacted.code).toContain('record[__fountainLiteral');
+  expect(compacted.code).toContain('get [__fountainLiteral');
+  expect(compacted.code).toContain('set [__fountainLiteral');
+  expect(compacted.code).toContain('__proto__: { inherited: true }');
+  expect(compacted.code).toContain('dependency.longRepeatedMethod()');
+  expect(compacted.code).toContain('require("fixture").longRepeatedMethod()');
+  expect(compacted.code).toContain('exports.longRepeatedMethod');
+  expect(compacted.code).toContain('module.exports.longRepeatedProperty');
+  expect(compacted.code).toContain('enumerable: true');
+  const exports: Record<string, unknown> = {};
+  runInNewContext(compacted.code, { exports, module: { exports }, require: () => ({ longRepeatedMethod() { return 4; } }) });
+  expect(exports.getter).toBe(3);
+  expect(exports.result).toEqual([[3, 3, 4, 4], true, true, ['longRepeatedProperty', 'counter'],
+    ['longRepeatedMethod', 'longRepeatedProperty', 'getter']]);
+});

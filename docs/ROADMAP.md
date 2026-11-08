@@ -147,10 +147,10 @@ the React starter shows toolbar edits in portable JSON. Independent
 time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 5,004 passes and six failures, with no skips.
-Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. Sharing repeated strings and class property names removed 43.0 KiB of
-raw CommonJS. The aggregate is 112.9 KiB over its existing limit. The CommonJS
-root defers three optional AI modules and loads 35.1 KiB less at startup.
+The current build passes every existing size limit. Sharing repeated property
+names reduced aggregate raw CommonJS from 1,522.3 to 1,405.4 KiB, below the
+1,408.8 KiB cap. It loads about 46 KiB less from the CommonJS root in a fresh
+Node process. The separately gzipped chunks grew by 6.7 KiB in total.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
