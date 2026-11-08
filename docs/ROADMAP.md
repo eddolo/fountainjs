@@ -63,6 +63,8 @@ bytes separately. Hosts can set a per-room recovery cap that refuses writes
 atomically and preserves existing copies. [Room storage and limits](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#limiting-recovery-writes-per-room).
 Hosts can opt into lossless compression of archived offline update batches.
 [Batch storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#compressing-archived-offline-operations).
+The SQLite reference also offers Brotli for live checkpoints where a host
+prefers smaller on-disk payloads. [Live compression](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#optional-compression-for-live-checkpoints).
 The live checkpoint has a separate canonical-byte limit and metadata-only
 headroom report. An oversized room can still freeze and install a smaller
 checkpoint. [Live capacity](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#monitoring-live-checkpoint-headroom).

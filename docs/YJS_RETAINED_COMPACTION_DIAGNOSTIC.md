@@ -370,6 +370,32 @@ bytes if compression gives no saving. Updated readers accept both forms and
 restore the canonical update before the authority validates or serves it.
 Upgrade every reader before enabling compressed writes on a shared database.
 
+Hosts can also opt into `compressLiveCheckpoints: 'brotli'`. The SQLite row
+identifies this storage encoding and bounds decompression by the original
+checkpoint length. Updated readers can open raw, gzip, and Brotli rows in
+any configuration. The existing `true` option continues to write gzip.
+Upgrade all readers before writing Brotli rows.
+
+In a controlled single-paragraph typing probe, Brotli quality 4 reduced the
+stored bytes further than gzip level 1. The original checkpoint bytes matched
+after decoding. Timings are median compression time only, from 11 runs.
+
+| Edits | Raw | Gzip | Brotli, including header | Gzip / Brotli |
+| ---: | ---: | ---: | ---: | ---: |
+| 128 | 11,601 B | 2,599 B | 2,081 B | 0.30 / 0.64 ms |
+| 512 | 46,908 B | 9,082 B | 7,404 B | 0.35 / 0.61 ms |
+| 2,048 | 189,756 B | 34,582 B | 28,826 B | 0.91 / 2.16 ms |
+
+This trades synchronous compression time for disk space. The canonical
+checkpoint limit and collaboration wire format are independent of this option.
+
+The 182 focused tests include exact reopen across all three encodings and
+refusal of undersized and oversized Brotli payloads. Six recorded Chromium,
+Firefox and WebKit journeys cover durable save retries and compaction with
+Brotli enabled. The Firefox storage panel was visually checked after the
+handoff. It showed 1,422 stored bytes for a 7,346-byte live checkpoint and
+the offline draft in the separate retired branch.
+
 The loopback handoff demo enables compression and shows both the canonical
 checkpoint size and the stored size. Compaction thresholds still compare
 canonical bytes. The Firefox workflow reported 7,340 canonical bytes and

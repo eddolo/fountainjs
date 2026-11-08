@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
+import { brotliCompressSync } from 'node:zlib';
 import * as Y from 'yjs';
 import { CoreExtension, Selection, composeExtensions, createEditor, insertText } from '../src';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
@@ -57,10 +58,10 @@ it('persists an initialized checkpoint and shares its epoch across independent S
   current.checkpoint.update.fill(0); expect(await json(pair)).toEqual(pair.editor.getJSON());
 });
 
-it('saves a smaller live checkpoint and lets an updated raw writer reopen it exactly', async () => {
+it.each([true, 'brotli'] as const)('saves a smaller live checkpoint and lets an updated raw writer reopen it exactly (compression: %s)', async compressLiveCheckpoints => {
   const pair = await fixture();
   const key = 'project:launch';
-  const repository = new SQLiteRetainedRoomRepository(pair.path, Date.now, { compressLiveCheckpoints: true });
+  const repository = new SQLiteRetainedRoomRepository(pair.path, Date.now, { compressLiveCheckpoints });
   cleanup.push(() => repository.close());
   const compressedRoom = new CoordinatedRetainedRoom(repository, key, pair.schema, 'schema-1');
   expect((await compressedRoom.snapshot()).checkpoint).toEqual(pair.checkpoint);
@@ -75,6 +76,40 @@ it('saves a smaller live checkpoint and lets an updated raw writer reopen it exa
   const raw = await pair.second.write({ epoch: saved.epoch, update: wire(pair.document) });
   expect(repository.readStorageUsage(key)?.liveBytes).toBe(raw.checkpoint.manifest.bytes);
   expect(await compressedRoom.snapshot()).toEqual(raw);
+});
+
+it('reads older gzip rows in Brotli mode and bounds decoding of newer live rows', async () => {
+  const pair = await fixture();
+  const key = 'project:launch';
+  const gzip = new SQLiteRetainedRoomRepository(pair.path, Date.now, { compressLiveCheckpoints: true });
+  const brotli = new SQLiteRetainedRoomRepository(pair.path, Date.now, { compressLiveCheckpoints: 'brotli' });
+  cleanup.push(() => gzip.close(), () => brotli.close());
+  const gzipRoom = new CoordinatedRetainedRoom(gzip, key, pair.schema, 'schema-1');
+  const brotliRoom = new CoordinatedRetainedRoom(brotli, key, pair.schema, 'schema-1');
+  for (let index = 0; index < 128; index++) type(pair, 'x');
+  const saved = await gzipRoom.write({ epoch: pair.initial.epoch, update: wire(pair.document) });
+  const gzipBytes = gzip.readStorageUsage(key)!.liveBytes;
+  expect(await brotliRoom.snapshot()).toEqual(saved);
+
+  // Freeze rewrites the same checkpoint using the selected storage codec.
+  const ticket = await brotliRoom.freeze(saved);
+  const frozen = await gzipRoom.snapshot();
+  expect(frozen).toEqual({ ...saved, phase: 'frozen' });
+  expect(brotli.readStorageUsage(key)?.liveBytes).toBeLessThan(gzipBytes);
+  expect(brotli.readLiveCheckpointCapacity(key)?.bytes).toBe(saved.checkpoint.manifest.bytes);
+
+  const db = new DatabaseSync(pair.path);
+  cleanup.push(() => db.close());
+  const stored = db.prepare('SELECT wire FROM fountain_retained_rooms_v1 WHERE room_key = ?').get(key)!.wire as Uint8Array;
+  const prefix = Buffer.from(stored.subarray(0, 5));
+  expect(prefix).toEqual(Buffer.from([0x46, 0x4a, 0x53, 0x42, 1]));
+  const replace = db.prepare('UPDATE fountain_retained_rooms_v1 SET wire = ? WHERE room_key = ?');
+  replace.run(Buffer.concat([prefix, brotliCompressSync(new Uint8Array(saved.checkpoint.manifest.bytes + 1))]), key);
+  await expect(gzipRoom.snapshot()).rejects.toMatchObject({ code: 'ERR_BUFFER_TOO_LARGE' });
+  replace.run(Buffer.concat([prefix, brotliCompressSync(new Uint8Array(saved.checkpoint.manifest.bytes - 1))]), key);
+  await expect(gzipRoom.snapshot()).rejects.toThrow('Invalid SQLite checkpoint wire length');
+  replace.run(stored, key);
+  expect((await brotliRoom.abort(ticket)).checkpoint).toEqual(saved.checkpoint);
 });
 
 it('refuses duplicate initialization without replacing saved content or epoch', async () => {

@@ -1,5 +1,5 @@
 import { DatabaseSync, type StatementSync } from 'node:sqlite';
-import { gzipSync, gunzipSync } from 'node:zlib';
+import { brotliCompressSync, brotliDecompressSync, constants, gzipSync, gunzipSync } from 'node:zlib';
 import type { RetainedRoomRecord } from '../../src/yjs/retained-room-coordinator';
 import type { RetainedRoomArchive, RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
@@ -9,6 +9,7 @@ import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from
 import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceRenewalMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
 const maxCheckpointBytes = 64 * 1024 * 1024;
+const brotliWirePrefix = Buffer.from([0x46, 0x4a, 0x53, 0x42, 1]); // FJSB, storage version 1
 
 function encodeStoredWire(wire: Uint8Array): Uint8Array {
   if (wire.length < 1_024) return wire;
@@ -22,6 +23,16 @@ function decodeStoredWire(wire: Uint8Array, expectedBytes: number): Uint8Array {
   if (wire.length >= expectedBytes || wire[0] !== 0x1f || wire[1] !== 0x8b) return Uint8Array.from(wire);
   if (!Number.isSafeInteger(expectedBytes) || expectedBytes > maxCheckpointBytes) throw new Error('Invalid SQLite checkpoint wire length.');
   const decoded = gunzipSync(wire, { maxOutputLength: expectedBytes });
+  if (decoded.length !== expectedBytes) throw new Error('Invalid SQLite checkpoint wire length.');
+  return Uint8Array.from(decoded);
+}
+
+function decodeLiveWire(wire: Uint8Array, expectedBytes: number): Uint8Array {
+  if (wire.length >= expectedBytes || !brotliWirePrefix.every((byte, index) => wire[index] === byte)) {
+    return decodeStoredWire(wire, expectedBytes);
+  }
+  if (!Number.isSafeInteger(expectedBytes) || expectedBytes > maxCheckpointBytes) throw new Error('Invalid SQLite checkpoint wire length.');
+  const decoded = brotliDecompressSync(wire.subarray(brotliWirePrefix.length), { maxOutputLength: expectedBytes });
   if (decoded.length !== expectedBytes) throw new Error('Invalid SQLite checkpoint wire length.');
   return Uint8Array.from(decoded);
 }
@@ -43,17 +54,17 @@ function roomMetadata(result: Record<string, unknown>, key: string) {
 export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, CrossFormatRepository {
   private readonly db: DatabaseSync;
   private readonly selectRoomMetadata: StatementSync;
-  private readonly compressLiveCheckpoints: boolean;
+  private readonly compressLiveCheckpoints: boolean | 'brotli';
   private readonly compressRecoveryBatches: boolean;
   private readonly maxLiveCheckpointBytesPerRoom: number;
   private readonly maxRecoveryBytesPerRoom?: number;
   constructor(path: string, private readonly presenceNow = Date.now, options: {
-    readonly compressLiveCheckpoints?: boolean;
+    readonly compressLiveCheckpoints?: boolean | 'brotli';
     readonly compressRecoveryBatches?: boolean;
     readonly maxRecoveryBytesPerRoom?: number;
     readonly maxLiveCheckpointBytesPerRoom?: number;
   } = {}) {
-    this.compressLiveCheckpoints = options.compressLiveCheckpoints === true;
+    this.compressLiveCheckpoints = options.compressLiveCheckpoints === 'brotli' ? 'brotli' : options.compressLiveCheckpoints === true;
     this.compressRecoveryBatches = options.compressRecoveryBatches === true;
     const maximum = options.maxRecoveryBytesPerRoom;
     if (maximum !== undefined && (!Number.isSafeInteger(maximum) || maximum < 0)) throw new TypeError('Invalid per-room recovery capacity.');
@@ -151,7 +162,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     const result = this.db.prepare('SELECT generation, metadata, wire FROM fountain_retained_rooms_v1 WHERE room_key = ?').get(key);
     if (!result) return undefined;
     if (!(result.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retained room row.');
-    const { manifest, ...row } = roomMetadata(result, key), update = decodeStoredWire(result.wire, manifest.bytes);
+    const { manifest, ...row } = roomMetadata(result, key), update = decodeLiveWire(result.wire, manifest.bytes);
     const checkpoint: DocumentCheckpoint = manifest.format === 'fountain-retained-checkpoint/1' ? { manifest, update } : { manifest, update };
     return { ...row, checkpoint };
   }
@@ -304,7 +315,10 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   }
 
   private liveWire(wire: Uint8Array): Uint8Array {
-    return this.compressLiveCheckpoints && wire.length >= 4_096 ? encodeStoredWire(wire) : wire;
+    if (!this.compressLiveCheckpoints || wire.length < 4_096) return wire;
+    if (this.compressLiveCheckpoints === true) return encodeStoredWire(wire);
+    const compressed = brotliCompressSync(wire, { params: { [constants.BROTLI_PARAM_QUALITY]: 4 } });
+    return compressed.length + brotliWirePrefix.length < wire.length ? Buffer.concat([brotliWirePrefix, compressed]) : wire;
   }
 
   private checkLiveCheckpointCapacity(bytes: number, previousBytes: number): void {
