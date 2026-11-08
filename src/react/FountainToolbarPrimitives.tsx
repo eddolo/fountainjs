@@ -158,24 +158,34 @@ export function FountainToolbarRoot({ label = 'Formatting and rich content', cla
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-    const field = event.target;
+    const toolbar = event.currentTarget, field = event.target as HTMLElement;
+    if (field.closest?.('[role="toolbar"]') !== toolbar) return;
     // Linux WebKit applies these defaults to an old contenteditable range,
     // even in a plain page. Closed colour controls have no text caret; their
     // picker activation and Tab remain native. Text fallbacks keep caret keys.
-    if (field instanceof HTMLInputElement && field.type === 'color') event.preventDefault();
+    if (field.tagName === 'INPUT' && (field as HTMLInputElement).type === 'color') event.preventDefault();
     if (isToolbarField(field)) return;
-    const controls = [...event.currentTarget.querySelectorAll<HTMLElement>(
-      ':is(button,input:not([type=hidden]):not([type=file]),select):not([disabled]):not([tabindex="-1"]),[tabindex]:not([tabindex="-1"])',
-    )];
+    const controls = [...toolbar.querySelectorAll<HTMLElement>(
+      ':is(button,input,select,[tabindex]):not(:disabled,input[type=hidden],input[type=file],[tabindex="-1"])',
+    )].filter(control => control.closest('[role="toolbar"]') === toolbar
+      && !control.closest('[hidden],[inert],[aria-hidden="true"]'));
     if (!controls.length) return;
-    const current = Math.max(0, controls.indexOf(document.activeElement as HTMLElement));
-    const direction = getComputedStyle(event.currentTarget).direction === 'rtl' ? -1 : 1;
-    const delta = event.key === 'ArrowRight' ? direction : -direction;
-    const target = event.key === 'Home' ? 0
+    const focusRoot = toolbar.getRootNode() as Document | ShadowRoot;
+    const current = controls.indexOf(focusRoot.activeElement as HTMLElement);
+    const direction = toolbar.ownerDocument.defaultView?.getComputedStyle(toolbar).direction === 'rtl' ? -1 : 1;
+    const step = event.key === 'Home' ? 1 : event.key === 'End' ? -1
+      : event.key === 'ArrowRight' ? direction : -direction;
+    let target = event.key === 'Home' ? 0
       : event.key === 'End' ? controls.length - 1
-        : (current + delta + controls.length) % controls.length;
+        : (current < 0 ? step > 0 ? 0 : controls.length - 1 : current + step);
     event.preventDefault();
-    controls[target]?.focus();
+    // CSS can hide a control without changing its attributes. Continue until
+    // the browser confirms a focus move, including within a shadow root.
+    for (let attempted = 0; attempted < controls.length; attempted++, target += step) {
+      const control = controls[(target + controls.length) % controls.length];
+      control.focus();
+      if (focusRoot.activeElement === control) return;
+    }
   };
   return <div
     {...props}

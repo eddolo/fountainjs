@@ -5317,6 +5317,40 @@ test('runs accessible bubble and floating menus in the public React playground',
   await expect(editor.locator('h2').last()).toBeAttached();
 });
 
+test('skips unavailable host controls during public toolbar keyboard navigation', async ({ page }, info) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Use compact toolbar' }).click();
+  const toolbar = page.getByRole('toolbar', { name: 'Compact writing toolbar' });
+  const first = toolbar.getByRole('button', { name: 'Highlight' });
+  const next = toolbar.getByRole('button', { name: 'Strong emphasis' });
+  await first.evaluate(control => {
+    const slot = control.ownerDocument.createElement('div');
+    slot.innerHTML = `<div hidden><button>Hidden action</button></div>
+      <div style="display:none"><button>Collapsed action</button></div>
+      <div inert><button>Inactive action</button></div>
+      <div aria-hidden="true"><button>Hidden from accessibility tree</button></div>
+      <fieldset disabled><button tabindex="0">Disabled action</button></fieldset>
+      <div role="toolbar" aria-label="Host-owned toolbar"><button>Nested action</button></div>`;
+    control.after(slot);
+  });
+  await first.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(next).toBeFocused();
+  await page.keyboard.press('ArrowLeft');
+  await expect(first).toBeFocused();
+  const nested = toolbar.getByRole('button', { name: 'Nested action' });
+  await nested.focus();
+  await page.keyboard.press('Home');
+  await expect(nested).toBeFocused();
+  await next.focus();
+  await page.keyboard.press('Home');
+  await expect(first).toBeFocused();
+  await toolbar.evaluate(element => { element.style.direction = 'rtl'; });
+  await page.keyboard.press('ArrowLeft');
+  await expect(next).toBeFocused();
+  await toolbar.screenshot({ path: info.outputPath('toolbar-keyboard-focus.png') });
+});
+
 test('composes and keyboard-navigates the public toolbar by stable group and action IDs', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Use compact toolbar' }).click();

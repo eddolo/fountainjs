@@ -144,6 +144,33 @@ describe('React toolbar primitives', () => {
     await act(async () => root.unmount());
     mount.remove();
   });
+
+  it('uses the active control inside a shadow root when navigating a toolbar', async () => {
+    const host = document.createElement('div');
+    const shadow = host.attachShadow({ mode: 'open' });
+    const mount = document.createElement('div');
+    shadow.append(mount);
+    document.body.append(host);
+    const root = createRoot(mount);
+    try {
+      await act(async () => root.render(
+        <FountainToolbarRoot>
+          <FountainToolbarButton label="First" onAction={() => undefined} />
+          <FountainToolbarButton label="Second" onAction={() => undefined} />
+          <FountainToolbarButton label="Last" onAction={() => undefined} />
+        </FountainToolbarRoot>,
+      ));
+      const second = shadow.querySelector<HTMLButtonElement>('[aria-label="Second"]')!;
+      const last = shadow.querySelector<HTMLButtonElement>('[aria-label="Last"]')!;
+      second.focus();
+      expect(document.activeElement).toBe(host);
+      await act(async () => second.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, composed: true, cancelable: true })));
+      expect(shadow.activeElement).toBe(last);
+    } finally {
+      await act(async () => root.unmount());
+      host.remove();
+    }
+  });
 });
 
 describe('supplied React toolbar composition', () => {

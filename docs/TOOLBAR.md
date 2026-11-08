@@ -188,8 +188,10 @@ the accessible name. Products may use any icon system instead.
   `H1 — Heading 1` and `A — Text styles`, for example. Custom icons/labels must preserve this
   relationship for speech-input users as well as screen-reader users.
 - Tab enters normal controls. From a command button, Left/Right wraps across
-  enabled controls and Home/End move to the first/last control. Arrow direction
-  follows computed LTR or RTL direction. Native inputs, selects, textareas,
+  available controls and Home/End move to the first/last available control.
+  This skips hidden controls, inert sections, disabled fieldsets and controls
+  owned by a nested toolbar. Arrow direction follows computed LTR or RTL
+  direction. Native inputs, selects, textareas,
   editable host fields and semantic text/combobox/spinbutton/slider widgets keep
   their own arrow/Home/End editing behavior rather than triggering traversal.
   Exception: actual native colour inputs suppress those four navigation defaults

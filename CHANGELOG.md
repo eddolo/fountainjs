@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep React toolbar keyboard navigation moving past hidden and disabled
+  controls, and within the toolbar that owns the focused control.
+
 - Keep malformed Markdown link and image destinations literal while parsing
   valid quoted titles that contain parentheses.
 
