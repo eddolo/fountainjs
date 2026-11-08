@@ -43,6 +43,26 @@ awareness are not serialized.
 
 ## Durable recovery behavior
 
+### Retrying a save before migration
+
+If the server saved a legacy edit but the writer lost the reply, retrying the
+same update returns the saved revision when the verified native checkpoint is
+unchanged. This preserves an existing migration rehearsal for that exact
+revision. The acknowledgement still checks the row generation. If another
+connection freezes or changes the room while the retry is being verified,
+the writer receives a revision conflict and keeps its local edits.
+
+The browser journey drops a successful legacy save response, retries the save
+and upgrades to retained storage. It checks that only the original save and
+the migration advance the revision. The new live editor, the server checkpoint
+and the retired legacy archive all contain the same edited document.
+The six focused source suites passed 196 tests, and 12 recorded handoff
+journeys passed across Chromium, Firefox and WebKit. The Chromium capture was
+visually checked. The public build's 180 runtime and CSS files match the
+previous build byte for byte.
+
+### Migration receipts and offline recovery
+
 Stable operation UUIDs make acknowledgement retry idempotent. A historical
 receipt returns current state and cannot reinstall a superseded destination.
 Old retained-only and cross-format operations share an operation-ID collision

@@ -79,6 +79,37 @@ it('accepts real legacy edits before migration and never allows a plain CAS to c
   expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
 });
 
+it('keeps a rehearsed legacy revision current after a lost write receipt and retry', async () => {
+  const pair = await fixture();
+  const update = type(pair, 'RETRY ');
+  const request = { epoch: pair.initial.epoch, protocol: 'legacy' as const, update };
+  const accepted = await pair.room.write(request);
+  const rehearsed = await pair.handoff.preflightLegacy(accepted, options());
+  const saved = await pair.a.readDocument(key);
+
+  const replay = await pair.other.write(request);
+
+  expect(replay).toEqual(accepted);
+  expect(await pair.b.readDocument(key)).toEqual(saved);
+  const ticket = await pair.room.freeze(rehearsed);
+  expect(ticket.checkpointSha256).toBe(rehearsed.sourceCheckpointSha256);
+  const moved = await pair.handoff.migrateLegacy(ticket, uuid(), options(), policy());
+  expect(await model(moved.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
+});
+
+it('fences a legacy replay acknowledgement against a concurrent migration freeze', async () => {
+  const pair = await fixture();
+  const request = { epoch: pair.initial.epoch, protocol: 'legacy' as const, update: type(pair, 'RETRY ') };
+  const accepted = await pair.room.write(request);
+  vi.spyOn(pair.a, 'readDocumentHeader').mockImplementationOnce(async roomKey => {
+    await pair.other.freeze(accepted);
+    return pair.b.readDocumentHeader(roomKey);
+  });
+
+  await expect(pair.room.write(request)).rejects.toMatchObject({ code: 'revision-conflict' });
+  expect(await pair.other.snapshot()).toEqual({ ...accepted, phase: 'frozen' });
+});
+
 it('rehearses the exact saved legacy revision without freezing, archiving or exposing a candidate identity', async () => {
   const pair = await fixture();
   const before = await pair.a.readDocument(key);

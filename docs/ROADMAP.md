@@ -41,6 +41,8 @@ legacy room, verifying its archive and active identity across reload and undo.
 The migration reference can also rehearse conversion against a saved legacy
 revision while the room stays open. A failed check leaves the room writable,
 and the live upgrade freezes the specific revision that passed the check.
+Retrying an already saved legacy update preserves that revision and its
+rehearsal. A concurrent freeze can still invalidate the retry acknowledgement.
 [Migration rehearsal](YJS_NAMESPACE_MIGRATION_AUDIT.md#check-a-migration-while-the-room-is-open).
 An existing retained room can also estimate checkpoint savings while it is
 writable. The demo requires a passing check for the saved revision before

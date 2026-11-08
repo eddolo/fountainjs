@@ -250,7 +250,7 @@ export class CoordinatedDocumentRoom {
     if (epoch !== row.epoch || protocol !== documentProtocol(row.checkpoint)) documentRoomFailure('stale-epoch', 'Writer epoch/protocol is stale; reconnect and retain pending edits.');
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
     const checkpoint = await applyDocumentRoomUpdate(row.checkpoint, this.schema, this.schemaVersion, this.projection, request.update);
-    if (protocol === 'retained' && checkpoint.manifest.checkpointSha256 === row.checkpoint.manifest.checkpointSha256) {
+    if (checkpoint.manifest.checkpointSha256 === row.checkpoint.manifest.checkpointSha256) {
       // An already integrated update is a read acknowledgement. Check the
       // same generation fence a writing CAS would require before returning it.
       if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed while acknowledging the replay. Retain pending edits and retry.');

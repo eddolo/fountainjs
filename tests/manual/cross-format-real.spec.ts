@@ -26,3 +26,34 @@ test('recovers a lost migration acknowledgement and archives typing made before 
  await type(page,'Active editor',' PENDING after lost ack');const pending=(await state(page)).active;expect(pending).not.toEqual(before.active);await capture(page,info,'lost-ack.png');await page.getByRole('button',{name:'Retry last migration',exact:true}).click();await expect(page.getByRole('status')).toContainText('Durable migration receipt replayed');const after=await state(page);expect(after.epoch).toBe(ambiguous.epoch);expect(after.revision).toBe(ambiguous.revision);expect(after.lastReplay).toEqual({replayed:true,current:true});expect(after.archive).toEqual(pending);expect(after.archiveProtocol).toBe('legacy');expect(after.active).toEqual(before.active);
  await type(page,'Active editor',' AFTER retry');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.server).toEqual(saved.active);expect(saved.archive).toEqual(pending);const raw=await page.evaluate(async(id:string)=>{const batch=await (window as any).audit.batch(id,1);return {revision:batch.revision,sha256:batch.sha256,bytes:batch.update.length}},saved.archiveId);expect(raw.revision).toBe(1);expect(raw.sha256).toMatch(/^[a-f0-9]{64}$/);expect(raw.bytes).toBeGreaterThan(0);await info.attach('retired-raw-batch',{body:JSON.stringify(raw),contentType:'application/json'});await capture(page,info,'final.png');
 });
+
+test('recovers a lost legacy save acknowledgement and migrates without extra revisions', async ({ page }, info) => {
+  const before = await state(page);
+  await type(page, 'Active editor', ' Save this before upgrading.');
+  const edited = (await state(page)).active;
+  await page.route('**/__handoff/write', async route => {
+    const committed = await route.fetch();
+    expect((await committed.json()).ok).toBe(true);
+    await route.abort();
+  }, { times: 1 });
+
+  const save = page.getByRole('button', { name: 'Save active edits', exact: true });
+  await save.click();
+  await expect(page.getByRole('status')).toContainText('editor retained');
+  const committed = await state(page);
+  expect(committed.revision).toBe(before.revision + 1);
+  expect(committed.server).toEqual(edited);
+  expect(committed.active).toEqual(edited);
+
+  await save.click();
+  await expect(page.getByRole('status')).toContainText('durably saved');
+  expect((await state(page)).revision).toBe(committed.revision);
+  await page.getByRole('button', { name: 'Migrate legacy room', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Legacy room migrated');
+  const migrated = await state(page);
+  expect(migrated.revision).toBe(committed.revision + 1);
+  expect(migrated.server).toEqual(edited);
+  expect(migrated.active).toEqual(edited);
+  expect(migrated.archive).toEqual(edited);
+  await capture(page, info, 'legacy-save-replay-migrated.png');
+});
