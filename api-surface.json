@@ -443,8 +443,8 @@
     "dist/yjs/retained-room-coordinator.d.ts": "ac30ca1aa8ef700f23245778915a7854c188f99579838ead879a642394bf7652",
     "dist/yjs/retained-room-store.d.cts": "ec36eeb19f7fe3d6180826fe0f38caf9cca59e41b1d34769fc8caf724c467249",
     "dist/yjs/retained-room-store.d.ts": "582747ae732ac6c86c1f7dd3ea59cdf51d6c46c7edeb512f03c0020459c57fd5",
-    "dist/yjs/room.d.cts": "dc1a05a25ddefa2669b69658fbfc428f01f1ba11062d8aa6aae6da3fd9f6fb37",
-    "dist/yjs/room.d.ts": "84a65895a75f121c5e8b69460b38b5c1a1f22186409c418535dfcb4377b24805",
+    "dist/yjs/room.d.cts": "48a91236a1e30fd8037f1ffaca253e6c5083bc798446d893eac21577e3525b3f",
+    "dist/yjs/room.d.ts": "687d962b458d8125f57c124c1d869e80436d2c6a31b2187071e83f6742287e94",
     "dist/yjs/structured-attributes.d.cts": "3cdabf825ec71a4f86c34413159cc4914f3d4309b496dfc6dc100f5d2c3ff4e1",
     "dist/yjs/structured-attributes.d.ts": "3c85b57c179dd329b657449ceef7582bd00a2c212c8d87cb1713e99c3608aeaa"
   }

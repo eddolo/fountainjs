@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Switch a mounted editor to a verified retained or XML room using
+  `bound.createAdapter`. The destination gets its own undo history, and a
+  rejected initial document leaves the local draft available for recovery.
+
 - Reduce retained Yjs checkpoint growth from block moves using shorter
   private identifiers. Existing rooms and application node IDs stay readable.
 

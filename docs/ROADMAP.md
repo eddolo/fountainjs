@@ -22,6 +22,10 @@ The package opener verifies the bound reply and checkpoint
 identity before selecting an adapter and mounting an editor. It refuses an
 unrequested format before admission. Fresh rooms opened through this reference
 select retained storage and pass the six structural cases after durable reopen.
+The developer guide now leads with the verified retained setup for new rooms.
+An already mounted editor can install a verified room through the same opener
+and keep author undo separate between sessions.
+[Switching verified sessions](YJS_RETAINED_PREVIEW.md#open-a-room-through-the-application-authority).
 Bound adapters also verify the admitted native root at mount and stop shared
 editing if that root is replaced or an embedded XML fragment is detached.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
@@ -127,7 +131,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 152.1 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 152.4 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

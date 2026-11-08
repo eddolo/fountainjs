@@ -122,6 +122,26 @@ identity before it returns an extension factory. The same entry exports the
 retained extension factory and both checkpoint capture functions for hosts that need to
 seed rooms or preserve an existing XML room.
 
+To replace a room in an already mounted editor, prepare the next bound room
+with the same editor schema and retain any unsubmitted draft from the
+previous session. Pass a factory to the existing replacement command:
+
+```ts
+import { replaceCollaborationAdapter } from 'fountainjs-editor'
+
+const switched = replaceCollaborationAdapter(editor, () => next.createAdapter({
+  user,
+  provider: createProvider(next.document, next.lease),
+}))
+```
+
+Create the destination provider with auto-connect disabled. The adapter
+checks the admitted root before the old session is detached.
+Once the destination connects, it owns its own author undo history. Keep the
+previous room's document until its provider has completed teardown. If the
+destination is refused by an editor transaction filter, shared editing
+reports an error and the visible draft remains available for recovery.
+
 ```ts
 import { CoreExtension, composeExtensions, createEditor } from 'fountainjs-editor'
 import { openYjsRoom } from 'fountainjs-editor/yjs/room'

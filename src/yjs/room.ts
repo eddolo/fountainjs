@@ -1,13 +1,14 @@
 import type * as Y from 'yjs';
 import type { Node, Schema } from '../core/schema';
 import type { FountainExtension } from '../extensions/extension';
+import { createCollaborationExtension, type CollaborationAdapter } from '../extensions/collaboration';
 import type { DocumentProtocol, DocumentRoomAdmission, DocumentRoomSnapshot } from './document-room';
 import type { YjsCollaborationExtensionOptions } from './index';
 import { legacyNodeIdentity } from './legacy-node-identity';
 import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
-import { createRetainedYjsCollaborationExtension } from './retained-adapter';
+import { RetainedYjsCollaborationAdapter } from './retained-adapter';
 import { checkpointWire, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
-import { admittedRoomRoots } from './admitted-room-root';
+import { admittedRoomRootChanged, admittedRoomRoots } from './admitted-room-root';
 import { projectRetainedRoomAttributes, roomStructuredMapName } from './structured-attributes';
 
 export { captureLegacyCheckpoint, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
@@ -39,6 +40,8 @@ export interface BoundYjsRoom {
   /** Build an extension for the verified protocol and document. Destroy the
    * editor before destroying the caller-owned Y.Doc. */
   createExtension(options: BoundYjsExtensionOptions): FountainExtension;
+  /** Build an adapter for replacement in a mounted editor using the same schema. */
+  createAdapter(options: Omit<BoundYjsExtensionOptions, 'autoConnect'>): CollaborationAdapter;
 }
 
 /** Prepare an isolated document before constructing an editor or provider.
@@ -91,16 +94,24 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
   const lease = Object.freeze({ ...offer, revision: reply.revision });
   const checkpoint = { manifest, get update() { return supplied.update; } };
 
-  const bind = (document: Y.Doc, baseDocument: Node,
-    createAdapterExtension: (options: YjsCollaborationExtensionOptions) => FountainExtension,
-    fragment?: Y.XmlFragment): BoundYjsRoom => Object.freeze({
-    lease, document, baseDocument, ...(fragment ? { fragment } : {}),
-    createExtension({ user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs, autoConnect }: BoundYjsExtensionOptions) {
-      return createAdapterExtension({ user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs, autoConnect,
+  const bind = (document: Y.Doc, baseDocument: Node, fragment: Y.XmlFragment,
+    Adapter: new (options: YjsCollaborationExtensionOptions) => CollaborationAdapter): BoundYjsRoom => {
+    const legacy = lease.protocol === 'legacy';
+    const makeAdapter = ({ user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs }: Omit<BoundYjsExtensionOptions, 'autoConnect'>) =>
+      new Adapter({ user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs,
         document, fragmentName: lease.room, structuredAttributes: legacyProjection.structuredAttributes,
-        ...(fragment ? { fragment, preserveConcurrentRoots: true } : {}) });
-    },
-  });
+        ...(legacy ? { fragment, preserveConcurrentRoots: true } : {}) });
+    return Object.freeze({
+      lease, document, baseDocument, ...(legacy ? { fragment } : {}),
+      createExtension({ autoConnect, ...options }: BoundYjsExtensionOptions) {
+        return createCollaborationExtension({ autoConnect, adapter: () => makeAdapter(options) });
+      },
+      createAdapter(options: Omit<BoundYjsExtensionOptions, 'autoConnect'>) {
+        if (admittedRoomRootChanged(fragment)) throw new Error('The admitted room root changed.');
+        return makeAdapter(options);
+      },
+    });
+  };
 
   if (offer.protocol === 'legacy') {
     if (manifest.format !== 'fountain-legacy-checkpoint/1') throw new Error('Room admission returned a different checkpoint protocol.');
@@ -108,10 +119,10 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     try {
       signal?.throwIfAborted();
       if (legacyNodeIdentity(restored.reader.root) !== offer.identity) throw new Error('Room admission native identity changed.');
-      const { createYjsCollaborationExtension } = await import('./index');
+      const { YjsCollaborationAdapter } = await import('./index');
       signal?.throwIfAborted();
       admittedRoomRoots.set(restored.reader.fragment, restored.reader.root);
-      return bind(restored.document, restored.baseDocument, createYjsCollaborationExtension, restored.reader.fragment);
+      return bind(restored.document, restored.baseDocument, restored.reader.fragment, YjsCollaborationAdapter);
     } catch (error) { restored.document.destroy(); throw error; }
   }
 
@@ -124,6 +135,6 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     const baseDocument = projectRetainedRoomAttributes(restored.document, restored.baseDocument, lease.room, legacyProjection.structuredAttributes);
     const fragment = restored.document.getXmlFragment(lease.room);
     admittedRoomRoots.set(fragment, fragment.get(0) as Y.XmlElement);
-    return bind(restored.document, baseDocument, createRetainedYjsCollaborationExtension);
+    return bind(restored.document, baseDocument, fragment, RetainedYjsCollaborationAdapter);
   } catch (error) { restored.document.destroy(); throw error; }
 }

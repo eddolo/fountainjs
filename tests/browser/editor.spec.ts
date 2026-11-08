@@ -5049,6 +5049,20 @@ test('pairs the optional AI demo with developer recipes for every public workflo
   expect(errors).toEqual([]);
 });
 
+test('shows verified room setup before the legacy collaboration recipe', async ({ page }, info) => {
+  await page.goto('/developers.html#collaboration');
+  await expect(page.getByRole('heading', { name: 'New rooms on the unreleased branch' })).toBeVisible();
+  const setup = page.locator('pre').filter({ hasText: 'const bound = await openYjsRoom' });
+  await expect(setup).toBeVisible();
+  await expect(setup).toContainText('createProvider(bound.document, bound.lease)');
+  const legacy = page.locator('details').filter({ hasText: 'Show the published XML example' });
+  await expect(legacy.locator('pre')).toBeHidden();
+  await legacy.locator('summary').click();
+  await expect(legacy.locator('pre')).toContainText('createYjsCollaborationExtension');
+  await expect(legacy.locator('pre')).toBeVisible();
+  await setup.screenshot({ path: info.outputPath('verified-room-recipe.png') });
+});
+
 test('keeps headline phrases together and makes full-page navigation explicit', async ({ page }) => {
   await page.goto('/');
   const primary = page.getByRole('navigation', { name: 'Primary navigation' });

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, canUndoCollaboration, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, reconnectCollaboration, setMark, splitBlock, toggleList, toggleQuote } from '../src';
+import { CoreExtension, Plugin, Selection, canUndoCollaboration, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, reconnectCollaboration, replaceCollaborationAdapter, setMark, splitBlock, toggleList, toggleQuote, undoCollaboration } from '../src';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomAdmission, type DocumentRoomRepository } from '../src/yjs/document-room';
@@ -74,6 +74,63 @@ it('opens a newly provisioned retained room at the newer bound revision', async 
   expect(Object.isFrozen(bound.lease)).toBe(true);
   expect(bound.baseDocument.textContent).toBe('New: Canonical starter');
   expect(bound.fragment).toBeUndefined();
+});
+
+it.each(['retained', 'legacy'] as const)('switches a mounted editor to a verified %s room and isolates author history', async protocol => {
+  const pair = await fixture();
+  await pair.room.initialize(pair.checkpoint);
+  const other = seed('Other room', 'fountain', protocol === 'legacy');
+  const checkpoint = protocol === 'legacy'
+    ? await captureLegacyCheckpoint(other.document, pair.schema, version)
+    : await captureRetainedCheckpoint(other.document, pair.schema, version);
+  const target = new CoordinatedDocumentRoom(pair.second, 'other-room', pair.schema, version);
+  await target.initialize(checkpoint);
+  const open = async (authority: CoordinatedDocumentRoom, kind: 'retained' | 'legacy') => {
+    const bound = await openYjsRoom({ expected: { key: authority.key }, schema: pair.schema, schemaVersion: version, protocols: [kind],
+      open: async protocols => (await authority.openForEditing({ protocols, loadCheckpoint: () => pair.checkpoint })).admission,
+      admit: offer => authority.admit(offer) });
+    cleanups.push(() => bound.document.destroy());
+    return bound;
+  };
+  const first = await open(pair.room, 'retained');
+  const oldProvider = { connect: vi.fn(), disconnect: vi.fn() };
+  const next = await open(target, protocol);
+  const tampered = await open(target, protocol);
+  const filtered = await open(target, protocol);
+  let refuseRemote = false;
+  const filter = defineExtension({ name: 'test-filter', plugins: [new Plugin({
+    filterTransaction: transaction => !refuseRemote || transaction.getMeta('fountain$collaborationRemote') !== true,
+  })] });
+  const kit = composeExtensions([CoreExtension, filter, first.createExtension({ user, provider: oldProvider })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: first.baseDocument.toJSON() });
+  cleanups.push(() => editor.destroy());
+  editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'First-room draft: '));
+  const previous = Y.encodeStateAsUpdate(first.document);
+  const provider = { connect: vi.fn() };
+  tampered.document.getXmlFragment(tampered.lease.room).delete(0, 1);
+  expect(replaceCollaborationAdapter(editor, () => tampered.createAdapter({ user, provider }))).toBe(false);
+  expect(editor.getText()).toBe('First-room draft: Canonical starter');
+  expect(oldProvider.disconnect).not.toHaveBeenCalled();
+  expect(provider.connect).not.toHaveBeenCalled();
+
+  expect(replaceCollaborationAdapter(editor, () => next.createAdapter({ user, provider }))).toBe(true);
+  expect(editor.getText()).toBe('Other room');
+  expect(oldProvider.disconnect).toHaveBeenCalledTimes(1);
+  expect(provider.connect).toHaveBeenCalledTimes(1);
+  expect(canUndoCollaboration(editor)).toBe(false);
+  editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Second-room edit: '));
+  expect(editor.getText()).toBe('Second-room edit: Other room');
+  expect(undoCollaboration(editor)).toBe(true);
+  expect(editor.getText()).toBe('Other room');
+  expect(Y.encodeStateAsUpdate(first.document)).toEqual(previous);
+  expect(await target.snapshot()).toMatchObject({ revision: 0, checkpoint });
+
+  editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Keep this draft: '));
+  refuseRemote = true;
+  expect(replaceCollaborationAdapter(editor, () => filtered.createAdapter({ user, provider }))).toBe(false);
+  expect(editor.getText()).toBe('Keep this draft: Other room');
+  expect(getCollaborationState(editor)).toMatchObject({ status: 'error' });
+  expect(provider.connect).toHaveBeenCalledTimes(1);
 });
 
 it.each([undefined, 'research-settings'] as const)('requires the full saved structured map (%s) and reopens the merged field values', async mapName => {

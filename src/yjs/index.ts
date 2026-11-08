@@ -601,7 +601,10 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         : base;
       if (this.structuredAttributes && !base.eq(shared)) this.repairCanonicalDocument(base, shared);
       const selection = this.localSelection ? this.resolveRelativeSelection(this.localSelection, shared) : undefined;
-      context.applyRemoteDocument(shared, { selection, origin: 'initial-sync' });
+      if ((!context.editor.state.doc.eq(shared) || selection && !selection.eq(context.editor.state.selection))
+        && !context.applyRemoteDocument(shared, { selection, origin: 'initial-sync' })) {
+        throw new Error('Editor rejected the shared document or selection.');
+      }
     }
     directionIdentityReleases.get(this)?.();
     directionIdentityReleases.set(this, registerSharedDirectionIdentity(context.editor, path => {

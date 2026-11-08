@@ -36,6 +36,12 @@ for (const [title, query] of [
   await expect(status).toHaveText('Saved and reopened at revision 1.');
   await expect(page.getByRole('region', { name: 'Reopened room' }).getByRole('textbox'))
     .toContainText('3 columns · Compact · light theme');
+  const mounted = await ada.getByRole('textbox').elementHandle();
+  await page.getByRole('button', { name: 'Load the saved revision in Ada’s editor' }).click();
+  await expect(status).toHaveText('Ada loaded saved revision 1 in the same editor.');
+  await expect(ada.getByRole('textbox')).toContainText('3 columns · Compact · light theme');
+  expect(await mounted.evaluate(element => element === document.querySelector('#ada [role="textbox"]'))).toBe(true);
+  await mounted.dispose();
   expect(errors).toEqual([]);
   await page.screenshot({ path: info.outputPath('reopened-settings.png'), fullPage: true });
 });

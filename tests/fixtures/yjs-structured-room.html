@@ -21,10 +21,11 @@
 <section aria-label="Grace"><h2>Grace</h2><div id="grace"></div><button id="compact" type="button" disabled>Use compact layout</button></section>
 <button id="invalid" type="button" disabled>Try an invalid field update</button>
 <button id="save" type="button" disabled>Save both copies and reopen</button>
+<button id="switch" type="button" disabled>Load the saved revision in Ada’s editor</button>
 <section aria-label="Reopened room"><h2>Reopened room</h2><div id="reopened"></div></section>
 <script type="module">
   import * as Y from 'yjs';
-  import { CoreExtension, EditorView, Schema, composeExtensions, createEditor, defineExtension }
+  import { CoreExtension, EditorView, Schema, composeExtensions, createEditor, defineExtension, replaceCollaborationAdapter }
     from '/artifacts/yjs-namespace-build-20261107/engine.js';
   import { captureRetainedCheckpoint, createRetainedYjsCollaborationExtension, openYjsRoom }
     from '/artifacts/yjs-namespace-build-20261107/bound-room.js';
@@ -148,7 +149,20 @@
     const update = Y.mergeUpdates([ada, grace].map(writer => Y.encodeStateAsUpdate(writer.document, vector)));
     const receipt = await authority.write({ epoch: current.epoch, protocol: current.protocol, update });
     saved = await openAuthor('reopened');
+    button('switch').disabled = false;
     status('Saved and reopened at revision ' + receipt.revision + '.');
+  };
+  button('switch').onclick = async () => {
+    button('switch').disabled = true;
+    const next = await open(structuredAttributes);
+    const previous = ada.document;
+    if (!replaceCollaborationAdapter(ada.editor, () => next.createAdapter({ user: user('ada') }))) {
+      next.document.destroy();
+      throw new Error('Ada could not load the verified session.');
+    }
+    ada.document = next.document;
+    previous.destroy();
+    status('Ada loaded saved revision ' + next.lease.revision + ' in the same editor.');
   };
   window.addEventListener('pagehide', () => {
     for (const author of [ada, grace, saved]) {

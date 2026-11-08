@@ -70,11 +70,13 @@ export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, asse
       assert.equal(room.captureRetainedCheckpoint, retained.captureRetainedCheckpoint);
       assert.equal(typeof room.captureLegacyCheckpoint, 'function');
       const offer = { key: snapshot.key, epoch, revision: 0, protocol: 'retained', room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
-      const bound = await room.openYjsRoom({
+      const open = () => room.openYjsRoom({
         expected: { key: snapshot.key }, schema: seed.state.schema, schemaVersion: 'packed-v1',
         open: async protocols => { assert.deepEqual(protocols, ['retained']); return offer; },
         admit: async accepted => { assert.deepEqual(accepted, offer); return snapshot; },
       });
+      const bound = await open();
+      const replacement = await open();
       let starts = 0;
       const extension = bound.createExtension({ user: { id: 'verified', name: 'Verified', color: '#7048e8' }, provider: { connect() { starts++; } } });
       assert.equal(starts, 0);
@@ -97,7 +99,14 @@ export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, asse
         editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Local: '));
         assert.ok(editor.state.doc.textContent.startsWith('Local: '));
         assert.deepEqual(Y.encodeStateAsUpdate(bound.document), received);
-      } finally { editor.destroy(); bound.document.destroy(); }
+        const installed = core.replaceCollaborationAdapter(editor, () => replacement.createAdapter({
+          user: { id: 'replacement', name: 'Replacement', color: '#7048e8' },
+        }));
+        assert.equal(installed, true);
+        assert.equal(getCollaborationState(editor).status, 'connected');
+        assert.deepEqual(editor.getJSON(), seed.getJSON());
+        assert.equal(undoCollaboration(editor), false);
+      } finally { editor.destroy(); replacement.document.destroy(); bound.document.destroy(); }
       assertLegacyDeferred?.();
       cases++;
     }
