@@ -7,12 +7,11 @@ development.
 
 ## Stability levels
 
-The published `0.4.0-beta.1` release is an incremental capability preview, not parity
-certification. By explicit maintainer choice, the current public beta targets
-`latest`, so the default install receives the current version. This tag does
-not imply stable maturity: keep the beta version suffix, prerelease GitHub flag,
-and open limitations in release notes. The same commit must pass full CI before
-approval. A maintainer still approves the stage using npm 2FA. Prefer the
+The published `0.4.0-beta.2` release is an incremental capability preview.
+By maintainer choice, npm's `latest` tag points to the public beta. Keep the
+beta version suffix, prerelease GitHub flag, and open limitations in release
+notes. The same commit must pass full CI before staging. A maintainer approves
+the stage using npm 2FA. Prefer the
 short-lived OIDC workflow; never commit authentication credentials. npm's
 [stage tag is immutable](https://docs.npmjs.com/cli/v11/commands/npm-stage/), so
 inspect the version and `latest` tag before approval. An already staged `next`
@@ -74,7 +73,8 @@ A release is eligible for npm staging only when all of the following are true:
 4. `publint` and Are the Types Wrong pass for every public entry.
 5. `pnpm pack --dry-run` shows only intended public files.
 6. the complete Chromium, Firefox, WebKit, Pixel/Chromium, and iPhone/WebKit
-   suite passes for changes that affect the editor/browser surface;
+   suite passes, including the desktop room recovery checks against the
+   compiled package;
 7. user-facing documentation and the deployed demos describe the same version
    and limitations;
 8. security-sensitive changes include adversarial tests and updated trust
@@ -93,11 +93,15 @@ remain additional jobs/steps. Command coverage is not evidence that an individua
 gate adequately tests its claimed behavior, and the math oracle is not visual
 rendering or whole-paper fidelity certification.
 
-`scripts/check-release.mjs` enforces items 1 and 2. The GitHub Publish npm
-workflow runs it from a published release event before the complete package
-gate. The workflow uses npm trusted publishing/OIDC, stages the package with
-provenance, and leaves the final npm approval behind maintainer 2FA. No
-long-lived npm token belongs in GitHub or the repository.
+`scripts/check-release.mjs` enforces items 1 and 2. On a published release,
+the GitHub Publish npm workflow first calls the same CI used for pull
+requests, using the tagged commit. A failed, canceled, or skipped CI run
+blocks staging. The staging job also checks the tag and changelog and runs
+the complete package gate. Only that job can request an OIDC token. npm
+stages the package with provenance and leaves final approval behind
+maintainer 2FA. Manual workflow runs can check the trusted publisher
+configuration without staging. No long-lived npm token belongs in GitHub or
+the repository.
 
 ## Release procedure
 

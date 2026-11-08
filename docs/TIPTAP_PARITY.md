@@ -36,9 +36,10 @@ at 1,405.7 KiB against a 1,408.8 KiB cap. In the size repair's matched builds,
 the CommonJS root loaded about 46 KiB less in a fresh Node process, while the
 separately gzipped chunks grew by 6.7 KiB in total.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
-Fresh release CI,
-retained history/storage growth and compaction, and safe adapter adoption
-remain open. The migration reference can select an embedded legacy fragment
+The release workflow now requires the tagged commit to pass the shared CI
+before npm staging, including the browser room-recovery checks. A fresh
+release CI run, retained history/storage growth and compaction, and safe
+adapter adoption remain open. The migration reference can select an embedded legacy fragment
 and reopen its original identity through rollback. The retained handoff can
 require measured live-checkpoint savings before activating a smaller room.
 The SQLite reference compresses recovery checkpoints, can compress live

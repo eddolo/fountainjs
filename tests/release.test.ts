@@ -35,6 +35,21 @@ describe('release metadata gate', () => {
     expect(missing, 'Normal CI must run pnpm check or every constituent gate').toEqual([]);
   });
 
+  it('requires the shared CI before an npm staging run', () => {
+    const ci = readFileSync('.github/workflows/ci.yml', 'utf8').replaceAll('\r\n', '\n');
+    const release = readFileSync('.github/workflows/release.yml', 'utf8').replaceAll('\r\n', '\n');
+    expect(ci).toMatch(/^  workflow_call:/m);
+    expect(ci).toMatch(/^        run: pnpm exec playwright test --config playwright\.yjs-incomplete-room\.config\.ts$/m);
+    expect(release).toContain("  verify:\n    if: github.event_name == 'release'\n    uses: ./.github/workflows/ci.yml");
+    expect(release).toContain('  publish:\n    needs: verify');
+    const guard = release.match(/^    if: >-\n((?:^      .+\n)+)/m)?.[1]?.trim().replace(/\s+/g, ' ');
+    expect(guard).toBe("${{ !cancelled() && ((github.event_name == 'release' && needs.verify.result == 'success') || "
+      + "(github.event_name == 'workflow_dispatch' && needs.verify.result == 'skipped')) }}");
+    expect(release).toMatch(/^      - name: Stage package on npm\n        if: github.event_name == 'release'$/m);
+    expect(release).toMatch(/^permissions:\n  contents: read\n\njobs:/m);
+    expect(release).toContain('run: node scripts/check-release.mjs --tag "$FOUNTAIN_RELEASE_TAG"');
+  });
+
   it.each([
     '    if: false\n', '    continue-on-error: true\n', '    needs: verify\n',
     '        if: false\n', '        continue-on-error: true\n',
