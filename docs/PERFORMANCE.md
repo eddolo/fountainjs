@@ -937,6 +937,11 @@ The aggregate check still counts the deferred modules. The build transform adds
 The loaded-byte comparison excludes peer dependencies and measures startup
 footprint in Node. All runtime modules remain in the package.
 
+Sharing the legacy XML wire decoder between the live adapter and checkpoint
+reader reduces the CommonJS aggregate by 285 bytes, to 1,595,653 bytes. The
+aggregate still exceeds its existing limit by 149.5 KiB. The strict checkpoint
+reader continues to refuse data that the live editor would omit.
+
 A fresh install of the local tarball passed 15 room and collaboration checks
 in each format, including a module-load check after mounting a retained room.
 All 153 focused source checks and 54 recorded migration, rollback and recovery

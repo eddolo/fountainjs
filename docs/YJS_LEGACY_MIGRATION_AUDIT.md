@@ -18,6 +18,18 @@ adapter, or fix the six default-adapter concurrent-edit failures by itself.
 
 ## Source decoding and recovery
 
+The live XML adapter and migration reader now share the private wire decoder
+in `src/yjs/legacy-xml.ts`. This puts the XML vocabulary, metadata parsing and
+size bounds in one place. The migration reader adds native identity indexing,
+strict text-attribute and formatting checks, and schema preservation checks.
+The shared decoder is read-only. The live adapter still owns writes, connection
+behavior and its existing projection of live text.
+
+The collaboration suite passed 811 tests and reproduced the six known legacy
+concurrency failures. Six recorded migration and rollback journeys passed in
+Chromium, Firefox and WebKit, including lost save acknowledgements. The packed
+consumer, public API and headless boundary checks passed.
+
 `src/yjs/legacy-document.ts` imports Yjs, core model/schema/selection operations,
 retained model validation and the structured-attribute reader. It recognizes
 the public adapter's `fountain-node`, `fountain:type`, `fountain:marks` and

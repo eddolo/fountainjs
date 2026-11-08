@@ -2,11 +2,10 @@ import * as Y from 'yjs';
 import { RangeSelection, Selection, nodeRangeAtPath, resolveDocumentPoint, selectionAtPosition, textPointToPosition, type AnySelection, type Node, type NodeJSON, type Schema } from '../core';
 import { validateRetainedDocument } from './retained-document';
 import { legacyNodeIdentity } from './legacy-node-identity';
+import { isSharedElement, readLegacyXmlRoot } from './legacy-xml';
 import { YjsStructuredAttributeStore, type YjsStructuredAttributesOptions } from './structured-attributes';
 
 export type LegacyStructuredOptions = Omit<YjsStructuredAttributesOptions, 'map'>;
-const safeName = (name: string): boolean => /^[a-z_][\w.-]{0,127}$/i.test(name) && !['__proto__', 'prototype', 'constructor'].includes(name);
-const element = (value: unknown): value is Y.XmlElement => value instanceof Y.XmlElement && value.nodeName === 'fountain-node';
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 
 /** Strict, read-only decoder for the public adapter's existing XML wire format.
@@ -19,37 +18,14 @@ export class LegacyDocumentReader {
   readonly root: Y.XmlElement;
   constructor(readonly source: Y.Doc, readonly room: string, readonly schema: Schema, structured?: LegacyStructuredOptions, selectedFragment?: Y.XmlFragment) {
     const fragment = selectedFragment ?? source.share.get(room);
-    if (!(fragment instanceof Y.XmlFragment) || fragment.constructor !== Y.XmlFragment || fragment.length !== 1 || !element(fragment.get(0))) throw new Error('Legacy checkpoint requires exactly one declared XML document root.');
+    if (!(fragment instanceof Y.XmlFragment) || fragment.constructor !== Y.XmlFragment || fragment.length !== 1 || !isSharedElement(fragment.get(0))) throw new Error('Legacy checkpoint requires exactly one declared XML document root.');
     this.fragment = fragment;
     this.root = fragment.get(0) as Y.XmlElement;
-    let nodes = 0, characters = 0;
-    const read = (node: Y.XmlElement, path: readonly number[], depth: number): NodeJSON => {
-      if (++nodes > 100_000 || depth > 100) throw new Error('Legacy document exceeds node/depth bounds.');
-      this.paths.set(node, Object.freeze([...path]));
-      this.identities.set(legacyNodeIdentity(node), Object.freeze([...path]));
-      const metadata = node.getAttributes(), type = metadata['fountain:type'], attrs: Record<string, unknown> = {}; let marks: NodeJSON['marks'];
-      if (typeof type !== 'string' || !type || Object.keys(metadata).length > 1_000) throw new Error('Invalid legacy node metadata.');
-      for (const [name, value] of Object.entries(metadata)) {
-        if (name === 'fountain:type') continue;
-        if (typeof value !== 'string' || value.length > 1_000_000) throw new Error('Invalid legacy encoded metadata.');
-        if (name === 'fountain:marks') { const decoded = JSON.parse(value); if (!Array.isArray(decoded)) throw new Error('Invalid legacy marks.'); marks = decoded; }
-        else if (name.startsWith('fountain:attr:') && safeName(name.slice(14))) attrs[name.slice(14)] = JSON.parse(value);
-        else throw new Error(`Unknown legacy node metadata: ${name}`);
-      }
-      const children = node.toArray();
-      if (type === 'text') {
-        // The public decoder ignores text attributes and XmlText formatting.
-        // Refuse them rather than silently interpreting or discarding them.
-        if (Object.keys(attrs).length || children.length !== 1 || !(children[0] instanceof Y.XmlText)) throw new Error('Unsupported legacy text structure or attributes.');
-        const text = children[0], runs = text.toDelta();
-        if (Object.keys(text.getAttributes()).length || runs.some((run: any) => typeof run.insert !== 'string' || run.attributes && Object.keys(run.attributes).length)) throw new Error('Unsupported legacy XmlText formatting or embeds.');
-        const value = text.toString(); characters += value.length;
-        if (characters > 10_000_000) throw new Error('Legacy text exceeds its character bound.');
-        this.paths.set(text, Object.freeze([...path])); return { type, text: value, ...(marks?.length ? { marks } : {}) };
-      }
-      return { type, ...(Object.keys(attrs).length ? { attrs } : {}), ...(marks?.length ? { marks } : {}), ...(children.length ? { content: children.map((child, index) => { if (!element(child)) throw new Error('Invalid legacy child.'); return read(child, [...path, index], depth + 1); }) } : {}) };
-    };
-    const raw = read(this.root, [], 0), base = schema.nodeFromJSON(raw);
+    const raw = readLegacyXmlRoot(this.root, (item, path) => {
+      this.paths.set(item, Object.freeze([...path]));
+      if (isSharedElement(item)) this.identities.set(legacyNodeIdentity(item), Object.freeze([...path]));
+    });
+    const base = schema.nodeFromJSON(raw);
     if (base.type !== schema.topNodeType) throw new Error('Legacy root is not the schema document.');
     // Schema factories may add defaults, but cannot drop/rewrite supplied data.
     const preserve = (before: NodeJSON, after: Node): void => {

@@ -10,7 +10,6 @@ import {
   textPointToPosition,
   type AnySelection,
   type Node,
-  type NodeJSON,
   type Transaction as FountainTransaction,
 } from '../core';
 import {
@@ -27,6 +26,8 @@ import type { FountainExtension } from '../extensions/extension';
 import { registerSharedDirectionIdentity } from '../core/shared-direction';
 import { hasSharedBlockLineage } from '../core/schema/block-lineage';
 import { admittedRoomRootChanged, admittedRoomRoots } from './admitted-room-root';
+import { ATTRIBUTE_PREFIX, ELEMENT_NAME, MARKS_ATTRIBUTE, MAXIMUM_ATTRIBUTE_LENGTH, TYPE_ATTRIBUTE, isSharedElement,
+  readLegacyXmlRoot, validAttributeName, type SharedElement } from './legacy-xml';
 import {
   YjsStructuredAttributeStore,
   type YjsStructuredAttributesOptions,
@@ -34,20 +35,9 @@ import {
 
 export type { YjsStructuredAttributesOptions } from './structured-attributes';
 
-const ELEMENT_NAME = 'fountain-node';
-const TYPE_ATTRIBUTE = 'fountain:type';
-const MARKS_ATTRIBUTE = 'fountain:marks';
-const ATTRIBUTE_PREFIX = 'fountain:attr:';
 const HISTORY_BEFORE = Symbol('fountain-yjs-selection-before');
 const HISTORY_AFTER = Symbol('fountain-yjs-selection-after');
-const MAXIMUM_DEPTH = 100;
-const MAXIMUM_NODES = 100_000;
-const MAXIMUM_TEXT_LENGTH = 10_000_000;
-const MAXIMUM_ATTRIBUTE_LENGTH = 1_000_000;
-const MAXIMUM_ATTRIBUTES = 1_000;
 const MAXIMUM_ALIGNMENT_CELLS = 250_000;
-
-type SharedElement = Y.XmlElement<Record<string, any>>;
 
 export interface YjsAwareness {
   readonly clientID?: number;
@@ -105,25 +95,6 @@ function encodeAttribute(value: unknown): string {
     throw new Error('Unsafe collaborative attribute.');
   }
   return encoded;
-}
-
-function validAttributeName(value: string): boolean {
-  return /^[a-z_][\w.-]{0,127}$/i.test(value)
-    && value !== '__proto__'
-    && value !== 'prototype'
-    && value !== 'constructor';
-}
-
-function decodeAttribute(value: unknown, label: string): unknown {
-  if (typeof value !== 'string' || value.length > MAXIMUM_ATTRIBUTE_LENGTH) {
-    throw new Error(`Invalid collaborative ${label}.`);
-  }
-  try { return JSON.parse(value); }
-  catch { throw new Error(`Invalid JSON in collaborative ${label}.`); }
-}
-
-function isSharedElement(value: unknown): value is SharedElement {
-  return value instanceof Y.XmlElement && value.nodeName === ELEMENT_NAME;
 }
 
 function setElementMetadata(element: SharedElement, node: Node): void {
@@ -312,66 +283,12 @@ function synchronizeElement(element: SharedElement, before: Node, after: Node): 
   synchronizeChildren(element, before.content, after.content);
 }
 
-function parseSharedElement(element: SharedElement, depth: number, count: { nodes: number; text: number }): NodeJSON {
-  if (depth > MAXIMUM_DEPTH || ++count.nodes > MAXIMUM_NODES) {
-    throw new Error('Document too large.');
-  }
-  const attributes = element.getAttributes();
-  if (Object.keys(attributes).length > MAXIMUM_ATTRIBUTES) {
-    throw new Error('Too many collaborative attributes.');
-  }
-  const type = attributes[TYPE_ATTRIBUTE];
-  if (typeof type !== 'string' || !type) throw new Error('Collaborative node needs a type.');
-  const attrs: Record<string, unknown> = {};
-  let marks: NodeJSON['marks'];
-  Object.entries(attributes).forEach(([name, value]) => {
-    if (name === TYPE_ATTRIBUTE) return;
-    if (name === MARKS_ATTRIBUTE) {
-      const parsed = decodeAttribute(value, 'marks');
-      if (!Array.isArray(parsed)) throw new Error('Collaborative marks must be an array.');
-      marks = parsed as NodeJSON['marks'];
-      return;
-    }
-    if (!name.startsWith(ATTRIBUTE_PREFIX) || name.length === ATTRIBUTE_PREFIX.length) {
-      throw new Error(`Unknown collaborative node metadata: ${name}`);
-    }
-    const attributeName = name.slice(ATTRIBUTE_PREFIX.length);
-    if (!validAttributeName(attributeName)) throw new Error(`Invalid collaborative attribute name: ${attributeName}`);
-    attrs[attributeName] = decodeAttribute(value, `attribute ${attributeName}`);
-  });
-
-  const children = element.toArray();
-  if (type === 'text') {
-    if (children.length !== 1 || !(children[0] instanceof Y.XmlText)) {
-      throw new Error('Invalid collaborative text node.');
-    }
-    const text = children[0].toString();
-    count.text += text.length;
-    if (count.text > MAXIMUM_TEXT_LENGTH) throw new Error('Collaborative text is too long.');
-    return {
-      type,
-      text,
-      ...(marks?.length ? { marks } : {}),
-    };
-  }
-  const content = children.map((child) => {
-    if (!isSharedElement(child)) throw new Error('Invalid collaborative child.');
-    return parseSharedElement(child, depth + 1, count);
-  });
-  return {
-    type,
-    ...(Object.keys(attrs).length ? { attrs } : {}),
-    ...(marks?.length ? { marks } : {}),
-    ...(content.length ? { content } : {}),
-  };
-}
-
-function readSharedDocument(fragment: Y.XmlFragment): NodeJSON {
+function readSharedDocument(fragment: Y.XmlFragment) {
   const children = fragment.toArray();
   if (children.length !== 1 || !isSharedElement(children[0])) {
     throw new Error('Expected one document root.');
   }
-  return parseSharedElement(children[0], 0, { nodes: 0, text: 0 });
+  return readLegacyXmlRoot(children[0]);
 }
 
 function sharedElementAtPath(fragment: Y.XmlFragment, path: readonly number[]): SharedElement | undefined {
