@@ -6,6 +6,37 @@ import { createRetainedHttpProvider } from '../examples/backends/retained-http-p
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { captureRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 
+it.each([false, true])('reuses a verified admission only when its installed bytes still match (local change: %s)', async diverged => {
+  const document = new Y.Doc();
+  const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({
+    document, user: { id: 'ada', name: 'Ada', color: '#7048e8' },
+  })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+  const checkpoint = await captureRetainedCheckpoint(document, editor.state.schema, 'transport-test');
+  const lease = { key: 'room', epoch: crypto.randomUUID(), revision: 0, protocol: 'retained' as const,
+    room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
+  const snapshot = { key: lease.key, epoch: lease.epoch, revision: 0, phase: 'active' as const, protocol: lease.protocol, checkpoint };
+  const merge = vi.fn(async () => {});
+  const onStatus = vi.fn();
+  const onSnapshot = vi.fn();
+  const provider = createRetainedHttpProvider({
+    document, bound: () => ({ lease, snapshot, admittedSnapshot: snapshot }),
+    poll: async () => null, write: async () => snapshot, merge, onStatus, onSnapshot,
+  });
+  try {
+    if (diverged) editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Pending note'));
+    await provider.connect();
+    expect(merge).toHaveBeenCalledTimes(diverged ? 1 : 0);
+    expect(onSnapshot).toHaveBeenCalledWith(snapshot);
+    expect(onStatus).toHaveBeenLastCalledWith('connected');
+    if (diverged) expect(editor.getText()).toBe('Pending note');
+  } finally {
+    provider.disconnect();
+    editor.destroy();
+    document.destroy();
+  }
+});
+
 it('backs off repeated failures without typing resetting the retry timer', async () => {
   const document = new Y.Doc();
   const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({

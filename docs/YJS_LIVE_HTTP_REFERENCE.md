@@ -120,6 +120,26 @@ Verification passed 43 focused source tests and 15 recorded workflows across
 Chromium, Firefox and WebKit, including reload, reconnect and the manual draft
 recovery path.
 
+### Reusing the installed admission checkpoint
+
+The HTTP provider can reuse the checkpoint that the retained adapter has
+already verified and installed during admission. It requires the same
+snapshot object and a byte-for-byte match with the live Yjs document.
+The provider reads the state vector from that installed document and starts
+polling normally. A newer binding reply or a changed local document takes
+the full verified merge path.
+
+In a 240-paragraph Node probe, median provider startup fell from 122.65 ms
+to 9.84 ms after the initial verified installation. Five timed trials per
+path alternated order after a warmup and confirmed identical native bytes.
+The probe excludes network time and the reader view. The browser workflow
+checks zero provider merges on a matching admission and a verified merge
+when a peer saves while binding is paused.
+The focused suite passed 45 source tests. Across Chromium, Firefox and
+WebKit, 12 recorded workflows covered reconnect, reload, matching admission,
+and a newer binding reply. The two binding workflows were rerun on the final
+browser fixture in all three engines.
+
 ## Presence
 
 The host [presence reference](../examples/backends/retained-http-presence.ts)

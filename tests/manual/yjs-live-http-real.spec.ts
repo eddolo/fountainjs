@@ -393,6 +393,7 @@ test('sends small receipts for a long document and falls back when a delta is co
     expect(bindReply.value.snapshot).toBeUndefined();
     const bindSize = (await bound.body()).byteLength;
     expect(bindSize).toBeLessThan(512);
+    expect(await peer.evaluate(() => (window as any).audit.transportMerges())).toBe(0);
     const session = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
     const full = await page.evaluate(async token => {
       const response = await fetch('/__admission/snapshot', {
@@ -490,6 +491,7 @@ test('loads a newer checkpoint when the room advances between load and binding',
     expect(reply.value.snapshot.revision).toBeGreaterThan(bound.request().postDataJSON().basis.revision);
     await expect(connection(page)).toHaveText('connected');
     await expect(editor(page)).toContainText('Saved during admission.');
+    expect(await page.evaluate(() => (window as any).audit.transportMerges())).toBeGreaterThan(0);
     await page.screenshot({ path: info.outputPath('newer-binding.png'), scale: 'css' });
   } finally {
     release.release();

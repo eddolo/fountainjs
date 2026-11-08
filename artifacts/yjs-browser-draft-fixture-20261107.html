@@ -130,7 +130,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   client?.view.destroy();
   client?.editor.destroy();
   client?.doc.destroy();
-  const next = {doc, detached, lease: null, bound: null};
+  const next = {doc, detached, lease: null, bound: null, transportMerges: 0};
   const loadedSnapshots = new WeakMap();
   const admission = {
     schemaVersion: version,
@@ -142,6 +142,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
         const basis = {revision: loaded.revision, checkpointSha256: loaded.checkpoint.manifest.checkpointSha256};
         const accepted = await request('bind-live', {lease,presenceWorker,basis}, signal);
         next.bound = restoreRetainedHttpBindReceipt(accepted, loaded, lease);
+        next.admittedSnapshot = next.bound === loaded ? loaded : undefined;
         next.presenceToken = accepted.token;
       } else next.bound = await request('bind', lease, signal);
       next.signal = signal;
@@ -162,7 +163,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
       next.lease = {key: accepted.key, epoch: accepted.epoch, revision: accepted.revision, protocol: 'retained', room: manifest.room, identity: manifest.roomId};
       const token = next.presenceToken, epoch = accepted.epoch;
       starts += 1;
-      return {lease: next.lease, snapshot: accepted, presence: {
+      return {lease: next.lease, snapshot: accepted, admittedSnapshot: next.admittedSnapshot, presence: {
         exchange: (lease, state, signal) => request('presence', {lease, token, state,presenceWorker}, signal),
         leave: () => request('leave-live', {epoch, token,presenceWorker}, AbortSignal.timeout(1_500)),
       }};
@@ -170,6 +171,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
     poll: (lease, signal, basis) => request('poll-retained', {lease, basis}, signal),
     write: (lease, update, signal, basis) => request('write', {epoch: lease.epoch, protocol: lease.protocol, update, basis}, signal),
     async merge(checkpoint, signal) {
+      next.transportMerges += 1;
       const candidate = await prepareRetainedAdmission(doc, checkpoint, next.editor.state.schema, version, 'fountain');
       signal.throwIfAborted();
       candidate.install('http-live-sync');
@@ -425,6 +427,7 @@ document.addEventListener('visibilitychange', () => {
 select('#message').textContent = 'Ready';
 window.audit = {
   async snapshot() { return {starts, server: serverModel, model: client.editor.getJSON(), copies: await drafts.list()}; },
+  transportMerges: () => client.transportMerges,
   async migration() {
     if (!migration) throw new Error('No migration for this session.');
     const [archive, latest] = await Promise.all([request('migration-record', { epoch: migration.epoch }), request('snapshot')]);

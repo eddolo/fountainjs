@@ -13,6 +13,8 @@ interface BoundPresence {
 interface BoundTransport {
   readonly lease: RetainedAdmissionLease;
   readonly snapshot: DocumentRoomSnapshot;
+  /** The exact snapshot already validated and installed by this admission. */
+  readonly admittedSnapshot?: DocumentRoomSnapshot;
   readonly presence?: BoundPresence;
 }
 
@@ -42,6 +44,10 @@ function checkpointFor(snapshot: DocumentRoomSnapshot, lease: RetainedAdmissionL
     throw new Error('Transport received a different native room. Local changes were retained.');
   }
   return checkpoint;
+}
+
+function sameUpdate(expected: Uint8Array, actual: Uint8Array): boolean {
+  return expected.length === actual.length && expected.every((byte, index) => actual[index] === byte);
 }
 
 function containsSentUpdate(bytes: Uint8Array, vector: Uint8Array, sent: Uint8Array): boolean {
@@ -148,7 +154,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       }).finally(() => { presenceRequest = undefined; });
     }
 
-    async function accept(snapshot: DocumentRoomSnapshot, sent?: Uint8Array) {
+    async function accept(snapshot: DocumentRoomSnapshot, sent?: Uint8Array, reuseAdmission = false) {
       const checkpoint = checkpointFor(snapshot, lease);
       if (sent && snapshot.revision === lease.revision && checkpoint.manifest.checkpointSha256 !== base.manifest.checkpointSha256) {
         throw new Error('The authority changed the checkpoint without advancing its revision. Local changes were retained.');
@@ -157,11 +163,14 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       if (!(bytes instanceof Uint8Array) || bytes.length !== checkpoint.manifest.bytes || !bytes.length || bytes.length > 64 * 1024 * 1024) {
         throw new Error('Invalid checkpoint update length.');
       }
-      const vector = Y.encodeStateVectorFromUpdate(bytes);
+      const alreadyInstalled = reuseAdmission && sameUpdate(bytes, Y.encodeStateAsUpdate(document));
+      const vector = alreadyInstalled ? Y.encodeStateVector(document) : Y.encodeStateVectorFromUpdate(bytes);
       if (sent && !containsSentUpdate(bytes, vector, sent)) {
         throw Object.assign(new Error('The authority checkpoint is missing the sent edit. Retrying local changes.'), { code: 'revision-conflict' });
       }
-      await options.merge(checkpoint, signal);
+      if (!alreadyInstalled) {
+        await options.merge(checkpoint, signal);
+      }
       signal.throwIfAborted();
       base = checkpoint;
       basis = { updateSha256: checkpoint.manifest.updateSha256, vector };
@@ -235,10 +244,10 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     }
 
     try {
-      await accept(bound.snapshot);
+      await accept(bound.snapshot, undefined, bound.snapshot === bound.admittedSnapshot);
       const incoming = (bound.snapshot.checkpoint as RetainedCheckpoint).update;
       const local = Y.encodeStateAsUpdate(document);
-      if (incoming.length !== local.length || !incoming.every((byte, index) => local[index] === byte)) edited += 1;
+      if (!sameUpdate(incoming, local)) edited += 1;
       onUpdate = (_bytes, _origin, _document, transaction) => {
         if (!transaction.local) return;
         edited += 1;

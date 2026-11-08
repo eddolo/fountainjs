@@ -172,6 +172,9 @@ full-checkpoint path, including the fallback after a bad delta.
 Binding can confirm a matching verified checkpoint in 181 bytes. When the
 room advances during admission, it sends the newer checkpoint instead.
 [Binding receipts](YJS_LIVE_HTTP_REFERENCE.md#reusing-a-checkpoint-during-binding).
+The provider also skips a duplicate client-side merge when the verified
+admission checkpoint exactly matches the installed native state.
+[Provider startup probe](YJS_LIVE_HTTP_REFERENCE.md#reusing-the-installed-admission-checkpoint).
 The SQLite reference reads metadata alone for idle polls and presence checks,
 including when the receiver is behind. Changed document responses still pass
 full validation and a generation check before delivery.
