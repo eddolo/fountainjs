@@ -17,6 +17,7 @@ import {
   placeEditorMenu,
   type EditorMenuPlacementOptions,
 } from '../view/menu-position';
+import { isToolbarField } from './toolbar-keyboard';
 
 export interface FountainContextMenuProps {
   editor: Editor;
@@ -106,7 +107,7 @@ function FountainContextMenu({
   useEffect(() => {
     if (!visible || !anchorElement) return;
     const escape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
+      if (event.defaultPrevented || event.key !== 'Escape') return;
       event.preventDefault();
       controller.dismiss();
     };
@@ -124,21 +125,26 @@ function FountainContextMenu({
     data-side={side}
     style={style}
     onKeyDown={(event) => {
+      if (event.defaultPrevented) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         controller.dismiss();
         anchorElement?.focus();
         return;
       }
-      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-      const controls = [...event.currentTarget.querySelectorAll<HTMLElement>(
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || isToolbarField(event.target)) return;
+      const toolbar = event.currentTarget;
+      const controls = [...toolbar.querySelectorAll<HTMLElement>(
         'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
       )];
       if (!controls.length) return;
-      const current = Math.max(0, controls.indexOf(document.activeElement as HTMLElement));
+      const owner = toolbar.ownerDocument;
+      const current = Math.max(0, controls.indexOf(owner.activeElement as HTMLElement));
+      const direction = owner.defaultView?.getComputedStyle(toolbar).direction === 'rtl' ? -1 : 1;
+      const delta = event.key === 'ArrowRight' ? direction : -direction;
       const target = event.key === 'Home' ? 0
         : event.key === 'End' ? controls.length - 1
-          : (current + (event.key === 'ArrowRight' ? 1 : -1) + controls.length) % controls.length;
+          : (current + delta + controls.length) % controls.length;
       event.preventDefault();
       controls[target]?.focus();
     }}

@@ -5166,7 +5166,7 @@ test('runs grouped default and product slash commands in the public React playgr
   await expect(freshEditor.locator('.demo-callout').last()).toContainText('A custom node supplied by the demo extension.');
 });
 
-test('runs accessible bubble and floating menus in the public React playground', async ({ page }) => {
+test('runs accessible bubble and floating menus in the public React playground', async ({ page }, info) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const firstText = editor.locator('[data-fountain-text-path]').first();
@@ -5186,6 +5186,33 @@ test('runs accessible bubble and floating menus in the public React playground',
   const bubble = page.getByRole('toolbar', { name: 'Selection actions' });
   await expect(bubble).toBeVisible();
   await expect(bubble.getByRole('button')).toHaveCount(4);
+  // Exercise a host-supplied control inside the real contextual toolbar.
+  await bubble.evaluate(element => {
+    const input = element.ownerDocument.createElement('input');
+    input.setAttribute('aria-label', 'Selection label');
+    input.value = 'Annotation';
+    input.tabIndex = 0;
+    element.prepend(input);
+  });
+  const field = bubble.getByRole('textbox', { name: 'Selection label' });
+  await field.focus();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('ArrowRight');
+  await expect(field).toBeFocused();
+  expect(await field.evaluate((input: HTMLInputElement) => input.selectionStart)).toBe(1);
+  await page.keyboard.press('End');
+  await expect(field).toBeFocused();
+  expect(await field.evaluate((input: HTMLInputElement) => input.selectionStart)).toBe('Annotation'.length);
+  const actions = bubble.getByRole('button');
+  await bubble.evaluate(element => element.setAttribute('dir', 'rtl'));
+  await actions.first().focus();
+  await field.evaluate(element => element.remove());
+  await page.keyboard.press('ArrowLeft');
+  await expect(actions.nth(1)).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(actions.first()).toBeFocused();
+  await bubble.screenshot({ path: info.outputPath('contextual-toolbar-rtl-focus.png') });
+  await bubble.evaluate(element => element.removeAttribute('dir'));
   await bubble.getByRole('button', { name: 'Bold selection' }).click();
   await expect(editor.locator('strong').first()).toContainText('Try Founta');
 

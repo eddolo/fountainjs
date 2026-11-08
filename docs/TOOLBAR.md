@@ -7,6 +7,20 @@ or replace the UI completely while using the same editor and commands.
 
 Import toolbar APIs from `fountainjs-editor/react`.
 
+## Contextual toolbar keyboard behavior
+
+In `FountainBubbleMenu` and `FountainFloatingMenu`, ArrowLeft and ArrowRight
+move between command controls in the menu's rendered direction, including RTL.
+Home and End jump to the first and last controls. Native fields and custom
+controls with textbox, combobox, spinbutton or slider semantics keep their
+own caret and value keys. Escape dismisses the menu and returns focus to its
+editor when the event has not already been handled by the host.
+
+The playground regression reproduced lost field focus in Chromium before the
+fix. The field and RTL navigation checks, plus the main toolbar traversal
+checks, passed in recorded Chromium, Firefox and WebKit runs. The Chromium
+RTL focus capture was visually checked.
+
 ## Physical table sides and document order
 
 The table panel's **Add column left/right** controls follow the mounted table's

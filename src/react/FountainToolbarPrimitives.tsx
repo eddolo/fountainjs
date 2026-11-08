@@ -8,6 +8,7 @@ import {
   type ReactNode,
   type SVGProps,
 } from 'react';
+import { isToolbarField } from './toolbar-keyboard';
 
 export type FountainToolbarGroupId =
   | 'history'
@@ -162,10 +163,7 @@ export function FountainToolbarRoot({ label = 'Formatting and rich content', cla
     // even in a plain page. Closed colour controls have no text caret; their
     // picker activation and Tab remain native. Text fallbacks keep caret keys.
     if (field instanceof HTMLInputElement && field.type === 'color') event.preventDefault();
-    // Fields own caret, value and option navigation; toolbar traversal applies
-    // only to command controls, not editable/native widgets supplied by a host.
-    if (field instanceof HTMLElement
-      && field.closest('input,textarea,select,[contenteditable]:not([contenteditable=false]),[role=textbox],[role=combobox],[role=spinbutton],[role=slider]')) return;
+    if (isToolbarField(field)) return;
     const controls = [...event.currentTarget.querySelectorAll<HTMLElement>(
       ':is(button,input:not([type=hidden]):not([type=file]),select):not([disabled]):not([tabindex="-1"]),[tabindex]:not([tabindex="-1"])',
     )];
