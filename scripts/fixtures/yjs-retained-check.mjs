@@ -57,6 +57,40 @@ export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, asse
       cases++;
     } finally { left.destroy(); right.destroy(); a.destroy(); b.destroy(); }
   }
+  const wrapDocs = [303, 202, 101].map(clientID => {
+    const document = new Y.Doc();
+    document.clientID = clientID;
+    return document;
+  });
+  const wrapper = make(wrapDocs[0], 'quote');
+  const initial = Y.encodeStateAsUpdate(wrapDocs[0]);
+  for (const document of wrapDocs.slice(1)) Y.applyUpdate(document, initial);
+  const authors = [wrapper, make(wrapDocs[1], 'ordered'), make(wrapDocs[2], 'bullet')];
+  const mergeWraps = (type) => {
+    const updates = wrapDocs.map(document => Y.encodeStateAsUpdate(document));
+    for (const document of wrapDocs) for (const update of updates) Y.applyUpdate(document, update);
+    for (const editor of authors) {
+      assert.equal(getCollaborationState(editor).status, 'connected');
+      assert.equal(editor.state.doc.child(0).type.name, type);
+      assert.equal(editor.state.doc.child(0).textContent, 'AlXpha');
+    }
+  };
+  try {
+    for (const editor of authors) editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    assert.equal(toggleQuote(authors[0]), true);
+    assert.equal(toggleList(authors[1], 'ordered'), true);
+    assert.equal(insertText(authors[2], 'X'), true);
+    assert.equal(toggleList(authors[2], 'bullet'), true);
+    mergeWraps('blockquote');
+    assert.equal(undoCollaboration(authors[0]), true);
+    mergeWraps('ordered_list');
+    assert.equal(undoCollaboration(authors[1]), true);
+    mergeWraps('bullet_list');
+    cases++;
+  } finally {
+    for (const editor of authors) editor.destroy();
+    for (const document of wrapDocs) document.destroy();
+  }
   // Admission is usable without importing any private source/backend class.
   const seedDoc = new Y.Doc(), seed = make(seedDoc, 'seed');
   try {

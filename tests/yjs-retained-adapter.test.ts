@@ -72,9 +72,10 @@ function peers(content = source, extensions: Parameters<typeof composeExtensions
   }, destroy: () => { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); } };
 }
 
-function threePeers(reverse: boolean, content?: NodeJSON, clientIDs?: readonly [number, number]) {
-  const pair = peers(content, undefined, undefined, clientIDs);
+function threePeers(reverse: boolean, content?: NodeJSON, clientIDs?: readonly [number, number, number?]) {
+  const pair = peers(content, undefined, undefined, clientIDs && [clientIDs[0], clientIDs[1]]);
   const thirdDoc = new Y.Doc();
+  if (clientIDs?.[2] !== undefined) thirdDoc.clientID = clientIDs[2];
   Y.applyUpdate(thirdDoc, Y.encodeStateAsUpdate(pair.leftDoc), 'seed');
   const third = pair.create(thirdDoc, 'third');
   const authors = [pair.left, pair.right, third];
@@ -214,6 +215,73 @@ it.each([false, true])('keeps editing after concurrent quote and list wrapping w
     expect(left.state.doc.child(1).textContent).toBe('AlXpha');
     expect(undoCollaboration(third)).toBe(true);
     exchange();
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+  } finally { destroy(); }
+});
+
+it.each([false, true])('keeps third-author text in place after both competing wraps are undone (winner first: %s)', winnerFirst => {
+  const { left, right, third, exchange, sync, destroy } = threePeers(winnerFirst, undefined, [202, 101]);
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(toggleQuote(left)).toBe(true);
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(toggleList(right, 'bullet')).toBe(true);
+    third.dispatch(third.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(insertText(third, 'X')).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('blockquote');
+    const [first, second] = winnerFirst ? [left, right] : [right, left];
+    expect(undoCollaboration(first)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe(winnerFirst ? 'bullet_list' : 'blockquote');
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(undoCollaboration(second)).toBe(true);
+    sync(['AlXpha']);
+    expect(left.state.doc.child(0).type.name).toBe('paragraph');
+    expect(left.state.doc.child(1).type.name).toBe('image_super');
+    expect(redoCollaboration(second)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe(winnerFirst ? 'bullet_list' : 'blockquote');
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(redoCollaboration(first)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('blockquote');
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+  } finally { destroy(); }
+});
+
+it('recovers the next surviving wrapper in native conflict order', () => {
+  const roomIds = vi.spyOn(globalThis.crypto, 'randomUUID')
+    .mockReturnValueOnce('00000000-0000-4000-8000-000000000003')
+    .mockReturnValueOnce('00000000-0000-4000-8000-000000000002')
+    .mockReturnValueOnce('00000000-0000-4000-8000-000000000001');
+  let pair: ReturnType<typeof threePeers>;
+  try { pair = threePeers(false, undefined, [303, 202, 101]); }
+  finally { roomIds.mockRestore(); }
+  const { left, right, third, exchange, sync, destroy } = pair;
+  try {
+    for (const editor of [left, right, third]) {
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    }
+    expect(toggleQuote(left)).toBe(true);
+    expect(toggleList(right, 'ordered')).toBe(true);
+    expect(insertText(third, 'X')).toBe(true);
+    expect(toggleList(third, 'bullet')).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('blockquote');
+    expect(undoCollaboration(left)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('ordered_list');
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(undoCollaboration(right)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('bullet_list');
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(undoCollaboration(third)).toBe(true);
+    sync(['AlXpha']);
+    expect(redoCollaboration(third)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('bullet_list');
     expect(left.state.doc.child(0).textContent).toBe('AlXpha');
   } finally { destroy(); }
 });

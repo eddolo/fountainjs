@@ -18,7 +18,8 @@ cases with the retained adapter and compare each author's undo in both editors.
 [Homepage workflow](YJS_RETAINED_PREVIEW.md#try-the-homepage-preview).
 Competing quote and list wraps no longer halt the retained room. Three-author
 checks cover both wrapper winners, author undo, checkpoint reopen, and
-continued editing.
+continued editing. When three wraps compete, undo shows the next surviving
+wrapper in replica order.
 The SQLite reference can open an existing room in its stored format and use
 the retained format when provisioning a new room.
 The package opener verifies the bound reply and checkpoint
@@ -134,7 +135,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 154.4 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 154.7 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

@@ -143,19 +143,30 @@ export class RetainedNodeStore {
   }
 
   private recoverPlacements(missing: ReadonlySet<string>): ReadonlyMap<string, Placement> {
-    const recovered = new Map<string, Placement>();
+    const recovered = new Map<string, Placement & { client: number; clock: number }>();
     if (!missing.size) return recovered;
-    let references = 0;
+    let references = 0, structs = 0;
     const scan = (parent: string, children: Y.Array<unknown>) => {
       references += children.length;
       if (references > MAX_REFERENCES) throw new RangeError('Too many retained child references.');
-      for (const reference of this.readReferences(children)) {
-        if (!missing.has(reference.id) || reference.id === parent || this.identities.get(reference.token) !== true) continue;
-        const prior = recovered.get(reference.id);
-        // Undo can remove a winning map value while the other reference is
-        // still live. Prefer a surviving container over a former root slot.
-        if (!prior || prior.parent === ROOT || parent !== ROOT && parent <= prior.parent) {
-          recovered.set(reference.id, { parent, token: reference.token });
+      const values = this.readReferences(children);
+      if (!values.some(reference => missing.has(reference.id))) return;
+      const items = Y.getTypeChildren(children);
+      structs += items.length;
+      if (structs > MAX_REFERENCES) throw new RangeError('Too many retained reference structs.');
+      let index = 0;
+      for (const item of items) {
+        if (item.deleted || !item.countable) continue;
+        for (let offset = 0; offset < item.length; offset++) {
+          const reference = values[index++];
+          if (!missing.has(reference.id) || reference.id === parent || this.identities.get(reference.token) !== true) continue;
+          const prior = recovered.get(reference.id), { client } = item.id, clock = item.id.clock + offset;
+          // Keep the last surviving root slot as a fallback. For competing
+          // containers, use Yjs replica precedence instead of random tokens.
+          if (!prior || prior.parent === ROOT
+            || parent !== ROOT && (client > prior.client || client === prior.client && clock > prior.clock)) {
+            recovered.set(reference.id, { parent, token: reference.token, client, clock });
+          }
         }
       }
     };

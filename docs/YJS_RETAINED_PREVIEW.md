@@ -52,10 +52,14 @@ wrapper remains visible and both editors keep the paragraph and can continue
 typing. The retained projection hides an empty quote or list wrapper only
 when its children were placed elsewhere. It keeps the native references for
 undo. If undo clears a winning placement, a surviving registered reference
-can restore the paragraph and its text.
+can restore the paragraph and its text. When several offline authors wrapped
+the same paragraph, recovery prefers the surviving reference with the same
+Yjs replica precedence used for the original concurrent assignments.
 
 Three-author tests cover both wrapper winners, undo and redo, subsequent
-reordering, and exact checkpoint reopen. They also cover two concurrent
+reordering, and exact checkpoint reopen. A recorded three-editor workflow
+checks that undo shows the next surviving wrapper and that undoing all three
+wraps leaves the third author's typing. The tests also cover two concurrent
 splits with typing or deletion, and a concurrent join, split and insertion.
 An empty required wrapper without displacement evidence still fails schema
 validation. Older retained builds can refuse checkpoints containing these
