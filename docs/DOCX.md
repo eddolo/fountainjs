@@ -186,7 +186,9 @@ unused duplicate metadata remains uninterpreted but appears in the inventory.
 - tracked deletions omitted from the current document, with a warning;
 - embedded PNG, JPEG, GIF, and WebP drawings as `image_super` or
   `inline_image`, including alternative text, title, pixel dimensions, and a
-  following Word Caption paragraph for block-image captions. Supported caption
+  following Word Caption paragraph for block-image captions. Transitional
+  Office image relationships can reference package-local parts outside
+  `word/media`, within the same archive and media limits. Supported caption
   runs, marks and safe hyperlinks remain attached as editable image content.
   Independent caption alignment and supported paragraph geometry are retained
   in `captionAlign` and `captionLayout`; export uses a neutral Caption style;

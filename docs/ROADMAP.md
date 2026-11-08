@@ -130,6 +130,9 @@ positions in independent LibreOffice output.
 The local Conversion Lab can also preview and download supported raster
 images that the DOCX import missed and append them as an undoable edit.
 [Image recovery workflow](CONVERSION_LAB.md#recover-a-packaged-image-missed-by-docx-import).
+The importer now keeps images at their drawing positions when an internal Word
+relationship points outside the usual media folder. Recorded Chromium, Firefox
+and WebKit tests verified the position after an edit, export and reopen.
 The table bridge now preserves whole-table placement through DOCX and HTML.
 [Table placement audit](DOCX_NATIVE_AUDIT.md#whole-table-placement-2026-11-07).
 The scientific source's missing rendered footnote is explained by two omitted

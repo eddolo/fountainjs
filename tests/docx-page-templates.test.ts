@@ -52,15 +52,15 @@ describe('native DOCX page templates', () => {
     expect(result.report.issues.some(issue => issue.code === 'page-field-recalculation-required')).toBe(true);
   });
 
-  it('extracts a header image and hyperlink via local relationships and retains the bytes', () => {
+  it.each([['../media/logo.png', 'word/media/logo.png'], ['../../assets/logo.png', 'assets/logo.png']])('extracts a header image through %s and retains the bytes', (target, part) => {
     const result = read(input({ header: `<w:p><w:hyperlink r:id="link"><w:r><w:t>Lab</w:t></w:r></w:hyperlink><w:r><w:drawing><wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><wp:extent cx="1143000" cy="238125"/><a:blip xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" r:embed="logo"/></wp:inline></w:drawing></w:r></w:p>`, parts: {
-      'word/stories/_rels/header one.xml.rels': strToU8(`<Relationships xmlns="${rel}"><Relationship Id="logo" Type="${r}/image" Target="../media/logo.png"/><Relationship Id="link" Type="${r}/hyperlink" Target="https://example.test/lab" TargetMode="External"/></Relationships>`),
-      'word/media/logo.png': Uint8Array.from(Buffer.from(png, 'base64')),
+      'word/stories/_rels/header one.xml.rels': strToU8(`<Relationships xmlns="${rel}"><Relationship Id="logo" Type="${r}/image" Target="${target}"/><Relationship Id="link" Type="${r}/hyperlink" Target="https://example.test/lab" TargetMode="External"/></Relationships>`),
+      [part]: Uint8Array.from(Buffer.from(png, 'base64')),
     } }));
     const paragraph = result.document.child(1).child(0);
     expect(paragraph.child(0).marks[0].attrs.href).toBe('https://example.test/lab');
     expect(paragraph.child(1).attrs.src).toBe(`data:image/png;base64,${png}`);
-    expect(result.packageParts.find(part => part.path === 'word/media/logo.png')?.handling).toBe('imported-image');
+    expect(result.packageParts.find(entry => entry.path === part)?.handling).toBe('imported-image');
     expect(read(exportDOCX(result.document).bytes).document.toJSON()).toEqual(withDOCXExportDefaults(result.document.toJSON()));
   });
 

@@ -11,13 +11,15 @@ describe('public conversion lab adapters', () => {
   it('recovers only the selected inventoried raster and retains the original bytes', () => {
     const raster = new Uint8Array(readFileSync(new URL('./fixtures/cross-container-figure.png', import.meta.url)));
     const source = exportLab(importLab(bytes('Original body'), 'markdown').document, 'docx');
-    const archive = zipSync({ ...unzipSync(source.bytes), 'word/media/missing.png': raster,
+    const archive = zipSync({ ...unzipSync(source.bytes), 'word/media/missing.png': raster, 'assets/another.png': raster,
       'word/media/disguised.png': bytes('<svg xmlns="http://www.w3.org/2000/svg"/>') });
     const document = importLab(archive, 'docx');
     expect(labImages(document.document)).toEqual([]);
     const missing = document.packageParts!.find(part => part.path.endsWith('/missing.png'))!;
     const disguised = document.packageParts!.find(part => part.path.endsWith('/disguised.png'))!;
     expect(recoverLabDOCXImage(archive, missing)).toEqual({ bytes: raster, type: 'image/png', fileName: 'missing.png' });
+    expect(recoverLabDOCXImage(archive, { ...missing, path: 'assets/another.png' })).toEqual({ bytes: raster, type: 'image/png', fileName: 'another.png' });
+    expect(() => recoverLabDOCXImage(archive, { ...missing, path: '../assets/another.png' })).toThrow('unrepresented media');
     expect(() => recoverLabDOCXImage(archive, disguised)).toThrow('not a supported PNG');
     expect(() => recoverLabDOCXImage(archive, { ...missing, declaredBytes: missing.declaredBytes + 1 })).toThrow('inventory');
   });

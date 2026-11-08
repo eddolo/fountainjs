@@ -11,6 +11,16 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+The DOCX importer follows internal Word image relationships to raster assets
+outside the usual `word/media` folder. A referenced image stays at its drawing
+position. Unused parts outside that folder stay in the original archive.
+Recorded Chromium, Firefox and WebKit journeys placed the chart between the
+same text runs after editing, exporting and reopening the file. The downloaded
+DOCX contained the exact image bytes and rendered the chart in the independent
+`docx-preview` viewer. That viewer failed to resolve the original file's
+percent-encoded image path, so the comparison does not verify native Word
+layout for the original.
+
 ### Recover a packaged image missed by DOCX import
 
 If the import reports unrepresented media, look under **Original source**.

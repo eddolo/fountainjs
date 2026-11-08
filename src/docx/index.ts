@@ -337,10 +337,11 @@ interface ImportedRelationship {
   readonly target: string;
   readonly type: 'hyperlink' | 'image';
   readonly external: boolean;
+  readonly packageImage: boolean;
 }
 
 interface ImportMediaContext {
-  readonly archive: Readonly<Record<string, Uint8Array>>;
+  readonly readImagePart: (path: string) => Uint8Array | undefined;
   readonly relationships: ReadonlyMap<string, ImportedRelationship>;
   readonly options: DOCXImportOptions;
   readonly restoredMath: ReadonlyMap<XMLElement, FountainNode>;
@@ -373,10 +374,7 @@ function packagePartPath(sourcePart: string, target: string): string | undefined
   return parts.join('/');
 }
 
-function wordPartPath(target: string, sourcePart = 'word/document.xml'): string | undefined {
-  const result = packagePartPath(sourcePart, target) ?? '';
-  return /^word\/media\/[^/]+$/i.test(result) ? result : undefined;
-}
+const conventionalMediaPart = /^word\/media\/[^/]+$/i;
 
 function pxFromEMU(value: string | undefined): string {
   const emu = Number(value);
@@ -432,8 +430,9 @@ function embeddedImageNode(
     issues.push({ code: 'external-image-omitted', severity: 'warning', message: 'A linked external Word image was not fetched; its description was preserved.', path });
     return undefined;
   }
-  const partPath = wordPartPath(relationship.target, media.sourcePart);
-  const bytes = partPath ? media.archive[partPath] : undefined;
+  const partPath = packagePartPath(media.sourcePart ?? 'word/document.xml', relationship.target);
+  const bytes = partPath && (relationship.packageImage || conventionalMediaPart.test(partPath))
+    ? media.readImagePart(partPath) : undefined;
   if (!partPath || !bytes) {
     issues.push({ code: 'missing-image-part', severity: 'warning', message: `Embedded image ${relationshipId} did not resolve to a packaged media file.`, path });
     return undefined;
@@ -1270,12 +1269,21 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
 function relationshipMap(root: XMLElement | undefined): ReadonlyMap<string, ImportedRelationship> {
   const map = new Map<string, ImportedRelationship>();
   if (!root) return map;
+  const packageRoot = elements(root, 'Relationships').find(item => expandedName(item) === `${REL_NS}|Relationships`);
+  const packageRelationships = new Set(packageRoot ? elements(packageRoot, 'Relationship') : []);
   for (const relationship of descendants(root, 'Relationship')) {
     const id = attr(relationship, 'Id');
     const target = attr(relationship, 'Target');
     const type = attr(relationship, 'Type') ?? '';
     const kind = /\/hyperlink$/i.test(type) ? 'hyperlink' : /\/image$/i.test(type) ? 'image' : undefined;
-    if (id && target && kind) map.set(id, { target, type: kind, external: attr(relationship, 'TargetMode') === 'External' });
+    if (id && target && kind) {
+      const external = attr(relationship, 'TargetMode') === 'External';
+      const mode = relationship.attrs.TargetMode;
+      // Only explicit OPC image relationships may look outside Word's usual media folder.
+      const packageImage = type === `${OFFICE_REL_NS}/image` && (mode === undefined || mode === 'Internal')
+        && packageRelationships.has(relationship) && expandedName(relationship) === `${REL_NS}|Relationship`;
+      map.set(id, { target, type: kind, external, packageImage });
+    }
   }
   return map;
 }
@@ -1441,24 +1449,27 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   let mediaFiles = 0;
   const wanted = new Set(['word/document.xml', 'word/numbering.xml', 'word/_rels/document.xml.rels']);
   const selectedParts = new Set<string>();
+  const mediaParts = new Set<string>();
   const entries: Array<readonly [string, number]> = [];
-  const entryPaths = new Set<string>();
+  const entrySizes = new Map<string, number>();
+  const countMedia = (name: string, size: number) => {
+    mediaParts.add(name);
+    mediaFiles += 1;
+    mediaBytes += size;
+    if (mediaFiles > limits.maxMediaFiles) throw new RangeError(`DOCX contains more than ${limits.maxMediaFiles} selected media files.`);
+    if (mediaBytes > limits.maxMediaBytes) throw new RangeError(`DOCX media exceeds ${limits.maxMediaBytes} expanded bytes.`);
+  };
   if (options.restoreMathSource === true) wanted.add(MATH_SOURCE_PART);
   const archive = unzipSync(bytes, { filter: (file) => {
     if (entries.length >= limits.maxArchiveEntries) throw new RangeError(`DOCX contains more than ${limits.maxArchiveEntries} archive entries.`);
     entries.push([file.name, file.originalSize]);
-    entryPaths.add(file.name);
-    const isMedia = /^word\/media\/[^/]+$/i.test(file.name);
+    entrySizes.set(file.name, file.originalSize);
+    const isMedia = conventionalMediaPart.test(file.name);
     if (!wanted.has(file.name) && !isMedia) return false;
     if (selectedParts.has(file.name)) throw new Error('DOCX contains duplicate selected ZIP parts.');
     selectedParts.add(file.name);
     if (file.name === MATH_SOURCE_PART && file.originalSize > 8_000_000) throw new RangeError('DOCX math-source metadata exceeds its expanded byte limit.');
-    if (isMedia) {
-      mediaFiles += 1;
-      mediaBytes += file.originalSize;
-      if (mediaFiles > limits.maxMediaFiles) throw new RangeError(`DOCX contains more than ${limits.maxMediaFiles} selected media files.`);
-      if (mediaBytes > limits.maxMediaBytes) throw new RangeError(`DOCX media exceeds ${limits.maxMediaBytes} expanded bytes.`);
-    }
+    if (isMedia) countMedia(file.name, file.originalSize);
     expanded += file.originalSize;
     if (file.name === 'word/document.xml' && file.originalSize > limits.maxDocumentXmlBytes) throw new RangeError(`DOCX document.xml exceeds ${limits.maxDocumentXmlBytes} bytes.`);
     if (expanded > limits.maxExpandedBytes) throw new RangeError(`DOCX selected content exceeds ${limits.maxExpandedBytes} expanded bytes.`);
@@ -1467,18 +1478,26 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
   const documentBytes = archive['word/document.xml'];
   if (!documentBytes) throw new Error('Invalid DOCX: word/document.xml is missing.');
   const parse = (name: string) => archive[name] ? parseXML(strFromU8(archive[name]!), limits) : undefined;
-  const readExtraParts = (paths: readonly string[]) => {
+  const readExtraParts = (paths: readonly string[], images = false) => {
     const pending = new Set(paths.filter(path => !selectedParts.has(path)));
     if (!pending.size) return;
     Object.assign(archive, unzipSync(bytes, { filter: file => {
       if (!pending.has(file.name)) return false;
       if (selectedParts.has(file.name)) throw new Error('DOCX contains duplicate selected ZIP parts.');
       selectedParts.add(file.name);
+      if (images) countMedia(file.name, file.originalSize);
       expanded += file.originalSize;
       if (file.name === PARAGRAPH_BRIDGE_PART && file.originalSize > 8_000_000) throw new RangeError('DOCX paragraph metadata exceeds its expanded byte limit.');
-      if (file.originalSize > limits.maxDocumentXmlBytes || expanded > limits.maxExpandedBytes) throw new RangeError('DOCX story content exceeds the XML or selected expanded byte limit.');
+      if (expanded > limits.maxExpandedBytes || (!images && file.originalSize > limits.maxDocumentXmlBytes)) throw new RangeError('DOCX story content exceeds the XML or selected expanded byte limit.');
       return true;
     } }));
+  };
+  const readImagePart = (path: string) => {
+    const size = entrySizes.get(path);
+    if (size === undefined || path === '__proto__') return undefined;
+    if (!selectedParts.has(path)) readExtraParts([path], true);
+    else if (!mediaParts.has(path)) countMedia(path, size);
+    return Object.hasOwn(archive, path) ? archive[path] : undefined;
   };
   const documentXML = parseXML(strFromU8(documentBytes), limits);
   const numbering = readNumbering(parse('word/numbering.xml'));
@@ -1500,7 +1519,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
       return { unavailable: true };
     }
     const target = packagePartPath('word/document.xml', relationship.attrs.Target ?? '');
-    if (!target || !entryPaths.has(target)) throw new Error(`DOCX ${kind} relationship has a missing or invalid target.`);
+    if (!target || !entrySizes.has(target)) throw new Error(`DOCX ${kind} relationship has a missing or invalid target.`);
     readExtraParts([target]);
     const xml = parse(target);
     if (kind === 'settings' && (!xml || elements(xml).length !== 1 || expandedName(elements(xml)[0]!) !== `${WORD_NS}|settings`)) throw new Error('Invalid DOCX theme settings root.');
@@ -1517,7 +1536,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     && packagePartPath('word/document.xml', item.attrs.Target ?? '') === PARAGRAPH_BRIDGE_PART);
   if (bridgeRelationships.length) {
     const relationship = bridgeRelationships[0]!;
-    if (bridgeRelationships.length !== 1 || relationship.attrs.TargetMode && relationship.attrs.TargetMode !== 'Internal' || !entryPaths.has(PARAGRAPH_BRIDGE_PART)) {
+    if (bridgeRelationships.length !== 1 || relationship.attrs.TargetMode && relationship.attrs.TargetMode !== 'Internal' || !entrySizes.has(PARAGRAPH_BRIDGE_PART)) {
       issues.push({ code: 'invalid-paragraph-metadata', severity: 'warning', sourcePart: 'word/_rels/document.xml.rels',
         message: 'Paragraph metadata has an ambiguous, external or missing internal relationship; no role or group alias was restored.' });
     } else {
@@ -1540,7 +1559,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     const relationship = noteRelationships[0];
     if (relationship && attr(relationship, 'TargetMode') !== 'External') {
       const target = packagePartPath('word/document.xml', attr(relationship, 'Target') ?? '');
-      if (!target || !entryPaths.has(target) || selectedParts.has(target)) throw new Error('DOCX footnotes relationship has a missing or invalid target.');
+      if (!target || !entrySizes.has(target) || selectedParts.has(target)) throw new Error('DOCX footnotes relationship has a missing or invalid target.');
       footnotePart = target;
       const split = target.lastIndexOf('/');
       const relPart = `${target.slice(0, split + 1)}_rels/${target.slice(split + 1)}.rels`;
@@ -1589,7 +1608,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     catch (error) { issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) }); }
   }
   const importedParts = new Set<string>();
-  const media: ImportMediaContext = { archive, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge };
+  const media: ImportMediaContext = { readImagePart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge };
   const blocks = parseBlocks(body, schema, media, numbering, issues, []);
   const importedStories = new Set<string>();
   const sections = descendants(body, 'sectPr').filter(item => expandedName(item) === `${WORD_NS}|sectPr`);
@@ -1631,7 +1650,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
             continue;
           }
           const target = packagePartPath('word/document.xml', relationship.attrs.Target ?? '');
-          if (!target || !entryPaths.has(target) || (selectedParts.has(target) && !importedStories.has(target))) throw new Error('DOCX header/footer relationship has a missing or invalid target.');
+          if (!target || !entrySizes.has(target) || (selectedParts.has(target) && !importedStories.has(target))) throw new Error('DOCX header/footer relationship has a missing or invalid target.');
           const split = target.lastIndexOf('/');
           const relPart = `${target.slice(0, split + 1)}_rels/${target.slice(split + 1)}.rels`;
           readExtraParts([target, relPart]);
@@ -1685,16 +1704,15 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
         else if (segment && segment !== '.') parts.push(segment);
       }
       const part = parts.join('/');
-      if (entryPaths.has(part)) omittedStories.add(part);
+      if (entrySizes.has(part)) omittedStories.add(part);
     }
   }
-  for (const part of entryPaths) {
+  for (const part of entrySizes.keys()) {
     if (part !== footnotePart && !importedStories.has(part) && /^word\/(?:header[^/]*|footer[^/]*|footnotes|endnotes|comments)\.xml$/i.test(part)) omittedStories.add(part);
   }
   for (const part of omittedStories) issues.push({ code: 'unrepresented-story-part', severity: 'warning', message: 'This packaged header, footer, note or comment part was not imported. Its text, assets, references and behaviour remain only in the original file.', sourcePart: part });
   const packageParts = Object.freeze(entries.map(([path, declaredBytes]): DOCXPackagePart => {
-    const isMedia = /^word\/media\/[^/]+$/i.test(path);
-    const handling = importedParts.has(path) ? 'imported-image' : isMedia ? 'unrepresented-media' : selectedParts.has(path) ? 'adapter-input' : 'not-interpreted';
+    const handling = importedParts.has(path) ? 'imported-image' : mediaParts.has(path) ? 'unrepresented-media' : selectedParts.has(path) ? 'adapter-input' : 'not-interpreted';
     if (handling === 'unrepresented-media') issues.push({ code: 'unrepresented-media-part', severity: 'warning', message: 'This packaged media file has no imported image node. It may belong to omitted content, be unsupported or be unused; it is not available in the converted document.', sourcePart: path });
     return Object.freeze({ path, declaredBytes, handling });
   }));

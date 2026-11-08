@@ -9,15 +9,15 @@ const schema = new Schema(StarterKit.schema);
 const word = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
 const rels = 'http://schemas.openxmlformats.org/package/2006/relationships';
 const office = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+const png = Uint8Array.from(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'));
+const drawing = '<w:r><w:drawing><a:blip xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="' + office + '" r:embed="img"/></w:drawing></w:r>';
 function source(body = '<w:p/>', parts: Record<string, Uint8Array> = {}) {
   return zipSync({ 'word/document.xml': strToU8(`<w:document xmlns:w="${word}"><w:body>${body}</w:body></w:document>`), ...parts });
 }
 
 describe('DOCX intake inventory without a DOM', () => {
   it('counts only successfully created image nodes as imported assets', () => {
-    const png = Uint8Array.from(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'));
-    const drawing = '<w:p><w:r><w:drawing><a:blip xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="' + office + '" r:embed="img"/></w:drawing></w:r></w:p>';
-    const bytes = source(drawing, {
+    const bytes = source(`<w:p>${drawing}</w:p>`, {
       'word/_rels/document.xml.rels': strToU8(`<Relationships xmlns="${rels}"><Relationship Id="img" Type="${office}/image" Target="media/body.png"/></Relationships>`),
       'word/media/body.png': png, 'word/media/header.png': png,
     });
@@ -27,6 +27,40 @@ describe('DOCX intake inventory without a DOM', () => {
     const failed = importDOCX(bytes, schema, { createImageSource: () => { throw new Error('host refused'); } });
     expect(failed.packageParts.filter(part => part.handling === 'unrepresented-media')).toHaveLength(2);
     expect(failed.packageParts.some(part => part.handling === 'imported-image')).toBe(false);
+  });
+
+  it.each(['../assets/diagram%20one.png', '/assets/diagram%20one.png'])('imports the image in place from %s', target => {
+    const bytes = source(`<w:p><w:r><w:t>Before</w:t></w:r>${drawing}<w:r><w:t>After</w:t></w:r></w:p>`, {
+      'word/_rels/document.xml.rels': strToU8(`<Relationships xmlns="${rels}"><Relationship Id="img" Type="${office}/image" Target="${target}"/><Relationship Id="unused" Type="${office}/image" Target="../assets/unused.png"/></Relationships>`),
+      'assets/diagram one.png': png, 'assets/unused.png': png, 'word/media/unused.png': png,
+    });
+    const result = importDOCX(bytes, schema, { maxMediaFiles: 2, maxMediaBytes: 2 * png.length });
+    const paragraph = result.document.child(0);
+    expect(paragraph.child(0).text).toBe('Before');
+    expect(paragraph.child(1).type.name).toBe('inline_image');
+    expect(paragraph.child(1).attrs.src).toBe(`data:image/png;base64,${Buffer.from(png).toString('base64')}`);
+    expect(paragraph.child(2).text).toBe('After');
+    expect(result.packageParts.find(part => part.path === 'assets/diagram one.png')?.handling).toBe('imported-image');
+    expect(result.packageParts.find(part => part.path === 'assets/unused.png')?.handling).toBe('not-interpreted');
+    expect(() => importDOCX(bytes, schema, { maxMediaFiles: 1 })).toThrow('selected media files');
+    expect(() => importDOCX(bytes, schema, { maxMediaBytes: png.length })).toThrow('media exceeds');
+    const selectedBytes = result.packageParts.filter(part => part.handling !== 'not-interpreted')
+      .reduce((total, part) => total + part.declaredBytes, 0);
+    expect(() => importDOCX(bytes, schema, { maxExpandedBytes: selectedBytes - 1 })).toThrow('selected expanded byte limit');
+  });
+
+  it.each([
+    ['urn:not-opc', office, '../assets/diagram.png', ''],
+    [rels, 'urn:not-office', '../assets/diagram.png', ''],
+    [rels, office, '../../assets/diagram.png', ''],
+    [rels, office, '../assets/diagram.png', 'External'],
+  ])('does not read a custom image part through %s %s %s %s', (namespace, kind, target, mode) => {
+    const result = importDOCX(source(`<w:p>${drawing}</w:p>`, {
+      'word/_rels/document.xml.rels': strToU8(`<Relationships xmlns="${namespace}"><Relationship Id="img" Type="${kind}/image" Target="${target}"${mode ? ` TargetMode="${mode}"` : ''}/></Relationships>`),
+      'assets/diagram.png': png,
+    }), schema, { maxMediaBytes: 1 });
+    expect(result.packageParts.find(part => part.path === 'assets/diagram.png')?.handling).toBe('not-interpreted');
+    expect(result.report.issues.some(issue => issue.code === 'missing-image-part' || issue.code === 'external-image-omitted')).toBe(true);
   });
   it('lists skipped bytes without parsing or expanding them as document content', () => {
     const result = importDOCX(source('<w:p><w:r><w:t>Body</w:t></w:r></w:p>', {

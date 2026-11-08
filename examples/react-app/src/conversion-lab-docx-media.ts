@@ -6,8 +6,12 @@ const labDOCXFileLimit = 4 * 1024 * 1024;
 
 /** Read only the selected media part from the original, already inventoried file. */
 export function recoverLabDOCXImage(archive: Uint8Array, part: DOCXPackagePart) {
-  const name = /^word\/media\/([^/\\\u0000-\u001f\u007f]+)$/iu.exec(part.path)?.[1];
-  if (!name || part.handling !== 'unrepresented-media') throw new Error('Select an unrepresented media file from the Word archive.');
+  const segments = part.path.split('/');
+  const name = segments.at(-1);
+  if (!name || part.handling !== 'unrepresented-media' || part.path === '__proto__' || /[\\\u0000-\u001f\u007f]/u.test(part.path)
+    || segments.some(segment => !segment || segment === '.' || segment === '..')) {
+    throw new Error('Select an unrepresented media file from the Word archive.');
+  }
   if (archive.length > labDOCXFileLimit || !Number.isSafeInteger(part.declaredBytes)
     || part.declaredBytes < 1 || part.declaredBytes > labDOCXFileLimit) {
     throw new Error('Image recovery supports DOCX files and individual images up to 4 MiB.');

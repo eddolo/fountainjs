@@ -28,7 +28,8 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 The latest full source run had 5,004 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
 pass. Sharing repeated strings and class property names removed 43.0 KiB of
-raw CommonJS. The aggregate is 112.9 KiB over its existing limit. The CommonJS
+raw CommonJS. The aggregate is 113.2 KiB over its existing limit after the
+DOCX package-image repair. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,
