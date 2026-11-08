@@ -8,7 +8,7 @@ import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyCheckpoin
 import { createRetainedYjsCollaborationExtension } from './retained-adapter';
 import { checkpointWire, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 import { admittedRoomRoots } from './admitted-room-root';
-import { projectRetainedRoomAttributes } from './structured-attributes';
+import { projectRetainedRoomAttributes, roomStructuredMapName } from './structured-attributes';
 
 export { captureLegacyCheckpoint, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 export { captureRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
@@ -57,7 +57,10 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     || new Set(protocols).size !== protocols.length || (protocol !== undefined && !protocols.includes(protocol))) {
     throw new TypeError('Invalid supported document-room protocols.');
   }
-  const offer = Object.freeze(checkpointWire.fields(await open(protocols, signal), 'epoch,identity,key,protocol,revision,room'));
+  const suppliedOffer = await open(protocols, signal);
+  const offerHasMap = suppliedOffer != null && Object.hasOwn(suppliedOffer, 'structuredMap');
+  const offer = Object.freeze(checkpointWire.fields(suppliedOffer,
+    offerHasMap ? 'epoch,identity,key,protocol,revision,room,structuredMap' : 'epoch,identity,key,protocol,revision,room'));
   signal?.throwIfAborted();
   if (offer.key !== key || typeof offer.epoch !== 'string' || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(offer.epoch)
     || !Number.isSafeInteger(offer.revision) || offer.revision < 0 || offer.revision < (revision ?? 0)
@@ -67,6 +70,13 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     || typeof offer.room !== 'string' || offer.room.length > 1_000
     || typeof offer.identity !== 'string' || !offer.identity || offer.identity.length > 200) {
     throw new Error('Room opening offer does not match the requested room.');
+  }
+  if (offerHasMap) {
+    const structured = legacyProjection.structuredAttributes;
+    if (offer.protocol !== 'retained' || typeof offer.structuredMap !== 'string'
+      || !structured || offer.structuredMap !== roomStructuredMapName(offer.room, structured.mapName)) {
+      throw new Error('Room opening requires definitions for the saved structured attribute map.');
+    }
   }
 
   const reply = checkpointWire.fields(await admit(offer, signal), 'checkpoint,epoch,key,phase,protocol,revision');

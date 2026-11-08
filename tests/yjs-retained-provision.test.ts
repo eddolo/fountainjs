@@ -7,7 +7,7 @@ import * as Y from 'yjs';
 import { CoreExtension, Selection, canUndoCollaboration, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, reconnectCollaboration, setMark, splitBlock, toggleList, toggleQuote } from '../src';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { createYjsCollaborationExtension } from '../src/yjs';
-import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
+import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomAdmission, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { prepareRetainedAdmission } from '../src/yjs/retained-admission';
@@ -97,16 +97,25 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
   const authority = new CoordinatedDocumentRoom(pair.first, key, schema, version, { structuredAttributes: structured });
   const checkpoint = await captureRetainedCheckpoint(document, schema, version);
   const initial = await authority.initialize(checkpoint);
+  const opened = await authority.openForEditing({ protocols: ['retained'], loadCheckpoint: () => checkpoint });
+  const admit = vi.fn((offer: DocumentRoomAdmission) => authority.admit(offer));
   const open = async (structuredAttributes?: { definitions: typeof structured.definitions; mapName?: string }) => {
     const bound = await openYjsRoom({ expected: { key }, schema, schemaVersion: version, structuredAttributes,
       open: async protocols => (await authority.openForEditing({ protocols, loadCheckpoint: () => checkpoint })).admission,
-      admit: offer => authority.admit(offer),
+      admit,
     });
     cleanups.push(() => bound.document.destroy());
     return bound;
   };
-  if (mapName === undefined) await expect(open()).rejects.toThrow('requires definitions for the saved structured attribute map');
+  await expect(open()).rejects.toThrow('requires definitions for the saved structured attribute map');
   await expect(open({ definitions: [config], mapName: 'wrong-map' })).rejects.toThrow(/requires .*structured attribute map/);
+  expect(admit).not.toHaveBeenCalled();
+  const selectedMap = mapName ?? 'fountain:structured-attributes';
+  expect(opened.admission).toHaveProperty('structuredMap', selectedMap);
+  const { structuredMap, ...incompleteOffer } = opened.admission;
+  expect(structuredMap).toBe(selectedMap);
+  await expect(authority.admit(incompleteOffer)).rejects.toMatchObject({ code: 'invalid-ticket' });
+  await expect(authority.admit({ ...opened.admission, structuredMap: 'wrong-map' })).rejects.toMatchObject({ code: 'invalid-ticket' });
   await expect(open({ definitions: [config], mapName })).rejects.toThrow('do not cover the saved room map');
   const wrongAttribute = defineStructuredAttribute({ nodeType: 'settings', attribute: 'other', root: 'object' });
   await expect(open({ definitions: [config, wrongAttribute], mapName })).rejects.toThrow(/Invalid structured attribute settings\.other/);
@@ -114,6 +123,7 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
 
   const mount = async () => {
     const bound = await open(structured);
+    expect(bound.lease.structuredMap).toBe(selectedMap);
     const localKit = composeExtensions([CoreExtension, panel, bound.createExtension({ user })]);
     const localEditor = createEditor({ schema: localKit.schema, plugins: localKit.plugins, content: bound.baseDocument.toJSON() });
     cleanups.push(() => localEditor.destroy());

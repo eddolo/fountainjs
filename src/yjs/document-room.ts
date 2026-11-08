@@ -5,7 +5,7 @@ import { captureLegacyCheckpoint, restoreLegacyCheckpoint, assertLegacyCheckpoin
 import { legacyNodeIdentity } from './legacy-node-identity';
 import { applyRetainedRoomUpdate, validateRetainedRoomCheckpoint, RetainedRoomError, type RetainedRoomVersion } from './retained-room-store';
 import { validateCoordinatedRoomRecord, type CoordinatedRecord, type CoordinatedFreeze } from './retained-room-coordinator';
-import { projectRetainedRoomAttributes } from './structured-attributes';
+import { projectRetainedRoomAttributes, roomStructuredMapName } from './structured-attributes';
 
 export type DocumentCheckpoint = RetainedCheckpoint | LegacyCheckpoint;
 export type DocumentProtocol = 'legacy' | 'retained';
@@ -24,6 +24,8 @@ export interface DocumentRoomSnapshot extends RetainedRoomVersion {
 export interface DocumentRoomAdmission {
   readonly key: string; readonly epoch: string; readonly revision: number;
   readonly protocol: DocumentProtocol; readonly room: string; readonly identity: string;
+  /** Map required by a retained room with authority-configured structured fields. */
+  readonly structuredMap?: string;
 }
 export interface RetainedRoomProvisionOptions {
   readonly room?: string;
@@ -190,8 +192,15 @@ export class CoordinatedDocumentRoom {
     if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'The room changed while opening. Retry before connecting.');
     signal?.throwIfAborted();
     const snapshot = documentSnapshot({ ...row, checkpoint: checked.checkpoint });
-    const admission = Object.freeze({ key: this.key, epoch: row.epoch, revision: row.revision, protocol, room: checked.checkpoint.manifest.room, identity: checked.identity });
+    const room = checked.checkpoint.manifest.room;
+    const structuredMap = this.admissionStructuredMap(protocol, room);
+    const admission = Object.freeze({ key: this.key, epoch: row.epoch, revision: row.revision, protocol, room,
+      identity: checked.identity, ...(structuredMap !== undefined ? { structuredMap } : {}) });
     return Object.freeze({ snapshot, admission });
+  }
+  private admissionStructuredMap(protocol: DocumentProtocol, room: string): string | undefined {
+    const structured = this.projection.structuredAttributes;
+    return protocol === 'retained' && structured ? roomStructuredMapName(room, structured.mapName) : undefined;
   }
   async snapshot(): Promise<DocumentRoomSnapshot> { const row = await this.current(), checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection); return documentSnapshot({ ...row, checkpoint: checked.checkpoint }); }
   /** Revision-aware read for a bound retained transport. An idle client gets no
@@ -236,7 +245,8 @@ export class CoordinatedDocumentRoom {
   /** Read-only connection fence. Every later write must still check its epoch;
    * this receipt does not reserve an active room or grant authorization. */
   async admit(request: DocumentRoomAdmission): Promise<DocumentRoomSnapshot> {
-    const expected = request && { key: request.key, epoch: request.epoch, revision: request.revision, protocol: request.protocol, room: request.room, identity: request.identity };
+    const expected = request && { key: request.key, epoch: request.epoch, revision: request.revision, protocol: request.protocol,
+      room: request.room, identity: request.identity, structuredMap: request.structuredMap };
     if (!expected || expected.key !== this.key || !documentRoomId(expected.epoch) || !Number.isSafeInteger(expected.revision) || expected.revision < 0
       || !['legacy', 'retained'].includes(expected.protocol) || typeof expected.room !== 'string' || expected.room.length > 1_000
       || typeof expected.identity !== 'string' || !expected.identity || expected.identity.length > 200) documentRoomFailure('invalid-ticket', 'Invalid authority admission request.');
@@ -244,6 +254,9 @@ export class CoordinatedDocumentRoom {
     if (row.epoch !== expected.epoch || documentProtocol(row.checkpoint) !== expected.protocol) documentRoomFailure('stale-epoch', 'Admission epoch/protocol is stale; preserve pending edits.');
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Authority admission refused: room is frozen.');
     if (row.revision < expected.revision || row.checkpoint.manifest.room !== expected.room) documentRoomFailure('revision-conflict', 'Admission revision or namespace is incompatible.');
+    if (expected.structuredMap !== this.admissionStructuredMap(expected.protocol, expected.room)) {
+      documentRoomFailure('invalid-ticket', 'Admission structured attribute map differs.');
+    }
     const checked = await validateDocumentCheckpoint(row.checkpoint, this.schema, this.schemaVersion, this.projection);
     if (checked.identity !== expected.identity) documentRoomFailure('invalid-ticket', 'Admission native room identity differs.');
     if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed during admission verification; retry explicitly.');

@@ -24,6 +24,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 - Verify saved structured field maps when opening retained rooms. Incomplete
   definitions are refused, and reopened editors see the merged field values.
+  Coordinated room offers declare the required map name, including custom
+  names, so a client can detect missing configuration before admission.
 
 - Load the legacy XML adapter when a verified room selects the legacy format.
   Retained-only room sessions avoid that module during startup.

@@ -28,14 +28,18 @@ export interface YjsStructuredAttributesOptions {
   readonly mapName?: string;
 }
 
+export function roomStructuredMapName(room: string, name?: string): string {
+  return name ?? `${room}:structured-attributes`;
+}
+
 export function projectRetainedRoomAttributes(
   document: Y.Doc,
   base: Node,
   room: string,
   options?: Omit<YjsStructuredAttributesOptions, 'map'>,
 ): Node {
-  const defaultMapName = `${room}:structured-attributes`;
-  const mapName = options?.mapName ?? defaultMapName;
+  const defaultMapName = roomStructuredMapName(room);
+  const mapName = roomStructuredMapName(room, options?.mapName);
   if ((!options || mapName !== defaultMapName) && document.share.has(defaultMapName)) {
     throw new Error('Room admission requires definitions for the saved structured attribute map.');
   }

@@ -13,6 +13,7 @@
 </style>
 <h1>Open a room with structured fields</h1>
 <p>Ada and Grace edit separate settings in two offline copies. Reopen the saved room to check the merged values.</p>
+<button id="missing" type="button" disabled>Open without field definitions</button>
 <button id="partial" type="button" disabled>Open with incomplete definitions</button>
 <button id="complete" type="button" disabled>Open both authors</button>
 <p id="status" role="status">Preparing the saved room…</p>
@@ -39,7 +40,9 @@
   } } });
   const layout = defineStructuredAttribute({ nodeType: 'settings', attribute: 'layout', root: 'object' });
   const display = defineStructuredAttribute({ nodeType: 'settings', attribute: 'display', root: 'object' });
-  const structuredAttributes = { definitions: [layout, display] };
+  const params = new URLSearchParams(location.search);
+  const mapName = params.has('custom') ? 'research-settings-fields' : undefined;
+  const structuredAttributes = { definitions: [layout, display], mapName };
   const schema = new Schema(composeExtensions([CoreExtension, panel]).schema);
   const schemaVersion = 'structured-room-browser-1';
   const seed = new Y.Doc();
@@ -57,7 +60,7 @@
   seedEditor.destroy();
   seed.destroy();
   const key = 'research-settings';
-  const mixedDefinitions = new URLSearchParams(location.search).has('mixed');
+  const mixedDefinitions = params.has('mixed');
   let row;
   const authority = new CoordinatedDocumentRoom({
     async readDocument(roomKey) { return row?.key === roomKey ? row : undefined; },
@@ -85,21 +88,29 @@
     const bound = await open(structuredAttributes);
     return show(bound.document, mount(bound.createExtension({ user: user(id) }), bound.baseDocument.toJSON()), id);
   };
+  button('missing').onclick = async () => {
+    try {
+      const bound = await open();
+      bound.document.destroy();
+      status('Unexpectedly opened without field definitions.');
+    } catch (error) { status(error.message); }
+  };
   button('partial').onclick = async () => {
     try {
-      const bound = await open({ definitions: [layout] });
+      const bound = await open({ definitions: [layout], mapName });
       bound.document.destroy();
       status('Unexpectedly opened with incomplete definitions.');
     } catch (error) { status(error.message); }
   };
   button('complete').onclick = async () => {
     button('complete').disabled = true;
+    button('missing').disabled = true;
     button('partial').disabled = true;
     ada = await openAuthor('ada');
     if (mixedDefinitions) {
       const saved = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
       const extension = createRetainedYjsCollaborationExtension({
-        document: saved.document, user: user('grace'), structuredAttributes: { definitions: [layout] },
+        document: saved.document, user: user('grace'), structuredAttributes: { definitions: [layout], mapName },
       });
       grace = show(saved.document, mount(extension, saved.baseDocument.toJSON()), 'grace');
     } else grace = await openAuthor('grace');
@@ -115,7 +126,7 @@
     const isolated = await restoreRetainedCheckpoint(before.checkpoint, schema, schemaVersion);
     try {
       const vector = Y.encodeStateVector(isolated.document);
-      isolated.document.getMap('fountain:structured-attributes').set('v1:["settings","panel-1","layout"]', 'invalid');
+      isolated.document.getMap(mapName ?? 'fountain:structured-attributes').set('v1:["settings","panel-1","layout"]', 'invalid');
       await authority.write({ epoch: before.epoch, protocol: before.protocol, update: Y.encodeStateAsUpdate(isolated.document, vector) });
       status('Unexpectedly saved the invalid field.');
     } catch (error) {
@@ -148,6 +159,7 @@
     }
   });
   button('partial').disabled = false;
+  button('missing').disabled = false;
   button('complete').disabled = false;
   status('Saved room ready.');
 </script>

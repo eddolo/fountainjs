@@ -239,13 +239,15 @@ gate still reports the existing 174.3 KiB ESM and 138.7 KiB CommonJS overruns.
 
 ### Validate structured fields before admitting a retained editor
 
-`openYjsRoom` refuses a saved default structured attribute map when the host
-omits its definitions. With definitions supplied, the opener requires the
-declared map and verifies that every live entry is covered and every expected
-entry exists. This stops a client with a partial field set before it can mount
-and remove the other fields on its first write. A host using a custom map name
-must still supply that name and its definitions. The current checkpoint format
-does not identify which arbitrary custom maps belong to the editor.
+The coordinated authority includes `structuredMap` in its opening offer for
+a retained room with configured fields. The opener requires matching client
+configuration before requesting admission. The authority checks the offered
+name again at admission, including a name omitted or changed in transit.
+After admission, the opener verifies that every live entry is covered and
+every expected entry exists before mounting. Hosts supplying their own offers
+should include the map name for structured rooms, including custom-named maps.
+The checkpoint inventory lists all shared roots, so a custom map's ownership
+comes from the configured authority.
 
 The initial draft projects verified values from that map. Two peers can edit
 separate fields of the same attribute offline. The saved materialized node can
@@ -256,8 +258,9 @@ not add a definitions handshake to independently connected providers.
 
 The SQLite test writes the two updates in separate revisions and reopens
 default and custom map names. The recorded Chromium, Firefox and WebKit demo
-tries incomplete definitions, makes both offline edits, and checks the saved
-settings in the reopened editor. The browser demo uses in-memory snapshots.
+tries missing and incomplete definitions, makes both offline edits, and checks
+the saved settings in the reopened editor. The browser demo uses the actual
+coordinated authority with an in-memory repository.
 
 Both adapters now scope live map deletion to keys the editing client owned
 before the edit. A client with fewer definitions can edit or delete its node

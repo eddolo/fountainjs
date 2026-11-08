@@ -425,8 +425,8 @@
     "dist/widgets/dom.d.ts": "032cb14a593792c7c2480bd0fecfc8318262aef3ab85e057af4656010b7a3e7c",
     "dist/widgets/index.d.cts": "ebcdbb9517e491fafbe2369c2433b22174115863553a6dccf1d63b32851eada1",
     "dist/widgets/index.d.ts": "de022859c8300e048526805267bc132564da5361a5979d6ce5b6e481f0228496",
-    "dist/yjs/document-room.d.cts": "47b9f1993110a50bb1a320874441933696497a2ca282429ca7c6648e57ad192c",
-    "dist/yjs/document-room.d.ts": "f139049cea3bd4475d6d6e4df37678905a380a820a7c8e51200a66693f107527",
+    "dist/yjs/document-room.d.cts": "3aaf7857bcbe1de13560d4c6988376f7895cf1eb4f7d3bbe6fbaec7dd995f679",
+    "dist/yjs/document-room.d.ts": "da47afd2fca17fd44603f3338dea7cdbff92a4dc607ade037f746101ce3a235a",
     "dist/yjs/index.d.cts": "8ebad64252f1d3b6d73ba5ca78e697e22bdb1d1e5a10a4173235aba8cfc36667",
     "dist/yjs/index.d.ts": "809fe49319514f5b3d7f2a05435073a67e216217e4635b310c8872ef41b1c685",
     "dist/yjs/legacy-checkpoint.d.cts": "5428f5a792b5b7e7607c3dcff4ba084fac925222a71d070fc18b42a18f4c02eb",
@@ -445,7 +445,7 @@
     "dist/yjs/retained-room-store.d.ts": "582747ae732ac6c86c1f7dd3ea59cdf51d6c46c7edeb512f03c0020459c57fd5",
     "dist/yjs/room.d.cts": "dc1a05a25ddefa2669b69658fbfc428f01f1ba11062d8aa6aae6da3fd9f6fb37",
     "dist/yjs/room.d.ts": "84a65895a75f121c5e8b69460b38b5c1a1f22186409c418535dfcb4377b24805",
-    "dist/yjs/structured-attributes.d.cts": "f8fa2ad7b6ab08e0f84edad3a5980880e75f38b1a43fd1fb8e90bc2a7424daf7",
-    "dist/yjs/structured-attributes.d.ts": "098a4480856c054291e04ba482cd6c2ca8b30928c9cbb83220cce26bfe92339c"
+    "dist/yjs/structured-attributes.d.cts": "3cdabf825ec71a4f86c34413159cc4914f3d4309b496dfc6dc100f5d2c3ff4e1",
+    "dist/yjs/structured-attributes.d.ts": "3c85b57c179dd329b657449ceef7582bd00a2c212c8d87cb1713e99c3608aeaa"
   }
 }

@@ -1,20 +1,24 @@
 import { expect, test } from '@playwright/test';
 
-for (const [title, mixed] of [
-  ['refuses incomplete room definitions and reopens both offline field edits', false],
-  ['preserves unowned fields when a directly connected editor writes', true],
+for (const [title, query] of [
+  ['refuses incomplete room definitions and reopens both offline field edits', ''],
+  ['preserves unowned fields when a directly connected editor writes', '?mixed'],
+  ['requires definitions for a custom named saved room map', '?custom'],
 ] as const) test(title, async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/tests/fixtures/yjs-structured-room.html' + (mixed ? '?mixed' : ''));
+  await page.goto('/tests/fixtures/yjs-structured-room.html' + query);
   const status = page.getByRole('status');
   await expect(status).toHaveText('Saved room ready.');
+  await page.getByRole('button', { name: 'Open without field definitions' }).click();
+  await expect(status).toHaveText('Room opening requires definitions for the saved structured attribute map.');
+  await expect(page.getByRole('textbox')).toHaveCount(0);
   await page.getByRole('button', { name: 'Open with incomplete definitions' }).click();
   await expect(status).toHaveText('Structured attribute definitions do not cover the saved room map.');
   await expect(page.getByRole('textbox')).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Open both authors' }).click();
-  await expect(status).toHaveText(mixed ? 'Grace opened a compatibility copy with fewer field definitions.' : 'Both authors opened the saved room.');
+  await expect(status).toHaveText(query === '?mixed' ? 'Grace opened a compatibility copy with fewer field definitions.' : 'Both authors opened the saved room.');
   const ada = page.getByRole('region', { name: 'Ada' });
   const grace = page.getByRole('region', { name: 'Grace' });
   await ada.getByRole('button', { name: 'Add a column' }).click();
