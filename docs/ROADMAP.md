@@ -4455,33 +4455,32 @@ dependent fonts and inherited paragraph/run styles remain unfinished; this does
 not close original title/heading or page-layout fidelity. See the
 [checkpoint and limitations](DOCX_FIDELITY_CHECKPOINT.md).
 
-## Inkognito naming check 2026 10 05
+## Inkognito naming check 2026-11-08
 
-The candidate is **not cleared for a rename**. Keep `FountainJS`,
-`fountainjs-editor`, existing repository URLs, document formats and imports
-unchanged. This is a collision check, not a trademark opinion or an instruction
-to reserve a name.
+**Keep FountainJS.** The strongest collision is an existing open-source
+document-processing package with the exact name. Adding `JS` or `-editor`
+to the npm slug would leave that product-name overlap in documentation,
+search results and cross-language examples.
 
-- The first-party [Inkognito site](https://www.inkognito.io/) already presents
-  an exact-name web-analytics software product. Its advertised launch timing is
-  not independently verified; the visible use of the brand is sufficient to
-  prevent treating the name as uncontested.
-- [trionlabs/inkognito](https://github.com/trionlabs/inkognito) is a separate
-  exact-name signed-document/identity proof project. Repository names are not
-  globally exclusive, but this is relevant software/document search overlap.
-- Read-only HTTPS requests to npm's public registry returned **404** for
-  `inkognito`, `inkognitojs` and `inkognito-editor` on this date. That means these
-  exact package metadata endpoints had no public package at the time of the
-  check; it does **not** prove that publishing is permitted, that a scope/domain
-  is available, or that a brand is legally clear.
-- No exhaustive jurisdiction-specific trademark search, domain-registration
-  availability check or legal clearance was completed. Search results and a
-  missing npm package are insufficient grounds to rename a shipped library.
+- PyPI already hosts `inkognito`, an MIT-licensed document extraction and
+  anonymization server. This overlaps with FountainJS's document conversion
+  audience, especially for Python integrations. [PyPI project](https://pypi.org/project/inkognito/)
+- GitHub has an exact-name project for signed documents and identity proofs.
+  The repository and its fork were both publicly visible and unarchived at
+  the time of the check. [Project](https://github.com/trionlabs/inkognito) ·
+  [Fork](https://github.com/0x471/inkognito)
+- Other products already use the same name for web analytics and automated
+  writing for LinkedIn. [Web analytics](https://www.inkognito.io/) ·
+  [Writing product](https://inkognito.fr/)
+- The npm public metadata endpoints for `inkognito`, `inkognitojs` and
+  `inkognito-editor` returned HTTP 404 on October 5 and again on November 8.
+  That establishes the absence of public metadata at those times. Publishing
+  eligibility, domain registration and trademark clearance require separate
+  checks. [npm registry](https://registry.npmjs.org/)
 
-Recommendation: continue the technical programme under FountainJS. If renaming
-is revisited, choose/recheck a candidate, obtain the appropriate clearance and
-explicit maintainer decision, then plan redirects, package aliases, documentation
-and compatibility rather than breaking existing imports or stored documents.
+Any later rename needs a distinct candidate, a maintainer decision and a
+compatibility plan for package imports, repository redirects and stored
+documents.
 
 ## 2026-10-07: block direction and explicit document focus
 
