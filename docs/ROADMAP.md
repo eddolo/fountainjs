@@ -92,6 +92,9 @@ source-data profile matches all 652 CommonMark body examples, with separate
 exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
+Unicode 17 reference labels now resolve consistently on both tested Node
+versions, including Node 20 with its older Unicode data.
+[Reference matching](MARKDOWN_SOURCE.md#consistent-unicode-reference-matching).
 
 The Conversion Lab's local CommonMark source-review mode keeps supported
 raw HTML as inert data. An edit to an independently mapped paragraph retained
@@ -120,7 +123,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 149.8 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 151.5 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

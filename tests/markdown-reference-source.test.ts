@@ -116,6 +116,22 @@ describe('reference-definition source provenance', () => {
     expect(MarkdownImporter.parse(result.markdown, schema).toJSON()).toEqual(changed.toJSON());
   });
 
+  it.each([
+    ['\u{A7CE}', '\u{A7CF}'],
+    ['\u{16EA0}', '\u{16EBB}'],
+    ['\u{AB70}', '\u{13A0}'],
+    ['\u{130}', 'i\u{307}'],
+    ['\u{FB03}', 'ffi'],
+  ])('resolves full Unicode folds for Markdown reference %s', (label, definition) => {
+    const schema = new Schema(CoreSchemaSpec);
+    const source = `[Paper][${label}]\n\n[${definition}]: /paper\n`;
+    const imported = MarkdownImporter.parseWithSource(source, schema);
+    const link = imported.document.child(0).child(0);
+    expect(link.textContent).toBe('Paper');
+    expect(link.marks.find(mark => mark.type.name === 'link')?.attrs.href).toBe('/paper');
+    expect(MarkdownExporter.exportWithSource(imported.document, imported.source).markdown).toBe(source);
+  });
+
   it('retains inert frontmatter and unused definitions after a structural edit', () => {
     const schema = new Schema(CoreSchemaSpec);
     const source = '---\ntitle: "Reference paper"\n---\n\nEdit.\n\nKeep [safe].\n\n[safe]: ./safe.md\n[unused]: ./unused.md\n';

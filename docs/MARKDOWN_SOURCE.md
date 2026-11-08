@@ -1,5 +1,19 @@
 # Markdown semantics and source fidelity
 
+## Consistent Unicode reference matching
+
+Markdown reference labels use the pinned Unicode 17 full case-fold mappings.
+This resolves the same link on runtimes with older Unicode tables and
+preserves the original spelling in source-aware exports. The generated table
+combines ranges with explicit mappings for irregular and multi-character folds.
+The generator produces identical output on Node 20 and 24.
+
+Before this change, the built importer left two Unicode 17 references as
+literal text on Node 20.19.5. After the change, Node 20.19.5 and 24.22.1
+resolve both references to the same target. An exhaustive comparison matched
+all 1,114,112 code points against the official CaseFolding data. The default
+and complete-file CommonMark body profiles retain their existing scores.
+
 ## CommonMark source review in the Conversion Lab
 
 The lab offers a single source-review option for the next Markdown files.

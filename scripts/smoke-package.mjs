@@ -142,6 +142,17 @@ function checkAutomaticCaretSource(engine, kit, label) {
 }
 checkAutomaticCaretSource(esmCore, esmCore.StarterKit, 'ESM root');
 checkAutomaticCaretSource(esmHeadlessCore, esmCore.StarterKit, 'ESM mixed core/root');
+function checkUnicodeMarkdownReference(engine, schema) {
+  // Beria Erfe case mappings arrived in Unicode 17, after the Node 20 baseline.
+  const source = '[Paper][\u{16EA0}]\n\n[\u{16EBB}]: /paper\n';
+  const parsed = engine.MarkdownImporter.parseWithSource(source, schema);
+  const link = parsed.document.child(0).child(0);
+  if (link.textContent !== 'Paper' || link.marks.find(mark => mark.type.name === 'link')?.attrs.href !== '/paper'
+    || engine.MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown !== source) {
+    throw new Error('Packed Markdown did not resolve the Unicode 17 reference while preserving the original source.');
+  }
+}
+checkUnicodeMarkdownReference(esmHeadlessCore, markdownSchema);
 const packedDOCX = esmDOCX.exportDOCX(markdownSchema.node('doc', {}, [
   markdownSchema.node('heading', { level: 2 }, [markdownSchema.text('Packed Word')]),
   markdownSchema.node('paragraph', {}, [markdownSchema.text('Pure Node DOCX')]),
@@ -455,6 +466,7 @@ const cjsDOCXRoundTrip = cjsDOCX.importDOCX(cjsDOCX.exportDOCX(cjsMarkdownSchema
 ])).bytes, cjsMarkdownSchema);
 if (cjsDOCXRoundTrip.document.textContent !== 'CommonJS Word') throw new Error('CommonJS DOCX entry did not round-trip in pure Node.');
 const cjsSourcedMarkdown = cjsHeadlessCore.MarkdownImporter.parseWithSource(markdownSource, cjsMarkdownSchema);
+checkUnicodeMarkdownReference(cjsHeadlessCore, cjsMarkdownSchema);
 if (cjsHeadlessCore.MarkdownExporter.exportWithSource(cjsSourcedMarkdown.document, cjsSourcedMarkdown.source).markdown !== markdownSource) {
   throw new Error('CommonJS headless core did not preserve unchanged Markdown source.');
 }

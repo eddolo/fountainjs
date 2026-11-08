@@ -8,8 +8,8 @@ export async function runMarkdownNestedReferenceJourney(page: Page, info: TestIn
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/conversion-lab.html');
-  const source = ['[ref]: /target "Original title"', '', '# Research notes ###', '',
-    '> First __quoted__ [link][ref].', '>', '  > Edit this quote.', '>', ' > Last _quoted_ [ref].', '',
+  const source = ['[ref]: /target "Original title"', '[\u{16EBB}]: /unicode "Unicode reference"', '', '# Research notes ###', '',
+    '> First __quoted__ [link][ref] and [Unicode link][\u{16EA0}].', '>', '  > Edit this quote.', '>', ' > Last _quoted_ [ref].', '',
     '*   First __source__ [link][ref].', '', '*   Edit this item.', '', '*   Last _source_ [ref].', '', 'After the list.', ''].join('\r\n');
   await writeFile(resolve(root, 'original.md'), source);
   await page.getByLabel('Choose documents').setInputFiles({ name: 'reference-notes.md', mimeType: 'text/markdown', buffer: Buffer.from(source) });
@@ -18,6 +18,7 @@ export async function runMarkdownNestedReferenceJourney(page: Page, info: TestIn
   await expect(editor.locator('blockquote > p')).toHaveCount(3);
   await expect(editor.locator('ul > li')).toHaveCount(3);
   await expect(editor.getByRole('link', { name: 'link', exact: true }).first()).toHaveAttribute('title', 'Original title');
+  await expect(editor.getByRole('link', { name: 'Unicode link', exact: true })).toHaveAttribute('href', '/unicode');
   await editor.screenshot({ path: resolve(root, 'imported.png'), caret: 'initial' });
   const download = async (name: string, currentWorkspace = workspace) => {
     await currentWorkspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption('markdown');
@@ -53,6 +54,7 @@ export async function runMarkdownNestedReferenceJourney(page: Page, info: TestIn
   await expect(reopened.locator('p').filter({ hasText: 'Reviewed this quote.' })).toBeVisible();
   await expect(reopened.getByRole('link', { name: 'link', exact: true }).first()).toHaveAttribute('href', '/target');
   await expect(reopened.getByRole('link', { name: 'link', exact: true }).first()).toHaveAttribute('title', 'Original title');
+  await expect(reopened.getByRole('link', { name: 'Unicode link', exact: true })).toHaveAttribute('href', '/unicode');
   await reopened.screenshot({ path: resolve(root, 'reopened.png'), caret: 'initial' });
   const tasks = ['[ref]: /first "First"', '', '- [ ] Review [proof][ref].', '- [X] Preserve __source__ [ref].', '',
     'Ready to publish.', '', '[ref]: /ignored "Ignored"', ''].join('\r\n');

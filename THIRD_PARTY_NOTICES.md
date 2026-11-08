@@ -1,12 +1,14 @@
 # Third-party notices
 
-## Unicode first-strong direction data
+## Unicode direction and case-folding data
 
 The internal first-strong direction foundation derives a compact class table
 from [Unicode 17.0.0 DerivedBidiClass](https://www.unicode.org/Public/17.0.0/ucd/extracted/DerivedBidiClass.txt),
 copyright 2025 Unicode, Inc. The pinned original and reproducible generator are
-retained for verification. This is not a general bidi layout implementation.
-The data and derived table are licensed under the Unicode License V3:
+retained for verification. Markdown reference matching derives a separate table
+from [Unicode 17.0.0 CaseFolding](https://www.unicode.org/Public/17.0.0/ucd/CaseFolding.txt),
+copyright 2025 Unicode, Inc. Both data sources and their derived tables are
+licensed under the Unicode License V3:
 
 UNICODE LICENSE V3
 
