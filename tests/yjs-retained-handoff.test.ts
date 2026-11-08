@@ -137,7 +137,7 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const edited = await pair.room.write({epoch:pair.initial.epoch,update:Y.encodeStateAsUpdate(pair.document)});
   expect(pair.b.readStorageUsage('missing-room')).toBeUndefined();
   expect(pair.b.readStorageUsage(key)).toEqual({
-    revision: edited.revision, liveBytes: edited.checkpoint.manifest.bytes,
+    revision: edited.revision, liveBytes: edited.checkpoint.manifest.bytes, liveCheckpointBytes: edited.checkpoint.manifest.bytes,
     archiveCount: 0, archiveBytes: 0, draftCount: 0, draftBytes: 0, batchCount: 0, batchBytes: 0,
     recoveryBytes: 0, totalBytes: edited.checkpoint.manifest.bytes,
   });
@@ -183,7 +183,7 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const archiveBytes = edited.checkpoint.manifest.bytes + Number(storedArchive?.branchBytes) + Number(storedArchive?.destinationBytes);
   const draftBytes = Number(storedDraft?.bytes), liveBytes = result.snapshot.checkpoint.manifest.bytes;
   expect(pair.b.readStorageUsage(key)).toEqual({
-    revision: result.snapshot.revision, liveBytes,
+    revision: result.snapshot.revision, liveBytes, liveCheckpointBytes: liveBytes,
     archiveCount: 1, archiveBytes, draftCount: 1, draftBytes, batchCount: 0, batchBytes: 0,
     recoveryBytes: archiveBytes + draftBytes, totalBytes: liveBytes + archiveBytes + draftBytes,
   });

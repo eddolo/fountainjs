@@ -56,6 +56,10 @@ Shorter private IDs reduce raw structural-history growth. The 128-move probe
 used 51,832 bytes of additional state, down from 63,800, and mixed-version
 editors preserved offline typing and author history.
 [Identity encoding evidence](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#smaller-private-identities).
+The SQLite reference can also compress live checkpoint storage. After 512
+single-character edits, it stored the 30,235-byte checkpoint in 9,112 bytes
+and reopened the same update.
+[Live checkpoint storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#optional-compression-for-live-checkpoints).
 The cross-format reference acknowledges exact retries of archived offline
 batches. The browser demo keeps a pending batch through reload and preserves
 newer local edits for a separate save.

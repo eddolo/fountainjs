@@ -195,9 +195,10 @@ The result is `artifacts/retained-compaction-diagnostic-20261106.json`.
 The Node 24 SQLite reference stores a gzip copy of an archived checkpoint when
 the update is at least 1 KiB and compression saves bytes. This applies to
 frozen sources, destinations, updated retired branches, and exact saved drafts.
-The live room and original cross-format edit batches use their existing byte
-representation. The archive reader accepts existing raw rows and bounds
-decompression by the original manifest length and the checkpoint size limit.
+Live rooms use raw storage by default. Original cross-format edit batches
+always use their existing byte representation. The reader accepts existing
+raw rows and bounds decompression by the original manifest length and the
+checkpoint size limit.
 The handoff verifies the same original checkpoint digest after decoding.
 
 A local probe replaced the first paragraph repeatedly, then restored its
@@ -261,3 +262,36 @@ nine recorded Chromium, Firefox and WebKit handoff journeys passed. The
 declaration snapshot changes reflect two private adapter fields.
 These measurements concern structural metadata. Per-keystroke text provenance
 and the need for a long-session compaction policy remain.
+
+### Optional compression for live checkpoints
+
+The SQLite reference can store live checkpoints with the same bounded gzip
+codec. Enable it with
+`new SQLiteRetainedRoomRepository(path, Date.now, { compressLiveCheckpoints: true })`.
+It attempts compression for checkpoints of at least 4 KiB and keeps the raw
+bytes if compression gives no saving. Updated readers accept both forms and
+restore the canonical update before the authority validates or serves it.
+Upgrade every reader before enabling compressed writes on a shared database.
+
+The loopback handoff demo enables compression and shows both the canonical
+checkpoint size and the stored size. Compaction thresholds still compare
+canonical bytes. The Firefox workflow reported 7,340 canonical bytes and
+1,658 stored live bytes after switching rooms. A Node probe saved the same
+typed checkpoints through two SQLite authorities and verified that their
+reopened update bytes and document models matched.
+
+| Single-character edits | Raw live checkpoint | Stored compressed |
+| ---: | ---: | ---: |
+| 128 | 8,716 B | 2,874 B |
+| 256 | 15,756 B | 4,943 B |
+| 512 | 30,235 B | 9,112 B |
+
+This measures the stored checkpoint payload. Shared Yjs history still grows
+and keeps the same wire format. Compression adds synchronous codec work to
+checkpoint reads and writes. The probe does not establish a large-room latency
+budget or total database disk savings.
+
+The source checks cover 156 cases, including exact reads across independent
+connections and a return to raw storage on the next write. The 36 recorded
+Chromium, Firefox and WebKit journeys cover retained and cross-format
+migration, rollback, and offline draft recovery with compression enabled.

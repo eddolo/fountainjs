@@ -31,8 +31,8 @@ retained history/storage growth and compaction, and safe adapter adoption
 remain open. The migration reference can select an embedded legacy fragment
 and reopen its original identity through rollback. The retained handoff can
 require measured live-checkpoint savings before activating a smaller room.
-The SQLite reference compresses recovery checkpoints and reports stored live,
-archive, draft and batch payload sizes in the handoff demo.
+The SQLite reference compresses recovery checkpoints, can compress live
+checkpoints on opt-in, and reports stored payload sizes in the handoff demo.
 [Room storage report](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#measuring-room-storage).
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 The latest preview reuses checked structure during ordinary remote typing.

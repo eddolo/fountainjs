@@ -36,10 +36,13 @@ function client(document = new Y.Doc(), protocol: DocumentProtocol = 'legacy', n
   const kit = composeExtensions([CoreExtension, MathExtension, extension]), editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
   cleanup.push(() => { editor.destroy(); document.destroy(); }); return { document, editor, schema: editor.state.schema };
 }
-async function fixture() {
+async function fixture(compressLiveCheckpoints = false) {
   const directory = mkdtempSync(join(tmpdir(), 'fountain-cross-format-'));
   cleanup.push(() => { if (dirname(resolve(directory)) !== resolve(tmpdir()) || !basename(directory).startsWith('fountain-cross-format-')) throw new Error('Unsafe cleanup target.'); rmSync(directory, { recursive: true, force: true }); });
-  const path = join(directory, 'rooms.sqlite'), a = new SQLiteRetainedRoomRepository(path), b = new SQLiteRetainedRoomRepository(path); cleanup.push(() => b.close()); cleanup.push(() => a.close());
+  const path = join(directory, 'rooms.sqlite');
+  const a = new SQLiteRetainedRoomRepository(path, Date.now, { compressLiveCheckpoints });
+  const b = new SQLiteRetainedRoomRepository(path);
+  cleanup.push(() => b.close()); cleanup.push(() => a.close());
   const source = client(), checkpoint = await captureLegacyCheckpoint(source.document, source.schema, version), room = new CoordinatedDocumentRoom(a, key, source.schema, version), other = new CoordinatedDocumentRoom(b, key, source.schema, version), handoff = new CrossFormatRoomHandoff(a, key, source.schema, version), second = new CrossFormatRoomHandoff(b, key, source.schema, version), initial = await room.initialize(checkpoint);
   return { ...source, path, a, b, checkpoint, room, other, handoff, second, initial };
 }
@@ -58,10 +61,13 @@ function gate(base: CrossFormatRepository, method: 'installCrossArchive' | 'comp
 }
 
 it('uses one persisted live row for old and new protocols and archives the exact original atomically', async () => {
-  const pair = await fixture(), expected = pair.editor.getJSON(), moved = await migrate(pair), current = await pair.other.snapshot();
+  const pair = await fixture(true), expected = pair.editor.getJSON(), moved = await migrate(pair), current = await pair.other.snapshot();
   expect(typeof globalThis.document).toBe('undefined'); expect(pair.initial.protocol).toBe('legacy'); expect(current.protocol).toBe('retained'); expect(current).toEqual(moved.result.snapshot); expect(current.epoch).not.toBe(pair.initial.epoch); expect(current.revision).toBe(1);
   expect(await model(current.checkpoint, pair)).toEqual(expected); const archive = await pair.b.readCrossArchive(key, moved.operation); expect(archive!.source.checkpoint).toEqual(pair.checkpoint); expect(archive!.destination.checkpoint).toEqual(current.checkpoint); expect(archive!.branchRevision).toBe(0);
   const retained = new CoordinatedRetainedRoom(pair.b, key, pair.schema, version); expect((await retained.snapshot()).checkpoint).toEqual(current.checkpoint);
+  const usage = pair.b.readStorageUsage(key)!;
+  expect(usage.liveCheckpointBytes).toBe(current.checkpoint.manifest.bytes);
+  expect(usage.liveBytes).toBeLessThan(usage.liveCheckpointBytes);
   const db = new DatabaseSync(pair.path); cleanup.push(() => db.close()); expect(db.prepare('SELECT count(*) AS total FROM fountain_retained_rooms_v1').get()!.total).toBe(1);
   moved.result.archive.source.checkpoint.update.fill(0); expect((await pair.b.readCrossArchive(key, moved.operation))!.source.checkpoint).toEqual(pair.checkpoint);
 });

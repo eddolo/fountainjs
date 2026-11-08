@@ -87,7 +87,7 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
   await roomStorage.click();
   await checkStorage.click();
   await expect(storedBytes).toContainText('Total recovery storage · 0 bytes');
-  await expect(storedBytes).toContainText(`Live checkpoint · ${original.bytes.toLocaleString('en-US')} bytes`);
+  await expect(storedBytes).toContainText(`Live checkpoint before storage compression · ${original.bytes.toLocaleString('en-US')} bytes`);
   await roomStorage.click();
   await page.getByText('Compaction settings', {exact:true}).click();
   const minimum = page.getByLabel('Minimum checkpoint bytes to save');
@@ -114,6 +114,15 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
   const grown = await state(page);
   expect(grown.active).toEqual(original.active);
   expect(grown.bytes).toBeGreaterThan(original.bytes + 512);
+  await roomStorage.click();
+  const grownStorageResponse = page.waitForResponse(result => result.url().endsWith('/__handoff/storage'));
+  await checkStorage.click();
+  const { value: grownStorage } = await (await grownStorageResponse).json();
+  expect(grownStorage.liveCheckpointBytes).toBe(grown.bytes);
+  expect(grownStorage.liveBytes).toBeLessThan(grown.bytes);
+  await expect(storedBytes).toContainText(`Live checkpoint stored · ${grownStorage.liveBytes.toLocaleString('en-US')} bytes`);
+  await info.attach('grown-live-room-storage', {body:JSON.stringify(grownStorage),contentType:'application/json'});
+  await roomStorage.click();
   await type(page,'Offline editor',' OFFLINE draft');
   const offline = (await state(page)).offline;
   await minimum.fill('512');
@@ -168,7 +177,8 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
   const response = page.waitForResponse(result => result.url().endsWith('/__handoff/storage'));
   await checkStorage.click();
   const { value: usage } = await (await response).json();
-  expect(usage).toMatchObject({ revision: compacted.revision, liveBytes: compacted.bytes, archiveCount: 1, draftCount: 1 });
+  expect(usage).toMatchObject({ revision: compacted.revision, liveCheckpointBytes: compacted.bytes, archiveCount: 1, draftCount: 1 });
+  expect(usage.liveBytes).toBeLessThan(compacted.bytes);
   expect(usage.recoveryBytes).toBe(usage.archiveBytes + usage.draftBytes);
   expect(usage.draftBytes).toBeGreaterThan(0);
   await expect(storedBytes).toContainText(`Saved offline drafts (1) · ${usage.draftBytes.toLocaleString('en-US')} bytes`);

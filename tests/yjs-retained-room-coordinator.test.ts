@@ -57,6 +57,26 @@ it('persists an initialized checkpoint and shares its epoch across independent S
   current.checkpoint.update.fill(0); expect(await json(pair)).toEqual(pair.editor.getJSON());
 });
 
+it('saves a smaller live checkpoint and lets an updated raw writer reopen it exactly', async () => {
+  const pair = await fixture();
+  const key = 'project:launch';
+  const repository = new SQLiteRetainedRoomRepository(pair.path, Date.now, { compressLiveCheckpoints: true });
+  cleanup.push(() => repository.close());
+  const compressedRoom = new CoordinatedRetainedRoom(repository, key, pair.schema, 'schema-1');
+  expect((await compressedRoom.snapshot()).checkpoint).toEqual(pair.checkpoint);
+  type(pair, ' Retained paragraph. '.repeat(500));
+  const saved = await compressedRoom.write({ epoch: pair.initial.epoch, update: wire(pair.document) });
+  const usage = repository.readStorageUsage(key)!;
+  expect(usage.liveCheckpointBytes).toBe(saved.checkpoint.manifest.bytes);
+  expect(usage.liveBytes).toBeLessThan(usage.liveCheckpointBytes / 2);
+  expect(await pair.second.snapshot()).toEqual(saved);
+  expect(await json(pair)).toEqual(pair.editor.getJSON());
+  type(pair, 'New edit');
+  const raw = await pair.second.write({ epoch: saved.epoch, update: wire(pair.document) });
+  expect(repository.readStorageUsage(key)?.liveBytes).toBe(raw.checkpoint.manifest.bytes);
+  expect(await compressedRoom.snapshot()).toEqual(raw);
+});
+
 it('refuses duplicate initialization without replacing saved content or epoch', async () => {
   const pair = await fixture();
   await expect(pair.second.initialize(pair.checkpoint)).rejects.toMatchObject({ code: 'revision-conflict' });

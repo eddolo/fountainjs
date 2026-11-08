@@ -8,24 +8,24 @@ import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoom
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
 import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceRenewalMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
-function archiveWire(wire: Uint8Array): Uint8Array {
+function encodeStoredWire(wire: Uint8Array): Uint8Array {
   if (wire.length < 1_024) return wire;
   const compressed = gzipSync(wire, { level: 1 });
   return compressed.length < wire.length ? compressed : wire;
 }
 
-function readArchiveWire(wire: Uint8Array, expectedBytes: number): Uint8Array {
+function decodeStoredWire(wire: Uint8Array, expectedBytes: number): Uint8Array {
   // Old rows hold raw bytes. Compression always produces a shorter BLOB, so
   // even a raw update starting with the gzip header is read without decoding.
   if (wire.length >= expectedBytes || wire[0] !== 0x1f || wire[1] !== 0x8b) return Uint8Array.from(wire);
-  if (!Number.isSafeInteger(expectedBytes) || expectedBytes > 67_108_864) throw new Error('Invalid SQLite archive wire length.');
+  if (!Number.isSafeInteger(expectedBytes) || expectedBytes > 67_108_864) throw new Error('Invalid SQLite checkpoint wire length.');
   const decoded = gunzipSync(wire, { maxOutputLength: expectedBytes });
-  if (decoded.length !== expectedBytes) throw new Error('Invalid SQLite archive wire length.');
+  if (decoded.length !== expectedBytes) throw new Error('Invalid SQLite checkpoint wire length.');
   return Uint8Array.from(decoded);
 }
 
 function readArchivedCheckpoint<M extends DocumentCheckpoint['manifest']>(manifest: M, wire: Uint8Array) {
-  return { manifest, update: readArchiveWire(wire, manifest.bytes) };
+  return { manifest, update: decodeStoredWire(wire, manifest.bytes) };
 }
 
 function roomMetadata(result: Record<string, unknown>, key: string) {
@@ -41,7 +41,9 @@ function roomMetadata(result: Record<string, unknown>, key: string) {
 export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, CrossFormatRepository {
   private readonly db: DatabaseSync;
   private readonly selectRoomMetadata: StatementSync;
-  constructor(path: string, private readonly presenceNow = Date.now) {
+  private readonly compressLiveCheckpoints: boolean;
+  constructor(path: string, private readonly presenceNow = Date.now, options: { readonly compressLiveCheckpoints?: boolean } = {}) {
+    this.compressLiveCheckpoints = options.compressLiveCheckpoints === true;
     this.db = new DatabaseSync(path, { timeout: 1_000, allowExtension: false, enableDoubleQuotedStringLiterals: false });
     try {
       this.db.exec(`PRAGMA journal_mode = WAL; PRAGMA synchronous = FULL;
@@ -119,7 +121,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     const result = this.db.prepare('SELECT generation, metadata, wire FROM fountain_retained_rooms_v1 WHERE room_key = ?').get(key);
     if (!result) return undefined;
     if (!(result.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retained room row.');
-    const { manifest, ...row } = roomMetadata(result, key), update = Uint8Array.from(result.wire);
+    const { manifest, ...row } = roomMetadata(result, key), update = decodeStoredWire(result.wire, manifest.bytes);
     const checkpoint: DocumentCheckpoint = manifest.format === 'fountain-retained-checkpoint/1' ? { manifest, update } : { manifest, update };
     return { ...row, checkpoint };
   }
@@ -151,10 +153,11 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
           FROM fountain_cross_format_batches_v1 WHERE room_key = $key
       )
       SELECT json_extract(live.metadata, '$.revision') AS revision, length(live.wire) AS liveBytes,
+        json_extract(live.metadata, '$.manifest.bytes') AS liveCheckpointBytes,
         archives.*, drafts.*, batches.*
       FROM fountain_retained_rooms_v1 AS live CROSS JOIN archives CROSS JOIN drafts CROSS JOIN batches
       WHERE live.room_key = $key`).get({ $key: key }) as {
-      revision: number; liveBytes: number;
+      revision: number; liveBytes: number; liveCheckpointBytes: number;
       archiveCount: number; archiveBytes: number;
       draftCount: number; draftBytes: number;
       batchCount: number; batchBytes: number;
@@ -240,6 +243,10 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     return { metadata: JSON.stringify({ ...metadata, manifest: checkpoint.manifest }), wire: checkpoint.update };
   }
 
+  private liveWire(wire: Uint8Array): Uint8Array {
+    return this.compressLiveCheckpoints && wire.length >= 4_096 ? encodeStoredWire(wire) : wire;
+  }
+
   async create(record: RetainedRoomRecord): Promise<boolean> {
     return this.createDocument(record);
   }
@@ -247,7 +254,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   async createDocument(record: DocumentRoomRecord): Promise<boolean> {
     const packet = this.packet(record);
     const result = this.db.prepare('INSERT INTO fountain_retained_rooms_v1 (room_key, generation, metadata, wire) VALUES (?, ?, ?, ?) ON CONFLICT(room_key) DO NOTHING')
-      .run(record.key, record.generation, packet.metadata, packet.wire);
+      .run(record.key, record.generation, packet.metadata, this.liveWire(packet.wire));
     return result.changes === 1;
   }
 
@@ -264,7 +271,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     if (typeof before.metadata !== 'string' || JSON.parse(before.metadata).manifest?.format !== next.checkpoint.manifest.format) throw new Error('Format changes require an atomic recovery archive.');
     const packet = this.packet(next);
     const result = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?')
-      .run(next.generation, packet.metadata, packet.wire, key, expectedGeneration);
+      .run(next.generation, packet.metadata, this.liveWire(packet.wire), key, expectedGeneration);
     return result.changes === 1;
   }
 
@@ -299,7 +306,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       || archive.branch.manifest.checkpointSha256 !== archive.source.checkpoint.manifest.checkpointSha256) throw new Error('Invalid archived handoff replacement.');
     const live = this.packet(next), source = this.packet(archive.source), destination = this.packet(archive.destination);
     if (live.metadata !== destination.metadata) throw new Error('Archive destination does not match the live replacement.');
-    const sourceWire = archiveWire(source.wire), destinationWire = archiveWire(destination.wire);
+    const sourceWire = encodeStoredWire(source.wire), destinationWire = encodeStoredWire(destination.wire), liveWire = this.liveWire(live.wire);
     const { source: _source, destination: _destination, branch: _branch, branchRevision: _revision, generation: _generation, ...header } = archive;
     const metadata = JSON.stringify({ ...header, source: JSON.parse(source.metadata), destination: JSON.parse(destination.metadata) });
     this.db.exec('BEGIN IMMEDIATE');
@@ -309,7 +316,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
         this.db.exec('ROLLBACK'); return false;
       }
       const changed = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?')
-        .run(next.generation, live.metadata, live.wire, key, expectedGeneration);
+        .run(next.generation, live.metadata, liveWire, key, expectedGeneration);
       if (changed.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       this.db.prepare('INSERT INTO fountain_retained_archives_v1 (room_key, archive_id, generation, source_room_id, source_revision, metadata, source_wire, destination_wire) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
         .run(key, archive.id, archive.generation, archive.source.checkpoint.manifest.roomId, archive.source.revision, metadata, sourceWire, destinationWire);
@@ -319,7 +326,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
 
   async compareArchiveBranch(key: string, id: string, expectedGeneration: string, checkpoint: RetainedRoomRecord['checkpoint']): Promise<boolean> {
     const result = this.db.prepare('UPDATE fountain_retained_archives_v1 SET generation = ?, branch_metadata = ?, branch_wire = ?, branch_revision = branch_revision + 1 WHERE room_key = ? AND archive_id = ? AND generation = ? AND source_room_id = ? AND branch_revision < 9007199254740991')
-      .run(globalThis.crypto.randomUUID(), JSON.stringify(checkpoint.manifest), archiveWire(checkpoint.update), key, id, expectedGeneration, checkpoint.manifest.roomId);
+      .run(globalThis.crypto.randomUUID(), JSON.stringify(checkpoint.manifest), encodeStoredWire(checkpoint.update), key, id, expectedGeneration, checkpoint.manifest.roomId);
     return result.changes === 1;
   }
 
@@ -336,7 +343,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       SELECT room_key, archive_id, ?, ?, ? FROM fountain_retained_archives_v1
       WHERE room_key = ? AND archive_id = ? AND source_room_id = ?
       ON CONFLICT(room_key, archive_id, draft_id) DO NOTHING`)
-      .run(draftId, JSON.stringify(checkpoint.manifest), archiveWire(checkpoint.update), key, archiveId, checkpoint.manifest.roomId);
+      .run(draftId, JSON.stringify(checkpoint.manifest), encodeStoredWire(checkpoint.update), key, archiveId, checkpoint.manifest.roomId);
     return result.changes === 1;
   }
 
@@ -365,14 +372,14 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       || archive.source.checkpoint.manifest.format === archive.destination.checkpoint.manifest.format) throw new Error('Invalid cross-format installation replacement.');
     const live = this.packet(next), source = this.packet(archive.source), destination = this.packet(archive.destination);
     if (live.metadata !== destination.metadata) throw new Error('Cross-format destination differs from live replacement.');
-    const sourceWire = archiveWire(source.wire), destinationWire = archiveWire(destination.wire);
+    const sourceWire = encodeStoredWire(source.wire), destinationWire = encodeStoredWire(destination.wire), liveWire = this.liveWire(live.wire);
     const { source: _source, destination: _destination, branch: _branch, branchRevision: _revision, generation: _generation, ...header } = archive;
     const metadata = JSON.stringify({ ...header, source: JSON.parse(source.metadata), destination: JSON.parse(destination.metadata) }), protocol = archive.source.checkpoint.manifest.format === 'fountain-legacy-checkpoint/1' ? 'legacy' : 'retained';
     this.db.exec('BEGIN IMMEDIATE');
     try {
       if (this.db.prepare('SELECT 1 FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, archive.id)) throw new RetainedRoomError('invalid-ticket', 'Operation UUID already belongs to a retained handoff.');
       if (prerequisite && this.db.prepare('SELECT generation FROM fountain_cross_format_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, prerequisite.id)?.generation !== prerequisite.generation) { this.db.exec('ROLLBACK'); return false; }
-      const result = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?').run(next.generation, live.metadata, live.wire, key, expectedGeneration);
+      const result = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?').run(next.generation, live.metadata, liveWire, key, expectedGeneration);
       if (result.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       this.db.prepare('INSERT INTO fountain_cross_format_archives_v1 (room_key, archive_id, generation, source_epoch, source_identity, source_protocol, source_revision, metadata, source_wire, destination_wire) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
         .run(key, archive.id, archive.generation, archive.source.epoch, archive.sourceIdentity, protocol, archive.source.revision, metadata, sourceWire, destinationWire);
@@ -383,7 +390,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     const protocol = checkpoint.manifest.format === 'fountain-legacy-checkpoint/1' ? 'legacy' : checkpoint.manifest.format === 'fountain-retained-checkpoint/1' ? 'retained' : null;
     if (!protocol) throw new Error('Invalid cross-format branch protocol.');
     if (!(batch.update instanceof Uint8Array) || !batch.update.length || batch.update.length > 67108864 || !/^[a-f0-9]{64}$/.test(batch.sha256)) throw new Error('Invalid raw retired batch packet.');
-    const update = Uint8Array.from(batch.update), metadata = JSON.stringify(checkpoint.manifest), wire = archiveWire(checkpoint.update);
+    const update = Uint8Array.from(batch.update), metadata = JSON.stringify(checkpoint.manifest), wire = encodeStoredWire(checkpoint.update);
     this.db.exec('BEGIN IMMEDIATE');
     try {
       const result = this.db.prepare(`UPDATE fountain_cross_format_archives_v1

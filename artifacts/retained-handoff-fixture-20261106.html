@@ -86,7 +86,8 @@ action('check-storage',async()=>{
  if(!usage) throw new Error('No saved room to measure');
  const bytes=value=>value.toLocaleString('en-US')+' bytes';
  const labels=[
-  ['Live checkpoint',bytes(usage.liveBytes)],
+  ['Live checkpoint before storage compression',bytes(usage.liveCheckpointBytes)],
+  ['Live checkpoint stored',bytes(usage.liveBytes)],
   [`Recovery archives (${usage.archiveCount})`,bytes(usage.archiveBytes)],
   [`Saved offline drafts (${usage.draftCount})`,bytes(usage.draftBytes)],
   [`Recorded offline batches (${usage.batchCount})`,bytes(usage.batchBytes)],
