@@ -26,3 +26,24 @@ exports.repeat = [${literal}, ${literal}];
   expect(exports.record).toEqual({ [value]: value });
   expect(exports.repeat).toEqual([value, value]);
 });
+
+it('shares class receiver property names without renaming keys or changing the receiver', () => {
+  const original = `class Reader {
+  get longRepeatedMemberName() { return this.localValue; }
+  set longRepeatedMemberName(value) { this.localValue = value; }
+  exercise() {
+    this.longRepeatedMemberName = 1;
+    this.longRepeatedMemberName += 2;
+    return [this.longRepeatedMemberName, this?.longRepeatedMemberName];
+  }
+}
+exports.longRepeatedMemberName = new Reader().exercise();`;
+  const compacted = compactCommonJsLiterals(original);
+  expect(compacted.code).toContain('this[__fountainLiteral');
+  expect(compacted.code).toContain('get longRepeatedMemberName()');
+  expect(compacted.code).toContain('this?.longRepeatedMemberName');
+  expect(compacted.code).toContain('exports.longRepeatedMemberName');
+  const exports: Record<string, unknown> = {};
+  runInNewContext(compacted.code, { exports });
+  expect(exports.longRepeatedMemberName).toEqual([3, 3]);
+});

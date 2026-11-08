@@ -910,6 +910,23 @@ A production browser build consuming the CommonJS root and DOCX entry
 retained the typed text and bold formatting through export and reopen in
 Chromium, Firefox, and WebKit. The reopened document was visually reviewed.
 
+#### Sharing repeated class property names
+
+The next build also shares repeated names in direct `this` accesses inside
+class bodies. Property declarations, optional accesses, and module export
+syntax retain their existing form. Raw CommonJS fell by another 23,360 bytes
+to 1,558,121 bytes, leaving 112.9 KiB above the existing aggregate limit. The
+sum of individually gzipped chunks increased by another 2,422 bytes. All
+91 ESM runtime files were byte-identical. Fresh CommonJS root and React
+imports loaded 8,486 and 7,567 fewer Fountain bytes respectively.
+
+Five alternating Node process pairs measured a 300-paragraph HTML parse at
+10.89 ms before and 10.80 ms after. An insert/delete pair in a 2,000-paragraph
+document measured 0.069 ms before and 0.067 ms after. These are medians for
+the two local workloads. The browser CommonJS consumer again passed the
+recorded edit and DOCX reopen in Chromium, Firefox, and WebKit. The package,
+declaration, and performance checks also passed.
+
 #### Earlier startup work
 
 Rebuilding the approved `f8bff232` checkpoint reproduced its exact CommonJS

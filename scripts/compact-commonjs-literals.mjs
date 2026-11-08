@@ -21,20 +21,33 @@ function canShare(node, parent, code) {
     : !/require|resolve|defineProperty|eval/iu.test(callee);
 }
 
-/** Let the chunk minifier assign short names to repeated string values. */
+function shareableUse(node, parent, inClass, code) {
+  const value = literalValue(node);
+  if (value?.length >= 8 && canShare(node, parent, code)) {
+    return { value, start: node.start, end: node.end, member: false };
+  }
+  if (inClass && node.type === 'MemberExpression' && !node.computed && !node.optional
+    && node.object.type === 'ThisExpression' && node.property.type === 'Identifier'
+    && node.property.name.length >= 7 && code[node.property.start - 1] === '.') {
+    return { value: node.property.name, start: node.property.start - 1, end: node.property.end, member: true };
+  }
+}
+
+/** Share string values and repeated `this` property names inside class bodies. */
 export function compactCommonJsLiterals(code) {
   const tree = parseAst(code);
   const literals = new Map();
-  function visit(node, parent) {
-    const value = literalValue(node);
-    if (value?.length >= 8 && canShare(node, parent, code)) {
-      const uses = literals.get(value) ?? [];
-      uses.push(node);
-      literals.set(value, uses);
+  function visit(node, parent, inClass = false) {
+    const use = shareableUse(node, parent, inClass, code);
+    if (use) {
+      const uses = literals.get(use.value) ?? [];
+      uses.push(use);
+      literals.set(use.value, uses);
     }
+    const inClassBody = inClass || node.type === 'ClassBody';
     for (const child of Object.values(node)) {
-      if (child?.type) visit(child, node);
-      else if (Array.isArray(child)) for (const item of child) if (item?.type) visit(item, node);
+      if (child?.type) visit(child, node, inClassBody);
+      else if (Array.isArray(child)) for (const item of child) if (item?.type) visit(item, node, inClassBody);
     }
   }
   visit(tree);
@@ -46,11 +59,11 @@ export function compactCommonJsLiterals(code) {
   for (const [value, uses] of literals) {
     if (uses.length < 2) continue;
     const encoded = JSON.stringify(value);
-    const savings = uses.reduce((sum, use) => sum + use.end - use.start - 3, 0) - encoded.length;
+    const savings = uses.reduce((sum, use) => sum + use.end - use.start - (use.member ? 5 : 3), 0) - encoded.length;
     if (savings < 10) continue;
     const name = prefix + bindings.length;
     bindings.push(`${name}=${encoded}`);
-    for (const use of uses) edited.overwrite(use.start, use.end, ` ${name} `);
+    for (const use of uses) edited.overwrite(use.start, use.end, use.member ? `[${name}]` : ` ${name} `);
   }
   if (!bindings.length) return;
   // Preserve any leading directives, including strict mode.
