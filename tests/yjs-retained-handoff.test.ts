@@ -77,6 +77,56 @@ function gate(base: RetainedHandoffRepository, method: 'installWithArchive' | 'c
   return { repository, ready, release };
 }
 
+it('preserves existing recovery records when drafts, branch edits or another handoff exceed capacity', async () => {
+  const pair = await fixture();
+  const moved = await migrate(pair);
+  const offline = await open(pair.checkpoint, pair);
+  const update = type(offline, 'OFFLINE');
+  const checkpoint = await captureRetainedCheckpoint(offline.document, pair.schema, version);
+  const draft = { archiveId: moved.operation, draftId: uuid(), roomId: checkpoint.manifest.roomId, checkpoint };
+  await pair.handoff.saveRetiredDraft(draft);
+  const usage = pair.a.readStorageUsage(key)!;
+  const limited = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxRecoveryBytesPerRoom: usage.recoveryBytes });
+  cleanup.push(() => limited.close());
+  const handoff = new RetainedRoomHandoff(limited, key, pair.schema, version);
+  const secondDraftId = uuid();
+  expect(await handoff.saveRetiredDraft(draft)).toEqual(checkpoint);
+  await expect(handoff.saveRetiredDraft({ ...draft, draftId: secondDraftId })).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(await pair.b.readRetiredDraft(key, moved.operation, secondDraftId)).toBeUndefined();
+  await expect(handoff.retainLateUpdate({ archiveId: moved.operation, roomId: draft.roomId, update })).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(await pair.b.readArchive(key, moved.operation)).toEqual(moved.result.archive);
+
+  const ticket = await pair.room.freeze(moved.result.snapshot);
+  const operation = uuid();
+  await expect(handoff.migrate(ticket, operation, options(), policy())).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(await pair.b.readArchive(key, operation)).toBeUndefined();
+  expect(await pair.b.readRetiredDraft(key, moved.operation, draft.draftId)).toEqual(checkpoint);
+  expect(limited.readStorageUsage(key)).toEqual(usage);
+  expect((await pair.room.snapshot()).phase).toBe('frozen');
+});
+
+it('admits only one of two independent draft saves that compete for the last available bytes', async () => {
+  const pair = await fixture();
+  const moved = await migrate(pair);
+  const checkpoint = pair.checkpoint;
+  const wire = checkpoint.update;
+  const storedBytes = wire.length < 1_024 ? wire.length : Math.min(wire.length, gzipSync(wire, { level: 1 }).length);
+  const maxRecoveryBytesPerRoom = pair.a.readStorageUsage(key)!.recoveryBytes + storedBytes;
+  const connections = [0, 1].map(() => new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxRecoveryBytesPerRoom }));
+  for (const connection of connections) cleanup.push(() => connection.close());
+  const draftIds = [uuid(), uuid()];
+  const results = await Promise.allSettled(connections.map((connection, index) =>
+    new RetainedRoomHandoff(connection, key, pair.schema, version).saveRetiredDraft({
+      archiveId: moved.operation, draftId: draftIds[index]!, roomId: checkpoint.manifest.roomId, checkpoint,
+    })));
+
+  expect(results.filter(result => result.status === 'fulfilled')).toHaveLength(1);
+  expect(results.filter(result => result.status === 'rejected')).toEqual([
+    expect.objectContaining({ reason: expect.objectContaining({ code: 'recovery-capacity' }) }),
+  ]);
+  expect(pair.a.readStorageUsage(key)).toMatchObject({ draftCount: 1, recoveryBytes: maxRecoveryBytesPerRoom });
+});
+
 it('atomically installs an exact fresh-room document with immutable original and destination archives', async () => {
   const pair = await fixture(), before = pair.editor.getJSON(), moved = await migrate(pair), current = await pair.other.snapshot();
   expect(typeof globalThis.document).toBe('undefined'); expect(current).toEqual(moved.result.snapshot);

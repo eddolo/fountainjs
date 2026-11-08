@@ -58,8 +58,9 @@ The SQLite reference now compresses cold checkpoint copies when it saves space.
 The 512-edit probe stored the 204,546-byte source in 29,184 bytes and recovered
 the exact checkpoint. Live checkpoint growth and archive retention policy
 remain open. [Cold archive storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#cold-sqlite-archive-storage).
-The SQLite reference and handoff demo report the live checkpoint and retained
-archive, draft and batch bytes separately. [Room storage report](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#measuring-room-storage).
+The SQLite reference and handoff demo report live checkpoint and recovery
+bytes separately. Hosts can set a per-room recovery cap that refuses writes
+atomically and preserves existing copies. [Room storage and limits](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#limiting-recovery-writes-per-room).
 Shorter private IDs reduce raw structural-history growth. The 128-move probe
 used 51,832 bytes of additional state, down from 63,800, and mixed-version
 editors preserved offline typing and author history.

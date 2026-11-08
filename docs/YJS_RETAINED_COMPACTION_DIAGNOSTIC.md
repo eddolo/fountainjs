@@ -237,6 +237,31 @@ for 18,959 stored payload bytes. This separates the live compaction result from
 the storage kept for recovery. The report excludes SQLite file overhead and
 does not apply a retention policy.
 
+### Limiting recovery writes per room
+
+Set `maxRecoveryBytesPerRoom` in the SQLite repository options to cap the
+combined stored payload size of a room's handoff checkpoints, retired branches,
+saved drafts and original cross-format batches. Use the same limit on every
+process that writes recovery records to the database. The option accepts a
+non-negative byte count and is off by default.
+
+The repository checks the projected size inside the write transaction. A change
+that would exceed the limit returns `recovery-capacity` and rolls back the whole
+operation, including any attempted live-room switch. Existing data and exact
+saved replays remain readable. If an administrator already froze the room, the
+freeze remains in effect. The host can retry with available capacity or abort
+the freeze. For a refused offline save, the host should keep the unsent draft
+available until it can be stored.
+
+The limit counts stored BLOB payloads. Live checkpoints, SQLite file and WAL
+overhead, and deletion or archival policies remain separate host concerns.
+
+148 focused checks passed, including competing saves from two SQLite
+connections at the exact limit. Three recorded Chromium, Firefox and WebKit
+journeys verified a refused offline save and its later retry. The Firefox
+captures show the draft in the offline editor before the retry and in the
+retired archive afterward, with the active document intact.
+
 ### Smaller private identities
 
 New retained node, text and placement identities use a base-36 representation

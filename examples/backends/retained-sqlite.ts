@@ -42,8 +42,15 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   private readonly db: DatabaseSync;
   private readonly selectRoomMetadata: StatementSync;
   private readonly compressLiveCheckpoints: boolean;
-  constructor(path: string, private readonly presenceNow = Date.now, options: { readonly compressLiveCheckpoints?: boolean } = {}) {
+  private readonly maxRecoveryBytesPerRoom?: number;
+  constructor(path: string, private readonly presenceNow = Date.now, options: {
+    readonly compressLiveCheckpoints?: boolean;
+    readonly maxRecoveryBytesPerRoom?: number;
+  } = {}) {
     this.compressLiveCheckpoints = options.compressLiveCheckpoints === true;
+    const maximum = options.maxRecoveryBytesPerRoom;
+    if (maximum !== undefined && (!Number.isSafeInteger(maximum) || maximum < 0)) throw new TypeError('Invalid per-room recovery capacity.');
+    this.maxRecoveryBytesPerRoom = maximum;
     this.db = new DatabaseSync(path, { timeout: 1_000, allowExtension: false, enableDoubleQuotedStringLiterals: false });
     try {
       this.db.exec(`PRAGMA journal_mode = WAL; PRAGMA synchronous = FULL;
@@ -165,6 +172,27 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     if (!usage) return undefined;
     const recoveryBytes = usage.archiveBytes + usage.draftBytes + usage.batchBytes;
     return { ...usage, recoveryBytes, totalBytes: usage.liveBytes + recoveryBytes };
+  }
+
+  // Run inside the same SQLite write transaction as the recovery change.
+  private checkRecoveryCapacity(key: string): void {
+    const maximum = this.maxRecoveryBytesPerRoom;
+    if (maximum === undefined) return;
+    const usage = this.readStorageUsage(key);
+    if (!usage || usage.recoveryBytes > maximum) {
+      throw Object.assign(new Error('Room recovery storage limit reached. Keep pending edits and retry after capacity is available.'), { code: 'recovery-capacity' });
+    }
+  }
+
+  private writeRecovery(key: string, write: () => boolean): boolean {
+    if (this.maxRecoveryBytesPerRoom === undefined) return write();
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const changed = write();
+      if (changed) this.checkRecoveryCapacity(key);
+      this.db.exec('COMMIT');
+      return changed;
+    } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }
 
   private withPresenceFence<T>(lease: DocumentRoomAdmission, mode: 'read' | 'write', action: (now: number) => T): T {
@@ -320,14 +348,15 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       if (changed.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       this.db.prepare('INSERT INTO fountain_retained_archives_v1 (room_key, archive_id, generation, source_room_id, source_revision, metadata, source_wire, destination_wire) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
         .run(key, archive.id, archive.generation, archive.source.checkpoint.manifest.roomId, archive.source.revision, metadata, sourceWire, destinationWire);
+      this.checkRecoveryCapacity(key);
       this.db.exec('COMMIT'); return true;
     } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }
 
   async compareArchiveBranch(key: string, id: string, expectedGeneration: string, checkpoint: RetainedRoomRecord['checkpoint']): Promise<boolean> {
-    const result = this.db.prepare('UPDATE fountain_retained_archives_v1 SET generation = ?, branch_metadata = ?, branch_wire = ?, branch_revision = branch_revision + 1 WHERE room_key = ? AND archive_id = ? AND generation = ? AND source_room_id = ? AND branch_revision < 9007199254740991')
-      .run(globalThis.crypto.randomUUID(), JSON.stringify(checkpoint.manifest), encodeStoredWire(checkpoint.update), key, id, expectedGeneration, checkpoint.manifest.roomId);
-    return result.changes === 1;
+    const metadata = JSON.stringify(checkpoint.manifest), wire = encodeStoredWire(checkpoint.update);
+    const statement = this.db.prepare('UPDATE fountain_retained_archives_v1 SET generation = ?, branch_metadata = ?, branch_wire = ?, branch_revision = branch_revision + 1 WHERE room_key = ? AND archive_id = ? AND generation = ? AND source_room_id = ? AND branch_revision < 9007199254740991');
+    return this.writeRecovery(key, () => statement.run(globalThis.crypto.randomUUID(), metadata, wire, key, id, expectedGeneration, checkpoint.manifest.roomId).changes === 1);
   }
 
   async readRetiredDraft(key: string, archiveId: string, draftId: string): Promise<RetainedCheckpoint | undefined> {
@@ -339,12 +368,12 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   }
 
   async createRetiredDraft(key: string, archiveId: string, draftId: string, checkpoint: RetainedCheckpoint): Promise<boolean> {
-    const result = this.db.prepare(`INSERT INTO fountain_retained_drafts_v1 (room_key, archive_id, draft_id, manifest, wire)
+    const manifest = JSON.stringify(checkpoint.manifest), wire = encodeStoredWire(checkpoint.update);
+    const statement = this.db.prepare(`INSERT INTO fountain_retained_drafts_v1 (room_key, archive_id, draft_id, manifest, wire)
       SELECT room_key, archive_id, ?, ?, ? FROM fountain_retained_archives_v1
       WHERE room_key = ? AND archive_id = ? AND source_room_id = ?
-      ON CONFLICT(room_key, archive_id, draft_id) DO NOTHING`)
-      .run(draftId, JSON.stringify(checkpoint.manifest), encodeStoredWire(checkpoint.update), key, archiveId, checkpoint.manifest.roomId);
-    return result.changes === 1;
+      ON CONFLICT(room_key, archive_id, draft_id) DO NOTHING`);
+    return this.writeRecovery(key, () => statement.run(draftId, manifest, wire, key, archiveId, checkpoint.manifest.roomId).changes === 1);
   }
 
   private crossRow(row: Record<string, unknown> | undefined, key: string): CrossFormatArchive | undefined {
@@ -383,6 +412,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       if (result.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       this.db.prepare('INSERT INTO fountain_cross_format_archives_v1 (room_key, archive_id, generation, source_epoch, source_identity, source_protocol, source_revision, metadata, source_wire, destination_wire) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
         .run(key, archive.id, archive.generation, archive.source.epoch, archive.sourceIdentity, protocol, archive.source.revision, metadata, sourceWire, destinationWire);
+      this.checkRecoveryCapacity(key);
       this.db.exec('COMMIT'); return true;
     } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }
@@ -401,6 +431,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       if (result.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       const archive = this.db.prepare('SELECT branch_revision, source_epoch FROM fountain_cross_format_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, id)!;
       this.db.prepare('INSERT INTO fountain_cross_format_batches_v1 (room_key, archive_id, revision, source_epoch, sha256, wire) VALUES (?, ?, ?, ?, ?, ?)').run(key, id, archive.branch_revision!, archive.source_epoch!, batch.sha256, update);
+      this.checkRecoveryCapacity(key);
       this.db.exec('COMMIT'); return true;
     } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }

@@ -332,6 +332,46 @@ it('commits neither a branch replacement nor a receipt if raw batch insertion fa
   db.exec('DROP TRIGGER fail_batch'); await pair.handoff.retainLateUpdate({ archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update }); expect((await pair.second.retiredBatch(moved.operation, 1)).update).toEqual(update);
 });
 
+it('refuses an over-capacity migration without changing the frozen row or reserving its operation', async () => {
+  const pair = await fixture();
+  const limited = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxRecoveryBytesPerRoom: 0 });
+  cleanup.push(() => limited.close());
+  const handoff = new CrossFormatRoomHandoff(limited, key, pair.schema, version);
+  const ticket = await pair.room.freeze(pair.initial);
+  const before = await pair.a.readDocument(key);
+  const operation = uuid();
+
+  await expect(handoff.migrateLegacy(ticket, operation, options(), policy())).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(await pair.b.readDocument(key)).toEqual(before);
+  expect(await pair.b.readCrossArchive(key, operation)).toBeUndefined();
+  expect(limited.readStorageUsage(key)?.recoveryBytes).toBe(0);
+
+  const retry = await pair.second.migrateLegacy(ticket, operation, options(), policy());
+  expect(retry.replayed).toBe(false);
+  expect(retry.snapshot.protocol).toBe('retained');
+});
+
+it('retains exact batch replays at capacity and rolls back a distinct batch and its branch together', async () => {
+  const pair = await fixture();
+  const peer = await open(pair.checkpoint, pair);
+  const moved = await migrate(pair);
+  const first = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'FIRST') };
+  const accepted = await pair.handoff.retainLateUpdate(first);
+  const usage = pair.a.readStorageUsage(key)!;
+  const limited = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxRecoveryBytesPerRoom: usage.recoveryBytes });
+  cleanup.push(() => limited.close());
+  const handoff = new CrossFormatRoomHandoff(limited, key, pair.schema, version);
+  const second = { ...first, update: type(peer, 'SECOND') };
+
+  expect(await handoff.retainLateUpdate(first)).toEqual(accepted);
+  await expect(handoff.retainLateUpdate(second)).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(limited.readStorageUsage(key)).toEqual(usage);
+  expect(await pair.b.readCrossArchive(key, moved.operation)).toEqual(accepted);
+  expect(await pair.b.readCrossBatch(key, moved.operation, 2)).toBeUndefined();
+  expect((await handoff.retiredBatch(moved.operation, 1)).update).toEqual(first.update);
+  expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
+});
+
 it('acknowledges an exact retired batch retry after a later distinct batch without appending again', async () => {
   const pair = await fixture(), peer = await open(pair.checkpoint, pair), moved = await migrate(pair);
   const request = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'FIRST') };
