@@ -20,6 +20,9 @@ Yjs updates. Recovery leaves the draft available when the complete room opens
 in a separate session. [Startup recovery](YJS_RETAINED_PREVIEW.md#initialize-once-then-join).
 Checkpoint-based retained admission also verifies the saved structured fields
 before installing the checkpoint or starting the provider.
+The cross-format reference can review a saved legacy paragraph and apply an
+explicit replacement to the matching paragraph in the live retained room.
+[Migration draft review](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md#review-a-legacy-paragraph-after-migration).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

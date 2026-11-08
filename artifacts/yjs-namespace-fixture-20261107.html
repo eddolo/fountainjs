@@ -2,7 +2,15 @@
 <style>body{margin:24px;background:#f5f3ff;color:#19152f;font:16px system-ui}h1{margin-bottom:8px}button,select{font:inherit;padding:8px 10px;border:1px solid #c5bce6;border-radius:6px;background:white}button{cursor:pointer}header{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.panes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}.panes>section{min-width:0;background:white;border:1px solid #c5bce6;border-radius:12px;overflow:hidden}h2{font-size:19px;padding:16px;margin:0}pre{padding:12px;margin:12px 0;max-height:180px;overflow:auto;font:13px monospace;background:#efecfa;white-space:pre-wrap}.fountain-editor{min-height:440px;padding:20px}.fountain-editor img{max-width:100%;max-height:90px;object-fit:contain}#message{min-height:28px;margin:18px 0}label{display:flex;gap:6px;align-items:center}</style>
 <h1>Live protocol migration · recoverable handoff</h1><p>Actual Node/SQLite authority. Legacy → retained → legacy. Pending old-protocol edits stay separately recoverable.</p>
 <header><button id="retained-only">Try retained-only join</button><label>Retained destination namespace <input id="destination" value="mapped-paper" aria-label="Retained destination namespace"></label><button id="save">Save active edits</button><button id="preflight">Check saved migration</button><button id="migrate">Migrate legacy room</button><button id="retry" disabled>Retry last migration</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain offline edits</button><label>Rollback source <select id="restore"><option value="source-branch">Pending source branch</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><button id="retry-rollback" disabled>Retry last rollback</button><label><input id="drop" type="checkbox">Drop migration acknowledgement (test only)</label></header>
-<div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2><button id="save-exact" type="button" disabled>Save exact offline draft</button></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2><button id="open-exact" type="button" disabled>Open saved offline draft</button> <button id="open-writer" type="button" disabled>Open outgoing editor draft</button></section></div>
+<div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2><button id="save-exact" type="button" disabled>Save exact offline draft</button></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2><button id="open-exact" type="button" disabled>Open saved offline draft</button> <button id="review-exact" type="button" disabled>Review saved paragraph</button> <button id="open-writer" type="button" disabled>Open outgoing editor draft</button></section></div>
+<section id="draft-review" aria-labelledby="draft-review-title" hidden>
+ <h2 id="draft-review-title">Review the recovered paragraph</h2>
+ <h3>Current room</h3><pre id="review-live"></pre>
+ <h3>Saved offline draft</h3><pre id="review-saved"></pre>
+ <label for="review-replacement">Text to apply</label>
+ <textarea id="review-replacement" rows="2" cols="60"></textarea>
+ <button id="apply-review" type="button">Apply reviewed paragraph</button>
+</section>
 <script type="module">
 import * as Y from 'yjs';
 import {CoreExtension,MathExtension,Schema,Plugin,EditorView,composeExtensions,createEditor,getCollaborationState,undoCollaboration,redoCollaboration} from '/artifacts/yjs-namespace-build-20261107/engine.js';
@@ -18,7 +26,7 @@ const nested=new URLSearchParams(location.search).has('nested');
 const schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema);
 const sessionKey='fountain-handoff:'+location.pathname+location.search;
 let token,current,original,active,archived,migration,rollback,rollbackArchiveId,archiveId,visibleArchiveId,lastReplay,initialEpoch,pendingArchive;
-let offlineBatch,exactDraft,writerDraft;
+let offlineBatch,exactDraft,writerDraft,paragraphReview;
 let drafts,autosave;
 const message=document.querySelector('#message');
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
@@ -67,6 +75,8 @@ function setControlsBusy(busy){
  document.querySelector('#save-exact').disabled=busy||!archiveId||!current||current.epoch===initialEpoch;
  document.querySelector('#open-exact').disabled=busy||!exactDraft?.acknowledged;
  document.querySelector('#open-writer').disabled=busy||!writerDraft?.acknowledged;
+ document.querySelector('#review-exact').disabled=busy||!exactDraft?.acknowledged||current?.protocol!=='retained';
+ document.querySelector('#apply-review').disabled=busy||current?.protocol!=='retained'||!paragraphReview?.canEditPlainText;
  if(busy)return;
  for(const id of ['retry','old','retain','rollback'])document.querySelector('#'+id).disabled=!migration;
  document.querySelector('#retry-rollback').disabled=!rollback;
@@ -212,6 +222,35 @@ action('save-exact',async()=>{
 });
 action('open-exact',()=>openExactDraft(exactDraft,'Exact offline draft'));
 action('open-writer',()=>openExactDraft(writerDraft,'Outgoing editor draft'));
+const reviewPanel=document.querySelector('#draft-review');
+action('review-exact',async()=>{
+ const {archiveId,sourceEpoch,draftId}=exactDraft;
+ paragraphReview=await request('preview-recovered-text',{archiveId,sourceEpoch,draftId,nodeId:'intro'});
+ document.querySelector('#review-live').textContent=paragraphReview.currentText;
+ document.querySelector('#review-saved').textContent=paragraphReview.draftText;
+ const replacement=document.querySelector('#review-replacement');
+ replacement.value=paragraphReview.draftText;
+ replacement.disabled=!paragraphReview.canEditPlainText;
+ reviewPanel.hidden=false;
+ message.textContent='Compare the saved paragraph with the active room before applying';
+ replacement.focus();
+});
+action('apply-review',async()=>{
+ const surface=active.view.dom,wasEditable=surface.contentEditable;
+ surface.contentEditable='false';
+ try{
+  const local=await captureWriter(active);
+  if(local.manifest.updateSha256!==current.checkpoint.manifest.updateSha256)throw new Error('Save active edits before applying a review');
+  const result=await request('apply-recovered-text',{review:paragraphReview,replacement:document.querySelector('#review-replacement').value});
+  Y.applyUpdate(active.doc,result.checkpoint.update,'review-recovery');
+  current=result;
+  paragraphReview=undefined;
+  reviewPanel.hidden=true;
+  await persistOperation();
+  message.textContent='Reviewed paragraph saved in the active room';
+  report('Applied reviewed offline text');
+ }finally{surface.contentEditable=wasEditable;surface.focus()}
+});
 async function finishRollback(){
  const result=await submitOperation('rollback',rollback);
  await install(result);

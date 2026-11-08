@@ -133,8 +133,26 @@ active document in their separate panes.
 
 The demo uses the existing same-tab IndexedDB session and loopback authority.
 The host still owns authentication, cross-device draft discovery and storage
-retention. Applying recovered edits to the active room remains a separate
-operation.
+retention.
+
+### Review a legacy paragraph after migration
+
+The text recovery reference can compare a paragraph from an exact legacy
+draft with the paragraph carrying the same stable ID in the active retained
+room. It verifies the retired writer epoch and that the migration archive
+leads to the active room. A manual replacement becomes a new edit in the
+current paragraph and keeps its live position, attributes and surrounding
+blocks. The active epoch and reviewed revision must still match at write time,
+including for a no-op. The exact draft stays independently readable.
+
+In the loopback demo, save the exact offline draft, choose **Review saved
+paragraph**, compare the text and apply a combined version. The demo requires
+local edits to be saved first and asks for a fresh review if the live revision
+changed. The recorded Chromium, Firefox and WebKit journeys verify both
+refusals, a successful apply, and the unchanged archived draft. The SQLite
+test also verifies that review can apply inside a live quote. This workflow
+covers identifiable text-only paragraphs. Other node types and automatic
+cross-format reconciliation remain open.
 
 ### Earlier handoff evidence
 

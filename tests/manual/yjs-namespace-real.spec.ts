@@ -376,6 +376,41 @@ test('keeps a retained draft across reload after a committed rollback loses its 
   await capture(page, info, 'rolled-back-after-reload.png');
 });
 
+test('recovers a saved legacy paragraph into the migrated room after explicit review', async ({ page }, info) => {
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  await type(page, 'Offline editor', ' Offline note.');
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Legacy room migrated');
+  await button('Save exact offline draft').click();
+  await expect(status).toContainText('Exact offline draft saved');
+  await button('Review saved paragraph').click();
+  await expect(page.locator('#review-live')).toHaveText('Alpha technical note.');
+  await expect(page.locator('#review-saved')).toHaveText('Alpha technical note. Offline note.');
+  await type(page, 'Active editor', ' Peer note.');
+  await button('Apply reviewed paragraph').click();
+  await expect(status).toContainText('Save active edits before applying');
+  await button('Save active edits').click();
+  await expect(status).toContainText('durably saved');
+  await button('Apply reviewed paragraph').click();
+  await expect(status).toContainText('The review is stale');
+  await button('Review saved paragraph').click();
+  await expect(page.locator('#review-live')).toHaveText('Alpha technical note. Peer note.');
+  await page.getByLabel('Text to apply').fill('Alpha technical note. Peer note. Recovered offline note.');
+  await page.locator('#draft-review').screenshot({ path: info.outputPath('reviewed-paragraph.png') });
+  const before = await state(page);
+  await button('Apply reviewed paragraph').click();
+  await expect(status).toContainText('Reviewed paragraph saved');
+  await expect(page.getByRole('textbox', { name: 'Active editor' })).toContainText('Alpha technical note. Peer note. Recovered offline note.');
+  const after = await state(page);
+  expect(after.revision).toBe(before.revision + 1);
+  expect(after.active).toEqual(after.server);
+  expect(after.server.content.slice(1)).toEqual(before.server.content.slice(1));
+  await button('Open saved offline draft').click();
+  await expect(page.getByRole('textbox', { name: 'Archive reader' })).toContainText('Alpha technical note. Offline note.');
+  await capture(page, info, 'recovered-paragraph-and-archive.png');
+});
+
 test('maps an explicit author-selected destination and refuses invalid input before freezing',async({page},info)=>{
  const before=await state(page);await page.getByLabel('Retained destination namespace',{exact:true}).fill('bad space');await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Invalid explicit destination');const refused=await state(page);expect(refused.epoch).toBe(before.epoch);expect(refused.revision).toBe(before.revision);expect(refused.phase).toBe('active');expect(refused.server).toEqual(before.server);
  await page.getByLabel('Retained destination namespace',{exact:true}).fill('review-copy');await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Legacy room migrated');const moved=await state(page);expect(moved.namespace).toBe('review-copy');expect(moved.activeNamespace).toBe('review-copy');expect(moved.archiveNamespace).toBe('Research / α 😀');expect(moved.active).toEqual(before.active);

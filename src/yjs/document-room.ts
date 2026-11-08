@@ -262,10 +262,13 @@ export class CoordinatedDocumentRoom {
     if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed during admission verification; retry explicitly.');
     return documentSnapshot({ ...row, checkpoint: checked.checkpoint });
   }
-  async write(request: { readonly epoch: string; readonly protocol: DocumentProtocol; readonly update: Uint8Array }): Promise<DocumentRoomSnapshot> {
-    const epoch = request.epoch, protocol = request.protocol, row = await this.current();
+  async write(request: { readonly epoch: string; readonly protocol: DocumentProtocol; readonly expectedRevision?: number; readonly update: Uint8Array }): Promise<DocumentRoomSnapshot> {
+    const { epoch, protocol, expectedRevision } = request, row = await this.current();
     if (epoch !== row.epoch || protocol !== documentProtocol(row.checkpoint)) documentRoomFailure('stale-epoch', 'Writer epoch/protocol is stale; reconnect and retain pending edits.');
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
+    if (expectedRevision !== undefined && expectedRevision !== row.revision) {
+      documentRoomFailure('revision-conflict', 'The reviewed room revision changed. Review the latest document before applying.');
+    }
     const checkpoint = await applyDocumentRoomUpdate(row.checkpoint, this.schema, this.schemaVersion, this.projection, request.update);
     if (checkpoint.manifest.checkpointSha256 === row.checkpoint.manifest.checkpointSha256) {
       // An already integrated update is a read acknowledgement. Check the

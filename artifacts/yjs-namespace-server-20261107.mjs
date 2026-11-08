@@ -8,6 +8,7 @@ import {CoreExtension,MathExtension,Schema,composeExtensions} from './yjs-namesp
 import {SQLiteRetainedRoomRepository} from './yjs-namespace-build-20261107/sqlite.js';
 import {CoordinatedDocumentRoom} from './yjs-namespace-build-20261107/document-room.js';
 import {CrossFormatRoomHandoff} from './yjs-namespace-build-20261107/handoff.js';
+import {RetainedTextRecovery} from './yjs-namespace-build-20261107/text-recovery.js';
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-cross-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:Buffer.from(value).toString('base64')}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?new Uint8Array(Buffer.from(value.__wire,'base64')):value);
 const options={history:'reset-with-source-checkpoint',offline:'reconcile-before-activation',externalState:'host-coordinated',migrators:[]},policy={history:'reset-with-source-archive',offline:'retain-retired-room-branches',externalReceipt:'test-loopback-coordination'};
@@ -52,6 +53,8 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='retain')value=await handoff.retainLateUpdate(body);
    else if(action==='save-exact-draft'){const draft=await handoff.saveRetiredDraft(body);value={sha256:draft.manifest.checkpointSha256}}
    else if(action==='read-exact-draft'){value=await handoff.readRetiredDraft(body.archiveId,body.sourceEpoch,body.draftId);if(!value)throw new Error('Saved offline draft is missing')}
+   else if(action==='preview-recovered-text')value=await new RetainedTextRecovery({crossFormat:repository},key,schema,'browser-schema-1').preview(body);
+   else if(action==='apply-recovered-text')value=await new RetainedTextRecovery({crossFormat:repository},key,schema,'browser-schema-1').apply(body.review,body.replacement);
    else if(action==='batch')value=await handoff.retiredBatch(body.id,body.revision);
    else if(action==='archive')value=await repository.readCrossArchive(key,body.id);
    else if(action==='close'){sessions.delete(req.headers['x-handoff-session']);value={closed:true}}

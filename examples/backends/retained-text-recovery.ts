@@ -1,18 +1,27 @@
 import * as Y from 'yjs';
 import { Editor, EditorState, moveNode, type NodeMove, type Node, type NodeJSON, type Schema } from '../../src/core';
 import { registerSharedDirectionIdentity } from '../../src/core/shared-direction';
-import { restoreRetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
+import { restoreRetainedCheckpoint, type RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
+import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyProjectionOptions } from '../../src/yjs/legacy-checkpoint';
+import { CoordinatedDocumentRoom, type DocumentCheckpoint } from '../../src/yjs/document-room';
+import { CrossFormatRoomHandoff, type CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
 import { RetainedDocumentStore } from '../../src/yjs/retained-document';
 import { RetainedRoomHandoff, type RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
-import { CoordinatedRetainedRoom } from '../../src/yjs/retained-room-coordinator';
+import { CoordinatedRetainedRoom, type CoordinatedRoomSnapshot } from '../../src/yjs/retained-room-coordinator';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
 import { assertRetainedWireString } from '../../src/yjs/retained-wire';
 
 interface DraftParagraph {
   readonly archiveId: string;
+  readonly sourceEpoch?: string;
   readonly draftId: string;
   readonly nodeId: string;
 }
+
+type RecoveryRepository = RetainedHandoffRepository | {
+  readonly crossFormat: CrossFormatRepository;
+  readonly projection?: LegacyProjectionOptions;
+};
 
 export interface RetiredParagraphReview extends DraftParagraph {
   readonly epoch: string;
@@ -29,6 +38,10 @@ export interface RetiredParagraphReview extends DraftParagraph {
 
 type ParagraphReplacement = string | { readonly useSavedFormatting: true } | { readonly content: readonly NodeJSON[] }
   | { readonly useSavedPlacement: true };
+
+function isRetainedCheckpoint(checkpoint: DocumentCheckpoint): checkpoint is RetainedCheckpoint {
+  return checkpoint.manifest.format === 'fountain-retained-checkpoint/1';
+}
 
 function composedRuns(schema: Schema, input: readonly NodeJSON[]): readonly Node[] {
   if (!Array.isArray(input) || !input.length || input.length > 500 || JSON.stringify(input).length > 128_000) {
@@ -99,41 +112,66 @@ function reviewedMove(doc: Node, live: ReturnType<typeof paragraph>, saved: Retu
 
 /** Host-authorized review of a text paragraph in the current handoff destination. */
 export class RetainedTextRecovery {
-  private readonly room: CoordinatedRetainedRoom;
-  private readonly handoff: RetainedRoomHandoff;
+  private readonly room: CoordinatedRetainedRoom | CoordinatedDocumentRoom;
+  private readonly legacyProjection?: LegacyProjectionOptions;
+  private readonly readDraft: (request: DraftParagraph) => Promise<{ saved: DocumentCheckpoint; roomId: string }>;
 
-  constructor(private readonly repository: RetainedHandoffRepository, private readonly key: string,
+  constructor(repository: RecoveryRepository, key: string,
     private readonly schema: Schema, private readonly schemaVersion: string) {
-    this.room = new CoordinatedRetainedRoom(repository, key, schema, schemaVersion);
-    this.handoff = new RetainedRoomHandoff(repository, key, schema, schemaVersion);
+    if ('crossFormat' in repository) {
+      const { crossFormat } = repository;
+      this.legacyProjection = snapshotLegacyProjection(repository.projection);
+      this.room = new CoordinatedDocumentRoom(crossFormat, key, schema, schemaVersion, this.legacyProjection);
+      const handoff = new CrossFormatRoomHandoff(crossFormat, key, schema, schemaVersion, this.legacyProjection);
+      this.readDraft = async ({ archiveId, sourceEpoch, draftId }) => {
+        if (sourceEpoch === undefined) throw new Error('Cross-format review needs the retired writer epoch.');
+        const saved = await handoff.readRetiredDraft(archiveId, sourceEpoch, draftId);
+        if (!saved) throw new Error('Saved offline draft was not found.');
+        const archive = await crossFormat.readCrossArchive(key, archiveId);
+        if (archive?.kind !== 'legacy-migration' || saved.manifest.format !== 'fountain-legacy-checkpoint/1') {
+          throw new RetainedRoomError('stale-epoch', 'The archive does not lead to a retained migration destination.');
+        }
+        return { saved, roomId: archive.destinationIdentity };
+      };
+    } else {
+      this.room = new CoordinatedRetainedRoom(repository, key, schema, schemaVersion);
+      const handoff = new RetainedRoomHandoff(repository, key, schema, schemaVersion);
+      this.readDraft = async ({ archiveId, draftId }) => {
+        const saved = await handoff.readRetiredDraft(archiveId, draftId);
+        if (!saved) throw new Error('Saved offline draft was not found.');
+        const archive = await repository.readArchive(key, archiveId);
+        if (!archive) throw new Error('Recovery archive was not found.');
+        return { saved, roomId: archive.destination.checkpoint.manifest.roomId };
+      };
+    }
   }
 
   private async loadReview(request: DraftParagraph) {
-    const { archiveId, draftId, nodeId } = request;
+    const { archiveId, sourceEpoch, draftId, nodeId } = request;
     if (typeof nodeId !== 'string' || !nodeId || nodeId.length > 200) throw new Error('Invalid recovery paragraph ID.');
-    const saved = await this.handoff.readRetiredDraft(archiveId, draftId);
-    if (!saved) throw new Error('Saved offline draft was not found.');
-    const archive = await this.repository.readArchive(this.key, archiveId);
+    const { saved, roomId } = await this.readDraft({ archiveId, sourceEpoch, draftId, nodeId });
     const current = await this.room.snapshot();
-    if (!archive || current.phase !== 'active'
-      || archive.destination.checkpoint.manifest.roomId !== current.checkpoint.manifest.roomId) {
+    const checkpoint = current.checkpoint;
+    if (current.phase !== 'active' || !isRetainedCheckpoint(checkpoint) || checkpoint.manifest.roomId !== roomId) {
       throw new RetainedRoomError('stale-epoch', 'The handoff destination is no longer the active room.');
     }
-    const draft = await restoreRetainedCheckpoint(saved, this.schema, this.schemaVersion);
+    const draft = isRetainedCheckpoint(saved)
+      ? await restoreRetainedCheckpoint(saved, this.schema, this.schemaVersion)
+      : await restoreLegacyCheckpoint(saved, this.schema, this.schemaVersion, this.legacyProjection);
     try {
-      const active = await restoreRetainedCheckpoint(current.checkpoint, this.schema, this.schemaVersion);
+      const active = await restoreRetainedCheckpoint(checkpoint, this.schema, this.schemaVersion);
       try {
         const live = paragraph(active.baseDocument, nodeId);
         const saved = paragraph(draft.baseDocument, nodeId);
         const currentParagraph = live.node, draftParagraph = saved.node;
         const currentLocation = paragraphLocation(active.baseDocument, live.path);
         const draftLocation = paragraphLocation(draft.baseDocument, saved.path);
-        const review = Object.freeze({ archiveId, draftId, nodeId, epoch: current.epoch, revision: current.revision,
+        const review = Object.freeze({ archiveId, ...(sourceEpoch === undefined ? {} : { sourceEpoch }), draftId, nodeId, epoch: current.epoch, revision: current.revision,
           currentText: currentParagraph.textContent, draftText: draftParagraph.textContent,
           currentParagraph: currentParagraph.toJSON(), draftParagraph: draftParagraph.toJSON(),
           canEditPlainText: plainRun(currentParagraph) && plainRun(draftParagraph), currentLocation: currentLocation.label,
           draftLocation: draftLocation.label, canUseSavedPlacement: Boolean(reviewedMove(active.baseDocument, live, draftLocation)) });
-        return { review, snapshot: current, draftParagraph, draftLocation };
+        return { review, checkpoint, draftParagraph, draftLocation };
       } finally { active.document.destroy(); }
     } finally { draft.document.destroy(); }
   }
@@ -142,8 +180,17 @@ export class RetainedTextRecovery {
     return (await this.loadReview(request)).review;
   }
 
+  private async writeReview(epoch: string, revision: number, update: Uint8Array): Promise<CoordinatedRoomSnapshot> {
+    const snapshot = await this.room.write({ epoch, protocol: 'retained', expectedRevision: revision, update });
+    const checkpoint = snapshot.checkpoint;
+    if (!isRetainedCheckpoint(checkpoint)) {
+      throw new RetainedRoomError('stale-epoch', 'The handoff destination is no longer a retained room.');
+    }
+    return { ...snapshot, checkpoint };
+  }
+
   async apply(review: RetiredParagraphReview, replacement: ParagraphReplacement) {
-    const { archiveId, draftId, nodeId, epoch, revision, currentText, draftText } = review;
+    const { archiveId, sourceEpoch, draftId, nodeId, epoch, revision, currentText, draftText } = review;
     const usePlacement = replacement !== null && typeof replacement === 'object' && 'useSavedPlacement' in replacement
       && replacement.useSavedPlacement === true;
     let composed: readonly Node[] | undefined;
@@ -156,7 +203,7 @@ export class RetainedTextRecovery {
     } else if (!usePlacement && (!replacement || typeof replacement !== 'object' || !('useSavedFormatting' in replacement) || replacement.useSavedFormatting !== true)) {
       throw new Error('Choose a reviewed replacement.');
     }
-    const { review: verified, snapshot, draftParagraph, draftLocation } = await this.loadReview({ archiveId, draftId, nodeId });
+    const { review: verified, checkpoint, draftParagraph, draftLocation } = await this.loadReview({ archiveId, sourceEpoch, draftId, nodeId });
     if (verified.epoch !== epoch || verified.revision !== revision
       || verified.currentText !== currentText || verified.draftText !== draftText) {
       throw new RetainedRoomError('revision-conflict', 'The review is stale. Compare the latest room and saved draft again.');
@@ -164,7 +211,7 @@ export class RetainedTextRecovery {
     if (typeof replacement === 'string' && !verified.canEditPlainText) {
       throw new Error('Manual text requires a single unformatted run in each version. Use the saved paragraph instead.');
     }
-    const restored = await restoreRetainedCheckpoint(snapshot.checkpoint, this.schema, this.schemaVersion);
+    const restored = await restoreRetainedCheckpoint(checkpoint, this.schema, this.schemaVersion);
     try {
       const store = new RetainedDocumentStore(restored.document, restored.manifest.room, this.schema, () => `review-${crypto.randomUUID()}`);
       try {
@@ -182,7 +229,7 @@ export class RetainedTextRecovery {
           try {
             if (!moveNode(editor, move)) throw new Error('The saved location is incompatible with the live document.');
           } finally { release(); editor.destroy(); }
-          return await this.room.write({ epoch, expectedRevision: revision, update: Y.encodeStateAsUpdate(restored.document, basis) });
+          return await this.writeReview(epoch, revision, Y.encodeStateAsUpdate(restored.document, basis));
         }
         const transaction = state.createTransaction();
         if (typeof replacement === 'string') {
@@ -190,9 +237,8 @@ export class RetainedTextRecovery {
         } else {
           transaction.replaceNode(target.path, [target.node.copy(composed ?? draftParagraph.content)]);
         }
-        if (transaction.doc.eq(doc)) return snapshot;
-        store.apply(transaction);
-        return await this.room.write({ epoch, expectedRevision: revision, update: Y.encodeStateAsUpdate(restored.document, basis) });
+        if (!transaction.doc.eq(doc)) store.apply(transaction);
+        return await this.writeReview(epoch, revision, Y.encodeStateAsUpdate(restored.document, basis));
       } finally { store.destroy(); }
     } finally { restored.document.destroy(); }
   }

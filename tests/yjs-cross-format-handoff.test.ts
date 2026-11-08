@@ -5,7 +5,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import * as Y from 'yjs';
-import { CoreExtension, MathExtension, Selection, composeExtensions, createEditor, defineExtension, insertText, toggleQuote } from '../src';
+import { CoreExtension, MathExtension, Selection, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, toggleQuote } from '../src';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
@@ -18,6 +18,7 @@ import { RetainedRoomHandoff, type RetainedHandoffPolicy } from '../src/yjs/reta
 import type { RetainedMigrationOptions } from '../src/yjs/retained-migration';
 import { retainedStructuredRootMigrator } from '../src/yjs/retained-migration';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
+import { RetainedTextRecovery } from '../examples/backends/retained-text-recovery';
 
 const cleanup: Array<() => void> = [];
 afterEach(() => { while (cleanup.length) cleanup.pop()!(); });
@@ -86,6 +87,43 @@ it('keeps the exact offline legacy draft even when the archived branch hides its
   const newer = await captureLegacyCheckpoint(offline.document, pair.schema, version);
   await expect(pair.second.saveRetiredDraft({ ...request, checkpoint: newer })).rejects.toMatchObject({ code: 'invalid-ticket' });
   expect(await pair.second.readRetiredDraft(operation, pair.initial.epoch, request.draftId)).toEqual(draft);
+});
+
+it('applies a reviewed legacy draft as a new retained edit without replacing the live paragraph structure', async () => {
+  const pair = await fixture();
+  const offline = await open(pair.checkpoint, pair);
+  type(offline, 'OFFLINE ');
+  const draft = await captureLegacyCheckpoint(offline.document, pair.schema, version);
+  const { operation, result } = await migrate(pair);
+  const request = { archiveId: operation, sourceEpoch: pair.initial.epoch, draftId: uuid(), nodeId: 'intro' };
+  await pair.handoff.saveRetiredDraft({ ...request, checkpoint: draft });
+  const recovery = new RetainedTextRecovery({ crossFormat: pair.b }, key, pair.schema, version);
+  const review = await recovery.preview(request);
+  expect(review).toMatchObject({ currentText: 'Alpha α 😀', draftText: 'AlOFFLINE pha α 😀', revision: result.snapshot.revision });
+  const active = await open(result.snapshot.checkpoint, pair, 'RetainedWriter');
+  active.editor.dispatch(active.editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+  expect(toggleQuote(active.editor)).toBe(true);
+  expect(getCollaborationState(active.editor)?.status).toBe('connected');
+  const wrapped = await pair.room.write({ epoch: result.snapshot.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(active.document) });
+  expect(wrapped.revision).toBe(result.snapshot.revision + 1);
+  await expect(pair.other.write({ epoch: result.snapshot.epoch, protocol: 'retained', expectedRevision: review.revision,
+    update: new Uint8Array([0]) })).rejects.toMatchObject({ code: 'revision-conflict' });
+  await expect(recovery.apply(review, review.draftText)).rejects.toMatchObject({ code: 'revision-conflict' });
+  expect(await pair.other.snapshot()).toEqual(wrapped);
+  const refreshed = await recovery.preview(request);
+  expect(refreshed.currentLocation).toBe('blockquote · block 1');
+  const applied = await recovery.apply(refreshed, 'Reviewed offline paragraph.');
+  expect(applied.revision).toBe(wrapped.revision + 1);
+  const saved = await model(applied.checkpoint, pair);
+  expect(saved.content?.[0]).toMatchObject({ type: 'blockquote', content: [
+    { type: 'paragraph', attrs: { nodeId: 'intro' }, content: [{ type: 'text', text: 'Reviewed offline paragraph.' }] },
+  ] });
+  expect(saved.content?.slice(1)).toEqual((await model(wrapped.checkpoint, pair)).content?.slice(1));
+  expect(await pair.handoff.readRetiredDraft(operation, request.sourceEpoch, request.draftId)).toEqual(draft);
+  expect(await pair.other.snapshot()).toEqual(applied);
+  const latest = await recovery.preview(request);
+  expect(await recovery.apply(latest, latest.currentText)).toEqual(applied);
+  await expect(recovery.preview({ ...request, sourceEpoch: uuid() })).rejects.toMatchObject({ code: 'stale-epoch' });
 });
 
 it('fences cross-format drafts by epoch and identity and includes them in the existing recovery cap', async () => {
