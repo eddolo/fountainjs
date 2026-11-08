@@ -259,6 +259,30 @@ default and custom map names. The recorded Chromium, Firefox and WebKit demo
 tries incomplete definitions, makes both offline edits, and checks the saved
 settings in the reopened editor. The browser demo uses in-memory snapshots.
 
+Both adapters now scope live map deletion to keys the editing client owned
+before the edit. A client with fewer definitions can edit or delete its node
+without removing another field from the shared map. Full-definition readers
+can reopen the room after such a deletion. Recognized entries for retired
+nodes stay available in the map, while missing or unrecognized live entries
+still fail admission. The browser audit exercises a directly connected
+retained client with a reduced field set. The SQLite tests also delete a node
+through that client and reopen the saved result with the full definitions.
+
+In the SQLite test with the default client garbage-collection setting, merging
+the deletion while collecting discarded history caused the exact checkpoint
+round-trip check to reject the save. The authority now keeps deletion history
+while applying an update in its isolated document. It preserves the manifest's
+client garbage-collection preference and still requires the exact checkpoint
+round-trip. Durable history can grow as a result. Storage and compaction
+limits continue to apply.
+
+Reconnect staging and HTTP receipt reconstruction also keep history during
+validation. The HTTP checks cover exact receipt checksums with both client
+GC settings, retry after a lost deletion acknowledgement, and fallback to a
+full receipt after a corrupt delta. The affected collaboration source suite
+passed 789 tests across 25 files. Recorded settings, migration, recovery and
+HTTP workflows passed in Chromium, Firefox and WebKit.
+
 ### Keep the admitted root through editor startup
 
 `openYjsRoom` now binds the exact restored Yjs root in both formats. The

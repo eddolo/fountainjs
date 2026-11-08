@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve structured Yjs map entries outside the editing client's ownership
+  while still removing and undoing entries for its own deleted nodes.
+- Preserve deletion history while the retained room authority builds a
+  checkpoint, so valid deletes can pass the exact reopen check.
+
 - Verify saved structured field maps when opening retained rooms. Incomplete
   definitions are refused, and reopened editors see the merged field values.
 

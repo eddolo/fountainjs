@@ -137,9 +137,16 @@ flat JSON attribute to the converged value. That repair uses a separate origin
 and cannot create an editor echo or undo item.
 
 Applications with several fragments can pass an explicit `mapName`, or a
-dedicated integrated `map` from the same `Y.Doc`. The supplied map is reserved
-for this adapter; unrelated application keys may be removed when document
-nodes are removed.
+dedicated integrated `map` from the same `Y.Doc`. Keep one structured map per
+room. Both adapters remove a field's entry when the edit removes the node or
+changes the identity used to address it. A client only removes entries it
+owned in the pre-edit document. An edit, deletion, or undo leaves other
+clients' fields and unrelated map keys intact. For independently connected
+peers, the host still owns compatibility of field definitions and cleanup of
+retired entries. The verified retained room opener checks that definitions
+cover every live entry before mounting an editor. It keeps fields it
+recognizes for deleted nodes in the saved map without projecting them into
+the document.
 
 ## What merges
 

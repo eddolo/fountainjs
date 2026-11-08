@@ -20,6 +20,7 @@ import {
   setStructuredAttribute,
 } from '../src/structured-attributes';
 import { createYjsCollaborationExtension } from '../src/yjs';
+import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 
 const ada: CollaborationUser = { id: 'ada', name: 'Ada', color: '#a855f7' };
 const linus: CollaborationUser = { id: 'linus', name: 'Linus', color: '#10b981' };
@@ -93,6 +94,52 @@ function config(editor: Editor): any {
 }
 
 describe('granular Yjs structured attributes', () => {
+  it.each([
+    ['legacy', createYjsCollaborationExtension],
+    ['retained', createRetainedYjsCollaborationExtension],
+  ] as const)('preserves unowned map entries while the %s editor edits, deletes, and undoes', (_format, extension) => {
+    const display = defineStructuredAttribute({ nodeType: 'structured_panel', attribute: 'display', root: 'object' });
+    const initial: NodeJSON = { type: 'doc', content: [
+      { type: 'structured_panel', attrs: { ...content.content![0].attrs, display: { theme: 'light' } } },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Keep this paragraph.' }] },
+    ] };
+    const mount = (document: Y.Doc, user: CollaborationUser, definitions: typeof configDefinition[]) => {
+      const kit = composeExtensions([CoreExtension, panelExtension, extension({
+        document, user, captureTimeout: 0, structuredAttributes: { definitions },
+      })]);
+      return createEditor({ schema: kit.schema, plugins: kit.plugins, content: initial });
+    };
+    const seed = new Y.Doc();
+    const author = mount(seed, ada, [configDefinition, display]);
+    const copy = cloneDocument(seed);
+    const older = mount(copy, linus, [configDefinition]);
+    try {
+      const map = copy.getMap('fountain:structured-attributes');
+      const configKey = 'v1:["structured_panel","panel-1","config"]';
+      const displayKey = 'v1:["structured_panel","panel-1","display"]';
+      const savedDisplay = map.get(displayKey) as Y.Map<unknown>;
+      expect(savedDisplay.get('theme')).toBe('light');
+      copy.transact(() => map.set('host:unrelated', 'keep me'), 'another-client');
+
+      expect(setStructuredAttribute(older, [0], configDefinition, ['layout', 'columns'], 4)).toBe(true);
+      expect(config(older).layout.columns).toBe(4);
+      expect(map.get(displayKey)).toBe(savedDisplay);
+      expect(map.get('host:unrelated')).toBe('keep me');
+      sync(seed, copy);
+      expect(author.state.doc.child(0).attrs.display).toEqual({ theme: 'light' });
+      expect(config(author).layout.columns).toBe(4);
+
+      older.dispatch(older.createTransaction().replaceNode([0], []));
+      expect(map.has(configKey)).toBe(false);
+      expect(map.get(displayKey)).toBe(savedDisplay);
+      expect(map.get('host:unrelated')).toBe('keep me');
+      expect(undoCollaboration(older)).toBe(true);
+      expect(config(older).layout.columns).toBe(4);
+      expect(map.has(configKey)).toBe(true);
+      expect(map.get(displayKey)).toBe(savedDisplay);
+    } finally { older.destroy(); author.destroy(); copy.destroy(); seed.destroy(); }
+  });
+
   it('merges concurrent edits to separate nested object fields without changing Fountain JSON', () => {
     const leftDocument = new Y.Doc();
     const left = createCollaborativeEditor(leftDocument, ada);

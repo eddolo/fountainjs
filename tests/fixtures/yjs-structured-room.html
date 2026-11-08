@@ -56,6 +56,7 @@
   seedEditor.destroy();
   seed.destroy();
   const key = 'research-settings';
+  const mixedDefinitions = new URLSearchParams(location.search).has('mixed');
   let revision = 0;
   let ada, grace, saved;
   const button = id => document.getElementById(id);
@@ -68,10 +69,13 @@
       admit: async () => ({ key, epoch, revision, protocol: 'retained', phase: 'active', checkpoint }),
     });
   };
-  const show = (bound, id) => {
-    const editor = mount(bound.createExtension({ user: user(id) }), bound.baseDocument.toJSON());
+  const show = (shared, editor, id) => {
     const view = new EditorView(document.getElementById(id), editor, { ariaLabel: id + ' editor' });
-    return { editor, view, document: bound.document };
+    return { editor, view, document: shared };
+  };
+  const openAuthor = async id => {
+    const bound = await open(structuredAttributes);
+    return show(bound.document, mount(bound.createExtension({ user: user(id) }), bound.baseDocument.toJSON()), id);
   };
   button('partial').onclick = async () => {
     try {
@@ -83,10 +87,16 @@
   button('complete').onclick = async () => {
     button('complete').disabled = true;
     button('partial').disabled = true;
-    ada = show(await open(structuredAttributes), 'ada');
-    grace = show(await open(structuredAttributes), 'grace');
+    ada = await openAuthor('ada');
+    if (mixedDefinitions) {
+      const saved = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
+      const extension = createRetainedYjsCollaborationExtension({
+        document: saved.document, user: user('grace'), structuredAttributes: { definitions: [layout] },
+      });
+      grace = show(saved.document, mount(extension, saved.baseDocument.toJSON()), 'grace');
+    } else grace = await openAuthor('grace');
     for (const id of ['columns', 'compact', 'save']) button(id).disabled = false;
-    status('Both authors opened the saved room.');
+    status(mixedDefinitions ? 'Grace opened a compatibility copy with fewer field definitions.' : 'Both authors opened the saved room.');
   };
   button('columns').onclick = () => setStructuredAttribute(ada.editor, [0], layout, ['columns'], 3);
   button('compact').onclick = () => setStructuredAttribute(grace.editor, [0], layout, ['compact'], true);
@@ -99,7 +109,7 @@
       checkpoint = await captureRetainedCheckpoint(authority.document, schema, schemaVersion);
       revision++;
     } finally { authority.document.destroy(); }
-    saved = show(await open(structuredAttributes), 'reopened');
+    saved = await openAuthor('reopened');
     status('Saved and reopened at revision ' + revision + '.');
   };
   window.addEventListener('pagehide', () => {

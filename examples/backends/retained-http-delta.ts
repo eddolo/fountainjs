@@ -45,8 +45,9 @@ export async function restoreRetainedHttpReceipt(receipt: RetainedHttpReceipt, b
   }
   const staged = new Y.Doc({ gc: false });
   try {
+    // Match checkpoint construction at the authority. The manifest's GC
+    // preference applies when the verified checkpoint is opened for editing.
     Y.applyUpdate(staged, base.update);
-    staged.gc = manifest.gc;
     Y.applyUpdate(staged, delta);
     const update = Y.encodeStateAsUpdate(staged);
     if (staged.store.pendingStructs || staged.store.pendingDs || update.length !== manifest.bytes) {

@@ -10,6 +10,7 @@ import { createYjsCollaborationExtension } from '../src/yjs';
 import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
+import { prepareRetainedAdmission } from '../src/yjs/retained-admission';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { validateRetainedRoomCheckpoint } from '../src/yjs/retained-room-store';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
@@ -86,7 +87,10 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
     document, user, structuredAttributes: structured,
   })]);
   const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
-    type: 'doc', content: [{ type: 'settings', attrs: { nodeId: 'panel-1', config: { columns: 2, compact: false }, display: { theme: 'light' } } }],
+    type: 'doc', content: [
+      { type: 'settings', attrs: { nodeId: 'panel-1', config: { columns: 2, compact: false }, display: { theme: 'light' } } },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Room notes' }] },
+    ],
   } });
   cleanups.push(() => { editor.destroy(); document.destroy(); });
   const schema = editor.state.schema;
@@ -129,6 +133,29 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
   expect(reopened.baseDocument.child(0).attrs).toEqual(attrs);
   expect(reopened.editor.state.doc.child(0).attrs).toEqual(attrs);
   expect(await authority.snapshot()).toEqual(saved);
+
+  const partial = await restoreRetainedCheckpoint(saved.checkpoint as typeof checkpoint, schema, version);
+  const partialKit = composeExtensions([CoreExtension, panel, createRetainedYjsCollaborationExtension({
+    document: partial.document, user, structuredAttributes: { definitions: [config], mapName },
+  })]);
+  const partialEditor = createEditor({ schema: partialKit.schema, plugins: partialKit.plugins, content: partial.baseDocument.toJSON() });
+  cleanups.push(() => { partialEditor.destroy(); partial.document.destroy(); });
+  partialEditor.dispatch(partialEditor.createTransaction().replaceNode([0], []));
+  await authority.write({ epoch: saved.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(partial.document,
+    Y.encodeStateVectorFromUpdate(saved.checkpoint.update)) });
+  const afterDeletion = await open(structured);
+  expect(afterDeletion.document.gc).toBe(true);
+  expect(afterDeletion.baseDocument.textContent).toBe('Room notes');
+  const retired = afterDeletion.document.getMap(mapName ?? 'fountain:structured-attributes');
+  expect(retired.toJSON()).toEqual({ 'v1:["settings","panel-1","display"]': { theme: 'light' } });
+
+  const reconnect = await restoreRetainedCheckpoint(saved.checkpoint as typeof checkpoint, schema, version);
+  cleanups.push(() => reconnect.document.destroy());
+  const latest = await authority.snapshot();
+  const candidate = await prepareRetainedAdmission(reconnect.document, latest.checkpoint as typeof checkpoint, schema, version, 'fountain');
+  expect(candidate.document.textContent).toBe('Room notes');
+  candidate.install('reconnect');
+  expect(reconnect.document.gc).toBe(true);
 });
 
 it.each([

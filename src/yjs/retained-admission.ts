@@ -65,9 +65,10 @@ export async function prepareRetainedAdmission(document:Y.Doc,checkpoint:Retaine
   if(before.length>64*1024*1024)throw new Error('Admission client exceeds checkpoint bounds.');
   const inventory=new Map(roots.map(root=>[root.name,root]));
   for(const root of incoming.manifest.roots){const local=inventory.get(root.name);if(local&&local.kind!==root.kind&&local.kind!=='unresolved'&&root.kind!=='unresolved')throw new Error('Admission shared-root types conflict.');if(!local||local.kind==='unresolved')inventory.set(root.name,root);}
-  const mergedRoots=wire.copyRoots([...inventory.values()]),staged=wire.load(before,mergedRoots,guid);staged.gc=gc;
+  const mergedRoots=wire.copyRoots([...inventory.values()]),staged=wire.load(before,mergedRoots,guid);
   try{
     Y.applyUpdate(staged,incoming.update);
+    staged.gc=gc;
     if(staged.store.pendingStructs||staged.store.pendingDs)throw new Error('Admission has unresolved shared dependencies.');
     const verified=await captureRetainedCheckpoint(staged,schema,schemaVersion,room);
     if(verified.manifest.roomId!==incoming.manifest.roomId)throw new Error('Admission conflicts with the local room identity; both sources preserved.');

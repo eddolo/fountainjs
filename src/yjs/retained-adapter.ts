@@ -302,12 +302,13 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
     if (!this.context || !this.store || this.joining) return;
-    this.gate(); this.structured?.overlay(update.before); this.structured?.validate(update.document);
+    this.gate();
+    const updateAttributes = this.structured?.prepareUpdate(update.before, update.document);
     const recordHistory = update.transaction.getMeta('addToHistory') !== false;
     this.pendingHistory = recordHistory ? { before: retainSelection(this.store, update.before, update.beforeSelection) } : undefined;
     try {
       this.options.document.transact(() => {
-        this.store!.apply(update.transaction); this.structured?.synchronize(update.document);
+        this.store!.apply(update.transaction); updateAttributes?.();
         if (this.pendingHistory) this.pendingHistory.after = retainSelection(this.store!, update.document, update.selection);
       }, recordHistory ? this.origin : this.repair);
     } finally { this.pendingHistory = undefined; }

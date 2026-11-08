@@ -34,7 +34,11 @@ export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema
   const restored = await restoreRetainedCheckpoint(source, schema, schemaVersion);
   try {
     complete(restored.document);
+    // Keep deletion history while assembling the authority's checkpoint.
+    // Reopened clients still receive the room's saved GC preference.
+    restored.document.gc = false;
     Y.applyUpdate(restored.document, bytes);
+    restored.document.gc = restored.manifest.gc;
     complete(restored.document);
     const next = await captureRetainedCheckpoint(restored.document, schema, schemaVersion, restored.manifest.room);
     if (next.manifest.roomId !== restored.manifest.roomId) throw new Error('Shared room identity changed.');

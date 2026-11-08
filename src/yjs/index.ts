@@ -748,8 +748,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
     this.assertInitialization();
-    this.structuredAttributes?.overlay(update.before);
-    this.structuredAttributes?.validate(update.document);
+    const updateAttributes = this.structuredAttributes?.prepareUpdate(update.before, update.document);
     const recordHistory = update.transaction.getMeta('addToHistory') !== false;
     const root = this.fragment.get(0);
     const pending: PendingHistorySelection = {
@@ -762,7 +761,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
           if (this.fragment.length) this.fragment.delete(0, this.fragment.length);
           this.fragment.insert(0, [createSharedElement(update.document)]);
         } else synchronizeElement(root, update.before, update.document);
-        this.structuredAttributes?.synchronize(update.document);
+        updateAttributes?.();
         if (recordHistory) pending.after = this.relativeSelection(update.selection, update.document);
       }, recordHistory ? this.localOrigin : this.repairOrigin);
     } finally {

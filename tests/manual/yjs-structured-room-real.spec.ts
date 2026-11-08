@@ -1,9 +1,12 @@
 import { expect, test } from '@playwright/test';
 
-test('refuses incomplete room definitions and reopens both offline field edits', async ({ page }, info) => {
+for (const [title, mixed] of [
+  ['refuses incomplete room definitions and reopens both offline field edits', false],
+  ['preserves unowned fields when a directly connected editor writes', true],
+] as const) test(title, async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/tests/fixtures/yjs-structured-room.html');
+  await page.goto('/tests/fixtures/yjs-structured-room.html' + (mixed ? '?mixed' : ''));
   const status = page.getByRole('status');
   await expect(status).toHaveText('Saved room ready.');
   await page.getByRole('button', { name: 'Open with incomplete definitions' }).click();
@@ -11,7 +14,7 @@ test('refuses incomplete room definitions and reopens both offline field edits',
   await expect(page.getByRole('textbox')).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Open both authors' }).click();
-  await expect(status).toHaveText('Both authors opened the saved room.');
+  await expect(status).toHaveText(mixed ? 'Grace opened a compatibility copy with fewer field definitions.' : 'Both authors opened the saved room.');
   const ada = page.getByRole('region', { name: 'Ada' });
   const grace = page.getByRole('region', { name: 'Grace' });
   await ada.getByRole('button', { name: 'Add a column' }).click();

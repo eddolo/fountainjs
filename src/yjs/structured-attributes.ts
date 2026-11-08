@@ -15,6 +15,7 @@ const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const MAXIMUM_SHARED_ENTRIES = 100_000;
 const ATTRIBUTE = 'attribute';
 const ENTRY_LIMIT = 'Attribute entry limit exceeded.';
+const INCOMPLETE_MAP = 'Structured attribute definitions do not cover the saved room map.';
 
 export interface YjsStructuredAttributesOptions {
   /** Structured node attributes that should merge below their JSON root. */
@@ -275,7 +276,7 @@ export class YjsStructuredAttributeStore {
   }
 
   initialize(document: Node): void {
-    this.synchronizeEntries(this.entries(document), true, false);
+    this.synchronizeEntries(this.entries(document), true);
   }
 
   validate(document: Node): void {
@@ -283,22 +284,49 @@ export class YjsStructuredAttributeStore {
   }
 
   synchronize(document: Node): void {
-    this.synchronizeEntries(this.entries(document), false, true);
+    this.synchronizeEntries(this.entries(document), false);
+  }
+
+  prepareUpdate(before: Node, after: Node): () => void {
+    const previous = this.entries(before);
+    this.readEntries(previous);
+    const next = this.entries(after);
+    // A mixed-version peer may share the map while owning fewer fields. Only
+    // remove entries this editor owned before its document edit.
+    return () => this.synchronizeEntries(next, false, previous);
   }
 
   overlay(document: Node, requireComplete = false): NodeJSON {
+    const json = document.toJSON();
+    this.readEntries(this.entries(document), (entry, value) => {
+      const target = nodeJSONAtPath(json, entry.path);
+      target.attrs = { ...(target.attrs ?? {}), [entry.definition.attribute]: value };
+    }, requireComplete);
+    return json;
+  }
+
+  private readEntries(entries: readonly StructuredEntry[],
+    apply?: (entry: StructuredEntry, value: StructuredAttributeValue) => void, requireComplete = false): void {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
       throw new Error(ENTRY_LIMIT);
     }
-    const entries = this.entries(document);
-    if (requireComplete && this.map.size !== entries.length) {
-      throw new Error('Structured attribute definitions do not cover the saved room map.');
+    if (requireComplete && this.map.size > entries.length) {
+      const expected = new Set(entries.map(entry => entry.key));
+      const liveIds = new Set(entries.map(entry => entry.node.attrs[this.identityAttribute]));
+      for (const key of this.map.keys()) {
+        if (expected.has(key)) continue;
+        // A client with fewer definitions can delete a node without owning
+        // every field. Keep its inactive entries in storage for recovery.
+        const saved = /^v1:\["([\w.:-]{1,128})","([A-Za-z0-9][\w.:-]{0,159})","([\w.:-]{1,128})"\]$/u.exec(key);
+        if (!saved || liveIds.has(saved[2]) || !this.byNodeType.get(saved[1])?.some(field => field.attribute === saved[3])) {
+          throw new Error(INCOMPLETE_MAP);
+        }
+      }
     }
-    const json = document.toJSON();
     for (const entry of entries) {
       const shared = this.map.get(entry.key);
       if (shared === undefined) {
-        if (requireComplete) throw new Error('Structured attribute definitions do not cover the saved room map.');
+        if (requireComplete) throw new Error(INCOMPLETE_MAP);
         continue;
       }
       const decoded = decodeSharedValue(shared, entry.definition.limits, 0, { entries: 0 });
@@ -310,10 +338,8 @@ export class YjsStructuredAttributeStore {
       if (!report.valid || report.value === undefined) {
         throw new Error(`Invalid ${ATTRIBUTE} ${entry.definition.nodeType}.${entry.definition.attribute}: ${report.issues.join(' ')}`);
       }
-      const target = nodeJSONAtPath(json, entry.path);
-      target.attrs = { ...(target.attrs ?? {}), [entry.definition.attribute]: report.value };
+      apply?.(entry, report.value);
     }
-    return json;
   }
 
   private entries(document: Node): readonly StructuredEntry[] {
@@ -355,14 +381,14 @@ export class YjsStructuredAttributeStore {
     return Object.freeze(result);
   }
 
-  private synchronizeEntries(entries: readonly StructuredEntry[], onlyMissing: boolean, removeStale: boolean): void {
+  private synchronizeEntries(entries: readonly StructuredEntry[], onlyMissing: boolean, previous?: readonly StructuredEntry[]): void {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
       throw new Error(ENTRY_LIMIT);
     }
-    const expected = new Set(entries.map((entry) => entry.key));
-    if (removeStale) [...this.map.keys()].forEach((key) => {
-      if (!expected.has(key)) this.map.delete(key);
-    });
+    if (previous) {
+      const expected = new Set(entries.map((entry) => entry.key));
+      for (const { key } of previous) if (!expected.has(key)) this.map.delete(key);
+    }
     entries.forEach((entry) => {
       const current = this.map.get(entry.key);
       if (current === undefined) {
