@@ -440,6 +440,42 @@ it('opens older archives with duplicate batch rows and preserves their historica
   expect(await reopened.readCrossBatch(key, moved.operation, 3)).toBeUndefined();
 });
 
+it('reopens the previous SQLite schema and mixes compressed batches with exact older raw batches', async () => {
+  const pair = await fixture();
+  const offline = await open(pair.checkpoint, pair);
+  const moved = await migrate(pair);
+  const first = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'OLDER RAW') };
+  await pair.handoff.retainLateUpdate(first);
+  const db = new DatabaseSync(pair.path);
+  cleanup.push(() => db.close());
+  db.exec('ALTER TABLE fountain_cross_format_batches_v1 DROP COLUMN raw_bytes');
+
+  const compressed = new SQLiteRetainedRoomRepository(pair.path, Date.now, { compressRecoveryBatches: true });
+  cleanup.push(() => compressed.close());
+  const writer = new CrossFormatRoomHandoff(compressed, key, pair.schema, version);
+  const second = { ...first, update: type(offline, 'Offline technical observation. '.repeat(512)) };
+  const accepted = await writer.retainLateUpdate(second);
+  const rows = db.prepare('SELECT raw_bytes, length(wire) AS stored FROM fountain_cross_format_batches_v1 WHERE room_key = ? ORDER BY revision').all(key);
+  expect(rows[0]).toMatchObject({ raw_bytes: null, stored: first.update.length });
+  expect(rows[1]).toMatchObject({ raw_bytes: second.update.length });
+  expect(Number(rows[1]!.stored)).toBeLessThan(second.update.length / 2);
+  expect(compressed.readStorageUsage(key)?.batchBytes).toBe(first.update.length + Number(rows[1]!.stored));
+
+  const reopened = new SQLiteRetainedRoomRepository(pair.path);
+  cleanup.push(() => reopened.close());
+  const reader = new CrossFormatRoomHandoff(reopened, key, pair.schema, version);
+  expect((await reader.retiredBatch(moved.operation, 1)).update).toEqual(first.update);
+  expect((await reader.retiredBatch(moved.operation, 2)).update).toEqual(second.update);
+  expect(await reader.retainLateUpdate(second)).toEqual(accepted);
+  expect(await reopened.readCrossBatch(key, moved.operation, 3)).toBeUndefined();
+  expect(await pair.room.snapshot()).toEqual(moved.result.snapshot);
+
+  db.prepare('UPDATE fountain_cross_format_batches_v1 SET raw_bytes = ? WHERE room_key = ? AND revision = 2').run(second.update.length - 1, key);
+  await expect(reader.retiredBatch(moved.operation, 2)).rejects.toMatchObject({ code: 'ERR_BUFFER_TOO_LARGE' });
+  expect((await reader.retiredBatch(moved.operation, 1)).update).toEqual(first.update);
+  expect(await reopened.readCrossArchive(key, moved.operation)).toEqual(accepted);
+});
+
 it('detects raw batch corruption independently of the merged recovery checkpoint', async () => {
   const pair = await fixture(), moved = await migrate(pair);
   const request = { archiveId: moved.operation, sourceEpoch: pair.initial.epoch, update: type(pair, 'LATE') };

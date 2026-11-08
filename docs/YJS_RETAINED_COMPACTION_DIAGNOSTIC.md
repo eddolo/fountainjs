@@ -218,8 +218,8 @@ The result is `artifacts/retained-compaction-diagnostic-20261106.json`.
 The Node 24 SQLite reference stores a gzip copy of an archived checkpoint when
 the update is at least 1 KiB and compression saves bytes. This applies to
 frozen sources, destinations, updated retired branches, and exact saved drafts.
-Live rooms use raw storage by default. Original cross-format edit batches
-always use their existing byte representation. The reader accepts existing
+Live rooms and original cross-format edit batches use raw storage by default.
+The reader accepts existing
 raw rows and bounds decompression by the original manifest length and the
 checkpoint size limit.
 The handoff verifies the same original checkpoint digest after decoding.
@@ -284,6 +284,26 @@ connections at the exact limit. Three recorded Chromium, Firefox and WebKit
 journeys verified a refused offline save and its later retry. The Firefox
 captures show the draft in the offline editor before the retry and in the
 retired archive afterward, with the active document intact.
+
+### Compressing archived offline operations
+
+Set `compressRecoveryBatches: true` on the SQLite writer to compress original
+cross-format edit batches when it saves space. The database records the original
+byte length and decompresses within that bound. Exact recovery and retry checks
+still use the original bytes and SHA-256. Storage reporting and the per-room
+recovery cap count the compressed BLOB.
+
+Opening an existing database adds a nullable metadata column. Old raw rows
+stay readable alongside compressed rows. Updated readers can read either kind
+even with the write option off. Upgrade all readers before enabling compressed
+writes, because older binaries expect raw BLOBs.
+
+152 focused source checks passed, including a previous-schema reopen, mixed
+raw and compressed rows, exact retry, and a rejected decompression bound.
+In three recorded Chromium, Firefox and WebKit journeys, a 7,718-byte update
+with repeated text used 702–703 stored bytes. The archive returned all original
+bytes and the active room kept its original content. The Chromium capture
+was visually checked. Compression ratios depend on the update contents.
 
 ### Smaller private identities
 

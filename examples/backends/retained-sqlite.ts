@@ -44,14 +44,17 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   private readonly db: DatabaseSync;
   private readonly selectRoomMetadata: StatementSync;
   private readonly compressLiveCheckpoints: boolean;
+  private readonly compressRecoveryBatches: boolean;
   private readonly maxLiveCheckpointBytesPerRoom: number;
   private readonly maxRecoveryBytesPerRoom?: number;
   constructor(path: string, private readonly presenceNow = Date.now, options: {
     readonly compressLiveCheckpoints?: boolean;
+    readonly compressRecoveryBatches?: boolean;
     readonly maxRecoveryBytesPerRoom?: number;
     readonly maxLiveCheckpointBytesPerRoom?: number;
   } = {}) {
     this.compressLiveCheckpoints = options.compressLiveCheckpoints === true;
+    this.compressRecoveryBatches = options.compressRecoveryBatches === true;
     const maximum = options.maxRecoveryBytesPerRoom;
     if (maximum !== undefined && (!Number.isSafeInteger(maximum) || maximum < 0)) throw new TypeError('Invalid per-room recovery capacity.');
     this.maxRecoveryBytesPerRoom = maximum;
@@ -117,12 +120,25 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
           revision INTEGER NOT NULL CHECK(revision BETWEEN 1 AND 9007199254740991),
           source_epoch TEXT NOT NULL CHECK(length(source_epoch) = 36), sha256 TEXT NOT NULL CHECK(length(sha256) = 64),
           wire BLOB NOT NULL CHECK(length(wire) BETWEEN 1 AND 67108864),
+          raw_bytes INTEGER,
           PRIMARY KEY(room_key, archive_id, revision)
         ) STRICT;
         CREATE INDEX IF NOT EXISTS fountain_cross_format_batch_digest_v1
           ON fountain_cross_format_batches_v1 (room_key, archive_id, sha256, revision);`);
+      this.addRecoveryBatchLength();
       this.selectRoomMetadata = this.db.prepare('SELECT generation, metadata FROM fountain_retained_rooms_v1 WHERE room_key = ?');
     } catch (error) { this.db.close(); throw error; }
+  }
+
+  private addRecoveryBatchLength(): void {
+    const hasLength = () => this.db.prepare('PRAGMA table_info(fountain_cross_format_batches_v1)').all().some(column => column.name === 'raw_bytes');
+    if (hasLength()) return;
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      // An older database can be opened by two updated processes at once.
+      if (!hasLength()) this.db.exec('ALTER TABLE fountain_cross_format_batches_v1 ADD COLUMN raw_bytes INTEGER');
+      this.db.exec('COMMIT');
+    } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }
 
   async read(key: string): Promise<RetainedRoomRecord | undefined> {
@@ -457,6 +473,8 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     if (!protocol) throw new Error('Invalid cross-format branch protocol.');
     if (!(batch.update instanceof Uint8Array) || !batch.update.length || batch.update.length > 67108864 || !/^[a-f0-9]{64}$/.test(batch.sha256)) throw new Error('Invalid raw retired batch packet.');
     const update = Uint8Array.from(batch.update), metadata = JSON.stringify(checkpoint.manifest), wire = encodeStoredWire(checkpoint.update);
+    const storedUpdate = this.compressRecoveryBatches ? encodeStoredWire(update) : update;
+    const rawBytes = storedUpdate.length < update.length ? update.length : null;
     this.db.exec('BEGIN IMMEDIATE');
     try {
       const result = this.db.prepare(`UPDATE fountain_cross_format_archives_v1
@@ -466,23 +484,30 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
         .run(crypto.randomUUID(), metadata, wire, key, id, expectedGeneration, protocol, key, id, batch.sha256);
       if (result.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       const archive = this.db.prepare('SELECT branch_revision, source_epoch FROM fountain_cross_format_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, id)!;
-      this.db.prepare('INSERT INTO fountain_cross_format_batches_v1 (room_key, archive_id, revision, source_epoch, sha256, wire) VALUES (?, ?, ?, ?, ?, ?)').run(key, id, archive.branch_revision!, archive.source_epoch!, batch.sha256, update);
+      this.db.prepare('INSERT INTO fountain_cross_format_batches_v1 (room_key, archive_id, revision, source_epoch, sha256, wire, raw_bytes) VALUES (?, ?, ?, ?, ?, ?, ?)')
+        .run(key, id, archive.branch_revision!, archive.source_epoch!, batch.sha256, storedUpdate, rawBytes);
       this.checkRecoveryCapacity(key);
       this.db.exec('COMMIT'); return true;
     } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }
   async readCrossBatch(key: string, archiveId: string, revision: number): Promise<CrossFormatBatch | undefined> {
-    const row = this.db.prepare('SELECT revision, source_epoch, sha256, wire FROM fountain_cross_format_batches_v1 WHERE room_key = ? AND archive_id = ? AND revision = ?').get(key, archiveId, revision);
+    const row = this.db.prepare('SELECT revision, source_epoch, sha256, wire, raw_bytes FROM fountain_cross_format_batches_v1 WHERE room_key = ? AND archive_id = ? AND revision = ?').get(key, archiveId, revision);
     return this.crossBatchRow(row, key, archiveId);
   }
   async findCrossBatch(key: string, archiveId: string, sha256: string): Promise<CrossFormatBatch | undefined> {
-    const row = this.db.prepare('SELECT revision, source_epoch, sha256, wire FROM fountain_cross_format_batches_v1 WHERE room_key = ? AND archive_id = ? AND sha256 = ? ORDER BY revision LIMIT 1').get(key, archiveId, sha256);
+    const row = this.db.prepare('SELECT revision, source_epoch, sha256, wire, raw_bytes FROM fountain_cross_format_batches_v1 WHERE room_key = ? AND archive_id = ? AND sha256 = ? ORDER BY revision LIMIT 1').get(key, archiveId, sha256);
     return this.crossBatchRow(row, key, archiveId);
   }
   private crossBatchRow(row: Record<string, unknown> | undefined, key: string, archiveId: string): CrossFormatBatch | undefined {
     if (!row) return undefined;
     if (typeof row.revision !== 'number' || typeof row.source_epoch !== 'string' || typeof row.sha256 !== 'string' || !(row.wire instanceof Uint8Array)) throw new Error('Invalid stored retired batch.');
-    return { key, archiveId, revision: row.revision, sourceEpoch: row.source_epoch, sha256: row.sha256, update: Uint8Array.from(row.wire) };
+    const length = row.raw_bytes;
+    if (length !== null && (typeof length !== 'number' || !Number.isSafeInteger(length) || length <= row.wire.length
+      || length > maxCheckpointBytes || row.wire[0] !== 0x1f || row.wire[1] !== 0x8b)) {
+      throw new Error('Invalid compressed retired batch length or header.');
+    }
+    const update = decodeStoredWire(row.wire, length ?? row.wire.length);
+    return { key, archiveId, revision: row.revision, sourceEpoch: row.source_epoch, sha256: row.sha256, update };
   }
 
   close(): void { this.db.close(); }
