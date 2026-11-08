@@ -789,6 +789,25 @@ it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)('appli
   } finally { pair.destroy(); }
 });
 
+it.each(['quote', 'bullet', 'ordered', 'task'] as const)('keeps untouched siblings in their original native placements when toggling %s', kind => {
+  const content: NodeJSON = { ...source, content: [...source.content!, ...['Beta', 'Gamma', 'Delta'].map(text => ({
+    type: 'paragraph', content: [{ type: 'text', text }],
+  }))] };
+  const pair = fixture(content);
+  try {
+    const siblings = pair.store.nodes.childrenOf('root').slice(1);
+    const tokens = siblings.map(id => pair.store.nodes.placementIdentity(id));
+    pair.editor.dispatch(pair.editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    const toggle = () => kind === 'quote' ? toggleQuote(pair.editor) : toggleList(pair.editor, kind);
+    for (let index = 0; index < 2; index++) {
+      expect(toggle()).toBe(true);
+      expect(pair.apply().toJSON()).toEqual(pair.editor.getJSON());
+      expect(pair.store.nodes.childrenOf('root').slice(1)).toEqual(siblings);
+      expect(siblings.map(id => pair.store.nodes.placementIdentity(id))).toEqual(tokens);
+    }
+  } finally { pair.destroy(); }
+});
+
 for (const reverse of [false, true]) it.each(['quote', 'bullet', 'ordered', 'task', 'mark', 'split'] as const)(
   `retains offline peer typing through actual %s commands (reverse exchange: ${reverse})`, kind => {
     const pair = peers();

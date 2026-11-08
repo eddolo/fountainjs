@@ -360,6 +360,16 @@ the exact original V1 bytes. These are controlled storage measurements. A
 production codec would still need bounded decoding and exact-byte verification
 before it could preserve the current checkpoint contract.
 
+### Keeping placements for unchanged siblings
+
+Wrapping one paragraph in a 129-paragraph document used to allocate new
+placement records for all 128 untouched siblings. The ordering pass now
+compares children that will remain under the same parent. The fixed-input
+quote test left all 128 existing placements intact. Its uncompressed Yjs V1
+update fell from 26,956 bytes to 861 bytes. After 16 wrap and unwrap actions,
+checkpoint growth fell from 219,983 bytes to 8,591 bytes. Four regression cases
+check the same placement invariant for quote, bullet, numbered, and task lists.
+
 ### Optional compression for live checkpoints
 
 The SQLite reference can store live checkpoints with the same bounded gzip

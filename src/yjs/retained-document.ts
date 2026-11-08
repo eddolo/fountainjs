@@ -57,7 +57,6 @@ interface ProjectionFrame {
   readonly projection: ReturnType<RetainedNodeStore['project']>;
   readonly partitions: ReadonlyMap<string, RetainedTextPartition>;
   readonly placements: ReadonlyMap<string, SplitPlacement>;
-  readonly hiddenWrappers: ReadonlySet<string>;
 }
 interface SplitPlacement { root: string; rootToken: string; token: string; partition: string }
 // Partition/leaf identities cannot contain NUL; separate tuple fields without
@@ -222,7 +221,6 @@ export class RetainedDocumentStore {
   private textLocations = new Map<string, { leaf: string; path: readonly number[] }>();
   private groups = new Map<string, GroupState>();
   private graph?: RetainedNodeProjection;
-  private hiddenWrappers: ReadonlySet<string> = new Set();
 
   constructor(readonly document: Y.Doc, name: string, readonly schema: Schema, private readonly createId: () => string, private readonly origin?: unknown) {
     this.metadata = document.getMap(`${name}:document`);
@@ -367,7 +365,6 @@ export class RetainedDocumentStore {
     const projection = this.nodes.project();
     if (projection.issues.some(issue => issue.kind === 'unattached')) throw new Error('Retained document has unattached records.');
     const fields = new Set<string>(), placements = new Map<string, SplitPlacement>();
-    const hiddenWrappers = new Set<string>();
     const collect = (node: RetainedNodeProjection): RetainedNodeProjection | undefined => {
       if (node.type === 'text') {
         if (!node.textLayout) throw new Error(`Missing retained text layout for ${node.id}.`);
@@ -391,14 +388,13 @@ export class RetainedDocumentStore {
         && spec && spec.content === expression && !spec.validate) {
         computeAttrs(spec.attrs, node.attrs ?? {});
         node.marks?.forEach(mark => this.schema.markFromJSON(mark));
-        hiddenWrappers.add(node.id);
         return undefined;
       }
       return children ? { ...node, content: children } : node;
     };
     const root = collect(projection.root)!;
     const partitions = this.text.projectMany([...fields]);
-    return { projection: { ...projection, root }, partitions, placements, hiddenWrappers };
+    return { projection: { ...projection, root }, partitions, placements };
   }
 
   read(validate = true): Node {
@@ -425,7 +421,7 @@ export class RetainedDocumentStore {
     return result;
   }
 
-  private normalizeFrame({ projection, partitions, placements, hiddenWrappers }: ProjectionFrame, validate: boolean): Node {
+  private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean): Node {
     // Candidates come only from this store's existing model/bindings. Shared
     // data was checked by acquisition or the guarded native-write proof.
     const previousNodes = new Map<string, Node>();
@@ -519,7 +515,7 @@ export class RetainedDocumentStore {
     };
     bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textLocations = textLocations;
     this.identityPaths = identityPaths; this.partitionPaths = partitionPaths;
-    this.groups = groupStates; this.graph = projection.root; this.hiddenWrappers = hiddenWrappers; this.model = result.node;
+    this.groups = groupStates; this.graph = projection.root; this.model = result.node;
     return result.node;
   }
 
@@ -802,18 +798,19 @@ export class RetainedDocumentStore {
     let reordered = false;
     for (const [parent, children] of expected) {
       const ids = children.flatMap(child => typeof child === 'string' ? [child] : child.ids);
-      // A plain edit does not change the sibling order. Revalidate that list
-      // once; a move can change later positions, so refresh after each move.
       let current = reordered ? this.nodes.childrenOf(parent) : orders.get(parent)!;
-      const visibleChildren = () => this.hiddenWrappers.size ? current.filter(id => !this.hiddenWrappers.has(id)) : current;
-      let visible = visibleChildren();
+      if (current.length === ids.length && current.every((id, index) => id === ids[index])) continue;
+      // Children moving to another parent, and displaced wrappers hidden by
+      // projection, must not force new placements for the siblings that stay.
+      const targets = new Set(ids);
+      let visible = current.filter(id => targets.has(id));
       for (let index = 0; index < ids.length; index++) if (visible[index] !== ids[index]) {
         const next = visible[index];
-        const rawIndex = visible === current ? index : next === undefined ? current.length : current.indexOf(next);
+        const rawIndex = next === undefined ? current.length : current.indexOf(next);
         this.nodes.move(ids[index], parent, rawIndex);
         reordered = true;
         current = this.nodes.childrenOf(parent);
-        visible = visibleChildren();
+        visible = current.filter(id => targets.has(id));
       }
     }
     if (intent) {
