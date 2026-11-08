@@ -5,11 +5,15 @@
 <div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2><button id="save-exact" type="button" disabled>Save exact offline draft</button></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2><button id="open-exact" type="button" disabled>Open saved offline draft</button> <button id="review-exact" type="button" disabled>Review saved paragraph</button> <button id="open-writer" type="button" disabled>Open outgoing editor draft</button></section></div>
 <section id="draft-review" aria-labelledby="draft-review-title" hidden>
  <h2 id="draft-review-title">Review the recovered paragraph</h2>
+ <label>Changed paragraph <select id="review-paragraph"></select></label>
+ <div id="review-comparison" hidden>
  <h3>Current room</h3><pre id="review-live"></pre>
  <h3>Saved offline draft</h3><pre id="review-saved"></pre>
  <label for="review-replacement">Text to apply</label>
  <textarea id="review-replacement" rows="2" cols="60"></textarea>
  <button id="apply-review" type="button">Apply reviewed paragraph</button>
+ <button id="apply-saved" type="button">Apply saved text and formatting</button>
+ </div>
 </section>
 <script type="module">
 import * as Y from 'yjs';
@@ -21,7 +25,7 @@ import {captureLegacyCheckpoint,restoreLegacyCheckpoint} from '/artifacts/yjs-na
 import {openYjsRoom} from '/artifacts/yjs-namespace-build-20261107/bound-room.js';
 import {openBrowserDrafts,scheduleBrowserDraftAutosave} from '/examples/backends/retained-browser-drafts.ts';
 import {downloadDocumentFile} from '/examples/react-app/src/math-document-files.ts';
-const sourceRoom='Research / α 😀',version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Migration paper'}},content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha technical note.'}]},{type:'blockquote',content:[{type:'paragraph',content:[{type:'text',text:'Keep every accepted edit recoverable.'}]}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Original figure'}},{type:'math_block',attrs:{latex:'x^2+y^2',label:'eq:one'}},{type:'code_block',attrs:{language:'lean'},content:[{type:'text',text:'example : 1 + 1 = 2 := by decide'}]}]};
+const sourceRoom='Research / α 😀',version='browser-schema-1',content={type:'doc',attrs:{metadata:{title:'Migration paper'}},content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text:'Alpha technical note.'}]},{type:'blockquote',content:[{type:'paragraph',attrs:{nodeId:'recovery-note'},content:[{type:'text',text:'Keep every accepted edit recoverable.'}]}]},{type:'image_super',attrs:{nodeId:'figure',src:'/tests/fixtures/cross-container-figure.png',alt:'Original figure'}},{type:'math_block',attrs:{latex:'x^2+y^2',label:'eq:one'}},{type:'code_block',attrs:{language:'lean'},content:[{type:'text',text:'example : 1 + 1 = 2 := by decide'}]}]};
 const nested=new URLSearchParams(location.search).has('nested');
 const schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema);
 const sessionKey='fountain-handoff:'+location.pathname+location.search;
@@ -76,19 +80,23 @@ function setControlsBusy(busy){
  document.querySelector('#open-exact').disabled=busy||!exactDraft?.acknowledged;
  document.querySelector('#open-writer').disabled=busy||!writerDraft?.acknowledged;
  document.querySelector('#review-exact').disabled=busy||!exactDraft?.acknowledged||current?.protocol!=='retained';
- document.querySelector('#apply-review').disabled=busy||current?.protocol!=='retained'||!paragraphReview?.canEditPlainText;
+ const canApply=current?.protocol==='retained'&&paragraphReview?.epoch===current.epoch&&paragraphReview?.draftId===exactDraft?.draftId;
+ document.querySelector('#review-paragraph').disabled=busy||!document.querySelector('#review-paragraph').options.length;
+ document.querySelector('#review-replacement').disabled=busy||!canApply||!paragraphReview.canEditPlainText;
+ document.querySelector('#apply-review').disabled=busy||!canApply||!paragraphReview.canEditPlainText;
+ document.querySelector('#apply-saved').disabled=busy||!canApply;
  if(busy)return;
  for(const id of ['retry','old','retain','rollback'])document.querySelector('#'+id).disabled=!migration;
  document.querySelector('#retry-rollback').disabled=!rollback;
 }
-function action(id,run){
- document.querySelector('#'+id).onclick=async()=>{
+function action(id,run,event='click'){
+ document.querySelector('#'+id).addEventListener(event,async()=>{
   setControlsBusy(true);
   message.textContent='Working…';
   try{await run();}
   catch(error){message.textContent='Request failed: '+error.message+' · editor retained; retry explicitly';}
   finally{setControlsBusy(false);}
- };
+ });
 }
 function prepareExactDraft(previous,archiveId,sourceEpoch,checkpoint){
  if(previous?.archiveId===archiveId&&previous.checkpoint.manifest.checkpointSha256===checkpoint.manifest.checkpointSha256)return previous;
@@ -223,25 +231,49 @@ action('save-exact',async()=>{
 action('open-exact',()=>openExactDraft(exactDraft,'Exact offline draft'));
 action('open-writer',()=>openExactDraft(writerDraft,'Outgoing editor draft'));
 const reviewPanel=document.querySelector('#draft-review');
-action('review-exact',async()=>{
+const reviewParagraph=document.querySelector('#review-paragraph');
+const comparison=document.querySelector('#review-comparison');
+const replacement=document.querySelector('#review-replacement');
+function draftReviewRequest(){
  const {archiveId,sourceEpoch,draftId}=exactDraft;
- paragraphReview=await request('preview-recovered-text',{archiveId,sourceEpoch,draftId,nodeId:'intro'});
+ return {archiveId,sourceEpoch,draftId};
+}
+async function compareParagraph(nodeId){
+ const draft=draftReviewRequest();
+ const sameParagraph=paragraphReview?.draftId===draft.draftId&&paragraphReview.epoch===current.epoch&&paragraphReview.nodeId===nodeId;
+ if(!sameParagraph){paragraphReview=undefined;comparison.hidden=true}
+ paragraphReview=await request('preview-recovered-text',{...draft,nodeId});
  document.querySelector('#review-live').textContent=paragraphReview.currentText;
  document.querySelector('#review-saved').textContent=paragraphReview.draftText;
- const replacement=document.querySelector('#review-replacement');
- replacement.value=paragraphReview.draftText;
- replacement.disabled=!paragraphReview.canEditPlainText;
+ if(!sameParagraph)replacement.value=paragraphReview.draftText;
+ comparison.hidden=false;
+ message.textContent=paragraphReview.canEditPlainText
+  ?'Compare the saved paragraph with the active room before applying'
+  :'This paragraph has formatting or empty text. You can apply the saved text and formatting.';
+}
+action('review-exact',async()=>{
+ const draft=draftReviewRequest();
+ const {paragraphs,total}=await request('list-recovered-paragraphs',draft);
+ reviewParagraph.replaceChildren(...paragraphs.map(({nodeId,excerpt})=>new Option(excerpt||'(Empty saved paragraph)',nodeId)));
  reviewPanel.hidden=false;
- message.textContent='Compare the saved paragraph with the active room before applying';
- replacement.focus();
+ if(!total){
+  paragraphReview=undefined;
+  comparison.hidden=true;
+  message.textContent='No changed text-only paragraphs with matching stable IDs were found';
+  return;
+ }
+ if(paragraphReview?.draftId===draft.draftId&&paragraphs.some(({nodeId})=>nodeId===paragraphReview.nodeId))reviewParagraph.value=paragraphReview.nodeId;
+ await compareParagraph(reviewParagraph.value);
+ if(total>paragraphs.length)message.textContent+=' · Showing the first '+paragraphs.length+' of '+total+' matching paragraphs';
 });
-action('apply-review',async()=>{
+action('review-paragraph',()=>compareParagraph(reviewParagraph.value),'change');
+async function applyParagraph(value){
  const surface=active.view.dom,wasEditable=surface.contentEditable;
  surface.contentEditable='false';
  try{
   const local=await captureWriter(active);
   if(local.manifest.updateSha256!==current.checkpoint.manifest.updateSha256)throw new Error('Save active edits before applying a review');
-  const result=await request('apply-recovered-text',{review:paragraphReview,replacement:document.querySelector('#review-replacement').value});
+  const result=await request('apply-recovered-text',{review:paragraphReview,replacement:value});
   Y.applyUpdate(active.doc,result.checkpoint.update,'review-recovery');
   current=result;
   paragraphReview=undefined;
@@ -250,7 +282,9 @@ action('apply-review',async()=>{
   message.textContent='Reviewed paragraph saved in the active room';
   report('Applied reviewed offline text');
  }finally{surface.contentEditable=wasEditable;surface.focus()}
-});
+}
+action('apply-review',()=>applyParagraph(replacement.value));
+action('apply-saved',()=>applyParagraph({useSavedFormatting:true}));
 async function finishRollback(){
  const result=await submitOperation('rollback',rollback);
  await install(result);

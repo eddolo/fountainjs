@@ -5,7 +5,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import * as Y from 'yjs';
-import { CoreExtension, MathExtension, Selection, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, toggleQuote } from '../src';
+import { CoreExtension, MathExtension, Selection, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, setMark, toggleQuote } from '../src';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
@@ -124,6 +124,37 @@ it('applies a reviewed legacy draft as a new retained edit without replacing the
   const latest = await recovery.preview(request);
   expect(await recovery.apply(latest, latest.currentText)).toEqual(applied);
   await expect(recovery.preview({ ...request, sourceEpoch: uuid() })).rejects.toMatchObject({ code: 'stale-epoch' });
+});
+
+it('lists formatting-only changes and excludes a paragraph whose ID is ambiguous', async () => {
+  const pair = await fixture();
+  const offline = await open(pair.checkpoint, pair);
+  const { operation } = await migrate(pair);
+  const request = { archiveId: operation, sourceEpoch: pair.initial.epoch, draftId: uuid() };
+  const recovery = new RetainedTextRecovery({ crossFormat: pair.b }, key, pair.schema, version);
+  const save = async (draftId: string) => pair.handoff.saveRetiredDraft({
+    ...request, draftId, checkpoint: await captureLegacyCheckpoint(offline.document, pair.schema, version),
+  });
+  await save(request.draftId);
+  expect(await recovery.listChangedParagraphs(request)).toEqual({ total: 0, paragraphs: [] });
+
+  offline.editor.dispatch(offline.editor.createTransaction().setSelection(Selection.range([0, 0], 0, [0, 0], 5)));
+  expect(setMark(offline.editor, 'strong')).toBe(true);
+  const marked = { ...request, draftId: uuid(), nodeId: 'intro' };
+  await save(marked.draftId);
+  expect(await recovery.listChangedParagraphs(marked)).toEqual({ total: 1, paragraphs: [{ nodeId: 'intro', excerpt: 'Alpha α 😀' }] });
+  const review = await recovery.preview(marked);
+  expect(review.canEditPlainText).toBe(false);
+  const applied = await recovery.apply(review, { useSavedFormatting: true });
+  expect((await model(applied.checkpoint, pair)).content?.[0]?.content).toEqual(review.draftParagraph.content);
+  expect(await recovery.listChangedParagraphs(marked)).toEqual({ total: 0, paragraphs: [] });
+
+  type(offline, 'CHANGED ');
+  offline.editor.dispatch(offline.editor.createTransaction().setNodeAttrs([1, 0], { nodeId: 'intro' }));
+  const duplicate = { ...marked, draftId: uuid() };
+  await save(duplicate.draftId);
+  expect(await recovery.listChangedParagraphs(duplicate)).toEqual({ total: 0, paragraphs: [] });
+  await expect(recovery.preview(duplicate)).rejects.toThrow('one identifiable text-only paragraph');
 });
 
 it('fences cross-format drafts by epoch and identity and includes them in the existing recovery cap', async () => {

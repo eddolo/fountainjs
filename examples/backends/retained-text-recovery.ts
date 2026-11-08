@@ -11,10 +11,13 @@ import { CoordinatedRetainedRoom, type CoordinatedRoomSnapshot } from '../../src
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
 import { assertRetainedWireString } from '../../src/yjs/retained-wire';
 
-interface DraftParagraph {
+interface SavedDraft {
   readonly archiveId: string;
   readonly sourceEpoch?: string;
   readonly draftId: string;
+}
+
+interface DraftParagraph extends SavedDraft {
   readonly nodeId: string;
 }
 
@@ -70,12 +73,27 @@ function uniqueBlock(document: Node, nodeId: string) {
   return matches.length === 1 ? matches[0] : undefined;
 }
 
+function isTextParagraph(node: Node): boolean {
+  return node.type.name === 'paragraph' && node.content.every(child => child.isText);
+}
+
 function paragraph(document: Node, nodeId: string) {
   const match = uniqueBlock(document, nodeId);
-  if (!match || match.node.type.name !== 'paragraph' || match.node.content.some(child => !child.isText)) {
+  if (!match || !isTextParagraph(match.node)) {
     throw new Error('Review requires one identifiable text-only paragraph in each document.');
   }
   return match;
+}
+
+function indexBlocks(document: Node): Map<string, Node | null> {
+  const blocks = new Map<string, Node | null>();
+  document.descendants((node, path) => {
+    const id = node.attrs.nodeId;
+    if (path.length && typeof id === 'string' && id.length > 0 && id.length <= 200) {
+      blocks.set(id, blocks.has(id) ? null : node);
+    }
+  });
+  return blocks;
 }
 
 const plainRun = (node: Node): boolean => node.childCount === 1 && node.child(0).marks.length === 0;
@@ -114,7 +132,7 @@ function reviewedMove(doc: Node, live: ReturnType<typeof paragraph>, saved: Retu
 export class RetainedTextRecovery {
   private readonly room: CoordinatedRetainedRoom | CoordinatedDocumentRoom;
   private readonly legacyProjection?: LegacyProjectionOptions;
-  private readonly readDraft: (request: DraftParagraph) => Promise<{ saved: DocumentCheckpoint; roomId: string }>;
+  private readonly readDraft: (request: SavedDraft) => Promise<{ saved: DocumentCheckpoint; roomId: string }>;
 
   constructor(repository: RecoveryRepository, key: string,
     private readonly schema: Schema, private readonly schemaVersion: string) {
@@ -146,10 +164,11 @@ export class RetainedTextRecovery {
     }
   }
 
-  private async loadReview(request: DraftParagraph) {
-    const { archiveId, sourceEpoch, draftId, nodeId } = request;
-    if (typeof nodeId !== 'string' || !nodeId || nodeId.length > 200) throw new Error('Invalid recovery paragraph ID.');
-    const { saved, roomId } = await this.readDraft({ archiveId, sourceEpoch, draftId, nodeId });
+  private async compareDraft<T>(
+    request: SavedDraft,
+    compare: (live: Node, saved: Node, snapshot: CoordinatedRoomSnapshot) => T,
+  ): Promise<T> {
+    const { saved, roomId } = await this.readDraft(request);
     const current = await this.room.snapshot();
     const checkpoint = current.checkpoint;
     if (current.phase !== 'active' || !isRetainedCheckpoint(checkpoint) || checkpoint.manifest.roomId !== roomId) {
@@ -161,19 +180,44 @@ export class RetainedTextRecovery {
     try {
       const active = await restoreRetainedCheckpoint(checkpoint, this.schema, this.schemaVersion);
       try {
-        const live = paragraph(active.baseDocument, nodeId);
-        const saved = paragraph(draft.baseDocument, nodeId);
-        const currentParagraph = live.node, draftParagraph = saved.node;
-        const currentLocation = paragraphLocation(active.baseDocument, live.path);
-        const draftLocation = paragraphLocation(draft.baseDocument, saved.path);
-        const review = Object.freeze({ archiveId, ...(sourceEpoch === undefined ? {} : { sourceEpoch }), draftId, nodeId, epoch: current.epoch, revision: current.revision,
-          currentText: currentParagraph.textContent, draftText: draftParagraph.textContent,
-          currentParagraph: currentParagraph.toJSON(), draftParagraph: draftParagraph.toJSON(),
-          canEditPlainText: plainRun(currentParagraph) && plainRun(draftParagraph), currentLocation: currentLocation.label,
-          draftLocation: draftLocation.label, canUseSavedPlacement: Boolean(reviewedMove(active.baseDocument, live, draftLocation)) });
-        return { review, checkpoint, draftParagraph, draftLocation };
+        return compare(active.baseDocument, draft.baseDocument, { ...current, checkpoint });
       } finally { active.document.destroy(); }
     } finally { draft.document.destroy(); }
+  }
+
+  /** Find text or formatting differences with one unambiguous paragraph in each copy. */
+  async listChangedParagraphs(request: SavedDraft) {
+    return this.compareDraft(request, (live, saved) => {
+      const current = indexBlocks(live);
+      const paragraphs: { nodeId: string; excerpt: string }[] = [];
+      let total = 0;
+      for (const [nodeId, draft] of indexBlocks(saved)) {
+        const active = current.get(nodeId);
+        if (!draft || !active || !isTextParagraph(draft) || !isTextParagraph(active)
+          || draft.childCount === active.childCount && draft.content.every((child, index) => child.eq(active.child(index)))) continue;
+        total++;
+        if (paragraphs.length < 100) paragraphs.push({ nodeId, excerpt: draft.textContent.slice(0, 120) });
+      }
+      return { paragraphs, total };
+    });
+  }
+
+  private async loadReview(request: DraftParagraph) {
+    const { archiveId, sourceEpoch, draftId, nodeId } = request;
+    if (typeof nodeId !== 'string' || !nodeId || nodeId.length > 200) throw new Error('Invalid recovery paragraph ID.');
+    return this.compareDraft(request, (active, draft, { checkpoint, epoch, revision }) => {
+      const live = paragraph(active, nodeId);
+      const saved = paragraph(draft, nodeId);
+      const currentParagraph = live.node, draftParagraph = saved.node;
+      const currentLocation = paragraphLocation(active, live.path);
+      const draftLocation = paragraphLocation(draft, saved.path);
+      const review = Object.freeze({ archiveId, ...(sourceEpoch === undefined ? {} : { sourceEpoch }), draftId, nodeId, epoch, revision,
+        currentText: currentParagraph.textContent, draftText: draftParagraph.textContent,
+        currentParagraph: currentParagraph.toJSON(), draftParagraph: draftParagraph.toJSON(),
+        canEditPlainText: plainRun(currentParagraph) && plainRun(draftParagraph), currentLocation: currentLocation.label,
+        draftLocation: draftLocation.label, canUseSavedPlacement: Boolean(reviewedMove(active, live, draftLocation)) });
+      return { review, checkpoint, draftParagraph, draftLocation };
+    });
   }
 
   async preview(request: DraftParagraph): Promise<RetiredParagraphReview> {

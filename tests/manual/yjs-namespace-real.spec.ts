@@ -387,6 +387,8 @@ test('recovers a saved legacy paragraph into the migrated room after explicit re
   await button('Review saved paragraph').click();
   await expect(page.locator('#review-live')).toHaveText('Alpha technical note.');
   await expect(page.locator('#review-saved')).toHaveText('Alpha technical note. Offline note.');
+  const replacement = page.getByLabel('Text to apply');
+  await replacement.fill('Alpha technical note. Recovered offline note.');
   await type(page, 'Active editor', ' Peer note.');
   await button('Apply reviewed paragraph').click();
   await expect(status).toContainText('Save active edits before applying');
@@ -396,7 +398,8 @@ test('recovers a saved legacy paragraph into the migrated room after explicit re
   await expect(status).toContainText('The review is stale');
   await button('Review saved paragraph').click();
   await expect(page.locator('#review-live')).toHaveText('Alpha technical note. Peer note.');
-  await page.getByLabel('Text to apply').fill('Alpha technical note. Peer note. Recovered offline note.');
+  await expect(replacement).toHaveValue('Alpha technical note. Recovered offline note.');
+  await replacement.fill('Alpha technical note. Peer note. Recovered offline note.');
   await page.locator('#draft-review').screenshot({ path: info.outputPath('reviewed-paragraph.png') });
   const before = await state(page);
   await button('Apply reviewed paragraph').click();
@@ -409,6 +412,38 @@ test('recovers a saved legacy paragraph into the migrated room after explicit re
   await button('Open saved offline draft').click();
   await expect(page.getByRole('textbox', { name: 'Archive reader' })).toContainText('Alpha technical note. Offline note.');
   await capture(page, info, 'recovered-paragraph-and-archive.png');
+});
+
+test('recovers a saved legacy paragraph selected from multiple changes', async ({ page }, info) => {
+  const button = (name: string) => page.getByRole('button', { name, exact: true });
+  const status = page.getByRole('status');
+  await type(page, 'Offline editor', ' First offline edit.');
+  const second = page.getByRole('textbox', { name: 'Offline editor' }).locator('blockquote p');
+  await second.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Second offline edit.');
+  await expect(second).toHaveText('Keep every accepted edit recoverable. Second offline edit.');
+  await button('Migrate legacy room').click();
+  await expect(status).toContainText('Legacy room migrated');
+  await button('Save exact offline draft').click();
+  await expect(status).toContainText('Exact offline draft saved');
+  await button('Review saved paragraph').click();
+  const paragraphs = page.getByLabel('Changed paragraph');
+  await expect(paragraphs.locator('option')).toHaveCount(2);
+  await paragraphs.selectOption({ label: 'Keep every accepted edit recoverable. Second offline edit.' });
+  await expect(page.locator('#review-live')).toHaveText('Keep every accepted edit recoverable.');
+  await expect(page.locator('#review-saved')).toHaveText('Keep every accepted edit recoverable. Second offline edit.');
+  await page.locator('#draft-review').screenshot({ path: info.outputPath('select-changed-paragraph.png') });
+  const before = await state(page);
+  await button('Apply reviewed paragraph').click();
+  await expect(status).toContainText('Reviewed paragraph saved');
+  const active = page.getByRole('textbox', { name: 'Active editor' });
+  await expect(active.locator('blockquote p')).toHaveText('Keep every accepted edit recoverable. Second offline edit.');
+  await expect(active.locator('p').first()).toHaveText('Alpha technical note.');
+  const after = await state(page);
+  expect(after.revision).toBe(before.revision + 1);
+  expect(after.active).toEqual(after.server);
+  await capture(page, info, 'second-paragraph-recovered.png');
 });
 
 test('maps an explicit author-selected destination and refuses invalid input before freezing',async({page},info)=>{

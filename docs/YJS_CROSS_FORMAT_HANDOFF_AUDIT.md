@@ -145,14 +145,20 @@ current paragraph and keeps its live position, attributes and surrounding
 blocks. The active epoch and reviewed revision must still match at write time,
 including for a no-op. The exact draft stays independently readable.
 
-In the loopback demo, save the exact offline draft, choose **Review saved
-paragraph**, compare the text and apply a combined version. The demo requires
-local edits to be saved first and asks for a fresh review if the live revision
-changed. The recorded Chromium, Firefox and WebKit journeys verify both
-refusals, a successful apply, and the unchanged archived draft. The SQLite
-test also verifies that review can apply inside a live quote. This workflow
-covers identifiable text-only paragraphs. Other node types and automatic
-cross-format reconciliation remain open.
+In the loopback demo, save the exact offline draft and choose **Review saved
+paragraph**. The picker finds text or formatting differences where the same
+stable ID identifies one text-only paragraph in each copy. It shows the first
+100 matches in saved document order and reports if there are more. Compare a
+paragraph and apply a combined version or use the saved text and formatting.
+The demo requires local edits to be saved first and asks for a fresh review if
+the live revision changed. Refreshing the same paragraph keeps the proposed
+text in the input so the author can reconsider it against the latest revision.
+
+Recorded Chromium, Firefox and WebKit journeys verify both refusals, selection
+and recovery of a second changed paragraph inside a quote, and the unchanged
+archived draft. The SQLite tests also cover formatting-only changes and reject
+ambiguous IDs. New or deleted paragraphs, placement-only changes in the picker,
+other node types and automatic cross-format reconciliation remain open.
 
 The shared browser CI runs this review alongside two exact-draft reload
 journeys for migration and rollback. It retains the traces and videos. npm

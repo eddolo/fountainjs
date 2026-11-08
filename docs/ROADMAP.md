@@ -99,6 +99,10 @@ The cross-format reference acknowledges exact retries of archived offline
 batches. The browser demo keeps a pending batch through reload and preserves
 newer local edits for a separate save.
 [Offline batch recovery](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md#durable-recovery-behavior).
+The migration reference now finds changed text-only paragraphs across the two
+copies. Authors can choose which paragraph to recover and keep their proposed
+text when refreshing a stale review.
+[Paragraph recovery](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md#review-a-legacy-paragraph-after-migration).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME

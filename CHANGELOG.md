@@ -9,7 +9,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 - Let the room migration reference review a saved legacy paragraph and apply
   an explicit edit to the corresponding retained paragraph. The write checks
-  the reviewed revision and keeps the archived draft intact.
+  the reviewed revision and keeps the archived draft intact. The demo lists
+  changed text-only paragraphs and preserves proposed text during review refresh.
 
 - Keep React toolbar keyboard navigation moving past hidden and disabled
   controls, and within the toolbar that owns the focused control.
