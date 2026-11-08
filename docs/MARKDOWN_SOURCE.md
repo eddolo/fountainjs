@@ -1,5 +1,23 @@
 # Markdown semantics and source fidelity
 
+## Link destination and title boundaries
+
+The default Markdown parser keeps malformed bare link and image destinations
+literal, including spaces inside parentheses and spaces after a backslash.
+Angle-bracket destinations require an escape for a literal opening angle
+bracket. Quoted titles can contain unmatched parentheses, and a destination
+can begin on the line after the link's opening parenthesis. If malformed
+inline syntax follows a valid shortcut reference, the reference still
+resolves and its suffix stays visible.
+
+Twenty-two supplemental LF/CRLF checks compare the parsed meaning with the
+development-only CommonMark reference and verify exact untouched source.
+The official corpus scores are unchanged. Recorded Chromium, Firefox and
+WebKit checks edit a different paragraph in the Conversion Lab and verify
+that the actual Markdown download retains both the original valid link and
+the literal malformed syntax.
+[CommonMark link grammar](https://spec.commonmark.org/0.31.2/#link-destination)
+
 ## Consistent Unicode reference matching
 
 Markdown reference labels use the pinned Unicode 17 full case-fold mappings.

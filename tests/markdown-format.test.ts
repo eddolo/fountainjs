@@ -291,6 +291,38 @@ describe('Markdown interchange', () => {
     expect(document.textContent).toContain('[invalid](guide.md "one "two" three")');
   });
 
+  it.each([
+    '[label](/a(b c))',
+    '![label](/a(b c))',
+    '[label](/a\\ c)',
+    '[label](</a<b>)',
+    '[label](/a (outer(inner)) )',
+    '[ref]: /a(b c)\n\n[ref]',
+    '[ref]: /guide "\n\n[ref]',
+  ])('keeps malformed destination or title syntax literal: %s', source => {
+    const schema = new Schema(CoreSchemaSpec);
+    const result = MarkdownImporter.parseWithSource(source, schema);
+    expect(HTMLExporter.export(result.document, { document: false })).not.toMatch(/<(?:a |img )/u);
+    expect(result.document.textContent).toBe(source.replaceAll('\n', ''));
+    expect(MarkdownExporter.exportWithSource(result.document, result.source).markdown).toBe(source);
+  });
+
+  it.each([
+    ['[label](/a "A ) B")', '/a', 'A ) B'],
+    ['[label](/a \'A ( B\')', '/a', 'A ( B'],
+    ['[label](\n</a ) b> "Title")', '/a ) b', 'Title'],
+    ['[label](</a\\<b>)', '/a<b', ''],
+    ['[label](/a(b%20c))', '/a(b%20c)', ''],
+    ['[ref]: /good\n\n[ref](/a(b c))', '/good', ''],
+  ])('parses valid destination boundaries in %s', (source, href, title) => {
+    const schema = new Schema(CoreSchemaSpec);
+    const result = MarkdownImporter.parseWithSource(source, schema);
+    const link = result.document.child(0).child(0).marks.find(mark => mark.type.name === 'link');
+    expect(link?.attrs).toMatchObject({ href, title });
+    expect(MarkdownExporter.exportWithSource(result.document, result.source).markdown).toBe(source);
+    expect(MarkdownImporter.parse(MarkdownExporter.export(result.document), schema).toJSON()).toEqual(result.document.toJSON());
+  });
+
   it('applies CommonMark link precedence for malformed inline syntax and nested links', () => {
     const schema = new Schema(CoreSchemaSpec);
     const document = MarkdownImporter.parse([

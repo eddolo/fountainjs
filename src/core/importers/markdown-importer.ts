@@ -920,10 +920,16 @@ function inlineLinkEnd(value: string, start: number): number {
       depth = 1;
       continue;
     }
-    if (!destinationStarted && /[\t ]/u.test(character)) continue;
+    if (!destinationStarted && /[\t \r\n]/u.test(character)) continue;
     if (!destinationStarted) {
       destinationStarted = true;
       angleDestination = character === '<';
+    } else if (!angleDestination && depth === 1 && (character === '"' || character === "'")
+      && /[\t \r\n]/u.test(value[index - 1])) {
+      // A quoted title owns its parentheses, including unmatched ones.
+      index = matchingDelimiter(value, index + 1, character);
+      if (index < 0) return -1;
+      continue;
     }
     if (angleDestination) {
       if (character === '\n' || character === '\r') return -1;
@@ -1168,6 +1174,9 @@ function destinationParts(value: string, allowEmpty = false): ReferenceDefinitio
     if (close < 0) return null;
     href = source.slice(1, close);
     if (/\r|\n/u.test(href)) return null;
+    for (let index = href.indexOf('<'); index >= 0; index = href.indexOf('<', index + 1)) {
+      if (!isEscapedMarkdownCharacter(href, index)) return null;
+    }
     cursor = close + 1;
     if (cursor < source.length && !/[\t \r\n]/u.test(source[cursor])) return null;
   } else {
@@ -1183,17 +1192,20 @@ function destinationParts(value: string, allowEmpty = false): ReferenceDefinitio
       }
       href += character;
     }
-    if (depth !== 0) return null;
+    // Spaces and control characters cannot occur anywhere in a bare
+    // destination, including inside balanced parentheses or after a backslash.
+    if (depth !== 0 || /[\u0000-\u0020\u007f]/u.test(href)) return null;
   }
   const remainder = source.slice(cursor).replace(/^[\t \r\n]+|[\t \r\n]+$/gu, '');
   let title = '';
   if (remainder) {
+    if (remainder.length < 2 || isEscapedMarkdownCharacter(remainder, remainder.length - 1)) return null;
     const first = remainder[0];
     const last = remainder.at(-1);
     if (!((first === '"' && last === '"') || (first === "'" && last === "'") || (first === '(' && last === ')'))) return null;
     for (let index = 1; index < remainder.length - 1; index++) {
       if (remainder[index] === '\\') { index++; continue; }
-      if (remainder[index] === last) return null;
+      if (remainder[index] === last || first === '(' && remainder[index] === '(') return null;
     }
     title = remainder.slice(1, -1);
   }

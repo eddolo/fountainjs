@@ -460,6 +460,30 @@ if (!Array.isArray(commonmarkSpec.tests) || commonmarkSpec.tests.length !== 652)
 }
 
 const schema = new Schema(CoreSchemaSpec);
+const linkGrammarProbes = [
+  '[link](/guide(draft copy))',
+  '![image](/guide(draft copy))',
+  '[link](/guide\\ draft)',
+  '[link](/guide "Draft ) copy")',
+  "[link](/guide 'Draft ( copy')",
+  '[link](\n</guide ) draft> "Guide")',
+  '[link](/guide (Draft(copy)) )',
+  '[ref]: /guide(draft copy)\n\n[ref]',
+  '[ref]: /guide "unterminated\\"\n\n[ref]',
+  '[ref]: /guide ""\n\n[ref]',
+  '[ref]: /guide\n\n[ref](/draft(copy here))',
+];
+for (const probe of linkGrammarProbes) for (const ending of ['\n', '\r\n']) {
+  const source = probe.replaceAll('\n', ending);
+  const parsed = MarkdownImporter.parseWithSource(source, schema);
+  const actual = semanticProjection(HTMLExporter.export(parsed.document, { document: false }));
+  const expected = semanticProjection(referenceRenderer.render(referenceParser.parse(source)));
+  if (JSON.stringify(actual) !== JSON.stringify(expected)
+    || MarkdownExporter.exportWithSource(parsed.document, parsed.source).markdown !== source) {
+    throw new Error(`Markdown link grammar changed source or reference meaning: ${JSON.stringify(source)}.`);
+  }
+}
+console.log(`Link grammar: ${linkGrammarProbes.length * 2} supplemental reference and exact-source checks.`);
 checkMarkdownDelimiterNeighbors({ schema, MarkdownImporter, MarkdownExporter, HTMLExporter,
   referenceParser, referenceRenderer, referenceOutput, semanticProjection });
 checkMarkdownCodeLabels({ schema, MarkdownImporter, MarkdownExporter, HTMLExporter,

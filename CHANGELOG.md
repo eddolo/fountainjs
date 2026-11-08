@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep malformed Markdown link and image destinations literal while parsing
+  valid quoted titles that contain parentheses.
+
 - Keep retained rooms editable after competing quote and list wraps. A
   displaced empty wrapper stays out of the document view, and undo can recover
   the surviving paragraph placement without losing a peer's typing.

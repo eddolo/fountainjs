@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -283,6 +284,31 @@ test('preserves immutable snapshots and owned attributes through real typing Ent
 
 test('imports private files in the conversion lab with reports and export reopen', async ({ page }, info) => {
   await conversionLabJourney(page, info);
+});
+
+test('keeps valid and malformed Markdown links distinct through an edit and download', async ({ page }, info) => {
+  const source = '# Linking drafts\r\n\r\nRead the [guide](/guide "Draft ) copy").\r\n\r\n[Invalid](/guide(draft copy))\r\n\r\nEdit here.\r\n';
+  await page.goto('/conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles({ name: 'links.md', mimeType: 'text/markdown', buffer: Buffer.from(source) });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: links.md', exact: true });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const link = editor.getByRole('link', { name: 'guide' });
+  await expect(link).toHaveAttribute('href', '/guide');
+  await expect(link).toHaveAttribute('title', 'Draft ) copy');
+  await expect(editor.getByRole('link')).toHaveCount(1);
+  await expect(editor.getByText('[Invalid](/guide(draft copy))', { exact: true })).toBeVisible();
+  await editor.getByText('Edit here.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' Reviewed.');
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('markdown');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export' }).click();
+  expect(await readFile((await (await pending).path())!, 'utf8')).toBe(source.replace('Edit here.', 'Edit here. Reviewed.'));
+  const reopened = workspace.getByRole('textbox', { name: 'Reopened export preview' });
+  await expect(reopened.getByRole('link', { name: 'guide' })).toHaveAttribute('title', 'Draft ) copy');
+  await expect(reopened.getByRole('link')).toHaveCount(1);
+  await expect(reopened.getByText('[Invalid](/guide(draft copy))', { exact: true })).toBeVisible();
+  await reopened.screenshot({ path: info.outputPath('reopened-markdown-links.png') });
 });
 
 test('resolves unequal Markdown runs through actual selection editing history download and reader reopen', async ({ page }, info) => {
