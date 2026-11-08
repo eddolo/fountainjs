@@ -445,7 +445,7 @@
     "dist/yjs/retained-room-store.d.ts": "463a9e3542f1d2737312627f051fbf06bb9688a328b07791a85f9f7e7d88a85a",
     "dist/yjs/room.d.cts": "dc1a05a25ddefa2669b69658fbfc428f01f1ba11062d8aa6aae6da3fd9f6fb37",
     "dist/yjs/room.d.ts": "84a65895a75f121c5e8b69460b38b5c1a1f22186409c418535dfcb4377b24805",
-    "dist/yjs/structured-attributes.d.cts": "783fad435a4b880d340fcde14e456c9a437746fc36ddad83ed6cddff3811845f",
-    "dist/yjs/structured-attributes.d.ts": "44aecb337c6c742fa45ee136982965b7cbd43da9940936cea9ed69c3ec3a248c"
+    "dist/yjs/structured-attributes.d.cts": "4d7c7cb1978876d8cdaf68f47e86b4a2bb06eec3552495fdfef694e4c2342eb0",
+    "dist/yjs/structured-attributes.d.ts": "bd411a46e4da6181aa93823e8060eca281fbecc6a05659d60f18b850e54b9102"
   }
 }

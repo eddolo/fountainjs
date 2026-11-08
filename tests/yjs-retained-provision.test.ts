@@ -4,7 +4,8 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, canUndoCollaboration, composeExtensions, createEditor, getCollaborationState, insertText, reconnectCollaboration, setMark, splitBlock, toggleList, toggleQuote } from '../src';
+import { CoreExtension, Selection, canUndoCollaboration, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, reconnectCollaboration, setMark, splitBlock, toggleList, toggleQuote } from '../src';
+import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
@@ -72,6 +73,62 @@ it('opens a newly provisioned retained room at the newer bound revision', async 
   expect(Object.isFrozen(bound.lease)).toBe(true);
   expect(bound.baseDocument.textContent).toBe('New: Canonical starter');
   expect(bound.fragment).toBeUndefined();
+});
+
+it.each([undefined, 'research-settings'] as const)('requires the full saved structured map (%s) and reopens the merged field values', async mapName => {
+  const pair = await fixture();
+  const panel = defineExtension({ name: 'room-settings', nodes: { settings: { group: 'block', atom: true } } });
+  const config = defineStructuredAttribute({ nodeType: 'settings', attribute: 'config', root: 'object' });
+  const display = defineStructuredAttribute({ nodeType: 'settings', attribute: 'display', root: 'object' });
+  const structured = { definitions: [config, display], mapName };
+  const document = new Y.Doc();
+  const kit = composeExtensions([CoreExtension, panel, createRetainedYjsCollaborationExtension({
+    document, user, structuredAttributes: structured,
+  })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+    type: 'doc', content: [{ type: 'settings', attrs: { nodeId: 'panel-1', config: { columns: 2, compact: false }, display: { theme: 'light' } } }],
+  } });
+  cleanups.push(() => { editor.destroy(); document.destroy(); });
+  const schema = editor.state.schema;
+  const authority = new CoordinatedDocumentRoom(pair.first, key, schema, version);
+  const checkpoint = await captureRetainedCheckpoint(document, schema, version);
+  const initial = await authority.initialize(checkpoint);
+  const open = async (structuredAttributes?: { definitions: typeof structured.definitions; mapName?: string }) => {
+    const bound = await openYjsRoom({ expected: { key }, schema, schemaVersion: version, structuredAttributes,
+      open: async protocols => (await authority.openForEditing({ protocols, loadCheckpoint: () => checkpoint })).admission,
+      admit: offer => authority.admit(offer),
+    });
+    cleanups.push(() => bound.document.destroy());
+    return bound;
+  };
+  if (mapName === undefined) await expect(open()).rejects.toThrow('requires definitions for the saved structured attribute map');
+  await expect(open({ definitions: [config], mapName: 'wrong-map' })).rejects.toThrow(/requires .*structured attribute map/);
+  await expect(open({ definitions: [config], mapName })).rejects.toThrow('do not cover the saved room map');
+  const wrongAttribute = defineStructuredAttribute({ nodeType: 'settings', attribute: 'other', root: 'object' });
+  await expect(open({ definitions: [config, wrongAttribute], mapName })).rejects.toThrow(/Invalid structured attribute settings\.other/);
+  expect(await authority.snapshot()).toEqual(initial);
+
+  const mount = async () => {
+    const bound = await open(structured);
+    const localKit = composeExtensions([CoreExtension, panel, bound.createExtension({ user })]);
+    const localEditor = createEditor({ schema: localKit.schema, plugins: localKit.plugins, content: bound.baseDocument.toJSON() });
+    cleanups.push(() => localEditor.destroy());
+    return { ...bound, editor: localEditor };
+  };
+  const left = await mount(), right = await mount();
+  expect(setStructuredAttribute(left.editor, [0], config, ['columns'], 4)).toBe(true);
+  expect(setStructuredAttribute(right.editor, [0], config, ['compact'], true)).toBe(true);
+  const vector = Y.encodeStateVectorFromUpdate(checkpoint.update);
+  for (const author of [left, right]) {
+    await authority.write({ epoch: author.lease.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(author.document, vector) });
+  }
+  const saved = await authority.snapshot();
+  const reopened = await mount();
+  expect(reopened.lease.revision).toBe(2);
+  const attrs = { nodeId: 'panel-1', config: { columns: 4, compact: true }, display: { theme: 'light' } };
+  expect(reopened.baseDocument.child(0).attrs).toEqual(attrs);
+  expect(reopened.editor.state.doc.child(0).attrs).toEqual(attrs);
+  expect(await authority.snapshot()).toEqual(saved);
 });
 
 it.each([

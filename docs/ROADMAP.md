@@ -22,6 +22,9 @@ select retained storage and pass the six structural cases after durable reopen.
 Bound adapters also verify the admitted native root at mount and stop shared
 editing if that root is replaced or an embedded XML fragment is detached.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
+The retained opener refuses incomplete definitions for a saved structured map
+and projects both authors' granular updates on reopen.
+[Structured field admission](YJS_NAMESPACE_MIGRATION_AUDIT.md#validate-structured-fields-before-admitting-a-retained-editor).
 Both adapters now preserve the local draft and suspend shared editing when
 the mounted editor rejects a peer's document update.
 [Rejected-update audit](YJS_STRUCTURAL_RETENTION_AUDIT.md#rejected-document-update-recovery).
@@ -77,7 +80,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 147.7 KiB over its existing limit. Retained
+pass. The CommonJS aggregate is 148.3 KiB over its existing limit. Retained
 rooms now defer the legacy adapter, reducing the room entry's initial load by
 about 20 KiB in both formats.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).

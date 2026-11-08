@@ -1,3 +1,4 @@
+import { Map as YMap } from 'yjs';
 import type * as Y from 'yjs';
 import type { Node, Schema } from '../core/schema';
 import type { FountainExtension } from '../extensions/extension';
@@ -8,6 +9,7 @@ import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyCheckpoin
 import { createRetainedYjsCollaborationExtension } from './retained-adapter';
 import { checkpointWire, restoreRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
 import { admittedRoomRoots } from './admitted-room-root';
+import { YjsStructuredAttributeStore } from './structured-attributes';
 
 export { captureLegacyCheckpoint, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 export { captureRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
@@ -110,8 +112,21 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
   try {
     signal?.throwIfAborted();
     if (restored.document.store.pendingStructs || restored.document.store.pendingDs) throw new Error('Room admission returned unresolved update dependencies.');
+    const structured = legacyProjection.structuredAttributes;
+    const defaultMapName = `${lease.room}:structured-attributes`;
+    const mapName = structured?.mapName ?? defaultMapName;
+    if ((!structured || mapName !== defaultMapName) && restored.document.share.has(defaultMapName)) {
+      throw new Error('Room admission requires definitions for the saved structured attribute map.');
+    }
+    let baseDocument = restored.baseDocument;
+    if (structured) {
+      const map = restored.document.share.get(mapName);
+      if (!(map instanceof YMap)) throw new Error('Room admission requires the declared structured attribute map.');
+      const attributes = new YjsStructuredAttributeStore(restored.document, { ...structured, map }, defaultMapName);
+      baseDocument = schema.nodeFromJSON(attributes.overlay(baseDocument, true));
+    }
     const fragment = restored.document.getXmlFragment(lease.room);
     admittedRoomRoots.set(fragment, fragment.get(0) as Y.XmlElement);
-    return bind(restored.document, restored.baseDocument, createRetainedYjsCollaborationExtension);
+    return bind(restored.document, baseDocument, createRetainedYjsCollaborationExtension);
   } catch (error) { restored.document.destroy(); throw error; }
 }

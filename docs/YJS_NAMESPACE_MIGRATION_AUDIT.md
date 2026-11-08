@@ -237,6 +237,28 @@ retired archive when the verified replacement opens. The package build, all
 441 tracked declarations, and the headless boundary pass. The aggregate size
 gate still reports the existing 174.3 KiB ESM and 138.7 KiB CommonJS overruns.
 
+### Validate structured fields before admitting a retained editor
+
+`openYjsRoom` refuses a saved default structured attribute map when the host
+omits its definitions. With definitions supplied, the opener requires the
+declared map and verifies that every live entry is covered and every expected
+entry exists. This stops a client with a partial field set before it can mount
+and remove the other fields on its first write. A host using a custom map name
+must still supply that name and its definitions. The current checkpoint format
+does not identify which arbitrary custom maps belong to the editor.
+
+The initial draft projects verified values from that map. Two peers can edit
+separate fields of the same attribute offline. The saved materialized node can
+contain either peer's whole attribute while the shared map has both field
+changes. The verified opener returns both changes and leaves the authority's
+saved bytes intact. This check applies to the package room opener. It does
+not add a definitions handshake to independently connected providers.
+
+The SQLite test writes the two updates in separate revisions and reopens
+default and custom map names. The recorded Chromium, Firefox and WebKit demo
+tries incomplete definitions, makes both offline edits, and checks the saved
+settings in the reopened editor. The browser demo uses in-memory snapshots.
+
 ### Keep the admitted root through editor startup
 
 `openYjsRoom` now binds the exact restored Yjs root in both formats. The

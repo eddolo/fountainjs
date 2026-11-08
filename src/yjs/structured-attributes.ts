@@ -286,14 +286,21 @@ export class YjsStructuredAttributeStore {
     this.synchronizeEntries(this.entries(document), false, true);
   }
 
-  overlay(document: Node): NodeJSON {
+  overlay(document: Node, requireComplete = false): NodeJSON {
     if (this.map.size > MAXIMUM_SHARED_ENTRIES) {
       throw new Error(ENTRY_LIMIT);
     }
+    const entries = this.entries(document);
+    if (requireComplete && this.map.size !== entries.length) {
+      throw new Error('Structured attribute definitions do not cover the saved room map.');
+    }
     const json = document.toJSON();
-    for (const entry of this.entries(document)) {
+    for (const entry of entries) {
       const shared = this.map.get(entry.key);
-      if (shared === undefined) continue;
+      if (shared === undefined) {
+        if (requireComplete) throw new Error('Structured attribute definitions do not cover the saved room map.');
+        continue;
+      }
       const decoded = decodeSharedValue(shared, entry.definition.limits, 0, { entries: 0 });
       const report = validateStructuredAttributeValue(entry.definition, decoded, {
         node: entry.node,

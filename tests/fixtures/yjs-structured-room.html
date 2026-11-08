@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open a room with structured fields</title>
+<link rel="stylesheet" href="/artifacts/yjs-namespace-build-20261107/styles.css">
+<style>
+  body { max-width: 860px; margin: 48px auto; padding: 0 20px; font: 16px/1.5 system-ui; }
+  section { margin: 20px 0; padding: 18px; border: 1px solid #cbc6dd; border-radius: 8px; }
+  h2 { margin-top: 0; }
+  button { padding: 8px 14px; margin: 0 8px 8px 0; }
+  section .fountain-editor { min-height: 0; padding: 12px; margin-bottom: 8px; }
+</style>
+<h1>Open a room with structured fields</h1>
+<p>Ada and Grace edit separate settings in two offline copies. Reopen the saved room to check the merged values.</p>
+<button id="partial" type="button" disabled>Open with incomplete definitions</button>
+<button id="complete" type="button" disabled>Open both authors</button>
+<p id="status" role="status">Preparing the saved room…</p>
+<section aria-label="Ada"><h2>Ada</h2><div id="ada"></div><button id="columns" type="button" disabled>Add a column</button></section>
+<section aria-label="Grace"><h2>Grace</h2><div id="grace"></div><button id="compact" type="button" disabled>Use compact layout</button></section>
+<button id="save" type="button" disabled>Save both copies and reopen</button>
+<section aria-label="Reopened room"><h2>Reopened room</h2><div id="reopened"></div></section>
+<script type="module">
+  import * as Y from 'yjs';
+  import { CoreExtension, EditorView, Schema, composeExtensions, createEditor, defineExtension }
+    from '/artifacts/yjs-namespace-build-20261107/engine.js';
+  import { captureRetainedCheckpoint, createRetainedYjsCollaborationExtension, openYjsRoom }
+    from '/artifacts/yjs-namespace-build-20261107/bound-room.js';
+  import { restoreRetainedCheckpoint } from '/artifacts/yjs-namespace-build-20261107/checkpoint.js';
+  import { defineStructuredAttribute, setStructuredAttribute }
+    from '/artifacts/yjs-namespace-build-20261107/structured-attributes.js';
+
+  const panel = defineExtension({ name: 'room-settings', nodes: { settings: {
+    group: 'block', atom: true, toDOM: node => ['p', {},
+      node.attrs.layout.columns + ' columns · ' + (node.attrs.layout.compact ? 'Compact' : 'Comfortable')
+      + ' · ' + node.attrs.display.theme + ' theme'],
+  } } });
+  const layout = defineStructuredAttribute({ nodeType: 'settings', attribute: 'layout', root: 'object' });
+  const display = defineStructuredAttribute({ nodeType: 'settings', attribute: 'display', root: 'object' });
+  const structuredAttributes = { definitions: [layout, display] };
+  const schema = new Schema(composeExtensions([CoreExtension, panel]).schema);
+  const schemaVersion = 'structured-room-browser-1';
+  const epoch = crypto.randomUUID();
+  const seed = new Y.Doc();
+  const user = id => ({ id, name: id, color: '#7048e8' });
+  const mount = (extension, content) => {
+    const kit = composeExtensions([CoreExtension, panel, extension]);
+    return createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+  };
+  const seedEditor = mount(createRetainedYjsCollaborationExtension({ document: seed, user: user('seed'), structuredAttributes }), {
+    type: 'doc', content: [{ type: 'settings', attrs: {
+      nodeId: 'panel-1', layout: { columns: 2, compact: false }, display: { theme: 'light' },
+    } }],
+  });
+  let checkpoint = await captureRetainedCheckpoint(seed, schema, schemaVersion);
+  seedEditor.destroy();
+  seed.destroy();
+  const key = 'research-settings';
+  let revision = 0;
+  let ada, grace, saved;
+  const button = id => document.getElementById(id);
+  const status = message => { document.getElementById('status').textContent = message; };
+  const open = options => {
+    const offer = { key, epoch, revision, protocol: 'retained', room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
+    return openYjsRoom({
+      expected: { key }, schema, schemaVersion, structuredAttributes: options,
+      open: async () => offer,
+      admit: async () => ({ key, epoch, revision, protocol: 'retained', phase: 'active', checkpoint }),
+    });
+  };
+  const show = (bound, id) => {
+    const editor = mount(bound.createExtension({ user: user(id) }), bound.baseDocument.toJSON());
+    const view = new EditorView(document.getElementById(id), editor, { ariaLabel: id + ' editor' });
+    return { editor, view, document: bound.document };
+  };
+  button('partial').onclick = async () => {
+    try {
+      const bound = await open({ definitions: [layout] });
+      bound.document.destroy();
+      status('Unexpectedly opened with incomplete definitions.');
+    } catch (error) { status(error.message); }
+  };
+  button('complete').onclick = async () => {
+    button('complete').disabled = true;
+    button('partial').disabled = true;
+    ada = show(await open(structuredAttributes), 'ada');
+    grace = show(await open(structuredAttributes), 'grace');
+    for (const id of ['columns', 'compact', 'save']) button(id).disabled = false;
+    status('Both authors opened the saved room.');
+  };
+  button('columns').onclick = () => setStructuredAttribute(ada.editor, [0], layout, ['columns'], 3);
+  button('compact').onclick = () => setStructuredAttribute(grace.editor, [0], layout, ['compact'], true);
+  button('save').onclick = async () => {
+    for (const id of ['columns', 'compact', 'save']) button(id).disabled = true;
+    const authority = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
+    try {
+      const vector = Y.encodeStateVector(authority.document);
+      for (const writer of [ada, grace]) Y.applyUpdate(authority.document, Y.encodeStateAsUpdate(writer.document, vector));
+      checkpoint = await captureRetainedCheckpoint(authority.document, schema, schemaVersion);
+      revision++;
+    } finally { authority.document.destroy(); }
+    saved = show(await open(structuredAttributes), 'reopened');
+    status('Saved and reopened at revision ' + revision + '.');
+  };
+  window.addEventListener('pagehide', () => {
+    for (const author of [ada, grace, saved]) {
+      if (!author) continue;
+      author.view.destroy();
+      author.editor.destroy();
+      author.document.destroy();
+    }
+  });
+  button('partial').disabled = false;
+  button('complete').disabled = false;
+  status('Saved room ready.');
+</script>
+</html>
