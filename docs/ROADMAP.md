@@ -84,7 +84,10 @@ newer local edits for a separate save.
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
 confidence, accessibility, RTL/localization, and practical onboarding. The
-default Markdown semantic profile matches 563/652. The explicit complete-file
+public slash menu now leaves IME candidate keys alone in recorded desktop
+browser tests. [Input evidence](TOOLBAR.md#suggestion-menus-during-text-composition).
+
+The default Markdown semantic profile matches 563/652. The explicit complete-file
 source-data profile matches all 652 CommonMark body examples, with separate
 exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
@@ -117,7 +120,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 149.7 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 149.8 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

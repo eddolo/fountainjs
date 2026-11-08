@@ -89,6 +89,13 @@ describe('framework-neutral mention suggestions', () => {
     expect(controller.getSnapshot().items.map((item) => item.id)).toEqual(['alice', 'abel']);
 
     const plugin = extension.plugins?.[0];
+    const candidateArrow = new KeyboardEvent('keydown', { key: 'ArrowDown', isComposing: true });
+    const candidateEnter = keyboard('Enter');
+    Object.defineProperty(candidateEnter, 'keyCode', { value: 229 });
+    expect(plugin?.spec.props?.handleKeyDown?.(editor, candidateArrow)).toBe(false);
+    expect(plugin?.spec.props?.handleKeyDown?.(editor, candidateEnter)).toBe(false);
+    expect(controller.getSnapshot()).toMatchObject({ open: true, selectedIndex: 0 });
+    expect(editor.getText()).toBe('@ab');
     expect(plugin?.spec.props?.handleKeyDown?.(editor, keyboard('ArrowDown'))).toBe(true);
     expect(controller.getSnapshot().selectedIndex).toBe(1);
     expect(plugin?.spec.props?.handleKeyDown?.(editor, keyboard('Enter'))).toBe(true);

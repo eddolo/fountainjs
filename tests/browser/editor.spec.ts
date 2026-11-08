@@ -5166,6 +5166,48 @@ test('runs grouped default and product slash commands in the public React playgr
   await expect(freshEditor.locator('.demo-callout').last()).toContainText('A custom node supplied by the demo extension.');
 });
 
+test('leaves IME candidate keys alone while the public slash menu is open', async ({ page }, info) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  await editor.locator('[data-fountain-node="paragraph"]').first().click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('/heading');
+  const menu = page.locator('.fountain-slash-command-menu');
+  const options = menu.getByRole('option');
+  await expect(options).toHaveCount(3);
+  await expect(options.nth(1)).toContainText('Heading 2');
+  const before = await editor.innerText();
+  const headingsBefore = await editor.locator('h2').count();
+  const selected = await editor.getAttribute('aria-activedescendant');
+  expect(selected).toBeTruthy();
+
+  const prevented = await editor.evaluate(element => {
+    const key = (name: string, isComposing = false, legacy = false) => {
+      const event = new KeyboardEvent('keydown', { key: name, isComposing, bubbles: true, cancelable: true });
+      if (legacy) Object.defineProperty(event, 'keyCode', { value: 229 });
+      return !element.dispatchEvent(event);
+    };
+    const composingArrow = key('ArrowDown', true);
+    const legacyEnter = key('Enter', false, true);
+    element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    const duringSession = ['ArrowDown', 'Enter', 'Escape', 'Backspace'].map(name => key(name));
+    element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '' }));
+    return { composingArrow, legacyEnter, duringSession };
+  });
+  expect(prevented).toEqual({ composingArrow: false, legacyEnter: false, duringSession: [false, false, false, false] });
+  await expect(menu).toBeVisible();
+  expect(await editor.innerText()).toBe(before);
+  await expect(editor).toHaveAttribute('aria-activedescendant', selected!);
+  await menu.screenshot({ path: info.outputPath('slash-menu-after-ime-keys.png') });
+
+  await page.keyboard.press('ArrowDown');
+  await expect(options.nth(1)).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Enter');
+  await expect(menu).toHaveCount(0);
+  await expect(editor.locator('h2')).toHaveCount(headingsBefore + 1);
+});
+
 test('runs accessible bubble and floating menus in the public React playground', async ({ page }, info) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });

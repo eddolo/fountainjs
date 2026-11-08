@@ -19,6 +19,7 @@ import {
   type NodeViewLike,
   type Transaction,
 } from '../core';
+import { isCompositionKey } from '../core/composition-key';
 import {
   createCommandManager,
   type CommandChecks,
@@ -528,7 +529,7 @@ export class EditorView {
   }
 
   private onDocumentBoundaryKeyDown = (event: KeyboardEvent): void => {
-    if (event.defaultPrevented || event.altKey || event.isComposing || this.input.composing) return;
+    if (event.defaultPrevented || event.altKey || this.input.composing || isCompositionKey(event)) return;
     const character = event.shiftKey && !event.ctrlKey && !event.metaKey
       && (event.key === 'ArrowLeft' || event.key === 'ArrowRight');
     const start = (event.ctrlKey || event.metaKey) && (event.key === 'Home' || (event.metaKey && event.key === 'ArrowUp'));

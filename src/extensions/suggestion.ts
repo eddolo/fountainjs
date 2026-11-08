@@ -6,6 +6,7 @@ import {
   type Editor,
   type EditorState,
 } from '../core';
+import { isCompositionKey } from '../core/composition-key';
 import { getNodeAtPath } from '../core/transaction/path';
 import type { InlineAtomRange } from './inline-atom';
 
@@ -301,7 +302,7 @@ export function handleSuggestionKeyDown<Item extends SuggestionItemBase>(
   controller: SuggestionController<Item> | undefined,
   event: KeyboardEvent,
 ): boolean {
-  if (!controller?.getSnapshot().open || event.ctrlKey || event.metaKey || event.altKey) return false;
+  if (isCompositionKey(event) || event.ctrlKey || event.metaKey || event.altKey || !controller?.getSnapshot().open) return false;
   if (event.key === 'ArrowDown') return controller.move(1);
   if (event.key === 'ArrowUp') return controller.move(-1);
   if (event.key === 'Enter') return controller.accept();

@@ -21,6 +21,20 @@ fix. The field and RTL navigation checks, plus the main toolbar traversal
 checks, passed in recorded Chromium, Firefox and WebKit runs. The Chromium
 RTL focus capture was visually checked.
 
+## Suggestion menus during text composition
+
+The editor leaves composition keystrokes to the input method before checking
+keyboard shortcuts or suggestion menus. This covers an active composition
+session, the browser's composition flag, and the legacy IME key code. Normal
+suggestion navigation and confirmation resume when composition ends.
+
+The public slash menu regression reproduced unwanted candidate navigation and
+confirmation in Chromium. The fix passed recorded Chromium, Firefox, and
+WebKit runs with simulated composition events followed by ordinary keyboard
+selection. Existing composition and deletion checks also passed on emulated
+Pixel and iPhone profiles. Physical keyboards and candidate windows still
+need device verification.
+
 ## Physical table sides and document order
 
 The table panel's **Add column left/right** controls follow the mounted table's

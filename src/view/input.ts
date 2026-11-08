@@ -29,6 +29,7 @@ import {
   Selection,
   RangeSelection,
 } from '../core';
+import { isCompositionKey } from '../core/composition-key';
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
@@ -264,6 +265,8 @@ export class InputManager {
   private onKeyDown = (event: KeyboardEvent): void => {
     this.shiftEnterPending = false;
     if (this.options.shouldStopEvent?.(event)) return;
+    // Leave candidate navigation and confirmation to the input method.
+    if (this.composingValue || isCompositionKey(event)) return;
     const codeRegion = this.focusedCodeRegion(event);
     let pluginsChecked = false;
     if (codeRegion) {
@@ -305,11 +308,11 @@ export class InputManager {
     // WebKit reports Shift+Enter as insertParagraph. Preserve keyboard intent
     // until beforeinput instead of bypassing plugins or inserting twice.
     this.shiftEnterPending = key === 'enter' && event.shiftKey && !modifier && !event.altKey
-      && !event.isComposing && !this.composingValue && this.editor.editable;
+      && this.editor.editable;
     const mark = modifier && !event.altKey
       ? key === 'b' ? 'strong' : key === 'i' ? 'em' : key === 'u' ? 'underline' : null
       : null;
-    if (modifier && !event.altKey && !event.isComposing && !this.composingValue && this.editor.editable
+    if (modifier && !event.altKey && this.editor.editable
       && (key === 'z' || key === 'y' && !event.shiftKey)) {
       event.preventDefault();
       if (key === 'z' && !event.shiftKey) undo(this.editor);
@@ -332,7 +335,7 @@ export class InputManager {
     } else if (mark) {
       event.preventDefault();
       toggleMark(this.editor, mark);
-    } else if (!modifier && !event.altKey && !event.isComposing && (key === 'backspace' || key === 'delete')) {
+    } else if (!modifier && !event.altKey && (key === 'backspace' || key === 'delete')) {
       const backward = key === 'backspace';
       const handled = this.runGroupedInput(
         backward ? 'delete-backward' : 'delete-forward',
