@@ -3,6 +3,12 @@
 <h1>Persistent room switch · recovery audit</h1><p>Actual Node/SQLite authority. Old-room edits are retained separately for review; rollback also archives the replaced room.</p>
 <header><button id="save">Save active edits</button><button id="migrate">Switch to fresh room</button><button id="retry" disabled>Retry last switch</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain old edits</button><label>Rollback source <select id="restore"><option value="retained-branch">Retained old edits</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><label><input id="drop" type="checkbox">Drop switch acknowledgement (test only)</label></header>
 <details><summary>Compaction settings</summary><p>Check a saved revision before switching. The switch resets live undo and archives the original room.</p><label for="minimum">Minimum checkpoint bytes to save</label><input id="minimum" type="number" min="1" step="1" placeholder="Optional"> <button id="check-compaction">Check compaction</button></details>
+<details>
+ <summary>Room storage</summary>
+ <p>Check the saved live room and its recovery copies. These counts exclude database overhead.</p>
+ <button id="check-storage">Check stored bytes</button>
+ <div id="storage-usage" role="region" aria-label="Stored room bytes" aria-live="polite"></div>
+</details>
 <div id="draft-controls" hidden><button id="exact">Show saved offline draft</button> <button id="merged">Show merged retired branch</button> <button id="preview-text">Review opening paragraph</button></div>
 <section id="text-review" aria-label="Paragraph recovery review" hidden>
  <p>Current room · <span id="current-location"></span></p><div id="review-current" class="paragraph-preview"></div>
@@ -73,6 +79,29 @@ function compactionMinimum(){
  if(minimumBytesSaved!==undefined && (!Number.isSafeInteger(minimumBytesSaved) || minimumBytesSaved<1)) throw new Error('Enter a positive whole number of bytes');
  return minimumBytesSaved;
 }
+action('check-storage',async()=>{
+ const output=document.querySelector('#storage-usage');
+ output.textContent='';
+ const usage=await request('storage');
+ if(!usage) throw new Error('No saved room to measure');
+ const bytes=value=>value.toLocaleString('en-US')+' bytes';
+ const labels=[
+  ['Live checkpoint',bytes(usage.liveBytes)],
+  [`Recovery archives (${usage.archiveCount})`,bytes(usage.archiveBytes)],
+  [`Saved offline drafts (${usage.draftCount})`,bytes(usage.draftBytes)],
+  [`Recorded offline batches (${usage.batchCount})`,bytes(usage.batchBytes)],
+  ['Total recovery storage',bytes(usage.recoveryBytes)],
+  ['Total stored',bytes(usage.totalBytes)],
+ ];
+ const revision=document.createElement('p'),list=document.createElement('ul');
+ revision.textContent='Saved revision '+usage.revision;
+ for(const [label,value] of labels){
+  const item=document.createElement('li');
+  item.textContent=label+' · '+value;
+  list.append(item);
+ }
+ output.append(revision,list);
+});
 action('check-compaction',async()=>{
  compactionReview=undefined;
  const minimumBytesSaved=compactionMinimum();

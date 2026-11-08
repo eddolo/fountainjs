@@ -135,6 +135,12 @@ it('compacts a long edit history while keeping old writers fenced and both branc
     pair.editor.dispatch(pair.editor.createTransaction().replaceText([0, 0], 0, previous.length, next));
   }
   const edited = await pair.room.write({epoch:pair.initial.epoch,update:Y.encodeStateAsUpdate(pair.document)});
+  expect(pair.b.readStorageUsage('missing-room')).toBeUndefined();
+  expect(pair.b.readStorageUsage(key)).toEqual({
+    revision: edited.revision, liveBytes: edited.checkpoint.manifest.bytes,
+    archiveCount: 0, archiveBytes: 0, draftCount: 0, draftBytes: 0, batchCount: 0, batchBytes: 0,
+    recoveryBytes: 0, totalBytes: edited.checkpoint.manifest.bytes,
+  });
   const settings = {...options(),minimumBytesSaved:1_000};
   const checked = await pair.handoff.preflightCompaction(edited, settings);
   expect(checked).toMatchObject({meetsMinimum:true, minimumBytesSaved:1_000});
@@ -153,6 +159,7 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const oversized = gzipSync(new Uint8Array(edited.checkpoint.manifest.bytes + 1));
   setSourceWire.run(oversized, key, operation);
   await expect(pair.b.readArchive(key, operation)).rejects.toMatchObject({ code: 'ERR_BUFFER_TOO_LARGE' });
+  expect(pair.b.readStorageUsage(key)).toMatchObject({ archiveCount: 1, liveBytes: result.snapshot.checkpoint.manifest.bytes });
   // Existing databases can contain the original raw representation alongside
   // new compressed checkpoints.
   setSourceWire.run(edited.checkpoint.update, key, operation);
@@ -169,14 +176,30 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const draft = await captureRetainedCheckpoint(pair.document, pair.schema, version);
   const draftId = uuid();
   await pair.second.saveRetiredDraft({ archiveId: operation, roomId: edited.checkpoint.manifest.roomId, draftId, checkpoint: draft });
-  const storedBranch = db.prepare('SELECT length(branch_wire) AS bytes FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, operation);
+  const storedArchive = db.prepare('SELECT length(branch_wire) AS branchBytes, length(destination_wire) AS destinationBytes FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, operation);
   const storedDraft = db.prepare('SELECT length(wire) AS bytes FROM fountain_retained_drafts_v1 WHERE room_key = ? AND archive_id = ? AND draft_id = ?').get(key, operation, draftId);
-  expect(storedBranch?.bytes).toBeLessThan(branch.branch.manifest.bytes);
+  expect(storedArchive?.branchBytes).toBeLessThan(branch.branch.manifest.bytes);
   expect(storedDraft?.bytes).toBeLessThan(draft.manifest.bytes);
+  const archiveBytes = edited.checkpoint.manifest.bytes + Number(storedArchive?.branchBytes) + Number(storedArchive?.destinationBytes);
+  const draftBytes = Number(storedDraft?.bytes), liveBytes = result.snapshot.checkpoint.manifest.bytes;
+  expect(pair.b.readStorageUsage(key)).toEqual({
+    revision: result.snapshot.revision, liveBytes,
+    archiveCount: 1, archiveBytes, draftCount: 1, draftBytes, batchCount: 0, batchBytes: 0,
+    recoveryBytes: archiveBytes + draftBytes, totalBytes: liveBytes + archiveBytes + draftBytes,
+  });
+  const neighborKey = 'project:storage-neighbor';
+  const neighbor = new CoordinatedRetainedRoom(pair.a, neighborKey, pair.schema, version);
+  await neighbor.initialize(pair.checkpoint);
+  expect(pair.b.readStorageUsage(neighborKey)).toMatchObject({
+    liveBytes: pair.checkpoint.manifest.bytes, recoveryBytes: 0, totalBytes: pair.checkpoint.manifest.bytes,
+  });
   expect(await pair.handoff.readRetiredDraft(operation, draftId)).toEqual(draft);
   const rollback = await pair.second.rollback(await pair.room.freeze(result.snapshot), uuid(), operation, 'retained-branch', policy());
   expect(await model(rollback.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
   expect(rollback.archive.source.checkpoint).toEqual(result.snapshot.checkpoint);
+  expect(pair.b.readStorageUsage(key)).toMatchObject({
+    revision: rollback.snapshot.revision, liveBytes: rollback.snapshot.checkpoint.manifest.bytes, archiveCount: 2, draftCount: 1,
+  });
 });
 
 it('keeps the exact offline checkpoint alongside an overlapping retired merge and reopens it through SQLite', async () => {

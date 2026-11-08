@@ -1,6 +1,6 @@
 # FountainJS opportunity roadmap
 
-## Current programme status — 2026-11-07
+## Current programme status — 2026-11-08
 
 The capability ledger has 61 Delivered rows, eight Partial rows and two Host
 boundary rows. These count bounded capability contracts, not percentage
@@ -50,6 +50,8 @@ The SQLite reference now compresses cold checkpoint copies when it saves space.
 The 512-edit probe stored the 204,546-byte source in 29,184 bytes and recovered
 the exact checkpoint. Live checkpoint growth and archive retention policy
 remain open. [Cold archive storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#cold-sqlite-archive-storage).
+The SQLite reference and handoff demo report the live checkpoint and retained
+archive, draft and batch bytes separately. [Room storage report](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#measuring-room-storage).
 The cross-format reference acknowledges exact retries of archived offline
 batches. The browser demo keeps a pending batch through reload and preserves
 newer local edits for a separate save.

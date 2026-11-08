@@ -26,6 +26,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    const {key,room,handoff}=session;
    if(action==='initialize')value=await room.initialize(body.checkpoint);
    else if(action==='snapshot')value=await room.snapshot();
+   else if(action==='storage')value=repository.readStorageUsage(key);
    else if(action==='write')value=await room.write(body);
    else if(action==='check-compaction')value=await handoff.preflightCompaction(body,{...options,minimumBytesSaved:body.minimumBytesSaved});
    else if(action==='freeze')value=await room.freeze(body);

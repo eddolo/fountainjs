@@ -219,3 +219,19 @@ Verification covered 120 focused source tests, 16 compiled Node handoff
 checks, and 36 recorded Chromium, Firefox, and WebKit handoff journeys.
 The browser review included the smaller live room, the read-only recovery
 copy, and cross-format rollback preserving the edits from both rooms.
+
+### Measuring room storage
+
+The SQLite reference's `readStorageUsage(roomKey)` returns the saved revision
+and the stored bytes for the live checkpoint, recovery archives (including
+retired branches), exact offline drafts, and original cross-format edit batches.
+A single SQL statement measures the BLOB lengths without restoring or
+decompressing checkpoints. A missing live room returns no report. The
+loopback demo scopes the read to its existing session.
+
+Open **Room storage** in the handoff demo and select **Check stored bytes**.
+In the Firefox compaction and recovery run, the saved live checkpoint used
+8,367 bytes. One recovery archive and one saved draft used another 10,592 bytes,
+for 18,959 stored payload bytes. This separates the live compaction result from
+the storage kept for recovery. The report excludes SQLite file overhead and
+does not apply a retention policy.

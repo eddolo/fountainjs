@@ -131,6 +131,39 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     return { ...row, checkpoint: { manifest } };
   }
 
+  /** A read-only room snapshot of stored BLOB sizes. The host authorizes access. */
+  readStorageUsage(key: string) {
+    const usage = this.db.prepare(`
+      WITH archive_payloads(bytes) AS (
+        SELECT length(source_wire) + length(destination_wire) + coalesce(length(branch_wire), 0)
+          FROM fountain_retained_archives_v1 WHERE room_key = $key
+        UNION ALL
+        SELECT length(source_wire) + length(destination_wire) + coalesce(length(branch_wire), 0)
+          FROM fountain_cross_format_archives_v1 WHERE room_key = $key
+      ),
+      archives AS (SELECT count(*) AS archiveCount, coalesce(sum(bytes), 0) AS archiveBytes FROM archive_payloads),
+      drafts AS (
+        SELECT count(*) AS draftCount, coalesce(sum(length(wire)), 0) AS draftBytes
+          FROM fountain_retained_drafts_v1 WHERE room_key = $key
+      ),
+      batches AS (
+        SELECT count(*) AS batchCount, coalesce(sum(length(wire)), 0) AS batchBytes
+          FROM fountain_cross_format_batches_v1 WHERE room_key = $key
+      )
+      SELECT json_extract(live.metadata, '$.revision') AS revision, length(live.wire) AS liveBytes,
+        archives.*, drafts.*, batches.*
+      FROM fountain_retained_rooms_v1 AS live CROSS JOIN archives CROSS JOIN drafts CROSS JOIN batches
+      WHERE live.room_key = $key`).get({ $key: key }) as {
+      revision: number; liveBytes: number;
+      archiveCount: number; archiveBytes: number;
+      draftCount: number; draftBytes: number;
+      batchCount: number; batchBytes: number;
+    } | undefined;
+    if (!usage) return undefined;
+    const recoveryBytes = usage.archiveBytes + usage.draftBytes + usage.batchBytes;
+    return { ...usage, recoveryBytes, totalBytes: usage.liveBytes + recoveryBytes };
+  }
+
   private withPresenceFence<T>(lease: DocumentRoomAdmission, mode: 'read' | 'write', action: (now: number) => T): T {
     this.db.exec(mode === 'read' ? 'BEGIN' : 'BEGIN IMMEDIATE');
     try {

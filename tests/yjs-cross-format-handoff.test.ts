@@ -282,6 +282,10 @@ it('retains exact raw legacy operations even when concurrent old-format wrapping
   const isolated = new Y.Doc(); isolated.getXmlFragment('fountain'); Y.applyUpdate(isolated, batch.update);
   try { const checkpoint = await captureLegacyCheckpoint(isolated, pair.schema, version); expect(await model(checkpoint, pair)).toEqual(offline.editor.getJSON()); } finally { isolated.destroy(); }
   expect((await pair.room.snapshot()).checkpoint).toEqual(moved.result.snapshot.checkpoint);
+  const usage = pair.b.readStorageUsage(key)!;
+  expect(usage).toMatchObject({ archiveCount: 1, draftCount: 0, batchCount: 1, batchBytes: update.length });
+  expect(usage.archiveBytes).toBeGreaterThan(0);
+  expect(usage.recoveryBytes).toBe(usage.archiveBytes + update.length);
 });
 
 it('commits neither a branch replacement nor a receipt if raw batch insertion fails', async () => {

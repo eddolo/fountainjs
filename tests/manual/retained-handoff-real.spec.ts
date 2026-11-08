@@ -79,8 +79,16 @@ test('retries live and retired saves after the server commits but the reply is l
 test('skips an unhelpful compaction and installs a smaller checkpoint after real edits', async ({page},info) => {
   const original = await state(page);
   const active = page.getByRole('textbox', {name:'Active editor', exact:true});
+  const roomStorage = page.getByText('Room storage', {exact:true});
+  const checkStorage = page.getByRole('button', {name:'Check stored bytes'});
+  const storedBytes = page.getByRole('region', {name:'Stored room bytes'});
   const freezes: string[] = [];
   page.on('request', request => { if (request.url().endsWith('/__handoff/freeze')) freezes.push(request.url()); });
+  await roomStorage.click();
+  await checkStorage.click();
+  await expect(storedBytes).toContainText('Total recovery storage · 0 bytes');
+  await expect(storedBytes).toContainText(`Live checkpoint · ${original.bytes.toLocaleString('en-US')} bytes`);
+  await roomStorage.click();
   await page.getByText('Compaction settings', {exact:true}).click();
   const minimum = page.getByLabel('Minimum checkpoint bytes to save');
   await minimum.fill('999999');
@@ -155,6 +163,20 @@ test('skips an unhelpful compaction and installs a smaller checkpoint after real
   await expect(page.getByRole('textbox', {name:'Archive reader'})).toContainText('OFFLINE draft');
   expect((await state(page)).archive).toEqual(offline);
   await capture(page,info,'compaction-offline-recovered.png');
+  await page.getByText('Compaction settings', {exact:true}).click();
+  await roomStorage.click();
+  const response = page.waitForResponse(result => result.url().endsWith('/__handoff/storage'));
+  await checkStorage.click();
+  const { value: usage } = await (await response).json();
+  expect(usage).toMatchObject({ revision: compacted.revision, liveBytes: compacted.bytes, archiveCount: 1, draftCount: 1 });
+  expect(usage.recoveryBytes).toBe(usage.archiveBytes + usage.draftBytes);
+  expect(usage.draftBytes).toBeGreaterThan(0);
+  await expect(storedBytes).toContainText(`Saved offline drafts (1) · ${usage.draftBytes.toLocaleString('en-US')} bytes`);
+  await expect(storedBytes).toContainText(`Total stored · ${usage.totalBytes.toLocaleString('en-US')} bytes`);
+  expect((await state(page)).revision).toBe(compacted.revision);
+  expect(freezes).toHaveLength(1);
+  await info.attach('stored-room-bytes', {body:JSON.stringify(usage),contentType:'application/json'});
+  await capture(page,info,'compaction-storage-usage.png');
 });
 
 test('lets the author compare the merged branch with the exact offline draft', async ({page},info) => {

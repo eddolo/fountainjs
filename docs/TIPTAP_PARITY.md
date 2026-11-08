@@ -1,6 +1,6 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-07
+## Current programme status — 2026-11-08
 
 The capability ledger has 61 Delivered rows, eight Partial rows and two Host
 boundary rows. These count bounded capability contracts, not percentage
@@ -24,13 +24,16 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 146.1 KiB over its existing limit.
-[Package size evidence](YJS_STRUCTURAL_RETENTION_AUDIT.md#rejected-document-update-recovery).
+pass. The CommonJS aggregate is 149.2 KiB over its existing limit.
+[Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The migration reference can select an embedded legacy fragment
 and reopen its original identity through rollback. The retained handoff can
 require measured live-checkpoint savings before activating a smaller room.
+The SQLite reference compresses recovery checkpoints and reports stored live,
+archive, draft and batch payload sizes in the handoff demo.
+[Room storage report](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#measuring-room-storage).
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 The latest preview reuses checked structure during ordinary remote typing.
 The 5,000-paragraph benchmark fell from 123.17 ms to 31.49 ms median receive
