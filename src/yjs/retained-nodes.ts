@@ -26,6 +26,7 @@ export interface RetainedNodeValue {
 export interface RetainedNodeProjection extends RetainedNodeValue {
   readonly id: string;
   readonly content: readonly RetainedNodeProjection[];
+  readonly displacedChild?: true;
 }
 /** Preallocated candidate identities for one fresh document seed. */
 export interface RetainedNodeSeed extends RetainedNodeValue {
@@ -132,13 +133,45 @@ export class RetainedNodeStore {
     return next;
   }
 
-  private placement(nodeId: string): Placement | undefined {
+  private storedPlacement(nodeId: string): Placement | undefined {
     const value = this.placements.get(nodeId);
     if (value === undefined) return undefined;
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid retained placement.');
     const candidate = value as Record<string, unknown>;
     if (Object.keys(candidate).length !== 2 || !id(candidate.parent) || !id(candidate.token)) throw new Error('Invalid retained placement.');
     return { parent: candidate.parent, token: candidate.token };
+  }
+
+  private recoverPlacements(missing: ReadonlySet<string>): ReadonlyMap<string, Placement> {
+    const recovered = new Map<string, Placement>();
+    if (!missing.size) return recovered;
+    let references = 0;
+    const scan = (parent: string, children: Y.Array<unknown>) => {
+      references += children.length;
+      if (references > MAX_REFERENCES) throw new RangeError('Too many retained child references.');
+      for (const reference of this.readReferences(children)) {
+        if (!missing.has(reference.id) || reference.id === parent || this.identities.get(reference.token) !== true) continue;
+        const prior = recovered.get(reference.id);
+        // Undo can remove a winning map value while the other reference is
+        // still live. Prefer a surviving container over a former root slot.
+        if (!prior || prior.parent === ROOT || parent !== ROOT && parent <= prior.parent) {
+          recovered.set(reference.id, { parent, token: reference.token });
+        }
+      }
+    };
+    scan(ROOT, this.rootChildren);
+    for (const [parent, record] of this.nodes) {
+      if (!(record instanceof Y.Map) || record.get('deleted') === true) continue;
+      const children = record.get('children');
+      if (children instanceof Y.Array) scan(parent, children);
+    }
+    return recovered;
+  }
+
+  private placement(nodeId: string): Placement | undefined {
+    const placement = this.storedPlacement(nodeId);
+    if (placement || !this.nodes.has(nodeId) || this.readRecord(nodeId).get('deleted') === true) return placement;
+    return this.recoverPlacements(new Set([nodeId])).get(nodeId);
   }
 
   private references(parent: string): readonly Reference[] {
@@ -156,8 +189,23 @@ export class RetainedNodeStore {
   }
 
   private readLiveChildren(parent: string): readonly string[] {
-    return this.readReferences(this.readChildren(parent)).filter(reference => {
-      const placement = this.placement(reference.id);
+    const references = this.readReferences(this.readChildren(parent));
+    let missing: Set<string> | undefined;
+    const live: string[] = [];
+    for (const reference of references) {
+      const placement = this.storedPlacement(reference.id);
+      if (!placement) {
+        const record = this.nodes.get(reference.id);
+        if (record instanceof Y.Map && record.get('deleted') !== true) (missing ??= new Set()).add(reference.id);
+      } else if (placement.parent === parent && placement.token === reference.token
+        && this.readRecord(reference.id).get('deleted') !== true) {
+        live.push(reference.id);
+      }
+    }
+    if (!missing) return live;
+    const recovered = this.recoverPlacements(missing);
+    return references.filter(reference => {
+      const placement = this.storedPlacement(reference.id) ?? recovered.get(reference.id);
       return placement?.parent === parent && placement.token === reference.token && this.readRecord(reference.id).get('deleted') !== true;
     }).map(reference => reference.id);
   }
@@ -361,14 +409,22 @@ export class RetainedNodeStore {
     };
     const placementFor = (nodeId: string): Placement | undefined => {
       if (placements.has(nodeId)) return placements.get(nodeId);
-      const placement = this.placement(nodeId);
+      const placement = this.storedPlacement(nodeId);
       // Stale/unknown references still need validation, but must not grow this
       // temporary map beyond the bounded node pool.
       if (records.has(nodeId)) placements.set(nodeId, placement);
       return placement;
     };
-    const issues: RetainedNodeIssue[] = [], parents = new Map<string, string>(), lifted = new Set<string>();
-    for (const nodeId of alive) { const placement = placementFor(nodeId); if (placement) parents.set(nodeId, placement.parent); }
+    const issues: RetainedNodeIssue[] = [], parents = new Map<string, string>(), lifted = new Set<string>(), missing = new Set<string>();
+    for (const nodeId of alive) {
+      const placement = placementFor(nodeId);
+      if (placement) parents.set(nodeId, placement.parent);
+      else missing.add(nodeId);
+    }
+    for (const [nodeId, placement] of this.recoverPlacements(missing)) {
+      placements.set(nodeId, placement);
+      parents.set(nodeId, placement.parent);
+    }
     const completed = new Set<string>();
     for (const nodeId of alive) {
       const path: string[] = [], local = new Map<string, number>();
@@ -392,15 +448,19 @@ export class RetainedNodeStore {
       if (!(array instanceof Y.Array)) throw new Error('Invalid retained children.');
       // Projection is a synchronous read. Pool bounds were checked at entry;
       // validate every reference/record without rescanning global map sizes.
+      let displacedChild = false;
       for (const reference of this.readReferences(array)) {
         const child = reference.id, placement = placementFor(child);
+        const parent = parents.get(child);
+        if (parent !== undefined && parent !== nodeId) displacedChild = true;
         if (placement?.parent !== nodeId || placement.token !== reference.token
-          || recordFor(child).get('deleted') === true || parents.get(child) !== nodeId) continue;
+          || recordFor(child).get('deleted') === true || parent !== nodeId) continue;
         if (seen.has(child)) issues.push({ kind: 'duplicate-reference', id: child });
         else { children.push(child); seen.add(child); }
       }
       if (nodeId === ROOT) for (const child of [...lifted].sort()) if (!seen.has(child)) children.push(child);
-      return { id: nodeId, ...this.value(record), content: children.map(child => visit(child, depth + 1)) };
+      const projection = { id: nodeId, ...this.value(record), content: children.map(child => visit(child, depth + 1)) };
+      return displacedChild ? { ...projection, displacedChild: true } : projection;
     };
     const root = visit(ROOT);
     for (const nodeId of alive) if (!visited.has(nodeId)) issues.push({ kind: 'unattached', id: nodeId });

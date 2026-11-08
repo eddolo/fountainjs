@@ -46,6 +46,21 @@ also hides peer cursors and requires a merge before switching rooms. Each room
 has a separate in-memory comment store. Switching closes an unsubmitted comment draft.
 Posted threads and anchors return when their room is reopened.
 
+You can also pause sync, use **Toggle quote** in Ada's editor and **Toggle
+bullet list** in Grace's editor on the same paragraph, then resume. One
+wrapper remains visible and both editors keep the paragraph and can continue
+typing. The retained projection hides an empty quote or list wrapper only
+when its children were placed elsewhere. It keeps the native references for
+undo. If undo clears a winning placement, a surviving registered reference
+can restore the paragraph and its text.
+
+Three-author tests cover both wrapper winners, undo and redo, subsequent
+reordering, and exact checkpoint reopen. They also cover two concurrent
+splits with typing or deletion, and a concurrent join, split and insertion.
+An empty required wrapper without displacement evidence still fails schema
+validation. Older retained builds can refuse checkpoints containing these
+conflicts, so all peers in the preview should use this projection together.
+
 All six offline cases passed in the production site build in Chromium, Firefox
 and WebKit, including undo by each author. Room switching and comment retention
 also passed in those engines. The bold and task-list cases passed in mobile

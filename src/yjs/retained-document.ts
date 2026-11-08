@@ -18,6 +18,10 @@ import { assertRetainedWireString } from './retained-wire';
 const VERSION = 'fountain-retained-document/3';
 const LEAF = 'fountain_leaf', ORDER = 'fountain_marks';
 const EMPTY_ATTRS: Attributes = Object.freeze({});
+const wrapperContent: ReadonlyMap<string, string> = new Map([
+  ['blockquote', 'block+'], ['list_item', 'block+'], ['task_item', 'block+'],
+  ['bullet_list', 'list_item+'], ['ordered_list', 'list_item+'], ['task_list', 'task_item+'],
+]);
 const pathKey = (path: readonly number[]) => path.join('.');
 // Callers compare validated portable metadata/documents, or missing fields.
 // Object-key order is immaterial; avoid sorted copies of entire documents.
@@ -53,6 +57,7 @@ interface ProjectionFrame {
   readonly projection: ReturnType<RetainedNodeStore['project']>;
   readonly partitions: ReadonlyMap<string, RetainedTextPartition>;
   readonly placements: ReadonlyMap<string, SplitPlacement>;
+  readonly hiddenWrappers: ReadonlySet<string>;
 }
 interface SplitPlacement { root: string; rootToken: string; token: string; partition: string }
 // Partition/leaf identities cannot contain NUL; separate tuple fields without
@@ -217,6 +222,7 @@ export class RetainedDocumentStore {
   private textLocations = new Map<string, { leaf: string; path: readonly number[] }>();
   private groups = new Map<string, GroupState>();
   private graph?: RetainedNodeProjection;
+  private hiddenWrappers: ReadonlySet<string> = new Set();
 
   constructor(readonly document: Y.Doc, name: string, readonly schema: Schema, private readonly createId: () => string, private readonly origin?: unknown) {
     this.metadata = document.getMap(`${name}:document`);
@@ -361,20 +367,38 @@ export class RetainedDocumentStore {
     const projection = this.nodes.project();
     if (projection.issues.some(issue => issue.kind === 'unattached')) throw new Error('Retained document has unattached records.');
     const fields = new Set<string>(), placements = new Map<string, SplitPlacement>();
-    const collect = (node: RetainedNodeProjection) => {
+    const hiddenWrappers = new Set<string>();
+    const collect = (node: RetainedNodeProjection): RetainedNodeProjection | undefined => {
       if (node.type === 'text') {
         if (!node.textLayout) throw new Error(`Missing retained text layout for ${node.id}.`);
         fields.add(node.id);
       }
-      for (const child of node.content) {
-        const placement = this.splitPlacement(child.id);
-        if (placement) { placements.set(child.id, placement); fields.add(placement.partition); }
-        collect(child);
+      let children: RetainedNodeProjection[] | undefined;
+      for (let index = 0; index < node.content.length; index++) {
+        const child = node.content[index], placement = this.splitPlacement(child.id);
+        if (placement) fields.add(placement.partition);
+        const visible = collect(child);
+        if (visible !== child) children ??= node.content.slice(0, index);
+        if (!visible) continue;
+        children?.push(visible);
+        if (placement) placements.set(child.id, placement);
       }
+      const expression = wrapperContent.get(node.type);
+      const spec = expression ? this.schema.nodes[node.type]?.spec : undefined;
+      // Only suppress a required wrapper emptied by displaced children or by
+      // suppressing its emptied child wrappers. Keep its native history intact.
+      if (node.id !== 'root' && !(children ?? node.content).length && (node.displacedChild || node.content.length)
+        && spec && spec.content === expression && !spec.validate) {
+        computeAttrs(spec.attrs, node.attrs ?? {});
+        node.marks?.forEach(mark => this.schema.markFromJSON(mark));
+        hiddenWrappers.add(node.id);
+        return undefined;
+      }
+      return children ? { ...node, content: children } : node;
     };
-    collect(projection.root);
+    const root = collect(projection.root)!;
     const partitions = this.text.projectMany([...fields]);
-    return { projection, partitions, placements };
+    return { projection: { ...projection, root }, partitions, placements, hiddenWrappers };
   }
 
   read(validate = true): Node {
@@ -401,7 +425,7 @@ export class RetainedDocumentStore {
     return result;
   }
 
-  private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean): Node {
+  private normalizeFrame({ projection, partitions, placements, hiddenWrappers }: ProjectionFrame, validate: boolean): Node {
     // Candidates come only from this store's existing model/bindings. Shared
     // data was checked by acquisition or the guarded native-write proof.
     const previousNodes = new Map<string, Node>();
@@ -495,7 +519,7 @@ export class RetainedDocumentStore {
     };
     bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textLocations = textLocations;
     this.identityPaths = identityPaths; this.partitionPaths = partitionPaths;
-    this.groups = groupStates; this.graph = projection.root; this.model = result.node;
+    this.groups = groupStates; this.graph = projection.root; this.hiddenWrappers = hiddenWrappers; this.model = result.node;
     return result.node;
   }
 
@@ -781,10 +805,15 @@ export class RetainedDocumentStore {
       // A plain edit does not change the sibling order. Revalidate that list
       // once; a move can change later positions, so refresh after each move.
       let current = reordered ? this.nodes.childrenOf(parent) : orders.get(parent)!;
-      for (let index = 0; index < ids.length; index++) if (current[index] !== ids[index]) {
-        this.nodes.move(ids[index], parent, index);
+      const visibleChildren = () => this.hiddenWrappers.size ? current.filter(id => !this.hiddenWrappers.has(id)) : current;
+      let visible = visibleChildren();
+      for (let index = 0; index < ids.length; index++) if (visible[index] !== ids[index]) {
+        const next = visible[index];
+        const rawIndex = visible === current ? index : next === undefined ? current.length : current.indexOf(next);
+        this.nodes.move(ids[index], parent, rawIndex);
         reordered = true;
         current = this.nodes.childrenOf(parent);
+        visible = visibleChildren();
       }
     }
     if (intent) {

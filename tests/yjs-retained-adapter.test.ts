@@ -2,11 +2,12 @@
 import { expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection, Plugin, RangeSelection, Selection, composeExtensions, createEditor,
-  canRedoCollaboration, canUndoCollaboration, createCollaborationExtension, defineExtension, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
+  canRedoCollaboration, canUndoCollaboration, createCollaborationExtension, defineExtension, deleteBackward, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
   redoCollaboration, replaceCollaborationAdapter, splitBlock, setMark, toggleList, toggleQuote, undoCollaboration, moveBlock,
   type NodeJSON } from '../src';
 import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborationExtensionOptions, type YjsProvider } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter } from '../src/yjs/retained-adapter';
+import { captureRetainedCheckpoint, restoreRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
 import { retainedNameKey } from '../src/yjs/retained-nodes';
 import { createStableNodeIdsExtension, inspectStableNodeIds } from '../src/node-ids';
@@ -43,7 +44,8 @@ for(const reverse of [false,true])it(`rebroadcasts remote stable-ID repairs with
 const source: NodeJSON = { type: 'doc', attrs: { audit: 'root' }, content: [
   { type: 'paragraph', content: [{ type: 'text', text: 'Alpha' }] }, { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } },
 ] };
-function peers(content = source, extensions: Parameters<typeof composeExtensions>[0] = [CoreExtension], options: Partial<YjsCollaborationExtensionOptions> = {}) {
+function peers(content = source, extensions: Parameters<typeof composeExtensions>[0] = [CoreExtension], options: Partial<YjsCollaborationExtensionOptions> = {},
+  clientIDs?: readonly [number, number]) {
   const states = new Map<number, Record<string, unknown>>(), listeners = new Set<() => void>();
   const create = (document: Y.Doc, id: string) => {
     const awareness: YjsAwareness = { clientID: document.clientID,
@@ -56,9 +58,11 @@ function peers(content = source, extensions: Parameters<typeof composeExtensions
     const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
     expect(getCollaborationState(editor)?.status).toBe('connected'); return editor;
   };
-  const leftDoc = new Y.Doc(), left = create(leftDoc, 'left'), rightDoc = new Y.Doc();
+  const leftDoc = new Y.Doc(), rightDoc = new Y.Doc();
+  if (clientIDs) [leftDoc.clientID, rightDoc.clientID] = clientIDs;
+  const left = create(leftDoc, 'left');
   Y.applyUpdate(rightDoc, Y.encodeStateAsUpdate(leftDoc), 'seed'); const right = create(rightDoc, 'right');
-  return { left, right, leftDoc, rightDoc, states, listeners, sync: (reverse = false) => {
+  return { left, right, leftDoc, rightDoc, states, listeners, create, sync: (reverse = false) => {
     const a = Y.encodeStateAsUpdate(leftDoc), b = Y.encodeStateAsUpdate(rightDoc);
     if (reverse) { Y.applyUpdate(rightDoc, a, 'peer'); Y.applyUpdate(leftDoc, b, 'peer'); }
     else { Y.applyUpdate(leftDoc, b, 'peer'); Y.applyUpdate(rightDoc, a, 'peer'); }
@@ -67,6 +71,152 @@ function peers(content = source, extensions: Parameters<typeof composeExtensions
     expect(left.getJSON()).toEqual(right.getJSON());
   }, destroy: () => { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); } };
 }
+
+function threePeers(reverse: boolean, content?: NodeJSON, clientIDs?: readonly [number, number]) {
+  const pair = peers(content, undefined, undefined, clientIDs);
+  const thirdDoc = new Y.Doc();
+  Y.applyUpdate(thirdDoc, Y.encodeStateAsUpdate(pair.leftDoc), 'seed');
+  const third = pair.create(thirdDoc, 'third');
+  const authors = [pair.left, pair.right, third];
+  const documents = [pair.leftDoc, pair.rightDoc, thirdDoc];
+  const otherBlocks = pair.left.state.doc.content.filter(node => node.type.name !== 'paragraph').map(node => node.toJSON());
+  const exchange = () => {
+    const updates = documents.map(document => Y.encodeStateAsUpdate(document));
+    if (reverse) updates.reverse();
+    for (const document of documents) for (const update of updates) Y.applyUpdate(document, update, 'peer');
+    for (const editor of authors) {
+      const status = getCollaborationState(editor);
+      expect(status?.status, status?.error?.message).toBe('connected');
+      expect(editor.getJSON()).toEqual(pair.left.getJSON());
+    }
+  };
+  const sync = (paragraphs: string[]) => {
+    exchange();
+    for (const editor of authors) {
+      expect(editor.state.doc.content.filter(node => node.type.name === 'paragraph').map(node => node.textContent)).toEqual(paragraphs);
+      expect(editor.state.doc.content.filter(node => node.type.name !== 'paragraph').map(node => node.toJSON()))
+        .toEqual(otherBlocks);
+    }
+  };
+  return { ...pair, third, exchange, sync, destroy() { third.destroy(); thirdDoc.destroy(); pair.destroy(); } };
+}
+
+it.each([false, true])('preserves third-author typing through two independent cuts and author undo (reverse: %s)', reverse => {
+  const { left, right, third, sync, destroy } = threePeers(reverse);
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(splitBlock(left)).toBe(true);
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0], 4)));
+    expect(splitBlock(right)).toBe(true);
+    third.dispatch(third.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
+    expect(insertText(third, 'X')).toBe(true);
+    sync(['Al', 'pXh', 'a']);
+
+    expect(undoCollaboration(left)).toBe(true);
+    sync(['AlpXh', 'a']);
+    expect(redoCollaboration(left)).toBe(true);
+    sync(['Al', 'pXh', 'a']);
+
+    expect(undoCollaboration(right)).toBe(true);
+    sync(['Al', 'pXha']);
+    expect(redoCollaboration(right)).toBe(true);
+    sync(['Al', 'pXh', 'a']);
+
+    expect(undoCollaboration(third)).toBe(true);
+    sync(['Al', 'ph', 'a']);
+    expect(redoCollaboration(third)).toBe(true);
+    sync(['Al', 'pXh', 'a']);
+  } finally { destroy(); }
+});
+
+it.each([false, true])('preserves an offline paragraph join, split, and insertion from three authors (reverse: %s)', reverse => {
+  const content: NodeJSON = { type: 'doc', content: ['Alpha', 'Beta', 'Tail'].map(text => ({
+    type: 'paragraph', content: [{ type: 'text', text }],
+  })) };
+  const { left, right, third, sync, destroy } = threePeers(reverse, content);
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([1, 0], 0)));
+    expect(deleteBackward(left)).toBe(true);
+    expect(left.state.doc.child(0).textContent).toBe('AlphaBeta');
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(splitBlock(right)).toBe(true);
+    third.dispatch(third.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
+    expect(insertText(third, 'X')).toBe(true);
+    sync(['Al', 'pXhaBeta', 'Tail']);
+    expect(undoCollaboration(left)).toBe(true);
+    sync(['Al', 'pXha', 'Beta', 'Tail']);
+    expect(redoCollaboration(left)).toBe(true);
+    sync(['Al', 'pXhaBeta', 'Tail']);
+    expect(undoCollaboration(right)).toBe(true);
+    sync(['AlpXhaBeta', 'Tail']);
+  } finally { destroy(); }
+});
+
+it.each([false, true])('retains both split boundaries after a third author deletes across them (reverse: %s)', reverse => {
+  const { left, right, third, sync, destroy } = threePeers(reverse);
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(splitBlock(left)).toBe(true);
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0], 4)));
+    expect(splitBlock(right)).toBe(true);
+    third.dispatch(third.createTransaction().setSelection(Selection.range([0, 0], 1, [0, 0], 4)));
+    expect(deleteBackward(third)).toBe(true);
+    sync(['A', '', 'a']);
+    expect(undoCollaboration(third)).toBe(true);
+    sync(['Al', 'ph', 'a']);
+    expect(redoCollaboration(third)).toBe(true);
+    sync(['A', '', 'a']);
+    expect(undoCollaboration(right)).toBe(true);
+    sync(['A', 'a']);
+  } finally { destroy(); }
+});
+
+it.each([false, true])('keeps editing after concurrent quote and list wrapping with offline typing (reverse: %s)', async reverse => {
+  const { left, right, leftDoc, third, exchange, destroy } = threePeers(reverse, undefined, reverse ? [101, 202] : [202, 101]);
+  try {
+    left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(toggleQuote(left)).toBe(true);
+    right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+    expect(toggleList(right, 'bullet')).toBe(true);
+    third.dispatch(third.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(insertText(third, 'X')).toBe(true);
+    exchange();
+    expect(left.state.doc.childCount).toBe(2);
+    expect(left.state.doc.child(0).type.name).toBe(reverse ? 'bullet_list' : 'blockquote');
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(left.state.doc.child(1).type.name).toBe('image_super');
+    expect(undoCollaboration(third)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).textContent).toBe('Alpha');
+    expect(redoCollaboration(third)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    const wrapper = left.state.doc.child(0).type.name;
+    const winner = wrapper === 'blockquote' ? left : right;
+    expect(undoCollaboration(winner)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(left.state.doc.childCount).toBe(2);
+    const bytes = Y.encodeStateAsUpdate(leftDoc);
+    const checkpoint = await captureRetainedCheckpoint(leftDoc, left.state.schema, 'wrap-test');
+    const reopened = await restoreRetainedCheckpoint(checkpoint, left.state.schema, 'wrap-test');
+    try {
+      expect(reopened.baseDocument.toJSON()).toEqual(left.getJSON());
+      expect(Y.encodeStateAsUpdate(leftDoc)).toEqual(bytes);
+    } finally { reopened.document.destroy(); }
+    expect(redoCollaboration(winner)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe(wrapper);
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+    expect(moveBlock(third, 0, 1)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).type.name).toBe('image_super');
+    expect(left.state.doc.child(1).textContent).toBe('AlXpha');
+    expect(undoCollaboration(third)).toBe(true);
+    exchange();
+    expect(left.state.doc.child(0).textContent).toBe('AlXpha');
+  } finally { destroy(); }
+});
 
 for(const reverse of [false,true])it(`preserves a history-neutral shared update through author undo/redo (reverse: ${reverse})`,()=>{
   const pair=peers();try{

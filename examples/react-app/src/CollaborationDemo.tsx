@@ -312,6 +312,9 @@ export default function CollaborationDemo() {
         <article data-collaboration-editor="ada">
           <header><span><i style={{ background: '#6d4aff' }} />Ada</span><code>{leftCollaboration?.status === 'error' ? 'local draft' : paused ? 'sync paused' : leftCollaboration?.status ?? 'connecting'}</code></header>
           <FountainComposer editor={left} showToolbar={false} ariaLabel="Ada collaborative editor" placeholder="Ada writes here…" />
+          <div className="collaboration-demo__editor-footer collaboration-demo__formatting" role="group" aria-label="Ada formatting">
+            <button aria-label="Toggle Ada quote" onMouseDown={(event) => event.preventDefault()} onClick={() => toggleQuote(left)}>Toggle quote</button>
+          </div>
           <div className="collaboration-demo__editor-footer">
             <span>{leftState?.doc.textContent.length ?? 0} characters · {leftCollaboration?.presences.length ?? 0} peer · {leftComments?.threads.length ?? 0} threads</span>
             <div><button disabled={!canUndoCollaboration(left)} onClick={() => room.leftKit.commands.undoCollaboration?.(left)}>Undo Ada</button><button disabled={!canRedoCollaboration(left)} onClick={() => room.leftKit.commands.redoCollaboration?.(left)}>Redo</button></div>

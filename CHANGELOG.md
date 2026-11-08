@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep retained rooms editable after competing quote and list wraps. A
+  displaced empty wrapper stays out of the document view, and undo can recover
+  the surviving paragraph placement without losing a peer's typing.
+
 - Switch a mounted editor to a verified retained or XML room using
   `bound.createAdapter`. The destination gets its own undo history, and a
   rejected initial document leaves the local draft available for recovery.

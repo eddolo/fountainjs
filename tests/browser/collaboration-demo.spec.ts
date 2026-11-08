@@ -386,6 +386,37 @@ for (const action of offlineActions) {
   });
 }
 
+test('continues editing after competing offline wraps in the public collaboration demo', async ({ page }, info) => {
+  await page.goto('/');
+  const demo = page.locator('#collaboration');
+  const ada = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const grace = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
+  const text = 'Edit either side. Text, blocks, selections, and undo remain author-aware.';
+  await expect(ada.locator('p').first()).toHaveText(text);
+  await demo.getByRole('button', { name: 'Pause document sync' }).click();
+  await ada.locator('p').first().click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('Home');
+  await page.keyboard.type('Ada: ');
+  await demo.getByRole('button', { name: 'Toggle Ada quote' }).click();
+  await expect(ada.locator('blockquote')).toHaveText('Ada: ' + text);
+  await grace.locator('p').first().click();
+  await demo.getByRole('button', { name: 'Toggle bullet list', exact: true }).click();
+  await expect(grace.locator('ul:not([data-type])')).toHaveText(text);
+
+  await demo.getByRole('button', { name: 'Resume document sync' }).click();
+  const wrapper = 'blockquote, ul:not([data-type])';
+  await expect(ada.locator(wrapper)).toHaveText(['Ada: ' + text]);
+  await expect(grace.locator(wrapper)).toHaveText(['Ada: ' + text]);
+  expect(await ada.locator(wrapper).evaluate(element => element.tagName))
+    .toBe(await grace.locator(wrapper).evaluate(element => element.tagName));
+  await expect(demo.getByRole('alert')).toHaveCount(0);
+  await grace.locator(wrapper).locator('p').click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('Home');
+  await page.keyboard.type('Merged: ');
+  await expect(ada.locator(wrapper)).toHaveText('Merged: Ada: ' + text);
+  await demo.screenshot({ path: info.outputPath('competing-wraps-merged.png') });
+});
+
 test('merges nested collaborative settings through the public two-editor demo', async ({ page }) => {
   await page.addInitScript(() => {
     const random = crypto.getRandomValues.bind(crypto);

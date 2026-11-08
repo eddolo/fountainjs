@@ -51,6 +51,14 @@ function boundsSchema() {
     marks: { strong: {} } });
 }
 
+it('refuses an empty required wrapper without evidence of a displaced child', () => {
+  const pair = fixture();
+  try {
+    pair.store.nodes.create({ type: 'blockquote' }, 'root', 0);
+    expect(() => pair.store.read()).toThrow('Content of blockquote does not match "block+".');
+  } finally { pair.destroy(); }
+});
+
 it('counts a reused portable subtree at its actual new depth', () => {
   const schema = boundsSchema(); let branch = schema.node('leaf');
   for (let index = 0; index < 99; index++) branch = schema.node('box', {}, [branch]);
