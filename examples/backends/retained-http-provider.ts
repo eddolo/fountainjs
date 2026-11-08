@@ -137,6 +137,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
     let basis: RetainedDeltaBasis;
     let edited = 0, acknowledged = 0;
     let retryCount = 0;
+    let waitingForUnfreeze = false;
     let running = false;
     let presenceRequest: AbortController | undefined;
     let lastPresenceRequest = Number.NEGATIVE_INFINITY;
@@ -188,7 +189,7 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
       if (signal.aborted) return;
       running = true;
       const sending = edited;
-      const writing = sending > acknowledged;
+      const writing = !waitingForUnfreeze && sending > acknowledged;
       let delay: number | undefined;
       try {
         const update = writing ? Y.encodeStateAsUpdate(document, basis.vector) : undefined;
@@ -220,13 +221,18 @@ export function createRetainedHttpProvider(options: RetainedHttpOptions) {
             return;
           }
         }
-        acknowledged = sending;
+        if (writing) acknowledged = sending;
+        waitingForUnfreeze = false;
         retryCount = 0;
         options.onStatus('connected');
         exchangePresence();
       } catch (error) {
         if (signal.aborted) return;
-        if (retryable(error)) {
+        const frozen = (error as { code?: string } | null)?.code === 'frozen';
+        if (frozen || retryable(error)) {
+          // A freeze can be aborted without changing epochs. Poll the same
+          // lease until it reopens instead of repeatedly sending pending bytes.
+          if (frozen) waitingForUnfreeze = true;
           const ceiling = 500 * 2 ** retryCount;
           retryCount = Math.min(retryCount + 1, 4);
           delay = Math.ceil(ceiling * (0.75 + 0.25 * Math.random()));

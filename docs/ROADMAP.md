@@ -44,6 +44,9 @@ and the live upgrade freezes the specific revision that passed the check.
 Retrying an already saved legacy update preserves that revision and its
 rehearsal. A concurrent freeze can still invalidate the retry acknowledgement.
 [Migration rehearsal](YJS_NAMESPACE_MIGRATION_AUDIT.md#check-a-migration-while-the-room-is-open).
+The retained HTTP reference keeps edits local during a freeze and resumes
+sending them if the same room epoch reopens.
+[Canceled freeze workflow](YJS_LIVE_HTTP_REFERENCE.md#resuming-after-a-canceled-freeze).
 An existing retained room can also estimate checkpoint savings while it is
 writable. The demo requires a passing check for the saved revision before
 freezing it, and installation checks the actual savings again.

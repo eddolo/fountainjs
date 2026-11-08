@@ -37,7 +37,7 @@ it.each([false, true])('reuses a verified admission only when its installed byte
   }
 });
 
-it('backs off repeated failures without typing resetting the retry timer', async () => {
+it.each(['network', 'frozen'])('backs off repeated %s failures without typing resetting the retry timer', async code => {
   const document = new Y.Doc();
   const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({
     document, user: { id: 'ada', name: 'Ada', color: '#7048e8' },
@@ -49,7 +49,7 @@ it('backs off repeated failures without typing resetting the retry timer', async
   const lease = { key: 'room', epoch: crypto.randomUUID(), revision: 0, protocol: 'retained' as const,
     room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
   const snapshot = { key: lease.key, epoch: lease.epoch, revision: 0, phase: 'active' as const, protocol: lease.protocol, checkpoint };
-  const failure = Object.assign(new Error('Offline'), { code: 'network' });
+  const failure = Object.assign(new Error('Room temporarily unavailable'), { code });
   const poll = vi.fn(async () => { throw failure; });
   const write = vi.fn(async () => { throw failure; });
   const onStatus = vi.fn();
@@ -61,25 +61,28 @@ it('backs off repeated failures without typing resetting the retry timer', async
     await vi.advanceTimersByTimeAsync(400);
     expect(poll).toHaveBeenCalledOnce();
     expect(onStatus).toHaveBeenLastCalledWith('reconnecting', failure);
+    poll.mockClear();
+    const retry = code === 'frozen' ? poll : write;
     editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'Pending '));
     await vi.advanceTimersByTimeAsync(374);
-    expect(write).not.toHaveBeenCalled();
+    expect(retry).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
-    expect(write).toHaveBeenCalledOnce();
+    expect(retry).toHaveBeenCalledOnce();
     await vi.advanceTimersByTimeAsync(749);
-    expect(write).toHaveBeenCalledOnce();
+    expect(retry).toHaveBeenCalledOnce();
     await vi.advanceTimersByTimeAsync(1);
-    expect(write).toHaveBeenCalledTimes(2);
+    expect(retry).toHaveBeenCalledTimes(2);
     for (const delay of [1_500, 3_000, 6_000, 6_000]) {
-      const before = write.mock.calls.length;
+      const before = retry.mock.calls.length;
       await vi.advanceTimersByTimeAsync(delay - 1);
-      expect(write).toHaveBeenCalledTimes(before);
+      expect(retry).toHaveBeenCalledTimes(before);
       await vi.advanceTimersByTimeAsync(1);
-      expect(write).toHaveBeenCalledTimes(before + 1);
+      expect(retry).toHaveBeenCalledTimes(before + 1);
     }
     provider.disconnect();
     await vi.advanceTimersByTimeAsync(20_000);
-    expect(write).toHaveBeenCalledTimes(6);
+    expect(retry).toHaveBeenCalledTimes(6);
+    if (code === 'frozen') expect(write).not.toHaveBeenCalled();
     expect(editor.getText()).toBe('Pending Incident report');
   } finally {
     provider.disconnect();

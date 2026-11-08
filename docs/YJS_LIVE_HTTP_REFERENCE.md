@@ -10,6 +10,26 @@ checkpoint if the room revision is unchanged. It still checks the active phase,
 protocol, epoch, namespace and native identity. Writes use the existing fenced
 SQLite authority.
 
+## Resuming after a canceled freeze
+
+An attached editor remains writable locally when its authority reports a
+temporary freeze. The provider backs off and polls with the original room lease,
+without resending pending edit bytes while the room remains frozen. If the
+administrator cancels the operation and the same epoch reopens, the provider
+resumes sending those edits automatically. The normal write checks still apply.
+If the authority replaces the epoch, the old transport stops and the recovery
+flow keeps its draft separate from the new room.
+
+This resumes an already bound document transport. Opening a frozen room still
+requires a fresh admission after it reopens. Presence has a separate lease and
+may need a fresh binding if the freeze outlasts that lease.
+
+The 101 focused source tests and 21 recorded Chromium, Firefox and WebKit
+journeys passed. The canceled-freeze journey ran against both newly retained
+rooms and rooms upgraded from legacy storage. It verifies no write while the
+room is frozen, then one accepted save with the edit visible to both writers.
+Before and after captures show the local draft and the saved server view.
+
 ## Idle reads and presence checks
 
 The SQLite host projects the room metadata separately from the checkpoint BLOB.

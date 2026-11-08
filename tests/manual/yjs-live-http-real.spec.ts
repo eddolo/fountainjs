@@ -247,6 +247,50 @@ test('stops a retired transport and reopens its locally saved typing after reloa
   } finally { await peer.close(); }
 });
 
+test('saves edits from a migration freeze when the same room reopens', async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  async function changePhase(action: 'freeze' | 'abort') {
+    const token = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
+    const response = await page.request.post('/__admission/' + action, {
+      headers: { Origin: new URL(page.url()).origin, 'X-Admission-Session': token },
+      data: {},
+    });
+    expect(response.ok()).toBe(true);
+    return (await response.json()).value;
+  }
+  try {
+    const before = await serverRevision(page);
+    const frozen = await changePhase('freeze');
+    expect(frozen.revision).toBe(before);
+    await expect(connection(page)).toHaveText(/reconnecting.*frozen/i);
+    await expect(connection(peer)).toHaveText(/reconnecting.*frozen/i);
+
+    const frozenPoll = page.waitForResponse(response => response.url().endsWith('/__admission/poll-retained') && response.status() === 400);
+    let writes = 0;
+    page.on('request', request => { if (request.url().endsWith('/__admission/write')) writes += 1; });
+    await editor(page).click();
+    await page.keyboard.press('End');
+    await page.keyboard.insertText(' Keep this while the room is frozen.');
+    expect((await (await frozenPoll).json()).code).toBe('frozen');
+    expect(writes).toBe(0);
+    await expect(editor(page)).toHaveText('Shared incident report. Keep this while the room is frozen.');
+    await expect(editor(peer)).toHaveText('Shared incident report.');
+    expect(await serverRevision(page)).toBe(before);
+    await page.screenshot({ path: info.outputPath('typing-while-frozen.png'), scale: 'css' });
+
+    const reopened = await changePhase('abort');
+    expect(reopened).toMatchObject({ phase: 'active', epoch: frozen.epoch, revision: before });
+    const expected = 'Shared incident report. Keep this while the room is frozen.';
+    await expect(server(page)).toHaveText(expected, { timeout: 12_000 });
+    await expect(editor(peer)).toHaveText(expected);
+    await expect(connection(page)).toHaveText('connected');
+    await expect(connection(peer)).toHaveText('connected');
+    expect(await serverRevision(page)).toBe(before + 1);
+    expect(writes).toBe(1);
+    await page.screenshot({ path: info.outputPath('frozen-edit-shared.png'), scale: 'css' });
+  } finally { await peer.close(); }
+});
+
 test('renders a native peer selection without writing a document revision and clears it on leave', async ({ page }, info) => {
   const peer = await secondAuthor(page);
   try {
