@@ -332,6 +332,18 @@ it.each([false, true])('retains character identity through concurrent formatting
   } finally { pair.destroy(); }
 });
 
+it.each([false, true])('retains the explicit bold value of an offline insertion during a competing removal (reverse exchange: %s)', reverse => {
+  const pair = peers('Alpha', false);
+  try {
+    pair.left.insert('first', 1, 'X', { strong: '{}' });
+    pair.right.format('first', 0, 1, { strong: null });
+    pair.sync(reverse);
+    const expected = [{ text: 'A' }, { text: 'X', attributes: { strong: '{}' } }, { text: 'lpha' }];
+    expect(pair.left.project('first').runs).toEqual(expected);
+    expect(pair.right.project('first').runs).toEqual(expected);
+  } finally { pair.destroy(); }
+});
+
 it.each([false, true])('keeps offline insertion on its original side of a split (reverse exchange: %s)', reverse => {
   const pair = peers();
   try {

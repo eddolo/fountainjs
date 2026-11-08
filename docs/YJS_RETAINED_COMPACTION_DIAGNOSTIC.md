@@ -331,6 +331,35 @@ declaration snapshot changes reflect two private adapter fields.
 These measurements concern structural metadata. Per-keystroke text provenance
 and the need for a long-session compaction policy remain.
 
+### Why styled insertions keep their explicit marks
+
+An experiment removed the explicit mark fields from new insertions and kept
+only the insertion marker's reference to the original style. The previous 332
+focused tests passed. A differential matrix of 2,160 pairs of offline insert
+and format operations then found 270 cases where the projected styles differed.
+For example, removing bold from the first character could also strip bold from
+an offline insertion immediately after it. The existing explicit mark shields
+that insertion in both delivery orders. The regression test fails on the
+smaller encoding and passes on the retained encoding.
+
+The retained encoding passed 334 focused source checks and six recorded
+Chromium, Firefox and WebKit workflows covering offline bold, native
+replacement and deletion, and author-local undo. The Chromium merge was
+visually checked.
+
+The trial used 47,567 V1 bytes instead of 85,374 for 512 insertions that
+alternated between plain text and a long link style. It saved no bytes for
+plain typing and 138 bytes for 1,024 insertions in a single link style. This
+records a rejected optimization. The existing live wire is still in use.
+
+Another probe kept the existing marks and compared gzip level 1 on the same
+V1 state and on a Yjs V2 transcode. The 512-insertion samples used 9,082 versus
+1,919 stored bytes for plain text, 12,091 versus 2,511 for alternating bold,
+and 12,767 versus 2,891 for alternating links. Each sample converted back to
+the exact original V1 bytes. These are controlled storage measurements. A
+production codec would still need bounded decoding and exact-byte verification
+before it could preserve the current checkpoint contract.
+
 ### Optional compression for live checkpoints
 
 The SQLite reference can store live checkpoints with the same bounded gzip
