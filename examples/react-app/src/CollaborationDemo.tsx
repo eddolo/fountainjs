@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Y from 'yjs';
 import {
   CoreExtension, canRedoCollaboration, canUndoCollaboration, composeExtensions, createEditor,
-  defineExtension, getCollaborationState, replaceCollaborationAdapter, selectText, toggleQuote,
+  defineExtension, getCollaborationState, replaceCollaborationAdapter, selectText, toggleList, toggleMark, toggleQuote,
 } from 'fountainjs-editor';
 import { InMemoryCommentsStore, connectComments, createCommentThread, createCommentsExtension, disconnectComments, getCommentsState, replaceCommentsAdapter } from 'fountainjs-editor/comments';
 import {
@@ -306,7 +306,7 @@ export default function CollaborationDemo() {
           <button onClick={() => downloadDocumentFile(document, 'fountain-grace-draft.json', JSON.stringify(right.getJSON(), null, 2), 'application/json')}>Download Grace’s copy</button>
         </div> : <small aria-live="polite">{paused
           ? 'Document sync and peer cursors are paused. You can edit either copy. Resume to merge before switching rooms.'
-          : 'Try an offline merge. Pause, type in a paragraph as Ada, then put the same paragraph in a quote as Grace. Resume to see both changes.'}</small>}
+          : 'Try an offline merge. Pause sync, type inside a paragraph as Ada, then format or split the same paragraph as Grace. Resume to see both changes.'}</small>}
       </div>
       <div className="collaboration-demo__editors">
         <article data-collaboration-editor="ada">
@@ -320,9 +320,16 @@ export default function CollaborationDemo() {
         <article data-collaboration-editor="grace">
           <header><span><i style={{ background: '#d23877' }} />Grace</span><code>{rightCollaboration?.status === 'error' ? 'local draft' : paused ? 'sync paused' : rightCollaboration?.status ?? 'connecting'}</code></header>
           <FountainComposer editor={right} showToolbar={false} ariaLabel="Grace collaborative editor" placeholder="Grace writes here…" />
+          <div className="collaboration-demo__editor-footer collaboration-demo__formatting" role="group" aria-label="Grace formatting">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleQuote(right)}>Toggle quote</button>
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleList(right, 'bullet')}>Toggle bullet list</button>
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleList(right, 'ordered')}>Toggle numbered list</button>
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleList(right, 'task')}>Toggle task list</button>
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleMark(right, 'strong')}>Toggle bold</button>
+          </div>
           <div className="collaboration-demo__editor-footer">
             <span>{rightState?.doc.textContent.length ?? 0} characters · {rightCollaboration?.presences.length ?? 0} peer · {rightComments?.threads.length ?? 0} threads</span>
-            <div><button onMouseDown={(event) => event.preventDefault()} onClick={() => toggleQuote(right)}>Toggle quote</button><button disabled={!canUndoCollaboration(right)} onClick={() => room.rightKit.commands.undoCollaboration?.(right)}>Undo Grace</button><button disabled={!canRedoCollaboration(right)} onClick={() => room.rightKit.commands.redoCollaboration?.(right)}>Redo</button></div>
+            <div><button disabled={!canUndoCollaboration(right)} onClick={() => room.rightKit.commands.undoCollaboration?.(right)}>Undo Grace</button><button disabled={!canRedoCollaboration(right)} onClick={() => room.rightKit.commands.redoCollaboration?.(right)}>Redo</button></div>
           </div>
         </article>
       </div>

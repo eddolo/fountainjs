@@ -170,6 +170,7 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .collaboration-demo__editor-footer > div { display: flex; gap: 5px; }
 .collaboration-demo__editor-footer button { padding: 6px 9px; color: #5641b8; background: white; border: 1px solid #d7d1f0; border-radius: 6px; font: 600 10px Manrope, sans-serif; }
 .collaboration-demo__editor-footer button:disabled { color: #aaa5b5; cursor: not-allowed; opacity: .6; }
+.collaboration-demo__editor-footer.collaboration-demo__formatting { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 5px; min-height: 0; }
 .collaboration-demo__structured { display: grid; grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(240px, .75fr)); gap: 12px; max-width: 1400px; margin: 18px auto 0; }
 .collaboration-demo__structured > div, .collaboration-demo__structured > article { padding: 20px; background: rgb(255 255 255 / 58%); border: 1px solid #d0c9f8; border-radius: 12px; }
 .collaboration-demo__structured > div > span { color: #6d4aff; font: 500 10px DM Mono, monospace; letter-spacing: .13em; }

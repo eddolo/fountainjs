@@ -308,50 +308,83 @@ test('identifies both editor copies when the second room connection fails', asyn
   await demo.screenshot({ path: info.outputPath('incomplete-room-switch.png') });
 });
 
-test('keeps offline text when a peer quotes its paragraph in the public collaboration demo', async ({ page }, info) => {
-  const pageErrors: string[] = [];
-  page.on('pageerror', error => pageErrors.push(error.message));
-  await page.goto('/');
-  const demo = page.locator('#collaboration');
-  const left = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
-  const right = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
-  const text = 'Edit either side. Text, blocks, selections, and undo remain author-aware.';
-  const edited = 'EdX' + text.slice(2);
+const offlineActions = [
+  { label: 'quote', button: 'Toggle quote', selector: 'blockquote' },
+  { label: 'bullet list', button: 'Toggle bullet list', selector: 'ul:not([data-type])' },
+  { label: 'numbered list', button: 'Toggle numbered list', selector: 'ol' },
+  { label: 'task list', button: 'Toggle task list', selector: 'ul[data-type="task-list"]' },
+  { label: 'partial bold', button: 'Toggle bold', selector: 'p strong' },
+  { label: 'paragraph split' },
+] as const;
 
-  await expect(right.locator('p').first()).toContainText(text);
-  const phrase = demo.locator('h2 .keep-together');
-  expect(await phrase.evaluate(element => element.getClientRects().length)).toBe(1);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-  await demo.getByRole('button', { name: 'Pause document sync' }).click();
-  await expect(demo.getByRole('button', { name: 'Switch both editors to Planning room' })).toBeDisabled();
-  await expect(page.locator('.fountain-widget-overlay .fountain-collaboration-caret')).toHaveCount(0);
+for (const action of offlineActions) {
+  test(`keeps offline text through ${action.label} in the public collaboration demo`, async ({ page }, info) => {
+    const pageErrors: string[] = [];
+    page.on('pageerror', error => pageErrors.push(error.message));
+    await page.goto('/');
+    const demo = page.locator('#collaboration');
+    const left = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
+    const right = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
+    const text = 'Edit either side. Text, blocks, selections, and undo remain author-aware.';
+    const edited = 'EdX' + text.slice(2);
+    const bold = action.label === 'partial bold';
+    async function placeCaret(editor: Locator, offset: number) {
+      await editor.locator('p').first().click({ position: { x: 5, y: 5 } });
+      await page.keyboard.press('Home');
+      for (let index = 0; index < offset; index++) await page.keyboard.press('ArrowRight');
+    }
 
-  await left.locator('p').first().click({ position: { x: 5, y: 5 } });
-  await page.keyboard.press('Home');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.type('X');
-  await expect(left.locator('p').first()).toContainText(edited);
-  await expect(right.locator('p').first()).toContainText(text);
+    async function assertResult(editor: Locator, value: string) {
+      if (!('selector' in action)) {
+        const split = value === text ? 3 : 4;
+        await expect(editor.locator('p')).toHaveText([value.slice(0, split), value.slice(split)]);
+      } else if (bold) {
+        await expect(editor.locator('p').first()).toHaveText(value);
+        await expect.poll(async () => (await editor.locator(action.selector).allTextContents()).join('').replace('X', '')).toBe('dit');
+      } else {
+        await expect(editor.locator(action.selector)).toHaveText(value);
+      }
+    }
 
-  await right.locator('p').first().click({ position: { x: 5, y: 5 } });
-  await demo.getByRole('button', { name: 'Toggle quote' }).click();
-  await expect(right.locator('blockquote')).toContainText(text);
-  await expect(left.locator('blockquote')).toHaveCount(0);
-  await demo.getByRole('button', { name: 'Resume document sync' }).click();
-  await expect(left.locator('blockquote')).toContainText(edited);
-  await expect(right.locator('blockquote')).toContainText(edited);
-  await expect(demo.getByRole('button', { name: 'Switch both editors to Planning room' })).toBeEnabled();
-  await demo.screenshot({ path: info.outputPath('retained-quote-merged.png') });
+    await expect(right.locator('p').first()).toHaveText(text);
+    expect(await demo.locator('h2 .keep-together').evaluate(element => element.getClientRects().length)).toBe(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+    await demo.getByRole('button', { name: 'Pause document sync' }).click();
+    await expect(demo.getByRole('button', { name: 'Switch both editors to Planning room' })).toBeDisabled();
+    await expect(page.locator('.fountain-widget-overlay .fountain-collaboration-caret')).toHaveCount(0);
 
-  await demo.getByRole('button', { name: 'Undo Ada' }).click();
-  await expect(left.locator('blockquote')).toContainText(text);
-  await expect(right.locator('blockquote')).toContainText(text);
-  await demo.locator('[data-collaboration-editor="ada"]').getByRole('button', { name: 'Redo' }).click();
-  await expect(left.locator('blockquote')).toContainText(edited);
-  await expect(right.locator('blockquote')).toContainText(edited);
-  expect(pageErrors).toEqual([]);
-});
+    await placeCaret(left, 2);
+    await page.keyboard.type('X');
+    await expect(left.locator('p').first()).toHaveText(edited);
+    await expect(right.locator('p').first()).toHaveText(text);
+
+    await placeCaret(right, bold ? 1 : 3);
+    if (bold) {
+      for (let index = 0; index < 3; index++) await page.keyboard.press('Shift+ArrowRight');
+      await expect.poll(() => page.evaluate(() => document.getSelection()?.toString())).toBe('dit');
+    }
+    if ('button' in action) await demo.getByRole('button', { name: action.button, exact: true }).click();
+    else await page.keyboard.press('Enter');
+    await assertResult(right, text);
+    await expect(left.locator('p')).toHaveText([edited]);
+
+    await demo.getByRole('button', { name: 'Resume document sync' }).click();
+    for (const editor of [left, right]) await assertResult(editor, edited);
+    await expect(demo.getByRole('button', { name: 'Switch both editors to Planning room' })).toBeEnabled();
+    await demo.screenshot({ path: info.outputPath('retained-offline-merged.png') });
+
+    await demo.getByRole('button', { name: 'Undo Ada' }).click();
+    for (const editor of [left, right]) await assertResult(editor, text);
+    await demo.locator('[data-collaboration-editor="ada"]').getByRole('button', { name: 'Redo' }).click();
+    for (const editor of [left, right]) await assertResult(editor, edited);
+    await demo.getByRole('button', { name: 'Undo Grace' }).click();
+    for (const editor of [left, right]) {
+      await expect(editor.locator('p')).toHaveText([edited]);
+      await expect(editor.locator('blockquote, ul, ol, p strong')).toHaveCount(0);
+    }
+    expect(pageErrors).toEqual([]);
+  });
+}
 
 test('merges nested collaborative settings through the public two-editor demo', async ({ page }) => {
   await page.addInitScript(() => {

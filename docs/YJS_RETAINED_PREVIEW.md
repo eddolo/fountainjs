@@ -35,13 +35,22 @@ starts with one authoritative in-memory document whose Yjs update is copied to
 the second peer before it joins. Switching swaps the adapters on the existing
 editor views. Returning to a room brings back its document edits.
 
-Select **Pause document sync**, type into a paragraph as Ada, click the same
-paragraph in Grace's editor, and choose **Toggle quote**. Select **Resume
-document sync** to merge both changes. Ada's Undo removes her typing while
-Grace's quote stays in both editors. The pause control also hides peer cursors
-and requires a merge before switching rooms. Each room has a separate
-in-memory comment store. Switching closes an unsubmitted comment draft.
+Select **Pause document sync** and type inside a paragraph as Ada. In Grace's
+editor, place the caret in the same paragraph and use **Toggle quote**,
+**Toggle bullet list**, **Toggle numbered list**, or **Toggle task list**. You
+can also select part of the paragraph and choose **Toggle bold**, or press
+Enter to split it. Select **Resume document sync** to merge both changes.
+Ada's Undo removes her typing while Grace's edit stays in both editors.
+Grace's Undo removes her edit while retaining Ada's typing. The pause control
+also hides peer cursors and requires a merge before switching rooms. Each room
+has a separate in-memory comment store. Switching closes an unsubmitted comment draft.
 Posted threads and anchors return when their room is reopened.
+
+All six offline cases passed in the production site build in Chromium, Firefox
+and WebKit, including undo by each author. Room switching and comment retention
+also passed in those engines. The bold and task-list cases passed in mobile
+Chromium and WebKit emulation. Desktop and narrow captures were visually
+checked. These workflows use the retained adapter in the homepage preview.
 
 The production website build passed 15 recorded desktop workflows across
 Chromium, Firefox and WebKit, plus two mobile-emulation merge workflows. The

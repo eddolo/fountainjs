@@ -13,6 +13,9 @@ for offline typing versus concurrent quote/list wrapping, partial marks and
 paragraph splitting. The unreleased `fountainjs-editor/yjs/room` entry defaults
 to the retained replacement for authority-backed rooms. Existing XML rooms
 require explicit legacy support or migration. Safe production adoption remains open.
+The homepage preview now lets visitors reproduce all six concurrent editing
+cases with the retained adapter and compare each author's undo in both editors.
+[Homepage workflow](YJS_RETAINED_PREVIEW.md#try-the-homepage-preview).
 The SQLite reference can open an existing room in its stored format and use
 the retained format when provisioning a new room.
 The package opener verifies the bound reply and checkpoint
