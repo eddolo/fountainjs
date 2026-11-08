@@ -2,7 +2,7 @@ import type * as Y from 'yjs';
 import type { Node, Schema } from '../core/schema';
 import type { FountainExtension } from '../extensions/extension';
 import type { DocumentProtocol, DocumentRoomAdmission, DocumentRoomSnapshot } from './document-room';
-import { createYjsCollaborationExtension, type YjsCollaborationExtensionOptions } from './index';
+import type { YjsCollaborationExtensionOptions } from './index';
 import { legacyNodeIdentity } from './legacy-node-identity';
 import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from './retained-adapter';
@@ -80,14 +80,14 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
   const lease = Object.freeze({ ...offer, revision: reply.revision });
   const checkpoint = { manifest, get update() { return supplied.update; } };
 
-  const bind = (document: Y.Doc, baseDocument: Node, fragment?: Y.XmlFragment): BoundYjsRoom => Object.freeze({
+  const bind = (document: Y.Doc, baseDocument: Node,
+    createAdapterExtension: (options: YjsCollaborationExtensionOptions) => FountainExtension,
+    fragment?: Y.XmlFragment): BoundYjsRoom => Object.freeze({
     lease, document, baseDocument, ...(fragment ? { fragment } : {}),
     createExtension({ user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs, autoConnect }: BoundYjsExtensionOptions) {
-      const adapterOptions = { user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs, autoConnect,
-        document, fragmentName: lease.room, structuredAttributes: legacyProjection.structuredAttributes };
-      return lease.protocol === 'retained'
-        ? createRetainedYjsCollaborationExtension(adapterOptions)
-        : createYjsCollaborationExtension({ ...adapterOptions, fragment, preserveConcurrentRoots: true });
+      return createAdapterExtension({ user, provider, awareness, awarenessField, captureTimeout, presenceThrottleMs, autoConnect,
+        document, fragmentName: lease.room, structuredAttributes: legacyProjection.structuredAttributes,
+        ...(fragment ? { fragment, preserveConcurrentRoots: true } : {}) });
     },
   });
 
@@ -97,8 +97,10 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     try {
       signal?.throwIfAborted();
       if (legacyNodeIdentity(restored.reader.root) !== offer.identity) throw new Error('Room admission native identity changed.');
+      const { createYjsCollaborationExtension } = await import('./index');
+      signal?.throwIfAborted();
       admittedRoomRoots.set(restored.reader.fragment, restored.reader.root);
-      return bind(restored.document, restored.baseDocument, restored.reader.fragment);
+      return bind(restored.document, restored.baseDocument, createYjsCollaborationExtension, restored.reader.fragment);
     } catch (error) { restored.document.destroy(); throw error; }
   }
 
@@ -110,6 +112,6 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     if (restored.document.store.pendingStructs || restored.document.store.pendingDs) throw new Error('Room admission returned unresolved update dependencies.');
     const fragment = restored.document.getXmlFragment(lease.room);
     admittedRoomRoots.set(fragment, fragment.get(0) as Y.XmlElement);
-    return bind(restored.document, restored.baseDocument);
+    return bind(restored.document, restored.baseDocument, createRetainedYjsCollaborationExtension);
   } catch (error) { restored.document.destroy(); throw error; }
 }

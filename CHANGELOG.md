@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Load the legacy XML adapter when a verified room selects the legacy format.
+  Retained-only room sessions avoid that module during startup.
+
 - Keep untouched Markdown source after proven visual edits in a document with
   a whole-document HTML projection. Report when the Conversion Lab falls back
   to rewritten Markdown.

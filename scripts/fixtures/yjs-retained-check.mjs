@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 
 // Modules are injected so the same contract exercises ESM, isolated CommonJS,
 // and a genuinely packed/installed consumer without mixing Yjs constructors.
-export async function checkRetainedYjs(core, retained, Y, legacy, room) {
-  for (const name of ['RetainedYjsCollaborationAdapter', 'createRetainedYjsCollaborationExtension', 'captureRetainedCheckpoint', 'restoreRetainedCheckpoint']) {
+export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, assertLegacyDeferred) {
+  const retainedNames = ['RetainedYjsCollaborationAdapter', 'createRetainedYjsCollaborationExtension', 'captureRetainedCheckpoint', 'restoreRetainedCheckpoint'];
+  for (const name of retainedNames) {
     assert.equal(typeof retained[name], 'function', `Missing retained export: ${name}`);
     assert.equal(core[name], undefined, `Retained preview leaked into the default entry: ${name}`);
-    assert.equal(legacy[name], undefined, `Retained preview leaked into /yjs: ${name}`);
   }
   assert.equal(typeof globalThis.document, 'undefined');
   assert.equal(typeof globalThis.window, 'undefined');
@@ -65,7 +65,7 @@ export async function checkRetainedYjs(core, retained, Y, legacy, room) {
     const snapshot = { key: 'packed-room', epoch, revision: 0, phase: 'active', protocol: 'retained', checkpoint };
     if (room) {
       assert.equal(core.openYjsRoom, undefined);
-      assert.equal(legacy.openYjsRoom, undefined);
+      assertLegacyDeferred?.();
       assert.equal(room.createRetainedYjsCollaborationExtension, retained.createRetainedYjsCollaborationExtension);
       assert.equal(room.captureRetainedCheckpoint, retained.captureRetainedCheckpoint);
       assert.equal(typeof room.captureLegacyCheckpoint, 'function');
@@ -98,6 +98,7 @@ export async function checkRetainedYjs(core, retained, Y, legacy, room) {
         assert.ok(editor.state.doc.textContent.startsWith('Local: '));
         assert.deepEqual(Y.encodeStateAsUpdate(bound.document), received);
       } finally { editor.destroy(); bound.document.destroy(); }
+      assertLegacyDeferred?.();
       cases++;
     }
     const target = new Y.Doc(); let started = 0, bound;
@@ -116,6 +117,9 @@ export async function checkRetainedYjs(core, retained, Y, legacy, room) {
       cases++;
     } finally { joined.destroy(); target.destroy(); }
     // Existing XML data is preserved and refused, never automatically migrated.
+    const legacy = loadLegacy();
+    assert.equal(legacy.openYjsRoom, undefined);
+    for (const name of retainedNames) assert.equal(legacy[name], undefined, `Retained preview leaked into /yjs: ${name}`);
     const oldDoc = new Y.Doc();
     const oldKit = composeExtensions([CoreExtension, legacy.createYjsCollaborationExtension({ document: oldDoc, user: { id: 'old', name: 'Old', color: '#7048e8' } })]);
     const old = createEditor({ schema: oldKit.schema, plugins: oldKit.plugins, content });

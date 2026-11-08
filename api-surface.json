@@ -39,8 +39,8 @@
     "dist/core/image.d.ts": "6057cc1d1f152d519fd93f97c08ff9c23e5389c5396506bec24c61b047554a98",
     "dist/core/importers/html-importer.d.cts": "5d8e67ad5113bc046701f455b16e347b1309384750ea4b578b528b37e6ef8d10",
     "dist/core/importers/html-importer.d.ts": "45825e0f9b656b301f069fcc71896bbcb351d3843a7f0972d6b13e635567db44",
-    "dist/core/importers/markdown-importer.d.cts": "6fb93e2d839228ad740fb60f3098e5fe3f568a274a0e5208e14bd8d56304085d",
-    "dist/core/importers/markdown-importer.d.ts": "638fa98f379022ed94306e862fa9b20d032201c70f2dbfdf0a007841c6dbe11d",
+    "dist/core/importers/markdown-importer.d.cts": "fa02982c3ce3899bf1a33130951a3b5e007a04e82b5ab144ab6603e339a5ba0c",
+    "dist/core/importers/markdown-importer.d.ts": "056a78dbf6748f2cf397d74733558aa16927e632836249a8f48aa8b30dd4d365",
     "dist/core/index.d.cts": "6eb9593d703b70a0f0039077191383bff746587a1d199f3e87e2d16f0e167168",
     "dist/core/index.d.ts": "806eac9137f0dd9c98c986136f729cf23ea1f38c08d884470c93948b4f4db60b",
     "dist/core/list-layout.d.cts": "10179145b1dabe85c3701bdb026e581a2d76266378f2d280057a3bbf3515e45e",
@@ -443,8 +443,8 @@
     "dist/yjs/retained-room-coordinator.d.ts": "ac30ca1aa8ef700f23245778915a7854c188f99579838ead879a642394bf7652",
     "dist/yjs/retained-room-store.d.cts": "1e7c983af856a0e424d40a63c89853f742e560a038b7f45df0664512732e4f2b",
     "dist/yjs/retained-room-store.d.ts": "463a9e3542f1d2737312627f051fbf06bb9688a328b07791a85f9f7e7d88a85a",
-    "dist/yjs/room.d.cts": "b8d76880b7f2266dd1589a95a33bf22fba58954055383e7bd4b93584114211c7",
-    "dist/yjs/room.d.ts": "d063298a8736a53b45c3ff4ed3250cb531347bd3df5b5c4125c5a17eee69c456",
+    "dist/yjs/room.d.cts": "dc1a05a25ddefa2669b69658fbfc428f01f1ba11062d8aa6aae6da3fd9f6fb37",
+    "dist/yjs/room.d.ts": "84a65895a75f121c5e8b69460b38b5c1a1f22186409c418535dfcb4377b24805",
     "dist/yjs/structured-attributes.d.cts": "783fad435a4b880d340fcde14e456c9a437746fc36ddad83ed6cddff3811845f",
     "dist/yjs/structured-attributes.d.ts": "44aecb337c6c742fa45ee136982965b7cbd43da9940936cea9ed69c3ec3a248c"
   }

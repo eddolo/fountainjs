@@ -890,6 +890,33 @@ checks passed. The installed tarball passed 39 recorded collaboration workflows
 across Chromium, Firefox and WebKit. The measured library bundling step took
 about six seconds locally, compared with about one second for the prior output.
 
+### CommonJS growth and retained room startup
+
+Rebuilding the approved `f8bff232` checkpoint reproduced its exact CommonJS
+aggregate of 1,442,472 bytes. At `34cdd29e` the same gate measured 1,593,764
+bytes. The emitted source maps list each mapped source in a single CommonJS
+chunk. Approximate attribution by generated source-map spans assigns 97,239
+additional bytes to collaboration, 27,380 to core outside Markdown, 19,822 to
+the editor view, and 15,472 to Markdown. HTML shrank by 10,586 bytes and other
+changes partly offset the growth. Both trial Terser configurations produced
+larger CommonJS output than the existing minifier.
+
+The room entry now imports the XML adapter only after a verified legacy
+admission. In fresh Node processes, loading the room entry reads 199,819
+CommonJS bytes instead of 220,493 and 196,506 ESM bytes instead of 217,650.
+These totals cover loaded Fountain chunks only. They exclude Yjs and other
+peers and do not measure execution latency. The CommonJS package smoke test
+checks that the legacy module remains unloaded after a retained editor mounts.
+The full aggregate still counts both implementations. It is 147.7 KiB over
+the existing CommonJS limit, with all individual entry checks passing.
+
+A fresh install of the local tarball passed 15 room and collaboration checks
+in each format, including a module-load check after mounting a retained room.
+All 153 focused source checks and 54 recorded migration, rollback and recovery
+workflows passed across Chromium, Firefox and WebKit. The package API snapshot
+was refreshed for a type-only import spelling and a Markdown documentation
+comment. Neither changes a public signature.
+
 ### Shared HTML import projection
 
 The browser and server HTML importers share projection for images, playback,

@@ -77,8 +77,10 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 146.1 KiB over its existing limit.
-[Package size evidence](YJS_STRUCTURAL_RETENTION_AUDIT.md#rejected-document-update-recovery).
+pass. The CommonJS aggregate is 147.7 KiB over its existing limit. Retained
+rooms now defer the legacy adapter, reducing the room entry's initial load by
+about 20 KiB in both formats.
+[Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption
 remain open. The local migration reference supports explicitly selected nested
