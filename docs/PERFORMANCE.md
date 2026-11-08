@@ -910,6 +910,15 @@ checks that the legacy module remains unloaded after a retained editor mounts.
 The full aggregate still counts both implementations. It is 147.7 KiB over
 the existing CommonJS limit, with all individual entry checks passing.
 
+The later stable-ID paste checkpoint measures 1,595,307 raw CommonJS bytes
+against 1,442,560 allowed. Fresh Node processes also measured the Fountain
+files actually loaded by each entry, compared with the approved `f8bff232`
+build. The root loads 705,221 bytes instead of 639,501, headless core 384,224
+instead of 339,838, and React 507,904 instead of 448,469. DOCX loads 204,235
+instead of 204,424. The newer `yjs/room` entry loads 201,359 bytes at import,
+with the legacy adapter still deferred. These measurements exclude peers and
+describe startup file size. They do not measure editor or import latency.
+
 A fresh install of the local tarball passed 15 room and collaboration checks
 in each format, including a module-load check after mounting a retained room.
 All 153 focused source checks and 54 recorded migration, rollback and recovery

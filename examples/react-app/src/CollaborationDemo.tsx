@@ -10,6 +10,7 @@ import {
 } from 'fountainjs-editor/experimental/yjs-retained';
 import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { FountainComments } from 'fountainjs-editor/react/comments';
+import { createStableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { defineStructuredAttribute, insertStructuredAttributeItems, setStructuredAttribute } from 'fountainjs-editor/structured-attributes';
 import type { YjsAwareness } from 'fountainjs-editor/yjs';
 import { downloadDocumentFile } from './math-document-files';
@@ -83,6 +84,11 @@ const collaborationSettingsDefinition = defineStructuredAttribute({
 
 const collaborationStructuredAttributes = Object.freeze({
   definitions: Object.freeze([collaborationSettingsDefinition]),
+});
+
+const collaborationSettingsIds = createStableNodeIdsExtension({
+  types: ['collaboration_settings'],
+  generateId: () => `settings-${crypto.randomUUID()}`,
 });
 
 const collaborationSettingsNode = {
@@ -170,7 +176,8 @@ function createSession(room: DemoRoom) {
     awareness.setPaused(false);
   };
 
-  return { leftDocument, rightDocument, awareness, content, comments: new InMemoryCommentsStore(), connectTransport, disconnectTransport, resume };
+  return { leftDocument, rightDocument, awareness, content, settingsId: content.content[2].attrs.nodeId,
+    comments: new InMemoryCommentsStore(), connectTransport, disconnectTransport, resume };
 }
 
 function authorOptions(session: ReturnType<typeof createSession>, user: typeof ada | typeof grace) {
@@ -184,6 +191,7 @@ export default function CollaborationDemo() {
     const kit = (author: typeof ada | typeof grace) => composeExtensions([
       CoreExtension,
       collaborationSettingsExtension,
+      collaborationSettingsIds,
       createRetainedYjsCollaborationExtension(authorOptions(sessions.launch, author)),
       createCommentsExtension({ adapter: () => sessions.launch.comments.createAdapter(), user: { id: author.id, name: author.name } }),
     ]);
@@ -261,8 +269,9 @@ export default function CollaborationDemo() {
 
   const leftComments = getCommentsState(left);
   const rightComments = getCommentsState(right);
-  const leftSettingsPath = leftState?.doc.content.findIndex((node) => node.type.name === 'collaboration_settings') ?? -1;
-  const rightSettingsPath = rightState?.doc.content.findIndex((node) => node.type.name === 'collaboration_settings') ?? -1;
+  const originalSettingsId = room.sessions[activeRoom].settingsId;
+  const leftSettingsPath = leftState?.doc.content.findIndex((node) => node.attrs.nodeId === originalSettingsId) ?? -1;
+  const rightSettingsPath = rightState?.doc.content.findIndex((node) => node.attrs.nodeId === originalSettingsId) ?? -1;
   const leftSettings = leftSettingsPath >= 0
     ? leftState?.doc.child(leftSettingsPath).attrs.config as { layout?: { columns?: number; compact?: boolean }; filters?: unknown[] }
     : undefined;
@@ -321,22 +330,22 @@ export default function CollaborationDemo() {
         <div>
           <span>NESTED CRDT ATTRIBUTES</span>
           <h3>Change separate fields. Keep both changes.</h3>
-          <p>The visible card is ordinary Fountain JSON. Its selected <code>config</code> attribute is mirrored into nested Y.Map and Y.Array values, so peers editing different settings do not overwrite the whole object.</p>
+          <p>These controls edit the original settings card for this room. Its <code>config</code> attribute is mirrored into nested Y.Map and Y.Array values, so peers can edit different settings at the same time.</p>
         </div>
         <article>
           <strong>Ada’s controls</strong>
-          <span>{leftSettings?.layout?.columns ?? 0} columns · {leftSettings?.filters?.length ?? 0} filters</span>
+          <span>{leftSettings ? `${leftSettings.layout?.columns ?? 0} columns · ${leftSettings.filters?.length ?? 0} filters` : 'Original settings card was removed'}</span>
           <div>
-            <button onClick={() => leftSettingsPath >= 0 && setStructuredAttribute(left, [leftSettingsPath], collaborationSettingsDefinition, ['layout', 'columns'], Math.min(6, (leftSettings?.layout?.columns ?? 1) + 1))}>Add a column</button>
-            <button onClick={() => leftSettingsPath >= 0 && insertStructuredAttributeItems(left, [leftSettingsPath], collaborationSettingsDefinition, ['filters'], leftSettings?.filters?.length ?? 0, [{ field: 'owner', value: 'ada' }])}>Add owner filter</button>
+            <button disabled={!leftSettings} onClick={() => leftSettingsPath >= 0 && setStructuredAttribute(left, [leftSettingsPath], collaborationSettingsDefinition, ['layout', 'columns'], Math.min(6, (leftSettings?.layout?.columns ?? 1) + 1))}>Add a column</button>
+            <button disabled={!leftSettings} onClick={() => leftSettingsPath >= 0 && insertStructuredAttributeItems(left, [leftSettingsPath], collaborationSettingsDefinition, ['filters'], leftSettings?.filters?.length ?? 0, [{ field: 'owner', value: 'ada' }])}>Add owner filter</button>
           </div>
         </article>
         <article>
           <strong>Grace’s controls</strong>
-          <span>{rightSettings?.layout?.compact ? 'Compact' : 'Comfortable'} · {rightSettings?.filters?.length ?? 0} filters</span>
+          <span>{rightSettings ? `${rightSettings.layout?.compact ? 'Compact' : 'Comfortable'} · ${rightSettings.filters?.length ?? 0} filters` : 'Original settings card was removed'}</span>
           <div>
-            <button onClick={() => rightSettingsPath >= 0 && setStructuredAttribute(right, [rightSettingsPath], collaborationSettingsDefinition, ['layout', 'compact'], !rightSettings?.layout?.compact)}>Toggle density</button>
-            <button onClick={() => rightSettingsPath >= 0 && insertStructuredAttributeItems(right, [rightSettingsPath], collaborationSettingsDefinition, ['filters'], rightSettings?.filters?.length ?? 0, [{ field: 'priority', value: 'high' }])}>Add priority filter</button>
+            <button disabled={!rightSettings} onClick={() => rightSettingsPath >= 0 && setStructuredAttribute(right, [rightSettingsPath], collaborationSettingsDefinition, ['layout', 'compact'], !rightSettings?.layout?.compact)}>Toggle density</button>
+            <button disabled={!rightSettings} onClick={() => rightSettingsPath >= 0 && insertStructuredAttributeItems(right, [rightSettingsPath], collaborationSettingsDefinition, ['filters'], rightSettings?.filters?.length ?? 0, [{ field: 'priority', value: 'high' }])}>Add priority filter</button>
           </div>
         </article>
       </div>}

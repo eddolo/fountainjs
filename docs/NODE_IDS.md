@@ -143,6 +143,14 @@ node, comment, tracked-change, and page-anchor positions do not move. It is
 marked `addToHistory: false`: a paste remains one undoable user action instead of
 creating a second repair-only undo entry.
 
+On a local edit, the extension keeps an existing node's ID when it can identify
+that node by immutable identity or its mapped position. A copy pasted before
+the original receives a new ID, so application references still point to the
+original. Initial normalization and remote repair use document order when
+resolving duplicate IDs. Applications that let independent offline authors
+create identical copies at the same location can supply a UUID generator,
+as the homepage's collaborative settings demo does.
+
 For collaboration, a repair appended to a validated remote transaction is
 explicitly published back through the provider boundary. This allows an older
 or differently configured peer to introduce a duplicate while an ID-aware peer

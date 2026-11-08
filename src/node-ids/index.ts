@@ -1,15 +1,18 @@
 import {
+  Mapping,
   Node,
   NodeSelection,
   Plugin,
   PluginKey,
   REBROADCAST_APPEND_TRANSACTION_META,
   Step,
+  nodeRangeAtPath,
   type NodeJSON,
   type Schema,
   type Attributes,
   type Editor,
 } from '../core';
+import { COLLABORATION_REMOTE_META } from '../extensions/collaboration-core';
 import { defineExtension, type FountainExtension } from '../extensions/extension';
 
 export const DEFAULT_STABLE_NODE_ID_ATTRIBUTE = 'nodeId';
@@ -263,18 +266,23 @@ export function planStableNodeIdRepairs(
   document: Node,
   options: StableNodeIdOptions = {},
 ): readonly StableNodeIdRepair[] {
-  const resolved = resolveOptions(options);
+  return planRepairs(document, resolveOptions(options));
+}
+
+function planRepairs(document: Node, resolved: ResolvedStableNodeIdOptions,
+  existingOwners?: ReadonlyMap<string, readonly number[]>): readonly StableNodeIdRepair[] {
   const inspected = entriesAndIssues(document, resolved);
   const used = new Set(inspected.entries.map((entry) => entry.id));
-  const firstPaths = new Map<string, readonly number[]>();
+  const ownerPaths = new Map(existingOwners);
   const repairs: StableNodeIdRepair[] = [];
   document.descendants((node, path, parent) => {
     if (!eligible(node, path, parent, resolved)) return;
     const value = node.attrs[resolved.attribute];
+    const owner = validId(value) ? ownerPaths.get(value) : undefined;
     const reason: StableNodeIdRepairReason | undefined = !validId(value)
       ? (value === undefined || value === null || value === '' ? 'missing' : 'invalid')
-      : firstPaths.has(value) ? 'duplicate' : undefined;
-    if (validId(value) && !firstPaths.has(value)) firstPaths.set(value, immutablePath(path));
+      : owner && (owner.length !== path.length || owner.some((part, index) => part !== path[index])) ? 'duplicate' : undefined;
+    if (validId(value) && !owner) ownerPaths.set(value, immutablePath(path));
     if (!reason) return;
     const id = nextUniqueId({
       node,
@@ -291,9 +299,7 @@ export function planStableNodeIdRepairs(
       path: immutablePath(path),
       nodeType: node.type.name,
       ...(value !== undefined ? { value } : {}),
-      ...(reason === 'duplicate' && typeof value === 'string'
-        ? { duplicateOf: firstPaths.get(value) }
-        : {}),
+      ...(reason === 'duplicate' ? { duplicateOf: owner } : {}),
     }));
   });
   return Object.freeze(repairs);
@@ -428,10 +434,32 @@ export function createStableNodeIdsExtension(options: StableNodeIdOptions = {}):
         ? createStableNodeIdIndex(newState.doc, configured)
         : value,
     },
-    appendTransaction: (_transactions, _oldState, newState) => {
-      const repairs = planStableNodeIdRepairs(newState.doc, configured);
-      if (!repairs.length) return null;
+    appendTransaction: (transactions, oldState, newState) => {
+      const index = stableNodeIdsKey.get(newState);
+      if (!index?.issues.length) return null;
+      const previous = stableNodeIdsKey.get(oldState);
+      const owners = new Map<string, readonly number[]>();
+      // A local paste can insert its copy before the existing owner. Retain
+      // that owner by identity, or by its mapped position when the same
+      // immutable node was inserted twice. Remote repair stays deterministic.
+      if (previous && !transactions.some(transaction => transaction.getMeta(COLLABORATION_REMOTE_META) === true)) {
+        const mapping = new Mapping(transactions.flatMap(transaction => transaction.mapping.maps));
+        const duplicates = new Set(index.issues.filter(issue => issue.reason === 'duplicate').map(issue => issue.value as string));
+        for (const id of duplicates) {
+          const original = previous.get(id);
+          if (!original) continue;
+          const candidates = index.getAll(id);
+          const retained = candidates.filter(candidate => candidate.node === original.node);
+          const position = mapping.mapResult(nodeRangeAtPath(oldState.doc, original.path).from);
+          const owner = retained.length === 1 ? retained[0] : !position.deletedAfter
+            ? (retained.length ? retained : candidates).find(candidate => nodeRangeAtPath(newState.doc, candidate.path).from === position.position)
+            : undefined;
+          if (owner) owners.set(id, owner.path);
+        }
+      }
       const resolved = resolveOptions(configured);
+      const repairs = planRepairs(newState.doc, resolved, owners);
+      if (!repairs.length) return null;
       const transaction = newState.createTransaction()
         .step(new StableNodeIdRepairStep(repairs, resolved.attribute));
       return transaction

@@ -112,6 +112,20 @@ describe('stable node identities', () => {
     expect(editor.state.doc.child(1).attrs.nodeId).toBe('test-1-0');
   });
 
+  it.each([false, true])('keeps the original ID when a copy is inserted first (shared node: %s)', sharedNode => {
+    const editor = editorWithIds(content(paragraph('Original', 'shared-id')));
+    const original = editor.state.doc.child(0);
+    const copy = sharedNode ? original : original.type.schema.nodeFromJSON({ ...original.toJSON(), content: [{ type: 'text', text: 'Copy' }] });
+    expect(editor.dispatch(editor.state.createTransaction().replace(0, 0, [copy]))).toBe(true);
+    expect(getStableNodeIdIndex(editor)?.get('shared-id')?.path).toEqual([1]);
+    expect(editor.state.doc.child(0).attrs.nodeId).toBe('test-0-0');
+    expect(editor.state.doc.child(1)).toBe(original);
+    expect(undo(editor)).toBe(true);
+    expect(getStableNodeIdIndex(editor)?.get('shared-id')?.path).toEqual([0]);
+    expect(redo(editor)).toBe(true);
+    expect(getStableNodeIdIndex(editor)?.get('shared-id')?.path).toEqual([1]);
+  });
+
   it('fails closed on duplicates and reports every invalid identity with paths', () => {
     const kit = composeExtensions([CoreExtension]);
     const editor = createEditor({

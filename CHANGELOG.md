@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep the original stable ID when an editor pastes a copy before its source.
+  The collaboration demo gives offline copies distinct IDs and keeps its
+  settings controls attached to the original card.
+
 - Preserve a rejected local collaboration draft through later peer updates.
   The public demo labels incomplete room switches and can download each copy.
 

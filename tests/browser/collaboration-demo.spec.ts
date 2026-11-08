@@ -1,5 +1,22 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+
+async function pasteSettingsCopy(editor: Locator, nestedDepth = 0) {
+  await editor.evaluate((element, depth) => {
+    let details: unknown = 'Portable details';
+    for (let level = 0; level < depth; level++) details = { next: details };
+    const payload = JSON.stringify({
+      version: 1, document: { type: 'doc', content: [{ type: 'collaboration_settings', attrs: {
+        nodeId: 'shared-launch-settings', config: { title: 'Pasted settings copy', layout: { columns: 3, compact: false }, filters: [], details },
+      } }] },
+    });
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [], getData: (type: string) => type === 'application/x-fountainjs+json' ? payload : '',
+    } });
+    element.dispatchEvent(event);
+  }, nestedDepth);
+}
 
 test('opens the lazy collaboration demo after a slow module load and shares typing', async ({ page }, info) => {
   let release!: () => void;
@@ -171,19 +188,8 @@ test('protects a rejected collaboration draft from peer edits and room switching
 
   await ada.locator('p').first().click();
   await page.keyboard.press('End');
-  await ada.evaluate(editor => {
-    const payload = JSON.stringify({
-      version: 1, document: { type: 'doc', content: [{ type: 'collaboration_settings', attrs: {
-        nodeId: 'shared-launch-settings', config: { title: 'Pasted settings copy', layout: { columns: 3, compact: false }, filters: [] },
-      } }] },
-    });
-    const event = new Event('paste', { bubbles: true, cancelable: true });
-    Object.defineProperty(event, 'clipboardData', { value: {
-      files: [], getData: (type: string) => type === 'application/x-fountainjs+json' ? payload : '',
-    } });
-    editor.dispatchEvent(event);
-  });
-  await expect(demo.getByRole('alert')).toContainText('Duplicate collaboration node ID');
+  await pasteSettingsCopy(ada, 40);
+  await expect(demo.getByRole('alert')).toContainText('exceeds its depth limit');
   await expect(ada).toContainText('Pasted settings copy');
   await expect(grace).not.toContainText('Pasted settings copy');
   await expect(switchRoom).toBeDisabled();
@@ -213,6 +219,65 @@ test('protects a rejected collaboration draft from peer edits and room switching
   expect(json).toContain('Pasted settings copy');
   expect(json).not.toContain('peer edit');
   await demo.screenshot({ path: info.outputPath('recoverable-collaboration-draft.png') });
+});
+
+test('merges two offline settings copies without reassigning the original card', async ({ page }, info) => {
+  await page.goto('/');
+  const demo = page.locator('#collaboration');
+  const ada = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const grace = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
+  await expect(ada.getByText('Shared launch settings', { exact: true })).toBeVisible();
+  await demo.getByRole('button', { name: 'Pause document sync' }).click();
+  for (const author of [ada, grace]) {
+    await author.locator('p').first().click();
+    await page.keyboard.press('End');
+    await pasteSettingsCopy(author);
+    await expect(author.locator('[data-collaboration-settings]').first()).toContainText('Pasted settings copy');
+    await expect(author.getByText('Pasted settings copy', { exact: true })).toHaveCount(1);
+  }
+  await demo.getByRole('button', { name: 'Resume document sync' }).click();
+  for (const author of [ada, grace]) await expect(author.getByText('Pasted settings copy', { exact: true })).toHaveCount(2);
+  await expect(demo.getByRole('alert')).toHaveCount(0);
+  await demo.getByRole('button', { name: 'Undo Ada' }).click();
+  for (const author of [ada, grace]) await expect(author.getByText('Pasted settings copy', { exact: true })).toHaveCount(1);
+  await demo.locator('[data-collaboration-editor="ada"]').getByRole('button', { name: 'Redo' }).click();
+  for (const author of [ada, grace]) await expect(author.getByText('Pasted settings copy', { exact: true })).toHaveCount(2);
+
+  await demo.getByRole('button', { name: 'Toggle density' }).click();
+  for (const author of [ada, grace]) {
+    const cards = author.locator('[data-collaboration-settings]');
+    await expect(cards.filter({ hasText: 'Shared launch settings' })).toContainText('2 columns · compact');
+    await expect(cards.filter({ hasText: 'Pasted settings copy' })).toHaveText([
+      'Pasted settings copy3 columns · comfortable', 'Pasted settings copy3 columns · comfortable',
+    ]);
+  }
+  await demo.screenshot({ path: info.outputPath('merged-settings-copies.png') });
+});
+
+test('copies a settings card through the real Chromium clipboard before its original', async ({ page, browserName }, info) => {
+  test.skip(browserName !== 'chromium', 'This exercises Chromium’s operating-system clipboard bridge.');
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/');
+  const demo = page.locator('#collaboration');
+  const ada = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const grace = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
+  const cards = (editor: Locator) => editor.locator('[data-collaboration-settings]');
+  await cards(ada).click();
+  await expect(cards(ada)).toHaveAttribute('data-fountain-selected-node', 'true');
+  await page.keyboard.press('Control+c');
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('Shared launch settings');
+  await ada.locator('p').first().click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Control+v');
+
+  for (const author of [ada, grace]) await expect(cards(author)).toHaveCount(2);
+  await expect(demo.getByRole('alert')).toHaveCount(0);
+  await demo.getByRole('button', { name: 'Toggle density' }).click();
+  for (const author of [ada, grace]) {
+    await expect(cards(author).first()).toContainText('2 columns · comfortable');
+    await expect(cards(author).last()).toContainText('2 columns · compact');
+  }
+  await demo.screenshot({ path: info.outputPath('native-settings-paste.png') });
 });
 
 test('identifies both editor copies when the second room connection fails', async ({ page }, info) => {
