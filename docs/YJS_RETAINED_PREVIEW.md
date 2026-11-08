@@ -292,6 +292,13 @@ loaded state, admission reports an error instead of overwriting it. Cancellation
 prevents late callbacks from installing state or starting transport. An epoch
 change on reconnect requires an explicit fresh session and draft recovery.
 
+Checkpoint-based admission validates the saved structured fields in the staged
+merge before binding or starting the provider. The client supplies definitions
+for the saved top-level map, including its custom name where one is declared.
+Missing definitions, an incompatible map or a local change to the saved map
+name leave the draft and shared bytes intact. The recovery fixture shows the
+refused draft alongside a new session that displays both saved fields.
+
 The [browser draft reference](YJS_BROWSER_DRAFT_RECOVERY_AUDIT.md) shows how a
 host can keep a rolling recovery copy in IndexedDB, including before switching
 sessions. A saved copy from the same session can pass through ordinary admission

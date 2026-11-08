@@ -18,6 +18,8 @@ text and keep the room eligible to receive later peer updates.
 Both adapters refuse to initialize an empty shared fragment with unresolved
 Yjs updates. Recovery leaves the draft available when the complete room opens
 in a separate session. [Startup recovery](YJS_RETAINED_PREVIEW.md#initialize-once-then-join).
+Checkpoint-based retained admission also verifies the saved structured fields
+before installing the checkpoint or starting the provider.
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
@@ -29,10 +31,10 @@ have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
 The latest full source run had 5,004 passes and six failures, with no skips.
-The current build passes every existing size limit. Sharing repeated property
-names reduced aggregate raw CommonJS from 1,522.3 to 1,405.4 KiB, below the
-1,408.8 KiB cap. The CommonJS root loads about 46 KiB less in a fresh Node
-process, while the separately gzipped chunks grew by 6.7 KiB in total.
+The current build passes every existing size limit, with aggregate CommonJS
+at 1,405.7 KiB against a 1,408.8 KiB cap. In the size repair's matched builds,
+the CommonJS root loaded about 46 KiB less in a fresh Node process, while the
+separately gzipped chunks grew by 6.7 KiB in total.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,
 retained history/storage growth and compaction, and safe adapter adoption

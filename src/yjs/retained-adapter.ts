@@ -216,7 +216,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       const response = await this.admission!.load(controller.signal);
       if (!current()) return;
       const { checkpoint, reference } = readRetainedAdmission(response, this.admission!, this.admissionLease);
-      const candidate = await prepareRetainedAdmission(this.options.document, checkpoint, context.editor.state.schema, this.admission!.schemaVersion, this.room);
+      const document = this.options.document, structured = this.structured;
+      // Reuse the normalized definitions and the actual top-level map binding.
+      const mapName = structured && [...document.share].find(([, type]) => Object.is(type, structured.map))?.[0];
+      const projection = structured && mapName !== undefined
+        ? { mapName, definitions: structured.definitions, identityAttribute: structured.identityAttribute } : undefined;
+      const candidate = await prepareRetainedAdmission(document, checkpoint, context.editor.state.schema, this.admission!.schemaVersion, this.room, projection);
       if (!current()) return;
       const checkDraft = () => { if (!context.editor.state.doc.eq(this.joinBaseline!) && !context.editor.state.doc.eq(candidate.document)) throw new Error('Unresolved local draft made while joining; draft preserved. Resolve it explicitly before reconnecting.'); };
       checkDraft();

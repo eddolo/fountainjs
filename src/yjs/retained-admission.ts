@@ -5,6 +5,8 @@ import {validateRetainedRoomCheckpoint} from './retained-room-store';
 import {RetainedDocumentStore} from './retained-document';
 import {assertRetainedWireData} from './retained-wire';
 import type {DocumentRoomSnapshot} from './document-room';
+import {projectRetainedRoomAttributes, type YjsStructuredAttributesOptions} from './structured-attributes';
+import {retainedStructuredMap} from './retained-structured-map';
 
 export interface RetainedAdmissionLease {
   readonly key:string;readonly epoch:string;readonly revision:number;
@@ -57,8 +59,9 @@ function declare(document:Y.Doc,roots:readonly CheckpointRoot[]):void {
 
 /** Validate the complete merge in isolation. The caller can inspect the result
  * and reject a draft conflict before any shared client state is changed. */
-export async function prepareRetainedAdmission(document:Y.Doc,checkpoint:RetainedCheckpoint,schema:Schema,schemaVersion:string,room:string):Promise<{readonly document:Node;readonly identity:string;install(origin:unknown):void}> {
-  const incoming=await validateRetainedRoomCheckpoint(checkpoint,schema,schemaVersion);
+export async function prepareRetainedAdmission(document:Y.Doc,checkpoint:RetainedCheckpoint,schema:Schema,schemaVersion:string,room:string,structured?:Omit<YjsStructuredAttributesOptions,'map'>):Promise<{readonly document:Node;readonly identity:string;install(origin:unknown):void}> {
+  let incomingMap:string|undefined;
+  const incoming=await validateRetainedRoomCheckpoint(checkpoint,schema,schemaVersion,(source,_base,name)=>{incomingMap=retainedStructuredMap(source,name);});
   if(incoming.manifest.room!==room)throw new Error('Admission checkpoint belongs to another namespace.');
   wire.assertIdle(document);assertRetainedWireData(document);
   const before=Y.encodeStateAsUpdate(document),roots=wire.roots(document),guid=document.guid,gc=document.gc;
@@ -70,11 +73,12 @@ export async function prepareRetainedAdmission(document:Y.Doc,checkpoint:Retaine
     Y.applyUpdate(staged,incoming.update);
     staged.gc=gc;
     if(staged.store.pendingStructs||staged.store.pendingDs)throw new Error('Admission has unresolved shared dependencies.');
+    if(retainedStructuredMap(staged,room)!==incomingMap)throw new Error('Admission changed the saved structured attribute map.');
     const verified=await captureRetainedCheckpoint(staged,schema,schemaVersion,room);
     if(verified.manifest.roomId!==incoming.manifest.roomId)throw new Error('Admission conflicts with the local room identity; both sources preserved.');
     const stagedUpdate=Y.encodeStateAsUpdate(staged);
     const reader=new RetainedDocumentStore(staged,room,schema,()=>{throw new Error('Admission reader cannot allocate identities.');});let value:Node;
-    try{value=reader.read();}finally{reader.destroy();}
+    try{value=projectRetainedRoomAttributes(staged,reader.read(),room,structured);}finally{reader.destroy();}
     wire.assertUnchanged(staged,stagedUpdate,verified.manifest.roots);
     let installed=false;
     return Object.freeze({document:value,identity:incoming.manifest.roomId,install(origin:unknown){

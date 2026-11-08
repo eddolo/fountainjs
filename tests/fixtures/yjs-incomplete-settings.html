@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open a room with saved settings</title>
+<link rel="stylesheet" href="/dist/styles.css">
+<style>
+  body { max-width: 800px; margin: 48px auto; padding: 0 20px; font: 16px/1.5 system-ui, sans-serif; }
+  section { margin: 20px 0; padding: 16px; border: 1px solid #cbc6dd; border-radius: 8px; }
+  section .fountain-editor { min-height: 60px; }
+</style>
+<h1>Open a room with saved settings</h1>
+<p id="status" role="status">Preparing the saved room</p>
+<button id="partial" type="button" disabled>Open with one field</button>
+<button id="complete" type="button" disabled>Open with both fields</button>
+<section aria-label="Local draft"><h2>Local draft</h2><div id="draft"></div></section>
+<section aria-label="Recovered shared room"><h2>Recovered shared room</h2><div id="recovered"></div><p id="settings"></p></section>
+<p id="connections">Transport connections: 0</p>
+<script type="module">
+  import * as Y from 'yjs';
+  import { CoreExtension, EditorView, composeExtensions, createEditor, defineExtension, getCollaborationState } from 'fountainjs-editor';
+  import { defineStructuredAttribute, setStructuredAttribute } from 'fountainjs-editor/structured-attributes';
+  import { captureRetainedCheckpoint, createRetainedYjsCollaborationExtension } from 'fountainjs-editor/experimental/yjs-retained';
+
+  const mapName = new URLSearchParams(location.search).get('map') === 'custom' ? 'incident-settings' : undefined;
+  const settings = defineExtension({ name: 'incident-settings', nodes: { settings: { group: 'block', atom: true,
+    toDOM: () => ['div', { 'aria-label': 'Incident display settings' }, 'Incident display settings'],
+  } } });
+  const layout = defineStructuredAttribute({ nodeType: 'settings', attribute: 'layout', root: 'object' });
+  const display = defineStructuredAttribute({ nodeType: 'settings', attribute: 'display', root: 'object' });
+  const schemaVersion = 'settings-1';
+  const doc = text => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] });
+  const create = (document, content, definitions, extra) => {
+    const kit = composeExtensions([CoreExtension, settings, createRetainedYjsCollaborationExtension({
+      document, user: { id: 'author', name: 'Author', color: '#7048e8' },
+      structuredAttributes: { mapName, definitions }, ...extra,
+    })]);
+    return createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+  };
+  const source = new Y.Doc(), initial = doc('Shared incident notes.');
+  initial.content.push({ type: 'settings', attrs: { nodeId: 'display-1', layout: { columns: 2 }, display: { compact: false } } });
+  const author = create(source, initial, [layout, display]);
+  setStructuredAttribute(author, [1], display, ['compact'], true);
+  const checkpoint = await captureRetainedCheckpoint(source, author.state.schema, schemaVersion);
+  let starts = 0;
+  const provider = { connect() { document.querySelector('#connections').textContent = 'Transport connections: ' + ++starts; } };
+  const admission = { schemaVersion, load: () => checkpoint };
+  const status = document.querySelector('#status');
+  const partial = document.querySelector('#partial'), complete = document.querySelector('#complete');
+  partial.disabled = false;
+  status.textContent = 'Saved room ready';
+  partial.onclick = () => {
+    partial.disabled = true;
+    const draft = create(new Y.Doc(), doc('My local notes.'), [layout], { admission, provider });
+    new EditorView(document.querySelector('#draft'), draft, { ariaLabel: 'Settings draft editor' });
+    draft.subscribe(() => {
+      const state = getCollaborationState(draft);
+      if (state.status === 'error') {
+        status.textContent = state.error.message;
+        complete.disabled = false;
+      }
+    });
+  };
+  complete.onclick = () => {
+    complete.disabled = true;
+    const room = create(new Y.Doc(), doc('Fallback.'), [layout, display], { admission, provider });
+    new EditorView(document.querySelector('#recovered'), room, { ariaLabel: 'Verified settings editor' });
+    room.subscribe(() => {
+      if (getCollaborationState(room).status !== 'connected') return;
+      const { layout, display } = room.state.doc.child(1).attrs;
+      document.querySelector('#settings').textContent = `Columns: ${layout.columns}. Compact view: ${display.compact ? 'On' : 'Off'}.`;
+      status.textContent = 'Room opened with both saved fields';
+    });
+  };
+</script>
+</html>

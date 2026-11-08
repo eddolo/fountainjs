@@ -34,6 +34,8 @@ policy on reopen. Native layout certification remains outstanding.
   definitions are refused, and reopened editors see the merged field values.
   Coordinated room offers declare the required map name, including custom
   names, so a client can detect missing configuration before admission.
+  Checkpoint-based admission also validates the merged map before binding and
+  refuses a local update that would rename the authority's saved map.
 
 - Load the legacy XML adapter when a verified room selects the legacy format.
   Retained-only room sessions avoid that module during startup.

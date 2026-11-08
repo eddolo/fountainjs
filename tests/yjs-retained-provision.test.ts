@@ -255,7 +255,7 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
   const reconnect = await restoreRetainedCheckpoint(saved.checkpoint as typeof checkpoint, schema, version);
   cleanups.push(() => reconnect.document.destroy());
   const latest = await authority.snapshot();
-  const candidate = await prepareRetainedAdmission(reconnect.document, latest.checkpoint as typeof checkpoint, schema, version, 'fountain');
+  const candidate = await prepareRetainedAdmission(reconnect.document, latest.checkpoint as typeof checkpoint, schema, version, 'fountain', structured);
   expect(candidate.document.textContent).toBe('Room notes');
   candidate.install('reconnect');
   expect(reconnect.document.gc).toBe(true);

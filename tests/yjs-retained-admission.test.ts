@@ -1,11 +1,12 @@
 // @vitest-environment node
 import {afterEach,expect,it,vi} from 'vitest';
 import * as Y from 'yjs';
-import {CoreExtension,composeExtensions,createEditor,disconnectCollaboration,getCollaborationState,reconnectCollaboration,replaceCollaborationAdapter,undoCollaboration,type Editor,type NodeJSON} from '../src';
+import {CoreExtension,composeExtensions,createEditor,defineExtension,disconnectCollaboration,getCollaborationState,reconnectCollaboration,replaceCollaborationAdapter,undoCollaboration,type Editor,type NodeJSON} from '../src';
 import {createRetainedYjsCollaborationExtension,RetainedYjsCollaborationAdapter} from '../src/yjs/retained-adapter';
 import {captureRetainedCheckpoint,type RetainedCheckpoint} from '../src/yjs/retained-checkpoint';
 import {createYjsCollaborationExtension,type YjsProvider} from '../src/yjs';
 import {prepareRetainedAdmission} from '../src/yjs/retained-admission';
+import {defineStructuredAttribute, setStructuredAttribute} from '../src/structured-attributes';
 
 const cleanup:Array<()=>void>=[];afterEach(()=>{while(cleanup.length)cleanup.pop()!();});
 const version='admission-1',content=(text:string):NodeJSON=>({type:'doc',content:[{type:'paragraph',attrs:{nodeId:'intro'},content:[{type:'text',text}]}]});
@@ -16,6 +17,62 @@ async function source(){const document=doc(),editor=make(document,'Authoritative
 const status=(editor:Editor)=>getCollaborationState(editor)?.status;
 const settled=async(editor:Editor,target='connected')=>vi.waitFor(()=>expect(status(editor)).toBe(target));
 const admission=(load:(signal:AbortSignal)=>RetainedCheckpoint|Promise<RetainedCheckpoint>,schemaVersion=version)=>({admission:{schemaVersion,load}});
+
+it.each([undefined, 'research-settings'])('validates every field of a saved structured map before binding (%s)', async mapName => {
+  const settings = defineExtension({ name: 'test-settings', nodes: { settings: { group: 'block', atom: true } } });
+  const config = defineStructuredAttribute({ nodeType: 'settings', attribute: 'config', root: 'object' });
+  const display = defineStructuredAttribute({ nodeType: 'settings', attribute: 'display', root: 'object' });
+  const data: NodeJSON = { type: 'doc', content: [{ type: 'settings', attrs: {
+    nodeId: 'settings-1', config: { columns: 2 }, display: { compact: false },
+  } }] };
+  const open = (document: Y.Doc, initial: NodeJSON, options: Parameters<typeof createRetainedYjsCollaborationExtension>[0]['structuredAttributes'],
+    extra: Partial<Parameters<typeof createRetainedYjsCollaborationExtension>[0]> = {}) => {
+    const kit = composeExtensions([CoreExtension, settings, createRetainedYjsCollaborationExtension({
+      document, user: { id: 'author', name: 'Author', color: '#7048e8' }, structuredAttributes: options, ...extra,
+    })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: initial });
+    cleanup.push(() => editor.destroy());
+    return editor;
+  };
+  const server = doc(), structured = { definitions: [config, display], mapName };
+  const author = open(server, data, structured);
+  expect(setStructuredAttribute(author, [0], display, ['compact'], true)).toBe(true);
+  const checkpoint = await captureRetainedCheckpoint(server, author.state.schema, version);
+  const bind = vi.fn(), provider = { connect: vi.fn() };
+  const extra = { provider, admission: {
+    schemaVersion: version, authority: { key: 'paper', bind },
+    load: () => ({ checkpoint, key: 'paper', epoch: '00000000-0000-0000-0000-000000000001',
+      revision: 1, phase: 'active' as const, protocol: 'retained' as const }),
+  } };
+  for (const options of [undefined, { definitions: [config], mapName }, { definitions: [config, display], mapName: 'wrong-map' }]) {
+    const client = doc(), before = Y.encodeStateAsUpdate(client);
+    const refused = open(client, content('Keep this draft'), options, extra);
+    await settled(refused, 'error');
+    expect(getCollaborationState(refused)?.error?.message).toMatch(/structured.*map/i);
+    expect(refused.getText()).toBe('Keep this draft');
+    expect(Y.encodeStateAsUpdate(client)).toEqual(before);
+    expect(bind).not.toHaveBeenCalled();
+    expect(provider.connect).not.toHaveBeenCalled();
+  }
+  const conflicting = doc();
+  Y.applyUpdate(conflicting, checkpoint.update);
+  conflicting.getMap('rogue-map').set('draft', true);
+  conflicting.getMap('fountain:document').set('structuredMap', 'rogue-map');
+  const before = Y.encodeStateAsUpdate(conflicting);
+  const refused = open(conflicting, content('Keep this draft'), { ...structured, mapName: 'rogue-map' }, extra);
+  await settled(refused, 'error');
+  expect(getCollaborationState(refused)?.error?.message).toContain('changed the saved structured attribute map');
+  expect(Y.encodeStateAsUpdate(conflicting)).toEqual(before);
+  expect(bind).not.toHaveBeenCalled();
+  expect(provider.connect).not.toHaveBeenCalled();
+
+  const admitted = open(doc(), data, structured, extra);
+  await settled(admitted);
+  expect(admitted.getJSON()).toEqual(author.getJSON());
+  expect(admitted.state.doc.child(0).attrs.display).toEqual({ compact: true });
+  expect(bind).toHaveBeenCalledOnce();
+  expect(provider.connect).toHaveBeenCalledOnce();
+});
 
 it('keeps an empty client unseeded and the provider disconnected until validated admission',async()=>{
  const server=await source(),client=doc(),pending=deferred<RetainedCheckpoint>(),before=Y.encodeStateAsUpdate(client),provider={connect:vi.fn(()=>{expect(client.getXmlFragment('fountain').length).toBe(1);}),disconnect:vi.fn()},editor=make(client,'Local template',{provider,...admission(()=>pending.promise)});
