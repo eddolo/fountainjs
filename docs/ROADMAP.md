@@ -142,7 +142,8 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 5,004 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 155.9 KiB over its existing limit. The CommonJS
+pass. Sharing repeated strings removed 20.2 KiB of raw CommonJS. The aggregate
+is 135.7 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import MagicString from 'magic-string';
 import { minify } from 'terser';
 import { defineConfig } from 'vite';
+import { compactCommonJsLiterals } from './scripts/compact-commonjs-literals.mjs';
 
 const optionalRootChunks = ['ai-document-tools', 'ai-conversation', 'ai-generated-media'];
 
@@ -71,7 +72,10 @@ export default defineConfig({
       renderChunk: {
         order: 'post',
         async handler(code, chunk, options) {
-          if (options.format === 'cjs' && chunk.fileName === 'index.cjs') return deferCommonJsRootExports(code);
+          if (options.format === 'cjs') {
+            if (chunk.fileName === 'index.cjs') return deferCommonJsRootExports(code);
+            if (chunk.fileName !== 'emoji-data.cjs') return compactCommonJsLiterals(code);
+          }
           if (options.format !== 'es') return;
           const output = await minify({ [chunk.fileName]: code }, {
             module: true,

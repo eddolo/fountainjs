@@ -892,6 +892,26 @@ about six seconds locally, compared with about one second for the prior output.
 
 ### CommonJS growth and retained room startup
 
+#### Sharing repeated CommonJS string values
+
+The library build now shares repeated literal values within individual
+CommonJS chunks before minification. It keeps module specifiers, property
+names and directives in their original syntax. The gate still measures the
+same files and uses the same limits. Raw CommonJS fell from 1,602,177 to
+1,581,481 bytes. It remains 135.7 KiB over the aggregate limit. The sum of the
+individually gzipped chunks increased by 2,300 bytes. All 91 ESM runtime
+files were byte-identical to the comparison build.
+
+Fresh Node processes loaded 5,592 fewer Fountain runtime bytes from the
+CommonJS root, 4,988 fewer from DOCX, and 6,045 fewer from React. These are
+bytes of loaded package files. An invalid DOCX still maps its exception back
+to the TypeScript source. The packed package smoke and API checks passed.
+A production browser build consuming the CommonJS root and DOCX entry
+retained the typed text and bold formatting through export and reopen in
+Chromium, Firefox, and WebKit. The reopened document was visually reviewed.
+
+#### Earlier startup work
+
 Rebuilding the approved `f8bff232` checkpoint reproduced its exact CommonJS
 aggregate of 1,442,472 bytes. At `34cdd29e` the same gate measured 1,593,764
 bytes. The emitted source maps list each mapped source in a single CommonJS
