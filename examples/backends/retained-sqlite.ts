@@ -8,6 +8,8 @@ import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoom
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
 import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceRenewalMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
+const maxCheckpointBytes = 64 * 1024 * 1024;
+
 function encodeStoredWire(wire: Uint8Array): Uint8Array {
   if (wire.length < 1_024) return wire;
   const compressed = gzipSync(wire, { level: 1 });
@@ -18,7 +20,7 @@ function decodeStoredWire(wire: Uint8Array, expectedBytes: number): Uint8Array {
   // Old rows hold raw bytes. Compression always produces a shorter BLOB, so
   // even a raw update starting with the gzip header is read without decoding.
   if (wire.length >= expectedBytes || wire[0] !== 0x1f || wire[1] !== 0x8b) return Uint8Array.from(wire);
-  if (!Number.isSafeInteger(expectedBytes) || expectedBytes > 67_108_864) throw new Error('Invalid SQLite checkpoint wire length.');
+  if (!Number.isSafeInteger(expectedBytes) || expectedBytes > maxCheckpointBytes) throw new Error('Invalid SQLite checkpoint wire length.');
   const decoded = gunzipSync(wire, { maxOutputLength: expectedBytes });
   if (decoded.length !== expectedBytes) throw new Error('Invalid SQLite checkpoint wire length.');
   return Uint8Array.from(decoded);
@@ -42,15 +44,20 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   private readonly db: DatabaseSync;
   private readonly selectRoomMetadata: StatementSync;
   private readonly compressLiveCheckpoints: boolean;
+  private readonly maxLiveCheckpointBytesPerRoom: number;
   private readonly maxRecoveryBytesPerRoom?: number;
   constructor(path: string, private readonly presenceNow = Date.now, options: {
     readonly compressLiveCheckpoints?: boolean;
     readonly maxRecoveryBytesPerRoom?: number;
+    readonly maxLiveCheckpointBytesPerRoom?: number;
   } = {}) {
     this.compressLiveCheckpoints = options.compressLiveCheckpoints === true;
     const maximum = options.maxRecoveryBytesPerRoom;
     if (maximum !== undefined && (!Number.isSafeInteger(maximum) || maximum < 0)) throw new TypeError('Invalid per-room recovery capacity.');
     this.maxRecoveryBytesPerRoom = maximum;
+    const liveMaximum = options.maxLiveCheckpointBytesPerRoom ?? maxCheckpointBytes;
+    if (!Number.isSafeInteger(liveMaximum) || liveMaximum < 1 || liveMaximum > maxCheckpointBytes) throw new TypeError('Invalid live checkpoint capacity.');
+    this.maxLiveCheckpointBytesPerRoom = liveMaximum;
     this.db = new DatabaseSync(path, { timeout: 1_000, allowExtension: false, enableDoubleQuotedStringLiterals: false });
     try {
       this.db.exec(`PRAGMA journal_mode = WAL; PRAGMA synchronous = FULL;
@@ -138,6 +145,15 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     if (!result) return undefined;
     const { manifest, ...row } = roomMetadata(result, key);
     return { ...row, checkpoint: { manifest } };
+  }
+
+  /** Canonical checkpoint headroom, without reading the live BLOB. */
+  readLiveCheckpointCapacity(key: string) {
+    const result = this.selectRoomMetadata.get(key);
+    if (!result) return undefined;
+    const { epoch, revision, phase, manifest } = roomMetadata(result, key);
+    const limitBytes = this.maxLiveCheckpointBytesPerRoom;
+    return { epoch, revision, phase, bytes: manifest.bytes, limitBytes, headroomBytes: limitBytes - manifest.bytes };
   }
 
   /** A read-only room snapshot of stored BLOB sizes. The host authorizes access. */
@@ -275,12 +291,28 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     return this.compressLiveCheckpoints && wire.length >= 4_096 ? encodeStoredWire(wire) : wire;
   }
 
+  private checkLiveCheckpointCapacity(bytes: number, previousBytes: number): void {
+    if (bytes > this.maxLiveCheckpointBytesPerRoom && bytes > previousBytes) {
+      throw Object.assign(new Error('Room live checkpoint limit reached. Keep pending edits until the room has capacity.'), { code: 'live-checkpoint-capacity' });
+    }
+  }
+
+  private checkReplacementCapacity(key: string, generation: string, bytes: number): void {
+    if (bytes <= this.maxLiveCheckpointBytesPerRoom) return;
+    const current = this.selectRoomMetadata.get(key);
+    if (current?.generation === generation) this.checkLiveCheckpointCapacity(bytes, roomMetadata(current, key).manifest.bytes);
+  }
+
   async create(record: RetainedRoomRecord): Promise<boolean> {
     return this.createDocument(record);
   }
 
   async createDocument(record: DocumentRoomRecord): Promise<boolean> {
     const packet = this.packet(record);
+    if (packet.wire.length > this.maxLiveCheckpointBytesPerRoom) {
+      if (this.selectRoomMetadata.get(record.key)) return false;
+      this.checkLiveCheckpointCapacity(packet.wire.length, 0);
+    }
     const result = this.db.prepare('INSERT INTO fountain_retained_rooms_v1 (room_key, generation, metadata, wire) VALUES (?, ?, ?, ?) ON CONFLICT(room_key) DO NOTHING')
       .run(record.key, record.generation, packet.metadata, this.liveWire(packet.wire));
     return result.changes === 1;
@@ -296,8 +328,10 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     // full checkpoint wire again just to enforce the same-format CAS contract.
     const before = this.selectRoomMetadata.get(key);
     if (!before || before.generation !== expectedGeneration) return false;
-    if (typeof before.metadata !== 'string' || JSON.parse(before.metadata).manifest?.format !== next.checkpoint.manifest.format) throw new Error('Format changes require an atomic recovery archive.');
+    const { manifest } = roomMetadata(before, key);
+    if (manifest.format !== next.checkpoint.manifest.format) throw new Error('Format changes require an atomic recovery archive.');
     const packet = this.packet(next);
+    this.checkLiveCheckpointCapacity(packet.wire.length, manifest.bytes);
     const result = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?')
       .run(next.generation, packet.metadata, this.liveWire(packet.wire), key, expectedGeneration);
     return result.changes === 1;
@@ -343,6 +377,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       if (prerequisite && this.db.prepare('SELECT generation FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, prerequisite.id)?.generation !== prerequisite.generation) {
         this.db.exec('ROLLBACK'); return false;
       }
+      this.checkReplacementCapacity(key, expectedGeneration, live.wire.length);
       const changed = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?')
         .run(next.generation, live.metadata, liveWire, key, expectedGeneration);
       if (changed.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
@@ -408,6 +443,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     try {
       if (this.db.prepare('SELECT 1 FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, archive.id)) throw new RetainedRoomError('invalid-ticket', 'Operation UUID already belongs to a retained handoff.');
       if (prerequisite && this.db.prepare('SELECT generation FROM fountain_cross_format_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, prerequisite.id)?.generation !== prerequisite.generation) { this.db.exec('ROLLBACK'); return false; }
+      this.checkReplacementCapacity(key, expectedGeneration, live.wire.length);
       const result = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?').run(next.generation, live.metadata, liveWire, key, expectedGeneration);
       if (result.changes !== 1) { this.db.exec('ROLLBACK'); return false; }
       this.db.prepare('INSERT INTO fountain_cross_format_archives_v1 (room_key, archive_id, generation, source_epoch, source_identity, source_protocol, source_revision, metadata, source_wire, destination_wire) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')

@@ -61,6 +61,9 @@ remain open. [Cold archive storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#cold-s
 The SQLite reference and handoff demo report live checkpoint and recovery
 bytes separately. Hosts can set a per-room recovery cap that refuses writes
 atomically and preserves existing copies. [Room storage and limits](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#limiting-recovery-writes-per-room).
+The live checkpoint has a separate canonical-byte limit and metadata-only
+headroom report. An oversized room can still freeze and install a smaller
+checkpoint. [Live capacity](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#monitoring-live-checkpoint-headroom).
 Shorter private IDs reduce raw structural-history growth. The 128-move probe
 used 51,832 bytes of additional state, down from 63,800, and mixed-version
 editors preserved offline typing and author history.

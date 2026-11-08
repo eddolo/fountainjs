@@ -91,6 +91,29 @@ replaced room. The byte threshold covers the live checkpoint. The archives
 still consume disk space, and the host still needs an archive retention policy.
 COLLAB-01 remains Partial.
 
+### Monitoring live checkpoint headroom
+
+`readLiveCheckpointCapacity(roomKey)` reads the saved epoch, revision, phase,
+canonical checkpoint bytes and remaining headroom from SQLite metadata alone.
+Use it to flag a room for compaction before approaching the checkpoint limit.
+The default limit is 64 MiB. Set `maxLiveCheckpointBytesPerRoom` to a lower
+positive byte count on each authority process to enforce an earlier ceiling.
+Compression affects stored bytes but does not increase canonical headroom.
+
+A growing write or replacement beyond the ceiling returns
+`live-checkpoint-capacity`. The host keeps the pending client draft and can
+recheck or increase capacity before retrying. An existing oversized room can
+still freeze, reopen, or install a smaller checkpoint. A rollback that would
+grow the live checkpoint beyond the cap is refused before the archive changes.
+The compaction preflight's `destinationBytes` can be compared with the limit
+while the room remains writable. The saved revision can change before freeze,
+so the authority checks the limit again at the actual write.
+
+151 focused source tests passed. Recorded Chromium, Firefox and WebKit
+journeys refused a live edit at the limit, kept the editor draft visible, and
+saved it exactly once after a retry with more capacity. The Chromium refusal
+and saved captures were visually inspected.
+
 Review of an overlapping-edit experiment found that replacing a whole paragraph
 can re-anchor an offline insertion to its start. The retired branch still
 contains the text, but its placement can differ from the writer's local copy.

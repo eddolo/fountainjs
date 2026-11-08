@@ -127,6 +127,62 @@ it('admits only one of two independent draft saves that compete for the last ava
   expect(pair.a.readStorageUsage(key)).toMatchObject({ draftCount: 1, recoveryBytes: maxRecoveryBytesPerRoom });
 });
 
+it('reports canonical checkpoint headroom and refuses growing edits without disturbing freeze or retry', async () => {
+  const pair = await fixture();
+  const limit = pair.initial.checkpoint.manifest.bytes;
+  const repository = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxLiveCheckpointBytesPerRoom: limit, compressLiveCheckpoints: true });
+  cleanup.push(() => repository.close());
+  const room = new CoordinatedRetainedRoom(repository, key, pair.schema, version);
+  expect(repository.readLiveCheckpointCapacity('missing')).toBeUndefined();
+  expect(repository.readLiveCheckpointCapacity(key)).toEqual({
+    epoch: pair.initial.epoch, revision: 0, phase: 'active', bytes: limit, limitBytes: limit, headroomBytes: 0,
+  });
+  const local = 'Pending '.repeat(512);
+  const request = { epoch: pair.initial.epoch, update: type(pair, local) };
+  await expect(room.write(request)).rejects.toMatchObject({ code: 'live-checkpoint-capacity' });
+  expect(await pair.other.snapshot()).toEqual(pair.initial);
+  expect(pair.editor.getText()).toContain(local);
+
+  const ticket = await room.freeze(pair.initial);
+  expect(repository.readLiveCheckpointCapacity(key)?.phase).toBe('frozen');
+  await room.abort(ticket);
+  expect(repository.readLiveCheckpointCapacity(key)?.headroomBytes).toBe(0);
+  const accepted = await pair.other.write(request);
+  expect(repository.readLiveCheckpointCapacity(key)?.headroomBytes).toBe(limit - accepted.checkpoint.manifest.bytes);
+  expect(accepted.revision).toBe(1);
+});
+
+it('compacts a room after lowering its cap and fences a rollback that would grow it past capacity', async () => {
+  const pair = await fixture();
+  const original = pair.editor.getJSON();
+  const originalText = pair.editor.state.doc.child(0).textContent;
+  for (let index = 0; index <= 32; index++) {
+    const previous = pair.editor.state.doc.child(0).textContent;
+    const next = index === 32 ? originalText : 'Old text '.repeat(16) + index;
+    pair.editor.dispatch(pair.editor.createTransaction().replaceText([0, 0], 0, previous.length, next));
+  }
+  const grown = await pair.room.write({ epoch: pair.initial.epoch, update: Y.encodeStateAsUpdate(pair.document) });
+  const limit = pair.initial.checkpoint.manifest.bytes + 512;
+  const repository = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxLiveCheckpointBytesPerRoom: limit });
+  cleanup.push(() => repository.close());
+  const room = new CoordinatedRetainedRoom(repository, key, pair.schema, version);
+  const handoff = new RetainedRoomHandoff(repository, key, pair.schema, version);
+  expect(repository.readLiveCheckpointCapacity(key)!.headroomBytes).toBeLessThan(0);
+  const settings = { ...options(), minimumBytesSaved: 512 };
+  const checked = await handoff.preflightCompaction(grown, settings);
+  expect(checked.meetsMinimum).toBe(true);
+  const result = await handoff.migrate(await room.freeze(checked), uuid(), settings, policy());
+  expect(repository.readLiveCheckpointCapacity(key)!.headroomBytes).toBeGreaterThan(0);
+  expect(await model(result.snapshot.checkpoint, pair)).toEqual(original);
+
+  const ticket = await room.freeze(result.snapshot);
+  const operation = uuid();
+  await expect(handoff.rollback(ticket, operation, result.archive.id, 'frozen-source', policy())).rejects.toMatchObject({ code: 'live-checkpoint-capacity' });
+  expect(await repository.readArchive(key, operation)).toBeUndefined();
+  expect(await room.snapshot()).toEqual({ ...result.snapshot, phase: 'frozen' });
+  expect((await repository.readArchive(key, result.archive.id))?.source.checkpoint).toEqual(grown.checkpoint);
+});
+
 it('atomically installs an exact fresh-room document with immutable original and destination archives', async () => {
   const pair = await fixture(), before = pair.editor.getJSON(), moved = await migrate(pair), current = await pair.other.snapshot();
   expect(typeof globalThis.document).toBe('undefined'); expect(current).toEqual(moved.result.snapshot);

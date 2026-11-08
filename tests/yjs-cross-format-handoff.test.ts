@@ -351,6 +351,28 @@ it('refuses an over-capacity migration without changing the frozen row or reserv
   expect(retry.snapshot.protocol).toBe('retained');
 });
 
+it('enforces the canonical live limit on provisioning and a growing cross-format replacement', async () => {
+  const pair = await fixture(true);
+  const limit = pair.initial.checkpoint.manifest.bytes;
+  const capped = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxLiveCheckpointBytesPerRoom: limit, compressLiveCheckpoints: true });
+  cleanup.push(() => capped.close());
+  const room = new CoordinatedDocumentRoom(capped, key, pair.schema, version);
+  const handoff = new CrossFormatRoomHandoff(capped, key, pair.schema, version);
+  const checked = await handoff.preflightLegacy(pair.initial, options());
+  expect(checked.report.destinationBytes).toBeGreaterThan(limit);
+  const ticket = await room.freeze(checked);
+  const operation = uuid();
+  await expect(handoff.migrateLegacy(ticket, operation, options(), policy())).rejects.toMatchObject({ code: 'live-checkpoint-capacity' });
+  expect(await room.snapshot()).toEqual({ ...pair.initial, phase: 'frozen' });
+  expect(await pair.b.readCrossArchive(key, operation)).toBeUndefined();
+
+  const moved = await pair.second.migrateLegacy(ticket, operation, options(), policy());
+  const freshKey = 'new:room-over-capacity';
+  const fresh = new CoordinatedDocumentRoom(capped, freshKey, pair.schema, version);
+  await expect(fresh.initialize(moved.snapshot.checkpoint)).rejects.toMatchObject({ code: 'live-checkpoint-capacity' });
+  expect(capped.readLiveCheckpointCapacity(freshKey)).toBeUndefined();
+});
+
 it('retains exact batch replays at capacity and rolls back a distinct batch and its branch together', async () => {
   const pair = await fixture();
   const peer = await open(pair.checkpoint, pair);
