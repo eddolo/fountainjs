@@ -1,7 +1,54 @@
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
+import MagicString from 'magic-string';
 import { minify } from 'terser';
 import { defineConfig } from 'vite';
+
+const optionalRootChunks = ['ai-document-tools', 'ai-conversation', 'ai-generated-media'];
+
+function deferCommonJsRootExports(code: string) {
+  const edited = new MagicString(code);
+  for (const chunk of optionalRootChunks) {
+    const declaration = new RegExp(`^const (\\w+) = require\\(['"]\\./${chunk}\\.cjs['"]\\);$`, 'm').exec(code);
+    if (!declaration) throw new Error(`Missing direct CommonJS re-export chunk ${chunk}.`);
+    const binding = declaration[1];
+    const assignments = [...code.matchAll(new RegExp(`^exports\\.(\\w+) = ${binding}\\.(\\w+);$`, 'gm'))];
+    const references = [...code.matchAll(new RegExp(`\\b${binding}\\b`, 'g'))];
+    if (!assignments.length || references.length !== assignments.length + 1) {
+      throw new Error(`Cannot defer ${chunk}: the CommonJS root uses it outside direct re-exports.`);
+    }
+    edited.overwrite(declaration.index, declaration.index + declaration[0].length,
+      `const ${binding} = () => require("./${chunk}.cjs");`);
+    for (const assignment of assignments) {
+      const [statement, name, member] = assignment;
+      // The assignment keeps the name visible to Node's CommonJS export lexer.
+      const alias = name === member ? '' : `, "${member}"`;
+      edited.overwrite(assignment.index, assignment.index + statement.length,
+        `exports.${name} = undefined; deferFountainExport("${name}", ${binding}${alias});`);
+    }
+  }
+  edited.append(`
+function deferFountainExport(name, load, member = name) {
+  let initialized = false;
+  let cached;
+  Object.defineProperty(exports, name, {
+    enumerable: true,
+    configurable: true,
+    get() {
+      if (!initialized) {
+        cached = load()[member];
+        initialized = true;
+      }
+      return cached;
+    },
+    set(value) {
+      Object.defineProperty(this, name, { value, enumerable: true, configurable: true, writable: true });
+    }
+  });
+}
+`);
+  return { code: edited.toString(), map: edited.generateMap({ hires: true }) };
+}
 
 export default defineConfig({
   plugins: [
@@ -24,6 +71,7 @@ export default defineConfig({
       renderChunk: {
         order: 'post',
         async handler(code, chunk, options) {
+          if (options.format === 'cjs' && chunk.fileName === 'index.cjs') return deferCommonJsRootExports(code);
           if (options.format !== 'es') return;
           const output = await minify({ [chunk.fileName]: code }, {
             module: true,

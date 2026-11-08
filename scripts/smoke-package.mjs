@@ -12,7 +12,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { build } from 'vite';
 import { checkMarkdownBlockAtoms } from './fixtures/markdown-block-atoms-check.mjs';
 import { checkRetainedYjs } from './fixtures/yjs-retained-check.mjs';
@@ -418,6 +418,26 @@ if (ydoc.getXmlFragment('fountain').length === 0) throw new Error('Packed Yjs di
 yjsEditor.destroy();
 ydoc.destroy();
 const cjsCore = require('fountainjs-editor');
+const optionalCommonJsExports = [
+  ['fountainjs-editor/ai/document-tools', 'AIDocumentToolbox'],
+  ['fountainjs-editor/ai/conversation', 'AIConversationController'],
+  ['fountainjs-editor/ai/generated-media', 'AIGeneratedMediaController'],
+];
+for (const [entry, name] of optionalCommonJsExports) {
+  if (!Object.keys(cjsCore).includes(name) || require.cache[require.resolve(entry)]) {
+    throw new Error(`The CommonJS root must expose ${name} without loading ${entry}.`);
+  }
+}
+for (const [entry, name] of optionalCommonJsExports) {
+  const value = cjsCore[name];
+  if (typeof value !== 'function' || !require.cache[require.resolve(entry)] || value !== require(entry)[name]) {
+    throw new Error(`The CommonJS root did not lazily load the original ${name} export.`);
+  }
+}
+const cjsNamespace = await import(pathToFileURL(require.resolve('fountainjs-editor')).href);
+for (const [, name] of optionalCommonJsExports) {
+  if (cjsNamespace[name] !== cjsCore[name]) throw new Error(`Node could not import ${name} from the CommonJS entry.`);
+}
 assertExports(cjsCore, coreNames, 'CommonJS package root');
 const cjsHeadlessCore = require('fountainjs-editor/core');
 assertExports(cjsHeadlessCore, headlessCoreNames, 'CommonJS headless core entry');

@@ -924,6 +924,19 @@ CommonJS build, which remains 149.3 KiB over its existing limit. It reduces
 saved collaboration data for structural edits.
 [Wire size comparison](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#smaller-private-identities).
 
+The CommonJS root now defers the document-tool, conversation and generated-media
+modules until an export from one of those modules is read. Requiring the root in
+a fresh Node process loads 669,271 Fountain bytes across 45 files, down from
+705,221 bytes across 48 files. Both builds expose the same 451 enumerable
+export names. The packed consumer verifies deferred loading, class identity
+and Node's named imports from the CommonJS entry. The ESM runtime files are
+byte-identical to the baseline.
+
+The aggregate check still counts the deferred modules. The build transform adds
+524 bytes overall and the unchanged CommonJS limit is exceeded by 149.8 KiB.
+The loaded-byte comparison excludes peer dependencies and measures startup
+footprint in Node. All runtime modules remain in the package.
+
 A fresh install of the local tarball passed 15 room and collaboration checks
 in each format, including a module-load check after mounting a retained room.
 All 153 focused source checks and 54 recorded migration, rollback and recovery
