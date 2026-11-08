@@ -6,6 +6,7 @@ import { RetainedDocumentStore } from './retained-document';
 import { retainedIdentityAllocator } from './retained-nodes';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore, type YjsStructuredAttributesOptions } from './structured-attributes';
+import { declareRetainedStructuredMap, retainedStructuredMap } from './retained-structured-map';
 
 export interface RetainedMigrationContext {
   /** Isolated snapshots, never the live source or an authoritative destination. */
@@ -54,7 +55,7 @@ const equal = (left: unknown, right: unknown): boolean => {
   return keys.length === Object.keys(b).length && keys.every(key => Object.hasOwn(b, key) && equal(a[key], b[key]));
 };
 function metadata(document: Y.Doc, room: string): void {
-  for (const [name, keys] of [[`${room}:document`, ['version', 'seeded']], [`${room}-nodes:metadata`, ['version']], [`${room}-text:metadata`, ['version']]] as const) {
+  for (const [name, keys] of [[`${room}:document`, ['version', 'seeded', 'structuredMap']], [`${room}-nodes:metadata`, ['version']], [`${room}-text:metadata`, ['version']]] as const) {
     if ([...document.getMap(name).keys()].some(key => !(keys as readonly string[]).includes(key))) throw new Error(`Unrecognized engine metadata in ${name}; source retained.`);
   }
   for (const [key, value] of document.getMap(`${room}-nodes:identities`)) if (!/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/.test(key) || value !== true) throw new Error('Unrecognized engine identity metadata.');
@@ -141,6 +142,8 @@ export async function buildRetainedMigrationCandidate(checkpoint: RetainedCheckp
       synchronous(migrator.migrate(context));
       if (migrator.roots.some(name => !target.share.has(name))) throw new Error(`Migrator ${migrator.name} did not produce every declared root.`);
     }
+    const structuredMap = retainedStructuredMap(from, room);
+    if (structuredMap !== undefined) declareRetainedStructuredMap(target, room, structuredMap);
     if ([...target.share.keys()].some(name => !core.has(name) && !owners.has(name)) || [...core].some(name => !target.share.has(name))) throw new Error('Migrator changed the root ownership inventory.');
     if (!equal(targetStore.read().toJSON(), document.toJSON())) throw new Error('Migrator changed document content.');
     for (const check of checks) check();

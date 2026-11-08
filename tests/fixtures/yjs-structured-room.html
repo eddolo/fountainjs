@@ -14,6 +14,7 @@
 <h1>Open a room with structured fields</h1>
 <p>Ada and Grace edit separate settings in two offline copies. Reopen the saved room to check the merged values.</p>
 <button id="missing" type="button" disabled>Open without field definitions</button>
+<button id="restart" type="button" disabled>Restart host without field definitions</button>
 <button id="partial" type="button" disabled>Open with incomplete definitions</button>
 <button id="complete" type="button" disabled>Open both authors</button>
 <p id="status" role="status">Preparing the saved room…</p>
@@ -63,7 +64,7 @@
   const key = 'research-settings';
   const mixedDefinitions = params.has('mixed');
   let row;
-  const authority = new CoordinatedDocumentRoom({
+  const repository = {
     async readDocument(roomKey) { return row?.key === roomKey ? row : undefined; },
     async createDocument(next) { if (row) return false; row = next; return true; },
     async compareDocument(roomKey, generation, next) {
@@ -71,7 +72,8 @@
       row = next;
       return true;
     },
-  }, key, schema, schemaVersion, { structuredAttributes });
+  };
+  const authority = new CoordinatedDocumentRoom(repository, key, schema, schemaVersion, { structuredAttributes });
   await authority.initialize(checkpoint);
   let ada, grace, saved;
   const button = id => document.getElementById(id);
@@ -94,6 +96,13 @@
       const bound = await open();
       bound.document.destroy();
       status('Unexpectedly opened without field definitions.');
+    } catch (error) { status(error.message); }
+  };
+  button('restart').onclick = async () => {
+    const restarted = new CoordinatedDocumentRoom(repository, key, schema, schemaVersion);
+    try {
+      await restarted.openForEditing({ protocols: ['retained'], loadCheckpoint: () => checkpoint });
+      status('Unexpectedly opened after restarting without field definitions.');
     } catch (error) { status(error.message); }
   };
   button('partial').onclick = async () => {
@@ -174,6 +183,7 @@
   });
   button('partial').disabled = false;
   button('missing').disabled = false;
+  button('restart').disabled = false;
   button('complete').disabled = false;
   status('Saved room ready.');
 </script>

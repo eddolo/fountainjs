@@ -1,6 +1,7 @@
 import * as Y from 'yjs';
 import type { Schema } from '../core/schema';
 import { captureRetainedCheckpoint, captureRetainedCheckpointWithProjection, restoreRetainedCheckpoint, verifyRetainedCheckpoint, type RetainedCheckpoint, type RetainedProjectionCheck } from './retained-checkpoint';
+import { retainedStructuredMap } from './retained-structured-map';
 
 export type RetainedRoomErrorCode = 'closed' | 'stale-epoch' | 'frozen' | 'revision-conflict' | 'invalid-ticket' | 'invalid-update' | 'insufficient-savings';
 export class RetainedRoomError extends Error {
@@ -37,11 +38,14 @@ export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema
     complete(restored.document);
     // Keep deletion history while assembling the authority's checkpoint.
     // Reopened clients still receive the room's saved GC preference.
+    const room = restored.manifest.room;
+    const structuredMap = retainedStructuredMap(restored.document, room);
     restored.document.gc = false;
     Y.applyUpdate(restored.document, bytes);
     restored.document.gc = restored.manifest.gc;
     complete(restored.document);
-    const next = await captureRetainedCheckpointWithProjection(restored.document, schema, schemaVersion, restored.manifest.room, check);
+    if (retainedStructuredMap(restored.document, room) !== structuredMap) throw new Error('Saved structured attribute map changed.');
+    const next = await captureRetainedCheckpointWithProjection(restored.document, schema, schemaVersion, room, check);
     if (next.manifest.roomId !== restored.manifest.roomId) throw new Error('Shared room identity changed.');
     return next;
   } catch (cause) { throw new RetainedRoomError('invalid-update', 'Retained update rejected; authoritative state was not changed.', { cause }); }

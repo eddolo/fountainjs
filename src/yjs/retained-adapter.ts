@@ -9,6 +9,7 @@ import { retainedIdentityAllocator } from './retained-nodes';
 import { removesOnlyDuplicateProvenance } from './retained-text';
 import { retainSelection, restoreSelection, type RetainedSelection } from './retained-selection';
 import { YjsStructuredAttributeStore } from './structured-attributes';
+import { declareRetainedStructuredMap } from './retained-structured-map';
 import { prepareRetainedAdmission, readRetainedAdmission, snapshotRetainedAdmission, type RetainedAdmission, type RetainedAdmissionLease } from './retained-admission';
 import { admittedRoomRootChanged, admittedRoomRoots } from './admitted-room-root';
 
@@ -249,6 +250,10 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
         if (this.store.schema !== context.editor.state.schema) throw new Error('Retained adapter belongs to another editor schema.');
         if (fresh) {
           this.store.seed(context.editor.state.doc); this.structured?.synchronize(context.editor.state.doc);
+          const mapName = this.options.structuredAttributes?.mapName;
+          if (mapName && this.options.document.share.get(mapName) === this.structured?.map) {
+            declareRetainedStructuredMap(this.options.document, this.room, mapName);
+          }
           const gate = new Y.XmlElement(GATE);
           const roomId = `r-${this.roomSeed}`;
           gate.setAttribute('format', FORMAT); gate.setAttribute('room', roomId);

@@ -61,6 +61,7 @@ it('preserves native text/node references through an explicit namespace change',
 });
 it('preserves explicit structured-map ownership and edits after namespace migration',async()=>{
  const pair=source('Paper / source',true),structured=pair.projection.structuredAttributes!,checkpoint=await pair.capture(),candidate=await buildLegacyMigrationCandidate(checkpoint,pair.schema,version,options(target,[retainedStructuredRootMigrator(structured)]),pair.projection),opened=await retained(candidate.destination,pair);
+ expect(opened.document.getMap(`${target}:document`).get('structuredMap')).toBe('widgets');
  const kit=composeExtensions([CoreExtension,MathExtension,panel,createRetainedYjsCollaborationExtension({document:opened.document,fragmentName:target,structuredAttributes:structured,user:{id:'new',name:'New author',color:'#7048e8'}})]),editor=createEditor({schema:kit.schema,plugins:kit.plugins,content:pair.editor.getJSON()});cleanup.push(()=>editor.destroy());expect(getCollaborationState(editor)?.status).toBe('connected');expect(editor.getJSON()).toEqual(pair.editor.getJSON());expect(setStructuredAttribute(editor,[3],definition,['columns'],4)).toBe(true);expect((editor.state.doc.child(3).attrs.config as any).columns).toBe(4);expect((pair.editor.state.doc.child(3).attrs.config as any).columns).toBe(2);
 });
 it('refuses target-core collisions and preserves unclaimed auxiliary roots',async()=>{

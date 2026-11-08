@@ -246,8 +246,16 @@ name again at admission, including a name omitted or changed in transit.
 After admission, the opener verifies that every live entry is covered and
 every expected entry exists before mounting. Hosts supplying their own offers
 should include the map name for structured rooms, including custom-named maps.
-The checkpoint inventory lists all shared roots, so a custom map's ownership
-comes from the configured authority.
+New retained rooms with an explicitly named custom map record its name in
+the room metadata. Legacy conversion records the destination's requirement,
+and retained checkpoint replacement carries it forward. A restarted host or
+client that opens without matching definitions now refuses the room, even if
+its opening offer omitted the name. Live authority writes cannot change or
+delete the declaration. Rooms written before this declaration still use the
+original host configuration. A mixed-version probe verified that an older
+editor with the matching definitions can edit a newly declared room and a
+new authority can reopen an older room with the original configuration.
+Use an updated checkpoint migrator for a room that carries the declaration.
 
 The initial draft projects verified values from that map. Two peers can edit
 separate fields of the same attribute offline. The saved materialized node can
@@ -261,6 +269,9 @@ default and custom map names. The recorded Chromium, Firefox and WebKit demo
 tries missing and incomplete definitions, makes both offline edits, and checks
 the saved settings in the reopened editor. The browser demo uses the actual
 coordinated authority with an in-memory repository.
+Nine recorded journeys also restart the authority without definitions, check
+that no editor mounts, then reopen with the correct settings. Visual review
+confirmed the refusal and the merged field values after reopening.
 
 Both adapters now scope live map deletion to keys the editing client owned
 before the edit. A client with fewer definitions can edit or delete its node

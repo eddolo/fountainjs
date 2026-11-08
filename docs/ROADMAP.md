@@ -40,7 +40,9 @@ editing if that root is replaced or an embedded XML fragment is detached.
 [Room opening audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#validating-the-room-before-mounting-the-editor).
 The retained opener refuses incomplete definitions for a saved structured map
 and projects both authors' granular updates on reopen. The coordinated
-authority declares the required default or custom map before admission.
+authority declares the required default or custom map before admission. New
+custom map declarations survive migration and prevent a misconfigured host
+from opening the room without its fields after a restart.
 [Structured field admission](YJS_NAMESPACE_MIGRATION_AUDIT.md#validate-structured-fields-before-admitting-a-retained-editor).
 The coordinated authority now applies the same field checks before saving or
 provisioning a retained room, so a rejected update leaves the last valid
@@ -140,7 +142,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 5,004 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 155.2 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 155.9 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

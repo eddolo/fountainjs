@@ -155,6 +155,19 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
   const checkpoint = await captureRetainedCheckpoint(document, schema, version);
   const initial = await authority.initialize(checkpoint);
   const opened = await authority.openForEditing({ protocols: ['retained'], loadCheckpoint: () => checkpoint });
+  const restarted = new CoordinatedDocumentRoom(pair.second, key, schema, version);
+  await expect(restarted.openForEditing({ protocols: ['retained'], loadCheckpoint: () => checkpoint }))
+    .rejects.toThrow('requires definitions for the saved structured attribute map');
+  if (mapName) {
+    const changed = await restoreRetainedCheckpoint(checkpoint, schema, version);
+    cleanups.push(() => changed.document.destroy());
+    const metadata = changed.document.getMap('fountain:document');
+    expect(metadata.get('structuredMap')).toBe(mapName);
+    metadata.delete('structuredMap');
+    await expect(authority.write({ epoch: initial.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(changed.document) }))
+      .rejects.toMatchObject({ code: 'invalid-update' });
+    expect(await authority.snapshot()).toEqual(initial);
+  }
   const admit = vi.fn((offer: DocumentRoomAdmission) => authority.admit(offer));
   const open = async (structuredAttributes?: { definitions: typeof structured.definitions; mapName?: string }) => {
     const bound = await openYjsRoom({ expected: { key }, schema, schemaVersion: version, structuredAttributes,
@@ -173,6 +186,9 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
   expect(structuredMap).toBe(selectedMap);
   await expect(authority.admit(incompleteOffer)).rejects.toMatchObject({ code: 'invalid-ticket' });
   await expect(authority.admit({ ...opened.admission, structuredMap: 'wrong-map' })).rejects.toMatchObject({ code: 'invalid-ticket' });
+  await expect(openYjsRoom({ expected: { key }, schema, schemaVersion: version,
+    open: async () => incompleteOffer, admit: async () => opened.snapshot,
+  })).rejects.toThrow('requires definitions for the saved structured attribute map');
   await expect(open({ definitions: [config], mapName })).rejects.toThrow('do not cover the saved room map');
   const wrongAttribute = defineStructuredAttribute({ nodeType: 'settings', attribute: 'other', root: 'object' });
   await expect(open({ definitions: [config, wrongAttribute], mapName })).rejects.toThrow(/Invalid structured attribute settings\.other/);

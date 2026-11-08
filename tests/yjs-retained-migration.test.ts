@@ -27,9 +27,9 @@ const content = { type: 'doc', attrs: { title: 'Migration paper', metadata: { ed
   { type: 'structured_panel', attrs: { nodeId: 'panel-1', config: { layout: { columns: 2, compact: false }, names: ['Ada', 'Grace'] } } },
 ] };
 const policies = (migrators: readonly RetainedRootMigrator[] = []): RetainedMigrationOptions => ({ history: 'reset-with-source-checkpoint', offline: 'reconcile-before-activation', externalState: 'host-coordinated', migrators });
-function fixture(structured = false, extensions: readonly FountainExtension[] = []) {
+function fixture(structured = false, extensions: readonly FountainExtension[] = [], mapName?: string) {
   const document = new Y.Doc(), kit = composeExtensions([CoreExtension, MathExtension, panel, ...extensions, createRetainedYjsCollaborationExtension({ document, captureTimeout: 0,
-    ...(structured ? { structuredAttributes: { definitions: [definition] } } : {}), user: { id: 'Ada', name: 'Ada', color: '#7048e8' } })]);
+    ...(structured ? { structuredAttributes: { definitions: [definition], mapName } } : {}), user: { id: 'Ada', name: 'Ada', color: '#7048e8' } })]);
   const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
   const reader = new RetainedDocumentStore(document, 'fountain', editor.state.schema, () => { throw new Error('No source allocation'); }); reader.read();
   cleanups.push(() => { reader.destroy(); editor.destroy(); document.destroy(); });
@@ -110,6 +110,16 @@ it('preserves granular structured attributes and later independent field updates
   expect(editor.getJSON()).toEqual(peer.getJSON()); expect(editor.state.doc.child(6).attrs.config).toEqual({ layout: { columns: 7, compact: false }, names: ['Ada', 'Mina'] });
   expect(undoCollaboration(editor)).toBe(true); Y.applyUpdate(peerDoc, Y.encodeStateAsUpdate(target.document)); expect(editor.getJSON()).toEqual(peer.getJSON());
   expect(editor.state.doc.child(6).attrs.config).toEqual({ layout: { columns: 5, compact: false }, names: ['Ada', 'Mina'] }); expect(pair.editor.state.doc.child(6).attrs.config).toEqual({ layout: { columns: 5, compact: true }, names: ['Ada', 'Mina'] });
+});
+
+it('preserves the custom map declaration when replacing a retained checkpoint', async () => {
+  const mapName = 'migration-settings';
+  const pair = fixture(true, [], mapName);
+  const candidate = await buildRetainedMigrationCandidate(await pair.capture(), pair.schema, 'schema-1',
+    policies([retainedStructuredRootMigrator({ definitions: [definition], mapName })]));
+  const target = await reopen(pair, candidate);
+  expect(target.document.getMap('fountain:document').get('structuredMap')).toBe(mapName);
+  expect(target.document.getMap(mapName).toJSON()).toEqual(pair.document.getMap(mapName).toJSON());
 });
 
 it('lets a host explicitly preserve binary/review state and empty root declarations with semantic verification', async () => {

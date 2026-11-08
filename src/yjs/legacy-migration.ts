@@ -6,6 +6,8 @@ import { snapshotRetainedMigrationOptions, type RetainedMigrationContext, type R
 import { RetainedDocumentStore } from './retained-document';
 import { retainSelection, restoreSelection } from './retained-selection';
 import { validateRetainedRoomCheckpoint } from './retained-room-store';
+import { roomStructuredMapName } from './structured-attributes';
+import { declareRetainedStructuredMap } from './retained-structured-map';
 
 export interface LegacyMigrationOptions extends RetainedMigrationOptions {
   /** Explicit retained namespace. Required when the source name is incompatible. */
@@ -74,6 +76,7 @@ export async function buildLegacyMigrationCandidate(checkpoint: LegacyCheckpoint
     });
     const inventory = () => { if ([...target.share.keys()].some(name => !core.has(name) && !owners.has(name)) || [...core, ...owners.keys()].some(name => !target.share.has(name))) throw new Error('Legacy migration changed the root ownership inventory.'); };
     for (const migrator of policy.migrators) { synchronous(migrator.migrate(context)); if (migrator.roots.some(name => !target.share.has(name))) throw new Error(`Legacy migrator ${migrator.name} omitted a declared root.`); }
+    if (settings.structuredAttributes) declareRetainedStructuredMap(target, room, roomStructuredMapName(sourceRoom, settings.structuredAttributes.mapName));
     inventory(); if (!same(store.read().toJSON(), document.toJSON())) throw new Error('Legacy migration changed document content.');
     for (const check of checks) check(); assertLegacyCheckpointState(from, source);
     const destination = await validateRetainedRoomCheckpoint(await captureRetainedCheckpoint(target, schema, schemaVersion, room), schema, schemaVersion);

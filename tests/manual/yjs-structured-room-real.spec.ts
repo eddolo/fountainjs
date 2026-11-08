@@ -10,6 +10,10 @@ for (const [title, query] of [
   await page.goto('/tests/fixtures/yjs-structured-room.html' + query);
   const status = page.getByRole('status');
   await expect(status).toHaveText('Saved room ready.');
+  await page.getByRole('button', { name: 'Restart host without field definitions' }).click();
+  await expect(status).toHaveText('Room admission requires definitions for the saved structured attribute map.');
+  await expect(page.getByRole('textbox')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('host-missing-fields.png'), fullPage: true });
   await page.getByRole('button', { name: 'Open without field definitions' }).click();
   await expect(status).toHaveText('Room opening requires definitions for the saved structured attribute map.');
   await expect(page.getByRole('textbox')).toHaveCount(0);

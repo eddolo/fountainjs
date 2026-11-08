@@ -1,6 +1,7 @@
 import * as Y from 'yjs';
 import type { Node, NodeJSON } from '../core';
 import { STABLE_NODE_ID_PATTERN } from '../node-ids';
+import { defaultStructuredMapName, retainedStructuredMap, SAFE_MAP_NAME } from './retained-structured-map';
 import {
   defineStructuredAttribute,
   validateStructuredAttributeValue,
@@ -10,7 +11,6 @@ import {
 } from '../structured-attributes';
 
 const SAFE_NAME = /^[A-Za-z_][A-Za-z0-9_.:-]{0,127}$/;
-const SAFE_MAP_NAME = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/;
 const UNSAFE_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 const MAXIMUM_SHARED_ENTRIES = 100_000;
 const ATTRIBUTE = 'attribute';
@@ -29,7 +29,7 @@ export interface YjsStructuredAttributesOptions {
 }
 
 export function roomStructuredMapName(room: string, name?: string): string {
-  return name ?? `${room}:structured-attributes`;
+  return name ?? defaultStructuredMapName(room);
 }
 
 export function projectRetainedRoomAttributes(
@@ -40,7 +40,9 @@ export function projectRetainedRoomAttributes(
 ): Node {
   const defaultMapName = roomStructuredMapName(room);
   const mapName = roomStructuredMapName(room, options?.mapName);
-  if ((!options || mapName !== defaultMapName) && document.share.has(defaultMapName)) {
+  const declared = retainedStructuredMap(document, room);
+  if (declared !== undefined && (!options || mapName !== declared)
+    || (!options || mapName !== defaultMapName) && document.share.has(defaultMapName)) {
     throw new Error('Room admission requires definitions for the saved structured attribute map.');
   }
   if (!options) return base;
