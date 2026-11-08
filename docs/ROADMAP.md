@@ -166,6 +166,9 @@ when the native endpoints reverse over the same highlighted text.
 Changed room responses now use verified deltas when smaller. The 49-paragraph
 browser fixture measured 1,699-byte edit receipts against a roughly 161 KB full
 checkpoint response. A bad delta fell back to a freshly fenced full response.
+The loopback authority can gzip a large document-only response for the
+full-checkpoint path, including the fallback after a bad delta.
+[Full-checkpoint transfer](YJS_LIVE_HTTP_REFERENCE.md#full-checkpoint-transfer).
 The SQLite reference reads metadata alone for idle polls and presence checks,
 including when the receiver is behind. Changed document responses still pass
 full validation and a generation check before delivery.

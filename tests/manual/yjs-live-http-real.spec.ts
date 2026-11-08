@@ -385,22 +385,43 @@ test('delivers one saved revision to overlapping readers', async ({ page }, info
 test('sends small receipts for a long document and falls back when a delta is corrupted', { tag: '@large' }, async ({ page }, info) => {
   const peer = await secondAuthor(page);
   try {
-    const fullSize = await page.evaluate(async () => {
+    const session = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
+    const full = await page.evaluate(async token => {
       const response = await fetch('/__admission/snapshot', {
         method: 'POST', body: '{}', headers: {
-          'Content-Type': 'application/json', 'X-Admission-Session': sessionStorage.getItem('fountain-draft-audit-session')!,
+          'Content-Type': 'application/json', 'X-Admission-Session': token,
         },
       });
-      return (await response.arrayBuffer()).byteLength;
+      return {
+        encoding: response.headers.get('content-encoding'),
+        wireLength: Number(response.headers.get('content-length')),
+        vary: response.headers.get('vary'),
+        decoded: await response.text(),
+      };
+    }, session);
+    const identity = await page.request.post('/__admission/snapshot', {
+      data: {}, headers: { Origin: new URL(page.url()).origin, 'X-Admission-Session': session, 'Accept-Encoding': 'gzip;q=0, identity' },
     });
+    expect(identity.ok()).toBe(true);
+    expect(identity.headers()['content-encoding']).toBeUndefined();
+    expect(identity.headers().vary?.split(',').map(value => value.trim().toLowerCase())).toContain('accept-encoding');
+    expect(await identity.text()).toBe(full.decoded);
+    const fullSize = Number(identity.headers()['content-length']);
     expect(fullSize).toBeGreaterThan(25_000);
+    expect(full.vary?.split(',').map(value => value.trim().toLowerCase())).toContain('accept-encoding');
+    expect(full.encoding).toBe('gzip');
+    expect(full.wireLength).toBeGreaterThan(0);
+    expect(full.wireLength).toBeLessThan(fullSize / 2);
     const outbound = page.waitForResponse(async response => response.url().endsWith('/write') && Boolean((await response.json()).value?.delta));
     const inbound = peer.waitForResponse(async response => response.url().endsWith('/poll-retained') && Boolean((await response.json()).value?.delta));
     await editor(page).getByText('Shared incident report.', { exact: true }).click();
     await page.keyboard.press('End');
     await page.keyboard.insertText(' New field note.');
-    const outgoingSize = (await (await outbound).body()).byteLength;
-    const incomingSize = (await (await inbound).body()).byteLength;
+    const outgoing = await outbound, incoming = await inbound;
+    expect(outgoing.headers()['content-encoding']).toBeUndefined();
+    expect(incoming.headers()['content-encoding']).toBeUndefined();
+    const outgoingSize = (await outgoing.body()).byteLength;
+    const incomingSize = (await incoming.body()).byteLength;
     expect(outgoingSize).toBeLessThan(fullSize / 10);
     expect(incomingSize).toBeLessThan(fullSize / 10);
     await expect(editor(peer)).toContainText('New field note.');
@@ -418,13 +439,18 @@ test('sends small receipts for a long document and falls back when a delta is co
       reply.value.baseUpdateSha256 = '0'.repeat(64);
       await route.fulfill({ response, json: reply });
     });
+    const fullFallback = peer.waitForResponse(response =>
+      response.url().endsWith('/poll-retained') && !response.request().postDataJSON().basis
+      && response.headers()['content-encoding'] === 'gzip');
     await page.keyboard.insertText(' Recovery checked.');
     await expect(editor(peer)).toContainText('New field note. Recovery checked.');
     await expect(server(peer)).toContainText('New field note. Recovery checked.');
     await expect(connection(peer)).toHaveText('connected');
     expect(corrupted).toBe(1);
     expect(fallback).toBe(1);
-    await info.attach('receipt-bytes', { body: JSON.stringify({ fullSize, outgoingSize, incomingSize }), contentType: 'application/json' });
+    const fallbackSize = Number((await fullFallback).headers()['content-length']);
+    expect(fallbackSize).toBeLessThan(fullSize / 2);
+    await info.attach('receipt-bytes', { body: JSON.stringify({ fullSize, compressedSize: full.wireLength, fallbackSize, outgoingSize, incomingSize }), contentType: 'application/json' });
     await peer.screenshot({ path: info.outputPath('delta-recovered.png'), scale: 'css' });
   } finally { await peer.close(); }
 });

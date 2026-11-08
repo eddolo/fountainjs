@@ -77,4 +77,9 @@ server=once(server,"else if(action==='write')value=await room.write(body);",`els
 server=once(server,'error:error.message','error:error.message,code:error.code');
 server=once(server,"sessions.delete(req.headers['x-admission-session']);", "repository.clearRoomPresence(room.key);sessions.delete(req.headers['x-admission-session']);");
 server=once(server,'repository.close();','repository.close();peerPresenceRepository.close();');
+server=once(server,"import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';","import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';\nimport {writeRetainedCheckpointJson} from '../examples/backends/retained-http-encoding.mjs';");
+server=once(server,'}res.end(encode({ok:true,value}));',`}
+  const json=encode({ok:true,value});
+  if(value?.checkpoint) await writeRetainedCheckpointJson(req,res,json);
+  else res.end(json);`);
 await writeFile('artifacts/yjs-authority-admission-server-20261107.mjs',server);

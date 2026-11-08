@@ -80,6 +80,26 @@ uses a loopback-only barrier immediately before the SQLite compare-and-swap,
 observes a real revision conflict, and verifies each author's text
 appears once in both editors and in the saved document.
 
+## Full-checkpoint transfer
+
+The loopback authority uses the [Node response encoder](../examples/backends/retained-http-encoding.mjs)
+for document-only checkpoint replies. At 4 KiB of JSON or larger, it sends
+gzip when the request explicitly accepts gzip and the result saves bytes.
+It preserves other `Vary` fields while adding `Accept-Encoding`. A request
+that refuses gzip receives the same JSON without compression.
+
+The browser decodes the response using HTTP. The provider still sees the same
+checkpoint bytes and manifest and applies its existing authority and merge
+checks. Small delta receipts and replies containing a presence credential
+continue on their existing path.
+
+In the recorded Chromium fixture, the full response used 12,933 transferred
+body bytes versus 143,748 without compression. After a deliberately corrupted
+delta, the single compressed fallback used 13,135 bytes and restored the
+correct saved document. Both normal delta receipts used 1,687 bytes.
+All 45 live transport workflows passed across Chromium, Firefox and WebKit.
+The focused provider, receipt, presence and authority suite passed 43 tests.
+
 ## Presence
 
 The host [presence reference](../examples/backends/retained-http-presence.ts)

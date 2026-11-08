@@ -13,6 +13,7 @@ import {CoordinatedDocumentRoom} from './yjs-authority-admission-build-20261107/
 import {CoordinatedRetainedRoom} from './yjs-authority-admission-build-20261107/coordinator.js';
 import {CrossFormatRoomHandoff} from './yjs-authority-admission-build-20261107/handoff.js';
 import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';
+import {writeRetainedCheckpointJson} from '../examples/backends/retained-http-encoding.mjs';
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-authority-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const peerPresenceRepository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite'));
 const waitingWriters = new Map();
@@ -94,7 +95,10 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='rotate'){const coordinator=new CoordinatedRetainedRoom(repository,room.key,schema,'admission-browser-1'),snapshot=await coordinator.snapshot(),ticket=await coordinator.freeze(snapshot),prepared=await coordinator.prepareResume(ticket);value=await coordinator.commitResume(ticket,prepared);}
    else if(action==='close'){repository.clearRoomPresence(room.key);sessions.delete(req.headers['x-admission-session']);value={closed:true};}
    else throw new Error('Unknown fixed test action');
-  }res.end(encode({ok:true,value}));
+  }
+  const json=encode({ok:true,value});
+  if(value?.checkpoint) await writeRetainedCheckpointJson(req,res,json);
+  else res.end(json);
  }catch(error){res.statusCode=400;res.end(encode({ok:false,error:error.message,code:error.code}));}
  })}}]});
 await server.listen();let closing=false;async function close(){if(closing)return;closing=true;await server.close();repository.close();peerPresenceRepository.close();if(dirname(resolve(temporary))!==resolve(tmpdir())||!basename(temporary).startsWith('fountain-authority-browser-'))throw new Error('Unsafe cleanup target');await rm(temporary,{recursive:true,force:true});}
