@@ -102,9 +102,38 @@ function assertUnchanged(document: Y.Doc, update: Uint8Array, entries: readonly 
   if (!sameBytes(Y.encodeStateAsUpdate(document), update) || stableJSON(roots(document)) !== stableJSON(entries)) throw new Error('Checkpoint validation changed shared state.');
 }
 
+/** Yjs may join adjacent array records during replay. Recreate the source
+ * boundaries in isolation and require an exact match, including payloads and
+ * deletion ranges, before accepting the replay's compact encoding. */
+function preservesWire(source: Y.Doc, replay: Y.Doc, original: Uint8Array): boolean {
+  if (!sameBytes(Y.encodeStateVector(source), Y.encodeStateVector(replay))) return false;
+  let exact = false;
+  replay.transact(transaction => {
+    for (const [client, structs] of source.store.clients) {
+      const loaded = replay.store.clients.get(client)!;
+      for (const { id } of structs) {
+        const item = loaded[Y.findIndexSS(loaded, id.clock)];
+        if (item.id.clock === id.clock) continue;
+        if (!(item instanceof Y.Item) || !(item.content instanceof Y.ContentAny)) return;
+        Y.getItemCleanStart(transaction, id);
+      }
+    }
+    exact = sameBytes(Y.encodeStateAsUpdate(replay), original);
+  });
+  return exact;
+}
+
 /** Internal synchronous guard for an already verified/captured checkpoint. */
 export function assertRetainedCheckpointState(document: Y.Doc, checkpoint: RetainedCheckpoint): void {
-  assertUnchanged(document, checkpoint.update, checkpoint.manifest.roots);
+  assertIdle(document); assertRetainedWireData(document);
+  const entries = checkpoint.manifest.roots;
+  if (stableJSON(roots(document)) !== stableJSON(entries)) throw new Error('Checkpoint validation changed shared state.');
+  const update = checkpoint.update, current = Y.encodeStateAsUpdate(document);
+  if (!sameBytes(current, update)) {
+    const copy = load(update, entries, checkpoint.manifest.guid);
+    try { if (!preservesWire(document, copy, current)) throw new Error('Checkpoint validation changed shared state.'); }
+    finally { copy.destroy(); }
+  }
   if (document.guid !== checkpoint.manifest.guid || document.gc !== checkpoint.manifest.gc) throw new Error('Checkpoint document options changed.');
 }
 
@@ -119,10 +148,13 @@ export type RetainedProjectionCheck = (document: Y.Doc, base: Node, room: string
 export async function captureRetainedCheckpointWithProjection(document: Y.Doc, schema: Schema, schemaVersion: string, room: string, check?: RetainedProjectionCheck): Promise<RetainedCheckpoint> {
   version(schemaVersion); assertIdle(document);
   assertRetainedWireData(document);
-  const inventory = roots(document), update = Y.encodeStateAsUpdate(document), guid = document.guid, gc = document.gc;
-  if (!update.length || update.length > MAX_BYTES || typeof guid !== 'string' || !guid || guid.length > 1_000) throw new Error('Checkpoint exceeds its archive bounds.');
-  const copy = load(update, inventory, guid);
+  const inventory = roots(document), original = Y.encodeStateAsUpdate(document), guid = document.guid, gc = document.gc;
+  if (!original.length || original.length > MAX_BYTES || typeof guid !== 'string' || !guid || guid.length > 1_000) throw new Error('Checkpoint exceeds its archive bounds.');
+  const copy = load(original, inventory, guid);
   try {
+    const update = Y.encodeStateAsUpdate(copy);
+    if (update.length > MAX_BYTES) throw new Error('Checkpoint exceeds its archive bounds.');
+    if (!sameBytes(original, update) && !preservesWire(document, copy, original)) throw new Error('Checkpoint validation changed shared state.');
     const roomId = gate(copy, room), projected = projection(copy, room, schema);
     check?.(copy, projected.node, room);
     const encoded = new TextEncoder().encode(stableJSON(projected.node.toJSON()));
@@ -130,7 +162,7 @@ export async function captureRetainedCheckpointWithProjection(document: Y.Doc, s
     const [updateSha256, documentSha256] = await Promise.all([digest(update), digest(encoded)]);
     const body = { format: FORMAT, room, roomId, schemaVersion, guid, gc, roots: projected.roots, bytes: update.length, updateSha256, documentSha256 } as const;
     const checkpointSha256 = await digest(new TextEncoder().encode(stableJSON(body)));
-    assertUnchanged(copy, update, projected.roots); assertUnchanged(document, update, inventory);
+    assertUnchanged(copy, update, projected.roots); assertUnchanged(document, original, inventory);
     if (document.guid !== guid || document.gc !== gc) throw new Error('Checkpoint source options changed during capture.');
     const manifest: RetainedCheckpointManifest = Object.freeze({ ...body, checkpointSha256 });
     return ownedCheckpoint(manifest, update);

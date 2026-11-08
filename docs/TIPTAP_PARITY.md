@@ -12,6 +12,9 @@ The active priority is COLLAB-01. Six ordinary default-adapter tests still fail
 for offline typing versus concurrent quote/list wrapping, partial marks and
 paragraph splitting. The retained replacement is available as an experimental
 entry in the unreleased local package. Safe production adoption remains open.
+Retained checkpoints now reopen a redone quote with another author's offline
+text and keep the room eligible to receive later peer updates.
+[Checkpoint recovery](YJS_RETAINED_CHECKPOINT_AUDIT.md#capture-after-undo-and-redo).
 
 Other unfinished areas are native document interchange/layout fidelity,
 Vue/Svelte/Angular integration coverage, desktop and physical mobile/IME
@@ -22,9 +25,9 @@ exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
-The latest full source run had 4,877 passes and six failures, with no skips.
+The latest full source run had 5,004 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 154.7 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 155.2 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).
 Fresh release CI,

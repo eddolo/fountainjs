@@ -45,6 +45,27 @@ to reinterpret it.
 
 ## Wire representability repair
 
+### Capture after undo and redo
+
+Redoing a quote wrap after merging another author's offline typing could
+leave two adjacent Yjs array records that Yjs joins on replay. The earlier
+checkpoint rejected the redone room because the full V1 encoding differed.
+Capture now accepts that encoding only after splitting the combined array
+records in an isolated copy and recovering the original bytes exactly. The
+archive stores the replay encoding and checks that validation leaves it
+unchanged. The live source is still checked against its original bytes and
+root inventory after hashing. The existing checksum and restore checks apply.
+
+The regression preserves the inserted text, quote structure, native state
+vector and a relative cursor position. Saving the restored room yields the
+same manifest, and the room accepts the author's subsequent undo. The test
+runs with Yjs garbage collection enabled and disabled.
+The previous build also opens the new archive after merge, undo and redo in
+both seed directions with either GC setting. Recorded Chromium, Firefox and
+WebKit journeys type the offline edit, wrap and redo the quote, save and reopen
+the room, then apply a later undo. Visual review confirmed that the reopened
+editor showed the quote and kept the offline text after the undo.
+
 An additional probe found that the initial capture could silently turn an
 unpaired high/low UTF-16 unit into the Unicode replacement character when Yjs
 encoded it as UTF-8. The initial observation and an independently reproducible

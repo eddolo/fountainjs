@@ -20,6 +20,11 @@ Competing quote and list wraps no longer halt the retained room. Three-author
 checks cover both wrapper winners, author undo, checkpoint reopen, and
 continued editing. When three wraps compete, undo shows the next surviving
 wrapper in replica order.
+Wrapping or unwrapping a paragraph now preserves the placements of its
+unchanged siblings. In the 129-paragraph quote probe the raw update fell from
+26,956 bytes to 861 bytes. [Placement evidence](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#keeping-placements-for-unchanged-siblings).
+A checkpoint can now reopen a redone quote that contains another author's
+offline text. [Checkpoint recovery](YJS_RETAINED_CHECKPOINT_AUDIT.md#capture-after-undo-and-redo).
 The SQLite reference can open an existing room in its stored format and use
 the retained format when provisioning a new room.
 The package opener verifies the bound reply and checkpoint
@@ -133,9 +138,9 @@ repository. The plain DOM starter includes a custom editable callout and
 the React starter shows toolbar edits in portable JSON. Independent
 time-to-first-editor and time-to-first-extension comparisons remain open.
 
-The latest full source run had 4,877 passes and six failures, with no skips.
+The latest full source run had 5,004 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 154.7 KiB over its existing limit. The CommonJS
+pass. The CommonJS aggregate is 155.2 KiB over its existing limit. The CommonJS
 root defers three optional AI modules and loads 35.1 KiB less at startup.
 Retained rooms defer the legacy adapter, reducing the room entry's initial
 load by about 20 KiB in both formats.

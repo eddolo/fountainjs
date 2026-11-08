@@ -1,10 +1,10 @@
 // @vitest-environment node
 import { expect, it } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, Selection, composeExtensions, createEditor, insertText } from '../src';
+import { CoreExtension, Selection, composeExtensions, createEditor, insertText, redoCollaboration, toggleQuote, undoCollaboration } from '../src';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { RetainedDocumentStore } from '../src/yjs/retained-document';
-import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
+import { assertRetainedCheckpointState, captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 
 const content = { type: 'doc', attrs: { title: 'Checkpoint', nested: { source: true } }, content: [
   { type: 'paragraph', attrs: { nodeId: 'intro' }, content: [{ type: 'text', text: 'Alpha' }] },
@@ -17,6 +17,42 @@ function fixture(gc = true) {
 }
 const wire = (document: Y.Doc) => Y.encodeStateAsUpdate(document);
 const changed = (checkpoint: RetainedCheckpoint, patch: object): RetainedCheckpoint => ({ update: checkpoint.update, manifest: { ...checkpoint.manifest, ...patch } });
+
+it.each([true, false])('reopens an offline edit after a concurrent quote wrap is redone (gc %s)', async gc => {
+  const pair = fixture(gc), peer = new Y.Doc({ gc });
+  Y.applyUpdate(peer, wire(pair.document));
+  const kit = composeExtensions([CoreExtension, createRetainedYjsCollaborationExtension({ document: peer, captureTimeout: 0, user: { id: 'Grace', name: 'Grace', color: '#7048e8' } })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+  try {
+    pair.editor.dispatch(pair.editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+    editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
+    expect(toggleQuote(pair.editor)).toBe(true);
+    expect(insertText(editor, 'X')).toBe(true);
+    Y.applyUpdate(pair.document, wire(peer));
+    expect(undoCollaboration(pair.editor)).toBe(true);
+    expect(redoCollaboration(pair.editor)).toBe(true);
+    const before = wire(pair.document);
+    const anchor = Y.createRelativePositionFromTypeIndex(pair.document.getMap<Y.Text>('fountain-text:texts').values().next().value!, 3);
+    const checkpoint = await captureRetainedCheckpoint(pair.document, pair.schema, 'schema-1');
+    expect(checkpoint.update).not.toEqual(before);
+    expect(() => assertRetainedCheckpointState(pair.document, checkpoint)).not.toThrow();
+    const restored = await restoreRetainedCheckpoint(checkpoint, pair.schema, 'schema-1');
+    try {
+      expect(restored.baseDocument.toJSON()).toEqual(pair.editor.getJSON());
+      expect(restored.baseDocument.child(0).type.name).toBe('blockquote');
+      expect(restored.baseDocument.child(0).textContent).toBe('AlXpha');
+      expect(Y.createAbsolutePositionFromRelativePosition(anchor, restored.document)?.index).toBe(3);
+      expect(Y.encodeStateVector(restored.document)).toEqual(Y.encodeStateVector(pair.document));
+      expect((await captureRetainedCheckpoint(restored.document, pair.schema, 'schema-1')).manifest).toEqual(checkpoint.manifest);
+      expect(wire(pair.document)).toEqual(before);
+      expect(undoCollaboration(pair.editor)).toBe(true);
+      expect(() => assertRetainedCheckpointState(pair.document, checkpoint)).toThrow('changed shared state');
+      Y.applyUpdate(restored.document, wire(pair.document));
+      const updated = await captureRetainedCheckpoint(restored.document, pair.schema, 'schema-1');
+      expect(updated.manifest.documentSha256).not.toBe(checkpoint.manifest.documentSha256);
+    } finally { restored.document.destroy(); }
+  } finally { editor.destroy(); peer.destroy(); pair.destroy(); }
+});
 
 it('captures and restores a pure-Node retained room without mutating the source', async () => {
   const pair = fixture();

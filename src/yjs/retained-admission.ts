@@ -72,9 +72,10 @@ export async function prepareRetainedAdmission(document:Y.Doc,checkpoint:Retaine
     if(staged.store.pendingStructs||staged.store.pendingDs)throw new Error('Admission has unresolved shared dependencies.');
     const verified=await captureRetainedCheckpoint(staged,schema,schemaVersion,room);
     if(verified.manifest.roomId!==incoming.manifest.roomId)throw new Error('Admission conflicts with the local room identity; both sources preserved.');
+    const stagedUpdate=Y.encodeStateAsUpdate(staged);
     const reader=new RetainedDocumentStore(staged,room,schema,()=>{throw new Error('Admission reader cannot allocate identities.');});let value:Node;
     try{value=reader.read();}finally{reader.destroy();}
-    wire.assertUnchanged(staged,verified.update,verified.manifest.roots);
+    wire.assertUnchanged(staged,stagedUpdate,verified.manifest.roots);
     let installed=false;
     return Object.freeze({document:value,identity:incoming.manifest.roomId,install(origin:unknown){
       if(installed)throw new Error('Admission candidate already installed.');
