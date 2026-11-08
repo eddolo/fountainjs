@@ -100,6 +100,26 @@ correct saved document. Both normal delta receipts used 1,687 bytes.
 All 45 live transport workflows passed across Chromium, Firefox and WebKit.
 The focused provider, receipt, presence and authority suite passed 43 tests.
 
+## Reusing a checkpoint during binding
+
+The browser keeps the snapshot it loaded for the current admission request.
+After the adapter validates it, the browser sends its revision and checkpoint
+checksum with the binding lease. The authority still validates the current
+saved checkpoint and fences the lease before issuing a presence token.
+When the saved revision and checksum match the browser's, the reply confirms
+them and omits the duplicate checkpoint. The browser checks the confirmation
+against the same loaded snapshot and lease. Older clients that omit the basis
+receive a full reply, as do clients whose room advanced during admission.
+
+The 49-paragraph Chromium workflow received a 181-byte binding confirmation.
+In a separate two-editor workflow, a peer saved a newer revision while binding
+was paused. The resumed editor received the newer full checkpoint and displayed
+the saved edit. The initial read-only view also reuses the snapshot the page
+already fetched at startup.
+Verification passed 43 focused source tests and 15 recorded workflows across
+Chromium, Firefox and WebKit, including reload, reconnect and the manual draft
+recovery path.
+
 ## Presence
 
 The host [presence reference](../examples/backends/retained-http-presence.ts)

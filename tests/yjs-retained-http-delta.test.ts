@@ -1,7 +1,7 @@
 // @vitest-environment node
 import * as Y from 'yjs';
 import { expect, it } from 'vitest';
-import { retainedHttpReceipt, restoreRetainedHttpReceipt } from '../examples/backends/retained-http-delta';
+import { retainedHttpBindReceipt, retainedHttpReceipt, restoreRetainedHttpBindReceipt, restoreRetainedHttpReceipt } from '../examples/backends/retained-http-delta';
 import { CoreExtension, composeExtensions, createEditor } from '../src';
 import type { DocumentRoomSnapshot } from '../src/yjs/document-room';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
@@ -33,5 +33,15 @@ it.each([true, false])('reconstructs authoritative insertion and deletion receip
     expect(retainedHttpReceipt(snapshot, { ...basis, vector: new Uint8Array(16_385) })).toBe(snapshot);
     expect(retainedHttpReceipt(snapshot, { ...basis, vector: new Uint8Array([255]) })).toBe(snapshot);
     expect(retainedHttpReceipt(snapshot)).toBe(snapshot);
+    const bindBasis = { revision: snapshot.revision, checkpointSha256: checkpoint.manifest.checkpointSha256 };
+    const lease = { key: snapshot.key, epoch: snapshot.epoch, revision: snapshot.revision, protocol: 'retained' as const, room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
+    const confirmation = retainedHttpBindReceipt(snapshot, bindBasis);
+    expect(confirmation).toEqual({ confirmed: bindBasis });
+    expect(restoreRetainedHttpBindReceipt(confirmation, snapshot, lease)).toBe(snapshot);
+    expect(() => restoreRetainedHttpBindReceipt(confirmation, snapshot, { ...lease, epoch: 'different' })).toThrow('does not match');
+    expect(() => restoreRetainedHttpBindReceipt({ confirmed: { ...bindBasis, checkpointSha256: 'wrong' } }, snapshot, lease)).toThrow('does not match');
+    expect(retainedHttpBindReceipt(snapshot, { ...bindBasis, revision: 0 })).toEqual({ snapshot });
+    expect(retainedHttpBindReceipt(snapshot, { ...bindBasis, checkpointSha256: 'wrong' })).toEqual({ snapshot });
+    expect(retainedHttpBindReceipt(snapshot)).toEqual({ snapshot });
   } finally { editor.destroy(); document.destroy(); }
 });

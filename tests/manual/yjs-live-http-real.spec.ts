@@ -383,8 +383,16 @@ test('delivers one saved revision to overlapping readers', async ({ page }, info
 });
 
 test('sends small receipts for a long document and falls back when a delta is corrupted', { tag: '@large' }, async ({ page }, info) => {
+  const binding = page.context().waitForEvent('response', response => response.url().endsWith('/bind-live'));
   const peer = await secondAuthor(page);
   try {
+    const bound = await binding;
+    const bindReply = await bound.json();
+    const basis = bound.request().postDataJSON().basis;
+    expect(bindReply.value).toMatchObject({ confirmed: basis, token: expect.any(String) });
+    expect(bindReply.value.snapshot).toBeUndefined();
+    const bindSize = (await bound.body()).byteLength;
+    expect(bindSize).toBeLessThan(512);
     const session = await page.evaluate(() => sessionStorage.getItem('fountain-draft-audit-session')!);
     const full = await page.evaluate(async token => {
       const response = await fetch('/__admission/snapshot', {
@@ -450,9 +458,43 @@ test('sends small receipts for a long document and falls back when a delta is co
     expect(fallback).toBe(1);
     const fallbackSize = Number((await fullFallback).headers()['content-length']);
     expect(fallbackSize).toBeLessThan(fullSize / 2);
-    await info.attach('receipt-bytes', { body: JSON.stringify({ fullSize, compressedSize: full.wireLength, fallbackSize, outgoingSize, incomingSize }), contentType: 'application/json' });
+    await info.attach('receipt-bytes', { body: JSON.stringify({ fullSize, compressedSize: full.wireLength, bindSize, fallbackSize, outgoingSize, incomingSize }), contentType: 'application/json' });
     await peer.screenshot({ path: info.outputPath('delta-recovered.png'), scale: 'css' });
   } finally { await peer.close(); }
+});
+
+test('loads a newer checkpoint when the room advances between load and binding', async ({ page }, info) => {
+  const peer = await secondAuthor(page);
+  const release = gate();
+  let bindingPaused = false;
+  try {
+    await page.getByRole('button', { name: 'Save recovery copy' }).click();
+    await expect(page.getByRole('status')).toContainText('Recovery copy saved');
+    await page.getByRole('button', { name: 'Leave shared session' }).click();
+    await page.route('**/__admission/bind-live', async route => {
+      bindingPaused = true;
+      await release.promise;
+      await route.continue();
+    }, { times: 1 });
+    const binding = page.waitForResponse('**/__admission/bind-live');
+    await page.getByRole('button', { name: 'Join shared session' }).click();
+    await expect.poll(() => bindingPaused).toBe(true);
+    await editor(peer).click();
+    await peer.keyboard.press('End');
+    await peer.keyboard.insertText(' Saved during admission.');
+    await expect(server(peer)).toContainText('Saved during admission.');
+    release.release();
+    const bound = await binding;
+    const reply = await bound.json();
+    expect(reply.value.confirmed).toBeUndefined();
+    expect(reply.value.snapshot.revision).toBeGreaterThan(bound.request().postDataJSON().basis.revision);
+    await expect(connection(page)).toHaveText('connected');
+    await expect(editor(page)).toContainText('Saved during admission.');
+    await page.screenshot({ path: info.outputPath('newer-binding.png'), scale: 'css' });
+  } finally {
+    release.release();
+    await peer.close();
+  }
 });
 
 test('keeps local typing when the write response has no acknowledgement', async ({ page }, info) => {

@@ -12,7 +12,7 @@ import {SQLiteRetainedRoomRepository} from './yjs-authority-admission-build-2026
 import {CoordinatedDocumentRoom} from './yjs-authority-admission-build-20261107/authority.js';
 import {CoordinatedRetainedRoom} from './yjs-authority-admission-build-20261107/coordinator.js';
 import {CrossFormatRoomHandoff} from './yjs-authority-admission-build-20261107/handoff.js';
-import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';
+import {retainedHttpBindReceipt,retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';
 import {writeRetainedCheckpointJson} from '../examples/backends/retained-http-encoding.mjs';
 const origin='http://127.0.0.1:4195',temporary=await mkdtemp(join(tmpdir(),'fountain-authority-browser-')),repository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite')),schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema),sessions=new Map();
 const peerPresenceRepository=new SQLiteRetainedRoomRepository(join(temporary,'rooms.sqlite'));
@@ -64,7 +64,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
     res.setHeader('X-Presence-Worker',worker);
     if(action==='bind-live'){
      const snapshot=await room.admit(body.lease);
-     value={snapshot,token:presence.bindPresence(body.lease)};
+     value={...retainedHttpBindReceipt(snapshot,body.basis),token:presence.bindPresence(body.lease)};
     }else if(action==='presence'){
      if(body.lease?.key!==room.key) throw new Error('Presence room does not match the session');
      value=presence.exchangePresence(body.lease,body.token,body.state);

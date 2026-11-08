@@ -45,7 +45,7 @@ server=once(server,"else if(action==='write')value=await room.write(body);",`els
     res.setHeader('X-Presence-Worker',worker);
     if(action==='bind-live'){
      const snapshot=await room.admit(body.lease);
-     value={snapshot,token:presence.bindPresence(body.lease)};
+     value={...retainedHttpBindReceipt(snapshot,body.basis),token:presence.bindPresence(body.lease)};
     }else if(action==='presence'){
      if(body.lease?.key!==room.key) throw new Error('Presence room does not match the session');
      value=presence.exchangePresence(body.lease,body.token,body.state);
@@ -77,7 +77,7 @@ server=once(server,"else if(action==='write')value=await room.write(body);",`els
 server=once(server,'error:error.message','error:error.message,code:error.code');
 server=once(server,"sessions.delete(req.headers['x-admission-session']);", "repository.clearRoomPresence(room.key);sessions.delete(req.headers['x-admission-session']);");
 server=once(server,'repository.close();','repository.close();peerPresenceRepository.close();');
-server=once(server,"import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';","import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';\nimport {writeRetainedCheckpointJson} from '../examples/backends/retained-http-encoding.mjs';");
+server=once(server,"import {retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';","import {retainedHttpBindReceipt,retainedHttpReceipt} from '../examples/backends/retained-http-delta.ts';\nimport {writeRetainedCheckpointJson} from '../examples/backends/retained-http-encoding.mjs';");
 server=once(server,'}res.end(encode({ok:true,value}));',`}
   const json=encode({ok:true,value});
   if(value?.checkpoint) await writeRetainedCheckpointJson(req,res,json);

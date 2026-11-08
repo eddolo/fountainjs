@@ -1,5 +1,6 @@
 import * as Y from 'yjs';
 import type { DocumentRoomSnapshot } from '../../src/yjs/document-room';
+import type { RetainedAdmissionLease } from '../../src/yjs/retained-admission';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 
 export interface RetainedDeltaBasis {
@@ -15,6 +16,39 @@ interface DeltaReceipt {
 }
 
 export type RetainedHttpReceipt = DocumentRoomSnapshot | DeltaReceipt;
+
+interface BindBasis {
+  readonly revision: number;
+  readonly checkpointSha256: string;
+}
+
+type BindReceipt = { readonly snapshot: DocumentRoomSnapshot } | { readonly confirmed: BindBasis };
+
+/** The host calls this only after verifying the current authority snapshot. */
+export function retainedHttpBindReceipt(snapshot: DocumentRoomSnapshot, basis?: BindBasis): BindReceipt {
+  if (snapshot.protocol === 'retained' && basis?.revision === snapshot.revision
+    && basis.checkpointSha256 === snapshot.checkpoint.manifest.checkpointSha256) {
+    return { confirmed: { revision: snapshot.revision, checkpointSha256: basis.checkpointSha256 } };
+  }
+  return { snapshot };
+}
+
+/** A confirmation can reuse only the checkpoint just verified for this lease. */
+export function restoreRetainedHttpBindReceipt(
+  receipt: BindReceipt,
+  loaded: DocumentRoomSnapshot,
+  lease: RetainedAdmissionLease,
+): DocumentRoomSnapshot {
+  if ('snapshot' in receipt) return receipt.snapshot;
+  const manifest = loaded.checkpoint.manifest;
+  if (loaded.key !== lease.key || loaded.epoch !== lease.epoch || loaded.revision !== lease.revision
+    || loaded.protocol !== 'retained' || loaded.phase !== 'active' || manifest.format !== 'fountain-retained-checkpoint/1'
+    || manifest.room !== lease.room || manifest.roomId !== lease.identity
+    || receipt.confirmed?.revision !== loaded.revision || receipt.confirmed.checkpointSha256 !== manifest.checkpointSha256) {
+    throw new Error('Authority confirmation does not match the admitted checkpoint.');
+  }
+  return loaded;
+}
 
 /** A vector only selects bytes to omit. The server's admitted snapshot still
  * supplies all metadata and checksums. Use the full receipt when a delta does

@@ -55,6 +55,7 @@ import {captureLegacyCheckpoint} from './yjs-authority-admission-build-20261107/
 import {prepareRetainedAdmission} from './yjs-authority-admission-build-20261107/admission.js';
 import {openBrowserDrafts, isSameDraftSession, scheduleBrowserDraftAutosave} from '/examples/backends/retained-browser-drafts.ts';
 import {createRetainedHttpProvider} from '/examples/backends/retained-http-provider.ts';
+import {restoreRetainedHttpBindReceipt} from '/examples/backends/retained-http-delta.ts';
 
 const version = 'admission-browser-1';
 const select = selector => document.querySelector(selector);
@@ -130,12 +131,17 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
   client?.editor.destroy();
   client?.doc.destroy();
   const next = {doc, detached, lease: null, bound: null};
+  const loadedSnapshots = new WeakMap();
   const admission = {
     schemaVersion: version,
     authority: {key: current.key, async bind(lease, signal) {
       if (live) {
-        const accepted = await request('bind-live', {lease,presenceWorker}, signal);
-        next.bound = accepted.snapshot;
+        const loaded = loadedSnapshots.get(signal);
+        loadedSnapshots.delete(signal);
+        if (!loaded) throw new Error('No checkpoint was loaded for this admission.');
+        const basis = {revision: loaded.revision, checkpointSha256: loaded.checkpoint.manifest.checkpointSha256};
+        const accepted = await request('bind-live', {lease,presenceWorker,basis}, signal);
+        next.bound = restoreRetainedHttpBindReceipt(accepted, loaded, lease);
         next.presenceToken = accepted.token;
       } else next.bound = await request('bind', lease, signal);
       next.signal = signal;
@@ -143,6 +149,7 @@ function mount(model, {doc = new Y.Doc(), draft, detached = false} = {}) {
     async load(signal) {
       const snapshot = await request('snapshot', {}, signal);
       if (draft && !isSameDraftSession(draft, snapshot)) throw new Error('Saved draft belongs to another session. Open it as a local copy.');
+      if (live) loadedSnapshots.set(signal, snapshot);
       return snapshot;
     },
   };
@@ -373,7 +380,7 @@ if (migration) {
 }
 drafts = await openBrowserDrafts('fountain-draft-audit-v1', current.key + ':' + user.id);
 mount(local('Local incident notes.'));
-await refresh();
+await refresh(current);
 await listCopies();
 button(select('#join'), () => {
   if (client.detached || !client.savedModel.eq(client.editor.state.doc)) throw new Error('Keep a copy before replacing this local draft.');
