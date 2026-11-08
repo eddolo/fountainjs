@@ -150,9 +150,12 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .collaboration-demo__note b { color: #5e43cc; }
 .collaboration-demo__note small { flex-basis: 100%; color: #746d86; }
 .collaboration-demo__room { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.collaboration-demo__room button { min-height: 36px; padding: 7px 11px; color: #fff; background: #5e43cc; border: 1px solid #5e43cc; border-radius: 7px; font: 700 11px Manrope, sans-serif; }
-.collaboration-demo__room button:not(:disabled):hover { color: #fff; background: #4932ad; border-color: #4932ad; }
-.collaboration-demo__room button:disabled { opacity: .6; cursor: default; }
+.collaboration-demo__note button { min-height: 36px; padding: 7px 11px; color: #fff; background: #5e43cc; border: 1px solid #5e43cc; border-radius: 7px; font: 700 11px Manrope, sans-serif; }
+.collaboration-demo__note button:not(:disabled):hover { color: #fff; background: #4932ad; border-color: #4932ad; }
+.collaboration-demo__note button:disabled { opacity: .6; cursor: default; }
+.collaboration-demo__recovery { flex-basis: 100%; padding: 12px; color: #553026; background: #fff5ec; border: 1px solid #e5c1af; border-radius: 8px; }
+.collaboration-demo__recovery p { margin: 6px 0; overflow-wrap: anywhere; }
+.collaboration-demo__recovery button { margin: 4px 8px 0 0; }
 .collaboration-demo__editors { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 1400px; margin: auto; }
 .collaboration-demo__editors > article { overflow: hidden; background: white; border: 1px solid #cbc4ef; border-radius: 15px; box-shadow: 0 18px 50px rgb(70 56 135 / 10%); }
 .collaboration-demo__editors article > header { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid #e5e1f4; }

@@ -8,6 +8,7 @@ import {
   createEditor,
   defineExtension,
   getCollaborationState,
+  reconnectCollaboration,
   setNodeAttributes,
   undoCollaboration,
   type CollaborationUser,
@@ -94,6 +95,43 @@ function config(editor: Editor): any {
 }
 
 describe('granular Yjs structured attributes', () => {
+  it.each([
+    ['legacy', createYjsCollaborationExtension],
+    ['retained', createRetainedYjsCollaborationExtension],
+  ] as const)('keeps the draft after a %s adapter rejects a local edit and a peer keeps writing', (_format, extension) => {
+    const initial: NodeJSON = { type: 'doc', content: [
+      content.content![0], { type: 'paragraph', content: [{ type: 'text', text: 'Original note' }] },
+    ] };
+    const mount = (document: Y.Doc, user: CollaborationUser) => {
+      const kit = composeExtensions([CoreExtension, panelExtension, extension({
+        document, user, structuredAttributes: { definitions: [configDefinition] },
+      })]);
+      return createEditor({ schema: kit.schema, plugins: kit.plugins, content: initial });
+    };
+    const leftDocument = new Y.Doc(), left = mount(leftDocument, ada);
+    const rightDocument = cloneDocument(leftDocument), right = mount(rightDocument, linus);
+    try {
+      left.dispatch(left.createTransaction().insertText([1, 0], 0, 'Shared '));
+      sync(leftDocument, rightDocument);
+      const shared = Y.encodeStateAsUpdate(leftDocument);
+      left.dispatch(left.createTransaction().replace(1, 1, [left.state.doc.child(0)]));
+      expect(getCollaborationState(left)?.error?.message).toMatch(/Duplicate collaboration node ID.*Preserve the local draft/);
+      expect(Y.encodeStateAsUpdate(leftDocument)).toEqual(shared);
+      const draft = left.getJSON();
+      expect(undoCollaboration(left)).toBe(false);
+      right.dispatch(right.createTransaction().insertText([1, 0], 0, 'Peer '));
+      sync(leftDocument, rightDocument);
+      expect(left.getJSON()).toEqual(draft);
+      expect(right.getText()).toContain('Peer Shared Original note');
+      const received = Y.encodeStateAsUpdate(leftDocument);
+      left.dispatch(left.createTransaction().insertText([2, 0], 0, 'Local '));
+      expect(left.getText()).toContain('Local Shared Original note');
+      expect(Y.encodeStateAsUpdate(leftDocument)).toEqual(received);
+      expect(reconnectCollaboration(left)).toBe(false);
+      expect(getCollaborationState(left)?.status).toBe('error');
+    } finally { left.destroy(); right.destroy(); leftDocument.destroy(); rightDocument.destroy(); }
+  });
+
   it.each([
     ['legacy', createYjsCollaborationExtension],
     ['retained', createRetainedYjsCollaborationExtension],

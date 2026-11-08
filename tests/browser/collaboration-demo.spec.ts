@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test('opens the lazy collaboration demo after a slow module load and shares typing', async ({ page }, info) => {
   let release!: () => void;
@@ -160,6 +161,88 @@ test('replaces both live collaboration documents without remounting the public e
   expect(await left.evaluate((element) => element.closest('[data-fountain-root]') === (globalThis as any).__fountainLeftRoot)).toBe(true);
 });
 
+test('protects a rejected collaboration draft from peer edits and room switching', async ({ page }, info) => {
+  await page.goto('/');
+  const demo = page.locator('#collaboration');
+  const ada = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const grace = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
+  const switchRoom = demo.getByRole('button', { name: 'Switch both editors to Planning room' });
+  await expect(switchRoom).toBeEnabled();
+
+  await ada.locator('p').first().click();
+  await page.keyboard.press('End');
+  await ada.evaluate(editor => {
+    const payload = JSON.stringify({
+      version: 1, document: { type: 'doc', content: [{ type: 'collaboration_settings', attrs: {
+        nodeId: 'shared-launch-settings', config: { title: 'Pasted settings copy', layout: { columns: 3, compact: false }, filters: [] },
+      } }] },
+    });
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: {
+      files: [], getData: (type: string) => type === 'application/x-fountainjs+json' ? payload : '',
+    } });
+    editor.dispatchEvent(event);
+  });
+  await expect(demo.getByRole('alert')).toContainText('Duplicate collaboration node ID');
+  await expect(ada).toContainText('Pasted settings copy');
+  await expect(grace).not.toContainText('Pasted settings copy');
+  await expect(switchRoom).toBeDisabled();
+  await expect(demo.getByRole('button', { name: 'Undo Ada' })).toBeDisabled();
+  await expect(demo.getByLabel('Shared review')).toHaveCount(0);
+  await expect(demo.getByRole('region', { name: 'Granular collaborative settings' })).toHaveCount(0);
+
+  await grace.getByText('Shared launch note', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' peer edit');
+  await expect(grace).toContainText('Shared launch note peer edit');
+  await expect(ada).not.toContainText('peer edit');
+  await ada.getByText('Shared launch note', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' local draft');
+  await expect(ada).toContainText('Shared launch note local draft');
+  await expect(grace).not.toContainText('local draft');
+
+  const downloading = page.waitForEvent('download');
+  await demo.getByRole('button', { name: 'Download Ada’s copy' }).click();
+  const download = await downloading;
+  expect(download.suggestedFilename()).toBe('fountain-ada-draft.json');
+  const path = info.outputPath(download.suggestedFilename());
+  await download.saveAs(path);
+  const json = await readFile(path, 'utf8');
+  expect(json).toContain('Shared launch note local draft');
+  expect(json).toContain('Pasted settings copy');
+  expect(json).not.toContain('peer edit');
+  await demo.screenshot({ path: info.outputPath('recoverable-collaboration-draft.png') });
+});
+
+test('identifies both editor copies when the second room connection fails', async ({ page }, info) => {
+  await page.goto('/');
+  const demo = page.locator('#collaboration');
+  const switchRoom = demo.getByRole('button', { name: 'Switch both editors to Planning room' });
+  await expect(switchRoom).toBeEnabled();
+  await page.evaluate(() => {
+    const randomUUID = crypto.randomUUID.bind(crypto);
+    let attempts = 0;
+    // Fail the second adapter construction after the first has switched.
+    Object.defineProperty(crypto, 'randomUUID', { configurable: true, value: () => {
+      if (++attempts === 2) {
+        Reflect.deleteProperty(crypto, 'randomUUID');
+        throw new Error('Room connection unavailable');
+      }
+      return randomUUID();
+    } });
+  });
+  await switchRoom.click();
+  await expect(demo.getByText('Room switch incomplete', { exact: true })).toBeVisible();
+  await expect(demo.getByRole('alert')).toContainText('Ada: Planning room. Grace: unverified copy.');
+  await expect(demo.getByRole('alert')).toContainText('Grace: Room connection unavailable');
+  await expect(demo.getByRole('textbox', { name: 'Ada collaborative editor' })).toContainText('Shared planning agenda');
+  await expect(demo.getByRole('textbox', { name: 'Grace collaborative editor' })).toContainText('Shared launch note');
+  await expect(switchRoom).toBeDisabled();
+  await expect(demo.getByLabel('Shared review')).toHaveCount(0);
+  await demo.screenshot({ path: info.outputPath('incomplete-room-switch.png') });
+});
+
 test('keeps offline text when a peer quotes its paragraph in the public collaboration demo', async ({ page }, info) => {
   const pageErrors: string[] = [];
   page.on('pageerror', error => pageErrors.push(error.message));
@@ -206,6 +289,19 @@ test('keeps offline text when a peer quotes its paragraph in the public collabor
 });
 
 test('merges nested collaborative settings through the public two-editor demo', async ({ page }) => {
+  await page.addInitScript(() => {
+    const random = crypto.getRandomValues.bind(crypto);
+    let clientId = 4_000_000_000;
+    // Force the first peer's flat attribute to win, so the second peer
+    // generates a repair while the offline edits are being exchanged.
+    crypto.getRandomValues = array => {
+      if (array instanceof Uint32Array && array.length === 1) {
+        array[0] = clientId--;
+        return array;
+      }
+      return random(array);
+    };
+  });
   await page.goto('/');
   const controls = page.getByRole('region', { name: 'Granular collaborative settings' });
   const left = page.locator('[data-collaboration-editor="ada"]');

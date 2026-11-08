@@ -7,6 +7,31 @@ structural work is not part of that PR or an npm/site release.
 
 ## Rejected document update recovery
 
+Both adapters also stop sharing after a rejected local document edit. For
+example, pasting a settings card with an existing stable ID leaves an editable
+private draft. A subsequent valid peer update can still enter the underlying
+Y.Doc, while the failed editor session keeps the draft and disables shared
+undo, redo and presence. Reconnecting the same adapter refuses to overwrite it.
+
+The homepage collaboration demo blocks room changes while recovery is needed
+and lets either editor copy be downloaded as Fountain JSON. If one editor
+opens the target room while the other fails, the demo labels their outcomes
+separately and closes the shared comments panel. The browser test injects a
+failure during construction of the second adapter to exercise that path.
+
+The demo now exchanges offline edits and their dependent repairs before
+resuming live forwarding. WebKit exposed an ordering failure where a repair
+deleted a required settings attribute before the replacement could integrate.
+The browser test fixes the Yjs client ID order so the older delivery sequence
+also reproduces the failure in Chromium. This is a test of the in-memory
+transport. Hosts still own delivery and recovery for their providers.
+
+The affected source suite passed 791 tests across 25 files. The production
+site passed 27 recorded desktop workflows across Chromium, Firefox and WebKit,
+plus four recovery checks in mobile emulation. The failure recordings show
+the divergent documents, and the draft test reads the downloaded JSON back
+and checks that it contains the private edit and the rejected card.
+
 In both adapters, an invalid document update previously left shared undo
 enabled and allowed subsequent typing to modify Yjs even while the editor
 reported an error. The retained adapter also returned to connected when a

@@ -4,7 +4,7 @@ import {
   CoreExtension, canRedoCollaboration, canUndoCollaboration, composeExtensions, createEditor,
   defineExtension, getCollaborationState, replaceCollaborationAdapter, selectText, toggleQuote,
 } from 'fountainjs-editor';
-import { InMemoryCommentsStore, connectComments, createCommentThread, createCommentsExtension, getCommentsState, replaceCommentsAdapter } from 'fountainjs-editor/comments';
+import { InMemoryCommentsStore, connectComments, createCommentThread, createCommentsExtension, disconnectComments, getCommentsState, replaceCommentsAdapter } from 'fountainjs-editor/comments';
 import {
   createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter,
 } from 'fountainjs-editor/experimental/yjs-retained';
@@ -12,6 +12,7 @@ import { FountainComposer, useFountain, useFountainState } from 'fountainjs-edit
 import { FountainComments } from 'fountainjs-editor/react/comments';
 import { defineStructuredAttribute, insertStructuredAttributeItems, setStructuredAttribute } from 'fountainjs-editor/structured-attributes';
 import type { YjsAwareness } from 'fountainjs-editor/yjs';
+import { downloadDocumentFile } from './math-document-files';
 
 class DemoAwarenessHub {
   readonly states = new Map<number, Record<string, unknown>>();
@@ -97,6 +98,7 @@ const collaborationSettingsNode = {
 } as const;
 
 type DemoRoom = 'launch' | 'planning';
+const roomName = (room: DemoRoom) => room === 'launch' ? 'Launch' : 'Planning';
 const ada = { id: 'ada', name: 'Ada', color: '#6d4aff' };
 const grace = { id: 'grace', name: 'Grace', color: '#d23877' };
 
@@ -158,11 +160,13 @@ function createSession(room: DemoRoom) {
     rightDocument.off('update', sendRight);
   };
   const resume = () => {
-    const left = Y.encodeStateAsUpdate(leftDocument, Y.encodeStateVector(rightDocument));
-    const right = Y.encodeStateAsUpdate(rightDocument, Y.encodeStateVector(leftDocument));
+    // Keep live forwarding off until both peers have the offline edits and
+    // the repairs they depend on. An early repair can otherwise deliver a
+    // deletion before the edit that supplies its replacement.
+    Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument, Y.encodeStateVector(rightDocument)), leftDocument);
+    Y.applyUpdate(leftDocument, Y.encodeStateAsUpdate(rightDocument, Y.encodeStateVector(leftDocument)), rightDocument);
     connectTransport();
-    Y.applyUpdate(rightDocument, left, leftDocument);
-    Y.applyUpdate(leftDocument, right, rightDocument);
+    Y.applyUpdate(rightDocument, Y.encodeStateAsUpdate(leftDocument, Y.encodeStateVector(rightDocument)), leftDocument);
     awareness.setPaused(false);
   };
 
@@ -186,11 +190,17 @@ export default function CollaborationDemo() {
     return { sessions, leftKit: kit(ada), rightKit: kit(grace) };
   }, []);
   const [activeRoom, setActiveRoom] = useState<DemoRoom>('launch');
+  const nextRoom = activeRoom === 'launch' ? 'planning' : 'launch';
   const [paused, setPaused] = useState(false);
+  const [incompleteSwitch, setIncompleteSwitch] = useState<{ room: DemoRoom; ada: boolean; grace: boolean }>();
   const left = useFountain({ schema: room.leftKit.schema, plugins: room.leftKit.plugins, content: room.sessions.launch.content });
   const right = useFountain({ schema: room.rightKit.schema, plugins: room.rightKit.plugins, content: room.sessions.launch.content });
   const leftState = useFountainState(left);
   const rightState = useFountainState(right);
+  const leftCollaboration = getCollaborationState(left);
+  const rightCollaboration = getCollaborationState(right);
+  const needsRecovery = Boolean(incompleteSwitch) || leftCollaboration?.status === 'error' || rightCollaboration?.status === 'error';
+  const canChangeRoom = !paused && !needsRecovery && leftCollaboration?.status === 'connected' && rightCollaboration?.status === 'connected';
 
   useEffect(() => {
     room.sessions.launch.connectTransport();
@@ -201,19 +211,33 @@ export default function CollaborationDemo() {
     };
   }, [room]);
 
+  useEffect(() => {
+    if (needsRecovery) {
+      disconnectComments(left);
+      disconnectComments(right);
+    }
+  }, [left, right, needsRecovery]);
+
   const switchRoom = () => {
-    const nextRoom = activeRoom === 'launch' ? 'planning' : 'launch';
+    if (!canChangeRoom) return;
     const session = room.sessions[nextRoom];
     replaceCommentsAdapter(left, session.comments.createAdapter(), { connect: false });
     replaceCommentsAdapter(right, session.comments.createAdapter(), { connect: false });
-    const leftOpened = replaceCollaborationAdapter(left, new RetainedYjsCollaborationAdapter(authorOptions(session, ada)));
-    const rightOpened = replaceCollaborationAdapter(right, new RetainedYjsCollaborationAdapter(authorOptions(session, grace)));
-    if (leftOpened) connectComments(left);
-    if (rightOpened) connectComments(right);
-    if (leftOpened && rightOpened) setActiveRoom(nextRoom);
+    const leftOpened = replaceCollaborationAdapter(left, () => new RetainedYjsCollaborationAdapter(authorOptions(session, ada)));
+    const rightOpened = replaceCollaborationAdapter(right, () => new RetainedYjsCollaborationAdapter(authorOptions(session, grace)));
+    const adaConnected = leftOpened && getCollaborationState(left)?.status === 'connected';
+    const graceConnected = rightOpened && getCollaborationState(right)?.status === 'connected';
+    if (!adaConnected || !graceConnected) {
+      setIncompleteSwitch({ room: nextRoom, ada: adaConnected, grace: graceConnected });
+      return;
+    }
+    connectComments(left);
+    connectComments(right);
+    setActiveRoom(nextRoom);
   };
 
   const toggleSync = () => {
+    if (needsRecovery) return;
     const session = room.sessions[activeRoom];
     if (paused) session.resume();
     else {
@@ -235,8 +259,6 @@ export default function CollaborationDemo() {
     });
   }, [right]);
 
-  const leftCollaboration = getCollaborationState(left);
-  const rightCollaboration = getCollaborationState(right);
   const leftComments = getCommentsState(left);
   const rightComments = getCommentsState(right);
   const leftSettingsPath = leftState?.doc.content.findIndex((node) => node.type.name === 'collaboration_settings') ?? -1;
@@ -257,15 +279,29 @@ export default function CollaborationDemo() {
         </div>
       </div>
       <div className="collaboration-demo__note">
-        <span><b>Try it:</b> edit both documents, select a phrase to reveal the peer cursor, then use each author’s undo.</span>
-        <span className="collaboration-demo__room"><strong>Room: {activeRoom === 'launch' ? 'Launch' : 'Planning'}</strong><button onClick={switchRoom} disabled={paused}>Switch both editors to {activeRoom === 'launch' ? 'Planning' : 'Launch'} room</button><button onClick={toggleSync}>{paused ? 'Resume document sync' : 'Pause document sync'}</button></span>
-        <small aria-live="polite">{paused
+        {needsRecovery ? <strong>Draft recovery</strong> : <span><b>Try it:</b> edit both documents, select a phrase to reveal the peer cursor, then use each author’s undo.</span>}
+        <span className="collaboration-demo__room">
+          <strong>{incompleteSwitch ? 'Room switch incomplete' : `Room: ${roomName(activeRoom)}`}</strong>
+          <button onClick={switchRoom} disabled={!canChangeRoom}>Switch both editors to {roomName(nextRoom)} room</button>
+          <button onClick={toggleSync} disabled={needsRecovery}>{paused ? 'Resume document sync' : 'Pause document sync'}</button>
+        </span>
+        {needsRecovery ? <div className="collaboration-demo__recovery">
+          <div role="alert">
+            <strong>{incompleteSwitch ? 'The editors did not both reach the requested room.' : 'A change could not be shared.'}</strong>
+            {incompleteSwitch && <p>Ada: {incompleteSwitch.ada ? `${roomName(incompleteSwitch.room)} room` : 'unverified copy'}. Grace: {incompleteSwitch.grace ? `${roomName(incompleteSwitch.room)} room` : 'unverified copy'}.</p>}
+            {leftCollaboration?.error && <p>Ada: {leftCollaboration.error.message}</p>}
+            {rightCollaboration?.error && <p>Grace: {rightCollaboration.error.message}</p>}
+          </div>
+          <p>Download the editor copies you want to keep before reloading this demo.</p>
+          <button onClick={() => downloadDocumentFile(document, 'fountain-ada-draft.json', JSON.stringify(left.getJSON(), null, 2), 'application/json')}>Download Ada’s copy</button>
+          <button onClick={() => downloadDocumentFile(document, 'fountain-grace-draft.json', JSON.stringify(right.getJSON(), null, 2), 'application/json')}>Download Grace’s copy</button>
+        </div> : <small aria-live="polite">{paused
           ? 'Document sync and peer cursors are paused. You can edit either copy. Resume to merge before switching rooms.'
-          : 'Try an offline merge. Pause, type in a paragraph as Ada, then put the same paragraph in a quote as Grace. Resume to see both changes.'}</small>
+          : 'Try an offline merge. Pause, type in a paragraph as Ada, then put the same paragraph in a quote as Grace. Resume to see both changes.'}</small>}
       </div>
       <div className="collaboration-demo__editors">
         <article data-collaboration-editor="ada">
-          <header><span><i style={{ background: '#6d4aff' }} />Ada</span><code>{paused ? 'sync paused' : leftCollaboration?.status ?? 'connecting'}</code></header>
+          <header><span><i style={{ background: '#6d4aff' }} />Ada</span><code>{leftCollaboration?.status === 'error' ? 'local draft' : paused ? 'sync paused' : leftCollaboration?.status ?? 'connecting'}</code></header>
           <FountainComposer editor={left} showToolbar={false} ariaLabel="Ada collaborative editor" placeholder="Ada writes here…" />
           <div className="collaboration-demo__editor-footer">
             <span>{leftState?.doc.textContent.length ?? 0} characters · {leftCollaboration?.presences.length ?? 0} peer · {leftComments?.threads.length ?? 0} threads</span>
@@ -273,7 +309,7 @@ export default function CollaborationDemo() {
           </div>
         </article>
         <article data-collaboration-editor="grace">
-          <header><span><i style={{ background: '#d23877' }} />Grace</span><code>{paused ? 'sync paused' : rightCollaboration?.status ?? 'connecting'}</code></header>
+          <header><span><i style={{ background: '#d23877' }} />Grace</span><code>{rightCollaboration?.status === 'error' ? 'local draft' : paused ? 'sync paused' : rightCollaboration?.status ?? 'connecting'}</code></header>
           <FountainComposer editor={right} showToolbar={false} ariaLabel="Grace collaborative editor" placeholder="Grace writes here…" />
           <div className="collaboration-demo__editor-footer">
             <span>{rightState?.doc.textContent.length ?? 0} characters · {rightCollaboration?.presences.length ?? 0} peer · {rightComments?.threads.length ?? 0} threads</span>
@@ -281,7 +317,7 @@ export default function CollaborationDemo() {
           </div>
         </article>
       </div>
-      <div className="collaboration-demo__structured" role="region" aria-label="Granular collaborative settings">
+      {!needsRecovery && <div className="collaboration-demo__structured" role="region" aria-label="Granular collaborative settings">
         <div>
           <span>NESTED CRDT ATTRIBUTES</span>
           <h3>Change separate fields. Keep both changes.</h3>
@@ -303,8 +339,8 @@ export default function CollaborationDemo() {
             <button onClick={() => rightSettingsPath >= 0 && insertStructuredAttributeItems(right, [rightSettingsPath], collaborationSettingsDefinition, ['filters'], rightSettings?.filters?.length ?? 0, [{ field: 'priority', value: 'high' }])}>Add priority filter</button>
           </div>
         </article>
-      </div>
-      <div className="collaboration-demo__comments">
+      </div>}
+      {!needsRecovery && <div className="collaboration-demo__comments">
         <div>
           <span>THREADED COMMENTS</span>
           <h3>Discussion is portable too.</h3>
@@ -312,7 +348,7 @@ export default function CollaborationDemo() {
           <p>The included in-memory adapter powers this page. Production apps replace it with REST, a database, a CRDT, or another authenticated store—and enforce permissions there.</p>
         </div>
         <FountainComments key={activeRoom} editor={left} title="Shared review" onError={(error) => console.error(error)} />
-      </div>
+      </div>}
       <div className="collaboration-demo__boundary">
         <code>fountainjs-editor/experimental/yjs-retained</code>
         <span>CRDT document + nested attributes + relative positions + local-origin undo</span>

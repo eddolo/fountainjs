@@ -301,16 +301,18 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
-    if (!this.context || !this.store || this.joining) return;
-    this.gate();
-    const updateAttributes = this.structured?.prepareUpdate(update.before, update.document);
-    const recordHistory = update.transaction.getMeta('addToHistory') !== false;
-    this.pendingHistory = recordHistory ? { before: retainSelection(this.store, update.before, update.beforeSelection) } : undefined;
+    if (!this.context || !this.store || this.joining || this.roomConflict) return;
     try {
+      this.gate();
+      const updateAttributes = this.structured?.prepareUpdate(update.before, update.document);
+      const recordHistory = update.transaction.getMeta('addToHistory') !== false;
+      this.pendingHistory = recordHistory ? { before: retainSelection(this.store, update.before, update.beforeSelection) } : undefined;
       this.options.document.transact(() => {
         this.store!.apply(update.transaction); updateAttributes?.();
         if (this.pendingHistory) this.pendingHistory.after = retainSelection(this.store!, update.document, update.selection);
       }, recordHistory ? this.origin : this.repair);
+    } catch (error) {
+      throw this.roomFailure(error instanceof Error ? error.message : String(error));
     } finally { this.pendingHistory = undefined; }
   }
 

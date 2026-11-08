@@ -29,7 +29,8 @@ Both live adapters now remove only fields owned by the document before a local
 edit, so a client with fewer definitions leaves other shared entries intact.
 [Structured attribute write behavior](STRUCTURED_ATTRIBUTES.md#enable-granular-yjs-merging).
 Both adapters now preserve the local draft and suspend shared editing when
-the mounted editor rejects a peer's document update.
+the mounted editor rejects a peer's update or the adapter rejects a local edit.
+The homepage demo explains failed switches and offers a JSON copy of each editor.
 [Rejected-update audit](YJS_STRUCTURAL_RETENTION_AUDIT.md#rejected-document-update-recovery).
 The live reference can run the six concurrency cases against an upgraded
 legacy room, verifying its archive and active identity across reload and undo.
@@ -83,7 +84,7 @@ time-to-first-editor and time-to-first-extension comparisons remain open.
 
 The latest full source run had 4,877 passes and six failures, with no skips.
 Both core entry-size checks, the ESM aggregate and the DOCX CommonJS entry
-pass. The CommonJS aggregate is 148.6 KiB over its existing limit. Retained
+pass. The CommonJS aggregate is 148.8 KiB over its existing limit. Retained
 rooms now defer the legacy adapter, reducing the room entry's initial load by
 about 20 KiB in both formats.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).

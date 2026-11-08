@@ -747,15 +747,16 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
-    this.assertInitialization();
-    const updateAttributes = this.structuredAttributes?.prepareUpdate(update.before, update.document);
-    const recordHistory = update.transaction.getMeta('addToHistory') !== false;
-    const root = this.fragment.get(0);
-    const pending: PendingHistorySelection = {
-      before: this.relativeSelection(update.beforeSelection, update.before),
-    };
-    this.pendingHistory = recordHistory ? pending : undefined;
+    if (this.initializationConflict) return;
     try {
+      this.assertInitialization();
+      const updateAttributes = this.structuredAttributes?.prepareUpdate(update.before, update.document);
+      const recordHistory = update.transaction.getMeta('addToHistory') !== false;
+      const root = this.fragment.get(0);
+      const pending: PendingHistorySelection = {
+        before: this.relativeSelection(update.beforeSelection, update.before),
+      };
+      this.pendingHistory = recordHistory ? pending : undefined;
       this.document.transact(() => {
         if (!isSharedElement(root)) {
           if (this.fragment.length) this.fragment.delete(0, this.fragment.length);
@@ -764,6 +765,8 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         updateAttributes?.();
         if (recordHistory) pending.after = this.relativeSelection(update.selection, update.document);
       }, recordHistory ? this.localOrigin : this.repairOrigin);
+    } catch (error) {
+      throw this.roomFailure(error instanceof Error ? error.message : String(error));
     } finally {
       this.pendingHistory = undefined;
     }

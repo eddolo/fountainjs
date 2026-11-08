@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve a rejected local collaboration draft through later peer updates.
+  The public demo labels incomplete room switches and can download each copy.
+
 - Preserve structured Yjs map entries outside the editing client's ownership
   while still removing and undoing entries for its own deleted nodes.
 - Preserve deletion history while the retained room authority builds a
