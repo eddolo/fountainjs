@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
-import { EditorState, NodeSelection, readDocumentPageSettings, type DocumentPageSettings, type Node } from 'fountainjs-editor';
+import { createImageNode, EditorState, imageFileToDataURL, NodeSelection, readDocumentPageSettings, type DocumentPageSettings, type Editor, type Node } from 'fountainjs-editor';
+import type { DOCXPackagePart } from 'fountainjs-editor/docx';
 import { FountainComposer, FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from 'fountainjs-editor/react';
 import { computeFootnoteNumbering, inspectFootnotes, insertFootnote, selectFootnoteDefinition, removeFootnote, inspectPageTemplates, selectPageTemplate, insertPageBreak, setDocumentPageSettings } from 'fountainjs-editor/pages';
 import { createLabContext, detectLabFormat, exportLab, importLab, labImages, labReportIssues, sameLabDocument, type LabContext, type LabFormat, type LabIssue } from './conversion-lab';
@@ -37,6 +38,58 @@ function RecoveredImage({ image, index }: { image: ReturnType<typeof labImages>[
   }
   return <figure>{image.embedded ? <><img src={image.source} alt={image.alt || `Recovered image ${index + 1}`} onError={() => setFailed(true)} /><figcaption>{image.alt || `Image ${index + 1}`} — {failed ? 'Embedded data recovered, but the browser cannot display it.' : 'Embedded raster data recovered'}</figcaption><button onClick={save}>Download image {index + 1}</button></> : <figcaption>{image.alt || `Image ${index + 1}`} — linked or unsupported image source. Not fetched or previewed. The address remains in the document.</figcaption>}{error && <p role="alert">{error}</p>}</figure>;
 }
+function SourceImageRecovery({ file, parts, editor }: { file: File; parts: readonly DOCXPackagePart[]; editor: Editor }) {
+  const [path, setPath] = useState(parts[0].path);
+  const [preview, setPreview] = useState<{ file: File; source: string }>();
+  const [alt, setAlt] = useState('');
+  const [dimensions, setDimensions] = useState<{ width: number; height: number }>();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [status, setStatus] = useState('');
+  function reset() { setPreview(undefined); setDimensions(undefined); setError(''); setStatus(''); }
+  async function open() {
+    const part = parts.find(candidate => candidate.path === path);
+    if (!part || busy) return;
+    reset(); setBusy(true);
+    try {
+      const { recoverLabDOCXImage } = await import('./conversion-lab-docx-media');
+      const image = recoverLabDOCXImage(new Uint8Array(await file.arrayBuffer()), part);
+      const recovered = new File([Uint8Array.from(image.bytes)], image.fileName, { type: image.type });
+      setPreview({ file: recovered, source: await imageFileToDataURL(recovered) });
+      setAlt(image.fileName);
+    } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
+    finally { setBusy(false); }
+  }
+  function append() {
+    if (!preview || !dimensions) return;
+    const scale = Math.min(1, 640 / Math.max(dimensions.width, dimensions.height));
+    const image = createImageNode(editor, { src: preview.source, alt,
+      width: `${Math.max(1, Math.round(dimensions.width * scale))}px`,
+      height: `${Math.max(1, Math.round(dimensions.height * scale))}px`,
+    });
+    const end = editor.state.doc.childCount;
+    if (!image || !editor.dispatch(editor.state.createTransaction().replace(end, end, [image]))) {
+      setError('The image could not be added to the draft.'); return;
+    }
+    setError(''); setStatus('Image appended to the draft. Use Undo in the editor to remove it.');
+  }
+  return <section className="lab-source-media" aria-label="Recover source images">
+    <h4>Recover images from the original DOCX</h4>
+    <p>Preview a PNG, JPEG, GIF or WebP that the import missed. You can download its original bytes or add it at the end of the draft. The archive does not tell this tool where the image belongs.</p>
+    <div className="lab-actions"><label>Unrepresented media<select value={path} disabled={busy} onChange={event => { setPath(event.target.value); reset(); }}>
+      {parts.map(part => <option key={part.path} value={part.path}>{part.path}</option>)}
+    </select></label><button type="button" disabled={busy} onClick={open}>{busy ? 'Reading image…' : 'Preview source image'}</button></div>
+    {preview && <figure><img src={preview.source} alt={`Preview of ${preview.file.name}`} onLoad={event => {
+      const { naturalWidth: width, naturalHeight: height } = event.currentTarget;
+      if (width > 0 && height > 0) setDimensions({ width, height });
+    }} onError={() => { setDimensions(undefined); setError('The browser could not display this image. You can still download its original bytes.'); }} />
+      <figcaption>{preview.file.name} · {preview.file.size.toLocaleString()} bytes</figcaption>
+      <label>Image description for the draft<input value={alt} onChange={event => setAlt(event.target.value)} /></label>
+      <div className="lab-actions"><button type="button" onClick={() => download(preview.file, preview.file.name, preview.file.type)}>Download source image</button>
+        <button type="button" disabled={!dimensions} onClick={append}>Append image to draft</button></div></figure>}
+    {error && <p role="alert">{error}</p>}{status && <p role="status">{status}</p>}
+  </section>;
+}
 function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const [initialState] = useState(() => EditorState.create({ schema: entry.context.schema,
     doc: entry.result!.document, plugins: entry.context.kit.plugins }));
@@ -52,7 +105,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const [note, setNote] = useState('');
   const images = labImages(entry.result!.document);
   const packageParts = entry.result!.packageParts;
-  const unrepresentedMedia = packageParts?.filter(part => part.handling === 'unrepresented-media').length ?? 0;
+  const unrepresentedParts = packageParts?.filter(part => part.handling === 'unrepresented-media') ?? [];
+  const unrepresentedMedia = unrepresentedParts.length;
   const markdownHTML = format === 'html' && entry.format === 'markdown';
   const omitMarkdownCaretHosts = markdownHTML && omitCaretHosts;
   const stale = check && (check.revision !== state.doc || check.format !== format || check.omitMarkdownCaretHosts !== omitMarkdownCaretHosts);
@@ -103,7 +157,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
     <div className="lab-notice"><strong>Import report</strong><p>These are reported conversion details—not proof of zero loss. Original-format layout and complete fidelity are unverified.</p>{entry.result!.issues.length ? <IssueList issues={entry.result!.issues} /> : <ul><li>No issues reported by this adapter. Undetected losses remain possible.</li></ul>}</div>
     {packageParts && <details className="lab-package" aria-label="Source package inventory"><summary>Source package: {packageParts.length} entries · Unrepresented media: {unrepresentedMedia}</summary><p>Archive entries are counted before conversion. Adapter input means bytes were read, not that every feature survived. Unrepresented media may be unused or belong to omitted content. Skipped parts remain in the untouched original; they are not embedded in the converted document.</p><ul>{packageParts.map((part, index) => <li key={index}><code>{part.path}</code> — {part.handling} · {part.declaredBytes.toLocaleString()} declared bytes</li>)}</ul></details>}
     <details className="lab-assets" open={images.length > 0}><summary>Images in the imported document: {images.length} ({images.filter(image => image.embedded).length} embedded raster)</summary><p>Embedded raster images can be displayed without internet access. This inventory reflects what the adapter recovered, not every image in the original archive. Missing/unsupported Word images appear in the import warnings when detected; headers, drawings and other unsupported structures may need further import work.</p><div>{images.map((image, index) => <RecoveredImage key={index} image={image} index={index} />)}</div></details>
-    <div className="lab-columns"><section><h3>1. Original source</h3><p>Text inspection, not an original-application rendering. Source is never executed.</p><pre aria-label="Original source">{entry.sourceText !== undefined ? entry.sourceText.slice(0, 60000) : 'DOCX is a binary archive. Download the untouched original to compare it in Word or LibreOffice. Native page preview is not available here.'}</pre>{(entry.sourceText?.length ?? 0) > 60000 && <p>Preview limited to 60,000 characters. The full original remains downloadable.</p>}</section><section><h3>2. Imported document — editable</h3><p>Edit here, then check an export. Undo/redo stays separate for each file.</p><FountainComposer ref={surface} editor={editor} ariaLabel="Imported document editor" />
+    <div className="lab-columns"><section><h3>1. Original source</h3><p>Text inspection, not an original-application rendering. Source is never executed.</p><pre aria-label="Original source">{entry.sourceText !== undefined ? entry.sourceText.slice(0, 60000) : 'DOCX is a binary archive. Download the untouched original to compare it in Word or LibreOffice. Native page preview is not available here.'}</pre>{(entry.sourceText?.length ?? 0) > 60000 && <p>Preview limited to 60,000 characters. The full original remains downloadable.</p>}
+      {unrepresentedMedia > 0 && <SourceImageRecovery file={entry.file} parts={unrepresentedParts} editor={editor} />}</section><section><h3>2. Imported document — editable</h3><p>Edit here, then check an export. Undo/redo stays separate for each file.</p><FountainComposer ref={surface} editor={editor} ariaLabel="Imported document editor" />
       {templateReport.templates.length > 0 && <section className="lab-footnotes" aria-label="Page template controls"><h2>Headers and footers</h2><p>These are editable templates, not repeated page previews. Native DOCX parts retain supported text, images and simple page fields; the receiving application must lay out pages and recalculate field values.</p><ul>{templateReport.templates.map(item => <li key={`${item.kind}:${item.variant}`}><button onClick={() => { if (selectPageTemplate(editor, item.kind, item.variant)) { surface.current?.focus(); setError(''); } else setError('This template has no text cursor position. Select its content directly in the editor.'); }}>Edit {item.kind} ({item.variant})</button></li>)}</ul></section>}
       <details className="lab-page-settings" aria-label="Document page settings"><summary>Page settings{pageSettings?.width && pageSettings?.height ? ` · ${pageSettings.width} × ${pageSettings.height} pt` : ' · unspecified values use export defaults'}</summary><p>Physical points (72 pt = 1 inch). These values travel with the document and DOCX export. They do not change this continuous editor into a paginated Word preview. Header/footer distances are offsets from the page edge, not content heights. Blank values are unspecified.</p>
         <form key={JSON.stringify(pageSettings)} onSubmit={event => { event.preventDefault(); const data = new FormData(event.currentTarget); const settings: Record<string, unknown> = { unit: 'pt' }; for (const [key] of pageSettingFields) { const value = String(data.get(key) ?? '').trim(); if (value) settings[key] = Number(value); } const orientation = data.get('orientation'); if (orientation) settings.orientation = orientation; if (setDocumentPageSettings(editor, settings as unknown as DocumentPageSettings)) { setError(''); setStatus('Page settings updated. Undo restores the previous settings.'); } else setError('Invalid page settings. Dimensions must be positive; distances must be finite numbers.'); }}>

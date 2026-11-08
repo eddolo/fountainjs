@@ -11,6 +11,30 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+### Recover a packaged image missed by DOCX import
+
+If the import reports unrepresented media, look under **Original source**.
+Select a package part and choose **Preview source image**. The lab reads the
+selected part locally from the untouched DOCX and recognizes PNG, JPEG, GIF and
+WebP by their bytes. The file and each recovered image are limited to 4 MiB.
+**Download source image** saves the original bytes. If the browser can display
+the image, give it a description and choose **Append image to draft**. Undo
+removes the appended image. DOCX export embeds it from the draft.
+The draft uses the decoded pixel dimensions and scales larger images down
+proportionally to fit within 640 × 640 pixels.
+
+The source package inventory still describes the initial import. The recovery
+step leaves the original intact and cannot determine where a missing image
+belonged in Word. External resources, vector images and other unsupported
+parts remain outside this recovery workflow.
+
+Recorded Chromium, Firefox, and WebKit journeys rejected an SVG disguised as
+a PNG, recovered an omitted chart, and checked undo and redo. The downloaded
+DOCX contained the original raster bytes and a drawing sized to the chart's
+300 × 120 pixels. Visual review covered the narrow recovery panel, the reopened
+editor and the actual download rendered by the independent browser viewer
+docx-preview. Native Word and LibreOffice layout were outside this run.
+
 Select **Use CommonMark source review for Markdown** before choosing a
 Markdown file. The mode combines CommonMark delimiter and bare-address
 rules with source capture. It retains supported HTML declarations, unfinished

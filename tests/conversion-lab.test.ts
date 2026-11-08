@@ -1,10 +1,26 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { unzipSync, zipSync } from 'fflate';
 import { createLabContext, detectLabFormat, exportLab, importLab, labReportIssues, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
+import { recoverLabDOCXImage } from '../examples/react-app/src/conversion-lab-docx-media';
 import { createEditor, EditorState, Schema, StarterKit } from 'fountainjs-editor';
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it('recovers only the selected inventoried raster and retains the original bytes', () => {
+    const raster = new Uint8Array(readFileSync(new URL('./fixtures/cross-container-figure.png', import.meta.url)));
+    const source = exportLab(importLab(bytes('Original body'), 'markdown').document, 'docx');
+    const archive = zipSync({ ...unzipSync(source.bytes), 'word/media/missing.png': raster,
+      'word/media/disguised.png': bytes('<svg xmlns="http://www.w3.org/2000/svg"/>') });
+    const document = importLab(archive, 'docx');
+    expect(labImages(document.document)).toEqual([]);
+    const missing = document.packageParts!.find(part => part.path.endsWith('/missing.png'))!;
+    const disguised = document.packageParts!.find(part => part.path.endsWith('/disguised.png'))!;
+    expect(recoverLabDOCXImage(archive, missing)).toEqual({ bytes: raster, type: 'image/png', fileName: 'missing.png' });
+    expect(() => recoverLabDOCXImage(archive, disguised)).toThrow('not a supported PNG');
+    expect(() => recoverLabDOCXImage(archive, { ...missing, declaredBytes: missing.declaredBytes + 1 })).toThrow('inventory');
+  });
   it('identifies actual Markdown formatting losses and their document locations', () => {
     const original = importLab(bytes('<pre>before <em>styled</em> <span style="color:#cc0000">red</span></pre>'), 'html');
     const output = exportLab(original.document, 'markdown');

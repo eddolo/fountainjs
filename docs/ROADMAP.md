@@ -127,6 +127,9 @@ The DOCX bridge now retains omitted and explicit inline drawing distances.
 Three browser downloads of the scientific fixture match both original header
 positions in independent LibreOffice output.
 [Native evidence](DOCX_NATIVE_AUDIT.md#inline-drawing-distances-2026-11-07).
+The local Conversion Lab can also preview and download supported raster
+images that the DOCX import missed and append them as an undoable edit.
+[Image recovery workflow](CONVERSION_LAB.md#recover-a-packaged-image-missed-by-docx-import).
 The table bridge now preserves whole-table placement through DOCX and HTML.
 [Table placement audit](DOCX_NATIVE_AUDIT.md#whole-table-placement-2026-11-07).
 The scientific source's missing rendered footnote is explained by two omitted
