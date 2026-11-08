@@ -7,7 +7,7 @@ import { snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionO
 import { buildLegacyMigrationCandidate, snapshotLegacyMigrationOptions, type LegacyMigrationCandidate, type LegacyMigrationOptions } from './legacy-migration';
 import { snapshotRetainedHandoffPolicy, type RetainedHandoffPolicy } from './retained-handoff';
 import { documentProtocol, documentRoomId as validId, documentRoomFailure as fail, documentSnapshot, validateDocumentCheckpoint, applyDocumentRoomUpdate, copyDocumentFreeze, assertDocumentFreeze,
-  type DocumentRoomRepository, type DocumentRoomRecord, type DocumentRoomSnapshot, type DocumentCheckpoint } from './document-room';
+  type DocumentRoomRepository, type DocumentRoomRecord, type DocumentRoomSnapshot, type DocumentCheckpoint, type DocumentProtocol, type ValidatedDocumentCheckpoint } from './document-room';
 
 export interface CrossFormatArchive {
   readonly key: string; readonly id: string; readonly generation: string;
@@ -30,6 +30,8 @@ export interface CrossFormatRepository extends DocumentRoomRepository {
   compareCrossBranch(key: string, id: string, expectedGeneration: string, checkpoint: DocumentCheckpoint, batch: { readonly update: Uint8Array; readonly sha256: string }): Promise<boolean>;
   readCrossBatch(key: string, archiveId: string, revision: number): Promise<CrossFormatBatch | undefined>;
   findCrossBatch(key: string, archiveId: string, sha256: string): Promise<CrossFormatBatch | undefined>;
+  readCrossDraft(key: string, archiveId: string, draftId: string): Promise<DocumentCheckpoint | undefined>;
+  createCrossDraft(key: string, archiveId: string, draftId: string, source: { readonly epoch: string; readonly identity: string; readonly protocol: DocumentProtocol }, checkpoint: DocumentCheckpoint): Promise<boolean>;
 }
 export interface CrossFormatBatch {
   readonly key: string; readonly archiveId: string; readonly sourceEpoch: string;
@@ -144,6 +146,45 @@ export class CrossFormatRoomHandoff {
     return this.install(row, restore === 'frozen-source' ? archive.source.checkpoint : archive.branch, operation, policy, 'format-rollback', archiveId, restore, null, { id: archiveId, generation: archive.generation });
   }
   async retiredEpoch(epoch: string): Promise<CrossFormatArchive | undefined> { if (!validId(epoch)) throw new Error('Invalid retired writer epoch.'); const archive = await this.repository.readRetiredEpoch(this.key, epoch); return archive && this.owned(archive); }
+
+  private async draftSource(archiveId: string, sourceEpoch: string, draftId: string) {
+    if (![archiveId, sourceEpoch, draftId].every(validId)) fail('invalid-ticket', 'Invalid cross-format draft selection.');
+    const archive = await this.repository.readCrossArchive(this.key, archiveId);
+    this.check(archive);
+    if (archive.source.epoch !== sourceEpoch) fail('stale-epoch', 'Draft belongs to another retired writer epoch.');
+    const source = await validateDocumentCheckpoint(archive.source.checkpoint, this.schema, this.schemaVersion, this.projection);
+    if (source.identity !== archive.sourceIdentity) fail('invalid-ticket', 'Retired draft source identity changed.');
+    return source;
+  }
+
+  private async verifyDraft(draft: DocumentCheckpoint, source: ValidatedDocumentCheckpoint) {
+    if (documentProtocol(draft) !== source.protocol || draft.manifest.room !== source.checkpoint.manifest.room) {
+      fail('stale-epoch', 'Draft belongs to another retired room or protocol.');
+    }
+    const verified = await validateDocumentCheckpoint(draft, this.schema, this.schemaVersion, this.projection);
+    if (verified.identity !== source.identity) fail('stale-epoch', 'Draft belongs to another retired room identity.');
+    return verified.checkpoint;
+  }
+
+  /** Preserve the writer's exact checkpoint independently of the retired branch merge. */
+  async saveRetiredDraft(request: { readonly archiveId: string; readonly sourceEpoch: string; readonly draftId: string; readonly checkpoint: DocumentCheckpoint }): Promise<DocumentCheckpoint> {
+    const { archiveId, sourceEpoch, draftId } = request;
+    const source = await this.draftSource(archiveId, sourceEpoch, draftId);
+    const checkpoint = await this.verifyDraft(request.checkpoint, source);
+    if (await this.repository.createCrossDraft(this.key, archiveId, draftId, { epoch: sourceEpoch, identity: source.identity, protocol: source.protocol }, checkpoint)) return checkpoint;
+    const saved = await this.repository.readCrossDraft(this.key, archiveId, draftId);
+    if (!saved) return fail('revision-conflict', 'Retired draft could not be saved. Retry with the same draft ID.');
+    const verified = await this.verifyDraft(saved, source);
+    if (verified.manifest.checkpointSha256 !== checkpoint.manifest.checkpointSha256) fail('invalid-ticket', 'Draft ID belongs to a different checkpoint.');
+    return verified;
+  }
+
+  async readRetiredDraft(archiveId: string, sourceEpoch: string, draftId: string): Promise<DocumentCheckpoint | undefined> {
+    const source = await this.draftSource(archiveId, sourceEpoch, draftId);
+    const saved = await this.repository.readCrossDraft(this.key, archiveId, draftId);
+    return saved && this.verifyDraft(saved, source);
+  }
+
   async retainLateUpdate(request: { readonly archiveId: string; readonly sourceEpoch: string; readonly update: Uint8Array }): Promise<CrossFormatArchive> {
     const id = request.archiveId, epoch = request.sourceEpoch, saved = await this.repository.readCrossArchive(this.key, id); this.check(saved);
     if (saved.source.epoch !== epoch) fail('stale-epoch', 'Late batch belongs to another retired writer epoch.');

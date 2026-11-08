@@ -50,6 +50,8 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='migrate'){value=await handoff.migrateLegacy(body.ticket,body.operation,session.nested?nestedOptions(body.destinationRoom):{...options,destinationRoom:body.destinationRoom},policy);if(body.dropAcknowledgement){res.destroy();return}}
    else if(action==='rollback')value=await handoff.rollback(body.ticket,body.operation,body.archive,body.restore,policy);
    else if(action==='retain')value=await handoff.retainLateUpdate(body);
+   else if(action==='save-exact-draft'){const draft=await handoff.saveRetiredDraft(body);value={sha256:draft.manifest.checkpointSha256}}
+   else if(action==='read-exact-draft'){value=await handoff.readRetiredDraft(body.archiveId,body.sourceEpoch,body.draftId);if(!value)throw new Error('Saved offline draft is missing')}
    else if(action==='batch')value=await handoff.retiredBatch(body.id,body.revision);
    else if(action==='archive')value=await repository.readCrossArchive(key,body.id);
    else if(action==='close'){sessions.delete(req.headers['x-handoff-session']);value={closed:true}}

@@ -106,6 +106,38 @@ draft. This is an in-memory test client, not a crash-persistent client outbox.
 
 ## Evidence
 
+### Exact writer drafts after a format switch
+
+`CrossFormatRoomHandoff.saveRetiredDraft` keeps a full writer checkpoint in
+SQLite independently of the frozen source, merged retired branch and raw
+operation log. It accepts legacy drafts after migration and retained drafts
+after rollback. The host supplies the retired archive, writer epoch and a
+stable draft ID. The authority verifies the original namespace, protocol and
+native room identity, including the root of an embedded legacy document. A
+retry with the same ID and checkpoint returns the saved copy. A changed
+checkpoint needs a new ID. These copies count toward the room's recovery cap.
+
+The loopback demo can save an offline writer's exact draft and open it in the
+read-only archive pane. It also saves a changed outgoing editor before
+replacing its view. If that save is interrupted, the source editor stays
+mounted, and retry uses the locally saved draft ID. The new active room and
+the retired branch keep their own documents and revisions. SQLite tests
+reproduce a legacy branch merge that hides the offline text and verify that
+the independent copy still opens with that text intact.
+
+All 178 focused tests and 12 recorded Chromium, Firefox and WebKit journeys
+passed. The recorded cases include a lost save reply followed by a reload,
+newer unsaved typing, and recovery of an outgoing editor after migration or
+rollback. Visual review confirmed the saved draft, newer offline text, and
+active document in their separate panes.
+
+The demo uses the existing same-tab IndexedDB session and loopback authority.
+The host still owns authentication, cross-device draft discovery and storage
+retention. Applying recovered edits to the active room remains a separate
+operation.
+
+### Earlier handoff evidence
+
 - **40 new source cases / 236 focused cases pass.** They cover actual legacy and
   retained clients, both rollback choices, undoing rollback, competing writers,
   operation replay, root identity, corruption, owned asynchronous inputs,

@@ -38,6 +38,35 @@ async function dropCommittedReply(page: import('@playwright/test').Page, action:
 test.beforeEach(async({page},info)=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-namespace-fixture-20261107.html'+(info.tags.includes('@nested')?'?nested':''));await expect(page.getByRole('status')).toContainText('Ready');expect((await state(page)).protocol).toBe('legacy');await sampleLayout(page)});
 test.afterEach(async({page},info)=>{const result=await state(page),layout=await page.evaluate(()=>(window as any).auditLayout);expect(errors.get(page)).toEqual([]);expect(layout.invalid).toEqual([]);expect(layout.frames).toBeGreaterThan(0);expect(result.protocol).toBe((info.title.startsWith('recovers')||info.title.startsWith('maps'))?'retained':'legacy');expect(result.activeProtocol).toBe(result.protocol);expect(result.activeNamespace).toBe(result.namespace);expect(result.namespace).toBe(result.protocol==='legacy'?'Research / α 😀':info.title.startsWith('maps')?'review-copy':'mapped-paper');await info.attach('cross-format-result',{body:JSON.stringify(result),contentType:'application/json'});await info.attach('layout-samples',{body:JSON.stringify(layout),contentType:'application/json'});await info.attach('runtime-modules',{body:JSON.stringify(await page.evaluate(()=>performance.getEntriesByType('resource').map((entry:any)=>new URL(entry.name).pathname).filter((path:string)=>path.endsWith('.js')||path.startsWith('/src/')))),contentType:'application/json'});await page.evaluate(()=>(window as any).audit.close())});
 
+test('recovers the exact embedded offline draft after a lost save reply and reload', { tag: '@nested' }, async ({ page }, info) => {
+  await type(page, 'Offline editor', ' SAVED OFFLINE');
+  const original = (await state(page)).offline;
+  await page.getByRole('button', { name: 'Migrate legacy room' }).click();
+  await expect(page.getByRole('status')).toContainText('Legacy room migrated');
+  const migrated = await state(page);
+  await dropCommittedReply(page, 'save-exact-draft');
+  const save = page.getByRole('button', { name: 'Save exact offline draft' });
+  await save.click();
+  await expect(page.getByRole('status')).toContainText('Request failed');
+  await expect(save).toBeEnabled();
+  await type(page, 'Offline editor', ' NEWER UNSAVED');
+  await reloadDraft(page);
+  await expect(page.getByRole('textbox', { name: 'Offline editor' })).toContainText('SAVED OFFLINE NEWER UNSAVED');
+  await save.click();
+  await expect(page.getByRole('status')).toContainText('Exact offline draft saved · newer offline edits still need saving');
+  await page.getByRole('button', { name: 'Open saved offline draft' }).click();
+  await expect(page.getByRole('status')).toContainText('Exact offline draft reopened');
+  const reader = page.getByRole('textbox', { name: 'Archive reader' });
+  await expect(reader).toHaveAttribute('contenteditable', 'false');
+  await expect(reader).toContainText('SAVED OFFLINE');
+  await expect(reader).not.toContainText('NEWER UNSAVED');
+  const result = await state(page);
+  expect(result.archive).toEqual(original);
+  expect(result.server).toEqual(migrated.server);
+  expect(result.revision).toBe(migrated.revision);
+  await capture(page, info, 'exact-offline-draft-reopened.png');
+});
+
 test('migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits',async({page},info)=>{
  const original=(await state(page)).active;await type(page,'Offline editor',' OLD pending');const offline=(await state(page)).offline;
  await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Legacy room migrated');let current=await state(page);expect(current.protocol).toBe('retained');expect(current.activeProtocol).toBe('retained');expect(current.archiveProtocol).toBe('legacy');expect(current.active).toEqual(original);expect(current.server).toEqual(original);expect(current.offline).toEqual(offline);
@@ -56,7 +85,18 @@ test('restores the frozen legacy original on explicit choice while retaining the
 
 test('recovers a lost migration acknowledgement and archives typing made before reconnection',async({page},info)=>{
  const before=await state(page);await page.getByLabel('Drop migration acknowledgement (test only)').check();await page.getByRole('button',{name:'Migrate legacy room',exact:true}).click();await expect(page.getByRole('status')).toContainText('Request failed');const ambiguous=await state(page);expect(ambiguous.protocol).toBe('retained');expect(ambiguous.activeProtocol).toBe('legacy');expect(ambiguous.epoch).not.toBe(before.epoch);expect(ambiguous.server).toEqual(before.server);
- await type(page,'Active editor',' PENDING after lost ack');const pending=(await state(page)).active;expect(pending).not.toEqual(before.active);await capture(page,info,'lost-ack.png');await page.getByRole('button',{name:'Retry last migration',exact:true}).click();await expect(page.getByRole('status')).toContainText('Durable migration receipt replayed');const after=await state(page);expect(after.epoch).toBe(ambiguous.epoch);expect(after.revision).toBe(ambiguous.revision);expect(after.lastReplay).toEqual({replayed:true,current:true});expect(after.archive).toEqual(pending);expect(after.archiveProtocol).toBe('legacy');expect(after.active).toEqual(before.active);
+ await type(page,'Active editor',' PENDING after lost ack');const pending=(await state(page)).active;expect(pending).not.toEqual(before.active);await capture(page,info,'lost-ack.png');
+ const retry=page.getByRole('button',{name:'Retry last migration',exact:true});
+ await dropCommittedReply(page,'save-exact-draft');
+ await retry.click();
+ await expect(page.getByRole('status')).toContainText('Request failed');
+ await expect(retry).toBeEnabled();
+ await expect(page.getByRole('textbox',{name:'Active editor'})).toContainText('PENDING after lost ack');
+ await reloadDraft(page);
+ await retry.click();await expect(page.getByRole('status')).toContainText('Durable migration receipt replayed');const after=await state(page);expect(after.epoch).toBe(ambiguous.epoch);expect(after.revision).toBe(ambiguous.revision);expect(after.lastReplay).toEqual({replayed:true,current:true});expect(after.archive).toEqual(pending);expect(after.archiveProtocol).toBe('legacy');expect(after.active).toEqual(before.active);
+ await page.getByRole('button',{name:'Open outgoing editor draft'}).click();
+ await expect(page.getByRole('status')).toContainText('Outgoing editor draft reopened');
+ expect((await state(page)).archive).toEqual(pending);
  await type(page,'Active editor',' AFTER retry');await page.getByRole('button',{name:'Save active edits',exact:true}).click();await expect(page.getByRole('status')).toContainText('durably saved');const saved=await state(page);expect(saved.server).toEqual(saved.active);expect(saved.archive).toEqual(pending);const raw=await page.evaluate(async(id:string)=>{const batch=await (window as any).audit.batch(id,1);return {revision:batch.revision,sha256:batch.sha256,bytes:batch.update.length}},saved.archiveId);expect(raw.revision).toBe(1);expect(raw.sha256).toMatch(/^[a-f0-9]{64}$/);expect(raw.bytes).toBeGreaterThan(0);await info.attach('retired-raw-batch',{body:JSON.stringify(raw),contentType:'application/json'});await capture(page,info,'final.png');
 });
 

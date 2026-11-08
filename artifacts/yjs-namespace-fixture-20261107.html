@@ -2,7 +2,7 @@
 <style>body{margin:24px;background:#f5f3ff;color:#19152f;font:16px system-ui}h1{margin-bottom:8px}button,select{font:inherit;padding:8px 10px;border:1px solid #c5bce6;border-radius:6px;background:white}button{cursor:pointer}header{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.panes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}.panes>section{min-width:0;background:white;border:1px solid #c5bce6;border-radius:12px;overflow:hidden}h2{font-size:19px;padding:16px;margin:0}pre{padding:12px;margin:12px 0;max-height:180px;overflow:auto;font:13px monospace;background:#efecfa;white-space:pre-wrap}.fountain-editor{min-height:440px;padding:20px}.fountain-editor img{max-width:100%;max-height:90px;object-fit:contain}#message{min-height:28px;margin:18px 0}label{display:flex;gap:6px;align-items:center}</style>
 <h1>Live protocol migration · recoverable handoff</h1><p>Actual Node/SQLite authority. Legacy → retained → legacy. Pending old-protocol edits stay separately recoverable.</p>
 <header><button id="retained-only">Try retained-only join</button><label>Retained destination namespace <input id="destination" value="mapped-paper" aria-label="Retained destination namespace"></label><button id="save">Save active edits</button><button id="preflight">Check saved migration</button><button id="migrate">Migrate legacy room</button><button id="retry" disabled>Retry last migration</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain offline edits</button><label>Rollback source <select id="restore"><option value="source-branch">Pending source branch</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><button id="retry-rollback" disabled>Retry last rollback</button><label><input id="drop" type="checkbox">Drop migration acknowledgement (test only)</label></header>
-<div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2></section></div>
+<div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2><button id="save-exact" type="button" disabled>Save exact offline draft</button></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2><button id="open-exact" type="button" disabled>Open saved offline draft</button> <button id="open-writer" type="button" disabled>Open outgoing editor draft</button></section></div>
 <script type="module">
 import * as Y from 'yjs';
 import {CoreExtension,MathExtension,Schema,Plugin,EditorView,composeExtensions,createEditor,getCollaborationState,undoCollaboration,redoCollaboration} from '/artifacts/yjs-namespace-build-20261107/engine.js';
@@ -18,7 +18,7 @@ const nested=new URLSearchParams(location.search).has('nested');
 const schema=new Schema(composeExtensions([CoreExtension,MathExtension]).schema);
 const sessionKey='fountain-handoff:'+location.pathname+location.search;
 let token,current,original,active,archived,migration,rollback,rollbackArchiveId,archiveId,visibleArchiveId,lastReplay,initialEpoch,pendingArchive;
-let offlineBatch;
+let offlineBatch,exactDraft,writerDraft;
 let drafts,autosave;
 const message=document.querySelector('#message');
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
@@ -55,12 +55,18 @@ function captureWriter(writer){
   : captureRetainedCheckpoint(writer.doc,schema,version,writer.namespace);
 }
 function watchWriter(writer){writer.doc.on('update',()=>{
- if(writer===original&&offlineBatch)offlineBatch.changed=true;
+ if(writer===original){
+  if(offlineBatch)offlineBatch.changed=true;
+  if(exactDraft)exactDraft.changed=true;
+ }
  autosave.changed();
 });}
 async function persistOperation(){autosave.changed();await autosave.flush();}
 function setControlsBusy(busy){
  for(const button of document.querySelectorAll('header button'))button.disabled=busy;
+ document.querySelector('#save-exact').disabled=busy||!archiveId||!current||current.epoch===initialEpoch;
+ document.querySelector('#open-exact').disabled=busy||!exactDraft?.acknowledged;
+ document.querySelector('#open-writer').disabled=busy||!writerDraft?.acknowledged;
  if(busy)return;
  for(const id of ['retry','old','retain','rollback'])document.querySelector('#'+id).disabled=!migration;
  document.querySelector('#retry-rollback').disabled=!rollback;
@@ -68,10 +74,30 @@ function setControlsBusy(busy){
 function action(id,run){
  document.querySelector('#'+id).onclick=async()=>{
   setControlsBusy(true);
+  message.textContent='Working…';
   try{await run();}
   catch(error){message.textContent='Request failed: '+error.message+' · editor retained; retry explicitly';}
   finally{setControlsBusy(false);}
  };
+}
+function prepareExactDraft(previous,archiveId,sourceEpoch,checkpoint){
+ if(previous?.archiveId===archiveId&&previous.checkpoint.manifest.checkpointSha256===checkpoint.manifest.checkpointSha256)return previous;
+ return {archiveId,sourceEpoch,draftId:crypto.randomUUID(),checkpoint,acknowledged:false};
+}
+async function saveExactDraft(draft){
+ await persistOperation();
+ const {archiveId,sourceEpoch,draftId,checkpoint}=draft;
+ const accepted=await request('save-exact-draft',{archiveId,sourceEpoch,draftId,checkpoint});
+ if(accepted.sha256!==checkpoint.manifest.checkpointSha256)throw new Error('Saved draft receipt does not match');
+ draft.acknowledged=true;
+ await persistOperation();
+}
+async function openExactDraft(draft,label){
+ const {archiveId,sourceEpoch,draftId}=draft;
+ const saved=await request('read-exact-draft',{archiveId,sourceEpoch,draftId});
+ archived=await reopen(saved,'archive',archived);
+ document.querySelector('#archive-title').textContent=label+' · read only';
+ message.textContent=label+' reopened · active room unchanged';
 }
 async function install(result){
  pendingArchive=undefined;
@@ -82,6 +108,13 @@ async function install(result){
   const source=active;
   if(source.epoch!==result.archive.source.epoch)throw new Error('Unreconciled editor epoch; preserve this editor for explicit recovery');
   const model=source.editor.state.doc,update=Y.encodeStateAsUpdate(source.doc);
+  const checkpoint=await captureWriter(source);
+  const frozen=result.archive.source.checkpoint.manifest;
+  if(writerDraft&&!writerDraft.acknowledged)await saveExactDraft(writerDraft);
+  if(checkpoint.manifest.updateSha256!==frozen.updateSha256||checkpoint.manifest.documentSha256!==frozen.documentSha256){
+   writerDraft=prepareExactDraft(writerDraft,result.archive.id,source.epoch,checkpoint);
+   if(!writerDraft.acknowledged)await saveExactDraft(writerDraft);
+  }
   const saved=await request('retain',{archiveId:result.archive.id,sourceEpoch:source.epoch,update});
   active=await openActive(result.snapshot,source,()=>{
    if(active===source&&source.editor.state.doc===model){
@@ -168,6 +201,17 @@ action('retain',async()=>{
   :'Offline edits retained separately · active room unchanged';
  report('Retired branch revision: '+result.branchRevision);
 });
+action('save-exact',async()=>{
+ if(!exactDraft||exactDraft.archiveId!==archiveId||exactDraft.acknowledged){
+  exactDraft=prepareExactDraft(exactDraft,archiveId,initialEpoch,await captureWriter(original));
+ }
+ await saveExactDraft(exactDraft);
+ message.textContent=exactDraft.changed
+  ?'Exact offline draft saved · newer offline edits still need saving'
+  :'Exact offline draft saved · active room unchanged';
+});
+action('open-exact',()=>openExactDraft(exactDraft,'Exact offline draft'));
+action('open-writer',()=>openExactDraft(writerDraft,'Outgoing editor draft'));
 async function finishRollback(){
  const result=await submitOperation('rollback',rollback);
  await install(result);
@@ -199,7 +243,7 @@ async function seedRoom(){
  active=await openActive(current);
 }
 async function reopenSession(saved){
- ({initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch}=saved);
+ ({initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,exactDraft,writerDraft}=saved);
  original=await reopen(saved.offline,'offline',undefined,initialEpoch);
  active=await reopen(saved.writer.checkpoint,'active',undefined,saved.writer.epoch);
  current=saved.acknowledged;
@@ -228,7 +272,7 @@ try{
   const [checkpoint,offline]=await Promise.all([captureWriter(writer),captureWriter(original)]);
   if(writer!==active)throw new Error('Editor changed during draft capture');
   const {key,epoch,revision,phase,protocol}=current;
-  await write({writer:{epoch:writer.epoch,checkpoint},offline,initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,
+  await write({writer:{epoch:writer.epoch,checkpoint},offline,initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,exactDraft,writerDraft,
    acknowledged:{key,epoch,revision,phase,protocol}});
  },(status,error)=>{
   document.querySelector('#draft-status').textContent=status==='saved'?'Recovery copy saved on this device'

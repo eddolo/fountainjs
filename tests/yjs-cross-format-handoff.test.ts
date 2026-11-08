@@ -10,7 +10,7 @@ import { defineStructuredAttribute, setStructuredAttribute } from '../src/struct
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { captureLegacyCheckpoint, restoreLegacyCheckpoint, type LegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
-import { restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
+import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { CoordinatedDocumentRoom, type DocumentCheckpoint, type DocumentProtocol } from '../src/yjs/document-room';
 import { CrossFormatRoomHandoff, type CrossFormatRepository } from '../src/yjs/cross-format-handoff';
 import { CoordinatedRetainedRoom } from '../src/yjs/retained-room-coordinator';
@@ -56,9 +56,71 @@ async function migrate(pair: Awaited<ReturnType<typeof fixture>>) { const ticket
 function gate(base: CrossFormatRepository, method: 'installCrossArchive' | 'compareCrossBranch' | 'compareDocument' | 'readCrossArchive' = 'installCrossArchive') {
   let release!: () => void, reached!: () => void;
   const waiting = new Promise<void>(resolve => { release = resolve; }), ready = new Promise<void>(resolve => { reached = resolve; });
-  const repository: CrossFormatRepository = { readDocument: base.readDocument.bind(base), createDocument: base.createDocument.bind(base), compareDocument: base.compareDocument.bind(base), readCrossArchive: base.readCrossArchive.bind(base), readRetiredEpoch: base.readRetiredEpoch.bind(base), installCrossArchive: base.installCrossArchive.bind(base), compareCrossBranch: base.compareCrossBranch.bind(base), readCrossBatch: base.readCrossBatch.bind(base), findCrossBatch: base.findCrossBatch.bind(base) };
+  const repository: CrossFormatRepository = { readDocument: base.readDocument.bind(base), createDocument: base.createDocument.bind(base), compareDocument: base.compareDocument.bind(base), readCrossArchive: base.readCrossArchive.bind(base), readRetiredEpoch: base.readRetiredEpoch.bind(base), installCrossArchive: base.installCrossArchive.bind(base), compareCrossBranch: base.compareCrossBranch.bind(base), readCrossBatch: base.readCrossBatch.bind(base), findCrossBatch: base.findCrossBatch.bind(base), readCrossDraft: base.readCrossDraft.bind(base), createCrossDraft: base.createCrossDraft.bind(base) };
   const original = repository[method] as (...args: any[]) => Promise<any>; (repository as any)[method] = async (...args: any[]) => { reached(); await waiting; return original(...args); }; return { repository, ready, release };
 }
+
+it('keeps the exact offline legacy draft even when the archived branch hides its text', async () => {
+  const pair = await fixture();
+  const offline = await open(pair.checkpoint, pair);
+  const update = type(offline, 'OFFLINE ');
+  const draft = await captureLegacyCheckpoint(offline.document, pair.schema, version);
+  pair.editor.dispatch(pair.editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+  expect(toggleQuote(pair.editor)).toBe(true);
+  await pair.room.write({ epoch: pair.initial.epoch, protocol: 'legacy', update: Y.encodeStateAsUpdate(pair.document) });
+  const { operation, result } = await migrate(pair);
+  const request = { archiveId: operation, sourceEpoch: pair.initial.epoch, draftId: uuid(), checkpoint: draft };
+  const branch = await pair.handoff.retainLateUpdate({ archiveId: operation, sourceEpoch: pair.initial.epoch, update });
+  expect(JSON.stringify(await model(branch.branch, pair))).not.toContain('OFFLINE');
+  const accepted = await Promise.all([pair.handoff.saveRetiredDraft(request), pair.second.saveRetiredDraft(request)]);
+  expect(accepted).toEqual([draft, draft]);
+  accepted[0].update.fill(0);
+  const saved = await pair.second.readRetiredDraft(operation, pair.initial.epoch, request.draftId);
+  expect(saved).toEqual(draft);
+  expect(await model(saved!, pair)).toEqual(offline.editor.getJSON());
+  expect(await pair.other.snapshot()).toEqual(result.snapshot);
+  expect(await pair.b.readCrossArchive(key, operation)).toEqual(branch);
+  expect(pair.b.readStorageUsage(key)).toMatchObject({ draftCount: 1, batchCount: 1 });
+
+  type(offline, 'NEWER ');
+  const newer = await captureLegacyCheckpoint(offline.document, pair.schema, version);
+  await expect(pair.second.saveRetiredDraft({ ...request, checkpoint: newer })).rejects.toMatchObject({ code: 'invalid-ticket' });
+  expect(await pair.second.readRetiredDraft(operation, pair.initial.epoch, request.draftId)).toEqual(draft);
+});
+
+it('fences cross-format drafts by epoch and identity and includes them in the existing recovery cap', async () => {
+  const pair = await fixture(), { operation } = await migrate(pair);
+  const request = { archiveId: operation, sourceEpoch: pair.initial.epoch, draftId: uuid(), checkpoint: pair.checkpoint };
+  const forbidden = vi.fn(() => { throw new Error('Read of a foreign checkpoint'); });
+  await expect(pair.handoff.saveRetiredDraft({ ...request, sourceEpoch: uuid(), get checkpoint() { return forbidden(); } })).rejects.toMatchObject({ code: 'stale-epoch' });
+  expect(forbidden).not.toHaveBeenCalled();
+  const foreign = client();
+  const foreignCheckpoint = await captureLegacyCheckpoint(foreign.document, pair.schema, version);
+  await expect(pair.handoff.saveRetiredDraft({ ...request, checkpoint: foreignCheckpoint })).rejects.toMatchObject({ code: 'stale-epoch' });
+  const usage = pair.b.readStorageUsage(key)!;
+  const capped = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxRecoveryBytesPerRoom: usage.recoveryBytes });
+  cleanup.push(() => capped.close());
+  const authority = new CrossFormatRoomHandoff(capped, key, pair.schema, version);
+  await expect(authority.saveRetiredDraft(request)).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(await pair.second.readRetiredDraft(operation, pair.initial.epoch, request.draftId)).toBeUndefined();
+  expect(capped.readStorageUsage(key)).toEqual(usage);
+});
+
+it('reopens an exact retained draft after rollback to legacy', async () => {
+  const pair = await fixture(), moved = await migrate(pair);
+  const active = moved.result.snapshot, offline = await open(active.checkpoint, pair);
+  type(offline, 'RETAINED DRAFT ');
+  const checkpoint = await captureRetainedCheckpoint(offline.document, pair.schema, version);
+  const ticket = await pair.room.freeze(active);
+  const rolled = await pair.handoff.rollback(ticket, uuid(), moved.operation, 'frozen-source', policy());
+  const request = { archiveId: rolled.archive.id, sourceEpoch: active.epoch, draftId: uuid(), checkpoint };
+  await expect(pair.handoff.saveRetiredDraft({ ...request, checkpoint: pair.checkpoint })).rejects.toMatchObject({ code: 'stale-epoch' });
+  await pair.handoff.saveRetiredDraft(request);
+  const saved = await pair.second.readRetiredDraft(request.archiveId, request.sourceEpoch, request.draftId);
+  expect(await model(saved!, pair)).toEqual(offline.editor.getJSON());
+  expect(await pair.other.snapshot()).toEqual(rolled.snapshot);
+  expect((await pair.b.readCrossArchive(key, request.archiveId))?.branchRevision).toBe(0);
+});
 
 it('uses one persisted live row for old and new protocols and archives the exact original atomically', async () => {
   const pair = await fixture(true), expected = pair.editor.getJSON(), moved = await migrate(pair), current = await pair.other.snapshot();

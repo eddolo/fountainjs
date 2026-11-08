@@ -4,7 +4,7 @@ import type { RetainedRoomRecord } from '../../src/yjs/retained-room-coordinator
 import type { RetainedRoomArchive, RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
-import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoomRecord, type DocumentRoomHeader, type DocumentCheckpoint } from '../../src/yjs/document-room';
+import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoomRecord, type DocumentRoomHeader, type DocumentCheckpoint, type DocumentProtocol } from '../../src/yjs/document-room';
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
 import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceRenewalMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
@@ -425,11 +425,9 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   }
 
   async readRetiredDraft(key: string, archiveId: string, draftId: string): Promise<RetainedCheckpoint | undefined> {
-    const row = this.db.prepare('SELECT manifest, wire FROM fountain_retained_drafts_v1 WHERE room_key = ? AND archive_id = ? AND draft_id = ?')
-      .get(key, archiveId, draftId);
-    if (!row) return undefined;
-    if (typeof row.manifest !== 'string' || !(row.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retired draft.');
-    return readArchivedCheckpoint(JSON.parse(row.manifest), row.wire);
+    const draft = this.readDraft(key, archiveId, draftId);
+    if (draft && draft.manifest.format !== 'fountain-retained-checkpoint/1') throw new Error('Invalid SQLite retained draft format.');
+    return draft as RetainedCheckpoint | undefined;
   }
 
   async createRetiredDraft(key: string, archiveId: string, draftId: string, checkpoint: RetainedCheckpoint): Promise<boolean> {
@@ -439,6 +437,30 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       WHERE room_key = ? AND archive_id = ? AND source_room_id = ?
       ON CONFLICT(room_key, archive_id, draft_id) DO NOTHING`);
     return this.writeRecovery(key, () => statement.run(draftId, manifest, wire, key, archiveId, checkpoint.manifest.roomId).changes === 1);
+  }
+
+  private readDraft(key: string, archiveId: string, draftId: string): DocumentCheckpoint | undefined {
+    const row = this.db.prepare('SELECT manifest, wire FROM fountain_retained_drafts_v1 WHERE room_key = ? AND archive_id = ? AND draft_id = ?')
+      .get(key, archiveId, draftId);
+    if (!row) return undefined;
+    if (typeof row.manifest !== 'string' || !(row.wire instanceof Uint8Array)) throw new Error('Invalid SQLite retired draft.');
+    return readArchivedCheckpoint(JSON.parse(row.manifest), row.wire);
+  }
+
+  async readCrossDraft(key: string, archiveId: string, draftId: string): Promise<DocumentCheckpoint | undefined> {
+    // Both archive types share one operation UUID space per room.
+    if (!this.db.prepare('SELECT 1 FROM fountain_cross_format_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, archiveId)) return undefined;
+    return this.readDraft(key, archiveId, draftId);
+  }
+
+  async createCrossDraft(key: string, archiveId: string, draftId: string,
+    source: { readonly epoch: string; readonly identity: string; readonly protocol: DocumentProtocol }, checkpoint: DocumentCheckpoint): Promise<boolean> {
+    const manifest = JSON.stringify(checkpoint.manifest), wire = encodeStoredWire(checkpoint.update);
+    const statement = this.db.prepare(`INSERT INTO fountain_retained_drafts_v1 (room_key, archive_id, draft_id, manifest, wire)
+      SELECT room_key, archive_id, ?, ?, ? FROM fountain_cross_format_archives_v1
+      WHERE room_key = ? AND archive_id = ? AND source_epoch = ? AND source_identity = ? AND source_protocol = ?
+      ON CONFLICT(room_key, archive_id, draft_id) DO NOTHING`);
+    return this.writeRecovery(key, () => statement.run(draftId, manifest, wire, key, archiveId, source.epoch, source.identity, source.protocol).changes === 1);
   }
 
   private crossRow(row: Record<string, unknown> | undefined, key: string): CrossFormatArchive | undefined {

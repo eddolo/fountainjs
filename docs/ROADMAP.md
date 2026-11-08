@@ -164,8 +164,10 @@ container while retaining the newer live paragraph.
 The cross-format browser reference keeps edits made while a replacement room
 opens and archives them on retry, including after rollback. A saved IndexedDB
 draft and operation can now reopen after a same-tab reload, including when the
-freeze, migration or rollback acknowledgement was lost. Durable host session
-routing and production adoption remain open.
+freeze, migration or rollback acknowledgement was lost. The reference also
+keeps an exact durable draft beside the cross-format archive when a merged
+legacy branch hides an offline edit. [Exact draft recovery](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md#exact-writer-drafts-after-a-format-switch).
+Durable host session routing and production adoption remain open.
 [Migration audit](YJS_NAMESPACE_MIGRATION_AUDIT.md#recovering-a-saved-handoff-draft-after-reload).
 Recent retained-adapter work is local, with no GitHub/npm/site publication.
 The latest preview reuses checked structure during ordinary remote typing.
