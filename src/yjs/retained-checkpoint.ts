@@ -109,7 +109,14 @@ export function assertRetainedCheckpointState(document: Y.Doc, checkpoint: Retai
 }
 
 /** Capture a stable full-wire rollback point. The source is never repaired. */
-export async function captureRetainedCheckpoint(document: Y.Doc, schema: Schema, schemaVersion: string, room = 'fountain'): Promise<RetainedCheckpoint> {
+export function captureRetainedCheckpoint(document: Y.Doc, schema: Schema, schemaVersion: string, room = 'fountain'): Promise<RetainedCheckpoint> {
+  return captureRetainedCheckpointWithProjection(document, schema, schemaVersion, room);
+}
+
+export type RetainedProjectionCheck = (document: Y.Doc, base: Node, room: string) => void;
+
+/** Run authority-owned validation on the isolated capture without reopening it. */
+export async function captureRetainedCheckpointWithProjection(document: Y.Doc, schema: Schema, schemaVersion: string, room: string, check?: RetainedProjectionCheck): Promise<RetainedCheckpoint> {
   version(schemaVersion); assertIdle(document);
   assertRetainedWireData(document);
   const inventory = roots(document), update = Y.encodeStateAsUpdate(document), guid = document.guid, gc = document.gc;
@@ -117,6 +124,7 @@ export async function captureRetainedCheckpoint(document: Y.Doc, schema: Schema,
   const copy = load(update, inventory, guid);
   try {
     const roomId = gate(copy, room), projected = projection(copy, room, schema);
+    check?.(copy, projected.node, room);
     const encoded = new TextEncoder().encode(stableJSON(projected.node.toJSON()));
     assertUnchanged(copy, update, projected.roots);
     const [updateSha256, documentSha256] = await Promise.all([digest(update), digest(encoded)]);

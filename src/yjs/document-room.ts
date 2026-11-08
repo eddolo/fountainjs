@@ -1,10 +1,11 @@
 import * as Y from 'yjs';
 import type { Schema } from '../core/schema';
-import type { RetainedCheckpoint } from './retained-checkpoint';
+import type { RetainedCheckpoint, RetainedProjectionCheck } from './retained-checkpoint';
 import { captureLegacyCheckpoint, restoreLegacyCheckpoint, assertLegacyCheckpointState, snapshotLegacyProjection, type LegacyCheckpoint, type LegacyProjectionOptions } from './legacy-checkpoint';
 import { legacyNodeIdentity } from './legacy-node-identity';
 import { applyRetainedRoomUpdate, validateRetainedRoomCheckpoint, RetainedRoomError, type RetainedRoomVersion } from './retained-room-store';
 import { validateCoordinatedRoomRecord, type CoordinatedRecord, type CoordinatedFreeze } from './retained-room-coordinator';
+import { projectRetainedRoomAttributes } from './structured-attributes';
 
 export type DocumentCheckpoint = RetainedCheckpoint | LegacyCheckpoint;
 export type DocumentProtocol = 'legacy' | 'retained';
@@ -72,9 +73,12 @@ function initialDocumentRoom(key: string, checkpoint: DocumentCheckpoint): Docum
   };
 }
 export interface ValidatedDocumentCheckpoint { readonly checkpoint: DocumentCheckpoint; readonly protocol: DocumentProtocol; readonly identity: string }
+const retainedProjection = (projection: LegacyProjectionOptions): RetainedProjectionCheck =>
+  (document, base, room) => projectRetainedRoomAttributes(document, base, room, projection.structuredAttributes);
+
 export async function validateDocumentCheckpoint(checkpoint: DocumentCheckpoint, schema: Schema, schemaVersion: string, projection: LegacyProjectionOptions): Promise<ValidatedDocumentCheckpoint> {
   if (documentProtocol(checkpoint) === 'retained') {
-    const owned = await validateRetainedRoomCheckpoint(checkpoint as RetainedCheckpoint, schema, schemaVersion);
+    const owned = await validateRetainedRoomCheckpoint(checkpoint as RetainedCheckpoint, schema, schemaVersion, retainedProjection(projection));
     return { checkpoint: owned, protocol: 'retained', identity: owned.manifest.roomId };
   }
   const restored = await restoreLegacyCheckpoint(checkpoint as LegacyCheckpoint, schema, schemaVersion, projection);
@@ -89,7 +93,7 @@ export async function applyDocumentRoomUpdate(source: DocumentCheckpoint, schema
   try {
     // The retained writer validates the original checkpoint as it restores
     // the isolated document it will edit. Reuse that one restore.
-    if (documentProtocol(source) === 'retained') return await applyRetainedRoomUpdate(source as RetainedCheckpoint, schema, schemaVersion, bytes);
+    if (documentProtocol(source) === 'retained') return await applyRetainedRoomUpdate(source as RetainedCheckpoint, schema, schemaVersion, bytes, retainedProjection(projection));
     const before = await validateDocumentCheckpoint(source, schema, schemaVersion, projection);
     const restored = await restoreLegacyCheckpoint(before.checkpoint as LegacyCheckpoint, schema, schemaVersion, projection);
     try {
@@ -140,7 +144,7 @@ export class CoordinatedDocumentRoom {
 
     const initial = await loadCheckpoint(signal);
     signal?.throwIfAborted();
-    const checkpoint = await validateRetainedRoomCheckpoint(initial, this.schema, this.schemaVersion);
+    const checkpoint = await validateRetainedRoomCheckpoint(initial, this.schema, this.schemaVersion, retainedProjection(this.projection));
     if (checkpoint.manifest.room !== room) documentRoomFailure('revision-conflict', 'Initial checkpoint uses a different namespace.');
     const row = initialDocumentRoom(this.key, checkpoint);
     signal?.throwIfAborted();
@@ -162,7 +166,7 @@ export class CoordinatedDocumentRoom {
     if (documentProtocol(row.checkpoint) !== 'retained') documentRoomFailure('stale-epoch', 'Existing room requires explicit migration to retained storage.');
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Existing room is frozen.');
     if (row.checkpoint.manifest.room !== room) documentRoomFailure('revision-conflict', 'Existing room uses a different namespace.');
-    const checkpoint = await validateRetainedRoomCheckpoint(row.checkpoint as RetainedCheckpoint, this.schema, this.schemaVersion);
+    const checkpoint = await validateRetainedRoomCheckpoint(row.checkpoint as RetainedCheckpoint, this.schema, this.schemaVersion, retainedProjection(this.projection));
     signal?.throwIfAborted();
     return documentSnapshot({ ...row, checkpoint });
   }

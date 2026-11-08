@@ -94,7 +94,7 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
   } });
   cleanups.push(() => { editor.destroy(); document.destroy(); });
   const schema = editor.state.schema;
-  const authority = new CoordinatedDocumentRoom(pair.first, key, schema, version);
+  const authority = new CoordinatedDocumentRoom(pair.first, key, schema, version, { structuredAttributes: structured });
   const checkpoint = await captureRetainedCheckpoint(document, schema, version);
   const initial = await authority.initialize(checkpoint);
   const open = async (structuredAttributes?: { definitions: typeof structured.definitions; mapName?: string }) => {
@@ -127,6 +127,26 @@ it.each([undefined, 'research-settings'] as const)('requires the full saved stru
     await authority.write({ epoch: author.lease.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(author.document, vector) });
   }
   const saved = await authority.snapshot();
+  const malformed = await restoreRetainedCheckpoint(saved.checkpoint as typeof checkpoint, schema, version);
+  cleanups.push(() => malformed.document.destroy());
+  malformed.document.gc = false;
+  const malformedMap = malformed.document.getMap(mapName ?? 'fountain:structured-attributes');
+  const configKey = 'v1:["settings","panel-1","config"]';
+  malformedMap.set(configKey, 'not an object');
+  const malformedUpdate = Y.encodeStateAsUpdate(malformed.document, Y.encodeStateVectorFromUpdate(saved.checkpoint.update));
+  await expect(authority.write({ epoch: saved.epoch, protocol: 'retained', update: malformedUpdate }))
+    .rejects.toMatchObject({ code: 'invalid-update' });
+  expect(await authority.snapshot()).toEqual(saved);
+  malformedMap.delete(configKey);
+  const missingUpdate = Y.encodeStateAsUpdate(malformed.document, Y.encodeStateVectorFromUpdate(saved.checkpoint.update));
+  await expect(authority.write({ epoch: saved.epoch, protocol: 'retained', update: missingUpdate }))
+    .rejects.toMatchObject({ code: 'invalid-update' });
+  expect(await authority.snapshot()).toEqual(saved);
+  const badCheckpoint = await captureRetainedCheckpoint(malformed.document, schema, version);
+  const freshKey = 'malformed-settings';
+  const fresh = new CoordinatedDocumentRoom(pair.first, freshKey, schema, version, { structuredAttributes: structured });
+  await expect(fresh.provisionRetained({ loadCheckpoint: () => badCheckpoint })).rejects.toThrow('do not cover the saved room map');
+  expect(await pair.first.readDocument(freshKey)).toBeUndefined();
   const reopened = await mount();
   expect(reopened.lease.revision).toBe(2);
   const attrs = { nodeId: 'panel-1', config: { columns: 4, compact: true }, display: { theme: 'light' } };

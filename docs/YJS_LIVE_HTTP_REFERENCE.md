@@ -10,6 +10,26 @@ checkpoint if the room revision is unchanged. It still checks the active phase,
 protocol, epoch, namespace and native identity. Writes use the existing fenced
 SQLite authority.
 
+## Validating structured fields before a save
+
+The coordinated room authority uses the same structured-attribute projection
+as the room opener. For a room with structured fields, configure the authority
+and editor with the same field definitions, identity attribute, and map name.
+The default map name is reserved for the room's structured fields. A custom
+map name comes from the host configuration.
+
+The authority checks the merged checkpoint before provisioning or saving it.
+A missing field or a value that fails its definition is refused before the
+database write. The same check applies when reading a saved checkpoint for
+admission. Validation reuses the model projected during checkpoint capture.
+
+SQLite tests reproduce a bad update against both the default and a custom
+map, verify that the saved checkpoint and revision stay intact, and reopen
+both authors' valid changes. They also verify that a bad starter leaves no
+room row. The recorded browser fixture uses the same authority with an
+in-memory repository. It shows a refused field update, preserves both offline
+drafts, and reopens their merged settings after a valid save.
+
 ## Resuming after a canceled freeze
 
 An attached editor remains writable locally when its authority reports a

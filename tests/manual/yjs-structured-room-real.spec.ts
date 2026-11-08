@@ -22,6 +22,12 @@ for (const [title, mixed] of [
   await expect(ada.getByRole('textbox')).toContainText('3 columns · Comfortable · light theme');
   await expect(grace.getByRole('textbox')).toContainText('2 columns · Compact · light theme');
 
+  await page.getByRole('button', { name: 'Try an invalid field update' }).click();
+  await expect(status).toHaveText('Invalid field rejected. Saved room unchanged at revision 0.');
+  await expect(ada.getByRole('textbox')).toContainText('3 columns · Comfortable · light theme');
+  await expect(grace.getByRole('textbox')).toContainText('2 columns · Compact · light theme');
+  await page.screenshot({ path: info.outputPath('rejected-field.png'), fullPage: true });
+
   await page.getByRole('button', { name: 'Save both copies and reopen' }).click();
   await expect(status).toHaveText('Saved and reopened at revision 1.');
   await expect(page.getByRole('region', { name: 'Reopened room' }).getByRole('textbox'))

@@ -18,6 +18,7 @@
 <p id="status" role="status">Preparing the saved room…</p>
 <section aria-label="Ada"><h2>Ada</h2><div id="ada"></div><button id="columns" type="button" disabled>Add a column</button></section>
 <section aria-label="Grace"><h2>Grace</h2><div id="grace"></div><button id="compact" type="button" disabled>Use compact layout</button></section>
+<button id="invalid" type="button" disabled>Try an invalid field update</button>
 <button id="save" type="button" disabled>Save both copies and reopen</button>
 <section aria-label="Reopened room"><h2>Reopened room</h2><div id="reopened"></div></section>
 <script type="module">
@@ -27,6 +28,7 @@
   import { captureRetainedCheckpoint, createRetainedYjsCollaborationExtension, openYjsRoom }
     from '/artifacts/yjs-namespace-build-20261107/bound-room.js';
   import { restoreRetainedCheckpoint } from '/artifacts/yjs-namespace-build-20261107/checkpoint.js';
+  import { CoordinatedDocumentRoom } from '/artifacts/yjs-namespace-build-20261107/document-room.js';
   import { defineStructuredAttribute, setStructuredAttribute }
     from '/artifacts/yjs-namespace-build-20261107/structured-attributes.js';
 
@@ -40,7 +42,6 @@
   const structuredAttributes = { definitions: [layout, display] };
   const schema = new Schema(composeExtensions([CoreExtension, panel]).schema);
   const schemaVersion = 'structured-room-browser-1';
-  const epoch = crypto.randomUUID();
   const seed = new Y.Doc();
   const user = id => ({ id, name: id, color: '#7048e8' });
   const mount = (extension, content) => {
@@ -52,23 +53,30 @@
       nodeId: 'panel-1', layout: { columns: 2, compact: false }, display: { theme: 'light' },
     } }],
   });
-  let checkpoint = await captureRetainedCheckpoint(seed, schema, schemaVersion);
+  const checkpoint = await captureRetainedCheckpoint(seed, schema, schemaVersion);
   seedEditor.destroy();
   seed.destroy();
   const key = 'research-settings';
   const mixedDefinitions = new URLSearchParams(location.search).has('mixed');
-  let revision = 0;
+  let row;
+  const authority = new CoordinatedDocumentRoom({
+    async readDocument(roomKey) { return row?.key === roomKey ? row : undefined; },
+    async createDocument(next) { if (row) return false; row = next; return true; },
+    async compareDocument(roomKey, generation, next) {
+      if (row?.key !== roomKey || row.generation !== generation) return false;
+      row = next;
+      return true;
+    },
+  }, key, schema, schemaVersion, { structuredAttributes });
+  await authority.initialize(checkpoint);
   let ada, grace, saved;
   const button = id => document.getElementById(id);
   const status = message => { document.getElementById('status').textContent = message; };
-  const open = options => {
-    const offer = { key, epoch, revision, protocol: 'retained', room: checkpoint.manifest.room, identity: checkpoint.manifest.roomId };
-    return openYjsRoom({
+  const open = options => openYjsRoom({
       expected: { key }, schema, schemaVersion, structuredAttributes: options,
-      open: async () => offer,
-      admit: async () => ({ key, epoch, revision, protocol: 'retained', phase: 'active', checkpoint }),
-    });
-  };
+      open: async protocols => (await authority.openForEditing({ protocols, loadCheckpoint: () => checkpoint })).admission,
+      admit: offer => authority.admit(offer),
+  });
   const show = (shared, editor, id) => {
     const view = new EditorView(document.getElementById(id), editor, { ariaLabel: id + ' editor' });
     return { editor, view, document: shared };
@@ -95,22 +103,41 @@
       });
       grace = show(saved.document, mount(extension, saved.baseDocument.toJSON()), 'grace');
     } else grace = await openAuthor('grace');
-    for (const id of ['columns', 'compact', 'save']) button(id).disabled = false;
+    for (const id of ['columns', 'compact', 'invalid', 'save']) button(id).disabled = false;
     status(mixedDefinitions ? 'Grace opened a compatibility copy with fewer field definitions.' : 'Both authors opened the saved room.');
   };
   button('columns').onclick = () => setStructuredAttribute(ada.editor, [0], layout, ['columns'], 3);
   button('compact').onclick = () => setStructuredAttribute(grace.editor, [0], layout, ['compact'], true);
-  button('save').onclick = async () => {
-    for (const id of ['columns', 'compact', 'save']) button(id).disabled = true;
-    const authority = await restoreRetainedCheckpoint(checkpoint, schema, schemaVersion);
+  button('invalid').onclick = async () => {
+    button('invalid').disabled = true;
+    button('save').disabled = true;
+    const before = await authority.snapshot();
+    const isolated = await restoreRetainedCheckpoint(before.checkpoint, schema, schemaVersion);
     try {
-      const vector = Y.encodeStateVector(authority.document);
-      for (const writer of [ada, grace]) Y.applyUpdate(authority.document, Y.encodeStateAsUpdate(writer.document, vector));
-      checkpoint = await captureRetainedCheckpoint(authority.document, schema, schemaVersion);
-      revision++;
-    } finally { authority.document.destroy(); }
+      const vector = Y.encodeStateVector(isolated.document);
+      isolated.document.getMap('fountain:structured-attributes').set('v1:["settings","panel-1","layout"]', 'invalid');
+      await authority.write({ epoch: before.epoch, protocol: before.protocol, update: Y.encodeStateAsUpdate(isolated.document, vector) });
+      status('Unexpectedly saved the invalid field.');
+    } catch (error) {
+      if (error.code !== 'invalid-update') throw error;
+      const after = await authority.snapshot();
+      if (after.revision !== before.revision || after.checkpoint.manifest.checkpointSha256 !== before.checkpoint.manifest.checkpointSha256) {
+        throw new Error('Rejected field update changed the saved room.');
+      }
+      status('Invalid field rejected. Saved room unchanged at revision ' + after.revision + '.');
+    } finally {
+      isolated.document.destroy();
+      button('save').disabled = false;
+    }
+  };
+  button('save').onclick = async () => {
+    for (const id of ['columns', 'compact', 'invalid', 'save']) button(id).disabled = true;
+    const current = await authority.snapshot();
+    const vector = Y.encodeStateVectorFromUpdate(current.checkpoint.update);
+    const update = Y.mergeUpdates([ada, grace].map(writer => Y.encodeStateAsUpdate(writer.document, vector)));
+    const receipt = await authority.write({ epoch: current.epoch, protocol: current.protocol, update });
     saved = await openAuthor('reopened');
-    status('Saved and reopened at revision ' + revision + '.');
+    status('Saved and reopened at revision ' + receipt.revision + '.');
   };
   window.addEventListener('pagehide', () => {
     for (const author of [ada, grace, saved]) {

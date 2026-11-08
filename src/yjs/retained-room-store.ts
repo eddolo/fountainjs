@@ -1,6 +1,6 @@
 import * as Y from 'yjs';
 import type { Schema } from '../core/schema';
-import { captureRetainedCheckpoint, restoreRetainedCheckpoint, verifyRetainedCheckpoint, type RetainedCheckpoint } from './retained-checkpoint';
+import { captureRetainedCheckpoint, captureRetainedCheckpointWithProjection, restoreRetainedCheckpoint, verifyRetainedCheckpoint, type RetainedCheckpoint, type RetainedProjectionCheck } from './retained-checkpoint';
 
 export type RetainedRoomErrorCode = 'closed' | 'stale-epoch' | 'frozen' | 'revision-conflict' | 'invalid-ticket' | 'invalid-update' | 'insufficient-savings';
 export class RetainedRoomError extends Error {
@@ -22,15 +22,16 @@ function complete(document: Y.Doc): void {
 }
 
 /** Shared private codec boundary for in-memory and persistent authorities. */
-export async function validateRetainedRoomCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string): Promise<RetainedCheckpoint> {
+export async function validateRetainedRoomCheckpoint(checkpoint: RetainedCheckpoint, schema: Schema, schemaVersion: string, check?: RetainedProjectionCheck): Promise<RetainedCheckpoint> {
   const restored = await verifyRetainedCheckpoint(checkpoint, schema, schemaVersion);
   try {
     complete(restored.document);
+    check?.(restored.document, restored.baseDocument, restored.checkpoint.manifest.room);
     return restored.checkpoint;
   } finally { restored.document.destroy(); }
 }
 
-export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema: Schema, schemaVersion: string, bytes: Uint8Array): Promise<RetainedCheckpoint> {
+export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema: Schema, schemaVersion: string, bytes: Uint8Array, check?: RetainedProjectionCheck): Promise<RetainedCheckpoint> {
   const restored = await restoreRetainedCheckpoint(source, schema, schemaVersion);
   try {
     complete(restored.document);
@@ -40,7 +41,7 @@ export async function applyRetainedRoomUpdate(source: RetainedCheckpoint, schema
     Y.applyUpdate(restored.document, bytes);
     restored.document.gc = restored.manifest.gc;
     complete(restored.document);
-    const next = await captureRetainedCheckpoint(restored.document, schema, schemaVersion, restored.manifest.room);
+    const next = await captureRetainedCheckpointWithProjection(restored.document, schema, schemaVersion, restored.manifest.room, check);
     if (next.manifest.roomId !== restored.manifest.roomId) throw new Error('Shared room identity changed.');
     return next;
   } catch (cause) { throw new RetainedRoomError('invalid-update', 'Retained update rejected; authoritative state was not changed.', { cause }); }
