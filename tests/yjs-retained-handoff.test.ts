@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
+import { gzipSync } from 'node:zlib';
 import * as Y from 'yjs';
 import { CoreExtension, Selection, composeExtensions, createEditor, getCollaborationState, insertText, moveNode, toggleQuote } from '../src';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
@@ -143,6 +144,19 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const result = await pair.handoff.migrate(ticket, operation, settings, policy());
   expect(result.archive.minimumBytesSaved).toBe(1_000);
   expect(result.archive.source.checkpoint).toEqual(edited.checkpoint);
+  const db = new DatabaseSync(pair.path);
+  cleanup.push(() => db.close());
+  const storedSource = db.prepare('SELECT source_wire FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, operation)?.source_wire as Uint8Array;
+  expect(storedSource.length).toBeLessThan(edited.checkpoint.manifest.bytes / 2);
+  expect((await pair.b.readArchive(key, operation))?.source.checkpoint).toEqual(edited.checkpoint);
+  const setSourceWire = db.prepare('UPDATE fountain_retained_archives_v1 SET source_wire = ? WHERE room_key = ? AND archive_id = ?');
+  const oversized = gzipSync(new Uint8Array(edited.checkpoint.manifest.bytes + 1));
+  setSourceWire.run(oversized, key, operation);
+  await expect(pair.b.readArchive(key, operation)).rejects.toMatchObject({ code: 'ERR_BUFFER_TOO_LARGE' });
+  // Existing databases can contain the original raw representation alongside
+  // new compressed checkpoints.
+  setSourceWire.run(edited.checkpoint.update, key, operation);
+  expect((await pair.b.readArchive(key, operation))?.source.checkpoint).toEqual(edited.checkpoint);
   expect(edited.checkpoint.manifest.bytes - result.snapshot.checkpoint.manifest.bytes).toBeGreaterThanOrEqual(1_000);
   expect(await model(result.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
   expect((await pair.second.migrate(ticket, operation, settings, policy())).replayed).toBe(true);
@@ -152,6 +166,14 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   await expect(pair.room.write({epoch:edited.epoch,update:late})).rejects.toMatchObject({code:'stale-epoch'});
   const branch = await pair.second.retainLateUpdate({archiveId:operation,roomId:edited.checkpoint.manifest.roomId,update:late});
   expect(await model(branch.branch, pair)).toEqual(pair.editor.getJSON());
+  const draft = await captureRetainedCheckpoint(pair.document, pair.schema, version);
+  const draftId = uuid();
+  await pair.second.saveRetiredDraft({ archiveId: operation, roomId: edited.checkpoint.manifest.roomId, draftId, checkpoint: draft });
+  const storedBranch = db.prepare('SELECT length(branch_wire) AS bytes FROM fountain_retained_archives_v1 WHERE room_key = ? AND archive_id = ?').get(key, operation);
+  const storedDraft = db.prepare('SELECT length(wire) AS bytes FROM fountain_retained_drafts_v1 WHERE room_key = ? AND archive_id = ? AND draft_id = ?').get(key, operation, draftId);
+  expect(storedBranch?.bytes).toBeLessThan(branch.branch.manifest.bytes);
+  expect(storedDraft?.bytes).toBeLessThan(draft.manifest.bytes);
+  expect(await pair.handoff.readRetiredDraft(operation, draftId)).toEqual(draft);
   const rollback = await pair.second.rollback(await pair.room.freeze(result.snapshot), uuid(), operation, 'retained-branch', policy());
   expect(await model(rollback.snapshot.checkpoint, pair)).toEqual(pair.editor.getJSON());
   expect(rollback.archive.source.checkpoint).toEqual(result.snapshot.checkpoint);

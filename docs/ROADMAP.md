@@ -46,6 +46,10 @@ An existing retained room can also estimate checkpoint savings while it is
 writable. The demo requires a passing check for the saved revision before
 freezing it, and installation checks the actual savings again.
 [Compaction rehearsal](YJS_RETAINED_HANDOFF_AUDIT.md#checking-compaction-before-freezing-a-room).
+The SQLite reference now compresses cold checkpoint copies when it saves space.
+The 512-edit probe stored the 204,546-byte source in 29,184 bytes and recovered
+the exact checkpoint. Live checkpoint growth and archive retention policy
+remain open. [Cold archive storage](YJS_RETAINED_COMPACTION_DIAGNOSTIC.md#cold-sqlite-archive-storage).
 The cross-format reference acknowledges exact retries of archived offline
 batches. The browser demo keeps a pending batch through reload and preserves
 newer local edits for a separate save.

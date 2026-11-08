@@ -189,3 +189,33 @@ node artifacts/retained-compaction-diagnostic-20261106.mjs cursor-overlay-build-
 ```
 
 The result is `artifacts/retained-compaction-diagnostic-20261106.json`.
+
+## Cold SQLite archive storage
+
+The Node 24 SQLite reference stores a gzip copy of an archived checkpoint when
+the update is at least 1 KiB and compression saves bytes. This applies to
+frozen sources, destinations, updated retired branches, and exact saved drafts.
+The live room and original cross-format edit batches use their existing byte
+representation. The archive reader accepts existing raw rows and bounds
+decompression by the original manifest length and the checkpoint size limit.
+The handoff verifies the same original checkpoint digest after decoding.
+
+A local probe replaced the first paragraph repeatedly, then restored its
+original text before compaction. It inspected SQLite BLOB lengths and reopened
+the archive, comparing the recovered checkpoint bytes with the original.
+
+| Replacements | Raw source | Stored source | Raw destination | Stored destination |
+| ---: | ---: | ---: | ---: | ---: |
+| 128 | 53,087 B | 8,035 B | 3,923 B | 878 B |
+| 512 | 204,546 B | 29,184 B | 3,919 B | 880 B |
+
+These are checkpoint payload sizes. SQLite pages, indexes, and WAL files use
+additional space. New and older raw rows can coexist. Upgrade all processes
+sharing the reference database before enabling archive writes from the updated
+repository. Older versions cannot open compressed rows. Hosts still need
+retention and backup policies for recovery archives.
+
+Verification covered 120 focused source tests, 16 compiled Node handoff
+checks, and 36 recorded Chromium, Firefox, and WebKit handoff journeys.
+The browser review included the smaller live room, the read-only recovery
+copy, and cross-format rollback preserving the edits from both rooms.
