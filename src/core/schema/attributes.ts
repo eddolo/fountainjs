@@ -23,11 +23,21 @@ export function computeAttrs(
 }
 
 export function isDeeplyImmutable(value: unknown, ancestors?: ReadonlySet<object>): boolean {
-  if (value === null || ['string', 'number', 'boolean', 'undefined'].includes(typeof value)) return true;
-  if (typeof value !== 'object' || ancestors?.has(value)) return false;
+  if (value === null) return true;
+  if (typeof value !== 'object') {
+    const kind = typeof value;
+    return kind === 'string' || kind === 'number' || kind === 'boolean' || kind === 'undefined';
+  }
+  if (ancestors?.has(value)) return false;
   const prototype = Object.getPrototypeOf(value);
   if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) return false;
   if (!Object.isFrozen(value)) return false;
-  const nextAncestors = new Set(ancestors).add(value);
-  return Object.values(value).every((entry) => isDeeplyImmutable(entry, nextAncestors));
+  // Most attribute bags contain only scalars. Track the active path only
+  // when descending into a child object, where a cycle can occur.
+  let nextAncestors: Set<object> | undefined;
+  for (const entry of Object.values(value)) {
+    if (entry !== null && typeof entry === 'object') nextAncestors ??= new Set(ancestors).add(value);
+    if (!isDeeplyImmutable(entry, nextAncestors)) return false;
+  }
+  return true;
 }

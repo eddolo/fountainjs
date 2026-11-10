@@ -41,9 +41,17 @@ const sameOrdered = (left: unknown, right: unknown): boolean => {
     || Array.isArray(left) !== Array.isArray(right)) return false;
   if (Array.isArray(left)) {
     if (left.length !== (right as unknown[]).length || Object.getPrototypeOf(left) !== Array.prototype || Object.getPrototypeOf(right) !== Array.prototype) return false;
-  } else if (![null, Object.prototype].includes(Object.getPrototypeOf(right))) return false;
+  } else {
+    const prototype = Object.getPrototypeOf(right);
+    if (prototype !== null && prototype !== Object.prototype) return false;
+  }
   const a = left as Record<string, unknown>, b = right as Record<string, unknown>, keys = Object.keys(a), next = Object.keys(b);
-  return keys.length === next.length && keys.every((key, index) => key === next[index] && sameOrdered(a[key], b[key]));
+  if (keys.length !== next.length) return false;
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index]!;
+    if (key !== next[index] || !sameOrdered(a[key], b[key])) return false;
+  }
+  return true;
 };
 interface Binding { id: string; from: number; length: number; modelFrom: number; leaf: string }
 interface GroupState { id: string; parent: string; value: RetainedNodeProjection }

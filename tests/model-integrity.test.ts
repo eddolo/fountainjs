@@ -4,6 +4,7 @@ import {
   insertText, redo, undo,
 } from '../src';
 import { freezeAttributes } from '../src/core/schema/node-spec';
+import { isDeeplyImmutable } from '../src/core/schema/attributes';
 
 describe('attribute allocation and deep immutability', () => {
   it('does not allocate ancestor sets for primitive attribute values', () => {
@@ -13,10 +14,14 @@ describe('attribute allocation and deep immutability', () => {
       allocations++;
       return Reflect.construct(target, args);
     } });
-    let attrs;
-    try { attrs = freezeAttributes({ text: 'Literal', zero: 0, flag: false, nil: null, optional: undefined }); }
+    let attrs, immutable;
+    try {
+      attrs = freezeAttributes({ text: 'Literal', zero: 0, flag: false, nil: null, optional: undefined });
+      immutable = isDeeplyImmutable(attrs);
+    }
     finally { globalThis.Set = OriginalSet; }
     expect(allocations).toBe(0);
+    expect(immutable).toBe(true);
     expect(attrs).toEqual({ text: 'Literal', zero: 0, flag: false, nil: null, optional: undefined });
     expect(Object.isFrozen(attrs)).toBe(true);
   });
@@ -31,6 +36,8 @@ describe('attribute allocation and deep immutability', () => {
     expect(Object.isFrozen(attrs.first)).toBe(true);
     expect(Object.isFrozen(attrs.first.nested)).toBe(true);
     expect(Object.isFrozen(attrs.first.nested[1])).toBe(true);
+    expect(isDeeplyImmutable({ first: attrs.first, second: attrs.first })).toBe(false);
+    expect(isDeeplyImmutable(Object.freeze({ first: attrs.first, second: attrs.first }))).toBe(true);
     expect(Object.isFrozen(supplied)).toBe(false);
     expect(Object.isFrozen(shared)).toBe(false);
     shared.nested.push('Caller change');
@@ -43,6 +50,8 @@ describe('attribute allocation and deep immutability', () => {
     const array: unknown[] = []; array.push(array);
     expect(() => freezeAttributes({ value: object })).toThrow('cannot contain circular values');
     expect(() => freezeAttributes({ value: array })).toThrow('cannot contain circular values');
+    expect(isDeeplyImmutable(Object.freeze(object))).toBe(false);
+    expect(isDeeplyImmutable(Object.freeze(array))).toBe(false);
     class MutableState { value = 'Original'; }
     const state = new MutableState();
     const attrs = freezeAttributes({ state });

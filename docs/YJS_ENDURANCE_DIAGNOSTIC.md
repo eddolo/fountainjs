@@ -453,3 +453,31 @@ computation for 183 ms. Both are part of full-document normalization. These
 are profile samples from one host. The unprofiled timing receipts are
 `artifacts/yjs-single-projection-{baseline,candidate,rematch-candidate,rematch-baseline}-20261110.json`.
 The raw profile is `artifacts/yjs-current-5000-20261110.cpuprofile`.
+
+## Fewer allocations when checking retained metadata
+
+Immutability checks allocate an ancestor set only when descending into nested
+objects. Ordered attribute comparison walks the existing key arrays directly.
+Factory validators still run on retained values, including unchanged branches.
+
+The same 5,000-paragraph diagnostic ran twice per installed build, with the
+order reversed for the second pair. Each run exercised six offline editing
+cycles and two checkpoint reopens using Yjs 13.6.32.
+
+| Run | Median 11-character burst | Burst p95 | Median split | Median wrap |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline first | 482.6 ms | 574.9 ms | 648.2 ms | 571.7 ms |
+| Candidate second | 464.9 ms | 535.7 ms | 616.1 ms | 607.6 ms |
+| Candidate first | 450.3 ms | 480.0 ms | 618.4 ms | 619.3 ms |
+| Baseline second | 464.5 ms | 503.7 ms | 614.2 ms | 613.3 ms |
+
+Typing burst medians improved by 3–4% in the paired runs on this host.
+Split timings were mixed and wrap medians were slower by 6–36 ms. All runs
+ended with the same portable document digest and exchanged 308 updates and
+102,356 bytes. The change leaves whole-document normalization on the typing
+path. Local measurements are in `artifacts/yjs-flat-metadata-*.json`.
+
+All 997 focused model and Yjs tests passed. The public collaboration demo
+passed 21 recorded Chromium, Firefox and WebKit workflows covering offline
+text merges, independent undo, and typing after competing wraps. Package,
+API and bundle budget checks passed.
