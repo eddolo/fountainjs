@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import type { Editor, NodeJSON } from '../core';
 import {
   addComment,
@@ -43,6 +43,13 @@ function anchorLabel(thread: CommentThread): string {
   return thread.anchor.quote || 'Cursor position';
 }
 
+function commentRunner(onError?: FountainCommentsProps['onError']) {
+  return async (operation: () => Promise<unknown>) => {
+    try { await operation(); }
+    catch (error) { onError?.(error); }
+  };
+}
+
 function CommentBody({
   editor,
   thread,
@@ -56,22 +63,22 @@ function CommentBody({
   reactions: readonly string[];
   onError?: (error: unknown) => void;
 }) {
+  const content = contentText(comment.content);
+  const timestamp = comment.updatedAt ?? comment.createdAt;
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(contentText(comment.content));
-  const run = async (operation: () => Promise<unknown>) => {
-    try { await operation(); }
-    catch (error) { onError?.(error); }
-  };
+  const [draft, setDraft] = useState(content);
+  const message = draft.trim();
+  const run = commentRunner(onError);
   const save = async (event: FormEvent) => {
     event.preventDefault();
-    if (!draft.trim()) return;
-    await run(() => updateComment(editor, thread.id, comment.id, draft.trim()));
+    if (!message) return;
+    await run(() => updateComment(editor, thread.id, comment.id, message));
     setEditing(false);
   };
   return <article className="fountain-comment" data-comment-id={comment.id}>
     <header>
       <strong>{comment.author.name}</strong>
-      <time dateTime={comment.updatedAt ?? comment.createdAt}>{new Date(comment.updatedAt ?? comment.createdAt).toLocaleString()}</time>
+      <time dateTime={timestamp}>{new Date(timestamp).toLocaleString()}</time>
     </header>
     {editing
       ? <form onSubmit={(event) => void save(event)}>
@@ -80,11 +87,11 @@ function CommentBody({
           <textarea value={draft} onChange={(event) => setDraft(event.currentTarget.value)} />
         </label>
         <div className="fountain-comments__actions">
-          <button type="submit" disabled={!draft.trim()}>Save</button>
-          <button type="button" onClick={() => { setDraft(contentText(comment.content)); setEditing(false); }}>Cancel</button>
+          <button type="submit" disabled={!message}>Save</button>
+          <button type="button" onClick={() => { setDraft(content); setEditing(false); }}>Cancel</button>
         </div>
       </form>
-      : <p>{contentText(comment.content)}</p>}
+      : <p>{content}</p>}
     <div className="fountain-comments__actions">
       {reactions.map((emoji) => {
         const reaction = comment.reactions.find((value) => value.emoji === emoji);
@@ -119,6 +126,10 @@ export function FountainComments({
   const [creating, setCreating] = useState(false);
   const [target, setTarget] = useState<CommentThreadType>('inline');
   const [draft, setDraft] = useState('');
+  const draftInput = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (creating) draftInput.current?.focus();
+  }, [creating]);
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const state = editor ? getCommentsState(editor) : undefined;
   const threads = useMemo(
@@ -127,15 +138,13 @@ export function FountainComments({
   );
   if (!editor || !state) return null;
 
-  const run = async (operation: () => Promise<unknown>) => {
-    try { await operation(); }
-    catch (error) { onError?.(error); }
-  };
+  const message = draft.trim();
+  const run = commentRunner(onError);
   const submitThread = async (event: FormEvent) => {
     event.preventDefault();
-    if (!draft.trim()) return;
+    if (!message) return;
     await run(async () => {
-      const thread = await createCommentThread(editor, { content: draft.trim(), type: target });
+      const thread = await createCommentThread(editor, { content: message, type: target });
       selectCommentThread(editor, thread.id, false);
       setDraft('');
       setCreating(false);
@@ -179,10 +188,10 @@ export function FountainComments({
       </label>
       <label>
         <span>New comment</span>
-        <textarea autoFocus value={draft} onChange={(event) => setDraft(event.currentTarget.value)} placeholder="Add context or feedback…" />
+        <textarea ref={draftInput} value={draft} onChange={(event) => setDraft(event.currentTarget.value)} placeholder="Add context or feedback…" />
       </label>
       <div className="fountain-comments__actions">
-        <button type="submit" disabled={!draft.trim()}>Create thread</button>
+        <button type="submit" disabled={!message}>Create thread</button>
         <button type="button" onClick={() => setCreating(false)}>Cancel</button>
       </div>
     </form> : null}
@@ -192,6 +201,7 @@ export function FountainComments({
         const selected = state.selectedThreadId === thread.id;
         const pending = state.pendingThreadIds.includes(thread.id);
         const anchor = anchorLabel(thread);
+        const replyDraft = replyDrafts[thread.id] ?? '';
         return <section
           key={thread.id}
           className={['fountain-comment-thread-card', selected ? 'is-selected' : '', thread.resolved ? 'is-resolved' : '', thread.anchor.status === 'orphaned' ? 'is-orphaned' : ''].filter(Boolean).join(' ')}
@@ -220,7 +230,7 @@ export function FountainComments({
             <label>
               <span>Reply to thread by {thread.author.name}</span>
               <textarea
-                value={replyDrafts[thread.id] ?? ''}
+                value={replyDraft}
                 onChange={(event) => {
                   const value = event.currentTarget.value;
                   setReplyDrafts((current) => ({ ...current, [thread.id]: value }));
@@ -228,7 +238,7 @@ export function FountainComments({
                 placeholder="Reply…"
               />
             </label>
-            <button type="submit" disabled={!replyDrafts[thread.id]?.trim()}>Reply</button>
+            <button type="submit" disabled={!replyDraft.trim()}>Reply</button>
           </form> : null}
           <footer className="fountain-comments__actions">
             {thread.anchor.status === 'orphaned' && canComment(editor, 'reattach-thread', thread.id)

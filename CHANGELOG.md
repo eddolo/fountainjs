@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Restore the homepage's new comment and reply drafts when returning to their
+  room, including the saved inline selection when the document matches.
+
 - Keep both homepage editors and their open comment in the original room when
   preparing a room switch fails, so the switch can be retried.
 

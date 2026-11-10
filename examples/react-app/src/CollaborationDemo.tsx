@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Y from 'yjs';
 import {
-  CoreExtension, canRedoCollaboration, canUndoCollaboration, composeExtensions, createEditor,
+  COLLABORATION_REMOTE_META, CoreExtension, canRedoCollaboration, canUndoCollaboration, composeExtensions, createEditor,
   defineExtension, getCollaborationState, replaceCollaborationAdapter, selectText, toggleList, toggleMark, toggleQuote,
+  type EditorState,
 } from 'fountainjs-editor';
 import { InMemoryCommentsStore, connectComments, createCommentThread, createCommentsExtension, disconnectComments, getCommentsState, replaceCommentsAdapter } from 'fountainjs-editor/comments';
 import {
@@ -199,6 +200,7 @@ export default function CollaborationDemo() {
   const [activeRoom, setActiveRoom] = useState<DemoRoom>('launch');
   const nextRoom = activeRoom === 'launch' ? 'planning' : 'launch';
   const [paused, setPaused] = useState(false);
+  const reviewPositions = useRef<Partial<Record<DemoRoom, Pick<EditorState, 'doc' | 'selection'>>>>({});
   const [roomPreparationError, setRoomPreparationError] = useState<string>();
   const [incompleteSwitch, setIncompleteSwitch] = useState<{ room: DemoRoom; ada: boolean; grace: boolean }>();
   const left = useFountain({ schema: room.leftKit.schema, plugins: room.leftKit.plugins, content: room.sessions.launch.content });
@@ -240,6 +242,7 @@ export default function CollaborationDemo() {
       return;
     }
     setRoomPreparationError(undefined);
+    reviewPositions.current[activeRoom] = { doc: left.state.doc, selection: left.state.selection };
     replaceCommentsAdapter(left, session.comments.createAdapter(), { connect: false });
     replaceCommentsAdapter(right, session.comments.createAdapter(), { connect: false });
     const leftOpened = replaceCollaborationAdapter(left, adaAdapter);
@@ -252,6 +255,12 @@ export default function CollaborationDemo() {
     }
     connectComments(left);
     connectComments(right);
+    const review = reviewPositions.current[nextRoom];
+    if (review?.doc.eq(left.state.doc)) {
+      // Apply the saved room position without taking focus from the switch button.
+      left.dispatch(left.state.createTransaction().setSelection(review.selection)
+        .setMeta(COLLABORATION_REMOTE_META, true).setMeta('addToHistory', false));
+    }
     setActiveRoom(nextRoom);
   };
 
@@ -374,15 +383,22 @@ export default function CollaborationDemo() {
           </div>
         </article>
       </div>}
-      {!needsRecovery && <div className="collaboration-demo__comments">
+      <div className="collaboration-demo__comments" hidden={needsRecovery}>
         <div>
           <span>THREADED COMMENTS</span>
           <h3>Discussion is portable too.</h3>
           <p>The document, comment store, and interface are separate modules. Each room shares its threads between both editors; select content to add an inline or block thread, reply, react, resolve, archive, or reattach an orphan.</p>
           <p>The included in-memory adapter powers this page. Production apps replace it with REST, a database, a CRDT, or another authenticated store—and enforce permissions there.</p>
         </div>
-        <FountainComments key={activeRoom} editor={left} title="Shared review" onError={(error) => console.error(error)} />
-      </div>}
+        {(['launch', 'planning'] as const).map(name => (
+          <FountainComments
+            key={name}
+            editor={!needsRecovery && activeRoom === name ? left : null}
+            title="Shared review"
+            onError={(error) => console.error(error)}
+          />
+        ))}
+      </div>
       <div className="collaboration-demo__boundary">
         <code>fountainjs-editor/yjs</code>
         <span>CRDT document + nested attributes + relative positions + local-origin undo</span>

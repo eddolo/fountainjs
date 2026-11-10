@@ -55,8 +55,10 @@ Enter to split it. Select **Resume document sync** to merge both changes.
 Ada's Undo removes her typing while Grace's edit stays in both editors.
 Grace's Undo removes her edit while retaining Ada's typing. The pause control
 also hides peer cursors and requires a merge before switching rooms. Each room
-has a separate in-memory comment store. Switching closes an unsubmitted comment draft.
-Posted threads and anchors return when their room is reopened.
+has a separate in-memory comment store. New comments and reply drafts return
+with their room during the same visit, along with posted threads and anchors.
+The open composer keeps its target type. Its saved selection is restored when
+the room document matches the version the author left.
 
 You can also pause sync, use **Toggle quote** in Ada's editor and **Toggle
 bullet list** in Grace's editor on the same paragraph, then resume. One
@@ -90,11 +92,13 @@ settings changes, and comments. The mobile checks verify the headline phrase
 fits on one line and the page has no horizontal overflow. A narrow Safari
 capture and a desktop capture were visually inspected.
 
-The room comment workflow passes in Chromium, Firefox, WebKit, and both
-mobile emulations. It restores posted threads and inline anchors in both
-mounted editors and clears the open draft. The Launch and Planning panels
-were inspected in WebKit. The comments source suite verifies late snapshots,
-writes, and mapped-anchor results from a retired provider.
+The room comment workflow checks an inline draft in Launch and a whole-document
+draft in Planning. Returning to Launch restores the selected word and keeps
+keyboard focus on the switch button. The author can post to that word and
+return to the original thread to finish an unsubmitted reply. The production
+build passed 18 desktop checks and four mobile-emulation checks. The comments
+source suite passed 46 tests, including late snapshots, writes, and
+mapped-anchor results from a retired provider.
 
 The homepage prepares both destination Yjs adapters before switching either
 editor or its comment store. If either preparation fails, both editors remain
