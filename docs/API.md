@@ -2288,6 +2288,9 @@ footnotes and import semantic HTML `doc-noteref` / `doc-footnote` roles.
 `insertPageBreak`, `insertFootnote`, `selectFootnoteDefinition`, and
 `removeFootnote` use ordinary validated transactions, so history and Yjs carry
 them without a page-specific collaboration protocol.
+`reconnectFootnote(editor, id)` inserts a reference at a collapsed body-text
+cursor for one existing unreferenced top-level definition. It keeps the
+original ID and content, and each repair can be undone independently.
 
 `setPageTemplate(editor, { kind, variant, content })` creates or replaces the
 single canonical `header` or `footer` for a `default`, `first`, `odd`, or `even`

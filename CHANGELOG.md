@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reconnect unreferenced DOCX footnotes at the cursor in the Conversion Lab.
+  Undo preserves the original note.
+
 - Preserve cached Word field results as editable text and report omitted
   field instructions in the document body.
 

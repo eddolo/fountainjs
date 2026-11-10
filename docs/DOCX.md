@@ -590,7 +590,9 @@ Export writes real `word/footnotes.xml`, not ordinary body paragraphs disguised
 as footnotes. Non-native IDs are deterministically mapped to available positive
 integers with a warning. Missing, duplicate, nested or unreferenced definitions
 prevent export rather than silently dropping content. Imported orphan definitions
-remain editable with a warning; unresolved references become visible placeholders.
+remain editable with a warning. In the Conversion Lab, place the cursor in
+body text and choose **Reconnect footnote at cursor** to restore the reference
+before exporting. Unresolved references become visible placeholders.
 Schema opt-out still reports omission and does not interpret the note part.
 
 Limits and remaining work:

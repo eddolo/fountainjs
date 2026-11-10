@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { createImageNode, EditorState, imageFileToDataURL, NodeSelection, readDocumentPageSettings, type DocumentPageSettings, type Editor, type Node } from 'fountainjs-editor';
 import type { DOCXPackagePart } from 'fountainjs-editor/docx';
 import { FountainComposer, FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from 'fountainjs-editor/react';
-import { computeFootnoteNumbering, inspectFootnotes, insertFootnote, selectFootnoteDefinition, removeFootnote, inspectPageTemplates, selectPageTemplate, insertPageBreak, setDocumentPageSettings } from 'fountainjs-editor/pages';
+import { computeFootnoteNumbering, inspectFootnotes, insertFootnote, selectFootnoteDefinition, reconnectFootnote, removeFootnote, inspectPageTemplates, selectPageTemplate, insertPageBreak, setDocumentPageSettings } from 'fountainjs-editor/pages';
 import { createLabContext, detectLabFormat, exportLab, importLab, labImages, labReportIssues, sameLabDocument, type LabContext, type LabFormat, type LabIssue } from './conversion-lab';
 import { SitePageLink } from './SitePageLink';
 import { ConversionPagePreview } from './ConversionPagePreview';
@@ -126,6 +126,16 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
     if (insertFootnote(editor, { id, content: 'New footnote' })) editFootnote(id);
     else setError('Place the cursor in body text before inserting a footnote. Notes cannot contain other footnote references.');
   }
+  function reconnectNote(id: string) {
+    if (reconnectFootnote(editor, id)) {
+      surface.current?.focus();
+      setError('');
+      setStatus('Footnote reference restored. Undo removes the reference and keeps the note.');
+    } else {
+      setStatus('');
+      setError('Place a text cursor in the document body, then reconnect the footnote.');
+    }
+  }
   function convert(save: boolean) {
     try {
       const output = exportLab(state.doc, format, entry.result?.source, entry.context, {
@@ -173,7 +183,18 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
       </details>
       <section className="lab-footnotes" aria-label="Page break controls"><h2>Manual page breaks</h2><p>Dashed separators mark explicit page boundaries, not blank lines. This editor is a continuous view, not a page-layout preview. Select a break and press Delete or Backspace to remove it; Undo restores it.</p><button onMouseDown={event => event.preventDefault()} onClick={() => { if (insertPageBreak(editor)) { surface.current?.focus(); setError(''); } else setError('Place the cursor in the document before inserting a page break.'); }}>Insert page break after current block</button><ul>{pageBreakPaths.map((path, index) => <li key={path.join('.')}><button onClick={() => { editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path))); surface.current?.focus(); setError(''); }}>Select page break {index + 1}</button></li>)}</ul></section>
       <section className="lab-footnotes" aria-label="Footnote controls"><h2>Footnotes</h2><p>Notes are editable blocks below the body, linked to numbered references. DOCX export stores them as native footnotes; original page placement and custom numbering are not reproduced here.</p><button onMouseDown={event => event.preventDefault()} onClick={addFootnote}>Insert footnote at cursor</button>
-        {footnoteReport.definitions.length > 0 && <ul>{footnoteReport.definitions.map(item => <li key={item.id}><span>Footnote {footnoteNumbers.get(item.id) ?? '— unreferenced'}</span><button onClick={() => editFootnote(item.id)}>Edit footnote {footnoteNumbers.get(item.id) ?? item.id}</button><button onClick={() => { if (removeFootnote(editor, item.id)) { setStatus('Footnote and its references removed. Undo restores them together.'); setError(''); } else setError('Could not remove this footnote.'); }}>Remove footnote {footnoteNumbers.get(item.id) ?? item.id}</button></li>)}</ul>}
+        {footnoteReport.definitions.length > 0 && <ul>{footnoteReport.definitions.map(item => {
+          const number = footnoteNumbers.get(item.id);
+          const label = number ? `footnote ${number}` : `unreferenced footnote ${item.id}`;
+          const canReconnect = !number && item.path.length === 1
+            && !footnoteReport.issues.some(issue => issue.id === item.id && issue.code === 'duplicate-definition');
+          return <li key={item.path.join('.')}>
+            <span>{number ? `Footnote ${number}` : `Unreferenced footnote ${item.id}`}</span>
+            <button onClick={() => editFootnote(item.id)}>Edit {label}</button>
+            {canReconnect && <button onMouseDown={event => event.preventDefault()} onClick={() => reconnectNote(item.id)}>Reconnect footnote {item.id} at cursor</button>}
+            <button onClick={() => { if (removeFootnote(editor, item.id)) { setStatus('Footnote and its references removed. Undo restores them together.'); setError(''); } else setError('Could not remove this footnote.'); }}>Remove {label}</button>
+          </li>;
+        })}</ul>}
         {footnoteReport.issues.length > 0 && <ul>{footnoteReport.issues.map((issue, index) => <li key={index}>{issue.detail}</li>)}</ul>}
       </section></section></div>
     {active && <ConversionPagePreview editor={editor} document={state.doc} surface={surface} />}

@@ -339,26 +339,10 @@ function insertFootnoteWithFactory(
   const id = uniqueFootnoteId(editor, options.id, idFactory);
   if (!referenceType || !definitionType || !content || !id) return false;
 
-  const selection = editor.state.selection;
-  let target: Node;
-  try { target = getNodeAtPath(editor.state.doc, selection.path); }
-  catch { return false; }
-  if (!target.isText) return false;
-  const text = target.text ?? '';
-  const before = text.slice(0, selection.from);
-  const after = text.slice(selection.to);
-  const reference = referenceType.create({ id });
   const definition = definitionType.create({ id }, content);
-  const inlineIndex = selection.path.at(-1) as number;
-  const referencePath = [...selection.path.slice(0, -1), inlineIndex + (before ? 1 : 0)];
   try {
-    const transaction = editor.state.createTransaction().replaceNode(selection.path, [
-      ...(before ? [target.withText(before)] : []),
-      reference,
-      target.withText(after),
-    ]);
-    transaction.replace(transaction.doc.childCount, transaction.doc.childCount, [definition]);
-    transaction.setSelection(new NodeSelection(transaction.doc, referencePath));
+    const transaction = placeFootnoteReference(editor, editor.state.selection, referenceType.create({ id }), definition);
+    if (!transaction) return false;
     editor.state.schema.validate(transaction.doc);
     assertFootnotes(transaction.doc);
     return editor.dispatch(transaction);
@@ -368,6 +352,43 @@ function insertFootnoteWithFactory(
 /** Inserts an inline reference and its top-level definition in one transaction. */
 export function insertFootnote(editor: Editor, options: InsertFootnoteOptions = {}): boolean {
   return insertFootnoteWithFactory(editor, options, () => defaultFootnoteId());
+}
+
+function placeFootnoteReference(editor: Editor, selection: Selection, reference: Node, definition?: Node) {
+  const target = getNodeAtPath(editor.state.doc, selection.path);
+  if (!target.isText) return null;
+  const text = target.text ?? '';
+  const before = text.slice(0, selection.from);
+  const inlineIndex = selection.path.at(-1)!;
+  const referencePath = [...selection.path.slice(0, -1), inlineIndex + (before ? 1 : 0)];
+  const transaction = editor.state.createTransaction().replaceNode(selection.path, [
+    ...(before ? [target.withText(before)] : []),
+    reference,
+    target.withText(text.slice(selection.to)),
+  ]);
+  if (definition) transaction.replace(transaction.doc.childCount, transaction.doc.childCount, [definition]);
+  return transaction.setSelection(new NodeSelection(transaction.doc, referencePath));
+}
+
+/** Links a unique, unreferenced definition to a collapsed cursor in the document body. */
+export function reconnectFootnote(editor: Editor, id: string): boolean {
+  const { doc, schema, selection } = editor.state;
+  const reference = schema.nodes.footnote_reference;
+  if (!editor.editable || !reference || !validFootnoteId(id)
+    || !(selection instanceof Selection) || !selection.isCollapsed) return false;
+  const { definitions, references } = inspectFootnotes(doc);
+  const matches = definitions.filter(entry => entry.id === id);
+  if (matches.length !== 1 || matches[0]!.path.length !== 1 || references.some(entry => entry.id === id)) return false;
+  try {
+    for (let length = 1; length < selection.path.length; length += 1) {
+      const type = getNodeAtPath(doc, selection.path.slice(0, length)).type.name;
+      if (type === 'footnote_definition' || type === 'page_header' || type === 'page_footer') return false;
+    }
+    const transaction = placeFootnoteReference(editor, selection, reference.create({ id }));
+    if (!transaction) return false;
+    schema.validate(transaction.doc);
+    return editor.dispatch(transaction);
+  } catch { return false; }
 }
 
 /** Selects the first editable text position in a footnote definition. */
@@ -429,6 +450,7 @@ export function createPagesExtension(options: PagesExtensionOptions = {}): Fount
     commands: {
       insertPageBreak,
       insertFootnote: (editor, insertOptions: InsertFootnoteOptions = {}) => insertFootnoteWithFactory(editor, insertOptions, idFactory),
+      reconnectFootnote,
       selectFootnoteDefinition,
       removeFootnote,
       setPageTemplate,

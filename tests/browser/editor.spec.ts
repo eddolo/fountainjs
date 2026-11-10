@@ -384,6 +384,62 @@ test('edits cached Word field results without exposing instructions in the conve
   expect(exported).not.toMatch(/instrText|fldChar|fldSimple|figure1/);
 });
 
+test('reconnects an imported orphan footnote and exports its native reference', async ({ page, browserName }, info) => {
+  const parts = unzipSync(await readFile('tests/fixtures/native-docx/cooling-report.docx'));
+  const main = 'word/document.xml';
+  const original = strFromU8(parts[main]!);
+  const source = original.replace('<w:footnoteReference w:id="1"/>', '');
+  expect(source).not.toBe(original);
+  parts[main] = strToU8(source);
+  await page.goto('/conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles({
+    name: 'unreferenced-note.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    buffer: Buffer.from(zipSync(parts)),
+  });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: unreferenced-note.docx', exact: true });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const controls = workspace.getByRole('region', { name: 'Footnote controls' });
+  const reconnect = controls.getByRole('button', { name: 'Reconnect footnote 1 at cursor' });
+  await expect(workspace.getByText(/A note without a body reference was retained/)).toBeVisible();
+  const definition = editor.locator('[data-fountain-footnote-definition="1"]');
+  await expect(definition).toContainText('they are not measured experimental data.');
+  await workspace.getByRole('button', { name: 'Check round trip' }).click();
+  await expect(workspace.getByRole('alert')).toContainText('has no reference');
+  await controls.getByRole('button', { name: 'Edit unreferenced footnote 1' }).click();
+  await reconnect.click();
+  await expect(workspace.getByRole('alert')).toHaveText('Place a text cursor in the document body, then reconnect the footnote.');
+  const ending = editor.locator('p').filter({ hasText: /^END OF REPORT/ });
+  await ending.click();
+  await page.keyboard.press('End');
+  if (browserName === 'firefox') await reconnect.press('Enter');
+  else await reconnect.click();
+  const reference = ending.locator('[data-fountain-footnote-reference="1"]');
+  await expect(reference).toHaveAttribute('data-fountain-footnote-number', '1');
+  await expect(reconnect).toHaveCount(0);
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect(reference).toHaveCount(0);
+  await expect(definition).toContainText('they are not measured experimental data.');
+  await expect(reconnect).toBeVisible();
+  await workspace.getByRole('button', { name: 'Redo', exact: true }).click();
+  await expect(reference).toBeVisible();
+  await ending.click();
+  await expect(reference).toBeInViewport();
+  await page.screenshot({ path: info.outputPath('reconnected-reference.png') });
+  await definition.locator('p').first().click();
+  await expect(definition).toBeInViewport();
+  await page.screenshot({ path: info.outputPath('reconnected-definition.png') });
+  const pending = page.waitForEvent('download', { timeout: 10_000 });
+  await workspace.getByRole('button', { name: 'Download export' }).click();
+  const download = await pending;
+  const exportedPath = info.outputPath('reconnected.docx');
+  await download.saveAs(exportedPath);
+  const exported = unzipSync(await readFile(exportedPath));
+  expect(strFromU8(exported[main]!)).toContain('<w:footnoteReference w:id="1"/>');
+  expect(strFromU8(exported['word/footnotes.xml']!)).toContain('they are not measured experimental data.');
+  const reopened = workspace.getByRole('textbox', { name: 'Reopened export preview' });
+  await expect(reopened.locator('[data-fountain-footnote-reference="1"]')).toBeVisible();
+});
+
 test('keeps valid and malformed Markdown links distinct through an edit and download', async ({ page }, info) => {
   const source = '# Linking drafts\r\n\r\nRead the [guide](/guide "Draft ) copy").\r\n\r\n[Invalid](/guide(draft copy))\r\n\r\nEdit here.\r\n';
   await page.goto('/conversion-lab.html');

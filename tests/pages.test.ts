@@ -9,6 +9,7 @@ import {
   Selection,
   composeExtensions,
   createEditor,
+  redo,
   undo,
 } from '../src';
 import {
@@ -21,6 +22,7 @@ import {
   insertPageBreak,
   inspectFootnotes,
   inspectPageTemplates,
+  reconnectFootnote,
   removePageTemplate,
   removeFootnote,
   resolvePageField,
@@ -76,6 +78,40 @@ describe('portable page intent', () => {
     expect(removeFootnote(editor, 'source-1')).toBe(true);
     expect(editor.state.doc.textContent).toBe('Before after');
     expect(inspectFootnotes(editor.state.doc)).toMatchObject({ references: [], definitions: [], valid: true });
+  });
+
+  it('reconnects orphan footnotes one at a time without changing their content or selected text', () => {
+    const kit = pagesKit(HistoryExtension);
+    const editor = createEditor({
+      schema: kit.schema,
+      plugins: kit.plugins,
+      content: { type: 'doc', content: [
+        paragraph('Body text'),
+        { type: 'footnote_definition', attrs: { id: 'first' }, content: [paragraph('Keep this note')] },
+        { type: 'footnote_definition', attrs: { id: 'second' }, content: [paragraph('And this note')] },
+      ] },
+    });
+    const select = (selection: Selection) => editor.dispatch(editor.state.createTransaction().setSelection(selection));
+    const original = editor.state.doc;
+    select(Selection.cursor([1, 0, 0], 0));
+    expect(reconnectFootnote(editor, 'second')).toBe(false);
+    select(new Selection([0, 0], 0, 4));
+    expect(reconnectFootnote(editor, 'first')).toBe(false);
+    expect(editor.state.doc).toBe(original);
+    select(Selection.cursor([0, 0], 4));
+    expect(reconnectFootnote(editor, 'first')).toBe(true);
+    expect(editor.state.doc.child(0).child(1).attrs.id).toBe('first');
+    expect(editor.state.doc.child(0).textContent).toBe('Body[^first] text');
+    expect(editor.state.doc.child(1)).toBe(original.child(1));
+    expect(editor.state.selection.kind).toBe('node');
+    expect(inspectFootnotes(editor.state.doc).issues.map(issue => issue.id)).toEqual(['second']);
+    expect(undo(editor)).toBe(true);
+    expect(editor.state.doc.toJSON()).toEqual(original.toJSON());
+    expect(redo(editor)).toBe(true);
+    select(Selection.cursor([0, 2], 5));
+    expect(reconnectFootnote(editor, 'first')).toBe(false);
+    expect(reconnectFootnote(editor, 'second')).toBe(true);
+    expect(inspectFootnotes(editor.state.doc).valid).toBe(true);
   });
 
   it('derives immutable display numbers from first-reference order without changing IDs', () => {
