@@ -4,6 +4,9 @@ import type { Node } from './node';
 // references, so retaining a new version cannot retain discarded snapshots.
 const lineages = new WeakMap<Node, symbol>();
 
+/** Internal operation provenance for unambiguous copied-container mapping. */
+export function blockLineage(node: Node): symbol | undefined { return lineages.get(node); }
+
 export function inheritBlockLineage(before: Node, after: Node): Node {
   if (before.type.isBlock && after.type.isBlock) {
     const lineage = lineages.get(before) ?? Symbol();

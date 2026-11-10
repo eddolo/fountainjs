@@ -5,7 +5,7 @@ import { AllSelection, CellSelection, CoreExtension, GapSelection, NodeSelection
   canRedoCollaboration, canUndoCollaboration, createCollaborationExtension, defineExtension, deleteBackward, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
   redoCollaboration, replaceCollaborationAdapter, splitBlock, setMark, toggleList, toggleQuote, undoCollaboration, moveBlock,
   type NodeJSON } from '../src';
-import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborationExtensionOptions, type YjsProvider } from '../src/yjs';
+import { createYjsCollaborationExtension, type YjsAwareness, type YjsCollaborationExtensionOptions, type YjsProvider } from '../src/yjs/legacy';
 import { createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter } from '../src/yjs/retained-adapter';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint } from '../src/yjs/retained-checkpoint';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
@@ -595,6 +595,7 @@ function standalone(document: Y.Doc, text: string, provider?: YjsProvider) {
 
 it('retires an old provider and shared document when replacing the adapter on the same editor', () => {
   const firstDoc = new Y.Doc(), secondDoc = new Y.Doc(), firstListeners = new Set<(value: string | { status?: string }) => void>();
+  standalone(firstDoc, 'First').editor.destroy();
   const firstProvider: YjsProvider = { connect: vi.fn(), disconnect: vi.fn(), on: (_event, listener) => { firstListeners.add(listener); }, off: (_event, listener) => { firstListeners.delete(listener); } };
   const secondProvider: YjsProvider = { connect: vi.fn(), disconnect: vi.fn() };
   const first = standalone(firstDoc, 'First', firstProvider), seed = standalone(secondDoc, 'Second'); seed.editor.destroy();
@@ -616,6 +617,7 @@ it('retires an old provider and shared document when replacing the adapter on th
 
 it('does not revive a disconnected session after its pending provider connection resolves', async () => {
   const document = new Y.Doc(); let resolve!: () => void;
+  standalone(document, 'Pending').editor.destroy();
   const provider: YjsProvider = { connect: vi.fn(() => new Promise<void>(done => { resolve = done; })), disconnect: vi.fn() };
   const { editor } = standalone(document, 'Pending', provider);
   try {
@@ -655,6 +657,8 @@ it('makes an older adapter refuse a retained room without overwriting it', () =>
 it.each(['retained', 'legacy'] as const)('preserves a local draft after a malformed %s update is repaired by a peer', kind => {
   const document = new Y.Doc(), peer = new Y.Doc();
   const factory = kind === 'legacy' ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
+  const prepared = composeExtensions([CoreExtension, factory({ document, user: { id: 'seed', name: 'Seed', color: '#7048e8' } })]);
+  createEditor({ schema: prepared.schema, plugins: prepared.plugins, content: source }).destroy();
   const listeners = new Set<(status: string | { status?: string }) => void>();
   const provider: YjsProvider = { connect: vi.fn(), disconnect: vi.fn(),
     on: (_event, listener) => { listeners.add(listener); }, off: (_event, listener) => { listeners.delete(listener); } };

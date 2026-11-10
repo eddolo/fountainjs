@@ -3,7 +3,7 @@ import { afterEach, expect, it } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, MathExtension, RangeSelection, GapSelection, Selection, composeExtensions, createEditor, defineExtension, insertText, undoCollaboration, type AnySelection } from '../src';
 import { setStructuredAttribute, defineStructuredAttribute } from '../src/structured-attributes';
-import { createYjsCollaborationExtension, type YjsAwareness } from '../src/yjs';
+import { createYjsCollaborationExtension, type YjsAwareness } from '../src/yjs/legacy';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { captureLegacyCheckpoint, restoreLegacyCheckpoint, type LegacyProjectionOptions } from '../src/yjs/legacy-checkpoint';
 import { buildLegacyMigrationCandidate, legacySelectionRootMigrator } from '../src/yjs/legacy-migration';

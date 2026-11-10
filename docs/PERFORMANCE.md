@@ -1,5 +1,26 @@
 # Performance and memory contract
 
+## Retained default adoption — 2026-11-10
+
+The new local `/yjs` default loads the retained implementation. In separate
+fresh CommonJS processes, this build loaded 182,133 bytes of Fountain runtime
+files for `/yjs`, versus 118,586 bytes for `/yjs/legacy` (27 versus 26 files).
+That is 63,547 additional uncompressed bytes in the collaboration import graph.
+It is not a network transfer, compressed bundle or timing measurement; Yjs's own
+external package is excluded. Collaboration remains an optional separate entry.
+
+The complete emitted runtime measures 1,571.4 KiB ESM and 1,409.3 KiB CommonJS.
+The CommonJS ceiling increases from 1,408.75 to 1,409.5 KiB for the verified
+identity, undo, provider admission and restructuring repairs. The original
+failed size receipt remains at `artifacts/yjs-default-budget-final-20261110.log`.
+Individual entry, ESM, CSS, latency and heap limits are unchanged.
+
+The existing performance and retention gates pass. These cover core editing,
+generic incremental collaboration, HTML processing and retained model mappings;
+they do not certify production retained-Yjs history growth or server throughput.
+The new default also passes recorded native editing journeys at 1,000 paragraphs.
+See [the adoption audit](YJS_DEFAULT_ADOPTION.md) for the full validation scope.
+
 ## Read-only HTML attribute inspection (2026-11-03, Unreleased)
 
 A diagnostic CPU recording around the existing 100-block HTML sample identifies

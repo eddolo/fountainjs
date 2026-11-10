@@ -231,6 +231,18 @@ export class RetainedNodeStore {
   }
   placementIdentity(nodeId: string): string | undefined { this.valid(); return this.placement(nodeId)?.token; }
 
+  /** Undo visibility, never the physical container a peer may still edit. */
+  retainUndoAllocation(item: Y.Item, insertions: Y.Transaction['deleteSet']): boolean {
+    if (item.parent === this.identities) return true;
+    let record = item.parent === this.nodes && item.content instanceof Y.ContentType ? item.content.type : item.parent;
+    while (record instanceof Y.AbstractType && record.parent !== this.nodes) record = record.parent;
+    if (!(record instanceof Y.Map)) return false;
+    const allocation = Y.createRelativePositionFromTypeIndex(record, 0).type;
+    if (!allocation || !Y.isDeleted(insertions, allocation)) return false;
+    if (item.parent === this.nodes && record.get('deleted') !== true) record.set('deleted', true);
+    return true;
+  }
+
   private placementTarget(nodeId: string, parent: string, index: number): { array: Y.Array<unknown>; index: number } {
     const target = this.record(parent);
     if (target.get('deleted') === true) throw new Error('Cannot place a retained node inside a deleted parent.');
@@ -474,7 +486,37 @@ export class RetainedNodeStore {
       return displacedChild ? { ...projection, displacedChild: true } : projection;
     };
     const root = visit(ROOT);
-    for (const nodeId of alive) if (!visited.has(nodeId)) issues.push({ kind: 'unattached', id: nodeId });
+    // A peer can create a child while another author deletes its ancestor.
+    // That child remains owned by the deleted subtree, not an orphan. Keep its
+    // native record and placement intact so undo can reveal the peer's work.
+    // Prove every hidden edge against an actual child reference; a placement
+    // pointing at a deleted record alone must not conceal corrupt ownership.
+    const hidden = new Map<string, boolean>(), references = new Map<string, ReadonlySet<string>>();
+    const beneathDeletion = (nodeId: string): boolean => {
+      const path: string[] = [], seen = new Set<string>(); let current = nodeId, result = false;
+      while (current !== ROOT && !visited.has(current) && !seen.has(current)) {
+        const known = hidden.get(current);
+        if (known !== undefined) { result = known; break; }
+        const record = records.get(current);
+        if (!record) break;
+        if (record.get('deleted') === true) { result = true; break; }
+        path.push(current); seen.add(current);
+        const placement = placementFor(current), parent = placement && records.get(placement.parent);
+        if (!placement || !parent) break;
+        let entries = references.get(placement.parent);
+        if (!entries) {
+          const children = placement.parent === ROOT ? this.rootChildren : parent.get('children');
+          if (!(children instanceof Y.Array)) throw new Error('Invalid retained children.');
+          entries = new Set(this.readReferences(children).map(reference => `${reference.id}\0${reference.token}`));
+          references.set(placement.parent, entries);
+        }
+        if (!entries.has(`${current}\0${placement.token}`)) break;
+        current = placement.parent;
+      }
+      for (const entry of path) hidden.set(entry, result);
+      return result;
+    };
+    for (const nodeId of alive) if (!visited.has(nodeId) && !beneathDeletion(nodeId)) issues.push({ kind: 'unattached', id: nodeId });
     return { root, issues };
   }
 }

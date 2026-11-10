@@ -3,6 +3,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
+import { YjsCollaborationAdapter as LegacyYjsCollaborationAdapter, createYjsCollaborationExtension as createLegacyYjsCollaborationExtension } from '../src/yjs/legacy';
 import {
   CoreExtension,
   Selection,
@@ -53,8 +54,9 @@ function createCollaborativeEditor(
   ydoc: Y.Doc,
   user: CollaborationUser,
   content: NodeJSON = document('Alpha'),
+  createExtension = createYjsCollaborationExtension,
 ): Editor {
-  const collaboration = createYjsCollaborationExtension({ document: ydoc, user });
+  const collaboration = createExtension({ document: ydoc, user });
   const kit = composeExtensions([CoreExtension, collaboration]);
   return createEditor({ schema: kit.schema, plugins: kit.plugins, content });
 }
@@ -103,6 +105,7 @@ class MemoryAwareness implements YjsAwareness {
 it.each([
   { name: 'default adapter', createExtension: createYjsCollaborationExtension },
   { name: 'retained adapter', createExtension: createRetainedYjsCollaborationExtension },
+  { name: 'explicit legacy adapter', createExtension: createLegacyYjsCollaborationExtension },
 ])('$name does not publish a queued older cursor after a newer cursor has been sent', ({ createExtension }) => {
   vi.useFakeTimers();
   vi.setSystemTime(1_000);
@@ -185,11 +188,11 @@ describe('optional Yjs collaboration adapter', () => {
     expect(rebuild).not.toHaveBeenCalled();
   });
 
-  it('deterministically repairs simultaneous empty-document initialization', () => {
+  it('retains the explicit legacy policy for simultaneous empty-document initialization', () => {
     const leftDocument = new Y.Doc();
-    const left = createCollaborativeEditor(leftDocument, ada, document('Left seed'));
+    const left = createCollaborativeEditor(leftDocument, ada, document('Left seed'), createLegacyYjsCollaborationExtension);
     const rightDocument = new Y.Doc();
-    const right = createCollaborativeEditor(rightDocument, linus, document('Right seed'));
+    const right = createCollaborativeEditor(rightDocument, linus, document('Right seed'), createLegacyYjsCollaborationExtension);
 
     sync(leftDocument, rightDocument);
     expect(left.getJSON()).toEqual(right.getJSON());
@@ -198,10 +201,10 @@ describe('optional Yjs collaboration adapter', () => {
     expect(rightDocument.getXmlFragment('fountain').length).toBe(1);
   });
 
-  it('keeps both independent roots and local edits when opted into conflict preservation', () => {
+  it.each([undefined, true, false])('default keeps both independent roots and local edits regardless of the legacy policy (%s)', preserveConcurrentRoots => {
     const leftDoc = new Y.Doc(), rightDoc = new Y.Doc(), merged = new Y.Doc();
     const make = (ydoc: Y.Doc, user: CollaborationUser) => {
-      const collaboration = createYjsCollaborationExtension({ document: ydoc, user, preserveConcurrentRoots: true });
+      const collaboration = createYjsCollaborationExtension({ document: ydoc, user, preserveConcurrentRoots });
       const kit = composeExtensions([CoreExtension, collaboration]);
       return createEditor({ schema: kit.schema, plugins: kit.plugins, content: document('Common template') });
     };
@@ -216,7 +219,7 @@ describe('optional Yjs collaboration adapter', () => {
       for (const [ydoc, editor] of [[leftDoc, left], [rightDoc, right]] as const) {
         expect(ydoc.getXmlFragment('fountain').length).toBe(2);
         expect(Y.encodeStateAsUpdate(ydoc)).toEqual(bytes);
-        expect(getCollaborationState(editor)?.error?.message).toContain('conflicting initial roots');
+        expect(getCollaborationState(editor)?.error?.message).toContain('conflicting collaboration room');
         expect(canUndoCollaboration(editor)).toBe(false);
         expect(undoCollaboration(editor)).toBe(false);
       }
@@ -354,22 +357,26 @@ describe('optional Yjs collaboration adapter', () => {
     expect(left.getText()).toBe('AXlphaY');
   });
 
-  it('fails closed on malformed remote trees and owns provider lifecycle', async () => {
+  it.each([
+    { name: 'default retained', Adapter: YjsCollaborationAdapter, attribute: 'format', factory: createYjsCollaborationExtension },
+    { name: 'explicit legacy', Adapter: LegacyYjsCollaborationAdapter, attribute: 'fountain:type', factory: createLegacyYjsCollaborationExtension },
+  ])('$name fails closed on malformed remote trees and owns provider lifecycle', async ({ Adapter, attribute, factory }) => {
     const ydoc = new Y.Doc();
+    createCollaborativeEditor(ydoc, ada, document('Safe'), factory).destroy();
     const provider: YjsProvider = {
       connect: vi.fn(),
       disconnect: vi.fn(),
       on: vi.fn(),
       off: vi.fn(),
     };
-    const adapter = new YjsCollaborationAdapter({ document: ydoc, provider, user: ada });
+    const adapter = new Adapter({ document: ydoc, provider, user: ada });
     const collaboration = createCollaborationExtension({ adapter: () => adapter });
     const kit = composeExtensions([CoreExtension, collaboration]);
     const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: document('Safe') });
     expect(provider.connect).toHaveBeenCalledTimes(1);
 
     const root = ydoc.getXmlFragment('fountain').get(0) as Y.XmlElement;
-    ydoc.transact(() => root.setAttribute('fountain:type', 'unknown'), 'hostile-peer');
+    ydoc.transact(() => root.setAttribute(attribute, 'unknown'), 'hostile-peer');
     expect(editor.getText()).toBe('Safe');
     expect(getCollaborationState(editor)).toMatchObject({
       status: 'error', error: { recoverable: true },
@@ -381,6 +388,7 @@ describe('optional Yjs collaboration adapter', () => {
 
   it('moves one live editor to a new Y.Doc and provider without observing the retired document', () => {
     const firstDocument = new Y.Doc();
+    createCollaborativeEditor(firstDocument, ada, document('First')).destroy();
     const firstStatus = new Set<(event: { status?: string } | string) => void>();
     const firstProvider: YjsProvider = {
       connect: vi.fn(),
@@ -415,15 +423,19 @@ describe('optional Yjs collaboration adapter', () => {
     expect(secondProvider.connect).toHaveBeenCalledTimes(1);
     expect(secondStatus.size).toBe(1);
 
-    const sharedText = (ydoc: Y.Doc) => {
-      const root = ydoc.getXmlFragment('fountain').get(0) as Y.XmlElement;
-      const block = root.get(0) as Y.XmlElement;
-      const leaf = block.get(0) as Y.XmlElement;
-      return leaf.get(0) as Y.XmlText;
+    const insertFromPeer = (ydoc: Y.Doc, value: string) => {
+      const peerDoc = new Y.Doc();
+      Y.applyUpdate(peerDoc, Y.encodeStateAsUpdate(ydoc));
+      const peer = createCollaborativeEditor(peerDoc, linus);
+      try {
+        peer.dispatch(peer.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
+        expect(insertText(peer, value)).toBe(true);
+        Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(peerDoc), 'provider');
+      } finally { peer.destroy(); peerDoc.destroy(); }
     };
-    firstDocument.transact(() => sharedText(firstDocument).insert(0, 'Stale '), 'old-provider');
+    insertFromPeer(firstDocument, 'Stale ');
     expect(editor.getText()).toBe('Second');
-    secondDocument.transact(() => sharedText(secondDocument).insert(0, 'Fresh '), 'new-provider');
+    insertFromPeer(secondDocument, 'Fresh ');
     expect(editor.getText()).toBe('Fresh Second');
 
     editor.destroy();
@@ -438,13 +450,13 @@ describe('optional Yjs collaboration adapter', () => {
     })).toThrow(/valid local user identity/);
     expect(() => new YjsCollaborationAdapter({
       document: new Y.Doc(), user: ada, awarenessField: '../unsafe',
-    })).toThrow(/awareness field/);
+    })).toThrow(/awareness options/);
     expect(() => new YjsCollaborationAdapter({
       document: new Y.Doc(), user: ada, captureTimeout: Number.NaN,
-    })).toThrow(/capture timeout/);
+    })).toThrow(/timing.*options/);
     expect(() => new YjsCollaborationAdapter({
       document: new Y.Doc(), user: ada, presenceThrottleMs: 1_001,
-    })).toThrow(/presence throttle/);
+    })).toThrow(/timing.*options/);
   });
 
   it('coalesces presence bursts and never duplicates listeners across reconnect cycles', () => {
@@ -452,6 +464,7 @@ describe('optional Yjs collaboration adapter', () => {
     try {
       const network = new AwarenessNetwork();
       const ydoc = new Y.Doc();
+      createCollaborativeEditor(ydoc, ada).destroy();
       const awareness = network.create(ydoc.clientID);
       const statusListeners = new Set<(event: { status?: string } | string) => void>();
       const provider: YjsProvider = {

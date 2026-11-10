@@ -7,10 +7,25 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Breaking beta collaboration change: `/yjs` now uses retained character and
+  node identities. Existing XML rooms require the explicit `/yjs/legacy`
+  entry or a verified migration; an import change never migrates stored data.
+  The supported Yjs peer range now starts at 13.6.32. See
+  [the adoption guide](docs/YJS_DEFAULT_ADOPTION.md) before upgrading.
+- Keep offline child edits recoverable when another author deletes their
+  containing block or undoes its creation. Undo changes visibility while
+  retaining the shared storage needed by peers and later redo.
+- Refuse to initialize an empty shared document attached to a provider before
+  a verified room has loaded, preventing an upgraded client from sending a
+  different storage format into an existing room.
+
 - Let the room migration reference review a saved legacy paragraph and apply
   an explicit edit to the corresponding retained paragraph. The write checks
   the reviewed revision and keeps the archived draft intact. The demo lists
   changed text-only paragraphs and preserves proposed text during review refresh.
+  A lost apply reply can be retried after reload without writing a second revision.
+  Pending reviews block keyboard undo and nested controls; rejected custom
+  proposals remain recoverable through another reload.
 
 - Keep React toolbar keyboard navigation moving past hidden and disabled
   controls, and within the toolbar that owns the focused control.

@@ -6,7 +6,7 @@ import {tmpdir} from 'node:os';
 import {basename,dirname,join,resolve} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 import {CoreExtension,MathExtension,composeExtensions,createEditor,defineExtension,getCollaborationState,type NodeJSON} from '../src';
-import {createYjsCollaborationExtension} from '../src/yjs';
+import {createYjsCollaborationExtension} from '../src/yjs/legacy';
 import {createRetainedYjsCollaborationExtension} from '../src/yjs/retained-adapter';
 import {captureLegacyCheckpoint,restoreLegacyCheckpoint,type LegacyProjectionOptions,type LegacyCheckpoint} from '../src/yjs/legacy-checkpoint';
 import {buildLegacyMigrationCandidate,type LegacyMigrationOptions} from '../src/yjs/legacy-migration';

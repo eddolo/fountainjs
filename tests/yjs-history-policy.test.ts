@@ -3,7 +3,7 @@ import {describe,expect,it} from 'vitest';
 import * as Y from 'yjs';
 import {CoreExtension,HistoryExtension,Selection,canRedo,canUndo,canUndoCollaboration,composeExtensions,createEditor,createTrailingEditableBlockExtension,
   getCollaborationState,insertText,redo,redoCollaboration,undo,undoCollaboration,type NodeJSON} from '../src';
-import {createYjsCollaborationExtension} from '../src/yjs';
+import {createYjsCollaborationExtension} from '../src/yjs/legacy';
 import {createRetainedYjsCollaborationExtension} from '../src/yjs/retained-adapter';
 import {createStableNodeIdsExtension,inspectStableNodeIds} from '../src/node-ids';
 

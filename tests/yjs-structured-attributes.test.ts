@@ -20,7 +20,8 @@ import {
   insertStructuredAttributeItems,
   setStructuredAttribute,
 } from '../src/structured-attributes';
-import { createYjsCollaborationExtension } from '../src/yjs';
+import { createYjsCollaborationExtension } from '../src/yjs/legacy';
+import { createYjsCollaborationExtension as createDefaultYjsCollaborationExtension } from '../src/yjs';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 
 const ada: CollaborationUser = { id: 'ada', name: 'Ada', color: '#a855f7' };
@@ -96,6 +97,7 @@ function config(editor: Editor): any {
 
 describe('granular Yjs structured attributes', () => {
   it.each([
+    ['default', createDefaultYjsCollaborationExtension],
     ['legacy', createYjsCollaborationExtension],
     ['retained', createRetainedYjsCollaborationExtension],
   ] as const)('keeps the draft after a %s adapter rejects a local edit and a peer keeps writing', (_format, extension) => {

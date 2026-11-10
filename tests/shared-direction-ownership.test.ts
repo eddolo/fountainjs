@@ -255,11 +255,17 @@ describe('portable shared direction ownership and HTML projection', () => {
       left.dispatch(left.createTransaction().setSelection(Selection.cursor([0, 2, 0, 0], 0)));
       right.dispatch(right.createTransaction().setSelection(Selection.cursor([0, 4, 0, 0], 0)));
       expect(indentListItem(left)).toBe(true); expect(indentListItem(right)).toBe(true);
+      // Each disconnected peer must name the original owner identically
+      // before merging, using a token accepted by the portable schema.
+      const groups = [...sharedTextDirections(left.state.doc, sharedDirectionGroup).keys()];
+      expect(groups).toHaveLength(1);
+      expect(groups[0]).toMatch(/^[A-Za-z0-9_-]{1,96}$/);
+      expect([...sharedTextDirections(right.state.doc, sharedDirectionGroup).keys()]).toEqual(groups);
       const leftUpdate = Y.encodeStateAsUpdate(leftDoc), rightUpdate = Y.encodeStateAsUpdate(rightDoc);
       Y.applyUpdate(leftDoc, rightUpdate); Y.applyUpdate(rightDoc, leftUpdate);
       expect(left.getJSON()).toEqual(right.getJSON());
       const directions = modelDirections(left.state.doc);
-      expect({ first: directions['English first'], second: directions['English second'] }).toEqual({ first: 'rtl', second: 'rtl' });
+      expect({ first: directions['English first'], second: directions['English second'] }, JSON.stringify(left.getJSON(), null, 2)).toEqual({ first: 'rtl', second: 'rtl' });
       expect(sharedTextDirections(left.state.doc, sharedDirectionGroup).size).toBe(1);
     } finally { left.destroy(); right.destroy(); leftDoc.destroy(); rightDoc.destroy(); }
   });

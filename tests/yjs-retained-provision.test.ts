@@ -6,7 +6,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import { CoreExtension, Plugin, Selection, canUndoCollaboration, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, reconnectCollaboration, replaceCollaborationAdapter, setMark, splitBlock, toggleList, toggleQuote, undoCollaboration } from '../src';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
-import { createYjsCollaborationExtension } from '../src/yjs';
+import { createYjsCollaborationExtension } from '../src/yjs/legacy';
 import { applyDocumentRoomUpdate, CoordinatedDocumentRoom, type DocumentRoomAdmission, type DocumentRoomRepository } from '../src/yjs/document-room';
 import { captureLegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';

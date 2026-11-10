@@ -30,7 +30,7 @@ describe('browser CI retry evidence retention', () => {
 
   it('keeps preflight outputs separate so later runs cannot remove their failed attempts', () => {
     const commands = workflow.split('\n').filter(line => line.includes('run:') && line.includes('playwright test'));
-    expect(commands).toHaveLength(6);
+    expect(commands).toHaveLength(8);
     const directories = commands.map(line => {
       const explicit = line.match(/--output=([^\s]+)/)?.[1];
       if (explicit) return explicit;
@@ -43,6 +43,8 @@ describe('browser CI retry evidence retention', () => {
     });
     expect(new Set(directories).size).toBe(commands.length);
     expect(directories).toContain('artifacts/cursor-overlay-browser-final-20261106');
+    expect(directories).toContain('artifacts/yjs-default-browser');
+    expect(directories).toContain('artifacts/yjs-incomplete-room-browser');
     // Preserve the disjoint headed clipboard / remaining headless coverage.
     const standard = commands.filter(line => !line.includes('--config'));
     expect(standard).toHaveLength(5);

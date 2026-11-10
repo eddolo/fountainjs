@@ -3,7 +3,7 @@ import { EditorState, isSafeURL, nodeRangeAtPath, textPointToPosition, type AnyS
 import { registerSharedDirectionIdentity } from '../core/shared-direction';
 import { createCollaborationExtension, type CollaborationAdapter, type CollaborationAdapterContext,
   type CollaborationLocalUpdate, type CollaborationPresence, type CollaborationUser } from '../extensions/collaboration';
-import type { YjsCollaborationExtensionOptions } from './index';
+import type { YjsExtensionOptions } from './types';
 import { RetainedDocumentStore, validateRetainedDocument } from './retained-document';
 import { retainedIdentityAllocator } from './retained-nodes';
 import { removesOnlyDuplicateProvenance } from './retained-text';
@@ -12,10 +12,12 @@ import { YjsStructuredAttributeStore } from './structured-attributes';
 import { declareRetainedStructuredMap } from './retained-structured-map';
 import { prepareRetainedAdmission, readRetainedAdmission, snapshotRetainedAdmission, type RetainedAdmission, type RetainedAdmissionLease } from './retained-admission';
 import { admittedRoomRootChanged, admittedRoomRoots } from './admitted-room-root';
+import { retainedDirectionIdentity } from './retained-direction';
 
-export interface RetainedYjsCollaborationExtensionOptions extends Omit<YjsCollaborationExtensionOptions, 'preserveConcurrentRoots'> {
+export interface RetainedYjsCollaborationExtensionOptions extends YjsExtensionOptions {
   /** Validate an authoritative existing-room snapshot before starting transport.
-   * Without this opt-in, isolated local/offline initialization is unchanged. */
+   * Without admission, provider-backed clients must already contain the room's
+   * initialized native state. Isolated initialization without a provider is allowed. */
   readonly admission?: RetainedAdmission;
 }
 
@@ -43,8 +45,8 @@ function bounds(document: Node, selection: AnySelection): { anchor: number; head
   return { anchor: textPointToPosition(document, selection.path, selection.from), head: textPointToPosition(document, selection.endPath, selection.to) };
 }
 
-/** Opt-in experimental adapter, separate from the default /yjs entry.
- * Named new rooms only; existing legacy data is refused, never auto-migrated. */
+/** Retained-identity adapter used by the default /yjs entry.
+ * Named retained rooms only; existing legacy data is refused, never auto-migrated. */
 export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private readonly room: string;
   private readonly fragment: Y.XmlFragment;
@@ -57,6 +59,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private context?: CollaborationAdapterContext;
   private store?: RetainedDocumentStore;
   private manager?: Y.UndoManager;
+  private historyPop?: { stack: Y.UndoManager['undoStack']; items: Y.UndoManager['undoStack'] };
   private roomId?: string;
   private roomConflict?: Error;
   private releaseDirection?: () => void;
@@ -136,10 +139,10 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     if (status === 'connected' || status === 'connecting' || status === 'reconnecting' || status === 'disconnected') this.context?.setStatus(status);
   };
   private readonly historyItem = (event: { stackItem: { meta: Map<unknown, unknown> }; origin: unknown }): void => {
-    const manager = this.manager;
-    if (manager && event.origin === manager && manager.currStackItem) {
+    const manager = this.manager, current = this.poppedHistoryItem();
+    if (manager && event.origin === manager && current) {
       // Yjs creates a new stack item for the inverse operation.
-      for (const [key, value] of manager.currStackItem.meta) event.stackItem.meta.set(key, value);
+      for (const [key, value] of current.meta) event.stackItem.meta.set(key, value);
       return;
     }
     if (event.origin !== this.origin || !this.pendingHistory) return;
@@ -182,7 +185,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     try {
       this.gate();
       const manager = this.manager;
-      const item = manager && transaction.origin === manager ? manager.currStackItem : undefined;
+      const item = manager && transaction.origin === manager ? this.poppedHistoryItem() : undefined;
       const bookmark = manager && item && !item.meta.has(REDUNDANT_UNDO)
         ? item.meta.get(manager.undoing ? BEFORE : AFTER) as RetainedSelection | undefined
         : undefined;
@@ -252,6 +255,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       this.roomConflict = new Error('Cannot initialize a room with unresolved update dependencies. Preserve the local draft and replace the collaboration session.');
       throw this.roomConflict;
     }
+    if (fresh && this.options.provider) {
+      // Provider sync may reveal an existing legacy room. Seeding locally first
+      // would publish a retained root into it before either client can refuse.
+      this.roomConflict = new Error('Cannot initialize an empty provider-backed room before admission. Load the authoritative retained checkpoint and replace the collaboration session; local draft preserved.');
+      throw this.roomConflict;
+    }
     if (!fresh || admittedRoomRoots.has(this.fragment)) this.roomId = this.gate();
     validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
     this.context = context;
@@ -273,17 +282,22 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       }, this.origin);
       const value = this.canonical(), selection = restoreSelection(this.store!, value, this.localSelection);
       this.apply(value, selection, 'initial-sync');
-      this.releaseDirection = registerSharedDirectionIdentity(context.editor, path => {
-        const id = this.store?.identity(path); return id ? `yjs-${id === 'root' ? this.roomId : id}` : null;
-      });
+      this.releaseDirection = registerSharedDirectionIdentity(context.editor, path =>
+        retainedDirectionIdentity(this.options.document, this.room, this.roomId, this.store?.identity(path)));
       if (!this.manager) {
         this.manager = new Y.UndoManager([...this.store!.scope, ...(this.structured ? [this.structured.map] : [])], {
           captureTimeout: this.options.captureTimeout ?? 500, trackedOrigins: new Set([this.origin]),
+          deleteFilter: item => {
+            // Yjs pops an item before filtering, and may skip several empty
+            // items. Its currStackItem is assigned only after these filters.
+            const entry = this.poppedHistoryItem();
+            return !entry || !this.store!.retainUndoAllocation(item, entry.insertions);
+          },
           captureTransaction: transaction => {
-            const manager = this.manager;
-            if (manager?.undoing && transaction.origin === manager && manager.currStackItem
+            const manager = this.manager, current = this.poppedHistoryItem();
+            if (manager?.undoing && transaction.origin === manager && current
               && removesOnlyDuplicateProvenance(transaction)) {
-              manager.currStackItem.meta.set(REDUNDANT_UNDO, true);
+              current.meta.set(REDUNDANT_UNDO, true);
               manager.stopCapturing();
               return false;
             }
@@ -376,7 +390,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     const manager = this.manager;
     if (!manager || this.joining || this.roomConflict) return false;
     while (this.manager === manager) {
-      const item = manager.undo();
+      const item = this.popHistory(manager, 'undo');
       if (!item) return false;
       if (!item.meta.has(REDUNDANT_UNDO)) return true;
     }
@@ -385,7 +399,17 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
 
   redo(): boolean {
     if (this.joining || this.roomConflict) return false;
-    return Boolean(this.manager?.redo());
+    return Boolean(this.manager && this.popHistory(this.manager, 'redo'));
+  }
+  private popHistory(manager: Y.UndoManager, direction: 'undo' | 'redo') {
+    const stack = direction === 'undo' ? manager.undoStack : manager.redoStack;
+    this.historyPop = { stack, items: stack.slice() };
+    try { return manager[direction](); }
+    finally { this.historyPop = undefined; }
+  }
+  private poppedHistoryItem() {
+    const pending = this.historyPop;
+    return pending?.items[pending.stack.length];
   }
   canUndo(): boolean { return !this.joining && !this.roomConflict && (this.manager?.canUndo() ?? false); }
   canRedo(): boolean { return !this.joining && !this.roomConflict && (this.manager?.canRedo() ?? false); }

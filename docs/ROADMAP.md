@@ -1,6 +1,41 @@
 # FountainJS opportunity roadmap
 
-## Current programme status — 2026-11-08
+## Current programme status — 2026-11-10
+
+The local default collaboration entry now uses retained identities. The six
+original offline typing versus wrapping, marks and splitting regressions pass
+through `/yjs` itself. Existing XML rooms require `/yjs/legacy` or an explicit
+authority-backed migration; changing an import does not convert stored data.
+The supported Yjs peer version starts at 13.6.32. This is an unreleased beta
+compatibility change. [Adoption guide](YJS_DEFAULT_ADOPTION.md).
+
+The deeper audit also repaired concurrent child splits beneath deleted parents,
+undo of a newly created parent with offline peer edits, and shared automatic
+direction during concurrent list indentation. Physical node/text identities
+survive deletion undo and checkpoint reopening. Invalid ownership still fails
+closed. Provider-backed clients cannot seed an empty local document before
+loading the room, preventing an upgraded client from writing a second format
+into an existing room. [Deletion and undo evidence](YJS_RETAINED_DELETION_AUDIT.md).
+
+Offline paragraph review now has durable idempotent receipts. A lost reply can
+be retried after reload without adding a revision or overwriting later edits.
+Pending review makes the editor inert; rejected proposals remain saved. Saved
+placement review also retains automatic-direction ownership.
+[Recovery evidence](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
+
+The combined source run passes 5,086 tests with no failures or skips. Build,
+package, declarations, types, headless/server checks and existing performance
+limits pass. All 45 recorded default-adapter desktop journeys pass. The migration
+matrix passes 17/18 on its first run; one Firefox startup timeout repeats once
+in isolation and subsequently passes unchanged. That cold-start reliability
+issue remains visible in the evidence. No release or deployed-site change is claimed.
+The capability ledger remains 61 Delivered, eight Partial and two Host boundary
+rows. COLLAB-01 remains Partial pending release validation and production
+adoption evidence. Native interchange/layout fidelity, framework integration,
+physical mobile/IME, accessibility, RTL/localization and onboarding remain open.
+Future native UI, notebooks, forms and transcription are separate roadmap work.
+
+## Historical programme status — 2026-11-08
 
 The capability ledger has 61 Delivered rows, eight Partial rows and two Host
 boundary rows. These count bounded capability contracts, not percentage

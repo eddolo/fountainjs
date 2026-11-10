@@ -54,14 +54,15 @@ const editor = createEditor({
   content: bound.baseDocument.toJSON(),
 })`;
 
-const collaborationExample = `import * as Y from 'yjs'
+const collaborationExample = `// Explicit compatibility entry on the unreleased branch.
 import { CoreExtension, composeExtensions } from 'fountainjs-editor'
-import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs'
+import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs/legacy'
 
-const ydoc = new Y.Doc()
 const collaboration = createYjsCollaborationExtension({
-  document: ydoc,
+  document: existingLegacyDocument,
+  fragment: existingLegacyFragment,
   provider: myAuthenticatedProvider, // optional and host-owned
+  preserveConcurrentRoots: true,
   user: { id: user.id, name: user.name, color: '#6d4aff' },
 })
 const kit = composeExtensions([CoreExtension, collaboration])
@@ -834,14 +835,15 @@ function Developers() {
             <p><code>LeanExtension</code> is equally optional and works source-only: portable Lean blocks, Unicode shortcuts, highlighting, and a clear <code>LeanInfoView</code> do not require a server. An injected <code>LeanProvider</code> may add mapped diagnostics, goals, hover, and completion through a local, self-hosted, managed, or one-shot service. FountainJS chooses no endpoint and stores no credentials; see the <a href="https://github.com/eddolo/fountainjs/blob/master/docs/LEAN.md">Lean provider and security guide</a>.</p>
             <p>The equation lab’s <strong>Print / Save PDF</strong> uses a current paged snapshot and host print CSS. A recorded Chromium export has independently inspected pages and verified internal PDF equation destinations; Firefox/WebKit have print-layout coverage, not equivalent native PDF evidence. Tagged accessible PDF, original-paper layout and native DOCX equations remain open. DOCX currently preserves TeX as explicitly lossy fallback text.</p>
             <h3 id="collaboration">Collaboration is a replaceable boundary</h3>
-            <p>The <a href="./#collaboration">two-editor demo</a> uses the experimental retained adapter. Pause document sync, type into a paragraph as Ada, wrap the same paragraph in a quote as Grace, and resume. Both edits survive and each author can undo their own work.</p>
+            <p>The <a href="./#collaboration">two-editor demo</a> uses retained character and node identities. Pause document sync, type into a paragraph as Ada, wrap the same paragraph in a quote as Grace, and resume. Both edits survive and each author can undo their own work.</p>
             <h4>New rooms on the unreleased branch</h4>
+            <p>The local <code>fountainjs-editor/yjs</code> default now uses retained storage. This is a beta compatibility change, with full release validation still pending. The published beta has not changed, and upgrading an import never converts an existing room.</p>
             <p><code>openYjsRoom</code> verifies a saved room before its provider starts. In this example, <code>rooms.open</code> and <code>rooms.admit</code> call your authenticated authority. <code>createProvider</code> builds a disconnected provider using the verified document and lease.</p>
             <Code>{retainedRoomExample}</Code>
             <p>To switch rooms in a mounted editor, open the destination first, save any pending source-room draft, then pass a factory returning <code>next.createAdapter(...)</code> to <code>replaceCollaborationAdapter</code>. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/YJS_RETAINED_PREVIEW.md#open-a-room-through-the-application-authority">retained room guide</a> covers provider cleanup and host responsibilities.</p>
             <h4>Existing XML rooms and the published beta</h4>
-            <p>Existing XML rooms keep their stored format until the host migrates them. The published XML adapter has known offline conflicts with concurrent formatting and block changes.</p>
-            <details><summary>Show the published XML example</summary><Code>{collaborationExample}</Code></details>
+            <p>Existing XML rooms keep their stored format until the host migrates them. On this branch, select <code>fountainjs-editor/yjs/legacy</code> explicitly to access them. That compatibility adapter retains known offline conflicts with concurrent formatting and block changes. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/YJS_DEFAULT_ADOPTION.md">adoption guide</a> explains the versioned room boundary, archived migration, draft recovery, and API differences.</p>
+            <details><summary>Show the explicit XML compatibility example</summary><Code>{collaborationExample}</Code></details>
             <p><code>createCollaborationExtension</code> owns validated remote application, status, normalized presence, and accessible caret and range decorations. The application owns transport, authentication, room authorization, offline persistence, and retention.</p>
             <p>Incoming shared trees must validate against the complete local schema before they replace editor state. Custom node types therefore work generically when every client composes the same extension, while an incompatible or hostile client fails closed. The <a href="https://github.com/eddolo/fountainjs/blob/master/docs/COLLABORATION.md">collaboration guide</a> documents the shared representation, provider contract, security rules, simultaneous-room initialization, relative presence, and undo behavior.</p>
             <h3>Performance is a release contract</h3>

@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-10",
+  "scope": "Unreleased retained default collaboration and durable review recovery",
+  "baseCommit": "115a69308a169bd695ccbc184463688c0ffc793f",
+  "units": {
+    "passed": 5086,
+    "failed": 0,
+    "skipped": 0,
+    "files": 314,
+    "report": "artifacts/yjs-default-source-final-20261110.json"
+  },
+  "browser": {
+    "default": {
+      "passed": 45,
+      "failed": 0,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "output": "artifacts/yjs-default-browser-final-20261110"
+    },
+    "migration": {
+      "firstRunPassed": 17,
+      "firstRunFailed": 1,
+      "output": "artifacts/yjs-migration-default-final-20261110",
+      "isolatedRetryFailed": true,
+      "unchangedLaterRetryPassed": true,
+      "laterOutput": "artifacts/yjs-nested-startup-diagnostic-20261110",
+      "openIssue": "Unexplained cold Firefox startup delay before initialize; not fixed or exempted."
+    }
+  },
+  "checks": {
+    "build": "passed",
+    "types": "passed",
+    "packageESMAndCJS": "passed",
+    "apiDeclarationFiles": 450,
+    "packedEntryTypes": "passed",
+    "headless": "passed",
+    "serverWorkerd": "passed",
+    "performanceAndHeap": "passed",
+    "budget": "passed after documented measured allowance"
+  },
+  "capacityKiB": {
+    "esm": 1571.4,
+    "commonjs": 1409.3,
+    "previousCommonjsCap": 1408.75,
+    "newCommonjsCap": 1409.5
+  },
+  "loadGraph": [
+    {
+      "entry": "fountainjs-editor/yjs/legacy",
+      "files": 26,
+      "bytes": 118586
+    },
+    {
+      "entry": "fountainjs-editor/yjs",
+      "files": 27,
+      "bytes": 182133
+    }
+  ],
+  "limitations": [
+    "No publication or site deployment",
+    "Legacy XML structural failures remain legacy limitations",
+    "Yjs support floor is now 13.6.32",
+    "No production storage/throughput or physical-device certification"
+  ],
+  "sourceSha256": {
+    ".github/workflows/ci.yml": "36ff16c14ebf368fe6e32c7ee2b71eae620d50ac2fd2a0e64b6cb03ef795628e",
+    "artifacts/build-cross-format-20261107.mjs": "c196f36efb4f2fd7858ae254331d4cef724352b631f63faefc93e35dd1a24b7f",
+    "artifacts/build-cursor-overlay-canary-20261106.mjs": "65c68273be72903c4f2dd88a74046f63ac6d5805ce5a5e953555fbe185b95a1a",
+    "artifacts/build-legacy-migration-20261106.mjs": "960d0a844f82cd3feb9b8a100b803aab3bd88630b8d91d8bb2c30a49a219d266",
+    "artifacts/build-yjs-authority-admission-20261107.mjs": "5bfd6669e1807c22b967cf3f2215a217a86309fcd4519f02fdfed494d70d39e3",
+    "artifacts/build-yjs-history-policy-20261107.mjs": "646554797a5433b18b8150e89db9a67908de09040873c21d55cb9e33a637c9c3",
+    "artifacts/build-yjs-namespace-20261107.mjs": "0a16816737c2bb3795c54c93a2a0e094b871a574629601d175b32099de72df65",
+    "artifacts/retained-adapter-fixture-20261106.html": "0e0dd85def965200c0c2efd5df26a449a520ea41e6ea8164fad4782fd5c87709",
+    "artifacts/yjs-namespace-fixture-20261107.html": "62de576a9c91697fa43833da61f2ff0426faf50c4390df577167aef21bfac58c",
+    "artifacts/yjs-namespace-server-20261107.mjs": "6e976777505e67fa912ff6d981f47545c5d3085427b08415e96dd9486a499e99",
+    "examples/backends/retained-sqlite.ts": "12c97252a8df9e7b2be35ed95d77dc72a74665bcb41fb4661214dc6c51ccfaaa",
+    "examples/backends/retained-text-recovery.ts": "5b3af1516dd96d0c16414d5889faa63bbd9c7f96795c5a67c6167032b1cca7d2",
+    "examples/react-app/src/Developers.tsx": "6c2c839696e5b47fd2b46e221ef0b4efb3cce09e9c9b336c1e421c9db710693a",
+    "package.json": "7c9d169d82f23f0e6e089ed6dd7f6ad69753dac8102526875f1f8a3b3b67f78f",
+    "playwright.yjs-default.config.ts": "f240ab0d52d68452c625f7dc8ff995fe76c6bde67fd604422ff5665f382dabe7",
+    "scripts/check-build-budgets.mjs": "1c7651f338192506c1f5aad5aa3e11908d77624165008b1ef5ee18e525fbbf72",
+    "scripts/fixtures/yjs-retained-check.mjs": "e3c1ba98f2feb359b6ac458955ac808056e10f57074f8ffc8971be921194aaf8",
+    "scripts/prepare-yjs-default-browser.mjs": "391ac5c1af37fc0a271277550d5c7daa867c9593a6589eaee9c9967e3b2b3a22",
+    "scripts/smoke-package.mjs": "017a5cd02d11469de69d228eaf2f962e2f0fa5c688041472bcf061692b9d35b5",
+    "src/core/schema/block-lineage.ts": "8d49a081752f8f6260406ff9c48637631b5382287e3000b135b2316c61dc9cfa",
+    "src/core/shared-direction.ts": "5103cdd1ec880909fe033ea18ffc915f17f3537117bd8354ad52f6c2539aa22b",
+    "src/core/transaction/restructure-children-step.ts": "9bd70969dd1e057ddd7026155a4ced4022341f9091a3d4643262273718d91e7b",
+    "src/yjs/document-room.ts": "a6880e3f83796ba81436cb295e872a12ef513eed5d42b82f23053ecb0c643e18",
+    "src/yjs/index.ts": "e2c9b35101e6118c22564580e9ebdb7ab357e24cecb7134d280526391c141115",
+    "src/yjs/legacy.ts": "c31d4b361f3c15d34558eccd9b24427626751637490c16706973d87b2de17e5b",
+    "src/yjs/retained-adapter.ts": "4916f78a00e7cb9fbafd15c16802d779f5706859a2a47687cd61feb1c335e387",
+    "src/yjs/retained-direction.ts": "950c68f3fbca2fcb701fade0612cf7d87bff9a2898848c9b416146072aa41c5f",
+    "src/yjs/retained-document.ts": "4d7cf4fad7e3c151ad48a88a0b84b130076a6abda5ba6d21cca1f738b0b60992",
+    "src/yjs/retained-nodes.ts": "81a63a0adffd9e39e75614a7f208530393a56fa1f9227f85f7bd5322d804afd3",
+    "src/yjs/retained-text.ts": "508df176151032457b9fbb4cc3c0f8c87f1f126a6932634bdf46d9e844dcd7de",
+    "src/yjs/room.ts": "78167fc79ec95f38f9111328941f15618d3fb2413ba9e177c853129e3190777a",
+    "src/yjs/types.ts": "4c9816384864820c4a2ce8796c4f62f22c93177d20685881fcec267db952dd83",
+    "tests/ci-browser-evidence.test.ts": "9830800d14871302aadc8d1ee93a7cc152082c7da0488ce388583c7cdf77d9e2",
+    "tests/fixtures/yjs-default-vite.config.ts": "7e49303816a679ad23a3f54f753b576a0d6b7002d006062a36807f892e8b9d18",
+    "tests/fixtures/yjs-incomplete-room.html": "6f7ec8acee004b47d91a04ea38b66c0742bad77d058cfc1a74c1adb8abe5018b",
+    "tests/manual/retained-adapter-real.spec.ts": "1992df114af3398654165b9321184d16eda8b7118c8f53bdf353190800e2f095",
+    "tests/manual/yjs-namespace-real.spec.ts": "0e3184bf5efc44f337dc5a101b99785d5911c7455f711d56883fb384535c52be",
+    "tests/shared-direction-ownership.test.ts": "96bb32ca85e71b189308e9626c5744089a012b8add1225f16729a5ff29235400",
+    "tests/trailing-editable-block.test.ts": "a9c1ec1e8ba9540658446f031ac822aa6c5b45b1eba096de4a57315a621e6f54",
+    "tests/yjs-collaboration.test.ts": "f3e8e226cc9ab864da31898f5c5d42e9c738daae5ea542deb67c91b44d0eeca7",
+    "tests/yjs-cross-format-handoff.test.ts": "5645171b87fb039a5680b4f754de29017ddc0316c469a8a9929cea550c26e8f9",
+    "tests/yjs-default-adoption.test.ts": "2940008b04b27644827c2923eba09ef5e35e3f28cc14a539efe81303f1443cbb",
+    "tests/yjs-document-range.test.ts": "4e5fb0cb5a1c8d90a58c5c4565a5279a0fa40863cfda6ad8666f153430196998",
+    "tests/yjs-history-policy.test.ts": "4429c92b36feacce67daa0eec1c6b69a42bf72236455b2bce3607daeeb22f329",
+    "tests/yjs-legacy-migration.test.ts": "b6aceef16b9dd4c996692990d071155123bde92ae3992dd77f10bb346f13f27b",
+    "tests/yjs-namespace-migration.test.ts": "da74a35adae138b775bcb02de7a89493057d38c94640f6eee87b970b363e330a",
+    "tests/yjs-provider-initialization.test.ts": "49df9bce4f9f410d16dd775ac668890ba3e634f47b39e279100b314cd81c9e45",
+    "tests/yjs-retained-adapter.test.ts": "f769af7a7a9f5f7146d9b20ab15f54eaeb184a6c9be3f94c0d535e8e0a4ba660",
+    "tests/yjs-retained-admission.test.ts": "5a3c27b6fbe8b49207b719cb54a006b33dbe9550f6f238656bcc8d8d6390bcfe",
+    "tests/yjs-retained-authority-admission.test.ts": "a95d25e471a63bb9b139a1d4b5cca1fb1e88f5889909163fbea2857aaea1e89a",
+    "tests/yjs-retained-deleted-ancestor.test.ts": "3fe2b97b7066fcad1a4e4c60585ef37dad90651e27ec7eba3a31dfb780ead2ad",
+    "tests/yjs-retained-handoff.test.ts": "3c3e2dcc87da2abc2fff881d41e0d534ecf69a0ed6b70bef1a2bd76d32c6160f",
+    "tests/yjs-retained-provision.test.ts": "7da630c0db2311aba6df365fe2efb40ac7dbe8dc1bccb8c87b546f37e43706e6",
+    "tests/yjs-retained-restructure.test.ts": "ea97ae7c5e9b249b65a688f83432dbf9a7cd27fe4521882f69772f317ca51975",
+    "tests/yjs-structured-attributes.test.ts": "6e0554449bebfafd94bf9c8569aefae345eff2da4a23bf875dadc7efec567553",
+    "vite.lib.config.ts": "e6693835dd10b737b480426becc4a036fc119f2daba31be7be54a4f387b2c973"
+  }
+}

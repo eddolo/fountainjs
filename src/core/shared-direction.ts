@@ -4,6 +4,7 @@ import { getNodeAtPath, replaceNodeAtPath } from './transaction/path';
 import { sharedDirectionGroupAttribute } from './text-direction';
 import { createSharedDirectionIndex } from './shared-direction-index';
 import type { Editor } from './editor';
+import { inheritBlockLineage } from './schema/block-lineage';
 
 type DirectionIdentity = (path: readonly number[]) => string | null;
 const identityProviders = new WeakMap<Editor, DirectionIdentity>();
@@ -180,7 +181,8 @@ export function prepareSharedDirection(
     if (!existing && identity && (typeof provided !== 'string' || !sharedDirectionGroupAttribute.validate(provided))) return null;
     const group = existing ?? provided ?? newGroup();
     if (!existing) {
-      const owner = source.node.type.create({ ...source.node.attrs, directionGroup: group }, source.node.content);
+      const owner = inheritBlockLineage(source.node,
+        source.node.type.create({ ...source.node.attrs, directionGroup: group }, source.node.content));
       prepared = replaceNodeAtPath(prepared, source.path, owner);
       owners.push(source.path);
     }

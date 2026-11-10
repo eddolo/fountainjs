@@ -235,6 +235,9 @@ export class RetainedDocumentStore {
   }
 
   get initialized(): boolean { return this.metadata.get('seeded') === true; }
+  retainUndoAllocation(item: Y.Item, insertions: Y.Transaction['deleteSet']): boolean {
+    return this.nodes.retainUndoAllocation(item, insertions) || this.text.retainUndoAllocation(item, insertions);
+  }
   identity(path: readonly number[]): string | undefined { return this.nodePaths.get(pathKey(path)); }
   path(identity: string): readonly number[] | undefined { return this.identityPaths.get(identity); }
 

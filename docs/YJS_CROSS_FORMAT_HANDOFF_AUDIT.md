@@ -1,5 +1,11 @@
 # Cross-format collaboration handoff audit
 
+Current follow-up, 2026-11-10. The local default adapter has changed to retained
+storage with explicit legacy compatibility. Nested namespace migration is
+covered by the linked later audit. The original scope and remaining-work
+statements below describe their historical checkpoints, not today's default.
+See [adoption](YJS_DEFAULT_ADOPTION.md) and [namespace migration](YJS_NAMESPACE_MIGRATION_AUDIT.md).
+
 Namespace follow-up (2026-11-07): [explicit destination mapping](YJS_NAMESPACE_MIGRATION_AUDIT.md)
 adds differently named source/destination rooms, binds replay and rollback to the
 mapping, and retains older same-name archives. The compatible-name scope below
@@ -159,6 +165,36 @@ and recovery of a second changed paragraph inside a quote, and the unchanged
 archived draft. The SQLite tests also cover formatting-only changes and reject
 ambiguous IDs. New or deleted paragraphs, placement-only changes in the picker,
 other node types and automatic cross-format reconciliation remain open.
+
+If the apply response is lost, the demo keeps the proposal and its operation
+ID in local recovery storage and pauses editing until the author retries.
+SQLite writes the receipt in the same transaction as the reviewed edit.
+An exact retry returns the current checkpoint in that epoch without adding a
+revision. The same ID with different review data is refused. A retry during
+a freeze waits for the room to reopen. Receipts store a digest and revision,
+count against the host's recovery cap and leave the document and receipt
+unchanged if the cap rejects the write.
+The host authorizes both the initial apply and any replay. The operation ID
+is a retry key and grants no access on its own.
+
+The lost-response journey drops the reply after the commit, reloads the tab,
+then verifies that the retry restores the editor to the saved revision.
+Separate SQLite connections exercise racing requests and replay after reopen.
+
+The 2026-11-10 review found two additional UI recovery failures. Setting only
+`contenteditable=false` still allowed keyboard undo to change the paused
+editor. The temporary lock now makes that surface inert, including its nested
+controls, and restores the previous state after acknowledgement or rejection.
+A stale-review rejection also discarded the persisted custom proposal after
+the next reload. Rejected proposals now stay in local recovery storage and
+remain visible until the author explicitly reviews and applies them again.
+The recorded journeys exercise a real pointer click followed by Ctrl+Z while
+pending, a dropped rejection reply, two reloads, refreshed live text, and an
+explicit combined edit. The changed paragraph adds exactly one revision.
+All nine targeted Chromium, Firefox and WebKit journeys pass with one headless
+worker. Traces, videos and screenshots are in
+`artifacts/yjs-review-receipt-final-20261110/`. The preserved-proposal Firefox
+screenshot was visually checked against the live and archived paragraph text.
 
 The shared browser CI runs this review alongside two exact-draft reload
 journeys for migration and rollback. It retains the traces and videos. npm

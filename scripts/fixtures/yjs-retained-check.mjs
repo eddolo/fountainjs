@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 
 // Modules are injected so the same contract exercises ESM, isolated CommonJS,
 // and a genuinely packed/installed consumer without mixing Yjs constructors.
-export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, assertLegacyDeferred) {
+export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, assertLegacyDeferred, defaultEntry) {
+  const create = defaultEntry?.createYjsCollaborationExtension ?? retained.createRetainedYjsCollaborationExtension;
   const retainedNames = ['RetainedYjsCollaborationAdapter', 'createRetainedYjsCollaborationExtension', 'captureRetainedCheckpoint', 'restoreRetainedCheckpoint'];
   for (const name of retainedNames) {
     assert.equal(typeof retained[name], 'function', `Missing retained export: ${name}`);
@@ -18,10 +19,12 @@ export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, asse
     { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } },
   ] };
   const make = (document, id, admission) => {
-    const kit = composeExtensions([CoreExtension, retained.createRetainedYjsCollaborationExtension({
+    const kit = composeExtensions([CoreExtension, create({
       document, user: { id, name: id, color: '#7048e8' }, captureTimeout: 0, ...(admission ? { admission } : {}),
     })]);
-    return createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content });
+    if (defaultEntry) assert.ok(core.getCollaborationAdapter(editor) instanceof defaultEntry.YjsCollaborationAdapter);
+    return editor;
   };
   let cases = 0;
   for (const reverse of [false, true]) for (const kind of ['quote', 'bullet', 'ordered', 'task', 'mark', 'split']) {
@@ -145,7 +148,7 @@ export async function checkRetainedYjs(core, retained, Y, loadLegacy, room, asse
       cases++;
     }
     const target = new Y.Doc(); let started = 0, bound;
-    const kit = composeExtensions([CoreExtension, retained.createRetainedYjsCollaborationExtension({
+    const kit = composeExtensions([CoreExtension, create({
       document: target, user: { id: 'joined', name: 'Joined', color: '#7048e8' },
       provider: { connect() { assert.ok(bound); started++; } },
       admission: { schemaVersion: 'packed-v1', load: () => snapshot, authority: { key: snapshot.key, bind: lease => { bound = lease; } } },

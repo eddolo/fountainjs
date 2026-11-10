@@ -119,7 +119,7 @@ export async function openYjsRoom(options: YjsRoomOptions): Promise<BoundYjsRoom
     try {
       signal?.throwIfAborted();
       if (legacyNodeIdentity(restored.reader.root) !== offer.identity) throw new Error('Room admission native identity changed.');
-      const { YjsCollaborationAdapter } = await import('./index');
+      const { YjsCollaborationAdapter } = await import('./legacy');
       signal?.throwIfAborted();
       admittedRoomRoots.set(restored.reader.fragment, restored.reader.root);
       return bind(restored.document, restored.baseDocument, restored.reader.fragment, YjsCollaborationAdapter);

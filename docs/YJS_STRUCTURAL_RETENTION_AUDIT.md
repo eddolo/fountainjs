@@ -1,5 +1,12 @@
 # Yjs structural and text identity retention
 
+Update, 2026-11-10. The local `/yjs` default now uses retained identities and
+passes the six original concurrency regressions below. Their assertions remain
+required; the old XML representation is available explicitly at `/yjs/legacy`
+and retains its documented limitations. The audit below records the original
+failure and intermediate evidence. See [current adoption](YJS_DEFAULT_ADOPTION.md)
+and [deleted-ancestor/undo repairs](YJS_RETAINED_DELETION_AUDIT.md).
+
 Work in progress, 2026-11-05. This is a confirmed correctness failure, not a
 certification of collaboration parity. The separate native-focus repair is
 [draft PR #22](https://github.com/eddolo/fountainjs/pull/22); this unfinished

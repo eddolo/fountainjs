@@ -142,6 +142,15 @@ jobs:
           retention-days: 7
       - name: Compiled native presence and retained-document regressions
         run: pnpm exec playwright test --config artifacts/cursor-navigation-browser-20261106.config.ts
+      - name: Public default collaboration native input and recovery
+        run: pnpm exec playwright test --config playwright.yjs-default.config.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-default-collaboration-evidence
+          path: artifacts/yjs-default-browser/
+          if-no-files-found: warn
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         if: always()
         with:

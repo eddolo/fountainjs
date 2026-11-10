@@ -1,11 +1,12 @@
 import * as Y from 'yjs';
 import { Editor, EditorState, moveNode, type NodeMove, type Node, type NodeJSON, type Schema } from '../../src/core';
 import { registerSharedDirectionIdentity } from '../../src/core/shared-direction';
-import { restoreRetainedCheckpoint, type RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
+import { checkpointWire, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { restoreLegacyCheckpoint, snapshotLegacyProjection, type LegacyProjectionOptions } from '../../src/yjs/legacy-checkpoint';
-import { CoordinatedDocumentRoom, type DocumentCheckpoint } from '../../src/yjs/document-room';
+import { CoordinatedDocumentRoom, documentRoomId, type DocumentCheckpoint, type DocumentReviewOperation } from '../../src/yjs/document-room';
 import { CrossFormatRoomHandoff, type CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
 import { RetainedDocumentStore } from '../../src/yjs/retained-document';
+import { retainedDirectionIdentity } from '../../src/yjs/retained-direction';
 import { RetainedRoomHandoff, type RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import { CoordinatedRetainedRoom, type CoordinatedRoomSnapshot } from '../../src/yjs/retained-room-coordinator';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
@@ -21,8 +22,12 @@ interface DraftParagraph extends SavedDraft {
   readonly nodeId: string;
 }
 
+type ReviewRepository = CrossFormatRepository & {
+  readDocumentReview?(key: string, id: string): Promise<{ digest: string; epoch: string; revision: number } | undefined>;
+};
+
 type RecoveryRepository = RetainedHandoffRepository | {
-  readonly crossFormat: CrossFormatRepository;
+  readonly crossFormat: ReviewRepository;
   readonly projection?: LegacyProjectionOptions;
 };
 
@@ -41,6 +46,7 @@ export interface RetiredParagraphReview extends DraftParagraph {
 
 type ParagraphReplacement = string | { readonly useSavedFormatting: true } | { readonly content: readonly NodeJSON[] }
   | { readonly useSavedPlacement: true };
+type ReviewProof = Pick<RetiredParagraphReview, keyof SavedDraft | 'nodeId' | 'epoch' | 'revision' | 'currentText' | 'draftText'>;
 
 function isRetainedCheckpoint(checkpoint: DocumentCheckpoint): checkpoint is RetainedCheckpoint {
   return checkpoint.manifest.format === 'fountain-retained-checkpoint/1';
@@ -131,13 +137,15 @@ function reviewedMove(doc: Node, live: ReturnType<typeof paragraph>, saved: Retu
 /** Host-authorized review of a text paragraph in the current handoff destination. */
 export class RetainedTextRecovery {
   private readonly room: CoordinatedRetainedRoom | CoordinatedDocumentRoom;
+  private readonly reviewRepository?: ReviewRepository;
   private readonly legacyProjection?: LegacyProjectionOptions;
   private readonly readDraft: (request: SavedDraft) => Promise<{ saved: DocumentCheckpoint; roomId: string }>;
 
-  constructor(repository: RecoveryRepository, key: string,
+  constructor(repository: RecoveryRepository, private readonly key: string,
     private readonly schema: Schema, private readonly schemaVersion: string) {
     if ('crossFormat' in repository) {
       const { crossFormat } = repository;
+      this.reviewRepository = crossFormat;
       this.legacyProjection = snapshotLegacyProjection(repository.projection);
       this.room = new CoordinatedDocumentRoom(crossFormat, key, schema, schemaVersion, this.legacyProjection);
       const handoff = new CrossFormatRoomHandoff(crossFormat, key, schema, schemaVersion, this.legacyProjection);
@@ -224,8 +232,11 @@ export class RetainedTextRecovery {
     return (await this.loadReview(request)).review;
   }
 
-  private async writeReview(epoch: string, revision: number, update: Uint8Array): Promise<CoordinatedRoomSnapshot> {
-    const snapshot = await this.room.write({ epoch, protocol: 'retained', expectedRevision: revision, update });
+  private async writeReview(epoch: string, revision: number, update: Uint8Array, reviewOperation?: DocumentReviewOperation): Promise<CoordinatedRoomSnapshot> {
+    const request = { epoch, protocol: 'retained' as const, expectedRevision: revision, update };
+    const snapshot = reviewOperation && this.room instanceof CoordinatedDocumentRoom
+      ? await this.room.writeReviewed(request, reviewOperation)
+      : await this.room.write(request);
     const checkpoint = snapshot.checkpoint;
     if (!isRetainedCheckpoint(checkpoint)) {
       throw new RetainedRoomError('stale-epoch', 'The handoff destination is no longer a retained room.');
@@ -233,7 +244,49 @@ export class RetainedTextRecovery {
     return { ...snapshot, checkpoint };
   }
 
-  async apply(review: RetiredParagraphReview, replacement: ParagraphReplacement) {
+  /** An operation ID is optional for retained-only hosts. Cross-format hosts
+   * can persist it before sending and retry the exact proposal after a lost reply. */
+  async apply(review: RetiredParagraphReview, replacement: ParagraphReplacement, operationId?: string): Promise<CoordinatedRoomSnapshot> {
+    if (operationId === undefined) return this.applyOnce(review, replacement);
+    const repository = this.reviewRepository;
+    if (!documentRoomId(operationId) || !repository?.readDocumentReview || !repository.commitDocumentReview) {
+      throw new RetainedRoomError('invalid-ticket', 'Durable review requires an operation UUID and an atomic receipt repository.');
+    }
+    const proposal = structuredClone(replacement);
+    const { archiveId, sourceEpoch, draftId, nodeId, epoch, revision, currentText, draftText } = review;
+    const proof = { archiveId, ...(sourceEpoch === undefined ? {} : { sourceEpoch }), draftId, nodeId, epoch, revision, currentText, draftText };
+    const digest = await checkpointWire.digest(new TextEncoder().encode(checkpointWire.stableJSON({ ...proof, proposal })));
+    const replay = async () => {
+      const receipt = await repository.readDocumentReview!(this.key, operationId);
+      if (!receipt) return;
+      if (receipt.digest !== digest || receipt.epoch !== epoch) {
+        throw new RetainedRoomError('invalid-ticket', 'This review operation UUID was already used for another proposal.');
+      }
+      const snapshot = await this.room.snapshot();
+      const checkpoint = snapshot.checkpoint;
+      if (snapshot.epoch !== epoch || !isRetainedCheckpoint(checkpoint)) {
+        throw new RetainedRoomError('stale-epoch', 'The reviewed edit was saved in an earlier room. Reopen the current room before editing.');
+      }
+      if (snapshot.phase !== 'active') {
+        throw new RetainedRoomError('frozen', 'The reviewed edit is saved. Retry when the room is writable.');
+      }
+      if (snapshot.revision < receipt.revision) {
+        throw new RetainedRoomError('revision-conflict', 'The reviewed edit is saved but the room cannot acknowledge it yet.');
+      }
+      return { ...snapshot, checkpoint };
+    };
+    const saved = await replay();
+    if (saved) return saved;
+    try { return await this.applyOnce(proof, proposal, { id: operationId, digest }); }
+    catch (error) {
+      // A concurrent retry may have won the storage fence.
+      const concurrent = await replay();
+      if (concurrent) return concurrent;
+      throw error;
+    }
+  }
+
+  private async applyOnce(review: ReviewProof, replacement: ParagraphReplacement, operation?: DocumentReviewOperation) {
     const { archiveId, sourceEpoch, draftId, nodeId, epoch, revision, currentText, draftText } = review;
     const usePlacement = replacement !== null && typeof replacement === 'object' && 'useSavedPlacement' in replacement
       && replacement.useSavedPlacement === true;
@@ -267,13 +320,13 @@ export class RetainedTextRecovery {
           if (!move) throw new Error('The saved location has no unambiguous live destination.');
           const editor = new Editor(state, (_state, transaction) => { store.apply(transaction); });
           const release = registerSharedDirectionIdentity(editor, path => {
-            const identity = store.identity(path);
-            return identity ? `yjs-${identity === 'root' ? restored.manifest.roomId : identity}` : null;
+            return retainedDirectionIdentity(restored.document, restored.manifest.room,
+              restored.manifest.roomId, store.identity(path));
           });
           try {
             if (!moveNode(editor, move)) throw new Error('The saved location is incompatible with the live document.');
           } finally { release(); editor.destroy(); }
-          return await this.writeReview(epoch, revision, Y.encodeStateAsUpdate(restored.document, basis));
+          return await this.writeReview(epoch, revision, Y.encodeStateAsUpdate(restored.document, basis), operation);
         }
         const transaction = state.createTransaction();
         if (typeof replacement === 'string') {
@@ -282,7 +335,7 @@ export class RetainedTextRecovery {
           transaction.replaceNode(target.path, [target.node.copy(composed ?? draftParagraph.content)]);
         }
         if (!transaction.doc.eq(doc)) store.apply(transaction);
-        return await this.writeReview(epoch, revision, Y.encodeStateAsUpdate(restored.document, basis));
+        return await this.writeReview(epoch, revision, Y.encodeStateAsUpdate(restored.document, basis), operation);
       } finally { store.destroy(); }
     } finally { restored.document.destroy(); }
   }

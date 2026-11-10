@@ -10,7 +10,7 @@ import {captureRetainedCheckpoint} from '../src/yjs/retained-checkpoint';
 import {CoordinatedDocumentRoom,type DocumentRoomSnapshot,type DocumentRoomRepository} from '../src/yjs/document-room';
 import {CoordinatedRetainedRoom} from '../src/yjs/retained-room-coordinator';
 import {SQLiteRetainedRoomRepository} from '../examples/backends/retained-sqlite';
-import {createYjsCollaborationExtension} from '../src/yjs';
+import {createYjsCollaborationExtension} from '../src/yjs/legacy';
 import {captureLegacyCheckpoint} from '../src/yjs/legacy-checkpoint';
 
 const cleanup:Array<()=>void>=[];afterEach(()=>{while(cleanup.length)cleanup.pop()!();});

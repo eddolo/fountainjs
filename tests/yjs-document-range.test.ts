@@ -5,12 +5,13 @@ import * as Y from 'yjs';
 import { CoreExtension, GapSelection, RangeSelection, Selection, composeExtensions, createEditor,
   getCollaborationState, insertText, redoCollaboration, setBlockType, setMark, setTextAlignment, splitBlock, toggleList, toggleQuote, undoCollaboration, type NodeJSON } from '../src';
 import { createYjsCollaborationExtension, type YjsAwareness } from '../src/yjs';
+import { createYjsCollaborationExtension as createLegacyYjsCollaborationExtension } from '../src/yjs/legacy';
 
 const p = (text: string): NodeJSON => ({ type: 'paragraph', content: [{ type: 'text', text }] });
 const content: NodeJSON = { type: 'doc', content: [p('Alpha'),
   { type: 'image_super', attrs: { src: '/figure.png', alt: 'Figure' } }] };
 
-function peers(source: NodeJSON = content) {
+function peers(source: NodeJSON = content, factory = createYjsCollaborationExtension) {
   const states = new Map<number, Record<string, unknown>>();
   const listeners = new Set<() => void>();
   const create = (ydoc: Y.Doc, id: string) => {
@@ -25,7 +26,7 @@ function peers(source: NodeJSON = content) {
       on: (_event, listener) => { listeners.add(listener); },
       off: (_event, listener) => { listeners.delete(listener); },
     };
-    const kit = composeExtensions([CoreExtension, createYjsCollaborationExtension({
+    const kit = composeExtensions([CoreExtension, factory({
       document: ydoc, awareness, presenceThrottleMs: 0, captureTimeout: 0,
       user: { id, name: id, color: '#a855f7' },
     })]);
@@ -176,8 +177,8 @@ it('merges an offline character insertion with a concurrent heading conversion w
   } finally { pair.destroy(); }
 });
 
-it('retains shared text through an attribute/type/text command chain with concurrent offline typing', () => {
-  const pair = peers();
+it('retains legacy XML shared text through an attribute/type/text command chain with concurrent offline typing', () => {
+  const pair = peers(content, createLegacyYjsCollaborationExtension);
   try {
     pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([0, 0], 2)));
     pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([0, 0], 0)));
@@ -195,8 +196,8 @@ it('retains shared text through an attribute/type/text command chain with concur
   } finally { pair.destroy(); }
 });
 
-it('retains the changed shared block on the large-document greedy alignment path', () => {
-  const pair = peers({ type: 'doc', content: Array.from({ length: 600 }, (_, index) => p(`Block ${index}`)) });
+it('retains the legacy XML shared block on the large-document greedy alignment path', () => {
+  const pair = peers({ type: 'doc', content: Array.from({ length: 600 }, (_, index) => p(`Block ${index}`)) }, createLegacyYjsCollaborationExtension);
   try {
     pair.left.dispatch(pair.left.createTransaction().setSelection(Selection.cursor([599, 0], 2)));
     pair.right.dispatch(pair.right.createTransaction().setSelection(Selection.cursor([599, 0], 0)));
@@ -213,8 +214,8 @@ it('retains the changed shared block on the large-document greedy alignment path
   } finally { pair.destroy(); }
 });
 
-it('does not infer conversion identity from equal text during an unrelated node replacement', () => {
-  const pair = peers();
+it('does not infer legacy XML conversion identity from equal text during an unrelated node replacement', () => {
+  const pair = peers(content, createLegacyYjsCollaborationExtension);
   try {
     const root = pair.rightDocument.getXmlFragment('fountain').get(0) as Y.XmlElement;
     const shared = root.get(0);

@@ -1,7 +1,15 @@
-# Retained collaboration preview
+# Retained collaboration guide
 
-This **unreleased, opt-in beta** entry makes the retained adapter available through
-the normal package:
+**Current local branch, 2026-11-10.** The ordinary
+`fountainjs-editor/yjs` entry now uses the retained adapter. This is an
+unreleased beta compatibility change. Existing XML rooms require the explicit
+`fountainjs-editor/yjs/legacy` entry or a deliberate authority-backed migration.
+Changing an import never converts stored data. Read the
+[default adoption and migration contract](YJS_DEFAULT_ADOPTION.md) before
+upgrading an application.
+
+The original preview entry remains available with its explicit retained names
+and checkpoint helpers:
 
 ```ts
 import {
@@ -21,11 +29,15 @@ run in Node without jsdom, `document`, `window` or `MutationObserver`. Browser
 editing still requires the normal view and input layers. Web Crypto is required;
 the package's supported Node 20+ runtime supplies it.
 
-The default `fountainjs-editor/yjs` entry still fails six structural concurrency
-tests. The preview uses `fountain-retained-document/3` for collaboration and
+The retained implementation uses `fountain-retained-document/3` for collaboration and
 `fountain-retained-checkpoint/1` for rollback. Store these separately from portable
-document JSON. The public beta API and stored-data migration rules apply to this
-entry. [Release policy](RELEASES.md).
+document JSON. The earlier XML default's six structural concurrency failures
+motivated this change. XML compatibility does not repair them. The public beta
+API and stored-data migration rules still apply. [Release policy](RELEASES.md).
+
+The measurements and completed browser runs below describe their recorded
+preview builds. They do not replace the full package and browser validation
+required for the new default.
 
 ## Try the homepage preview
 
@@ -229,7 +241,8 @@ includes the snapshot and the native identity required for admission. Bind
 through the authority before mounting the matching adapter or starting its
 provider. A format or epoch change between these steps requires a fresh open.
 The client must keep its local draft through that retry. The authority API
-belongs to the host reference. Existing `/yjs` clients use the legacy adapter.
+belongs to the host reference. Clients on the published beta still use the
+legacy adapter. This local branch requires `/yjs/legacy` to select it directly.
 
 The opening flow passed 84 focused source cases and 21 recorded journeys in
 Chromium, Firefox and WebKit. The provisioning demo opens the same retained
@@ -237,7 +250,9 @@ room for two simultaneous first authors. The migration demo shows an existing
 nested XML room opening with its legacy adapter, refusing a retained-only
 client, and accepting that client after explicit migration. A source test
 also checks that a legacy room winning the initial insert keeps its exact
-bytes. The default-adapter matrix still reproduces its six failures.
+bytes. At that earlier checkpoint, the XML default still reproduced its six
+failures. Current default adoption is tracked separately in
+[the adoption report](YJS_DEFAULT_ADOPTION.md).
 
 ```ts
 import * as Y from 'yjs';
@@ -319,10 +334,13 @@ independent initialization, legacy XML data, subdocuments and nonportable wire
 values are refused. Existing XML rooms need the separately audited migration and
 rollback workflow; this entry intentionally exports no migration/admin service.
 
-Remaining adoption work includes deployed transport and provisioning, draft
-retention and cross-session reconciliation, multi-host authority, history and metadata growth and compaction,
-broader application integration, and full release CI. Recorded desktop-engine
+Remaining adoption work includes deploying the reference transport, provisioning
+and draft recovery with application authorization, multi-host authority, history
+and metadata growth and compaction, broader application integration, and full
+release CI. Recorded desktop-engine
 journeys are not physical mobile/IME or assistive-technology certification.
 
-The preview is isolated from the default root, core, React and XML adapter
-runtime graphs. [Package measurements and installed consumer audit](YJS_RETAINED_PACKAGE_AUDIT.md).
+The earlier preview was isolated from the default root, core, React and XML
+adapter runtime graphs. The new `/yjs` default intentionally loads retained
+storage. Its current package measurements must be checked independently of the
+[historical preview measurements and installed consumer audit](YJS_RETAINED_PACKAGE_AUDIT.md).

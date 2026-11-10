@@ -11,12 +11,25 @@ export type DocumentCheckpoint = RetainedCheckpoint | LegacyCheckpoint;
 export type DocumentProtocol = 'legacy' | 'retained';
 export type DocumentRoomRecord = CoordinatedRecord<DocumentCheckpoint>;
 export type DocumentRoomHeader = CoordinatedRecord<Pick<DocumentCheckpoint, 'manifest'>>;
+export interface DocumentReviewOperation {
+  readonly id: string;
+  readonly digest: string;
+}
+interface DocumentWriteRequest {
+  readonly epoch: string;
+  readonly protocol: DocumentProtocol;
+  readonly expectedRevision?: number;
+  readonly update: Uint8Array;
+}
 export interface DocumentRoomRepository {
   readDocument(key: string): Promise<DocumentRoomRecord | undefined>;
   /** Read an owned header from the same atomic row used by readDocument. */
   readDocumentHeader?(key: string): Promise<DocumentRoomHeader | undefined>;
   createDocument(record: DocumentRoomRecord): Promise<boolean>;
   compareDocument(key: string, expectedGeneration: string, next: DocumentRoomRecord): Promise<boolean>;
+  /** Atomically compare the generation, record a review receipt and apply the
+   * optional changed checkpoint. A false result must change nothing. */
+  commitDocumentReview?(row: DocumentRoomRecord, next: DocumentRoomRecord | undefined, operation: DocumentReviewOperation): Promise<boolean>;
 }
 export interface DocumentRoomSnapshot extends RetainedRoomVersion {
   readonly key: string; readonly phase: 'active' | 'frozen'; readonly protocol: DocumentProtocol; readonly checkpoint: DocumentCheckpoint;
@@ -262,21 +275,40 @@ export class CoordinatedDocumentRoom {
     if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed during admission verification; retry explicitly.');
     return documentSnapshot({ ...row, checkpoint: checked.checkpoint });
   }
-  async write(request: { readonly epoch: string; readonly protocol: DocumentProtocol; readonly expectedRevision?: number; readonly update: Uint8Array }): Promise<DocumentRoomSnapshot> {
-    const { epoch, protocol, expectedRevision } = request, row = await this.current();
+  async write(request: DocumentWriteRequest): Promise<DocumentRoomSnapshot> {
+    return this.writeUpdate(request);
+  }
+  async writeReviewed(request: DocumentWriteRequest, operation: DocumentReviewOperation): Promise<DocumentRoomSnapshot> {
+    return this.writeUpdate(request, { id: operation.id, digest: operation.digest });
+  }
+  private async writeUpdate(request: DocumentWriteRequest, operation?: DocumentReviewOperation): Promise<DocumentRoomSnapshot> {
+    const { epoch, protocol, expectedRevision } = request;
+    if (operation && (!this.repository.commitDocumentReview || protocol !== 'retained'
+      || !Number.isSafeInteger(expectedRevision) || !documentRoomId(operation.id) || !/^[a-f0-9]{64}$/.test(operation.digest))) {
+      documentRoomFailure('invalid-ticket', 'Invalid document review operation.');
+    }
+    const row = await this.current();
     if (epoch !== row.epoch || protocol !== documentProtocol(row.checkpoint)) documentRoomFailure('stale-epoch', 'Writer epoch/protocol is stale; reconnect and retain pending edits.');
     if (row.phase !== 'active') documentRoomFailure('frozen', 'Document room is frozen; retain pending edits.');
     if (expectedRevision !== undefined && expectedRevision !== row.revision) {
       documentRoomFailure('revision-conflict', 'The reviewed room revision changed. Review the latest document before applying.');
     }
     const checkpoint = await applyDocumentRoomUpdate(row.checkpoint, this.schema, this.schemaVersion, this.projection, request.update);
-    if (checkpoint.manifest.checkpointSha256 === row.checkpoint.manifest.checkpointSha256) {
+    const changed = checkpoint.manifest.checkpointSha256 !== row.checkpoint.manifest.checkpointSha256;
+    if (changed && row.revision >= Number.MAX_SAFE_INTEGER) documentRoomFailure('revision-conflict', 'Document revision capacity exceeded.');
+    if (operation) {
+      const next = changed ? { ...row, checkpoint, generation: crypto.randomUUID(), revision: row.revision + 1 } : undefined;
+      if (!await this.repository.commitDocumentReview!(row, next, operation)) {
+        documentRoomFailure('revision-conflict', 'Document room changed before the review receipt was saved.');
+      }
+      return documentSnapshot(next ?? { ...row, checkpoint });
+    }
+    if (!changed) {
       // An already integrated update is a read acknowledgement. Check the
       // same generation fence a writing CAS would require before returning it.
       if ((await this.currentHeader()).generation !== row.generation) documentRoomFailure('revision-conflict', 'Authority changed while acknowledging the replay. Retain pending edits and retry.');
       return documentSnapshot({ ...row, checkpoint });
     }
-    if (row.revision >= Number.MAX_SAFE_INTEGER) documentRoomFailure('revision-conflict', 'Document revision capacity exceeded.');
     return documentSnapshot(await this.commit(row, { checkpoint, revision: row.revision + 1 }));
   }
   async freeze(expected: RetainedRoomVersion): Promise<CoordinatedFreeze> {

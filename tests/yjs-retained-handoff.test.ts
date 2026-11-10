@@ -16,6 +16,8 @@ import { RetainedRoomHandoff, type RetainedHandoffRepository, type RetainedHando
 import { type RetainedMigrationOptions } from '../src/yjs/retained-migration';
 import { SQLiteRetainedRoomRepository } from '../examples/backends/retained-sqlite';
 import { RetainedTextRecovery } from '../examples/backends/retained-text-recovery';
+import { sharedTextDirections } from '../src/core/first-strong-direction';
+import { sharedDirectionGroup } from '../src/core/shared-direction';
 
 const cleanup: Array<() => void> = [];
 afterEach(() => { while (cleanup.length) cleanup.pop()!(); });
@@ -244,7 +246,7 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   expect(pair.b.readStorageUsage('missing-room')).toBeUndefined();
   expect(pair.b.readStorageUsage(key)).toEqual({
     revision: edited.revision, liveBytes: edited.checkpoint.manifest.bytes, liveCheckpointBytes: edited.checkpoint.manifest.bytes,
-    archiveCount: 0, archiveBytes: 0, draftCount: 0, draftBytes: 0, batchCount: 0, batchBytes: 0,
+    archiveCount: 0, archiveBytes: 0, draftCount: 0, draftBytes: 0, batchCount: 0, batchBytes: 0, reviewCount: 0, reviewBytes: 0,
     recoveryBytes: 0, totalBytes: edited.checkpoint.manifest.bytes,
   });
   const settings = {...options(),minimumBytesSaved:1_000};
@@ -290,7 +292,7 @@ it('compacts a long edit history while keeping old writers fenced and both branc
   const draftBytes = Number(storedDraft?.bytes), liveBytes = result.snapshot.checkpoint.manifest.bytes;
   expect(pair.b.readStorageUsage(key)).toEqual({
     revision: result.snapshot.revision, liveBytes, liveCheckpointBytes: liveBytes,
-    archiveCount: 1, archiveBytes, draftCount: 1, draftBytes, batchCount: 0, batchBytes: 0,
+    archiveCount: 1, archiveBytes, draftCount: 1, draftBytes, batchCount: 0, batchBytes: 0, reviewCount: 0, reviewBytes: 0,
     recoveryBytes: archiveBytes + draftBytes, totalBytes: liveBytes + archiveBytes + draftBytes,
   });
   const neighborKey = 'project:storage-neighbor';
@@ -484,6 +486,40 @@ it('reapplies the archived placement with the live text and refuses a stale or m
   cleanup.push(()=>rootReader.destroy());
   expect(rootReader.read().child(1).toJSON()).toEqual(before.child(0).toJSON());
   expect(rootReader.identity([1])).toBe(identity);
+});
+
+it('recovers a saved move out of an automatic-direction quote without losing its shared owner', async () => {
+  const pair = await fixture();
+  const source = pair.schema.nodeFromJSON({ type: 'doc', content: [
+    { type: 'blockquote', attrs: { nodeId: 'quote', dir: 'auto' }, content: [
+      { type: 'paragraph', attrs: { nodeId: 'anchor' }, content: [{ type: 'text', text: 'שלום anchor' }] },
+      { type: 'paragraph', attrs: { nodeId: 'intro' }, content: [{ type: 'text', text: 'English note' }] },
+    ] },
+    { type: 'paragraph', attrs: { nodeId: 'after' }, content: [{ type: 'text', text: 'After' }] },
+  ] });
+  pair.editor.dispatch(pair.editor.createTransaction().replace(0, pair.editor.state.doc.childCount, source.content));
+  await pair.room.write({ epoch: pair.initial.epoch, update: Y.encodeStateAsUpdate(pair.document) });
+  const moved = await migrate(pair);
+  expect(moveNode(pair.editor, { fromPath: [0, 1], toParentPath: [], toIndex: 1 })).toBe(true);
+  const draft = await captureRetainedCheckpoint(pair.document, pair.schema, version);
+  const request = { archiveId: moved.operation, draftId: uuid(), nodeId: 'intro' };
+  await pair.handoff.saveRetiredDraft({ ...request, roomId: draft.manifest.roomId, checkpoint: draft });
+  const service = new RetainedTextRecovery(pair.a, key, pair.schema, version);
+  const review = await service.preview(request);
+  expect(review.canUseSavedPlacement).toBe(true);
+  const result = await service.apply(review, { useSavedPlacement: true });
+  const restored = await restoreRetainedCheckpoint(result.checkpoint, pair.schema, version);
+  try {
+    expect(restored.baseDocument.content.map(node => node.textContent)).toEqual(['שלום anchor', 'English note', 'After']);
+    expect(restored.baseDocument.child(1).attrs.nodeId).toBe('intro');
+    const groups = sharedTextDirections(restored.baseDocument, sharedDirectionGroup);
+    expect(groups.size).toBe(1);
+    for (const [token, direction] of groups) {
+      expect(token).toMatch(/^[A-Za-z0-9_-]{1,96}$/);
+      expect(direction).toBe('rtl');
+    }
+  } finally { restored.document.destroy(); }
+  expect(await pair.handoff.readRetiredDraft(request.archiveId, request.draftId)).toEqual(draft);
 });
 
 it.each(['active', 'prepared', 'stale-ticket', 'foreign-ticket'] as const)('refuses %s migration without archiving or replacing the source', async mode => {

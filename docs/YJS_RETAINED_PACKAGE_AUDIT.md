@@ -1,5 +1,11 @@
 # Retained collaboration package audit
 
+Current compatibility update, 2026-11-10. The local default adoption requires
+Yjs 13.6.32 or newer within v13. Earlier 13.6.0 results below cover their recorded
+workflows only; broader subsequent diagnostics found unsupported checkpoint and
+history behavior. See [adoption](YJS_DEFAULT_ADOPTION.md) and
+[compatibility evidence](YJS_RETAINED_DELETION_AUDIT.md#yjs-compatibility-evidence).
+
 The local `0.4.0-beta.2` tarball exposes
 `fountainjs-editor/experimental/yjs-retained` in ESM and CommonJS. It exports the
 adapter, extension factory and isolated checkpoint capture and restore.

@@ -4,7 +4,7 @@ import type { RetainedRoomRecord } from '../../src/yjs/retained-room-coordinator
 import type { RetainedRoomArchive, RetainedHandoffRepository } from '../../src/yjs/retained-handoff';
 import type { RetainedCheckpoint } from '../../src/yjs/retained-checkpoint';
 import { RetainedRoomError } from '../../src/yjs/retained-room-store';
-import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoomRecord, type DocumentRoomHeader, type DocumentCheckpoint, type DocumentProtocol } from '../../src/yjs/document-room';
+import { assertRetainedRoomReader, type DocumentRoomAdmission, type DocumentRoomRecord, type DocumentRoomHeader, type DocumentCheckpoint, type DocumentProtocol, type DocumentReviewOperation } from '../../src/yjs/document-room';
 import type { CrossFormatArchive, CrossFormatBatch, CrossFormatRepository } from '../../src/yjs/cross-format-handoff';
 import { encodeRetainedPresence, presenceCapacity, presenceLeaseMs, presenceRenewalMs, presenceVisibilityMs, type PresencePeer, type PresenceState } from './retained-http-presence';
 
@@ -134,6 +134,12 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
           raw_bytes INTEGER,
           PRIMARY KEY(room_key, archive_id, revision)
         ) STRICT;
+        CREATE TABLE IF NOT EXISTS fountain_document_reviews_v1 (
+          room_key TEXT NOT NULL, operation_id TEXT NOT NULL CHECK(length(operation_id) = 36),
+          digest TEXT NOT NULL CHECK(length(digest) = 64), epoch TEXT NOT NULL CHECK(length(epoch) = 36),
+          revision INTEGER NOT NULL CHECK(revision BETWEEN 0 AND 9007199254740991),
+          PRIMARY KEY(room_key, operation_id)
+        ) STRICT;
         CREATE INDEX IF NOT EXISTS fountain_cross_format_batch_digest_v1
           ON fountain_cross_format_batches_v1 (room_key, archive_id, sha256, revision);`);
       this.addRecoveryBatchLength();
@@ -183,7 +189,7 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     return { epoch, revision, phase, bytes: manifest.bytes, limitBytes, headroomBytes: limitBytes - manifest.bytes };
   }
 
-  /** A read-only room snapshot of stored BLOB sizes. The host authorizes access. */
+  /** Stored BLOB and logical receipt sizes. The host authorizes access. */
   readStorageUsage(key: string) {
     const usage = this.db.prepare(`
       WITH archive_payloads(bytes) AS (
@@ -201,19 +207,24 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
       batches AS (
         SELECT count(*) AS batchCount, coalesce(sum(length(wire)), 0) AS batchBytes
           FROM fountain_cross_format_batches_v1 WHERE room_key = $key
+      ),
+      reviews AS (
+        SELECT count(*) AS reviewCount, coalesce(sum(length(operation_id) + length(digest) + length(epoch) + 8), 0) AS reviewBytes
+          FROM fountain_document_reviews_v1 WHERE room_key = $key
       )
       SELECT json_extract(live.metadata, '$.revision') AS revision, length(live.wire) AS liveBytes,
         json_extract(live.metadata, '$.manifest.bytes') AS liveCheckpointBytes,
-        archives.*, drafts.*, batches.*
-      FROM fountain_retained_rooms_v1 AS live CROSS JOIN archives CROSS JOIN drafts CROSS JOIN batches
+        archives.*, drafts.*, batches.*, reviews.*
+      FROM fountain_retained_rooms_v1 AS live CROSS JOIN archives CROSS JOIN drafts CROSS JOIN batches CROSS JOIN reviews
       WHERE live.room_key = $key`).get({ $key: key }) as {
       revision: number; liveBytes: number; liveCheckpointBytes: number;
       archiveCount: number; archiveBytes: number;
       draftCount: number; draftBytes: number;
       batchCount: number; batchBytes: number;
+      reviewCount: number; reviewBytes: number;
     } | undefined;
     if (!usage) return undefined;
-    const recoveryBytes = usage.archiveBytes + usage.draftBytes + usage.batchBytes;
+    const recoveryBytes = usage.archiveBytes + usage.draftBytes + usage.batchBytes + usage.reviewBytes;
     return { ...usage, recoveryBytes, totalBytes: usage.liveBytes + recoveryBytes };
   }
 
@@ -353,6 +364,10 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
   }
 
   async compareDocument(key: string, expectedGeneration: string, next: DocumentRoomRecord): Promise<boolean> {
+    return this.compareDocumentRow(key, expectedGeneration, next);
+  }
+
+  private compareDocumentRow(key: string, expectedGeneration: string, next: DocumentRoomRecord): boolean {
     if (next.key !== key || next.generation === expectedGeneration) throw new Error('Invalid SQLite retained CAS replacement.');
     // Only coordination metadata is needed for this guard. Do not copy the
     // full checkpoint wire again just to enforce the same-format CAS contract.
@@ -365,6 +380,27 @@ export class SQLiteRetainedRoomRepository implements RetainedHandoffRepository, 
     const result = this.db.prepare('UPDATE fountain_retained_rooms_v1 SET generation = ?, metadata = ?, wire = ? WHERE room_key = ? AND generation = ?')
       .run(next.generation, packet.metadata, this.liveWire(packet.wire), key, expectedGeneration);
     return result.changes === 1;
+  }
+
+  async readDocumentReview(key: string, id: string) {
+    return this.db.prepare('SELECT digest, epoch, revision FROM fountain_document_reviews_v1 WHERE room_key = ? AND operation_id = ?')
+      .get(key, id) as { digest: string; epoch: string; revision: number } | undefined;
+  }
+
+  async commitDocumentReview(row: DocumentRoomRecord, next: DocumentRoomRecord | undefined, operation: DocumentReviewOperation): Promise<boolean> {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      if (this.selectRoomMetadata.get(row.key)?.generation !== row.generation
+        || !this.db.prepare('INSERT INTO fountain_document_reviews_v1 VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING')
+          .run(row.key, operation.id, operation.digest, row.epoch, next?.revision ?? row.revision).changes
+        || next && !this.compareDocumentRow(row.key, row.generation, next)) {
+        this.db.exec('ROLLBACK');
+        return false;
+      }
+      this.checkRecoveryCapacity(row.key);
+      this.db.exec('COMMIT');
+      return true;
+    } catch (error) { try { this.db.exec('ROLLBACK'); } catch {} throw error; }
   }
 
   private archiveRow(row: Record<string, unknown> | undefined, key: string): RetainedRoomArchive | undefined {

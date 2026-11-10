@@ -1,11 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
 import {auditCompiledRuntime} from './compiled-runtime-audit';
 const installedPreview = process.env.FOUNTAIN_RETAINED_PACKAGE_AUDIT === '1';
-auditCompiledRuntime(...(installedPreview ? [
+const defaultAdapter = process.env.FOUNTAIN_DEFAULT_YJS_AUDIT === '1';
+auditCompiledRuntime(...(defaultAdapter ? ['/dist/index.js', '/dist/yjs.js', '/dist/yjs-legacy.js'] : installedPreview ? [
  '/node_modules/.vite/deps/fountainjs-editor.js',
  '/node_modules/.vite/deps/fountainjs-editor_experimental_yjs-retained.js',
 ] : []));
-const url = installedPreview ? '/index.html' : '/artifacts/retained-adapter-fixture-compiled-20261106.html';
+const url = defaultAdapter ? '/artifacts/yjs-default-fixture.html' : installedPreview ? '/index.html' : '/artifacts/retained-adapter-fixture-compiled-20261106.html';
 async function snapshot(page:Page){return page.evaluate(()=> (window as any).audit.snapshot());}
 async function caret(page:Page,name:string,offset:number){const editor=page.getByRole('textbox',{name:`${name} editor`});await editor.click();await page.keyboard.press('Control+Home');for(let i=0;i<offset;i++)await page.keyboard.press('ArrowRight');return editor;}
 for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`native offline typing survives ${operation}, author undo and redo`,async({page},testInfo)=>{
@@ -27,6 +28,70 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
  await testInfo.attach('converged-json',{body:JSON.stringify(peers,null,2),contentType:'application/json'});expect(errors).toEqual([]);
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}
+
+test('native offline Enter survives a deleted ancestor and returns with its author undo', async ({page}, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(url);
+  const source = {type:'doc', attrs:{audit:'deleted-ancestor'}, content:[
+    {type:'blockquote', content:[{type:'paragraph', content:[{type:'text', text:'Alpha'}]}]},
+    {type:'paragraph', content:[{type:'text', text:'Survivor'}]},
+  ]};
+  await page.locator('#open').setInputFiles({name:'deleted-ancestor.json', mimeType:'application/json',
+    buffer:Buffer.from(JSON.stringify(source))});
+  await expect(page.locator('#message')).toHaveText('Reopened portable document');
+  const initial = (await snapshot(page))[0].json;
+  const hidden = {...initial, content:[initial.content[1]]};
+  const ada = page.getByRole('textbox', {name:'Ada editor'});
+  const grace = page.getByRole('textbox', {name:'Grace editor'});
+
+  await page.getByRole('button', {name:'Pause sync', exact:true}).click();
+  await caret(page, 'Ada', 1);
+  await page.locator('#ada').getByRole('button', {name:'Delete block', exact:true}).click();
+  await expect(ada.locator('p')).toHaveText(['Survivor']);
+  await expect(ada.locator('blockquote')).toHaveCount(0);
+  await expect(grace.locator('blockquote p')).toHaveText(['Alpha']);
+  await caret(page, 'Grace', 2);
+  await expect.poll(async () => (await snapshot(page))[1].selection).toMatchObject({path:[0,0,0], from:2, to:2});
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('X');
+  await expect(grace.locator('blockquote p')).toHaveText(['Al','Xpha']);
+
+  await page.getByRole('button', {name:'Synchronize', exact:true}).click();
+  await expect.poll(async () => (await snapshot(page)).map((peer:any) => ({json:peer.json,status:peer.status}))).toEqual([
+    {json:hidden,status:'connected'}, {json:hidden,status:'connected'},
+  ]);
+  for (const editor of [ada, grace]) {
+    await expect(editor.locator('blockquote')).toHaveCount(0);
+    await expect(editor.locator('p')).toHaveText(['Survivor']);
+  }
+  await page.screenshot({path:info.outputPath('ancestor-deleted-converged.png'),fullPage:true});
+
+  await page.locator('#ada').getByRole('button', {name:'Undo', exact:true}).click();
+  await expect.poll(async () => (await snapshot(page)).map((peer:any) => ({status:peer.status,
+    paragraphs:peer.json.content[0].content.map(text), survivor:peer.json.content[1], attrs:peer.json.attrs}))).toEqual([
+    {status:'connected',paragraphs:['Al','Xpha'],survivor:initial.content[1],attrs:initial.attrs},
+    {status:'connected',paragraphs:['Al','Xpha'],survivor:initial.content[1],attrs:initial.attrs},
+  ]);
+  let peers = await snapshot(page);
+  expect(peers[0].json).toEqual(peers[1].json);
+  for (const editor of [ada, grace]) await expect(editor.locator('blockquote p')).toHaveText(['Al','Xpha']);
+
+  await grace.locator('blockquote p').nth(1).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('!');
+  await expect.poll(async () => (await snapshot(page)).map((peer:any) => ({status:peer.status,
+    paragraphs:peer.json.content[0].content.map(text)}))).toEqual([
+    {status:'connected',paragraphs:['Al','Xpha!']}, {status:'connected',paragraphs:['Al','Xpha!']},
+  ]);
+  for (const editor of [ada, grace]) await expect(editor.locator('p')).toHaveText(['Al','Xpha!','Survivor']);
+  peers = await snapshot(page);
+  expect(peers[0].json).toEqual(peers[1].json);
+  expect(peers[0].json.content[1]).toEqual(initial.content[1]);
+  await page.screenshot({path:info.outputPath('ancestor-restored-with-offline-split.png'),fullPage:true});
+  await info.attach('deleted-ancestor-result', {body:JSON.stringify(peers,null,2),contentType:'application/json'});
+  expect(errors).toEqual([]);
+});
 
 if (!installedPreview) test('keeps both drafts after incompatible room data is removed', async ({page},info) => {
   await page.goto(url);

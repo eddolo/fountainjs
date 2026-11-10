@@ -22,7 +22,7 @@
   import * as Y from 'yjs';
   import { CoreExtension, EditorView, Selection, composeExtensions, createEditor, getCollaborationState,
     insertText, reconnectCollaboration } from 'fountainjs-editor';
-  import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs';
+  import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs/legacy';
   import { createRetainedYjsCollaborationExtension } from 'fountainjs-editor/experimental/yjs-retained';
 
   const legacy = new URLSearchParams(location.search).get('protocol') === 'legacy';

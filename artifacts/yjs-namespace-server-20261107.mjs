@@ -55,7 +55,7 @@ const server=await createServer({configFile:false,root:resolve('.'),cacheDir:'no
    else if(action==='read-exact-draft'){value=await handoff.readRetiredDraft(body.archiveId,body.sourceEpoch,body.draftId);if(!value)throw new Error('Saved offline draft is missing')}
    else if(action==='list-recovered-paragraphs')value=await new RetainedTextRecovery({crossFormat:repository},key,schema,'browser-schema-1').listChangedParagraphs(body);
    else if(action==='preview-recovered-text')value=await new RetainedTextRecovery({crossFormat:repository},key,schema,'browser-schema-1').preview(body);
-   else if(action==='apply-recovered-text')value=await new RetainedTextRecovery({crossFormat:repository},key,schema,'browser-schema-1').apply(body.review,body.replacement);
+   else if(action==='apply-recovered-text')value=await new RetainedTextRecovery({crossFormat:repository},key,schema,'browser-schema-1').apply(body.review,body.replacement,body.operationId);
    else if(action==='batch')value=await handoff.retiredBatch(body.id,body.revision);
    else if(action==='archive')value=await repository.readCrossArchive(key,body.id);
    else if(action==='close'){sessions.delete(req.headers['x-handoff-session']);value={closed:true}}

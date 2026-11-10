@@ -281,7 +281,12 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
 `], { stdio: 'inherit' });
 const esmYjs = await import('fountainjs-editor/yjs');
 assertExports(esmYjs, yjsNames, 'ESM Yjs entry');
-await checkRetainedYjs(esmCore, await import('fountainjs-editor/experimental/yjs-retained'), await import('yjs'), () => esmYjs, await import('fountainjs-editor/yjs/room'));
+const esmLegacyYjs = await import('fountainjs-editor/yjs/legacy');
+assertExports(esmLegacyYjs, yjsNames, 'ESM legacy Yjs entry');
+// Exercise the full retention contract via the public default, while checkpoint
+// helpers and the experimental compatibility entry keep their original names.
+await checkRetainedYjs(esmCore, await import('fountainjs-editor/experimental/yjs-retained'),
+  await import('yjs'), () => esmLegacyYjs, await import('fountainjs-editor/yjs/room'), undefined, esmYjs);
 assertExports(await import('fountainjs-editor/comments'), commentsNames, 'ESM comments entry');
 assertExports(await import('fountainjs-editor/react/comments'), reactCommentsNames, 'ESM React comments entry');
 assertExports(await import('fountainjs-editor/tracked-changes'), trackedChangesNames, 'ESM tracked changes entry');
@@ -547,10 +552,11 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   import { createRequire } from 'node:module';
   import { checkRetainedYjs } from './scripts/fixtures/yjs-retained-check.mjs';
   const require = createRequire(import.meta.url);
-  const legacyPath = require.resolve('fountainjs-editor/yjs');
+  const legacyPath = require.resolve('fountainjs-editor/yjs/legacy');
+  const defaultYjs = require('fountainjs-editor/yjs');
   await checkRetainedYjs(require('fountainjs-editor'), require('fountainjs-editor/experimental/yjs-retained'), require('yjs'),
-    () => require('fountainjs-editor/yjs'), require('fountainjs-editor/yjs/room'),
-    () => assert.equal(require.cache[legacyPath], undefined, 'A retained room loaded the legacy adapter'));
+    () => require('fountainjs-editor/yjs/legacy'), require('fountainjs-editor/yjs/room'),
+    () => assert.equal(require.cache[legacyPath], undefined, 'A retained room loaded the legacy adapter'), defaultYjs);
 `], { stdio: 'inherit' });
 
 const smokeDirectory = mkdtempSync(join(tmpdir(), 'fountain-package-smoke-'));

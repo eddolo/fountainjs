@@ -1200,29 +1200,49 @@ syntax survived.
 
 The root package exposes a provider-independent collaboration boundary. The
 separate `fountainjs-editor/yjs` entry adds shared editing, relative remote
-selections, accessible carets, a configurable room initialization conflict policy, and
-local-origin undo/redo.
+selections, accessible carets, and local-origin undo/redo.
+
+**Unreleased local change:** `/yjs` now uses retained character and node
+identities. Existing XML rooms require `/yjs/legacy` or an explicit migration.
+The published beta still uses the XML adapter. Installing that beta does not
+provide this local change. See the [adoption and compatibility contract](docs/YJS_DEFAULT_ADOPTION.md).
 
 ```bash
 npm install fountainjs-editor yjs
 ```
 
 ```ts
-import * as Y from 'yjs'
-import { CoreExtension, composeExtensions } from 'fountainjs-editor'
-import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs'
+// Unreleased branch: open a room through the application's authority.
+import { CoreExtension, composeExtensions, createEditor } from 'fountainjs-editor'
+import { openYjsRoom } from 'fountainjs-editor/yjs/room'
 
-const ydoc = new Y.Doc()
-const collaboration = createYjsCollaborationExtension({
-  document: ydoc,
-  provider: myWebSocketWebRTCOrManagedProvider,
-  user: { id: user.id, name: user.name, color: '#6d4aff' },
+const room = await openYjsRoom({
+  schema,
+  schemaVersion: 'article-v1',
+  expected: { key: articleId },
+  open: (protocols, signal) => api.openArticle(articleId, protocols, signal),
+  admit: (offer, signal) => api.admitArticle(offer, signal),
+})
+const collaboration = room.createExtension({
+  provider: api.createDisconnectedProvider(room.document, room.lease),
+  user: currentUser,
 })
 const kit = composeExtensions([CoreExtension, collaboration])
+const editor = createEditor({
+  schema: kit.schema, plugins: kit.plugins, content: room.baseDocument.toJSON(),
+})
 ```
 
-Switching rooms does not require rebuilding the editor. Pass a fresh
-`YjsCollaborationAdapter` to `replaceCollaborationAdapter(editor, adapter)`;
+The application supplies the authorized `api`, a matching schema and a
+provider that fences every write against the verified lease. Provision one
+native room and admit subsequent peers to it. Independently initializing a
+template on each client is a conflict, even when the templates look identical.
+The direct `createYjsCollaborationExtension` factory remains available for
+already prepared rooms and isolated local experiments.
+
+Switching rooms does not require rebuilding the editor. Open the destination,
+retain any unsaved source draft, then pass a factory returning
+`next.createAdapter(...)` to `replaceCollaborationAdapter(editor, factory)`;
 late updates from the retired document/provider are ignored and the previous
 adapter is disconnected and destroyed once. Local cursor awareness is
 deduplicated and throttled to a 32 ms cadence by default. React's `useFountain`
@@ -1230,13 +1250,16 @@ also creates only one editor across Strict Mode's duplicate development render.
 
 See the [collaboration and Yjs guide](docs/COLLABORATION.md) for lifecycle,
 provider, security, offline, and replacement examples.
-For the legacy adapter, `preserveConcurrentRoots: true` keeps independently
+For the explicit legacy adapter, `preserveConcurrentRoots: true` keeps independently
 initialized shared roots and stops synchronization until the host reviews the
-drafts and replaces the session.
+drafts and replaces the session. The retained default always preserves these
+conflicts, including when old code passes `preserveConcurrentRoots: false`.
 
-Concurrent typing with some structural or formatting edits can still lose or
-misplace text in the default adapter. The unreleased retained preview uses a
-separate room format and is opt-in. [Retained preview guide](docs/YJS_RETAINED_PREVIEW.md).
+The XML compatibility adapter retains the known concurrent typing versus
+structural/formatting failures. The retained implementation uses a different
+room format and refuses XML without changing its bytes. Migration must preserve
+checkpoints, drafts and late updates through the authority. Full default-adoption
+release checks remain pending. [Retained room guide](docs/YJS_RETAINED_PREVIEW.md).
 
 The provider is optional. An app may transport Yjs updates itself, add offline
 persistence to the same `Y.Doc`, select a managed provider, or leave

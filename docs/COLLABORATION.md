@@ -9,10 +9,12 @@ FountainJS collaboration has two layers:
    relative cursor positions, and origin-aware undo. It has a `yjs` peer
    dependency and is not loaded by the root package.
 
-Six required tests still expose
-offline typing conflicts with structural/formatting edits in the default XML
-adapter. The local beta includes an experimental retained package entry with
-separate wire storage and explicit room initialization. [Retained preview guide](YJS_RETAINED_PREVIEW.md).
+The unreleased local `/yjs` entry uses retained character and node identities.
+The published beta still uses the XML representation. Existing XML rooms need
+the explicit `/yjs/legacy` entry or an authority-backed migration; changing an
+import does not convert their bytes. The XML compatibility adapter retains its
+known offline typing conflicts with structural and formatting edits.
+[Adoption contract](YJS_DEFAULT_ADOPTION.md).
 
 For adapter authors, normal remote updates are not sent back as local updates.
 When an extension explicitly requests rebroadcast of an appended maintenance
@@ -22,7 +24,7 @@ editor's older pre-remote state. History-neutral repairs retain
 `addToHistory: false`; an authored action followed by maintenance still requests
 history in the combined notification. An adapter implementing its own history
 must honor that distinction. Custom adapters must implement their own history
-policy. The default XML and retained preview adapters pass the
+policy. The explicit XML and retained adapters pass the
 [shared history-neutral workflow checks](YJS_HISTORY_POLICY_AUDIT.md).
 
 The application still owns the room service, network transport,
@@ -40,6 +42,9 @@ npm install fountainjs-editor yjs
 A `Y.Doc` works locally and can be synchronized later. This is useful for
 tests, workers, peer-to-peer handoff, or applications that already transport
 Yjs updates themselves.
+This direct example initializes one isolated local room. Load that room's native
+Yjs state into subsequent peers before mounting them. A locally empty `Y.Doc`
+does not establish that a remote room is empty.
 
 ```ts
 import * as Y from 'yjs'
@@ -69,8 +74,9 @@ them and apply ordinary transport limits.
 Seed a room once and load its authoritative update into every new client's
 `Y.Doc` before attaching the editor. The legacy adapter historically kept the
 first root when separately initialized peers met. Applications can set
-`preserveConcurrentRoots: true` on `createYjsCollaborationExtension` or
-`YjsCollaborationAdapter` to refuse that conflict instead.
+`preserveConcurrentRoots: true` on the explicit `/yjs/legacy` factory or adapter
+to refuse that conflict instead. The retained default always refuses independent
+initialization and cannot turn that preservation off.
 
 The adapter then reports an error, leaves the shared roots in place, and keeps
 the current editor available for local typing. Shared undo and writes stop for
@@ -82,7 +88,7 @@ Yjs before the refusal. Later local typing belongs to the local editor JSON.
 
 Enable the policy on each participating legacy client. Older or unconfigured
 peers can still delete roots through their own legacy behavior. The retained
-preview always refuses independent initialization.
+default always refuses independent initialization.
 
 The recorded legacy browser example exchanges two independently typed drafts,
 shows the refusal, and downloads native bytes that reopen with both roots.
@@ -94,44 +100,53 @@ pnpm exec playwright test --config artifacts/yjs-legacy-root-conflict-20261107.c
 ## Attach a network provider
 
 `YjsProvider` is structural. A provider may expose `connect`, `disconnect`,
-`status` events, and an Awareness-compatible object. Common Yjs providers fit
-that boundary without being imported by FountainJS:
+`status` events, and an Awareness-compatible object. Open the authoritative room
+before constructing its provider. A fresh empty provider-backed document without
+admission is refused before any local seed or provider connection. Otherwise a
+new retained seed could be sent into an existing XML room before synchronization
+reveals the format conflict.
 
 ```ts
-import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
-import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs'
+import { openYjsRoom } from 'fountainjs-editor/yjs/room'
 
-const ydoc = new Y.Doc()
-const provider = new WebsocketProvider(roomURL, roomId, ydoc, {
-  connect: false,
-  params: { ticket: await issueShortLivedRoomTicket(roomId) },
+const room = await openYjsRoom({
+  schema,
+  schemaVersion: 'article-v1',
+  expected: { key: articleId },
+  open: (protocols, signal) => api.openArticle(articleId, protocols, signal),
+  admit: (offer, signal) => api.admitArticle(offer, signal),
 })
 
-const collaboration = createYjsCollaborationExtension({
-  document: ydoc,
-  provider,
-  user: { id: currentUser.id, name: currentUser.name, color: '#196c55' },
+// Host code: create the provider with auto-connect disabled. The backend
+// authenticates the user and fences every write against this native room lease.
+const provider = api.createDisconnectedProvider(room.document, room.lease)
+const collaboration = room.createExtension({
+  provider, user: currentUser,
 })
+// Compose with the same schema extensions and mount room.baseDocument.toJSON().
 ```
 
-The example is intentionally host code. Do not put permanent provider secrets
+The `api` methods and provider are application code. Existing initialized retained
+documents remain usable with a host-managed provider, but the host must ensure
+its native identity matches the remote room. Preseeding an unrelated local
+template does not establish that. The initialization guard cannot authenticate
+or validate a backend, and a provider already connected before admission is
+outside its lifecycle. Do not put permanent provider secrets
 in browser bundles, document JSON, awareness state, or repository settings.
 Use short-lived, room-scoped credentials and enforce document permissions on
 the relay/service—not in the editor UI.
 
 ### Switch documents or providers without recreating the editor
 
-Room, account, and transport changes are explicit runtime operations. Create a
-fresh adapter and replace the current session:
+Room, account, and transport changes are explicit runtime operations. Open the
+destination through the authority and save any unsent source draft before
+replacing the current session:
 
 ```ts
 import { replaceCollaborationAdapter } from 'fountainjs-editor'
-import { YjsCollaborationAdapter } from 'fountainjs-editor/yjs'
 
-replaceCollaborationAdapter(editor, new YjsCollaborationAdapter({
-  document: nextYDoc,
-  provider: nextProvider,
+replaceCollaborationAdapter(editor, () => next.createAdapter({
+  provider: api.createDisconnectedProvider(next.document, next.lease),
   user: { id: currentUser.id, name: currentUser.name, color: '#196c55' },
 }))
 ```
@@ -174,25 +189,23 @@ scope access, disclose the data destination, and retain a revocation path.
 
 ## Shared document representation
 
-The adapter stores a Fountain node as a `Y.XmlElement`:
+The retained default stores node and character identities separately from their
+current document placement. Wrapping a paragraph, splitting its text or applying
+a mark therefore does not have to discard the shared object that an offline
+peer is editing. A small named room gate identifies the versioned retained
+protocol. Checkpoints preserve its native Yjs state; ordinary Fountain JSON
+remains the portable document representation.
 
-- the node type is shared metadata;
-- each node attribute is a separate shared key, so unrelated attribute edits
-  can merge independently;
-- a text node owns one `Y.XmlText`, giving concurrent character edits CRDT
-  semantics;
-- marks are stored on their text-node element;
-- container children are a Yjs sequence, preserving retained block identity
-  across ordinary insertion, deletion, and editing;
-- the document has one root element. If two disconnected clients initialize an
-  empty room simultaneously, Yjs ordering chooses the same first root and the
-  adapter removes the redundant seed deterministically.
+The explicit XML adapter instead represents each model node as a nested
+`Y.XmlElement`, with its text in a `Y.XmlText` and marks on the text-node element.
+Its before/after reconciliation aligns existing elements and replaces unmatched
+structure. That representation has the documented offline structural-edit
+limitations. Its historical first-root cleanup is available only in the legacy
+adapter when `preserveConcurrentRoots` is not enabled. The retained default
+never chooses one independently initialized draft and discards the other.
 
-Local reconciliation uses the transaction's before/after document pair. It
-retains aligned nodes, applies minimal prefix/suffix changes to `Y.XmlText`,
-and inserts or deletes unmatched structure. Incoming state is reconstructed
-through the receiving editor's schema and must pass complete validation before
-one `fountain$collaborationRemote` transaction can replace editor content.
+Both adapters reconstruct incoming state through the receiving editor's schema
+and validate it before applying a remote transaction.
 Malformed nodes, marks, attributes, excess depth/count, unsafe presence, and
 unknown schema types fail closed; the previous editor document remains intact.
 
@@ -221,7 +234,7 @@ const collaboration = createYjsCollaborationExtension({
 
 Configured nodes need valid unique stable IDs. The adapter mirrors their
 selected values into a dedicated nested `Y.Map`/`Y.Array` tree, updates it in
-the same transaction as the canonical XML representation, overlays it on
+the same transaction as the canonical document representation, overlays it on
 remote reads, and repairs the flat JSON attribute after convergence. Separate
 nested keys and concurrent array insertions survive; edits to the same leaf and
 whole-root replacement remain genuine conflicts resolved by Yjs. The undo

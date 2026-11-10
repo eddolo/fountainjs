@@ -7,7 +7,7 @@ import { DatabaseSync } from 'node:sqlite';
 import * as Y from 'yjs';
 import { CoreExtension, MathExtension, Selection, composeExtensions, createEditor, defineExtension, getCollaborationState, insertText, setMark, toggleQuote } from '../src';
 import { defineStructuredAttribute, setStructuredAttribute } from '../src/structured-attributes';
-import { createYjsCollaborationExtension } from '../src/yjs';
+import { createYjsCollaborationExtension } from '../src/yjs/legacy';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
 import { captureLegacyCheckpoint, restoreLegacyCheckpoint, type LegacyCheckpoint } from '../src/yjs/legacy-checkpoint';
 import { captureRetainedCheckpoint, restoreRetainedCheckpoint, type RetainedCheckpoint } from '../src/yjs/retained-checkpoint';
@@ -155,6 +155,48 @@ it('lists formatting-only changes and excludes a paragraph whose ID is ambiguous
   await save(duplicate.draftId);
   expect(await recovery.listChangedParagraphs(duplicate)).toEqual({ total: 0, paragraphs: [] });
   await expect(recovery.preview(duplicate)).rejects.toThrow('one identifiable text-only paragraph');
+});
+
+it('atomically records one reviewed edit and acknowledges exact retries at the latest revision', async () => {
+  const pair = await fixture();
+  const offline = await open(pair.checkpoint, pair);
+  type(offline, 'OFFLINE ');
+  const { operation, result } = await migrate(pair);
+  const request = { archiveId: operation, sourceEpoch: pair.initial.epoch, draftId: uuid(), nodeId: 'intro' };
+  await pair.handoff.saveRetiredDraft({ ...request, checkpoint: await captureLegacyCheckpoint(offline.document, pair.schema, version) });
+  const recovery = new RetainedTextRecovery({ crossFormat: pair.a }, key, pair.schema, version);
+  const second = new RetainedTextRecovery({ crossFormat: pair.b }, key, pair.schema, version);
+  const review = await recovery.preview(request);
+  const id = uuid(), proposal = 'Recovered from the archived draft.';
+  const usage = pair.a.readStorageUsage(key)!;
+  const capped = new SQLiteRetainedRoomRepository(pair.path, Date.now, { maxRecoveryBytesPerRoom: usage.recoveryBytes });
+  cleanup.push(() => capped.close());
+  const limited = new RetainedTextRecovery({ crossFormat: capped }, key, pair.schema, version);
+  await expect(limited.apply(review, proposal, id)).rejects.toMatchObject({ code: 'recovery-capacity' });
+  expect(await pair.a.readDocumentReview(key, id)).toBeUndefined();
+  expect(await pair.other.snapshot()).toEqual(result.snapshot);
+
+  const [first, replay] = await Promise.all([
+    recovery.apply(review, proposal, id), second.apply(review, proposal, id),
+  ]);
+  expect(replay).toEqual(first);
+  expect(first.revision).toBe(review.revision + 1);
+  expect(pair.a.readStorageUsage(key)).toMatchObject({ reviewCount: 1, reviewBytes: 144, recoveryBytes: usage.recoveryBytes + 144 });
+  await expect(second.apply(review, 'Different proposal.', id)).rejects.toMatchObject({ code: 'invalid-ticket' });
+  await expect(second.apply(review, proposal, uuid())).rejects.toMatchObject({ code: 'revision-conflict' });
+  const active = await open(first.checkpoint, pair, 'RetainedWriter');
+  type(active, 'PEER ');
+  const latest = await pair.other.write({ epoch: first.epoch, protocol: 'retained', update: Y.encodeStateAsUpdate(active.document) });
+  const frozen = await pair.room.freeze(latest);
+  await expect(second.apply(review, proposal, id)).rejects.toMatchObject({ code: 'frozen' });
+  await pair.room.abort(frozen);
+  const reopened = new SQLiteRetainedRoomRepository(pair.path);
+  cleanup.push(() => reopened.close());
+  const afterRestart = new RetainedTextRecovery({ crossFormat: reopened }, key, pair.schema, version);
+  expect(await afterRestart.apply(review, proposal, id)).toEqual(latest);
+  const noChange = await afterRestart.preview(request), noChangeId = uuid();
+  expect(await afterRestart.apply(noChange, noChange.currentText, noChangeId)).toEqual(latest);
+  expect(await reopened.readDocumentReview(key, noChangeId)).toMatchObject({ epoch: latest.epoch, revision: latest.revision });
 });
 
 it('fences cross-format drafts by epoch and identity and includes them in the existing recovery cap', async () => {

@@ -4,7 +4,7 @@ import * as Y from 'yjs';
 import {CoreExtension,composeExtensions,createEditor,defineExtension,disconnectCollaboration,getCollaborationState,reconnectCollaboration,replaceCollaborationAdapter,undoCollaboration,type Editor,type NodeJSON} from '../src';
 import {createRetainedYjsCollaborationExtension,RetainedYjsCollaborationAdapter} from '../src/yjs/retained-adapter';
 import {captureRetainedCheckpoint,type RetainedCheckpoint} from '../src/yjs/retained-checkpoint';
-import {createYjsCollaborationExtension,type YjsProvider} from '../src/yjs';
+import {createYjsCollaborationExtension,type YjsProvider} from '../src/yjs/legacy';
 import {prepareRetainedAdmission} from '../src/yjs/retained-admission';
 import {defineStructuredAttribute, setStructuredAttribute} from '../src/structured-attributes';
 

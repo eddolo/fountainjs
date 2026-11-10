@@ -22,6 +22,7 @@ import {
   type NodeJSON,
 } from '../src';
 import { createYjsCollaborationExtension } from '../src/yjs';
+import { RetainedDocumentStore } from '../src/yjs/retained-document';
 
 const paragraph = (text = '') => ({ type: 'paragraph', content: [{ type: 'text', text }] }) as const;
 const rule = { type: 'horizontal_rule' } as const;
@@ -140,7 +141,10 @@ describe('trailing editable block extension', () => {
     const right = createEditor({ schema: rightKit.schema, plugins: rightKit.plugins, content: left.getJSON() });
 
     left.dispatch(left.state.createTransaction().replace(left.state.doc.childCount, left.state.doc.childCount, [left.state.schema.node('horizontal_rule')]));
-    expect(leftDocument.getXmlFragment('fountain').toString()).toContain('horizontal_rule');
+    const stored = new RetainedDocumentStore(leftDocument, 'fountain', left.state.schema, () => { throw new Error('Read-only storage inspection'); });
+    try {
+      expect(stored.read().content.map(node => node.type.name)).toEqual(['paragraph', 'horizontal_rule', 'paragraph']);
+    } finally { stored.destroy(); }
     const leftUpdate = Y.encodeStateAsUpdate(leftDocument);
     const rightUpdate = Y.encodeStateAsUpdate(rightDocument);
     Y.applyUpdate(leftDocument, rightUpdate, 'right-peer');

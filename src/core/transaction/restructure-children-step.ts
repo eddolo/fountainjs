@@ -1,5 +1,6 @@
 import { Node } from '../schema';
 import { childOffset } from '../schema/child-offset';
+import { blockLineage } from '../schema/block-lineage';
 import { nodeRangeAtPath, StepMap } from './mapping';
 import { getNodeAtPath, replaceNodeAtPath } from './path';
 import { Step } from './step';
@@ -50,13 +51,23 @@ export class RestructureChildrenStep extends Step {
     const content = needsRebase ? this.content.map(rebase) : this.content;
     const start = (this.parentPath.length ? nodeRangeAtPath(doc, this.parentPath).from + 1 : 0) + childOffset(parent, this.from);
     const origins = new Map<Node, Origin[]>();
+    const copiedOrigins = new Map<symbol, { node: Node; origin: Origin } | null>();
     const index = (node: Node, from: number): void => {
       const entries = origins.get(node) ?? []; entries.push({ from, size: node.nodeSize }); origins.set(node, entries);
+      const lineage = blockLineage(node);
+      if (lineage) copiedOrigins.set(lineage, copiedOrigins.has(lineage) ? null : { node, origin: { from, size: node.nodeSize } });
       let position = from + 1;
       node.content.forEach(child => { index(child, position); position += child.nodeSize; });
     };
     let end = start;
     current.forEach(node => { index(node, end); end += node.nodeSize; });
+    const copiedCounts = new Map<symbol, number>();
+    const countCopies = (node: Node): void => {
+      const lineage = blockLineage(node);
+      if (lineage) copiedCounts.set(lineage, (copiedCounts.get(lineage) ?? 0) + 1);
+      node.content.forEach(countCopies);
+    };
+    content.forEach(countCopies);
     let oldPosition = start, inserted = 0;
     const ranges: number[] = [], originOffsets = new Map<Node, number>();
     const gap = (until: number): void => {
@@ -71,6 +82,21 @@ export class RestructureChildrenStep extends Step {
       originOffsets.set(node, offset + (origin ? 1 : 0));
       if (origin) { gap(origin.from); oldPosition += origin.size; return; }
       if (node.isText) { inserted += node.nodeSize; return; }
+      // A copied container keeps its opening token when operation provenance
+      // identifies exactly one old and one new owner. Recurse through changed
+      // children instead of claiming their contents were all retained. A split
+      // producing multiple copies cannot assign the old owner to both.
+      const lineage = blockLineage(node), copied = lineage && copiedCounts.get(lineage) === 1 ? copiedOrigins.get(lineage) : undefined;
+      if (copied && copied.node.type === node.type && copied.origin.from >= oldPosition) {
+        gap(copied.origin.from); oldPosition++;
+        node.content.forEach(retain);
+        const closing = copied.origin.from + copied.origin.size - 1;
+        // Indenting a later sibling can move it across this owner's old close.
+        // Preserve the close only if it remains in monotonic source order.
+        if (closing >= oldPosition) { gap(closing); oldPosition++; }
+        else inserted++;
+        return;
+      }
       inserted++;
       node.content.forEach(retain);
       inserted++;

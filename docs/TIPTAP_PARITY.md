@@ -1,6 +1,34 @@
 # FountainJS → ProseMirror + Tiptap capability programme
 
-## Current programme status — 2026-11-08
+## Current programme status — 2026-11-10
+
+The six original default-adapter concurrency regressions now pass through the
+ordinary `/yjs` entry. It uses retained character/node identities; the former
+XML implementation is explicitly available at `/yjs/legacy`. Existing rooms
+are never silently reinterpreted. This is a local, unreleased beta compatibility
+change, with Yjs 13.6.32 as the supported minimum.
+[Adoption and migration](YJS_DEFAULT_ADOPTION.md).
+
+Additional confirmed failures repaired in this checkpoint include offline
+splits under deleted ancestors, undo of a parent insertion while another author
+edits it, and concurrent indentation losing list ownership and automatic RTL
+direction. Empty provider-backed startup now refuses to seed before room
+admission. Recovery receipts preserve reviewed drafts through lost replies,
+reload and retries. [Deletion/undo](YJS_RETAINED_DELETION_AUDIT.md),
+[draft review](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
+
+Combined verification passes 5,086 source tests with zero failures/skips,
+45 recorded default-adapter desktop journeys, package/type/headless/server
+checks and existing performance limits. The migration matrix has 17 first-run
+passes and one Firefox startup timeout, which repeats once and later passes
+unchanged in isolation. Preserve that reliability limitation; these changes
+do not establish production parity or a new release.
+The ledger remains 61 Delivered, eight Partial and two Host boundary rows;
+COLLAB-01 stays Partial. Production rollout, sustained storage/performance,
+document interchange/layout fidelity, broader framework/device coverage,
+accessibility and RTL/localization remain unfinished.
+
+## Historical programme status — 2026-11-08
 
 The capability ledger has 61 Delivered rows, eight Partial rows and two Host
 boundary rows. These count bounded capability contracts, not percentage

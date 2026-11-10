@@ -419,6 +419,21 @@ export class RetainedTextStore {
 
   has(id: string): boolean { this.assertLive(); return validId(id) && this.owners.has(id); }
 
+  /** A stream and its initial boundaries outlive undo of their authoring. */
+  retainUndoAllocation(item: Y.Item, insertions: Y.Transaction['deleteSet']): boolean {
+    if (item.parent === this.texts && item.content instanceof Y.ContentType && item.content.type instanceof Y.Text) return true;
+    const created = (stream: unknown): boolean => {
+      if (!(stream instanceof Y.Text) || stream.parent !== this.texts) return false;
+      const allocation = Y.createRelativePositionFromTypeIndex(stream, 0).type;
+      return !!allocation && Y.isDeleted(insertions, allocation);
+    };
+    if (item.parent === this.owners) {
+      const stream = this.texts.get(item.content.getContent()[0]);
+      return created(stream);
+    }
+    return item.content instanceof Y.ContentEmbed && created(item.parent);
+  }
+
   partitions(streamId: string): readonly RetainedTextPartition[] { return this.index(streamId); }
 
   private position(partition: RetainedTextPartition, offset: number): number {
