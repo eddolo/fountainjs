@@ -1,8 +1,7 @@
 # Vue 3 integration
 
-**Unreleased:** this entry is available in the repository build and deployed
-demo. Do not expect it in the existing npm release until the next verified
-publication. Build this checkout with `pnpm build` to try the package locally.
+The `fountainjs-editor/vue` entry is available in the
+[published 0.4.0-beta.2 package](https://www.npmjs.com/package/fountainjs-editor/v/0.4.0-beta.2).
 
 The optional `fountainjs-editor/vue` entry supplies `useFountain`,
 `useFountainState`, and `FountainEditor`. Vue is an external optional peer

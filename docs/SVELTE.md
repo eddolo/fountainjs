@@ -1,8 +1,7 @@
 # Svelte 5 integration
 
-**Unreleased:** this entry is available in the repository build. Do not expect
-it in the existing npm release until the next verified publication. Build the
-checkout with `pnpm build` to try it locally.
+The `fountainjs-editor/svelte` entry is available in the
+[published 0.4.0-beta.2 package](https://www.npmjs.com/package/fountainjs-editor/v/0.4.0-beta.2).
 
 `fountainjs-editor/svelte` supplies a client lifecycle helper, a readable state
 store and a native Svelte action. It uses the same Fountain document engine,

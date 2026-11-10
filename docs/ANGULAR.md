@@ -1,8 +1,7 @@
 # Angular integration
 
-**Unreleased:** this entry is in the repository build. The existing npm release
-does not contain it; publication remains gated on the full release objective.
-Run `pnpm build` to try this checkout.
+The `fountainjs-editor/angular` entry is available in the
+[published 0.4.0-beta.2 package](https://www.npmjs.com/package/fountainjs-editor/v/0.4.0-beta.2).
 
 `fountainjs-editor/angular` provides `createFountain`, `fountainState` and the
 standalone `FountainEditorDirective`. Angular 22 is an external optional peer;
@@ -43,6 +42,8 @@ Use the ordinary Angular application build/linker, not a TypeScript-only
 transpiler, for the directive and your templates.
 
 ## Use Fountain as a form field
+
+The Forms entry is unreleased. Build the current checkout to try it locally.
 
 For Angular 22 Reactive Forms, import `FountainDocumentField` from
 `fountainjs-editor/angular/forms` and install the matching `@angular/forms`

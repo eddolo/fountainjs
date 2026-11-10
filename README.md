@@ -14,7 +14,8 @@ Underneath those ready-made features is a modular editing engine: a typed docume
 
 `0.4.0-beta.2` is the public-beta checkpoint, not a claim of completed parity.
 Install it with `npm install fountainjs-editor@0.4.0-beta.2`; npm's `latest` tag
-currently points to that version. See the [checkpoint and known limitations](docs/RELEASE_0_4_0_BETA_2.md).
+currently points to that version. See the [GitHub prerelease](https://github.com/eddolo/fountainjs/releases/tag/v0.4.0-beta.2)
+and its [known limitations](docs/RELEASE_0_4_0_BETA_2.md).
 Newer changes listed under Unreleased are not in this package.
 The unreleased [Markdown/HTML work](docs/MARKDOWN_DOCUMENT_FLOW.md) keeps the
 default and optional safe-reader reference profiles at 563/652 and 613/652.
