@@ -285,7 +285,9 @@ resolved field values without copying model content. `measureDOMPageFlow()` is
 the optional browser boundary: it measures line boxes, direct blockquote
 children, list items, table row-span groups, media, and footnotes, but those measurements
 never enter editor state and the adapter never moves editable nodes. Its source
-map is ordinary frozen data and never retains a DOM element. The strict content
+map is ordinary frozen data and never retains a DOM element. Read-only callers
+can set `omitTrailingCaret: true` to exclude the editor's untouched automatic
+typing paragraph while preserving authored empty paragraphs. The strict content
 projection then joins page placements to those sources and fails closed if an
 external layout is incomplete or inconsistent. The optional controller
 automates invalidation and measurement but does not own rendering or state. Its

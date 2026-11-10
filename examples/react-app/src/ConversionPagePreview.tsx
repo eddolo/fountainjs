@@ -15,7 +15,7 @@ function paperFor(document: Node) {
     if (paper.size.width > 4000 || paper.size.height > 4000 || bodyWidth < 64 || paper.bodyHeight < 64) {
       throw new RangeError('Document dimensions exceed this preview’s layout limits.');
     }
-    return { paper, note: 'Using the document’s paper size and margins.' };
+    return { paper, settings, note: 'Using the document’s paper size and margins.' };
   } catch (error) {
     return {
       paper: createPageGeometry({ size: 'letter', margins: 25.4, unitsPerMillimetre }),
@@ -52,7 +52,7 @@ export function ConversionPagePreview({ editor, document, surface }: {
     setMessage('Measuring the draft…');
     let source: HTMLElement | undefined;
     try {
-      const { paper, note } = paperFor(draft);
+      const { paper, settings, note } = paperFor(draft);
       const width = paper.size.width - paper.margins.left - paper.margins.right;
       source = live.cloneNode(true) as HTMLElement;
       source.setAttribute('aria-hidden', 'true');
@@ -66,10 +66,19 @@ export function ConversionPagePreview({ editor, document, surface }: {
       if (target.current !== mount) return;
       if (editor.state.doc !== draft) throw new Error('The draft changed before measurement. Build the preview again.');
 
-      const measurement = measureDOMPageFlow(source, draft);
-      const templateHeight = (kind: 'header' | 'footer') => Math.max(0, ...measurement.templates.filter(template => template.kind === kind).map(template => template.height));
-      const geometry = createPageGeometry({ size: paper.size, margins: paper.margins,
-        headerHeight: templateHeight('header'), footerHeight: templateHeight('footer') });
+      const measurement = measureDOMPageFlow(source, draft, { omitTrailingCaret: true });
+      const furniture = (kind: 'header' | 'footer', bodyMargin: number, edgeDistance?: number) => {
+        const templates = measurement.templates.filter(template => template.kind === kind);
+        if (!templates.length) return { margin: bodyMargin, height: 0 };
+        const margin = edgeDistance === undefined ? bodyMargin : edgeDistance * 96 / 72;
+        // A template only takes body space once it extends past the body margin.
+        const height = Math.max(bodyMargin - margin, ...templates.map(template => template.height));
+        return { margin, height };
+      };
+      const header = furniture('header', paper.margins.top, settings?.headerDistance);
+      const footer = furniture('footer', paper.margins.bottom, settings?.footerDistance);
+      const geometry = createPageGeometry({ size: paper.size, margins: { ...paper.margins, top: header.margin, bottom: footer.margin },
+        headerHeight: header.height, footerHeight: footer.height });
       const layout = layoutPages(measurement.items, geometry, { maximumPages: 150 });
       const presentation = projectPagePresentation(draft, layout);
       source.classList.remove('lab-page-measure');
@@ -80,7 +89,7 @@ export function ConversionPagePreview({ editor, document, surface }: {
         measurement, layout, presentation, content: projectDOMPageContent(measurement, layout),
       }, { ariaLabel: 'Paged draft preview' });
       const warnings = [...measurement.warnings, ...layout.warnings, ...presentation.warnings].map(warning => warning.detail);
-      const templates = measurement.templates.length ? ' Headers and footers use their measured heights. Original offsets may differ.' : '';
+      const templates = measurement.templates.length ? ' Headers and footers use measured heights and any supported edge distances.' : '';
       setBuilt({ document: draft, pages: pages.length, note: note + templates, warnings });
       setMessage('');
     } catch (error) {

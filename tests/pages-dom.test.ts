@@ -2,6 +2,7 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CoreExtension, Schema, composeExtensions } from '../src';
+import { markAutomaticTrailingParagraph } from '../src/core/editing-provenance';
 import { PagesExtension, createPageGeometry } from '../src/pages';
 import {
   DOMEditablePageSurface,
@@ -26,6 +27,21 @@ function rectangle(top: number, height: number): DOMRect {
 afterEach(() => vi.restoreAllMocks());
 
 describe('DOM page measurement adapter', () => {
+  it('omits only the automatic trailing typing paragraph when building a reader projection', () => {
+    const model = schema();
+    const blank = () => model.node('paragraph', {}, [model.text('')]);
+    const authored = blank();
+    const caret = blank();
+    markAutomaticTrailingParagraph(caret);
+    const document = model.node('doc', {}, [authored, caret]);
+    const root = window.document.createElement('div');
+    root.innerHTML = '<p data-fountain-path="0"></p><p data-fountain-path="1"></p>';
+    const paths = (omitTrailingCaret: boolean) => measureDOMPageFlow(root, document, { omitTrailingCaret }).fragmentSources.map(source => source.sourcePath);
+    expect(paths(false)).toEqual([[0], [1]]);
+    expect(paths(true)).toEqual([[0]]);
+    expect(document.content).toEqual([authored, caret]);
+  });
+
   it('measures templates, body blocks, manual breaks, and footnote reservations without changing the model', () => {
     const document = schema().nodeFromJSON({
       type: 'doc',

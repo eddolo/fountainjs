@@ -34,18 +34,20 @@ it('shares class receiver property names without renaming keys or changing the r
   exercise() {
     this.longRepeatedMemberName = 1;
     this.longRepeatedMemberName += 2;
-    return [this.longRepeatedMemberName, this?.longRepeatedMemberName];
+    const absent = null;
+    return [this.longRepeatedMemberName, this?.longRepeatedMemberName, absent?.longRepeatedMemberName];
   }
 }
 exports.longRepeatedMemberName = new Reader().exercise();`;
   const compacted = compactCommonJsLiterals(original);
   expect(compacted.code).toContain('this[__fountainLiteral');
   expect(compacted.code).toContain('get longRepeatedMemberName()');
-  expect(compacted.code).toContain('this?.longRepeatedMemberName');
+  expect(compacted.code).toContain('this?.[__fountainLiteral');
+  expect(compacted.code).toContain('absent?.[__fountainLiteral');
   expect(compacted.code).toContain('exports.longRepeatedMemberName');
   const exports: Record<string, unknown> = {};
   runInNewContext(compacted.code, { exports });
-  expect(exports.longRepeatedMemberName).toEqual([3, 3]);
+  expect(exports.longRepeatedMemberName).toEqual([3, 3, undefined]);
 });
 
 it('shares ordinary object members while retaining receivers, definitions and static exports', () => {

@@ -37,12 +37,14 @@ function shareableUse(node, parent, moduleBindings, code) {
   if (value?.length >= 8 && canShare(node, parent, code)) {
     return { value, start: node.start, end: node.end, member: false };
   }
-  if (node.type === 'MemberExpression' && !node.computed && !node.optional
+  if (node.type === 'MemberExpression' && !node.computed
     && node.object.type !== 'Super' && node.property.type === 'Identifier'
     && !isModuleRead(node.object, moduleBindings)
     && !staticKeys.has(node.property.name)
     && node.property.name.length >= 5 && code[node.property.start - 1] === '.') {
-    return { value: node.property.name, start: node.property.start - 1, end: node.property.end, member: true };
+    // Optional access retains its `?.` token before the computed property.
+    const start = node.optional ? node.property.start : node.property.start - 1;
+    return { value: node.property.name, start, end: node.property.end, member: true };
   }
   if (node.type === 'Property' && parent?.type === 'ObjectExpression'
     && !node.computed && !node.shorthand && node.key.type === 'Identifier'

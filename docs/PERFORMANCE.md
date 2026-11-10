@@ -915,6 +915,11 @@ about six seconds locally, compared with about one second for the prior output.
 
 #### Sharing repeated CommonJS property keys
 
+The 2026-11-10 build also shares eligible optional member names while
+retaining the optional access token and its short-circuit behavior. On the
+same source, aggregate CommonJS size fell from 1,449,714 to 1,445,864 bytes
+and passes the existing 1,449,408-byte cap.
+
 The build now shares repeated names in ordinary property accesses and object
 definitions. It preserves the actual property keys and receivers, CommonJS
 export assignments and direct module member reads, optional accesses, and

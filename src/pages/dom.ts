@@ -1,4 +1,5 @@
 import type { Node } from '../core';
+import { isAutomaticTrailingParagraph } from '../core/editing-provenance';
 import type { ParagraphLayout } from '../core/paragraph-layout';
 import { repeatedDOMTableRows } from '../core/table-layout';
 import {
@@ -84,6 +85,8 @@ export interface DOMPageMeasurementOptions {
   readonly lineFragmentNodeTypes?: readonly string[];
   /** Optional host-owned legal fragments for custom rendered blocks/NodeViews. */
   readonly blockContinuation?: DOMPageBlockContinuationAdapter;
+  /** Exclude an untouched automatic typing paragraph from a read-only projection. */
+  readonly omitTrailingCaret?: boolean;
 }
 
 export interface DOMPageBlockContinuationContext {
@@ -935,8 +938,10 @@ function measureDOMPageFlowInternal(
       && !rendered.has(index)
     ) rendered.set(index, element);
   });
-  document.content.forEach((_node, index) => {
-    if (!rendered.has(index)) warnings.push(Object.freeze({
+  const tail = options.omitTrailingCaret ? document.content.at(-1) : undefined;
+  const omittedCaret = isAutomaticTrailingParagraph(tail) ? tail : undefined;
+  document.content.forEach((node, index) => {
+    if (node !== omittedCaret && !rendered.has(index)) warnings.push(Object.freeze({
       code: 'missing-rendered-node', path: Object.freeze([index]),
       detail: `No rendered top-level node was found for model path ${index}.`,
     }));
@@ -966,7 +971,7 @@ function measureDOMPageFlowInternal(
   const nextEntries = new Map<number, CachedFlowMeasurement>();
   document.content.forEach((node, index) => {
     const element = rendered.get(index);
-    if (!element) return;
+    if (!element || node === omittedCaret) return;
     const path = Object.freeze([index]);
     if (node.type.name === 'footnote_definition') return;
     const definitionSignature = referencedDefinitionSignature(node, definitionMeasurements);

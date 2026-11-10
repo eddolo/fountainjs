@@ -262,7 +262,7 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .closing a { display: inline-block; padding: 14px 20px; color: #17152a; background: white; border-radius: 10px; font-size: 14px; font-weight: 800; }
 .closing__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 .closing__actions a + a { color: white; background: transparent; border: 1px solid rgb(255 255 255 / 45%); }
-footer { display: flex; justify-content: space-between; padding: 24px clamp(20px, 5vw, 72px); color: #8c8798; background: #17152a; font: 10px DM Mono, monospace; }
+footer:where(:not(.fountain-editor footer)) { display: flex; justify-content: space-between; padding: 24px clamp(20px, 5vw, 72px); color: #8c8798; background: #17152a; font: 10px DM Mono, monospace; }
 
 @media (max-width: 1200px) {
   .definition { grid-template-columns: 1fr; }
@@ -321,7 +321,7 @@ footer { display: flex; justify-content: space-between; padding: 24px clamp(20px
   .collaboration-demo__editor-footer { align-items: flex-start; gap: 8px; flex-direction: column; }
   .collaboration-demo__room { width: 100%; align-items: flex-start; flex-direction: column; }
   .versions-demo .fountain-version-card footer { flex-direction: row; }
-  footer { gap: 12px; flex-direction: column; }
+  footer:where(:not(.fountain-editor footer)) { gap: 12px; flex-direction: column; }
   .hero h1 > span, .hero h1 > em { white-space: normal; }
   .closing h2 { font-size: clamp(34px, 10.5vw, 42px); }
   .closing__phrase { display: block; white-space: nowrap; }

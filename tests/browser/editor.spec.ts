@@ -102,7 +102,7 @@ test('keeps native form emptiness custom policy failures and canceled invalid ev
 test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
   await webComponentValidationJourney(page, info);
 });
-import { conversionLabJourney, conversionPagePreviewJourney } from './conversion-lab-journey';
+import { conversionLabJourney, conversionPagePreviewJourney, conversionScientificPreviewJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';
 
@@ -289,6 +289,20 @@ test('previews and prints only the current local draft in the conversion lab', a
     expect(pages).toHaveLength(2);
     expect(pages[0]).toMatch(/^Lead first.*Lead third$/su);
     expect(pages[1]).toMatch(/^Section heading.*Body second Added in the lab\.$/su);
+  }
+});
+
+test('prints the edited scientific DOCX in the conversion lab', async ({ page }, info) => {
+  const { pdf, sheetCount } = await conversionScientificPreviewJourney(page, info);
+  if (pdf) {
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(sheetCount);
+    expect(pages[0]).toContain('Cooling experiment report');
+    expect(pages.at(-1)).toContain('END OF REPORT Checked in the lab.');
+    const text = pages.join(' ');
+    expect(text).toContain('Recorded temperatures');
+    expect(text).toContain('they are not measured experimental data.');
+    expect(text.match(/they are not measured experimental data\./gu)).toHaveLength(1);
   }
 });
 

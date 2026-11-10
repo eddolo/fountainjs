@@ -3,6 +3,58 @@ import { readFile } from 'node:fs/promises';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionScientificPreviewJourney(page: Page, info: TestInfo) {
+  await page.goto('/conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles('tests/fixtures/native-docx/cooling-report.docx');
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: cooling-report.docx' });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  await expect(editor.locator('img')).toHaveCount(3);
+  await expect(editor.locator('[data-fountain-math]')).toHaveCount(2);
+  const ending = editor.getByText('END OF REPORT', { exact: true });
+  await ending.click();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Checked in the lab.');
+  await expect(editor).toContainText('END OF REPORT Checked in the lab.');
+
+  const controls = workspace.getByRole('region', { name: 'Draft pagination' });
+  await controls.getByRole('button', { name: 'Build page preview' }).click();
+  const preview = controls.getByRole('region', { name: 'Paged draft preview' });
+  await expect(preview).toBeVisible();
+  const sheets = preview.locator('.fountain-page-preview__sheet');
+  const body = sheets.locator('.fountain-page-preview__body');
+  const header = sheets.locator('.fountain-page-preview__header');
+  const footer = sheets.locator('[data-fountain-page-template^="footer:"]');
+  const notes = body.locator('.fountain-page-preview__footnotes');
+  await expect(body.locator('img')).toHaveCount(2);
+  await expect(body.locator('[data-fountain-math]')).toHaveCount(2);
+  await expect(body.locator('table')).toHaveCount(1);
+  await expect(notes).toHaveCount(1);
+  await expect(notes).toContainText('they are not measured experimental data.');
+  await expect(sheets.last()).toContainText('END OF REPORT Checked in the lab.');
+  await expect(sheets).toHaveCount(2);
+  expect(await header.locator('img').count()).toBeGreaterThan(0);
+  await expect(footer.first()).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  const firstSheet = (await sheets.first().boundingBox())!;
+  const firstHeader = (await header.first().boundingBox())!;
+  const firstFooter = (await footer.first().boundingBox())!;
+  // This fixture declares both edge distances at 36 pt (48 CSS px).
+  expect(firstHeader.y - firstSheet.y).toBeCloseTo(48, 0);
+  expect(firstSheet.y + firstSheet.height - firstFooter.y - firstFooter.height).toBeCloseTo(48, 0);
+  await expect.poll(() => sheets.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  await page.setViewportSize({ width: 1280, height: 1460 });
+  for (const [index, sheet] of (await sheets.all()).entries()) {
+    await sheet.screenshot({ path: info.outputPath(`cooling-report-sheet-${index + 1}.png`) });
+  }
+
+  await page.emulateMedia({ media: 'print' });
+  await expect(editor).toBeHidden();
+  const pdf = info.project.name === 'chromium'
+    ? await page.pdf({ path: info.outputPath('cooling-report-print.pdf'), preferCSSPageSize: true, printBackground: true })
+    : undefined;
+  await page.emulateMedia({ media: 'screen' });
+  return { pdf, sheetCount: await sheets.count() };
+}
+
 export async function conversionPagePreviewJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
   const paragraph = (lines: string[], keepWithNext = false) => schema.node('paragraph', {

@@ -16,9 +16,10 @@ records current failures; successful draft round trips do not resolve those loss
 After importing a file, choose **Build page preview** below the editor. This
 lays out the current draft locally in a read-only preview. The preview uses
 supported paper size and margins from the document. It states when it uses
-Letter with 1-inch margins instead. Header and footer templates reserve their
-measured height. Their original edge offsets can differ. Layout warnings are
-listed beneath the page count, and a preview is limited to 150 pages.
+Letter with 1-inch margins instead. Header and footer templates use the
+supported edge distances and only take body space when their measured height
+extends past the corresponding margin. Layout warnings are listed beneath the
+page count, and a preview is limited to 150 pages.
 
 Use **Print / Save PDF** to open the browser's print dialog for that snapshot.
 Edits clear the snapshot and disable printing until it is rebuilt. Switching
@@ -36,6 +37,16 @@ PDF contains only the two updated draft pages at the imported paper size.
 Firefox and WebKit checks cover the same preview workflow and print-media
 isolation. This verifies the tested draft, with original-file comparison still
 separate.
+
+The scientific-report journey uses a separately authored DOCX with embedded
+charts, two equations, a merged table, a repeated header and footer, and a
+footnote. It caught site footer styling leaking into the draft and the editor's
+automatic typing paragraph producing a blank final sheet. The projection uses
+the document footer's own styling and skips that generated paragraph. Authored
+blank paragraphs still contribute to layout. The Chromium PDF went from four
+Letter pages to two, matching LibreOffice's page count for the untouched file.
+Both PDF pages and the browser preview were visually inspected. The documents
+still differ in some vertical spacing, caption alignment, and equation styling.
 
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing

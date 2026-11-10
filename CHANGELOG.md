@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Build a paged preview of the active Conversion Lab draft and print it or save
+  it as a PDF. The preview uses supported DOCX header and footer offsets, keeps
+  site styling out of the document, and clears when the draft changes.
+- Use `omitTrailingCaret` in DOM page measurement for read-only output that
+  skips the editor's automatic typing paragraph while retaining authored blanks.
 - Reopen HTML and Fountain JSON downloads from CommonMark source review in
   the Conversion Lab with the source-review schema.
 - Restore keyboard focus after closing clipboard history or pasting from it.
