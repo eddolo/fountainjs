@@ -1,0 +1,777 @@
+{
+  "profile": "artifacts/yjs-endurance-1000x2-20261110.cpuprofile",
+  "sampledMs": 8097.271,
+  "samples": 5261,
+  "scope": "One profiled 1,000-paragraph, two-cycle semantic pass. Inclusive times overlap. Nearest-Fountain attribution includes dependency descendants; GC cannot be reliably assigned. Timing is separate from the unprofiled 12-cycle baseline.",
+  "categories": [
+    {
+      "frame": "Fountain retained/Yjs integration",
+      "milliseconds": 5293.98
+    },
+    {
+      "frame": "Diagnostic/Node/Yjs without Fountain caller",
+      "milliseconds": 1165.854
+    },
+    {
+      "frame": "Diagnostic package fingerprint",
+      "milliseconds": 613.938
+    },
+    {
+      "frame": "GC",
+      "milliseconds": 496.387
+    },
+    {
+      "frame": "Fountain core",
+      "milliseconds": 332.135
+    },
+    {
+      "frame": "Fountain stable IDs",
+      "milliseconds": 111.193
+    },
+    {
+      "frame": "Runtime/module startup/other",
+      "milliseconds": 77.825
+    },
+    {
+      "frame": "Fountain collaboration/other extensions",
+      "milliseconds": 5.959
+    }
+  ],
+  "nearestFountain": [
+    {
+      "frame": "src/yjs/retained-text.ts:200:2 assertLive",
+      "milliseconds": 1042.132
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:105:2 valid",
+      "milliseconds": 726.501
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:407:2 value",
+      "milliseconds": 352.225
+    },
+    {
+      "frame": "src/yjs/retained-checkpoint.ts:94:9 Xr",
+      "milliseconds": 202.468
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:444:19 l",
+      "milliseconds": 190.586
+    },
+    {
+      "frame": "src/yjs/retained-checkpoint.ts:99:9 Zr",
+      "milliseconds": 170.694
+    },
+    {
+      "frame": "src/yjs/retained-wire.ts:9:16 pr",
+      "milliseconds": 131.556
+    },
+    {
+      "frame": "src/yjs/retained-text.ts:221:2 scan",
+      "milliseconds": 124.055
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:478:10 f",
+      "milliseconds": 121.937
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:426:2 project",
+      "milliseconds": 101.201
+    },
+    {
+      "frame": "src/core/schema/attributes.ts:4:16 l",
+      "milliseconds": 98.345
+    },
+    {
+      "frame": "src/yjs/retained-text.ts:128:9 ar",
+      "milliseconds": 85.768
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:351:2 decode",
+      "milliseconds": 85.354
+    },
+    {
+      "frame": "src/yjs/retained-checkpoint.ts:35:6 Br",
+      "milliseconds": 82.604
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:39:9 Nn",
+      "milliseconds": 78.971
+    },
+    {
+      "frame": "src/yjs/retained-checkpoint.ts:148:22 ei",
+      "milliseconds": 74.462
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:25:17 Q",
+      "milliseconds": 64.243
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:261:2 splitPlacement",
+      "milliseconds": 63.718
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:44:16 In",
+      "milliseconds": 58.879
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:509:10 _",
+      "milliseconds": 55.17
+    },
+    {
+      "frame": "src/yjs/retained-text.ts:547:2 resolve",
+      "milliseconds": 53.744
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:494:49 (anonymous)",
+      "milliseconds": 52.006
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:769:10 S",
+      "milliseconds": 50.935
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:428:2 normalizeFrame",
+      "milliseconds": 48.562
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:741:2 change",
+      "milliseconds": 45.299
+    }
+  ],
+  "inclusiveFountain": [
+    {
+      "frame": "src/core/editor.ts:70:2 dispatch",
+      "milliseconds": 3375.683
+    },
+    {
+      "frame": "src/core/editor.ts:97:30 (anonymous)",
+      "milliseconds": 3296.793
+    },
+    {
+      "frame": "src/extensions/collaboration-core.ts:324:9 H",
+      "milliseconds": 3295.181
+    },
+    {
+      "frame": "src/extensions/collaboration-core.ts:571:37 (anonymous)",
+      "milliseconds": 3295.181
+    },
+    {
+      "frame": "src/extensions/collaboration-core.ts:578:20 (anonymous)",
+      "milliseconds": 3272.184
+    },
+    {
+      "frame": "src/yjs/retained-adapter.ts:345:2 onLocalUpdate",
+      "milliseconds": 3270.522
+    },
+    {
+      "frame": "src/yjs/retained-adapter.ts:352:28 (anonymous)",
+      "milliseconds": 3255.522
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:526:2 apply",
+      "milliseconds": 3250.681
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:549:47 (anonymous)",
+      "milliseconds": 3183.943
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:741:2 change",
+      "milliseconds": 2875.208
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:404:2 read",
+      "milliseconds": 1802.154
+    },
+    {
+      "frame": "src/core/commands.ts:1226:16 zr",
+      "milliseconds": 1637.746
+    },
+    {
+      "frame": "src/core/commands.ts:56:9 In",
+      "milliseconds": 1636.512
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:368:2 acquireFrame",
+      "milliseconds": 1330.363
+    },
+    {
+      "frame": "src/yjs/retained-text.ts:200:2 assertLive",
+      "milliseconds": 1042.132
+    },
+    {
+      "frame": "src/yjs/retained-adapter.ts:163:2 canonical",
+      "milliseconds": 1020.601
+    },
+    {
+      "frame": "src/yjs/retained-adapter.ts:190:36 sharedChanged",
+      "milliseconds": 973.372
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:426:2 project",
+      "milliseconds": 921.575
+    },
+    {
+      "frame": "src/core/commands.ts:382:16 $n",
+      "milliseconds": 920.472
+    },
+    {
+      "frame": "src/core/commands.ts:40:9 Nn",
+      "milliseconds": 913.441
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:413:2 readAfterRemote",
+      "milliseconds": 874.109
+    },
+    {
+      "frame": "src/yjs/retained-text.ts:399:2 readFrame",
+      "milliseconds": 863.16
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:720:2 finishChange",
+      "milliseconds": 803.398
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:478:10 f",
+      "milliseconds": 742.755
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:105:2 valid",
+      "milliseconds": 726.501
+    }
+  ],
+  "self": [
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/dist/yjs.cjs:31:24 get",
+      "milliseconds": 786.265
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/src/types/YMap.js:144:11 get size",
+      "milliseconds": 549.369
+    },
+    {
+      "frame": ":0:-1 (garbage collector)",
+      "milliseconds": 496.387
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/src/structs/Item.js:351:14 get deleted",
+      "milliseconds": 491.756
+    },
+    {
+      "frame": ":0:-1 open",
+      "milliseconds": 420.648
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js:45:67 (anonymous)",
+      "milliseconds": 378.724
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/iterator.js:29:30 createIterator",
+      "milliseconds": 230.729
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:444:19 l",
+      "milliseconds": 190.586
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/lib0@0.2.117/node_modules/lib0/encoding.js:306:37 _writeVarStringNative",
+      "milliseconds": 130.969
+    },
+    {
+      "frame": "src/yjs/retained-wire.ts:9:16 pr",
+      "milliseconds": 115.056
+    },
+    {
+      "frame": ":0:-1 readFileUtf8",
+      "milliseconds": 111.274
+    },
+    {
+      "frame": ":0:-1 RegExp: ^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+      "milliseconds": 103.173
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:407:2 value",
+      "milliseconds": 102.81
+    },
+    {
+      "frame": "src/core/schema/attributes.ts:4:16 l",
+      "milliseconds": 98.345
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:478:10 f",
+      "milliseconds": 96.95
+    },
+    {
+      "frame": "src/yjs/retained-text.ts:128:9 ar",
+      "milliseconds": 85.768
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/src/types/AbstractType.js:889:26 typeMapGet",
+      "milliseconds": 82.783
+    },
+    {
+      "frame": "src/yjs/retained-checkpoint.ts:35:6 Br",
+      "milliseconds": 82.604
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:426:2 project",
+      "milliseconds": 74.212
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:351:2 decode",
+      "milliseconds": 70.667
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/.pnpm/yjs@13.6.32/node_modules/yjs/src/utils/encoding.js:57:21 writeStructs",
+      "milliseconds": 68.222
+    },
+    {
+      "frame": ":0:-1 read",
+      "milliseconds": 67.662
+    },
+    {
+      "frame": "node:internal/encoding:360:12 encodeInto",
+      "milliseconds": 64.709
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:25:17 Q",
+      "milliseconds": 64.243
+    },
+    {
+      "frame": ":0:-1 encodeInto",
+      "milliseconds": 55.962
+    }
+  ],
+  "yjsMapSizeCallers": [
+    {
+      "frame": "src/yjs/retained-text.ts:200:2 assertLive",
+      "milliseconds": 296.964
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:105:2 valid",
+      "milliseconds": 229.685
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:407:2 value",
+      "milliseconds": 16.07
+    },
+    {
+      "frame": "src/yjs/retained-document.ts:261:2 splitPlacement",
+      "milliseconds": 3.398
+    },
+    {
+      "frame": "src/yjs/retained-nodes.ts:111:2 checkCapacity",
+      "milliseconds": 3.252
+    }
+  ],
+  "diagnosticCallsites": [
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:231:61 (anonymous)",
+      "milliseconds": 1983.353
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:1:0 (anonymous)",
+      "milliseconds": 1332.791
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:209:41 (anonymous)",
+      "milliseconds": 657.398
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:139:28 (anonymous)",
+      "milliseconds": 538.367
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:172:64 (anonymous)",
+      "milliseconds": 434.053
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:162:40 (anonymous)",
+      "milliseconds": 413.848
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:184:48 (anonymous)",
+      "milliseconds": 137.715
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:233:65 (anonymous)",
+      "milliseconds": 125.359
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:221:37 (anonymous)",
+      "milliseconds": 111.063
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:238:46 (anonymous)",
+      "milliseconds": 105.609
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:146:44 (anonymous)",
+      "milliseconds": 105.11
+    },
+    {
+      "frame": "file:///C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/scripts/diagnose-yjs-endurance.mjs:215:35 (anonymous)",
+      "milliseconds": 102.318
+    }
+  ],
+  "phaseAttribution": {
+    "split": {
+      "sampledMs": 1637.7459999999985,
+      "attributed": [
+        {
+          "frame": "src/yjs/retained-text.ts:200 assertLive",
+          "ms": 917.235
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:105 valid",
+          "ms": 464.301
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:547 resolve",
+          "ms": 52.192
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:221 scan",
+          "ms": 21.475
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:128 ar",
+          "ms": 15.856
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:741 change",
+          "ms": 12.725
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:407 value",
+          "ms": 11.621
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:549 (anonymous)",
+          "ms": 9.813
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:122 readRecord",
+          "ms": 7.477
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:39 Nn",
+          "ms": 7.309
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:399 readFrame",
+          "ms": 6.352
+        },
+        {
+          "frame": "src/yjs/retained-mapping.ts:104 dr",
+          "ms": 6.299
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:91 er",
+          "ms": 6.275
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:25 Q",
+          "ms": 6.014
+        }
+      ],
+      "inclusive": [
+        {
+          "frame": "src/core/commands.ts:1226 zr",
+          "ms": 1637.746
+        },
+        {
+          "frame": "src/core/commands.ts:56 In",
+          "ms": 1636.512
+        },
+        {
+          "frame": "src/core/editor.ts:70 dispatch",
+          "ms": 1636.335
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:526 apply",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/yjs/retained-adapter.ts:352 (anonymous)",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/yjs/retained-adapter.ts:345 onLocalUpdate",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:578 (anonymous)",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:324 H",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:571 (anonymous)",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/core/editor.ts:97 (anonymous)",
+          "ms": 1632.777
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:549 (anonymous)",
+          "ms": 1626.374
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:741 change",
+          "ms": 1606.855
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:200 assertLive",
+          "ms": 917.235
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:547 resolve",
+          "ms": 533.098
+        }
+      ]
+    },
+    "typingBurst": {
+      "sampledMs": 657.3980000000004,
+      "attributed": [
+        {
+          "frame": "src/yjs/retained-nodes.ts:407 value",
+          "ms": 59.89
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:444 l",
+          "ms": 51.962
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:200 assertLive",
+          "ms": 34.093
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:351 decode",
+          "ms": 28.517
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:221 scan",
+          "ms": 26.041
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:25 Q",
+          "ms": 24.382
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:566 reserveCapacity",
+          "ms": 18.311
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:769 S",
+          "ms": 16.601
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:39 Nn",
+          "ms": 16.429
+        },
+        {
+          "frame": "src/core/schema/attributes.ts:4 l",
+          "ms": 16.284
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:478 f",
+          "ms": 16.142
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:494 (anonymous)",
+          "ms": 14.559
+        },
+        {
+          "frame": "src/yjs/retained-mapping.ts:55 lr",
+          "ms": 13.45
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:125 u",
+          "ms": 13.287
+        }
+      ],
+      "inclusive": [
+        {
+          "frame": "src/core/commands.ts:382 $n",
+          "ms": 657.398
+        },
+        {
+          "frame": "src/core/editor.ts:70 dispatch",
+          "ms": 652.882
+        },
+        {
+          "frame": "src/core/commands.ts:40 Nn",
+          "ms": 652.882
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:324 H",
+          "ms": 636.612
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:571 (anonymous)",
+          "ms": 636.612
+        },
+        {
+          "frame": "src/core/editor.ts:97 (anonymous)",
+          "ms": 636.612
+        },
+        {
+          "frame": "src/yjs/retained-adapter.ts:345 onLocalUpdate",
+          "ms": 634.963
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:578 (anonymous)",
+          "ms": 634.963
+        },
+        {
+          "frame": "src/yjs/retained-adapter.ts:352 (anonymous)",
+          "ms": 629.997
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:526 apply",
+          "ms": 625.156
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:549 (anonymous)",
+          "ms": 602.543
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:741 change",
+          "ms": 417.749
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:720 finishChange",
+          "ms": 354.849
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:404 read",
+          "ms": 257.362
+        }
+      ]
+    },
+    "structuralBoth": {
+      "sampledMs": 1983.3529999999976,
+      "attributed": [
+        {
+          "frame": "src/yjs/retained-text.ts:200 assertLive",
+          "ms": 917.235
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:105 valid",
+          "ms": 693.551
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:547 resolve",
+          "ms": 52.192
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:221 scan",
+          "ms": 26.258
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:407 value",
+          "ms": 24.415
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:741 change",
+          "ms": 22.489
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:128 ar",
+          "ms": 17.412
+        },
+        {
+          "frame": "src/yjs/retained-mapping.ts:104 dr",
+          "ms": 11.68
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:549 (anonymous)",
+          "ms": 11.464
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:39 Nn",
+          "ms": 10.378
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:25 Q",
+          "ms": 10.266
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:399 readFrame",
+          "ms": 8.02
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:444 l",
+          "ms": 7.801
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:122 readRecord",
+          "ms": 7.477
+        }
+      ],
+      "inclusive": [
+        {
+          "frame": "src/core/editor.ts:70 dispatch",
+          "ms": 1980.263
+        },
+        {
+          "frame": "src/yjs/retained-adapter.ts:345 onLocalUpdate",
+          "ms": 1973.434
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:578 (anonymous)",
+          "ms": 1973.434
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:324 H",
+          "ms": 1973.434
+        },
+        {
+          "frame": "src/extensions/collaboration-core.ts:571 (anonymous)",
+          "ms": 1973.434
+        },
+        {
+          "frame": "src/core/editor.ts:97 (anonymous)",
+          "ms": 1973.434
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:526 apply",
+          "ms": 1972.391
+        },
+        {
+          "frame": "src/yjs/retained-adapter.ts:352 (anonymous)",
+          "ms": 1972.391
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:549 (anonymous)",
+          "ms": 1961.006
+        },
+        {
+          "frame": "src/yjs/retained-document.ts:741 change",
+          "ms": 1930.14
+        },
+        {
+          "frame": "src/core/commands.ts:1226 zr",
+          "ms": 1637.746
+        },
+        {
+          "frame": "src/core/commands.ts:56 In",
+          "ms": 1636.512
+        },
+        {
+          "frame": "src/yjs/retained-text.ts:200 assertLive",
+          "ms": 917.235
+        },
+        {
+          "frame": "src/yjs/retained-nodes.ts:105 valid",
+          "ms": 693.551
+        }
+      ]
+    }
+  }
+}
