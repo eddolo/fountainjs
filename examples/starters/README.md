@@ -1,15 +1,17 @@
 # FountainJS starters
 
-Download either project from the developer guide, or copy its directory from
+Download a project from the developer guide, or copy its directory from
 this repository. Each is a standalone npm project that uses the published
 FountainJS beta.
 
 - [Plain DOM](plain-dom) uses `EditorView` and defines a custom callout.
 - [React](react) uses `useFountain` and the supplied editor and toolbar.
+- [Node.js](node) validates and converts local Markdown and HTML without a
+  browser or build step. Install it with `npm install` and run `npm start`.
 
 The guide's browser test verifies that the downloads contain the same files
 as these directories and that the demos link back to their starter cards.
-For a separate consumer check, extract both ZIPs into the same parent
+For a separate browser consumer check, extract the plain DOM and React ZIPs into the same parent
 directory outside the repository, then run `npm install` and
 `npm run build` in each extracted project. Set `FOUNTAIN_STARTER_ROOT` to
 that parent and run the following from the FountainJS repository.

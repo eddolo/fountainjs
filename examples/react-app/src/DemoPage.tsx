@@ -747,7 +747,9 @@ function Runtime({ demo }: { demo: DemoDefinition }) {
 
 function DemoPage() {
   const demo = getDemo(document.body.dataset.demo);
-  const starter = demo.slug === 'react-article' ? 'react' : demo.slug === 'plain-dom-notes' ? 'plain-dom' : null;
+  const starter = demo.slug === 'react-article' ? 'react'
+    : demo.slug === 'plain-dom-notes' ? 'plain-dom'
+    : demo.slug === 'node-markdown' ? 'node' : null;
   const previous = demo.index > 1 ? demo.index - 2 : 9;
   const next = demo.index < 10 ? demo.index : 0;
 

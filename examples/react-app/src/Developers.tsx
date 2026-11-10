@@ -675,20 +675,26 @@ function Developers() {
         <article className="dev-content">
           <section className="dev-section" id="starters">
             <p className="dev-label">00 · START HERE</p>
-            <h2>Run your first editor.</h2>
-            <p>Download and extract a starter. Use Node.js 20.19+ or 22.12+, then run <code>npm install</code> and <code>npm run dev</code> in the extracted folder. Both projects pin the published <code>0.4.0-beta.2</code> package.</p>
+            <h2>Start with a working project.</h2>
+            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins the published <code>0.4.0-beta.2</code> package. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
             <div className="dev-starters">
               <article id="starter-plain-dom">
                 <h3>Plain JavaScript</h3>
-                <p>Mount an editor with <code>EditorView</code>. Insert an editable callout, undo it, and inspect the document JSON.</p>
+                <p>Run <code>npm run dev</code> to mount an editor with <code>EditorView</code>. Insert a callout, undo it, and inspect the document JSON.</p>
                 <StarterDownload kind="plain-dom" label="Download plain DOM starter" />
                 <a href="./demos/plain-dom-notes.html">Explore the plain DOM demo →</a>
               </article>
               <article id="starter-react">
                 <h3>React</h3>
-                <p>Use <code>useFountain</code> and <code>FountainComposer</code> to edit with the supplied toolbar and read each change as JSON.</p>
+                <p>Run <code>npm run dev</code> to try <code>useFountain</code> and <code>FountainComposer</code>. Edit with the supplied toolbar and read each change as JSON.</p>
                 <StarterDownload kind="react" label="Download React starter" />
                 <a href="./demos/react-article.html">Explore the React demo →</a>
+              </article>
+              <article id="starter-node">
+                <h3>Node.js</h3>
+                <p>Run <code>npm start</code> to convert Markdown to validated Fountain JSON. Try a local Markdown or HTML file without a browser or build step.</p>
+                <StarterDownload kind="node" label="Download Node.js starter" />
+                <a href="./demos/node-markdown.html">Explore the server conversion demo →</a>
               </article>
             </div>
           </section>

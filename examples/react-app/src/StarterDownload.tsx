@@ -3,11 +3,11 @@
 import { useState } from 'react';
 
 const templates = import.meta.glob<string>(
-  '../../starters/{plain-dom,react}/{package.json,index.html,main.js,main.jsx,README.md}',
+  '../../starters/{plain-dom,react,node}/{package.json,index.html,main.js,main.jsx,convert.mjs,sample.md,README.md}',
   { eager: true, query: '?raw', import: 'default' },
 );
 
-export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react'; label: string }) {
+export function StarterDownload({ kind, label }: { kind: 'plain-dom' | 'react' | 'node'; label: string }) {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState(false);
 
