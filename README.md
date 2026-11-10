@@ -635,6 +635,7 @@ hover title and can be expanded to read the full text before pasting.
 In the current preview, Enter in search pastes a single matching entry.
 Closing the picker or successfully pasting returns focus to the control
 that had it before the picker opened.
+Remove and Clear all return focus to search and update the result status.
 
 ```ts
 const kit = composeExtensions([

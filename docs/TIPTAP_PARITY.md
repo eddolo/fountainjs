@@ -27,6 +27,11 @@ Native keyboard journeys in Chromium, Firefox and WebKit verify Escape from
 search, focus return to the toolbar, shortcut reopening, and Enter pasting one
 matching result at the preserved editor caret. An unmatched query leaves
 search focused. The Chromium baseline reproduced lost focus after Escape.
+The next keyboard pass reproduces lost focus after Remove and checks that
+both Remove and Clear all return focus to search. The picker preserves the
+filter while removing an entry and exposes result counts and empty messages
+as a live status. Chromium, Firefox and WebKit pass the updated journey,
+including a check that the status stays readable over the picker background.
 Follow-up repairs prevent partially shared capacity failures, bind provider
 sessions to their original documents, and preserve native selection through
 metadata updates. The preceding public browser run passes 57 cases with two existing

@@ -634,6 +634,8 @@ same plugin state and render their own picker.
 The React picker focuses search on open. Enter pastes when the search has
 exactly one result. Escape, the close button, and successful paste return focus
 to the previously focused control when it is still mounted.
+Removing an entry or clearing history keeps the picker open and focuses
+search. Result counts and empty states are exposed through a live status.
 
 Persistence is deliberately synchronous and host-owned:
 

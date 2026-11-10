@@ -5750,7 +5750,7 @@ test('edits code language and line numbers through the public React toolbar', as
   await expect(block).not.toHaveAttribute('data-fountain-code-lines');
 });
 
-test('opens the searchable clipboard-history picker in the public React toolbar', async ({ page }) => {
+test('opens the searchable clipboard-history picker in the public React toolbar', async ({ page }, info) => {
   await page.goto('/');
   const editor = page.getByRole('textbox', { name: 'Rich text editor' });
   const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
@@ -5803,6 +5803,37 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   await search.press('Enter');
   await expect(picker).toHaveCount(0);
   await expect(editor).toBeFocused();
+  await expect(paragraph).toHaveText(`${original}${original}`);
+
+  const heading = editor.getByRole('heading', { name: 'Try FountainJS in this document.' });
+  await heading.evaluate((element) => {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const selection = getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('ControlOrMeta+c');
+  await trigger.press('Enter');
+  await expect(picker.getByRole('listitem')).toHaveCount(2);
+  await search.fill('Try FountainJS in this document');
+  const status = picker.getByRole('status');
+  await expect(status).toHaveText('1 matching copy');
+  await expect(status.locator('..')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await picker.getByRole('button', { name: /Remove Try FountainJS/ }).press('Enter');
+  await expect(status).toHaveText('No matching copied text.');
+  await expect(search).toBeFocused();
+  await expect(search).toHaveValue('Try FountainJS in this document');
+  await search.fill('');
+  await expect(picker.getByRole('listitem')).toHaveCount(1);
+  await expect(status).toHaveText('1 saved copy');
+  await picker.getByRole('button', { name: 'Clear all' }).press('Enter');
+  await expect(status).toHaveText('Copy text in this editor to start a history.');
+  await expect(search).toBeFocused();
+  await picker.screenshot({ path: info.outputPath('clipboard-history-cleared.png') });
+  await search.press('Escape');
+  await expect(trigger).toBeFocused();
   await expect(paragraph).toHaveText(`${original}${original}`);
 });
 

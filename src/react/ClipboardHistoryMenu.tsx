@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import type { Editor } from '../core';
 import {
   clearClipboardHistory,
@@ -26,11 +26,6 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
   const returnTarget = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState('');
   const history = editor ? getClipboardHistoryState(editor) : null;
-  const entries = useMemo(() => {
-    const normalized = query.trim().toLocaleLowerCase();
-    return normalized ? (history?.entries ?? []).filter((entry) => entry.text.toLocaleLowerCase().includes(normalized)) : history?.entries ?? [];
-  }, [history, query]);
-
   useEffect(() => {
     const input = search.current;
     if (!history?.open || !input) return;
@@ -41,6 +36,11 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
   }, [history?.open]);
 
   if (!editor || !history?.open) return null;
+  const normalized = query.trim().toLocaleLowerCase();
+  const entries = normalized ? history.entries.filter((entry) => entry.text.toLocaleLowerCase().includes(normalized)) : history.entries;
+  const status = entries.length
+    ? `${entries.length} ${normalized ? 'matching' : 'saved'} ${entries.length === 1 ? 'copy' : 'copies'}`
+    : history.entries.length ? 'No matching copied text.' : 'Copy text in this editor to start a history.';
   const returnFocus = () => {
     const target = returnTarget.current;
     returnTarget.current = null;
@@ -52,6 +52,9 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
   };
   const paste = (id: string) => {
     if (pasteClipboardHistoryEntry(editor, id)) returnFocus();
+  };
+  const refocusSearch = (changed: boolean) => {
+    if (changed) search.current?.focus();
   };
   const keepFocus = (event: MouseEvent) => event.preventDefault();
   return (
@@ -86,8 +89,7 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <div className="fountain-clipboard-history__entries" role="list">
-        {!entries.length && <p className="fountain-clipboard-history__empty">{history.entries.length ? 'No matching copied text.' : 'Copy text in this editor to start a history.'}</p>}
+      <div className="fountain-clipboard-history__entries" role={entries.length ? 'list' : undefined}>
         {entries.map((entry) => <article key={entry.id} role="listitem" className="fountain-clipboard-history__entry">
           <details>
             <summary title={entry.text}>{preview(entry.text)}</summary>
@@ -96,14 +98,14 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
           <div className="fountain-clipboard-history__actions">
             <time dateTime={new Date(entry.copiedAt).toISOString()}>{new Date(entry.copiedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
             <button type="button" aria-label={`Paste ${preview(entry.text)}`} onMouseDown={keepFocus} onClick={() => paste(entry.id)}>Paste</button>
-            <button type="button" onMouseDown={keepFocus} onClick={() => removeClipboardHistoryEntry(editor, entry.id)} aria-label={`Remove ${preview(entry.text)}`}>Remove</button>
+            <button type="button" onMouseDown={keepFocus} onClick={() => refocusSearch(removeClipboardHistoryEntry(editor, entry.id))} aria-label={`Remove ${preview(entry.text)}`}>Remove</button>
           </div>
         </article>)}
       </div>
-      {history.entries.length > 0 && <footer>
-        <span>{history.entries.length} saved {history.entries.length === 1 ? 'copy' : 'copies'}</span>
-        <button type="button" onClick={() => clearClipboardHistory(editor)}>Clear all</button>
-      </footer>}
+      <div className="fountain-clipboard-history__status">
+        <span role="status">{status}</span>
+        {history.entries.length > 0 && <button type="button" onClick={() => refocusSearch(clearClipboardHistory(editor))}>Clear all</button>}
+      </div>
     </section>
   );
 }

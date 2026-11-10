@@ -355,9 +355,9 @@
 .fountain-toolbar__check input { min-width: 0; accent-color: var(--fountain-accent); }
 
 .fountain-clipboard-history { position: absolute; z-index: 30; inset-block-start: calc(100% + 8px); inset-inline-end: 12px; display: grid; gap: 10px; width: min(520px, calc(100vw - 32px)); max-height: min(620px, 75vh); padding: 14px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 14px; box-shadow: 0 20px 50px rgb(23 25 35 / 18%); font: 14px/1.4 system-ui, sans-serif; }
-.fountain-clipboard-history header, .fountain-clipboard-history footer, .fountain-clipboard-history__actions { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.fountain-clipboard-history header, .fountain-clipboard-history__status, .fountain-clipboard-history__actions { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
 .fountain-clipboard-history header > div { display: grid; }
-.fountain-clipboard-history small, .fountain-clipboard-history time, .fountain-clipboard-history footer { color: var(--fountain-muted); font-size: 12px; }
+.fountain-clipboard-history small, .fountain-clipboard-history time, .fountain-clipboard-history__status { color: var(--fountain-muted); font-size: 12px; }
 .fountain-clipboard-history > input { width: 100%; padding: 9px 11px; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 8px; }
 .fountain-clipboard-history__entries { display: grid; gap: 8px; overflow: auto; }
 .fountain-clipboard-history__entry { display: grid; gap: 7px; padding: 10px; background: #fafafa; border: 1px solid var(--fountain-border); border-radius: 9px; }
@@ -367,7 +367,6 @@
 .fountain-clipboard-history button { padding: 6px 9px; color: var(--fountain-ink); background: #f5f3ff; border: 1px solid var(--fountain-border); border-radius: 7px; cursor: pointer; }
 .fountain-clipboard-history__actions { justify-content: flex-end; }
 .fountain-clipboard-history__actions time { margin-inline-end: auto; }
-.fountain-clipboard-history__empty { margin: 8px; color: var(--fountain-muted); text-align: center; }
 
 .fountain-suggestion-menu { z-index: 40; display: grid; gap: 8px; width: min(320px, calc(100vw - 16px)); max-height: min(380px, 55vh); padding: 10px; overflow: auto; color: var(--fountain-ink); background: #fff; border: 1px solid var(--fountain-border); border-radius: 12px; box-shadow: 0 18px 46px rgb(23 25 35 / 20%); font: 13px/1.35 system-ui, sans-serif; }
 .fountain-suggestion-menu:not([style]) { position: relative; margin: 8px; }

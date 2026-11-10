@@ -9,6 +9,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 - Restore keyboard focus after closing clipboard history or pasting from it.
   Enter in search pastes a single match, and each Paste button names its entry.
+  Removing or clearing clips returns focus to search and updates the live
+  result status.
 - Build collaboration projection reuse indexes with the existing path bindings
   to reduce repeated work in large documents.
 - Decode plain collaboration text runs directly and check for empty field
