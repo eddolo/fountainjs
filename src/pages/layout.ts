@@ -570,7 +570,7 @@ export function layoutPages(
         warnings.push(Object.freeze({
           code: 'constraint-relaxed',
           itemId: item.id,
-          detail: 'Widow/orphan fragment constraints could not fit an empty page and were relaxed without dropping content.',
+          detail: 'Fragment constraints could not fit an empty page and were relaxed without dropping content.',
         }));
       }
 

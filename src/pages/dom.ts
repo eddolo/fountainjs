@@ -863,7 +863,7 @@ function wholeItem(
 ): { readonly item: PageFlowItem; readonly sources: readonly DOMPageFragmentSource[] } {
   const height = outerHeight(element, count);
   const references = referencesIn(element, definitions, count);
-  const item = Object.freeze({
+  const item = {
     id: itemId,
     height,
     ...(references.length
@@ -875,8 +875,8 @@ function wholeItem(
           })]),
         }
       : {}),
-  });
-  return Object.freeze({
+  };
+  return {
     item,
     sources: Object.freeze([Object.freeze({
       itemId,
@@ -888,7 +888,7 @@ function wholeItem(
       clipOffset: 0,
       height,
     })]),
-  });
+  };
 }
 
 function measureDOMPageFlowInternal(
@@ -1036,6 +1036,7 @@ function measureDOMPageFlowInternal(
 
     let item: PageFlowItem;
     let sources: readonly DOMPageFragmentSource[];
+    const paragraphLayout = node.type.spec.paragraphFlow === 'text' ? node.attrs.layout as ParagraphLayout : undefined;
     const custom = customFragments(
       options.blockContinuation,
       document,
@@ -1046,11 +1047,10 @@ function measureDOMPageFlowInternal(
       definitionMeasurements,
       count,
     );
-    const structural = custom ? null : structuralFragments(element, node, itemId, path, definitionMeasurements, count);
-    const text = !custom && lineTypes.has(node.type.name)
+    const continuation = custom ?? structuralFragments(element, node, itemId, path, definitionMeasurements, count);
+    const text = !continuation && lineTypes.has(node.type.name)
       ? textFragments(element, itemId, path, definitionMeasurements, count)
       : null;
-    const continuation = custom ?? structural;
     if (continuation) {
       item = {
         id: itemId,
@@ -1065,7 +1065,7 @@ function measureDOMPageFlowInternal(
       item = {
         id: itemId,
         fragments: text.fragments,
-        minimumStart: minimumLines,
+        minimumStart: paragraphLayout?.keepLinesTogether ? text.fragments.length : minimumLines,
         minimumEnd: minimumLines,
         ...(node.type.name === 'heading' ? { keepWithNext: true } : {}),
       };
@@ -1077,8 +1077,7 @@ function measureDOMPageFlowInternal(
         : whole.item;
       sources = whole.sources;
     }
-    const paragraphLayout = node.attrs.layout as ParagraphLayout | undefined;
-    if (node.type.spec.paragraphFlow === 'text' && paragraphLayout?.pageBreakBefore === true) {
+    if (paragraphLayout?.pageBreakBefore === true) {
       item = { ...item, breakBefore: true };
     }
 

@@ -1572,15 +1572,23 @@ Object.assign(globalThis, {
         importedStyledPrintGeometry(),
       ),
       previewImportedStyled: () => renderPagesPreview(importedStyledPrintGeometry(), true),
-      previewDOCXParagraphBreak: () => {
+      previewDOCXParagraphBreak: (keepLinesTogether?: boolean) => {
         const schema = pagesEditor.state.schema;
         const paragraph = (text: string, pageBreakBefore: boolean) => schema.node('paragraph', {
           layout: { unit: 'pt', pageBreakBefore },
         }, [schema.text(text)]);
-        const source = schema.node('doc', {}, [
+        const lines = (text: readonly string[], keepTogether: boolean) => schema.node('paragraph', {
+          layout: { unit: 'pt', keepLinesTogether: keepTogether, lineHeight: 18, lineHeightUnit: 'pt', lineHeightRule: 'exact' },
+        }, text.flatMap((line, index) => index ? [schema.node('hard_break'), schema.text(line)] : [schema.text(line)]));
+        const source = keepLinesTogether === undefined ? schema.node('doc', {}, [
           paragraph('First page introduction', false),
           paragraph('Second page opening', true),
           paragraph('Second page continuation', false),
+        ]) : schema.node('doc', {
+          pageSettings: { unit: 'pt', width: 261, height: 114, marginTop: 7.5, marginRight: 7.5, marginBottom: 7.5, marginLeft: 7.5 },
+        }, [
+          lines(['Lead first', 'Lead second', 'Lead third'], false),
+          lines(['Body first', 'Body second', 'Body third', 'Body fourth'], keepLinesTogether),
         ]);
         const bytes = exportDOCX(source).bytes;
         const imported = importDOCX(bytes, schema).document;
@@ -1589,7 +1597,8 @@ Object.assign(globalThis, {
           .setSelection(Selection.cursor([0, 0], 0)));
         pagesView.dom.style.boxSizing = 'content-box';
         pagesView.dom.style.width = '328px';
-        const preview = renderPagesPreview(createPageGeometry({ size: { width: 348, height: 210 }, margins: 10 }), true);
+        const height = keepLinesTogether === undefined ? 210 : 152;
+        const preview = renderPagesPreview(createPageGeometry({ size: { width: 348, height }, margins: 10 }), true);
         return { bytes: Array.from(bytes), preview };
       },
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({

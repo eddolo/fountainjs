@@ -1,5 +1,22 @@
 # Independent native DOCX audit
 
+## Keep lines together 2026 11 10
+
+The DOCX importer retained `w:keepLines`, but the preview split the same
+four-line paragraph with the setting both on and off. The preview now moves
+all measured lines of a top-level text block to the next sheet when they fit
+there. A longer paragraph can still split with a warning. Nested structural
+fragments and host continuation adapters retain their own split rules.
+
+In the paired browser-generated DOCX fixtures, LibreOffice 24.2.7.2 split
+the control two lines per sheet and moved all four lines of the enabled
+paragraph to sheet two. Chromium, Firefox and WebKit agreed with these sheet
+assignments. Chromium print PDF and the independent native PDF agreed on
+the text on both pages. The preview and both PDF renders were visually
+checked. The layout check covers this top-level case and one oversized
+fallback. All 71 focused source tests and nine recorded browser checks passed
+alongside the build, existing size limits, package and API checks.
+
 ## Paragraph break before 2026 11 10
 
 DOCX import and export already retained `w:pageBreakBefore`. The Fountain

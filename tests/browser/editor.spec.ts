@@ -1140,6 +1140,34 @@ test('starts a new preview sheet at a DOCX paragraph break', async ({ page, brow
   }
 });
 
+test('keeps all lines of a DOCX paragraph together when it fits on the next sheet', async ({ page, browserName }, info) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  const runPreview = (keepLinesTogether: boolean) => page.evaluate(enabled => (
+    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphBreak(enabled)
+  ), keepLinesTogether);
+  const control = await runPreview(false);
+  const preview = page.locator('#browser-page-preview');
+  const sheets = preview.locator('.fountain-page-preview__sheet');
+  const fragments = (sheet: Locator) => sheet.locator('[data-fountain-page-item="block:1:paragraph"]');
+  await expect(fragments(sheets.first()).first()).toBeVisible();
+  await expect(fragments(sheets.nth(1)).first()).toBeVisible();
+  await writeFile(info.outputPath('split-control.docx'), Buffer.from(control.bytes));
+
+  const enabled = await runPreview(true);
+  await writeFile(info.outputPath('keep-lines.docx'), Buffer.from(enabled.bytes));
+  await preview.screenshot({ path: info.outputPath('keep-lines-preview.png') });
+  expect(enabled.preview).toMatchObject({ pageCount: 2, sourceUnchanged: true });
+  await expect(fragments(sheets.first())).toHaveCount(0);
+  await expect(fragments(sheets.nth(1))).toHaveText(/Body first.*Body second.*Body third.*Body fourth/su);
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ path: info.outputPath('keep-lines-print.pdf'), preferCSSPageSize: true });
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(2);
+    expect(pages[0]).not.toContain('Body first');
+    expect(pages[1]).toMatch(/Body first.*Body second.*Body third.*Body fourth/su);
+  }
+});
+
 test('paginates imported styled semantic HTML without structural or PDF text loss', async ({ page, browserName }) => {
   await page.goto('/browser-tests.html?fixture=pages-preview');
   const imported = await page.evaluate(() => (

@@ -66,6 +66,21 @@ describe('DOM-independent page layout', () => {
     expect(result.pages[1].placements[0]).toMatchObject({ fragmentFrom: 5, fragmentTo: 7, continuedBefore: true, continuedAfter: false });
   });
 
+  it('keeps an oversized paragraph readable when the full paragraph cannot fit on one page', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 80 }, margins: 10 });
+    const result = layoutPages([{
+      id: 'keep-lines',
+      fragments: Array.from({ length: 5 }, (_, index) => ({ id: `line-${index + 1}`, height: 20 })),
+      minimumStart: 5,
+      minimumEnd: 2,
+    }], geometry);
+
+    expect(result.pages.map(page => page.placements[0])).toMatchObject([
+      { fragmentFrom: 0, fragmentTo: 3 }, { fragmentFrom: 3, fragmentTo: 5 },
+    ]);
+    expect(result.warnings).toMatchObject([{ code: 'constraint-relaxed', itemId: 'keep-lines' }]);
+  });
+
   it('accounts for repeated table headers and page-local footnotes', () => {
     const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
     const result = layoutPages([{

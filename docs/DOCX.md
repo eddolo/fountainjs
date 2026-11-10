@@ -260,6 +260,12 @@ Never-declared keep-with-next, keep-lines and page-break-before resolve to false
 and export explicitly, so an imported heading does not acquire the generated
 stylesheet's keep flags on reopening.
 
+The Fountain page preview and print projection keep the measured lines of a
+top-level text paragraph together when `keepLinesTogether` is enabled. When
+the paragraph is taller than an empty sheet, it can split with a layout
+warning so every line remains visible. Paragraphs inside lists, tables and
+other structural continuations use their container's split rules.
+
 Unreleased 2026-10-05: paragraph `layout.fontFamily` and physical `fontSize`
 retain the supported font context separately from text-run marks. Document and
 paragraph-style defaults are resolved before paragraph-mark run properties;
