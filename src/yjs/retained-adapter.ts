@@ -3,7 +3,7 @@ import { EditorState, isSafeURL, nodeRangeAtPath, textPointToPosition, type AnyS
 import { registerSharedDirectionIdentity } from '../core/shared-direction';
 import { createCollaborationExtension, type CollaborationAdapter, type CollaborationAdapterContext,
   type CollaborationLocalUpdate, type CollaborationPresence, type CollaborationUser } from '../extensions/collaboration';
-import type { YjsExtensionOptions } from './types';
+import type { YjsAwareness, YjsExtensionOptions } from './types';
 import { RetainedDocumentStore, validateRetainedDocument } from './retained-document';
 import { retainedIdentityAllocator } from './retained-nodes';
 import { removesOnlyDuplicateProvenance } from './retained-text';
@@ -48,6 +48,9 @@ function bounds(document: Node, selection: AnySelection): { anchor: number; head
 /** Retained-identity adapter used by the default /yjs entry.
  * Named retained rooms only; existing legacy data is refused, never auto-migrated. */
 export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
+  private readonly options: Pick<RetainedYjsCollaborationExtensionOptions, 'document' | 'provider' | 'captureTimeout'>;
+  private readonly localAwareness?: YjsAwareness;
+  private readonly structuredMapName?: string;
   private readonly room: string;
   private readonly fragment: Y.XmlFragment;
   private readonly localUser: CollaborationUser;
@@ -79,8 +82,12 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private joinBaseline?: Node;
   private admissionLease?: RetainedAdmissionLease;
 
-  constructor(private readonly options: RetainedYjsCollaborationExtensionOptions) {
+  constructor(options: RetainedYjsCollaborationExtensionOptions) {
     if (!(options?.document instanceof Y.Doc)) throw new TypeError('Yjs needs a Y.Doc.');
+    // The adapter owns one session. Reusing the host's configuration object
+    // must not redirect awaited admission, writes, or listener cleanup.
+    this.options = { document: options.document, provider: options.provider, captureTimeout: options.captureTimeout };
+    this.localAwareness = options.awareness ?? options.provider?.awareness;
     if (options.fragment !== undefined && (!(options.fragment instanceof Y.XmlFragment) || options.fragment.doc !== options.document)) throw new TypeError('Yjs needs a fragment belonging to its Y.Doc.');
     if (options.fragmentName !== undefined && typeof options.fragmentName !== 'string'
       || options.awarenessField !== undefined && typeof options.awarenessField !== 'string') throw new TypeError('Invalid retained room or awareness name.');
@@ -91,7 +98,10 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     this.field = options.awarenessField ?? 'fountain'; this.throttle = options.presenceThrottleMs ?? 32;
     if (!/^[\w.-]{1,100}$/.test(this.field) || !Number.isFinite(this.throttle) || this.throttle < 0 || this.throttle > 1_000
       || options.captureTimeout !== undefined && (!Number.isFinite(options.captureTimeout) || options.captureTimeout < 0)) throw new TypeError('Invalid retained collaboration timing or awareness options.');
-    if (options.structuredAttributes) this.structured = new YjsStructuredAttributeStore(options.document, options.structuredAttributes, `${this.room}:structured-attributes`);
+    if (options.structuredAttributes) {
+      this.structured = new YjsStructuredAttributeStore(options.document, options.structuredAttributes, `${this.room}:structured-attributes`);
+      this.structuredMapName = options.structuredAttributes.mapName;
+    }
     if (options.admission !== undefined) {
       this.admission = snapshotRetainedAdmission(options.admission);
     }
@@ -131,7 +141,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   private error(error: unknown): void { this.context?.setStatus('error', { message: error instanceof Error ? error.message : String(error), recoverable: true }); }
-  private readonly awareness = () => this.options.awareness ?? this.options.provider?.awareness;
+  private readonly awareness = () => this.localAwareness;
   private readonly awarenessChanged = (): void => { try { this.presences(); } catch (error) { this.error(error); } };
   private readonly providerStatus = (value: string | { status?: string }): void => {
     if (this.roomConflict) return;
@@ -270,7 +280,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
         if (this.store.schema !== context.editor.state.schema) throw new Error('Retained adapter belongs to another editor schema.');
         if (fresh) {
           this.store.seed(context.editor.state.doc); this.structured?.synchronize(context.editor.state.doc);
-          const mapName = this.options.structuredAttributes?.mapName;
+          const mapName = this.structuredMapName;
           if (mapName && this.options.document.share.get(mapName) === this.structured?.map) {
             declareRetainedStructuredMap(this.options.document, this.room, mapName);
           }

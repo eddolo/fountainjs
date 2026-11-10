@@ -675,7 +675,10 @@ const limits = Object.freeze({
   // and copied-container provenance measure 1409.3 KiB. Preserve the prior
   // failed receipt; allow 0.75 KiB code capacity for these verified repairs.
   // Individual entries, ESM, CSS and all runtime/heap limits stay unchanged.
-  'all CommonJS runtime code': 1409.5 * kibibyte,
+  // Whole-transaction retained capacity preflight and stable provider ownership
+  // measure 1414.1 KiB. Allow 4.75 KiB for these data-preservation repairs;
+  // keep the failed receipt and every other code/CSS/runtime/heap cap unchanged.
+  'all CommonJS runtime code': 1414.25 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

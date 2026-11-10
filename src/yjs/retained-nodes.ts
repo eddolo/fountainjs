@@ -78,9 +78,9 @@ function decode(value: unknown): unknown {
   const result: unknown = JSON.parse(value); encode(result); return result;
 }
 
-/** Internal candidate node pool. Tree placements are references; moving a node
- * never deletes its metadata or descendants. A single placement register picks
- * one owner during concurrent moves. The existing adapter does not use this yet. */
+/** Internal retained node pool used by the public collaboration adapter.
+ * Tree placements are references; moving a node never deletes its metadata or
+ * descendants. A single placement register picks one owner during concurrent moves. */
 export class RetainedNodeStore {
   readonly metadata: Y.Map<unknown>;
   readonly scope: readonly (Y.Map<unknown> | Y.Array<unknown>)[];
@@ -105,6 +105,18 @@ export class RetainedNodeStore {
   private valid(): void {
     if (this.metadata.get('version') !== VERSION) throw new Error('Unsupported retained node representation.');
     if (this.nodes.size > MAX_NODES || this.identities.size > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
+  }
+
+  /** Conservative transaction reservation, including duplicate physical slots. */
+  checkCapacity(nodes: number, references: number): void {
+    if (this.nodes.size + nodes > MAX_NODES || this.identities.size + references > MAX_REFERENCES) {
+      throw new RangeError('Retained structural pools need compaction before this transaction.');
+    }
+    let slots = this.rootChildren.length;
+    for (const value of this.nodes.values()) if (value instanceof Y.Map) {
+      const children = value.get('children'); if (children instanceof Y.Array) slots += children.length;
+    }
+    if (slots + references > MAX_REFERENCES) throw new RangeError('Retained child references need compaction before this transaction.');
   }
 
   private readRecord(nodeId: string): Y.Map<unknown> {

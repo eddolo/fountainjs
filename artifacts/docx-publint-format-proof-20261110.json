@@ -1,0 +1,25 @@
+{
+  "observed": "2026-11-10",
+  "artifact": "dist/docx.cjs",
+  "bytes": 159226,
+  "sha256": "1634280e1c6ebc789afa73b292e56454d07ec31a2abdfc3445d376efd3e2de76",
+  "publintVersion": "0.3.24",
+  "algorithm": "src/shared/utils.js getCodeFormat/stripComments/isCodeEsm/isCodeCjs",
+  "classifiedByPublint": "ESM",
+  "beforeNaiveCommentStripping": {
+    "isEsm": true,
+    "isCjs": true
+  },
+  "afterNaiveCommentStripping": {
+    "isEsm": true,
+    "isCjs": false,
+    "bytes": 40245
+  },
+  "esmRegexMatch": " export default",
+  "realSourceAroundRegexMatch": "d[o]&&n.push({code:`page-settings-defaulted`,[G]:`info`,[K]:`Unspecified page settings use export defaults: ${d.join(`, `)}. These explicit values appear on reimport.`}),l.width<=l.marginLeft+l.marginRight+l.gutter||l.height<=Math",
+  "requireResult": {
+    "exportDOCX": "function",
+    "importDOCX": "function"
+  },
+  "conclusion": "False positive. The ESM regex matches export default inside the diagnostic string export defaults. Comment stripping does not parse strings and strips minified URL-bearing code as // comments, hiding real require/exports syntax. Node successfully executes this .cjs module and exposes its DOCX functions. No export extension or emitted code was changed to satisfy the heuristic."
+}

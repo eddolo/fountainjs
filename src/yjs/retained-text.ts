@@ -143,10 +143,9 @@ function decodeAttributes(value: unknown, lookup: (client: number, clock: number
   return decoded;
 }
 
-/** Internal candidate storage for the next collaboration representation.
+/** Internal retained storage used by the public collaboration adapter.
  * Character sequences live outside the document tree. Private boundary embeds
- * partition them without copying characters or exposing embeds as document text.
- * This is deliberately not wired into, or exported by, the existing adapter. */
+ * partition them without copying characters or exposing embeds as document text. */
 export class RetainedTextStore {
   readonly metadata: Y.Map<unknown>;
   readonly scope: readonly Y.Map<unknown>[];
@@ -418,6 +417,44 @@ export class RetainedTextStore {
   }
 
   has(id: string): boolean { this.assertLive(); return validId(id) && this.owners.has(id); }
+
+  /** Reserve a whole model transaction before its first shared mutation. */
+  checkCapacity(partitions: number, streams: number, unknownStyles: number, formats: readonly Readonly<Record<string, string>>[],
+    formatKeys: ReadonlyMap<string, ReadonlySet<string>>, growth: ReadonlyMap<string, number>): void {
+    this.assertLive();
+    if (partitions && this.owners.size + partitions > MAX_PARTITIONS || streams && this.texts.size + streams > MAX_PARTITIONS) {
+      throw new RangeError('Retained text pools need compaction before this transaction.');
+    }
+    const fresh = new Set<string>();
+    for (const value of formats) {
+      validateRetainedTextFormat(value);
+      const encoded = styleEncoding(value), key = `${this.document.clientID}:${encoded}`;
+      const cached = this.localStyles.get(key);
+      if (cached === undefined) fresh.add(key);
+      else if (this.styles.get(`${this.document.clientID}:${cached}`) !== encoded) throw new Error('Retained style definition was changed.');
+    }
+    if ((unknownStyles || fresh.size) && this.styles.size + unknownStyles + fresh.size > MAX_PARTITIONS) throw new RangeError('Retained style definitions need compaction before this transaction.');
+    const byStream = new Map<string, { keys: Set<string>; growth: number }>();
+    for (const id of new Set([...formatKeys.keys(), ...growth.keys()])) {
+      const stream = this.owners.get(id);
+      if (!validId(stream)) throw new Error('Unknown retained text partition.');
+      const entry = byStream.get(stream) ?? { keys: new Set<string>(), growth: 0 };
+      for (const key of formatKeys.get(id) ?? []) entry.keys.add(key);
+      entry.growth += growth.get(id) ?? 0; byStream.set(stream, entry);
+    }
+    for (const [id, reservation] of byStream) {
+      let characters = 0;
+      for (const operation of this.readStream(id).toDelta()) {
+        if (typeof operation.insert === 'string') characters += operation.insert.length;
+        if (!reservation.keys.size || typeof operation.insert !== 'string') continue;
+        const raw = operation.attributes ?? {}, keys = new Set(Object.keys(raw).filter(key => key !== PROVENANCE));
+        for (const key of Object.keys(decodeAttributes(raw, this.style))) keys.add(key);
+        for (const key of reservation.keys) keys.add(key);
+        if (keys.size > MAX_ATTRIBUTES) throw new RangeError('Too many retained text attributes. Compact the room or reduce the formatting transaction before retrying.');
+      }
+      if (characters + reservation.growth > MAX_TEXT) throw new RangeError('Retained text stream needs compaction before this transaction.');
+    }
+  }
 
   /** A stream and its initial boundaries outlive undo of their authoring. */
   retainUndoAllocation(item: Y.Item, insertions: Y.Transaction['deleteSet']): boolean {

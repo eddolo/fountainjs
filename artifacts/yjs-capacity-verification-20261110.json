@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-10",
+  "baseCommit": "2c28c0ea",
+  "scope": "Retained transaction capacity, provider session ownership and Lean cancellation; browser investigation continues",
+  "units": {
+    "passed": 5118,
+    "failed": 0,
+    "skipped": 0,
+    "files": 318,
+    "newTests": 32,
+    "report": "artifacts/yjs-capacity-source-final-20261110.json"
+  },
+  "checks": {
+    "build": "passed",
+    "typescriptSvelteAngular": "passed",
+    "packageESMAndCommonJS": "passed",
+    "publicDeclarations": 450,
+    "packedEntryTypes": "passed, with declared Angular ESM-only profile",
+    "headlessModules": 139,
+    "nodeAndWorkerd": "passed",
+    "markdownMathAndDOCX": "passed",
+    "existingPerformanceAndHeapLimits": "passed",
+    "nativeLeanValidAndInvalidProofs": "passed",
+    "nativeLeanCancellationMs": 739
+  },
+  "capacityKiB": {
+    "esm": 1577.4,
+    "commonjs": 1414.1,
+    "previousCommonjsCap": 1409.5,
+    "newCommonjsCap": 1414.25,
+    "otherLimitsChanged": false,
+    "failureReceipt": "artifacts/yjs-capacity-budget-before-20261110.log",
+    "passingReceipt": "artifacts/yjs-capacity-budget-final-20261110.log"
+  },
+  "publicBrowserFirstRun": {
+    "passed": 54,
+    "failed": 4,
+    "skipped": 2,
+    "output": "artifacts/yjs-public-release-20261110",
+    "findings": [
+      "Three guide checks use the old XML-example label; selector correction is prepared separately.",
+      "Firefox partial-bold journey inserts at offset 1 instead of 2 before merging; native-caret metadata race under investigation.",
+      "Two existing clipboard demonstrations are Chromium-only."
+    ]
+  },
+  "limitations": [
+    "No publication or deployed-site change.",
+    "Linux release CI, Bun/Deno on this machine and production adoption are not certified here.",
+    "Earlier intermittent Firefox cold-start delay remains unexplained; five further cold diagnostics passed without timeout changes.",
+    "Initial real Lean integration timed out; later valid/invalid proof checks passed unchanged. Cancellation repair is a separate proven defect.",
+    "Capacity checks use documented conservative bounds and do not sandbox arbitrary side-effecting host callbacks.",
+    "Performance receipt covers the existing budgets, not production retained-Yjs throughput certification.",
+    "publint DOCX format warning is a proven regex false positive; CommonJS package and interoperability checks pass."
+  ]
+}

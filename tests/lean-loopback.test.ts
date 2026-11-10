@@ -72,6 +72,43 @@ describe('Lean loopback provider', () => {
 });
 
 describe('Lean loopback bridge', () => {
+  it('cancels a running check when the client disconnects after sending its complete source', async () => {
+    const projectRoot = mkdtempSync(join(tmpdir(), 'fountain-lean-project-'));
+    temporaryDirectories.push(projectRoot);
+    let started!: () => void;
+    const checking = new Promise<void>((resolve) => { started = resolve; });
+    let release!: () => void;
+    let checkerSignal: AbortSignal | undefined;
+    const bridge = await createLeanLoopbackBridge({
+      projectRoot, allowedOrigins: ['http://127.0.0.1:4173'], sessionToken: 's'.repeat(32),
+      runLean: ({ signal }: { signal: AbortSignal }) => new Promise((resolve) => {
+        checkerSignal = signal;
+        release = () => resolve({ exitCode: 1, stdout: '', stderr: '', timedOut: false, overflow: false });
+        signal.addEventListener('abort', release, { once: true });
+        started();
+      }),
+    });
+    const client = new AbortController();
+    const result = fetch(`${bridge.endpoint}/v1/check`, {
+      method: 'POST', signal: client.signal,
+      headers: { origin: 'http://127.0.0.1:4173', authorization: `Bearer ${'s'.repeat(32)}`,
+        'content-type': 'application/json', 'x-fountain-lean-protocol': '1' },
+      body: JSON.stringify({ id: request.id, uri: request.uri, version: 1, source: request.source }),
+    }).catch((error: unknown) => error);
+    try {
+      await checking;
+      expect(checkerSignal?.aborted).toBe(false);
+      client.abort();
+      await result;
+      await vi.waitFor(() => expect(checkerSignal?.aborted).toBe(true), { timeout: 1_000 });
+    } finally {
+      client.abort();
+      release?.();
+      await result;
+      await bridge.close();
+    }
+  });
+
   it('rejects ambient web requests and permits only an authenticated fixed check operation', async () => {
     const projectRoot = mkdtempSync(join(tmpdir(), 'fountain-lean-project-'));
     temporaryDirectories.push(projectRoot);

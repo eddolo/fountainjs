@@ -94,6 +94,12 @@ request fields, and bounds source, response, concurrency, and execution time.
 Temporary source is created with restrictive permissions and removed after the
 check. No request source is logged.
 
+If the browser cancels after sending the source, the bridge also stops the
+running checker. Receiving a complete request body does not mean its client is
+still waiting. The cancellation regression uses an actual HTTP connection;
+the Windows process check stopped a deliberately long-running Lean command
+without waiting for its execution deadline.
+
 The bridge deliberately needs a user-approved project directory because Lean
 imports can execute project build/plugin code. Use only a project you trust;
 the origin and session secret prevent unrelated web pages from silently using

@@ -2,6 +2,14 @@
 
 ## Current programme status — 2026-11-10
 
+Follow-up reliability work now prevents retained storage/formatting capacity
+failures from partially sharing a transaction, binds pending room admission and
+cleanup to the original provider/document, and cancels abandoned Lean checks.
+The integrated source run passes 5,118 tests. A subsequent public-demo audit
+exposes a Firefox native-caret race during metadata updates; investigation is
+active, so no new release clearance is claimed. See
+[capacity and session follow-up](YJS_DEFAULT_ADOPTION.md#capacity-and-session-ownership-follow-up).
+
 The local default collaboration entry now uses retained identities. The six
 original offline typing versus wrapping, marks and splitting regressions pass
 through `/yjs` itself. Existing XML rooms require `/yjs/legacy` or an explicit
@@ -23,7 +31,8 @@ Pending review makes the editor inert; rejected proposals remain saved. Saved
 placement review also retains automatic-direction ownership.
 [Recovery evidence](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
 
-The combined source run passes 5,086 tests with no failures or skips. Build,
+At the preceding adoption checkpoint, the combined source run passes 5,086
+tests with no failures or skips. Build,
 package, declarations, types, headless/server checks and existing performance
 limits pass. All 45 recorded default-adapter desktop journeys pass. The migration
 matrix passes 17/18 on its first run; one Firefox startup timeout repeats once

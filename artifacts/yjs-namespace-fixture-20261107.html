@@ -40,6 +40,10 @@ let token,current,original,active,archived,migration,rollback,rollbackArchiveId,
 let offlineBatch,exactDraft,writerDraft,paragraphReview,pendingReview,reviewDraft,lockedReviewSurface;
 let drafts,autosave;
 const message=document.querySelector('#message');
+const startup=[];
+window.auditStartup=startup;
+const boot=stage=>startup.push({stage,time:performance.now()});
+boot('module ready');
 const encode=value=>JSON.stringify(value,(_key,value)=>value instanceof Uint8Array?{__wire:btoa(String.fromCharCode(...value))}:value),decode=text=>JSON.parse(text,(_key,value)=>value&&typeof value==='object'&&Object.keys(value).length===1&&typeof value.__wire==='string'?Uint8Array.from(atob(value.__wire),c=>c.charCodeAt(0)):value);
 async function request(action,body={}){const response=await fetch('/__handoff/'+action,{method:'POST',headers:{'Content-Type':'application/json',...(token?{'X-Handoff-Session':token}:{})},body:encode(body)}),result=decode(await response.text());if(!result.ok){const error=new Error(result.error);error.code=result.code;error.authorityRejected=true;throw error}return result.value}
 const shortcuts=new Plugin({props:{handleKeyDown:(editor,event)=>!event.altKey&&!event.isComposing&&(event.ctrlKey||event.metaKey)&&['z','y'].includes(event.key.toLowerCase())?(event.key.toLowerCase()==='y'||event.shiftKey?redoCollaboration(editor):undoCollaboration(editor)):false}});
@@ -361,6 +365,7 @@ action('rollback',async()=>{
 });
 action('retry-rollback',finishRollback);
 async function seedRoom(){
+ boot('create source document');
  const doc=new Y.Doc();
  let fragment;
  if(nested){
@@ -368,10 +373,18 @@ async function seedRoom(){
   const folder=doc.getMap('research-folder');
   folder.set('title','Physics review');folder.set('body',fragment);
  }
+ boot('mount source editor');
  original=mount(doc,'offline',undefined,undefined,'legacy',undefined,sourceRoom,fragment);
- current=await request('initialize',{checkpoint:await captureWriter(original)});
+ boot('capture source checkpoint');
+ const pendingCheckpoint=captureWriter(original);
+ boot('source checkpoint pending');
+ const checkpoint=await pendingCheckpoint;
+ boot('initialize authority');
+ current=await request('initialize',{checkpoint});
  initialEpoch=current.epoch;original.epoch=initialEpoch;
+ boot('open active editor');
  active=await openActive(current);
+ boot('active editor ready');
 }
 async function reopenSession(saved){
  ({initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,exactDraft,writerDraft,pendingReview,reviewDraft}=saved);
@@ -400,8 +413,11 @@ try{
  setControlsBusy(true);
  if(nested)document.querySelector('h1').textContent='Move a nested research document';
  const resumed=sessionStorage.getItem(sessionKey);
+ boot('open session');
  token=resumed??(await request('open',{nested})).token;
+ boot('open local recovery storage');
  drafts=await openBrowserDrafts('fountain-cross-format-recovery-v1',token);
+ boot('local recovery storage ready');
  const write=drafts.createAutosaveSlot(token);
  autosave=scheduleBrowserDraftAutosave(async()=>{
   const writer=active;
@@ -421,11 +437,13 @@ try{
   opened=await reopenSession(saved);
  }else await seedRoom();
  watchWriter(original);watchWriter(active);
+ boot('persist initial recovery');
  await persistOperation();
  sessionStorage.setItem(sessionKey,token);
  setControlsBusy(false);
  report(resumed?'Writer reopened from local recovery':'Legacy room initialized');
  message.textContent=opened;
+ boot('ready');
 }catch(error){message.textContent='Opening failed: '+error.message;throw error}
 document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='hidden')void autosave.flush().catch(()=>undefined);

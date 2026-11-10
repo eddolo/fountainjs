@@ -243,6 +243,12 @@ export async function createLeanLoopbackBridge(options) {
     request.once('close', () => {
       if (!request.complete) abort.abort();
     });
+    // IncomingMessage closes normally once the body has been read. A later
+    // cancellation (source changed, editor closed or client timeout) closes the
+    // response instead; stop the checker rather than leaving it running.
+    response.once('close', () => {
+      if (!response.writableEnded) abort.abort();
+    });
     try {
       const checkRequest = validateRequest(await readJSON(request, bodyLimit));
       const result = await runLean({

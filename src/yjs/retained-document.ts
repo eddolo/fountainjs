@@ -81,6 +81,7 @@ interface NativeTextProof {
   readonly path: readonly number[]; readonly from: number; readonly to: number; readonly text: string;
   readonly original: Node; readonly target: Node;
 }
+interface CapacityChange { before: Node; after: Node; mapping: Mapping; step: Step; native?: NativeTextProof; plan?: RetainedTextPlan }
 function proveNativeText(before: Node, after: Node, mapping: Mapping, step: Step): NativeTextProof | undefined {
   if (!(step instanceof ReplaceTextStep) || step.apply !== ReplaceTextStep.prototype.apply) return;
   const { from, to, text } = step, path = Object.freeze([...step.path]);
@@ -132,7 +133,7 @@ export function validateRetainedDocument(document: Node, schema: Schema): void {
     if (node.type.name.length > 200 || Object.keys(node.attrs).length > 1_000 || Object.keys(node.attrs).some(name => name.length > 200)) throw new RangeError('Retained node metadata exceeds the candidate storage bounds.');
     assertRetainedWireString(node.type.name);
     if (typeof node.text === 'string') assertRetainedWireString(node.text);
-    if (node.isText) validateRetainedTextFormat(format(node, 'preflight'));
+    if (node.isText) validateRetainedTextFormat(format(node, 'x'.repeat(200)));
     let count = 1, text = node.text?.length ?? 0, height = 0;
     let cacheable = reusable && standardSerialization() && names.get(node.type) === node.type.name && Object.getPrototypeOf(node) === Node.prototype && Object.isFrozen(node)
       && (node.text === undefined || typeof node.text === 'string')
@@ -222,7 +223,7 @@ export class RetainedDocumentStore {
   private groups = new Map<string, GroupState>();
   private graph?: RetainedNodeProjection;
 
-  constructor(readonly document: Y.Doc, name: string, readonly schema: Schema, private readonly createId: () => string, private readonly origin?: unknown) {
+  constructor(readonly document: Y.Doc, private readonly name: string, readonly schema: Schema, private readonly createId: () => string, private readonly origin?: unknown) {
     this.metadata = document.getMap(`${name}:document`);
     if (!this.metadata.size) document.transact(() => this.metadata.set('version', VERSION), origin);
     if (this.metadata.get('version') !== VERSION) throw new Error('Unsupported retained document version.');
@@ -530,6 +531,7 @@ export class RetainedDocumentStore {
     // invalid custom step must not leave an earlier valid step half-applied.
     const changes = transaction.steps.map(step => {
       const after = step.apply(before), mapping = new Mapping(step.getMaps?.(before) ?? [step.getMap(before)]);
+      this.validate(after);
       const native = transaction.steps.length === 1 ? proveNativeText(before, after, mapping, step) : undefined;
       const checked = native ? undefined : planRetainedText(before, after, mapping, step instanceof ReplaceStep);
       // A native single-step proof needs no whole-tree plan. All other steps
@@ -546,8 +548,10 @@ export class RetainedDocumentStore {
     try {
       const projected = this.document.transact(event => {
         writer = event;
+        const native = changes.length === 1 && changes[0].native ? this.prepareChangeText(changes[0].native, event) : undefined;
+        this.reserveCapacity(changes, native);
         let result: Node | undefined;
-        for (const change of changes) result = (change.native ? this.changeText(change.after, change.native, event) : undefined)
+        for (const change of changes) result = (change.native && native ? this.changeText(change.after, change.native, event, native) : undefined)
           ?? this.change(change.before, change.after, change.mapping, change.step, change.plan, event);
         return result;
       }, this.origin);
@@ -559,7 +563,129 @@ export class RetainedDocumentStore {
     } finally { this.document.off('afterTransaction', observed); }
   }
 
-  private changeText(after: Node, { path, from, to, text, original, target }: NativeTextProof, shared: Y.Transaction): Node | undefined {
+  private reserveCapacity(changes: readonly CapacityChange[], native: ReturnType<RetainedDocumentStore['prepareChangeText']>): void {
+    if (native && changes[0].native) {
+      const { from, to, text } = changes[0].native;
+      this.text.checkCapacity(0, 0, 0, text ? [native.desired] : [], new Map(),
+        new Map([[native.binding.id, Math.max(0, text.length - (to - from))]]));
+      return;
+    }
+    let nodes = 0, identities = 0, partitions = 0, streams = 0, styles = 0, cuts = 0;
+    const formatKeys = new Map<string, Set<string>>(), growth = new Map<string, number>();
+    type Origin = string | symbol;
+    let origins = new Map<string, Set<Origin>>([...this.textPaths].map(([path, bindings]) => [path, new Set(bindings.map(binding => binding.id))]));
+    const partitionBounds = new Map<Origin, number>();
+    for (const values of origins.values()) for (const id of values) partitionBounds.set(id, 1);
+    const provisional = new Map<symbol, { keys: Set<string>; characters: number }>();
+    const currentPartitions = this.document.getMap(`${this.name}-text:owners`).size;
+    const reserveFormat = (id: Origin, keys: readonly string[]) => {
+      const target = typeof id === 'string' ? formatKeys.get(id) ?? new Set<string>() : provisional.get(id)!.keys;
+      for (const key of keys) target.add(key);
+      if (target.size > 1_000) throw new RangeError('Too many retained text attributes. Compact the room or reduce the formatting transaction before retrying.');
+      if (typeof id === 'string') formatKeys.set(id, target);
+    };
+    const addGrowth = (id: Origin, amount: number) => {
+      if (typeof id === 'string') growth.set(id, (growth.get(id) ?? 0) + amount);
+      else if ((provisional.get(id)!.characters += amount) > 10_000_000) throw new RangeError('Retained text stream needs compaction before this transaction.');
+    };
+    for (const change of changes) {
+      const plan = change.plan ?? planRetainedText(change.before, change.after, change.mapping, change.step instanceof ReplaceStep);
+      const retainedNodes = planRetainedNodeStarts(change.before, change.after, change.mapping);
+      const parents = new Map(retainedNodes.map(entry => [pathKey(entry.after), pathKey(entry.before)])); parents.set('', '');
+      const nextOrigins = new Map<string, Set<Origin>>(), groupKeys = new Map<string, string>();
+      const ownership: { origins: ReadonlySet<Origin>; source: string; target: string; bound: number }[] = [];
+      const fallbackGroups: Set<Origin>[] = [];
+      const sourceGroups = new Map<string, string>();
+      const sourceLayout = (node: Node, path: number[]): void => {
+        for (let index = 0; index < node.childCount;) {
+          if (!node.child(index).isText) { sourceLayout(node.child(index), [...path, index++]); continue; }
+          const group = pathKey([...path, index]), empty = !node.child(index).nodeSize;
+          do { sourceGroups.set(pathKey([...path, index++]), group); }
+          while (!empty && index < node.childCount && node.child(index).isText && node.child(index).nodeSize > 0);
+        }
+      };
+      sourceLayout(change.before, []);
+      let pieces = 0, structural = 0, groups = 0;
+      for (const retained of plan.retained) {
+        const source = pathKey(retained.before.path), target = pathKey(retained.after.path), sources = origins.get(source) ?? new Set<Origin>();
+        ownership.push({ origins: sources, source, target, bound: [...sources].reduce((sum, id) => sum + (partitionBounds.get(id) ?? 1), 0) });
+        const set = nextOrigins.get(target) ?? new Set<Origin>();
+        for (const id of origins.get(source) ?? []) set.add(id);
+        nextOrigins.set(target, set);
+        const before = getNodeAtPath(change.before, retained.before.path), after = getNodeAtPath(change.after, retained.after.path);
+        if (!same(before.attrs, after.attrs) || !same(before.marks.map(mark => mark.toJSON()), after.marks.map(mark => mark.toJSON()))) {
+          for (const id of set) reserveFormat(id, Object.keys(format(after, 'preflight')));
+        }
+      }
+      const insertedPaths = new Set<string>();
+      for (const inserted of plan.inserted) {
+        insertedPaths.add(pathKey(inserted.path));
+      }
+      const visit = (node: Node, path: number[]): void => {
+        if (node.isText) return;
+        const parent = pathKey(path);
+        if (path.length && !parents.has(parent)) structural++;
+        for (let index = 0; index < node.childCount;) {
+          if (!node.child(index).isText) { visit(node.child(index), [...path, index++]); continue; }
+          const paths: string[] = [], sourceIds = new Set<Origin>(), groupKey = pathKey([...path, index]); let retained = false;
+          const empty = node.child(index).nodeSize === 0;
+          do {
+            const key = pathKey([...path, index++]); paths.push(key); groupKeys.set(key, groupKey);
+            retained ||= !!nextOrigins.get(key)?.size;
+            for (const id of nextOrigins.get(key) ?? (parents.get(parent) === parent ? origins.get(key) : undefined) ?? []) sourceIds.add(id);
+          } while (!empty && index < node.childCount && node.child(index).isText && node.child(index).nodeSize > 0);
+          // A group with no retained source may allocate a new physical stream.
+          // Carry a provisional origin through subsequent steps and splits so
+          // earlier insertions and removed wire fields cannot escape bounds.
+          if (!sourceIds.size) {
+            const origin = Symbol(); provisional.set(origin, { keys: new Set(), characters: 0 }); sourceIds.add(origin);
+            partitionBounds.set(origin, 1); groups++;
+          } else if (!retained) fallbackGroups.push(sourceIds);
+          for (const key of paths) nextOrigins.set(key, sourceIds);
+        }
+      };
+      visit(change.after, []);
+      const targets = new Map<Origin, { groups: Set<string>; bound: number }>();
+      for (const entry of ownership) for (const id of entry.origins) {
+        const value = targets.get(id) ?? { groups: new Set<string>(), bound: 0 };
+        value.groups.add(groupKeys.get(entry.target)!); value.bound += entry.bound; targets.set(id, value);
+      }
+      // Retained pieces claim their partitions before empty/replaced groups
+      // try to reuse a same-path binding. Two groups cannot both claim it.
+      const assigned = new Set(targets.keys());
+      for (const sources of fallbackGroups) {
+        if ([...sources].some(id => assigned.has(id))) {
+          const origin = Symbol(); provisional.set(origin, { keys: new Set(), characters: 0 }); sources.add(origin);
+          partitionBounds.set(origin, 1); groups++;
+        }
+        for (const id of sources) assigned.add(id);
+      }
+      for (const [id, value] of targets) if (value.groups.size > 1) {
+        pieces += value.bound; partitionBounds.set(id, (partitionBounds.get(id) ?? 1) + value.bound);
+      }
+      for (const inserted of plan.inserted) for (const id of nextOrigins.get(pathKey(inserted.path)) ?? []) {
+        addGrowth(id, inserted.to - inserted.from);
+        reserveFormat(id, Object.keys(format(getNodeAtPath(change.after, inserted.path), 'preflight')));
+      }
+      const split = typeof (change.step as Step & { getRetainedSplit?: unknown }).getRetainedSplit === 'function';
+      // Each source binding can contribute one piece per retained slice. A
+      // boundary split adds at most two empty pieces. Every piece is an upper
+      // bound for one new partition; unchanged groups may use none of them.
+      pieces += split ? 2 : 0; cuts += split ? 1 : 0;
+      if (split) for (const id of targets.keys()) partitionBounds.set(id, (partitionBounds.get(id) ?? 1) + 2);
+      const created = structural + groups + pieces;
+      const moved = created || retainedNodes.some(entry => pathKey(entry.before) !== pathKey(entry.after))
+        || ownership.some(entry => sourceGroups.get(entry.source) !== groupKeys.get(entry.target));
+      nodes += created; identities += 2 * created + (moved ? parents.size + currentPartitions + partitions + groups + pieces : 0);
+      partitions += groups + pieces; streams += groups; styles += insertedPaths.size;
+      origins = nextOrigins;
+    }
+    this.nodes.checkCapacity(nodes, identities);
+    if (this.splits.size + cuts > 100_000) throw new RangeError('Retained structural pools need compaction before this transaction.');
+    this.text.checkCapacity(partitions, streams, styles, [], formatKeys, growth);
+  }
+
+  private prepareChangeText({ path, from, to, original, target }: NativeTextProof, shared: Y.Transaction) {
     // The native text step changes one existing leaf without structural or
     // formatting intent. Custom apply implementations use the general path.
     if (shared.changed.size) return;
@@ -574,6 +700,11 @@ export class RetainedDocumentStore {
     // formats or pending foreign text must not be treated as one native leaf.
     if (partition.runs.map(run => run.text).join('') !== original.text
       || partition.runs.some(run => !same(run.attributes ?? {}, desired))) return;
+    return { binding, frame, proof, desired };
+  }
+
+  private changeText(after: Node, { from, to, text }: NativeTextProof, shared: Y.Transaction,
+    { binding, frame, proof, desired }: NonNullable<ReturnType<RetainedDocumentStore['prepareChangeText']>>): Node {
     if (to > from) this.text.delete(binding.id, from, to);
     if (text) this.text.insert(binding.id, from, text, desired);
     const current = proof?.partitions();

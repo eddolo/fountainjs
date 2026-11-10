@@ -170,7 +170,24 @@ The concurrent case retains one original list and its parent identities, keeps
 the Hebrew anchor first, and preserves peer typing through the other author's
 undo and redo.
 
-## Current verification
+## Capacity and session ownership follow-up
+
+The subsequent audit fixes rejection after partial shared writes and mutable
+host options redirecting a pending checkpoint or connection cleanup. See
+[transaction capacity](YJS_RETAINED_CAPACITY_AUDIT.md) and
+[session ownership](YJS_PROVIDER_LIFECYCLE_AUDIT.md). The full source run now
+passes **5,118 tests in 318 files**, with zero failures or skips. Build, types,
+package consumers, server/headless, format checks and existing performance
+limits pass. The CommonJS aggregate allowance increases from 1,409.5 to
+1,414.25 KiB for the measured 1,414.1 KiB build; other limits stay unchanged.
+
+The ordinary public-demo audit exposed a separate Firefox native-caret race
+during metadata updates, before the merge operation. It remains under active
+investigation. Three guide checks also used an obsolete compatibility-example
+label. These browser failures are retained; this is not release clearance.
+Receipt: `artifacts/yjs-capacity-verification-20261110.json`.
+
+## Adoption checkpoint verification — 2c28c0ea
 
 The [compact verification receipt](../artifacts/yjs-default-verification-20261110.json)
 records the tested source hashes, results, package costs and remaining limitation.

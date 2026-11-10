@@ -7,6 +7,18 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reserve retained collaboration storage for a complete transaction before
+  changing shared data. Storage/formatting capacity refusals keep the local
+  draft and leave peers unchanged, including multi-step and hidden-text cases.
+  Ordinary metadata changes and edits in a 25,000-paragraph document remain
+  supported without reserving replacement nodes for untouched content.
+- Stop a local Lean check when its browser request is cancelled, including
+  cancellation after the full source has already reached the bridge.
+- Bind retained collaboration admission, writes and cleanup to the original
+  document, provider and awareness objects. Reusing the caller's options can
+  no longer redirect a pending checkpoint into another document or leave the
+  original provider and cursor listeners attached.
+
 - Breaking beta collaboration change: `/yjs` now uses retained character and
   node identities. Existing XML rooms require the explicit `/yjs/legacy`
   entry or a verified migration; an import change never migrates stored data.
