@@ -154,6 +154,51 @@ describe('DOM-independent page layout', () => {
     expect(result.warnings).toEqual([]);
   });
 
+  it.each([false, true])('keeps a chain together up to an explicit page boundary (%s)', breakBefore => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'lead', height: 45 },
+      { id: 'heading', height: 20, keepWithNext: true },
+      { id: 'caption', height: 20, keepWithNext: true },
+      { id: 'body', height: 30, breakBefore },
+    ], geometry);
+
+    expect(result.pages.map(page => page.placements.map(item => item.itemId))).toEqual(
+      breakBefore ? [['lead', 'heading', 'caption'], ['body']] : [['lead'], ['heading', 'caption', 'body']],
+    );
+    expect(result.warnings).toEqual([]);
+  });
+
+  it.each([40, 45])('reserves a shared footnote once for a keep chain (lead height %s)', leadHeight => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const footnotes = [{ id: 'note', height: 10 }];
+    const result = layoutPages([
+      { id: 'lead', height: leadHeight },
+      { id: 'heading', keepWithNext: true, fragments: [{ id: 'a', height: 15, footnotes }] },
+      { id: 'caption', keepWithNext: true, fragments: [{ id: 'b', height: 15, footnotes }] },
+      { id: 'body', height: 20 },
+    ], geometry);
+
+    expect(result.pages.map(page => page.placements.map(item => item.itemId))).toEqual(
+      leadHeight === 40 ? [['lead', 'heading', 'caption', 'body']] : [['lead'], ['heading', 'caption', 'body']],
+    );
+    expect(result.pages.at(-1)?.footnotes).toEqual(footnotes);
+  });
+
+  it('relaxes an oversized chain while preserving a pair that fits', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'heading', height: 40, keepWithNext: true },
+      { id: 'caption', height: 40, keepWithNext: true },
+      { id: 'body', height: 40 },
+    ], geometry);
+
+    expect(result.pages.map(page => page.placements.map(item => item.itemId))).toEqual([
+      ['heading'], ['caption', 'body'],
+    ]);
+    expect(result.warnings).toMatchObject([{ code: 'constraint-relaxed', itemId: 'heading' }]);
+  });
+
   it('reports when keep-with-next cannot fit on an empty page', () => {
     const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
     const result = layoutPages([

@@ -1199,6 +1199,34 @@ test('keeps a multiline DOCX caption with the following paragraph', async ({ pag
   }
 });
 
+test('keeps a DOCX heading and caption chain with its body', async ({ page, browserName }, info) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  const runPreview = (keepChain: boolean) => page.evaluate(enabled => (
+    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphFlow('keepChain', enabled)
+  ), keepChain);
+  const preview = page.locator('#browser-page-preview');
+  const sheets = preview.locator('.fountain-page-preview__sheet');
+  const group = /Section heading.*Caption first.*Caption second.*Body first.*Body second/su;
+  const control = await runPreview(false);
+  await writeFile(info.outputPath('broken-chain.docx'), Buffer.from(control.bytes));
+  await expect(sheets.first()).toContainText('Section heading');
+  await expect(sheets.nth(1)).toContainText(/Caption first.*Body second/su);
+
+  const enabled = await runPreview(true);
+  await writeFile(info.outputPath('keep-chain.docx'), Buffer.from(enabled.bytes));
+  await preview.screenshot({ path: info.outputPath('keep-chain-preview.png') });
+  expect(enabled.preview).toMatchObject({ pageCount: 2, sourceUnchanged: true });
+  await expect(sheets.first()).not.toContainText('Section heading');
+  await expect(sheets.nth(1)).toContainText(group);
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ path: info.outputPath('keep-chain-print.pdf'), preferCSSPageSize: true });
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(2);
+    expect(pages[0]).not.toContain('Section heading');
+    expect(pages[1]).toMatch(group);
+  }
+});
+
 test('paginates imported styled semantic HTML without structural or PDF text loss', async ({ page, browserName }) => {
   await page.goto('/browser-tests.html?fixture=pages-preview');
   const imported = await page.evaluate(() => (

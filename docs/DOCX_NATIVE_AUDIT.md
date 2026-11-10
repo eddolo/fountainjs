@@ -1,5 +1,20 @@
 # Independent native DOCX audit
 
+## Consecutive keep-with-next settings 2026 11 10
+
+The earlier pairwise preview left a heading on page one while moving its
+linked caption and following body paragraph to page two. The paginator now
+reserves the full chain through a legal opening of its last block, including
+each shared footnote once. Forced page boundaries stop the chain. A chain
+that cannot fit on a blank page warns and uses adjacent-pair fallback.
+
+In the paired DOCX fixture, disabling the heading's link left it on page one.
+Enabling both links moved the heading, caption and body to page two in the
+three desktop browser previews, Chromium print PDF and LibreOffice 24.2.7.2.
+The native control, browser preview and both PDF renders were visually
+inspected. The check covers top-level blocks. A separate 10,000-item model
+check retained every item in order with both a fitting and an oversized chain.
+
 ## Keep with next 2026 11 10
 
 The browser used to leave a two-line caption on page one while moving the

@@ -1572,15 +1572,15 @@ Object.assign(globalThis, {
         importedStyledPrintGeometry(),
       ),
       previewImportedStyled: () => renderPagesPreview(importedStyledPrintGeometry(), true),
-      previewDOCXParagraphFlow: (rule: 'break' | 'keepLinesTogether' | 'keepWithNext', enabled = true) => {
+      previewDOCXParagraphFlow: (rule: 'break' | 'keepLinesTogether' | 'keepWithNext' | 'keepChain', enabled = true) => {
         const schema = pagesEditor.state.schema;
         const paragraph = (text: string, pageBreakBefore: boolean) => schema.node('paragraph', {
           layout: { unit: 'pt', pageBreakBefore },
         }, [schema.text(text)]);
-        const lines = (text: readonly string[], applyRule = false) => schema.node('paragraph', {
-          layout: { unit: 'pt', lineHeight: 18, lineHeightUnit: 'pt', lineHeightRule: 'exact', ...(applyRule && { [rule]: enabled }) },
+        const lines = (text: readonly string[], layout = {}) => schema.node('paragraph', {
+          layout: { unit: 'pt', lineHeight: 18, lineHeightUnit: 'pt', lineHeightRule: 'exact', ...layout },
         }, text.flatMap((line, index) => index ? [schema.node('hard_break'), schema.text(line)] : [schema.text(line)]));
-        const height = rule === 'keepWithNext' ? 176 : 152;
+        const height = rule === 'keepChain' ? 204 : rule === 'keepWithNext' ? 176 : 152;
         const source = rule === 'break' ? schema.node('doc', {}, [
           paragraph('First page introduction', false),
           paragraph('Second page opening', true),
@@ -1589,9 +1589,10 @@ Object.assign(globalThis, {
           pageSettings: { unit: 'pt', width: 261, height: height * 0.75, marginTop: 7.5, marginRight: 7.5, marginBottom: 7.5, marginLeft: 7.5 },
         }, [
           lines(['Lead first', 'Lead second', 'Lead third']),
-          ...(rule === 'keepWithNext'
-            ? [lines(['Caption first', 'Caption second'], true), lines(['Body first', 'Body second'])]
-            : [lines(['Body first', 'Body second', 'Body third', 'Body fourth'], true)]),
+          ...(rule === 'keepChain' ? [lines(['Section heading'], { keepWithNext: enabled })] : []),
+          ...(rule === 'keepLinesTogether'
+            ? [lines(['Body first', 'Body second', 'Body third', 'Body fourth'], { keepLinesTogether: enabled })]
+            : [lines(['Caption first', 'Caption second'], { keepWithNext: rule === 'keepChain' || enabled }), lines(['Body first', 'Body second'])]),
         ]);
         const bytes = exportDOCX(source).bytes;
         const imported = importDOCX(bytes, schema).document;

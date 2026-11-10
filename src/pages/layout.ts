@@ -260,24 +260,23 @@ function measuredFootnotes(
 }
 
 function itemFragments(item: PageFlowItem, knownFootnoteMeasurements: Map<string, string>): readonly PageFlowFragment[] {
-  validateId(item?.id, 'A page flow item');
   if (item.fragments !== undefined) {
     if (!Array.isArray(item.fragments) || !item.fragments.length) throw new TypeError(`Page flow item ${item.id} requires at least one fragment.`);
     const fragmentIds = new Set<string>();
-    return Object.freeze(item.fragments.map((fragment) => {
+    return item.fragments.map((fragment) => {
       validateId(fragment?.id, `A fragment in ${item.id}`);
       if (fragmentIds.has(fragment.id)) throw new TypeError(`Page flow item ${item.id} repeats fragment id ${fragment.id}.`);
       fragmentIds.add(fragment.id);
       if (!finiteNonNegative(fragment.height)) throw new TypeError(`Fragment ${fragment.id} requires a finite non-negative height.`);
-      return Object.freeze({
+      return {
         id: fragment.id,
         height: fragment.height,
         footnotes: measuredFootnotes(fragment.footnotes, knownFootnoteMeasurements),
-      });
-    }));
+      };
+    });
   }
   if (!finiteNonNegative(item.height)) throw new TypeError(`Page flow item ${item.id} requires a finite non-negative height.`);
-  return Object.freeze([Object.freeze({ id: item.id, height: item.height, footnotes: Object.freeze([]) })]);
+  return [{ id: item.id, height: item.height }];
 }
 
 function pageUsed(page: MutablePage): number {
@@ -297,9 +296,10 @@ function additionalFootnoteHeight(
       additions.set(footnote.id, footnote);
     }
   }));
-  const completeHeight = [...additions.values()].reduce((total, footnote) => total + footnote.height, 0);
+  const notes = [...additions.values()];
+  const completeHeight = notes.reduce((total, footnote) => total + footnote.height, 0);
   if (prospectiveContentHeight + completeHeight <= bodyHeight) return completeHeight;
-  return [...additions.values()].reduce((total, footnote) => {
+  return notes.reduce((total, footnote) => {
     const fragments = footnote.fragments;
     if (!fragments) return total + footnote.height;
     const minimumStart = footnote.minimumStart ?? 1;
@@ -491,30 +491,50 @@ export function layoutPages(
     pending.forEach((footnote) => { footnoteTarget = placeFootnote(footnoteTarget, footnote, itemId); });
   };
 
+  const keepsNext = (index: number) => {
+    const { item } = normalized[index];
+    const next = normalized[index + 1];
+    return item.keepWithNext && !item.breakAfter && next && !next.item.breakBefore;
+  };
+  const keepHeight = (start: number, end: number) => {
+    const tail = normalized[end];
+    const opening = tail.minimumStart + tail.minimumEnd > tail.fragments.length
+      ? tail.fragments
+      : tail.fragments.slice(0, tail.minimumStart);
+    const group = normalized.slice(start, end).flatMap(entry => entry.fragments).concat(opening);
+    const height = group.reduce((sum, fragment) => sum + fragment.height, 0);
+    // A continued footnote can advance the active page during placement.
+    // Reserve whole notes when deciding whether this group fits together.
+    return height + additionalFootnoteHeight(page(), group, placedFootnotes, height, Infinity);
+  };
+  let chainEnd = 0;
+  let heldThrough = 0;
+
   normalized.forEach((entry, itemIndex) => {
     const { item, fragments, minimumStart, minimumEnd, continuationHeight } = entry;
     if (item.breakBefore && page().placements.length) nextPage(item.id);
 
-    const next = normalized[itemIndex + 1];
-    if (item.keepWithNext && !item.breakAfter && next && !next.item.breakBefore) {
-      const nextOpening = next.minimumStart + next.minimumEnd > next.fragments.length
-        ? next.fragments
-        : next.fragments.slice(0, next.minimumStart);
-      const pairFragments = [...fragments, ...nextOpening];
-      const pairContentHeight = pairFragments.reduce((sum, fragment) => sum + fragment.height, 0);
-      const pair = pairContentHeight
-        + additionalFootnoteHeight(page(), pairFragments, placedFootnotes, pairContentHeight, geometry.bodyHeight);
-      if (pair > geometry.bodyHeight) warnings.push(Object.freeze({
-        code: 'constraint-relaxed',
-        itemId: item.id,
-        detail: `Keep-with-next exceeds page capacity for ${item.id}.`,
-      }));
-      else if (pair > remaining(page()) && page().placements.length) nextPage(item.id);
+    if (itemIndex >= heldThrough && keepsNext(itemIndex)) {
+      let end = itemIndex + 1;
+      if (itemIndex >= chainEnd) {
+        while (keepsNext(end)) end += 1;
+        chainEnd = end;
+      }
+      let height = keepHeight(itemIndex, end);
+      if (height <= geometry.bodyHeight) heldThrough = end;
+      else {
+        warnings.push(Object.freeze({
+          code: 'constraint-relaxed', itemId: item.id,
+          detail: `Keep-with-next exceeds page capacity for ${item.id}.`,
+        }));
+        if (end > itemIndex + 1) height = keepHeight(itemIndex, itemIndex + 1);
+      }
+      if (height <= geometry.bodyHeight && height > remaining(page()) && page().placements.length) nextPage(item.id);
     }
 
     let from = 0;
     while (from < fragments.length) {
-      let target = page();
+      const target = page();
       const continued = from > 0 ? continuationHeight : 0;
       let to = from;
       let height = continued;
@@ -533,7 +553,7 @@ export function layoutPages(
       }
 
       if (to === from && pageUsed(target) > 0) {
-        target = nextPage(item.id);
+        nextPage(item.id);
         continue;
       }
 

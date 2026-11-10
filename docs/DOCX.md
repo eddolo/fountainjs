@@ -266,12 +266,13 @@ the paragraph is taller than an empty sheet, it can split with a layout
 warning so every line remains visible. Paragraphs inside lists, tables and
 other structural continuations use their container's split rules.
 
-For adjacent top-level text blocks, the preview and print projection apply
-`keepWithNext` to a multi-line block as well as a single line. The current
-block stays with a legal opening of the next block when they can fit on one
-sheet. An explicit `false` overrides the default for a Fountain heading.
-Explicit page breaks take priority. Longer chains and nested Word layout
-remain outside this verified behavior.
+The preview and print projection honor `keepWithNext` on top-level text
+blocks. Consecutive declarations keep the linked blocks with a legal opening
+of the final block when they fit together on one sheet, including space for
+their footnotes. A group taller than a sheet emits a warning and falls back to
+adjacent pairs where possible. An explicit `false` overrides the Fountain
+heading default, and a forced page break ends the group. Nested Word layout
+remains outside this verified behavior.
 
 Unreleased 2026-10-05: paragraph `layout.fontFamily` and physical `fontSize`
 retain the supported font context separately from text-run marks. Document and
