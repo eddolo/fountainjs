@@ -691,20 +691,29 @@ export class RetainedDocumentStore {
     if (shared.changed.size) return;
     if (!original.isText || !target.isText || !original.nodeSize || !target.nodeSize || to - from === original.nodeSize) return;
     const bindings = this.textPaths.get(pathKey(path)), binding = bindings?.length === 1 ? bindings[0] : undefined;
-    if (!binding || binding.from || binding.modelFrom || binding.length !== original.nodeSize
+    if (!binding || binding.modelFrom || binding.length !== original.nodeSize
       || this.groups.get(binding.id)?.value.textLayout?.empty !== false) return;
     const frame = this.frameCurrent ? this.frame : undefined;
+    // A trailing model leaf may be only the last format run of its partition
+    // after marks were added/removed. Prove only appending there: replacement
+    // and cross-leaf boundary affinity still belong to general reconciliation.
+    if (binding.from && (!frame || from !== original.nodeSize || to !== from
+      || getNodeAtPath(this.model!, path.slice(0, -1)).childCount - 1 !== path.at(-1))) return;
     const proof = frame ? this.text.prepareNativeProjection(binding.id, shared) : undefined;
     const desired = format(original, binding.leaf), partition = proof?.partition ?? this.text.project(binding.id);
     // Read the actual partition before writing. Incomplete bindings, mixed
     // formats or pending foreign text must not be treated as one native leaf.
-    if (partition.runs.map(run => run.text).join('') !== original.text
+    if (binding.from) {
+      const last = partition.runs.at(-1);
+      if (!last || binding.from + binding.length !== partition.to - partition.from
+        || last.text !== original.text || !same(last.attributes ?? {}, desired)) return;
+    } else if (partition.runs.map(run => run.text).join('') !== original.text
       || partition.runs.some(run => !same(run.attributes ?? {}, desired))) return;
-    return { binding, frame, proof, desired };
+    return { binding, frame, proof, desired, from: binding.from + from, to: binding.from + to };
   }
 
-  private changeText(after: Node, { from, to, text }: NativeTextProof, shared: Y.Transaction,
-    { binding, frame, proof, desired }: NonNullable<ReturnType<RetainedDocumentStore['prepareChangeText']>>): Node {
+  private changeText(after: Node, { text }: NativeTextProof, shared: Y.Transaction,
+    { binding, frame, proof, desired, from, to }: NonNullable<ReturnType<RetainedDocumentStore['prepareChangeText']>>): Node {
     if (to > from) this.text.delete(binding.id, from, to);
     if (text) this.text.insert(binding.id, from, text, desired);
     const current = proof?.partitions();

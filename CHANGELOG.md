@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Speed up continued collaborative typing when formatting leaves the final
+  text run at a nonzero offset in shared storage. Appending there preserves
+  the existing author undo and relative anchors.
 - Keep an untouched empty paragraph's original shared text record when an
   earlier block is split or moved. Undoing that split no longer removes layout
   metadata needed by a peer's concurrent typing in the empty paragraph.

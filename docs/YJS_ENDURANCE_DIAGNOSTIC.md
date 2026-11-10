@@ -300,45 +300,56 @@ broader sustained performance and the previously recorded startup reliability
 limitations remain open. No preceding failed browser receipt is superseded by
 this narrower default-adapter run.
 
-## Candidate typing optimization — not implemented
+## Typing after split and undo
 
-`prepareChangeText` in `src/yjs/retained-document.ts` currently accepts only one
-binding covering both the entire model leaf and the entire retained partition.
-`normalizeFrame` can merge equal leaf identities from several partitions into
-one model leaf; a formatted leaf can also occupy only part of a partition.
-Those valid shapes fail the native proof and use general reconciliation. The
-profile confirms fallback during typing, but does not independently identify
-which binding condition rejected each measured character.
+A separate CPU profile of the installed structural repair sampled 1,839 ms
+inside the typing bursts of a four-cycle, 1,000-paragraph workload. General
+reconciliation accounted for 1,357 sampled ms and capacity reservation for
+259 sampled ms. Those samples locate the work. The unprofiled runs provide the
+latency comparison.
 
-A bounded next step is to support an edit wholly inside one binding of a leaf
-whose bindings belong to one physical stream. Validate the complete leaf's
-ordered, gap-free binding coverage against the freshly checked stream, including
-text, format and leaf identity. Translate model offsets using
-`binding.from + modelOffset - binding.modelFrom`; retain the existing partition
-and leaf identities. The existing `prepareNativeProjection` in
-`src/yjs/retained-text.ts` already rereads that whole stream and refreshes all its
-partition coordinates. This could cover suffix typing after retained fragments
-have recombined without introducing a general multi-partition writer.
+In-memory instrumentation of that same package traced 66 character inserts
+over six cycles at 100 paragraphs. The first 11 used a single binding that
+covered the whole retained partition. The other 55 used a single binding
+covering the final formatted run of a partition with two to six runs. Each
+insertion was at the end of its visible leaf and physical partition. The
+binding started at a nonzero offset, so it failed the original native proof.
 
-Required boundaries remain:
+The repair in `src/yjs/retained-document.ts` verifies that the final model
+leaf occupies the entire last wire run of the partition, then translates an
+append to its physical offset. It uses the existing stream refresh, capacity
+reservation and observer checks. Interior edits and ambiguous boundaries
+continue through general reconciliation.
 
-- Keep `proveNativeText`'s exact built-in, single-step mapping proof and reject
-  pending foreign writes before the first shared mutation. Preflight capacity
-  must use the same binding/projection proof as the writer.
-- Preserve general reconciliation's insertion affinity at partition edges.
-  Keep ambiguous boundaries, cross-binding replacements, empty/full-leaf
-  transformations and custom/multistep operations on the general path initially.
-- Preserve `prepareNativeProjection`'s unchanged-outside guard, `writeVersion`,
-  observer/cleanup invalidation and `finishChange`'s fresh semantic comparison.
-  Never merge/delete retained boundaries merely to make a fast path eligible:
-  those identities carry peer edits, anchors and author undo.
-- Extend the existing native-versus-general byte/history comparisons in
-  `tests/yjs-retained-document.test.ts` before adoption, including adjacent
-  formatting, fragment boundaries, remote edits and checkpoint continuation.
+Both installed packages passed all semantic checks in the back-to-back,
+12-cycle run at 1,000 paragraphs on the same Windows host with Yjs 13.6.32.
 
-`normalizeFrame` still traverses and rebinds the complete model even on a native
-text write. Incrementally normalizing only affected ancestors is a separate,
-larger optimization. It cannot simply reuse unchecked models: the same test
-file exercises changed schema attribute rules, custom validation and foreign
-metadata writes during projection. Measure the smaller binding extension first;
-do not remove those semantics to obtain a timing improvement.
+| Action | Structural repair | With trailing-run append |
+| --- | ---: | ---: |
+| Eleven-character burst median | 714.9 ms | 136.0 ms |
+| Eleven-character burst p95 | 916.4 ms | 163.1 ms |
+| Split median | 128.4 ms | 137.3 ms |
+| Wrap median | 116.9 ms | 125.0 ms |
+| Remote apply p95 | 32.7 ms | 32.4 ms |
+
+In the separate two-size run the typing medians were 33.9 ms at 100
+paragraphs and 150.3 ms at 1,000. The earlier structural build measured
+127.6 and 585.8 ms in that workload. Split and wrap times also rose in
+the two-size run. The back-to-back run showed a smaller increase of about
+7% for each. These are single-host observations. Whole-model normalization
+still contributes to typing cost, and sustained structural performance at
+larger document sizes needs further measurement.
+
+The paired run exchanged 584 updates and 309,148 bytes in each package,
+including 24 duplicate deliveries. The local receipts are
+`artifacts/yjs-typing-rematch-base-20261110.json` and
+`artifacts/yjs-typing-rematch-new-20261110.json`. The 959 Yjs tests cover
+shared data equality, relative anchors, repeated appends after mark changes,
+author undo and redo, and projection invalidation during a foreign stream write.
+The compiled package passed 48 recorded journeys across Chromium, Firefox
+and WebKit. The focused continuation journey also checks formatting the
+prefix after a split undo, typing into the trailing run, and author-only
+undo and redo with both editors still connected.
+
+The CommonJS runtime totals 1,449,193 bytes, 199 bytes more than the preceding
+build. The aggregate allowance grows by 192 bytes to cover the checked append.

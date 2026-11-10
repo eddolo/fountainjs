@@ -682,7 +682,9 @@ const limits = Object.freeze({
   // 1414.9 KiB. Add 0.75 KiB for this repair; all other limits remain unchanged.
   // Empty-sibling retention and the exact-fallback pool check total 1,448,994
   // bytes: 34 bytes above this cap. Add 64 bytes; all other limits stay fixed.
-  'all CommonJS runtime code': 1415.0625 * kibibyte,
+  // The checked trailing-run append totals 1,449,193 bytes, 169 above the
+  // preceding limit. Allow 192 bytes for the added wire-offset checks.
+  'all CommonJS runtime code': 1415.25 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

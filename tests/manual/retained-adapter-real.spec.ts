@@ -25,6 +25,41 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
  await page.screenshot({path:testInfo.outputPath('converged.png'),fullPage:true});
  await page.locator('#grace').getByRole('button',{name:'Undo',exact:true}).click();await expect.poll(async()=> (await snapshot(page))[0].json.content[0]).toMatchObject({type:'paragraph',content:[{text:'AlXpha'}]});
  await page.locator('#grace').getByRole('button',{name:'Redo',exact:true}).click();await expect.poll(async()=> (await snapshot(page))[0].json).toEqual(peers[0].json);
+ if (operation === 'Enter') {
+   const grace = page.locator('#grace');
+   const undo = grace.getByRole('button', { name: 'Undo', exact: true });
+   const redo = grace.getByRole('button', { name: 'Redo', exact: true });
+   const expectFirstParagraph = async (expected: string) => {
+     await expect.poll(async () => (await snapshot(page)).map((peer: any) => ({
+       value: text(peer.json.content[0]), status: peer.status,
+     }))).toEqual([{ value: expected, status: 'connected' }, { value: expected, status: 'connected' }]);
+     for (const name of ['Ada editor', 'Grace editor']) {
+       await expect(page.getByRole('textbox', { name }).locator('p').first()).toHaveText(expected);
+     }
+   };
+   await undo.click();
+   await expectFirstParagraph('AlXpha');
+   await caret(page, 'Grace', 0);
+   await page.keyboard.press('Shift+ArrowRight');
+   await page.keyboard.press('Shift+ArrowRight');
+   await grace.getByRole('button', { name: 'Bold', exact: true }).click();
+   await expect(grace.getByRole('textbox', { name: 'Grace editor' }).locator('p').first().locator('strong')).toHaveText('Al');
+   await expect.poll(async () => (await snapshot(page))[1].json.content[0].content.map(text)).toEqual(['Al', 'Xpha']);
+   await caret(page, 'Grace', 0);
+   await page.keyboard.press('End');
+   await page.keyboard.type('!');
+   await expectFirstParagraph('AlXpha!');
+   await undo.click();
+   await expectFirstParagraph('AlXpha');
+   await redo.click();
+   await expectFirstParagraph('AlXpha!');
+   const continued = await snapshot(page);
+   expect(continued[0].json).toEqual(continued[1].json);
+   expect(continued[0].json.content[0].content[0].marks).toContainEqual(expect.objectContaining({ type: 'strong' }));
+   expect(continued[0].json.content.at(-1)).toEqual(peers[0].json.content.at(-1));
+   expect(continued[0].json.attrs).toEqual(peers[0].json.attrs);
+   await page.screenshot({ path: testInfo.outputPath('continued-after-split-undo.png'), fullPage: true });
+ }
  await testInfo.attach('converged-json',{body:JSON.stringify(peers,null,2),contentType:'application/json'});expect(errors).toEqual([]);
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}

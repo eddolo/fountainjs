@@ -5,7 +5,7 @@
 Follow-up reliability work now prevents retained storage/formatting capacity
 failures from partially sharing a transaction, binds pending room admission and
 cleanup to the original provider/document, and cancels abandoned Lean checks.
-The latest integrated source run passes 5,151 tests. The public-demo audit also
+The structural repair passed 5,151 source tests. The public-demo audit also
 repaired a native-caret race during metadata updates, rapid navigation and
 inline decoration redraws. A rebuilt browser run exposed and then repaired
 stale-DOM capture during nested collaboration notifications. The ordinary
@@ -19,10 +19,11 @@ Yjs editing, offline merges, author undo and checkpoint reopening. Its first
 counts and unnecessary sibling reconciliation reduces the measured 1,000-
 paragraph median split from 1,611.5 to 115.9 ms and wrapping from 340.4 to 99.5 ms.
 An existing empty-sibling undo failure is also repaired. All 48 recorded default
-browser journeys pass across three desktop engines. Typing remains slow after
-fragmented histories (585.8 ms for an eleven-character burst in this workload).
-These results are separate from virtualized rendering and generic core
-performance; they do not certify 100,000-block collaboration or production parity.
+browser journeys pass across three desktop engines. The follow-up append
+repair reduces the median eleven-character typing burst from 714.9 to 136.0 ms
+in a back-to-back 1,000-paragraph run. Split and wrap medians rise about 7%
+in that pair. The append repair passes 959 Yjs tests and 48 recorded browser
+journeys. Larger sustained collaboration and release validation remain open.
 [Workload and evidence](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The local default collaboration entry now uses retained identities. The six
