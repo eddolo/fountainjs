@@ -1,4 +1,5 @@
 import * as Y from 'yjs';
+import { retainedMapExceeds } from './retained-map-capacity';
 
 const VERSION = 'fountain-retained-text/3';
 const MARKER = '$fountain:partition';
@@ -182,7 +183,7 @@ export class RetainedTextStore {
     if (style === undefined) {
       if (seedStyles) {
         if (!seedStyles.delete(encoded)) throw new Error('Retained seed style was not reserved.');
-      } else if (this.styles.size >= MAX_PARTITIONS) throw new RangeError('Retained style definitions need compaction.');
+      } else if (retainedMapExceeds(this.styles, MAX_PARTITIONS - 1)) throw new RangeError('Retained style definitions need compaction.');
       style = this.clock(); this.styles.set(`${client}:${style}`, encoded); this.localStyles.set(key, style);
     } else if (this.styles.get(`${client}:${style}`) !== encoded) throw new Error('Retained style definition was changed.');
     return [client, this.clock(), style];
@@ -200,8 +201,8 @@ export class RetainedTextStore {
   private assertLive(): void {
     if (this.destroyed) throw new Error('Retained text store is destroyed.');
     if (this.metadata.get('version') !== VERSION) throw new Error('Unsupported retained text representation.');
-    if (this.owners.size > MAX_PARTITIONS || this.texts.size > MAX_PARTITIONS) throw new RangeError('Retained text pool is too large.');
-    if (this.styles.size > MAX_PARTITIONS) throw new RangeError('Too many retained style definitions.');
+    if (retainedMapExceeds(this.owners, MAX_PARTITIONS) || retainedMapExceeds(this.texts, MAX_PARTITIONS)) throw new RangeError('Retained text pool is too large.');
+    if (retainedMapExceeds(this.styles, MAX_PARTITIONS)) throw new RangeError('Too many retained style definitions.');
   }
 
   private readStream(id: string): Y.Text {
@@ -264,7 +265,7 @@ export class RetainedTextStore {
   private freshId(id: string): void {
     this.assertLive();
     if (!validId(id) || this.owners.has(id)) throw new Error('Invalid or duplicate retained text partition ID.');
-    if (this.owners.size >= MAX_PARTITIONS) throw new RangeError('Too many retained text partitions.');
+    if (retainedMapExceeds(this.owners, MAX_PARTITIONS - 1)) throw new RangeError('Too many retained text partitions.');
   }
 
   private prepareRuns(runs: readonly RetainedTextRun[]) {
@@ -422,7 +423,7 @@ export class RetainedTextStore {
   checkCapacity(partitions: number, streams: number, unknownStyles: number, formats: readonly Readonly<Record<string, string>>[],
     formatKeys: ReadonlyMap<string, ReadonlySet<string>>, growth: ReadonlyMap<string, number>): void {
     this.assertLive();
-    if (partitions && this.owners.size + partitions > MAX_PARTITIONS || streams && this.texts.size + streams > MAX_PARTITIONS) {
+    if (partitions && retainedMapExceeds(this.owners, MAX_PARTITIONS - partitions) || streams && retainedMapExceeds(this.texts, MAX_PARTITIONS - streams)) {
       throw new RangeError('Retained text pools need compaction before this transaction.');
     }
     const fresh = new Set<string>();
@@ -433,7 +434,7 @@ export class RetainedTextStore {
       if (cached === undefined) fresh.add(key);
       else if (this.styles.get(`${this.document.clientID}:${cached}`) !== encoded) throw new Error('Retained style definition was changed.');
     }
-    if ((unknownStyles || fresh.size) && this.styles.size + unknownStyles + fresh.size > MAX_PARTITIONS) throw new RangeError('Retained style definitions need compaction before this transaction.');
+    if ((unknownStyles || fresh.size) && retainedMapExceeds(this.styles, MAX_PARTITIONS - unknownStyles - fresh.size)) throw new RangeError('Retained style definitions need compaction before this transaction.');
     const byStream = new Map<string, { keys: Set<string>; growth: number }>();
     for (const id of new Set([...formatKeys.keys(), ...growth.keys()])) {
       const stream = this.owners.get(id);

@@ -1,0 +1,668 @@
+{
+  "format": "fountain-yjs-endurance-diagnostic/1",
+  "startedAt": "2026-11-10T16:26:58.043Z",
+  "package": {
+    "root": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\.pnpm\\fountainjs-editor@file+arti_c2ab1ff833e47f9755ee1c3b86490e61\\node_modules\\fountainjs-editor",
+    "version": "0.4.0-beta.2",
+    "fingerprint": {
+      "algorithm": "SHA-256(sorted relative path + NUL + contents + NUL)",
+      "scope": "dist/** and package.json",
+      "sha256": "15ca6112bc41dc3c2bbe816b1e034960ddd04178b1f71c3ec5f63e0569ac9e4c",
+      "files": 1001,
+      "bytes": 15989075
+    },
+    "tarball": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\fountainjs-reconciliation-20261110.tgz",
+    "tarballSha256": "67f77d90ddfea71e602d93d70fe24e9c2434a6f024181f69f1665c5e1762e12a"
+  },
+  "runtime": {
+    "node": "v24.22.1",
+    "yjs": "13.6.33",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "arch": "x64",
+    "cpu": "12th Gen Intel(R) Core(TM) i3-12100F"
+  },
+  "configuration": {
+    "sizes": [
+      1000
+    ],
+    "cycles": 2,
+    "checkpointEvery": 1,
+    "gc": true,
+    "entry": "fountainjs-editor/yjs",
+    "module": "CommonJS public exports",
+    "clientIDs": [
+      101,
+      202
+    ],
+    "transport": "deterministic in-memory state-vector update relay; relay withheld for offline edits",
+    "timingThresholds": null
+  },
+  "scope": "Semantic diagnostic, not a production performance certification. No history clearing, forced Yjs GC policy changes, network transport, compaction, or migration. Same-room checkpoints preserve native identity but do not restore local undo stacks.",
+  "profiles": [
+    {
+      "size": 1000,
+      "cycles": 2,
+      "ok": true,
+      "traffic": {
+        "updates": 124,
+        "bytes": 23021,
+        "duplicateUpdates": 4,
+        "duplicateBytes": 3591
+      },
+      "milestones": [
+        {
+          "name": "seed",
+          "cycle": -1,
+          "documents": [
+            {
+              "author": "Ada",
+              "nativeClientID": 101,
+              "sharedBytes": 1563792,
+              "sharedSha256": "f94633aa33eec45ead37effea081092dab6abbf5ed149f3deaae7aa4781f1cab",
+              "documentSha256": "2dcd22eedd401437296bcf59abffd77ec21ea209c2a86025265790dda2a699dd",
+              "topLevelBlocks": 1005,
+              "characters": 23997,
+              "canUndo": false
+            },
+            {
+              "author": "Grace",
+              "nativeClientID": 202,
+              "sharedBytes": 1563792,
+              "sharedSha256": "f94633aa33eec45ead37effea081092dab6abbf5ed149f3deaae7aa4781f1cab",
+              "documentSha256": "2dcd22eedd401437296bcf59abffd77ec21ea209c2a86025265790dda2a699dd",
+              "topLevelBlocks": 1005,
+              "characters": 23997,
+              "canUndo": false
+            }
+          ],
+          "memory": {
+            "heapUsed": 44380424,
+            "arrayBuffers": 1761577,
+            "heapAndArrayBuffers": 46142001,
+            "external": 4198915,
+            "rss": 206430208
+          },
+          "traffic": {
+            "updates": 0,
+            "bytes": 0,
+            "duplicateUpdates": 0,
+            "duplicateBytes": 0
+          }
+        },
+        {
+          "name": "cycle-complete",
+          "cycle": 0,
+          "documents": [
+            {
+              "author": "Ada",
+              "nativeClientID": 101,
+              "sharedBytes": 1567883,
+              "sharedSha256": "098da216d4f55e925200f51774f6b52b99aa68aa7db21a974b18238e8290fd49",
+              "documentSha256": "aa00e8f991034ed6f1d9c2e243c4e4c2fca10e390ca316695d269c5b78b9da9d",
+              "topLevelBlocks": 1005,
+              "characters": 24010,
+              "canUndo": true
+            },
+            {
+              "author": "Grace",
+              "nativeClientID": 202,
+              "sharedBytes": 1566225,
+              "sharedSha256": "9eaba04ad6b5d8999812eb592fc1f670e2e1df29a72eb9d2ab97666fd5bde56f",
+              "documentSha256": "aa00e8f991034ed6f1d9c2e243c4e4c2fca10e390ca316695d269c5b78b9da9d",
+              "topLevelBlocks": 1005,
+              "characters": 24010,
+              "canUndo": true
+            }
+          ],
+          "memory": {
+            "heapUsed": 45758536,
+            "arrayBuffers": 197785,
+            "heapAndArrayBuffers": 45956321,
+            "external": 2666595,
+            "rss": 297140224
+          },
+          "traffic": {
+            "updates": 46,
+            "bytes": 8569,
+            "duplicateUpdates": 2,
+            "duplicateBytes": 2124
+          }
+        },
+        {
+          "name": "checkpoint-reopened",
+          "cycle": 0,
+          "documents": [
+            {
+              "author": "Ada",
+              "nativeClientID": 101,
+              "sharedBytes": 1567883,
+              "sharedSha256": "098da216d4f55e925200f51774f6b52b99aa68aa7db21a974b18238e8290fd49",
+              "documentSha256": "aa00e8f991034ed6f1d9c2e243c4e4c2fca10e390ca316695d269c5b78b9da9d",
+              "topLevelBlocks": 1005,
+              "characters": 24010,
+              "canUndo": true
+            },
+            {
+              "author": "Grace",
+              "nativeClientID": 2865857613,
+              "sharedBytes": 1567883,
+              "sharedSha256": "098da216d4f55e925200f51774f6b52b99aa68aa7db21a974b18238e8290fd49",
+              "documentSha256": "aa00e8f991034ed6f1d9c2e243c4e4c2fca10e390ca316695d269c5b78b9da9d",
+              "topLevelBlocks": 1005,
+              "characters": 24010,
+              "canUndo": false
+            }
+          ],
+          "memory": {
+            "heapUsed": 61190728,
+            "arrayBuffers": 3333551,
+            "heapAndArrayBuffers": 64524279,
+            "external": 5802393,
+            "rss": 301998080
+          },
+          "traffic": {
+            "updates": 46,
+            "bytes": 8569,
+            "duplicateUpdates": 2,
+            "duplicateBytes": 2124
+          }
+        },
+        {
+          "name": "cycle-complete",
+          "cycle": 1,
+          "documents": [
+            {
+              "author": "Ada",
+              "nativeClientID": 101,
+              "sharedBytes": 1571294,
+              "sharedSha256": "71a6bb2c716616912fdac2265f56afee117b3456384b8f1dd561e4a2bbddf170",
+              "documentSha256": "f4a262ca7e788d5470467303fb66c2656a896cfa4cc141300d983c91a65e43b1",
+              "topLevelBlocks": 1005,
+              "characters": 24023,
+              "canUndo": true
+            },
+            {
+              "author": "Grace",
+              "nativeClientID": 2865857613,
+              "sharedBytes": 1569935,
+              "sharedSha256": "7bdbfafc4ccf46bc00879d0e42bc738135516e6b68effcf570b1fe6d10aa2900",
+              "documentSha256": "f4a262ca7e788d5470467303fb66c2656a896cfa4cc141300d983c91a65e43b1",
+              "topLevelBlocks": 1005,
+              "characters": 24023,
+              "canUndo": true
+            }
+          ],
+          "memory": {
+            "heapUsed": 60556320,
+            "arrayBuffers": 197785,
+            "heapAndArrayBuffers": 60754105,
+            "external": 2666627,
+            "rss": 369643520
+          },
+          "traffic": {
+            "updates": 108,
+            "bytes": 20319,
+            "duplicateUpdates": 4,
+            "duplicateBytes": 3591
+          }
+        },
+        {
+          "name": "checkpoint-reopened",
+          "cycle": 1,
+          "documents": [
+            {
+              "author": "Ada",
+              "nativeClientID": 101,
+              "sharedBytes": 1571294,
+              "sharedSha256": "71a6bb2c716616912fdac2265f56afee117b3456384b8f1dd561e4a2bbddf170",
+              "documentSha256": "f4a262ca7e788d5470467303fb66c2656a896cfa4cc141300d983c91a65e43b1",
+              "topLevelBlocks": 1005,
+              "characters": 24023,
+              "canUndo": true
+            },
+            {
+              "author": "Grace",
+              "nativeClientID": 3139423482,
+              "sharedBytes": 1571294,
+              "sharedSha256": "71a6bb2c716616912fdac2265f56afee117b3456384b8f1dd561e4a2bbddf170",
+              "documentSha256": "f4a262ca7e788d5470467303fb66c2656a896cfa4cc141300d983c91a65e43b1",
+              "topLevelBlocks": 1005,
+              "characters": 24023,
+              "canUndo": false
+            }
+          ],
+          "memory": {
+            "heapUsed": 62237736,
+            "arrayBuffers": 3340373,
+            "heapAndArrayBuffers": 65578109,
+            "external": 5809215,
+            "rss": 372883456
+          },
+          "traffic": {
+            "updates": 108,
+            "bytes": 20319,
+            "duplicateUpdates": 4,
+            "duplicateBytes": 3591
+          }
+        },
+        {
+          "name": "complete",
+          "cycle": 2,
+          "documents": [
+            {
+              "author": "Ada",
+              "nativeClientID": 101,
+              "sharedBytes": 1571594,
+              "sharedSha256": "f6347a94c66acca5ae0c719ce3b2a7de38917cb2c39896befd79e25995129857",
+              "documentSha256": "f4a262ca7e788d5470467303fb66c2656a896cfa4cc141300d983c91a65e43b1",
+              "topLevelBlocks": 1005,
+              "characters": 24023,
+              "canUndo": true
+            },
+            {
+              "author": "Grace",
+              "nativeClientID": 3139423482,
+              "sharedBytes": 1571398,
+              "sharedSha256": "74f9c9f7c538109d8df68271a951e2380b34b4da0ff4380da434690fc2b9c017",
+              "documentSha256": "f4a262ca7e788d5470467303fb66c2656a896cfa4cc141300d983c91a65e43b1",
+              "topLevelBlocks": 1005,
+              "characters": 24023,
+              "canUndo": false
+            }
+          ],
+          "memory": {
+            "heapUsed": 60656488,
+            "arrayBuffers": 197785,
+            "heapAndArrayBuffers": 60854273,
+            "external": 2666627,
+            "rss": 362332160
+          },
+          "traffic": {
+            "updates": 124,
+            "bytes": 23021,
+            "duplicateUpdates": 4,
+            "duplicateBytes": 3591
+          }
+        }
+      ],
+      "measurements": {
+        "local.typing-burst": {
+          "count": 2,
+          "firstMs": 135.52739999999994,
+          "medianMs": 135.52739999999994,
+          "p95Ms": 509.0980999999997,
+          "maximumMs": 509.0980999999997,
+          "samplesMs": [
+            135.52739999999994,
+            509.0980999999997
+          ]
+        },
+        "transport.encode": {
+          "count": 60,
+          "firstMs": 2.550700000000006,
+          "medianMs": 1.769999999999527,
+          "p95Ms": 2.8111999999998716,
+          "maximumMs": 8.652000000000044,
+          "samplesMs": [
+            2.550700000000006,
+            1.9762000000000626,
+            2.101899999999887,
+            2.800000000000182,
+            1.8886999999999716,
+            1.825099999999793,
+            3.0953000000001794,
+            1.801200000000108,
+            2.8111999999998716,
+            1.9964999999997417,
+            8.652000000000044,
+            1.9544000000000779,
+            1.712500000000091,
+            5.248500000000149,
+            2.2999000000004344,
+            1.7010999999997694,
+            1.763600000000224,
+            1.7712000000001353,
+            1.6932999999999083,
+            1.6820999999999913,
+            1.689600000000155,
+            1.6657000000000153,
+            2.291099999999915,
+            1.7489999999997963,
+            1.739799999999832,
+            1.570799999999963,
+            1.6768999999999323,
+            1.7662999999997737,
+            2.004399999999805,
+            1.7136000000000422,
+            1.7757999999994354,
+            1.7013999999999214,
+            1.657100000000355,
+            1.8604000000004817,
+            1.769999999999527,
+            1.6544999999996435,
+            1.6314999999995052,
+            1.5869000000002416,
+            2.094600000000355,
+            1.6911999999992986,
+            1.8262999999997191,
+            1.998500000000604,
+            1.6748999999999796,
+            1.7948999999998705,
+            1.6851000000006024,
+            1.712999999999738,
+            1.7412999999996828,
+            1.6688999999996668,
+            1.7847000000001572,
+            1.6823000000003958,
+            1.826799999999821,
+            1.7133999999996377,
+            2.422700000000077,
+            1.8045000000001892,
+            1.7056000000002314,
+            1.6846999999997934,
+            1.6721999999999753,
+            1.7885999999998603,
+            2.388600000000224,
+            2.2564999999995052
+          ]
+        },
+        "remote.apply": {
+          "count": 124,
+          "firstMs": 12.472899999999981,
+          "medianMs": 0.09820000000036089,
+          "p95Ms": 32.48959999999988,
+          "maximumMs": 45.896400000000085,
+          "samplesMs": [
+            12.472899999999981,
+            0.04510000000004766,
+            0.09730000000013206,
+            0.05370000000016262,
+            0.05089999999995598,
+            10.355999999999995,
+            0.07369999999991705,
+            0.0545999999999367,
+            12.441700000000083,
+            0.07829999999989923,
+            0.04099999999993997,
+            0.04579999999987194,
+            0.09519999999997708,
+            8.159900000000107,
+            0.12860000000000582,
+            0.06169999999997344,
+            34.38559999999984,
+            37.89490000000001,
+            0.0644999999999527,
+            0.09820000000036089,
+            0.2339999999999236,
+            0.12359999999989668,
+            0.2171000000003005,
+            45.896400000000085,
+            0.07430000000022119,
+            0.21700000000009823,
+            0.06680000000005748,
+            37.41459999999961,
+            0.14159999999992579,
+            0.12409999999999854,
+            44.621200000000044,
+            0.07789999999977226,
+            0.06880000000001019,
+            0.06870000000026266,
+            31.33550000000014,
+            0.08869999999978972,
+            0.10539999999991778,
+            0.08210000000008222,
+            11.342200000000048,
+            0.09169999999994616,
+            0.05670000000009168,
+            0.05319999999983338,
+            0.05609999999978754,
+            8.849700000000212,
+            0.0684000000001106,
+            0.056499999999687134,
+            10.29489999999987,
+            0.1754000000000815,
+            0.05760000000009313,
+            0.07609999999976935,
+            13.025000000000091,
+            0.09859999999980573,
+            0.058299999999690044,
+            0.0522000000000844,
+            0.07889999999997599,
+            10.831299999999828,
+            0.06390000000010332,
+            0.05099999999993088,
+            8.820799999999963,
+            0.09429999999974825,
+            0.056599999999889405,
+            0.05889999999999418,
+            25.021099999999933,
+            0.0944999999992433,
+            0.06310000000030414,
+            0.06220000000030268,
+            0.06539999999949941,
+            8.300199999999677,
+            0.08579999999983556,
+            0.07949999999982538,
+            6.879100000000108,
+            0.11570000000028813,
+            0.0510999999996784,
+            0.0713000000005195,
+            0.08709999999973661,
+            6.181300000000192,
+            0.07090000000061991,
+            0.05519999999978609,
+            34.948600000000624,
+            29.92330000000038,
+            0.1301999999996042,
+            0.06620000000020809,
+            0.322400000000016,
+            0.16190000000005966,
+            0.07659999999941647,
+            30.458300000000236,
+            0.12299999999959255,
+            0.09770000000025902,
+            0.10890000000017608,
+            32.48959999999988,
+            0.113999999999578,
+            0.12380000000030122,
+            29.657000000000153,
+            0.12420000000020082,
+            0.06310000000030414,
+            0.0860000000002401,
+            29.37880000000041,
+            0.11779999999998836,
+            0.06430000000000291,
+            0.09169999999994616,
+            6.864999999999782,
+            0.24830000000019936,
+            0.08249999999952706,
+            0.11589999999978318,
+            0.20280000000002474,
+            8.912700000000768,
+            0.07419999999910942,
+            0.07909999999992579,
+            0.12880000000041036,
+            12.436900000000605,
+            0.09659999999985303,
+            0.07900000000063301,
+            10.733799999999974,
+            0.1022000000002663,
+            0.06480000000010477,
+            0.10050000000046566,
+            0.10820000000057917,
+            11.048299999999472,
+            0.09289999999964493,
+            0.0794000000005326,
+            16.66570000000047,
+            0.11239999999997963,
+            0.13910000000032596,
+            0.1550999999999476
+          ]
+        },
+        "local.delete": {
+          "count": 2,
+          "firstMs": 76.8119999999999,
+          "medianMs": 44.02819999999974,
+          "p95Ms": 76.8119999999999,
+          "maximumMs": 76.8119999999999,
+          "samplesMs": [
+            76.8119999999999,
+            44.02819999999974
+          ]
+        },
+        "local.mark-add": {
+          "count": 2,
+          "firstMs": 65.73509999999987,
+          "medianMs": 41.40570000000025,
+          "p95Ms": 65.73509999999987,
+          "maximumMs": 65.73509999999987,
+          "samplesMs": [
+            65.73509999999987,
+            41.40570000000025
+          ]
+        },
+        "local.mark-remove": {
+          "count": 2,
+          "firstMs": 54.23350000000005,
+          "medianMs": 41.905799999999545,
+          "p95Ms": 54.23350000000005,
+          "maximumMs": 54.23350000000005,
+          "samplesMs": [
+            54.23350000000005,
+            41.905799999999545
+          ]
+        },
+        "local.split": {
+          "count": 1,
+          "firstMs": 139.78409999999985,
+          "medianMs": 139.78409999999985,
+          "p95Ms": 139.78409999999985,
+          "maximumMs": 139.78409999999985,
+          "samplesMs": [
+            139.78409999999985
+          ]
+        },
+        "local.offline-peer-text": {
+          "count": 2,
+          "firstMs": 77.8243,
+          "medianMs": 74.1855999999998,
+          "p95Ms": 77.8243,
+          "maximumMs": 77.8243,
+          "samplesMs": [
+            77.8243,
+            74.1855999999998
+          ]
+        },
+        "local.neutral-metadata": {
+          "count": 2,
+          "firstMs": 208.77469999999994,
+          "medianMs": 50.971700000000055,
+          "p95Ms": 208.77469999999994,
+          "maximumMs": 208.77469999999994,
+          "samplesMs": [
+            208.77469999999994,
+            50.971700000000055
+          ]
+        },
+        "local.undo": {
+          "count": 10,
+          "firstMs": 37.977600000000166,
+          "medianMs": 29.94250000000011,
+          "p95Ms": 37.977600000000166,
+          "maximumMs": 37.977600000000166,
+          "samplesMs": [
+            37.977600000000166,
+            31.651100000000042,
+            26.852899999999863,
+            30.703799999999774,
+            29.418100000000322,
+            30.19080000000031,
+            25.452299999999923,
+            29.94250000000011,
+            31.30240000000049,
+            27.799200000000383
+          ]
+        },
+        "local.redo": {
+          "count": 6,
+          "firstMs": 35.073199999999815,
+          "medianMs": 27.139700000000175,
+          "p95Ms": 35.073199999999815,
+          "maximumMs": 35.073199999999815,
+          "samplesMs": [
+            35.073199999999815,
+            27.139700000000175,
+            31.173999999999978,
+            26.61329999999998,
+            24.109199999999873,
+            29.486800000000585
+          ]
+        },
+        "checkpoint.capture": {
+          "count": 2,
+          "firstMs": 311.6954999999998,
+          "medianMs": 311.6954999999998,
+          "p95Ms": 345.7485000000006,
+          "maximumMs": 345.7485000000006,
+          "samplesMs": [
+            311.6954999999998,
+            345.7485000000006
+          ]
+        },
+        "checkpoint.restore": {
+          "count": 2,
+          "firstMs": 182.45110000000022,
+          "medianMs": 182.45110000000022,
+          "p95Ms": 214.6890000000003,
+          "maximumMs": 214.6890000000003,
+          "samplesMs": [
+            182.45110000000022,
+            214.6890000000003
+          ]
+        },
+        "local.continue-after-reopen": {
+          "count": 2,
+          "firstMs": 62.92579999999998,
+          "medianMs": 62.92579999999998,
+          "p95Ms": 66.13249999999971,
+          "maximumMs": 66.13249999999971,
+          "samplesMs": [
+            62.92579999999998,
+            66.13249999999971
+          ]
+        },
+        "local.wrap": {
+          "count": 1,
+          "firstMs": 117.0098999999991,
+          "medianMs": 117.0098999999991,
+          "p95Ms": 117.0098999999991,
+          "maximumMs": 117.0098999999991,
+          "samplesMs": [
+            117.0098999999991
+          ]
+        }
+      },
+      "memory": {
+        "before": {
+          "heapUsed": 10241304,
+          "arrayBuffers": 197785,
+          "heapAndArrayBuffers": 10439089,
+          "external": 2609848,
+          "rss": 68984832
+        },
+        "afterDestroy": {
+          "heapUsed": 13601640,
+          "arrayBuffers": 197785,
+          "heapAndArrayBuffers": 13799425,
+          "external": 2666595,
+          "rss": 360501248
+        },
+        "retainedHeapAndArrayBuffers": 3360336,
+        "note": "After forced JS GC; public modules/JIT and this numeric report remain resident. No universal leak threshold is asserted."
+      }
+    }
+  ],
+  "ok": true,
+  "finishedAt": "2026-11-10T16:27:04.368Z"
+}

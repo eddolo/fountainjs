@@ -7,6 +7,14 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep an untouched empty paragraph's original shared text record when an
+  earlier block is split or moved. Undoing that split no longer removes layout
+  metadata needed by a peer's concurrent typing in the empty paragraph.
+- Avoid repeated whole-pool counting during retained collaboration and skip
+  reconciliation of unchanged sibling text when splitting a paragraph. Exact
+  capacity checks remain in place when the conservative key-count bound is
+  insufficient; storage limits and the shared representation are unchanged.
+
 - Preserve native caret movement and backward selections during collaboration
   presence and decoration updates. Capturing a browser selection no longer
   schedules a stale restoration after the next arrow-key movement; explicit

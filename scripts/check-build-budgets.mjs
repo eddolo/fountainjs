@@ -680,7 +680,9 @@ const limits = Object.freeze({
   // keep the failed receipt and every other code/CSS/runtime/heap cap unchanged.
   // Native selection ownership and deferred command reconciliation measure
   // 1414.9 KiB. Add 0.75 KiB for this repair; all other limits remain unchanged.
-  'all CommonJS runtime code': 1415 * kibibyte,
+  // Empty-sibling retention and the exact-fallback pool check total 1,448,994
+  // bytes: 34 bytes above this cap. Add 64 bytes; all other limits stay fixed.
+  'all CommonJS runtime code': 1415.0625 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

@@ -17,13 +17,23 @@ admission. Recovery receipts preserve reviewed drafts through lost replies,
 reload and retries. [Deletion/undo](YJS_RETAINED_DELETION_AUDIT.md),
 [draft review](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
 
-The latest source verification passes 5,134 tests with zero failures/skips.
+The latest source verification passes 5,151 tests with zero failures/skips.
 Follow-up repairs prevent partially shared capacity failures, bind provider
 sessions to their original documents, and preserve native selection through
-metadata updates. The public browser run passes 57 cases with two existing
+metadata updates. The preceding public browser run passes 57 cases with two existing
 clipboard skips; one Chromium fixture module fails to load with
 `ERR_NO_BUFFER_SPACE`, then its unchanged isolated journey passes. That is not
 a clean first-run matrix. [Selection audit](SELECTION_METADATA_AUDIT.md).
+
+Actual retained-Yjs endurance is now measured independently of the generic
+performance gate. Matched installed-package runs preserve offline edits,
+author undo and checkpoint continuation at 100/1,000 paragraphs. The repair
+reduces the 1,000-paragraph median split from 1,611.5 to 115.9 ms and wrapping
+from 340.4 to 99.5 ms. An existing empty-sibling undo failure is also repaired;
+all 48 current default-adapter browser journeys pass across three desktop engines.
+Typing remains a concrete gap (585.8 ms per eleven-character burst in the same
+workload). This is not production parity or evidence for 100,000-block collaboration.
+[Endurance diagnostic](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The preceding adoption checkpoint passed 45 recorded default-adapter desktop
 journeys, package/type/headless/server checks and existing performance limits.

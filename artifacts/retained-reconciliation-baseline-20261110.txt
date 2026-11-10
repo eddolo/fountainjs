@@ -1,0 +1,44 @@
+2026-11-10 retained split reconciliation audit
+
+Candidate change: preserve unchanged text groups during a split, excluding only
+the two explicit split target groups instead of every group in the document.
+
+Command:
+pnpm exec vitest run tests/yjs-retained-reconciliation.test.ts --maxWorkers=1 --reporter=dot
+
+Candidate result: 4 passed, 2 failed. Passing cases cover split offsets 0, 2, 5
+with 24 untouched marked multi-leaf siblings plus an empty sibling, and a nested
+item split which moves an unchanged paragraph's ancestor. The relative-position
+resolution guard confirms zero resolutions against untouched sibling streams.
+
+Failing cases:
+keeps offline sibling edits and author undo through selective split reconciliation
+(reverse: false), and the same test (reverse: true).
+
+Exact sequence:
+1. Seed Alpha, 24 marked multi-leaf paragraphs, and one empty paragraph.
+2. Fork two ordinary default Yjs adapters (client IDs 101 and 202).
+3. Left inserts X in the first marked sibling and types into the empty sibling.
+4. Right splits Alpha at offset 2.
+5. Exchange updates; both documents agree, peer edits retained.
+6. Undo right's split and exchange updates.
+7. Adapter enters error: Missing retained text layout for <initial empty text ID>.
+
+Control run restored only the original global !intent eligibility gate while
+leaving all other source unchanged, then ran:
+pnpm exec vitest run tests/yjs-retained-reconciliation.test.ts --maxWorkers=1 --reporter=dot -t "keeps offline sibling"
+
+Control result: 2 failed, 4 skipped; identical missing text-layout failure after
+undo in both delivery orders. Candidate selective gate was restored afterward.
+Thus this undo failure is pre-existing relative to selective split eligibility.
+The failing assertions remain in the test file, unchanged, pending repair.
+
+Repair follow-up:
+The unchanged-empty-group proof now reuses its existing stream when the exact
+immutable parent/leaf and zero-length owned bindings survive the path shift.
+Both explicit split targets remain excluded from this preservation shortcut.
+The original six reconciliation cases now pass without weakening assertions.
+
+Independent validation:
+pnpm exec vitest run tests/yjs-retained-document.test.ts tests/yjs-retained-reconciliation.test.ts tests/yjs-retained-reservation.test.ts tests/yjs-retained-capacity.test.ts tests/yjs-retained-format-capacity.test.ts --maxWorkers=1 --reporter=dot
+Result: 5 files passed, 164 tests passed, 11.11 seconds.

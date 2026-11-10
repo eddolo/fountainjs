@@ -5,13 +5,25 @@
 Follow-up reliability work now prevents retained storage/formatting capacity
 failures from partially sharing a transaction, binds pending room admission and
 cleanup to the original provider/document, and cancels abandoned Lean checks.
-The latest integrated source run passes 5,134 tests. The public-demo audit also
+The latest integrated source run passes 5,151 tests. The public-demo audit also
 repaired a native-caret race during metadata updates, rapid navigation and
 inline decoration redraws. A rebuilt browser run exposed and then repaired
 stale-DOM capture during nested collaboration notifications. The ordinary
 homepage now exercises the public default entry. No new release clearance is
 claimed. See [native selection evidence](SELECTION_METADATA_AUDIT.md) and
 [capacity and session follow-up](YJS_DEFAULT_ADOPTION.md#capacity-and-session-ownership-follow-up).
+
+The installed-package collaboration endurance diagnostic now measures actual
+Yjs editing, offline merges, author undo and checkpoint reopening. Its first
+100/1,000-paragraph runs exposed slow structural edits. Removing repeated map
+counts and unnecessary sibling reconciliation reduces the measured 1,000-
+paragraph median split from 1,611.5 to 115.9 ms and wrapping from 340.4 to 99.5 ms.
+An existing empty-sibling undo failure is also repaired. All 48 recorded default
+browser journeys pass across three desktop engines. Typing remains slow after
+fragmented histories (585.8 ms for an eleven-character burst in this workload).
+These results are separate from virtualized rendering and generic core
+performance; they do not certify 100,000-block collaboration or production parity.
+[Workload and evidence](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The local default collaboration entry now uses retained identities. The six
 original offline typing versus wrapping, marks and splitting regressions pass

@@ -1,0 +1,2 @@
+{"reverse":false,"passed":false,"stage":"undo split and exchange","error":"Missing retained text layout for i-6kwovv9wdcx7a09n1e9as9qn1:5k. Preserve the local draft and replace the collaboration session.\n+ actual - expected\n\n+ 'error'\n- 'connected'\n"}
+{"reverse":true,"passed":false,"stage":"undo split and exchange","error":"Missing retained text layout for i-a4fsl0mag64ko6xth7p707tm2:5k. Preserve the local draft and replace the collaboration session.\n+ actual - expected\n\n+ 'error'\n- 'connected'\n"}

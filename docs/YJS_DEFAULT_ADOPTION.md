@@ -275,3 +275,27 @@ The original concurrent-edit regressions remain acceptance requirements for
 the ordinary default. Their content and position assertions remain intact.
 Existing historical evidence applies to the builds and scopes recorded in its
 audits; it does not replace a fresh release run of the combined implementation.
+
+## Structural latency and empty-sibling follow-up
+
+The later installed-package diagnostic exposes costly full-pool size checks
+and unnecessary reconciliation of untouched text during a split. Conservative
+constant-time capacity proofs with exact fallback and selective sibling reuse
+reduce the measured 1,000-paragraph median split from 1,611.5 to 115.9 ms, and
+wrapping from 340.4 to 99.5 ms. Storage limits, wire format and author-history
+semantics remain unchanged. Typing still needs work: the same eleven-character
+burst measures 585.8 ms after the repair. These are one-machine observations,
+not production or huge-document collaboration certification.
+
+The new tests also found a pre-existing concurrency failure: another author's
+split could rewrite an untouched empty paragraph's storage; after a peer typed
+there, undoing the split removed required layout. Its original shared identity
+is now preserved under an exact empty-leaf/parent proof. The previously packed
+build fails both delivery orders; the repaired installed package passes them.
+
+Current validation: 5,151 source tests, 48 recorded default browser journeys,
+build/types/package checks, 450 public declarations and 139 headless modules.
+The new browser case visibly exercises native typing, Enter, synchronization,
+Undo and Redo in all three engines. A bounded installed-consumer check also
+passes with Yjs 13.6.33; the full matrix remains on 13.6.32.
+[Detailed evidence and remaining typing work](YJS_ENDURANCE_DIAGNOSTIC.md#measured-repair--2026-11-10).

@@ -5,7 +5,9 @@ collector for an **installed Fountain package**. It does not change CI, package
 scripts, library behavior, or acceptance limits. The installed-package smoke
 and a twelve-cycle baseline at 100 and 1,000 paragraphs pass their semantic
 assertions. The baseline exposes substantial retained-adapter latency at 1,000
-paragraphs; these measurements do not establish production readiness.
+paragraphs. The subsequent repair materially reduces structural-edit latency
+but leaves typing latency open; these measurements do not establish production
+readiness.
 
 ## Consumer and invocation
 
@@ -225,3 +227,118 @@ author undo and foreign changes; removing capacity checks is not a solution.
 Repeat the exact packed-package workload after repairs and retain every semantic
 assertion. This diagnostic itself changes no library behavior or acceptance
 threshold.
+
+## Measured repair — 2026-11-10
+
+The same installed-package workload was repeated after the repair, with the
+same Node/Yjs versions, hardware, 12 cycles and semantic assertions. Other
+Fountain build/browser/source jobs were stopped during each measured run.
+These are matched single runs on one machine, not a cross-device benchmark.
+
+| Paragraphs | Action | Baseline median | Repaired median |
+| --- | --- | ---: | ---: |
+| 100 | Split | 54.02 ms | 24.91 ms |
+| 100 | Wrap | 18.47 ms | 14.50 ms |
+| 100 | 11-character typing burst | 121.30 ms | 127.64 ms |
+| 1,000 | Split | 1,611.53 ms | 115.93 ms |
+| 1,000 | Wrap | 340.38 ms | 99.46 ms |
+| 1,000 | 11-character typing burst | 621.76 ms | 585.78 ms |
+
+The 1,000-paragraph split is about 13.9 times faster in this workload; its
+repaired p95 is 126.44 ms. The small typing changes do **not** establish a
+typing improvement: 100-paragraph bursts are slower in this sample, and
+1,000-paragraph typing remains a substantial gap. Remote-apply p95 also remains
+open (26.63 to 30.34 ms at 1,000 paragraphs); the sample includes empty protocol
+updates and is not a network-latency measurement.
+
+Both repaired profiles pass all convergence, duplicate-delivery, untouched
+content, author-history and checkpoint-continuation assertions. Evidence:
+`artifacts/yjs-endurance-repaired-20261110.json`. All 1,000 installed `dist`
+files match the rebuilt package; the extra two files are internal helper
+declarations. See `artifacts/yjs-reconciliation-packed-match-20261110.json`.
+
+The implementation changes are deliberately bounded:
+
+- `src/yjs/retained-map-capacity.ts` uses Yjs's physical `_map.size` only as a
+  conservative live-key upper bound. When it cannot prove capacity, the exact
+  public `size` check still runs. This relies on the tested Yjs 13.6.x map
+  representation; it adds no cached count or observers. Large tombstone-heavy
+  pools can still require linear scans. Every existing pool limit is unchanged.
+- `RetainedDocumentStore.change` preserves unaffected text groups during a
+  split only after the existing identity/ownership/provenance proof. Both
+  explicit split targets still process their boundaries. The document-wide
+  parent-order invalidation remains unchanged.
+- The new concurrent-edit regression found an existing empty-sibling defect:
+  an earlier split shifted its numeric path, causing unnecessary allocation
+  and layout writes. A peer could type into that paragraph, then the splitter's
+  undo removed layout needed by the surviving text. Exact immutable parent/leaf
+  identity and zero-length bindings now preserve that original empty record.
+  The unchanged packed baseline reproduces both delivery-order failures;
+  the repaired installed package passes the same script, including redo.
+
+Source validation passes 5,151 tests in 321 files with no failures or skips.
+Seventeen new tests cover capacity boundaries, pending/remote transactions,
+undo, unchanged marked siblings, split edges, nested relocation and empty
+record retention. No test asserts machine-dependent elapsed time.
+The prior CommonJS size cap fails by 34 bytes; a documented 64-byte aggregate
+allowance covers the repair. No other size, storage or performance cap changes.
+Build, TypeScript, 450 public declarations, package exports and the 139-module
+headless boundary pass. All 48 compiled-default browser journeys pass across
+Chromium, Firefox and WebKit. The added journey uses the file picker, native
+typing/Enter, pause/synchronize controls and author Undo/Redo. Firefox undo and
+WebKit redo screenshots plus sampled Firefox recording frames were inspected;
+both views retain the peer's text and marked context.
+
+A separate installed consumer with Yjs 13.6.33 also passes both empty-sibling
+reproductions and the 1,000-paragraph/two-cycle checkpoint diagnostic. This is
+bounded patch-version coverage, not the complete source/browser matrix on
+13.6.33. The workspace remains pinned to 13.6.32. Evidence:
+`artifacts/yjs-endurance-peer-13.6.33-20261110.json`.
+
+The build remains unreleased. Full release CI, real-device/IME validation,
+broader sustained performance and the previously recorded startup reliability
+limitations remain open. No preceding failed browser receipt is superseded by
+this narrower default-adapter run.
+
+## Candidate typing optimization — not implemented
+
+`prepareChangeText` in `src/yjs/retained-document.ts` currently accepts only one
+binding covering both the entire model leaf and the entire retained partition.
+`normalizeFrame` can merge equal leaf identities from several partitions into
+one model leaf; a formatted leaf can also occupy only part of a partition.
+Those valid shapes fail the native proof and use general reconciliation. The
+profile confirms fallback during typing, but does not independently identify
+which binding condition rejected each measured character.
+
+A bounded next step is to support an edit wholly inside one binding of a leaf
+whose bindings belong to one physical stream. Validate the complete leaf's
+ordered, gap-free binding coverage against the freshly checked stream, including
+text, format and leaf identity. Translate model offsets using
+`binding.from + modelOffset - binding.modelFrom`; retain the existing partition
+and leaf identities. The existing `prepareNativeProjection` in
+`src/yjs/retained-text.ts` already rereads that whole stream and refreshes all its
+partition coordinates. This could cover suffix typing after retained fragments
+have recombined without introducing a general multi-partition writer.
+
+Required boundaries remain:
+
+- Keep `proveNativeText`'s exact built-in, single-step mapping proof and reject
+  pending foreign writes before the first shared mutation. Preflight capacity
+  must use the same binding/projection proof as the writer.
+- Preserve general reconciliation's insertion affinity at partition edges.
+  Keep ambiguous boundaries, cross-binding replacements, empty/full-leaf
+  transformations and custom/multistep operations on the general path initially.
+- Preserve `prepareNativeProjection`'s unchanged-outside guard, `writeVersion`,
+  observer/cleanup invalidation and `finishChange`'s fresh semantic comparison.
+  Never merge/delete retained boundaries merely to make a fast path eligible:
+  those identities carry peer edits, anchors and author undo.
+- Extend the existing native-versus-general byte/history comparisons in
+  `tests/yjs-retained-document.test.ts` before adoption, including adjacent
+  formatting, fragment boundaries, remote edits and checkpoint continuation.
+
+`normalizeFrame` still traverses and rebinds the complete model even on a native
+text write. Incrementally normalizing only affected ancestors is a separate,
+larger optimization. It cannot simply reuse unchecked models: the same test
+file exercises changed schema attribute rules, custom validation and foreign
+metadata writes during projection. Measure the smaller binding extension first;
+do not remove those semantics to obtain a timing improvement.

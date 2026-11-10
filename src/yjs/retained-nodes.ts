@@ -1,5 +1,6 @@
 import * as Y from 'yjs';
 import type { Attributes, MarkJSON } from '../core/schema';
+import { retainedMapExceeds } from './retained-map-capacity';
 
 const VERSION = 'fountain-retained-nodes/2';
 const ROOT = 'root';
@@ -104,12 +105,12 @@ export class RetainedNodeStore {
 
   private valid(): void {
     if (this.metadata.get('version') !== VERSION) throw new Error('Unsupported retained node representation.');
-    if (this.nodes.size > MAX_NODES || this.identities.size > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
+    if (retainedMapExceeds(this.nodes, MAX_NODES) || retainedMapExceeds(this.identities, MAX_REFERENCES)) throw new RangeError('Retained node pool is too large.');
   }
 
   /** Conservative transaction reservation, including duplicate physical slots. */
   checkCapacity(nodes: number, references: number): void {
-    if (this.nodes.size + nodes > MAX_NODES || this.identities.size + references > MAX_REFERENCES) {
+    if (retainedMapExceeds(this.nodes, MAX_NODES - nodes) || retainedMapExceeds(this.identities, MAX_REFERENCES - references)) {
       throw new RangeError('Retained structural pools need compaction before this transaction.');
     }
     let slots = this.rootChildren.length;
@@ -139,7 +140,7 @@ export class RetainedNodeStore {
 
   private fresh(): string {
     this.valid();
-    if (this.identities.size >= MAX_REFERENCES) throw new RangeError('Too many retained identities.');
+    if (retainedMapExceeds(this.identities, MAX_REFERENCES - 1)) throw new RangeError('Too many retained identities.');
     const next = this.createId();
     if (!id(next) || next === ROOT || this.identities.has(next)) throw new Error('ID factory must supply a fresh retained identity.');
     return next;
@@ -331,7 +332,7 @@ export class RetainedNodeStore {
   create(value: RetainedNodeValue, parent = ROOT, index = this.liveChildren(parent).length): string {
     const nodeId = this.fresh(), token = this.fresh();
     if (nodeId === token) throw new Error('ID factory must supply distinct retained identities.');
-    if (this.nodes.size >= MAX_NODES || this.identities.size + 2 > MAX_REFERENCES) throw new RangeError('Retained node pool is too large.');
+    if (retainedMapExceeds(this.nodes, MAX_NODES - 1) || retainedMapExceeds(this.identities, MAX_REFERENCES - 2)) throw new RangeError('Retained node pool is too large.');
     const { type, attrs, marks, layout } = this.prepare(value);
     const target = this.placementTarget(nodeId, parent, index);
     this.document.transact(() => {

@@ -29,6 +29,72 @@ for(const operation of ['Quote','Bullet','Ordered','Task','Bold','Enter'])test(`
 });
 function text(node:any):string{return node.text??(node.content??[]).map(text).join('');}
 
+test('native offline typing in an empty sibling survives another author split undo and redo', async ({page}, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(url);
+  const source = {type:'doc', attrs:{audit:'empty-sibling-review'}, content:[
+    {type:'paragraph', content:[{type:'text', text:'Alpha'}]},
+    {type:'paragraph', content:[{type:'text', text:'Keep '},
+      {type:'text', text:'marked', marks:[{type:'em'}]}, {type:'text', text:' context'}]},
+    {type:'paragraph', content:[{type:'text', text:''}]},
+  ]};
+  await page.locator('#open').setInputFiles({name:'empty-sibling-review.json', mimeType:'application/json',
+    buffer:Buffer.from(JSON.stringify(source))});
+  await expect(page.locator('#message')).toHaveText('Reopened portable document');
+  const initial = (await snapshot(page))[0].json;
+  const ada = page.getByRole('textbox', {name:'Ada editor'});
+  const grace = page.getByRole('textbox', {name:'Grace editor'});
+  for (const editor of [ada, grace]) await expect(editor.locator('p')).toHaveText(['Alpha','Keep marked context','']);
+
+  await page.getByRole('button', {name:'Pause sync', exact:true}).click();
+  await ada.locator('p').last().click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('Peer note');
+  await expect(ada.locator('p').last()).toHaveText('Peer note');
+  await expect(grace.locator('p').last()).toHaveText('');
+  await grace.locator('p').first().click({position:{x:5,y:5}});
+  await page.keyboard.press('Home');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(async () => (await snapshot(page))[1].selection).toMatchObject({path:[0,0],from:2,to:2});
+  await page.keyboard.press('Enter');
+  await expect(grace.locator('p')).toHaveText(['Al','pha','Keep marked context','']);
+  await expect(ada.locator('p')).toHaveText(['Alpha','Keep marked context','Peer note']);
+
+  async function assertBoth(paragraphs: string[]) {
+    await expect.poll(async () => (await snapshot(page)).map((peer:any) => ({status:peer.status,
+      paragraphs:peer.json.content.map(text)}))).toEqual([
+      {status:'connected',paragraphs}, {status:'connected',paragraphs},
+    ]);
+    const peers = await snapshot(page);
+    expect(peers[0].json).toEqual(peers[1].json);
+    for (const peer of peers) {
+      expect(peer.json.attrs).toEqual(initial.attrs);
+      expect(peer.json.content.at(-2)).toEqual(initial.content[1]);
+    }
+    for (const editor of [ada, grace]) {
+      await expect(editor.locator('p')).toHaveText(paragraphs);
+      await expect(editor.locator('em')).toHaveText('marked');
+      await expect(editor.locator('p').last()).toBeVisible();
+    }
+    return peers;
+  }
+
+  await page.getByRole('button', {name:'Synchronize', exact:true}).click();
+  const merged = await assertBoth(['Al','pha','Keep marked context','Peer note']);
+  await page.screenshot({path:info.outputPath('empty-sibling-merged.png'),fullPage:true});
+  await page.locator('#grace').getByRole('button', {name:'Undo', exact:true}).click();
+  await assertBoth(['Alpha','Keep marked context','Peer note']);
+  await page.screenshot({path:info.outputPath('empty-sibling-after-split-undo.png'),fullPage:true});
+  await page.locator('#grace').getByRole('button', {name:'Redo', exact:true}).click();
+  const redone = await assertBoth(['Al','pha','Keep marked context','Peer note']);
+  expect(redone[0].json).toEqual(merged[0].json);
+  await page.screenshot({path:info.outputPath('empty-sibling-after-split-redo.png'),fullPage:true});
+  await info.attach('empty-sibling-result', {body:JSON.stringify(redone,null,2),contentType:'application/json'});
+  expect(errors).toEqual([]);
+});
+
 test('native offline Enter survives a deleted ancestor and returns with its author undo', async ({page}, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

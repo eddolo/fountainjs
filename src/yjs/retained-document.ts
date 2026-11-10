@@ -741,6 +741,7 @@ export class RetainedDocumentStore {
   private change(before: Node, after: Node, mapping: Mapping, step: Step, checked?: RetainedTextPlan, shared?: Y.Transaction): Node {
     const plan = checked ?? planRetainedText(before, after, mapping, step instanceof ReplaceStep), oldNodes = this.nodePaths, oldBindings = this.textPaths;
     const intent = (step as Step & { getRetainedSplit?: () => { textPath: readonly number[]; rightTextPath: readonly number[]; offset: number } }).getRetainedSplit?.();
+    const splitTargets = intent ? new Set([pathKey(intent.textPath), pathKey(intent.rightTextPath)]) : undefined;
     const nextNodes = new Map<string, string>([['', 'root']]), values = new Map<string, RetainedNodeProjection>();
     const collect = (raw: RetainedNodeProjection) => { values.set(raw.id, raw); raw.content.forEach(collect); };
     collect(this.graph!);
@@ -792,12 +793,19 @@ export class RetainedDocumentStore {
         // can reuse objects while deleting/reinserting their characters. Require
         // full, offset-preserving provenance for every original text leaf too.
         const oldParent = identity === id ? this.identityPaths.get(id) : undefined;
-        if (!intent && oldParent && !group.empty && group.leaves.every(leaf => {
+        // Only the two split groups need boundary markers. Unchanged sibling
+        // groups can retain their streams when the same provenance proof holds.
+        if (oldParent && !group.leaves.some(leaf => splitTargets?.has(pathKey(leaf.path))) && group.leaves.every(leaf => {
           const oldKey = pathKey([...oldParent, leaf.path.at(-1)!]), bindings = oldBindings.get(oldKey);
           return bindings?.length && bindings.every(binding => this.groups.get(binding.id)?.parent === id)
-            && (provenance.get(pathKey(leaf.path)) ?? []).filter(slice => pathKey(slice.before.path) === oldKey
+            // Empty leaves have no character spans to prove. The unchanged
+            // immutable parent/leaf and its zero-length binding identify the
+            // original stream even when an earlier edit shifts its path.
+            && (group.empty ? getNodeAtPath(before, [...oldParent, leaf.path.at(-1)!]) === leaf.node
+              && bindings.every(binding => binding.length === 0)
+              : (provenance.get(pathKey(leaf.path)) ?? []).filter(slice => pathKey(slice.before.path) === oldKey
               && slice.before.from === slice.after.from && slice.before.to === slice.after.to)
-              .reduce((length, slice) => length + slice.after.to - slice.after.from, 0) === leaf.node.nodeSize;
+              .reduce((length, slice) => length + slice.after.to - slice.after.from, 0) === leaf.node.nodeSize);
         })) {
           group.ids = [...new Set(group.leaves.flatMap(leaf => oldBindings.get(pathKey([...oldParent, leaf.path.at(-1)!]))!.map(binding => binding.id)))];
           group.preserved = true;
