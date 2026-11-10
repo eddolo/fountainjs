@@ -40,6 +40,13 @@ export async function conversionScientificPreviewJourney(page: Page, info: TestI
   const notes = body.locator('.fountain-page-preview__footnotes');
   await expect(body.locator('img')).toHaveCount(2);
   await expect(body.locator('[data-fountain-math]')).toHaveCount(2);
+  const math = body.locator('[data-fountain-math="block"]');
+  for (const equation of await math.all()) {
+    await expect(equation).toHaveCSS('padding-top', '0px');
+    await expect(equation.locator('.katex-display')).toHaveCSS('margin-top', '0px');
+    const spacingAfter = await equation.evaluate(element => parseFloat(getComputedStyle(element).marginBlockEnd));
+    expect(Math.abs(spacingAfter - 28 / 3)).toBeLessThan(0.02);
+  }
   await expect(body.locator('table')).toHaveCount(1);
   await expect(notes).toHaveCount(1);
   await expect(notes).toContainText('they are not measured experimental data.');

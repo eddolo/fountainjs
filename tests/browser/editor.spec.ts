@@ -6426,6 +6426,8 @@ test('renders real KaTeX while reporting published-equation and trust failures w
   const math = page.locator('[data-fountain-math="block"]');
   const direct = page.getByLabel('Edit math source', { exact: true });
   await expect(math.locator('.katex')).toBeVisible();
+  await expect(math).toHaveCSS('padding-top', '4px');
+  expect(await math.locator('.katex-display').evaluate(element => parseFloat(getComputedStyle(element).marginTop))).toBeGreaterThan(0);
   await expect(math.locator('annotation')).toHaveText(mathReferenceSamples[0].source);
   await expect(page.getByRole('status')).toContainText('Typeset view ready');
   const renderedWidth = await math.locator('.katex-html').evaluate(element => element.getBoundingClientRect().width);

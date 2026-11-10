@@ -118,6 +118,8 @@
 .fountain-editor .fountain-math { border-radius: .38rem; color: inherit; background: transparent; }
 .fountain-editor .fountain-math--inline { display: inline-block; margin: 0 .12em; padding: .08em 0; vertical-align: baseline; }
 .fountain-editor .fountain-math--display { display: block; margin: 1rem 0; padding: .25rem 0; overflow-x: auto; text-align: center; }
+.fountain-math[data-fountain-paragraph-layout] { padding-block: 0; }
+.fountain-math[data-fountain-paragraph-layout] .katex-display { margin: 0; }
 .fountain-editor .fountain-math[data-fountain-math-appearance="tinted"] { background: color-mix(in srgb, var(--fountain-accent) 8%, transparent); }
 .fountain-editor .fountain-math--inline[data-fountain-math-appearance="tinted"] { padding-inline: .32em; }
 .fountain-editor .fountain-math--display[data-fountain-math-appearance="tinted"] { padding: 1rem; }

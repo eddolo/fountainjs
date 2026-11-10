@@ -51,6 +51,13 @@ the page's left edge. LibreOffice placed both at 57.7 pt. In the editor, resizin
 the raster does not resize its independent caption column. Some vertical spacing
 and equation styling still differ.
 
+For display equations that carry paragraph layout, the preview uses the
+retained spacing without the default display padding and KaTeX margins. In
+the scientific report this moved “Recorded temperatures” from 299.0 to
+242.8 pt down page two. LibreOffice placed the heading at 238.6 pt. Both
+equations, the two-page layout, and the document edit remained visible in
+the regenerated PDF.
+
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing
 position. Unused parts outside that folder stay in the original archive.
