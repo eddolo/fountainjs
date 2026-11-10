@@ -561,6 +561,22 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
 
 const smokeDirectory = mkdtempSync(join(tmpdir(), 'fountain-package-smoke-'));
 try {
+  const markdownPath = join(smokeDirectory, 'bom.md');
+  const markdown = Buffer.from('\uFEFF# Heading\r\n\r\nA\uFEFFB\r\n');
+  writeFileSync(markdownPath, markdown);
+  // Evaluate from the repository root so Node resolves the built package by self-reference.
+  const starter = readFileSync('examples/starters/node/convert.mjs', 'utf8');
+  const starterArgs = ['--input-type=module', '-e', starter, '--', 'convert.mjs', markdownPath];
+  const starterJSON = JSON.parse(execFileSync(process.execPath, starterArgs, { encoding: 'utf8' }));
+  if (starterJSON.content[0].type !== 'heading' || starterJSON.content[1].content[0].text !== 'A\uFEFFB'
+    || !execFileSync(process.execPath, [...starterArgs, 'markdown']).equals(markdown)) {
+    throw new Error('The Node.js starter failed to preserve Markdown UTF-8 source while parsing its heading.');
+  }
+  writeFileSync(markdownPath, Buffer.from([0xff]));
+  const invalidUTF8 = spawnSync(process.execPath, [...starterArgs, 'markdown']);
+  if (invalidUTF8.status !== 1 || invalidUTF8.stdout.length !== 0) {
+    throw new Error('The Node.js starter did not reject invalid UTF-8 before writing output.');
+  }
   // Bundling a mark command must drop the unrelated split transaction code.
   // Removing the emitted pure annotations makes Rolldown retain that code.
   const entry = join(smokeDirectory, 'mark.mjs');

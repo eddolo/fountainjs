@@ -13,7 +13,9 @@ if (extra.length || !['json', 'html', 'markdown'].includes(format)
   process.exitCode = 1;
 } else {
   const schema = new Schema(CoreSchemaSpec);
-  const input = await readFile(filename ?? new URL('./sample.md', import.meta.url), 'utf8');
+  const source = await readFile(filename ?? new URL('./sample.md', import.meta.url));
+  const hasUTF8Marker = source[0] === 0xef && source[1] === 0xbb && source[2] === 0xbf;
+  const input = new TextDecoder('utf-8', { fatal: true }).decode(source);
   let imported;
   if (extension === '.html' || extension === '.htm') {
     const { ServerHTMLImporter } = await import('fountainjs-editor/html/server');
@@ -34,6 +36,7 @@ if (extra.length || !['json', 'html', 'markdown'].includes(format)
       ? MarkdownExporter.exportWithSource(document, imported.source)
       : MarkdownExporter.exportWithReport(document);
     for (const loss of exported.losses) console.error(`${loss.kind}: ${loss.detail}`);
-    process.stdout.write(exported.markdown);
+    const marker = imported.source && hasUTF8Marker ? '\uFEFF' : '';
+    process.stdout.write(marker + exported.markdown);
   }
 }

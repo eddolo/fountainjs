@@ -17,8 +17,9 @@ node convert.mjs sample.md markdown > roundtrip.md
 node convert.mjs your-page.html > document.json
 ```
 
-The Markdown round trip preserves the unchanged sample's spelling and line
-endings. HTML input uses the separate server importer and writes reported
+The Markdown round trip preserves unchanged UTF-8 source, including line
+endings and an optional byte-order mark. Invalid UTF-8 is rejected.
+HTML input uses the separate server importer and writes reported
 conversion issues to stderr. The HTML output is a fragment that your app can
 embed in its reader with the app's own resource policy.
 
