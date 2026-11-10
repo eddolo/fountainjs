@@ -99,9 +99,14 @@ exact-source checks. Safe HTML keeps blocked destinations inactive. DOCX/PDF
 have bounded supported workflows. ODT/EPUB remain unclaimed.
 [Markdown source policy](MARKDOWN_SOURCE.md).
 
-The latest full source run had 5,004 passes and six failures, with no skips.
-The current build passes every existing size limit, with aggregate CommonJS
-at 1,405.7 KiB against a 1,408.8 KiB cap. In the size repair's matched builds,
+The local `2e10151a` release check passes all 5,226 source tests in 322 files,
+along with build, API, package, server/workerd, headless, Markdown, math, DOCX,
+performance/retention and framework type checks. Every existing size limit
+passes, with aggregate CommonJS at 1,415.1 KiB against a 1,415.4 KiB cap.
+The current mobile-emulation matrix passes all 58 checks. The full hosted
+release matrix and physical-device evidence remain open.
+[Current release evidence](RELEASES.md#local-integration-preflight-at-2e10151a).
+In the earlier size repair's matched builds,
 the CommonJS root loaded about 46 KiB less in a fresh Node process, while the
 separately gzipped chunks grew by 6.7 KiB in total.
 [Package size evidence](PERFORMANCE.md#commonjs-growth-and-retained-room-startup).

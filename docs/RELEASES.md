@@ -190,6 +190,41 @@ open [draft](https://github.com/eddolo/fountainjs/pull/22) still points to
 failed. A fresh hosted matrix and release approval remain open for the
 current candidate.
 
+### Local integration preflight at 2e10151a
+
+The `2e10151a` runtime passed `pnpm check` on Windows with two source-test
+workers. All 5,226 source tests in 322 files passed. Build, API surface,
+packed-entry smoke checks, Node/workerd, the headless boundary, Markdown
+profiles, math references, DOCX interoperability, existing size limits,
+performance/retention and framework type checks passed in the same run.
+The log is `artifacts/release-check-2e10151a.log`.
+
+All 24 recorded desktop integration checks pass across Chromium, Firefox and
+WebKit. The batch covers backward and cross-container selection, empty-document
+Enter/Backspace, clipboard history, multiline math, table deletion/sizing,
+quote exit and native footnote recovery/export. This is a focused regression
+batch; the complete hosted browser matrix remains outstanding.
+
+The complete 58-check mobile-emulation matrix passed in Android/Chromium
+and iPhone/WebKit profiles with one browser worker. This covers the actual
+framework demos, Enter/Backspace, math, DOCX handoff, review/version controls,
+menus, block controls and bounded 100,000-block mounting. Physical virtual
+keyboards and real-device IME remain unverified.
+
+The website builds under `/fountainjs/` with its existing large-chunk warning.
+A fresh local tarball passes the
+general entry-resolution check and the separate Angular ESM-only profile.
+Publint exits successfully with the existing DOCX CommonJS-format warning;
+the packed runtime smoke checks load that CommonJS entry successfully.
+These checks use the existing acceptance limits.
+
+GitHub's draft #22 still points to `1a9e1640`, and the published registry
+tags remain `latest: 0.4.0-beta.2` and `next: 0.4.0-beta.1` on November 10.
+The local preflight does not certify the hosted release matrix. GitHub CLI
+authentication is currently unavailable on this machine.
+[Draft PR](https://github.com/eddolo/fountainjs/pull/22) ·
+[Registry tags](https://registry.npmjs.org/-/package/fountainjs-editor/dist-tags).
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad
