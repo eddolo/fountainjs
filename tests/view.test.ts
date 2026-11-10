@@ -512,6 +512,7 @@ describe('EditorView', () => {
     const view = new EditorView(mount, editor);
     const checkbox = view.dom.querySelector<HTMLInputElement>('[data-fountain-task-toggle]');
     expect(checkbox?.checked).toBe(false);
+    expect(checkbox?.getAttribute('aria-label')).toBe('Test the editor');
     if (checkbox) checkbox.checked = true;
     checkbox?.dispatchEvent(new Event('change', { bubbles: true }));
     expect(editor.state.doc.child(0).child(0).attrs.checked).toBe(true);

@@ -56,6 +56,8 @@ export async function issueEditorJourney(page: Page, info: TestInfo): Promise<vo
   await expect(preview).toHaveAttribute('contenteditable', 'false');
   await expect(preview).toHaveAttribute('aria-readonly', 'true');
   const readerTasks = preview.getByRole('checkbox');
+  await expect(readerTasks.nth(0)).toHaveAccessibleName('Both editors show the selected room');
+  await expect(readerTasks.nth(1)).toHaveAccessibleName('The document remains editable');
   await expect(readerTasks).toHaveCount(2);
   await expect(readerTasks.nth(0)).toBeDisabled();
   await expect(readerTasks.nth(0)).not.toBeChecked();
@@ -84,7 +86,13 @@ export async function issueEditorJourney(page: Page, info: TestInfo): Promise<vo
   await expect(source).toHaveValue(edited.replace('Needs checking', 'Verified locally'));
   await visualTab.click();
   await expect(page.getByRole('alert')).toHaveCount(0);
-  const checkbox = editor.locator('input[type="checkbox"]').first();
+  const taskText = 'Both editors show the selected room';
+  const checkbox = editor.getByRole('checkbox', { name: taskText, exact: true });
+  await editor.getByText(taskText, { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' today');
+  await expect(editor.getByRole('checkbox', { name: `${taskText} today`, exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect(editor).not.toHaveAttribute('aria-readonly', 'true');
   await expect(checkbox).toBeEnabled();
   await checkbox.check();

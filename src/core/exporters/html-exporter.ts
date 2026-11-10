@@ -6,6 +6,7 @@ import type { Attributes, DOMOutputSpec, Mark, Node } from '../schema';
 import { isSafeURL } from '../url';
 import { INLINE_DRAWING_DATA, isInlineDrawingDistances } from '../image-drawing';
 import { tableBackground } from '../table-background';
+import { taskCheckboxLabel } from '../task-label';
 import { quoteDOMAttributes, textBlockDOMAttributes } from '../explicit-emphasis';
 import { isMathExpression } from '../math-expression';
 import { imageCaptionDOMAttributes, imageFigureStyles, imageParagraphDOMAttributes } from '../image-caption';
@@ -309,7 +310,7 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
     case 'ordered_list': return `<ol${node.attrs.start !== 1 ? ` start="${node.attrs.start}"` : ''}${listAttributes(node)}>${children()}</ol>`;
     case 'list_item': return `<li${listAttributes(node, true)}>${children()}</li>`;
     case 'task_list': return `<ul data-type="task-list"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}>${children()}</ul>`;
-    case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''}>${children()}</li>`;
+    case 'task_item': return `<li data-type="task-item" data-checked="${Boolean(node.attrs.checked)}"${renderDOMAttributes(textDirectionDOMAttributes(node.attrs))}><input type="checkbox" disabled${node.attrs.checked ? ' checked' : ''} aria-label="${escapeHTML(taskCheckboxLabel(node))}">${children()}</li>`;
     case 'code_block': return `<pre data-language="${escapeHTML(node.attrs.language)}"${node.attrs.lineNumbers === false ? ' data-line-numbers="false"' : ''}${codeTheme(node) === 'light' ? ' data-fountain-code-theme="light"' : ''}${renderDOMAttributes({ ...paragraphLayoutDOMAttributes(node.attrs.layout), ...textDirectionDOMAttributes(node.attrs) })}><code class="language-${escapeHTML(node.attrs.language)}">${children()}</code></pre>`;
     case 'horizontal_rule': return '<hr>';
     case 'hard_break': return '<br>';

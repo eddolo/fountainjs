@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Name checklist checkboxes from their own task text in the editor, reader
+  and standalone HTML. Blank tasks have a fallback name.
+
 - Announce read-only editor surfaces as read-only textboxes and show saved task
   states with disabled checkboxes. In editable documents, refused task edits
   restore the displayed checkbox value.

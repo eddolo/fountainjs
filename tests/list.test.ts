@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CoreSchemaSpec,
+  HTMLExporter,
   HTMLImporter,
   MarkdownExporter,
   MarkdownImporter,
@@ -19,6 +20,26 @@ const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'tex
 const item = (text: string) => ({ type: 'list_item', content: [paragraph(text)] });
 
 describe('professional list transforms', () => {
+  it('names exported task checkboxes from their own text and preserves task state', () => {
+    const schema = new Schema(CoreSchemaSpec);
+    const text = 'Verify "<draft>" & sign';
+    const nested = schema.node('task_item', { checked: false }, [schema.node('paragraph', {}, [schema.text('Nested check')])]);
+    const labelled = schema.node('task_item', { checked: true }, [
+      schema.node('paragraph', {}, [schema.text(text), schema.node('hard_break'), schema.text('today')]),
+      schema.node('task_list', {}, [nested]),
+    ]);
+    const empty = schema.node('task_item', {}, [schema.node('paragraph')]);
+    const doc = schema.node('doc', {}, [schema.node('task_list', {}, [labelled, empty])]);
+    const html = HTMLExporter.export(doc, { document: false });
+    const root = document.createElement('div');
+    root.innerHTML = html;
+    const checkboxes = [...root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+    expect(checkboxes.map(checkbox => checkbox.getAttribute('aria-label')))
+      .toEqual([`${text} today`, 'Nested check', 'Task completion']);
+    expect(checkboxes.map(checkbox => [checkbox.disabled, checkbox.checked])).toEqual([[true, true], [true, false], [true, false]]);
+    expect(HTMLImporter.parse(html, schema).toJSON()).toEqual(doc.toJSON());
+  });
+
   it.each(['outdent', 'bullet', 'task'] as const)('preserves zero-based numbering around a middle-item %s', action => {
     const editor = createEditor({ schema: CoreSchemaSpec, content: {
       type: 'doc', content: [{ type: 'ordered_list', attrs: { start: 0 }, content: [item('Zero'), item('One'), item('Two')] }],

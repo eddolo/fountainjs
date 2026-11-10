@@ -1,4 +1,5 @@
 import type { NodeSpec } from '../../core';
+import { taskCheckboxLabel } from '../../core/task-label';
 import { textDirectionAttribute, sharedDirectionGroupAttribute, textDirectionDOMAttributes } from '../../core/text-direction';
 export const taskItem: NodeSpec = {
   paragraphFlow: 'transparent',
@@ -8,7 +9,7 @@ export const taskItem: NodeSpec = {
       type: 'checkbox',
       checked: Boolean(node.attrs.checked),
       'data-fountain-task-toggle': '',
-      'aria-label': 'Toggle task',
+      'aria-label': taskCheckboxLabel(node),
       contenteditable: 'false',
     }],
     ['div', { className: 'fountain-task-item__content' }, 0]],
