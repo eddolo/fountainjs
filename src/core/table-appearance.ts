@@ -90,7 +90,8 @@ export function cellAppearanceDOMAttributes(node: Node, context?: NodeDOMContext
   // Native grid widths already include cell borders and margins. Do not add
   // those a second time through the browser's content-box width convention.
   const styles: string[] = ['box-sizing:border-box'];
-  if (own?.verticalAlign) styles.push(`vertical-align:${own.verticalAlign === 'center' ? 'middle' : own.verticalAlign}`);
+  const alignment = own?.verticalAlign;
+  if (parent || alignment) styles.push(`vertical-align:${alignment === 'center' ? 'middle' : alignment ?? 'top'}`);
   for (const side of TABLE_EDGE_SIDES) {
     // Word 'none' permits the table-level fallback; 'nil' (hidden) suppresses it.
     const direct = own?.borders?.[side];
@@ -101,5 +102,5 @@ export function cellAppearanceDOMAttributes(node: Node, context?: NodeDOMContext
     else if (parent) styles.push(`padding-${side}:0`);
   }
   return { ...(own ? { 'data-fountain-table-appearance': JSON.stringify(own) } : {}),
-    'data-fountain-cell-appearance': 'true', ...(styles.length ? { style: styles.join(';') } : {}) };
+    'data-fountain-cell-appearance': 'true', style: styles.join(';') };
 }

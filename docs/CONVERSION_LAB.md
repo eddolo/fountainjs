@@ -77,8 +77,9 @@ without a declared height. All three desktop browser engines retain the
 declarations through preview and DOCX download. LibreOffice produced the
 same label positions and page raster for the original and the downloaded
 DOCX. The exact row clips text in the native render. The browser preview grows
-that row so every line can be read, and may position text differently where
-the source leaves cell alignment implicit.
+that row so every line can be read. The 60 pt minimum row now starts its text
+at the top in both the browser and LibreOffice, with no explicit alignment
+added to the download.
 
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing

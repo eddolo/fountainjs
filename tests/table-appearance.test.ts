@@ -43,6 +43,7 @@ describe('portable table appearance', () => {
     const cells = host.querySelectorAll('td');
     expect(cells[0]?.style.borderTop).toBe('1pt solid rgb(16, 32, 48)');
     expect(cells[0]?.style.paddingTop).toBe('0pt');
+    expect(cells[0]?.style.verticalAlign).toBe('top');
     expect(cells[1]?.style.borderTopStyle).toBe('hidden');
     expect(cells[1]?.style.borderLeft).toBe('0.75pt solid rgb(128, 144, 160)');
     expect(cells[1]?.style.paddingLeft).toBe('0pt');
@@ -57,6 +58,16 @@ describe('portable table appearance', () => {
       expect(doc.child(0).attrs.appearance).toBeUndefined();
       expect(doc.child(0).child(0).child(0).attrs.appearance).toBeUndefined();
     }
+  });
+  it('keeps the host alignment for cells without a physical table appearance or override', () => {
+    const doc = fixture();
+    const table = doc.child(0);
+    const html = HTMLExporter.export(doc.copy([schema.node('table', {}, table.content)]), { document: false });
+    const host = document.createElement('div');
+    host.innerHTML = html;
+    const cells = host.querySelectorAll('td');
+    expect(cells[0]?.style.verticalAlign).toBe('');
+    expect(cells[1]?.style.verticalAlign).toBe('middle');
   });
   it('refreshes equal cell views when only their table appearance changes, including undo/redo', () => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: fixture().toJSON() });

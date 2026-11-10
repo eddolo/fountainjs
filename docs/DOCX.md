@@ -75,7 +75,9 @@ column membership; cached `cnfStyle` annotations do not replace current geometry
 Word cell alignment (`w:vAlign`) retains top, center, and bottom through
 the editor, paged preview, Fountain HTML and DOCX export. Direct cell
 declarations override inherited style alignment. Unsupported values appear in
-the conversion report.
+the conversion report. When no alignment is declared, imported tables
+top-align their cell contents in the browser. Re-export keeps the Word
+alignment property absent.
 
 Direct `w:trHeight` declarations retain minimum and exact heights in
 twentieths of a point. A missing rule follows Word's minimum-height behavior.

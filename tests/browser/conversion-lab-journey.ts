@@ -34,6 +34,10 @@ export async function conversionRowHeightJourney(page: Page, info: TestInfo) {
     expect(heights[0]).toBeGreaterThanOrEqual(79.5);
     expect(heights[1]).toBeGreaterThan(48);
     expect(heights[2]).toBeLessThan(60);
+    const minimumCell = rows.nth(0).locator('td');
+    await expect(minimumCell).toHaveCSS('vertical-align', 'top');
+    const inset = await minimumCell.evaluate(cell => cell.querySelector('p')!.getBoundingClientRect().top - cell.getBoundingClientRect().top);
+    expect(inset).toBeLessThan(12);
     await expect(rows.nth(1)).toContainText('Visible line four');
   }
   await expectHeights(workspace.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
@@ -50,6 +54,7 @@ export async function conversionRowHeightJourney(page: Page, info: TestInfo) {
   await (await pending).saveAs(saved);
   const xml = strFromU8(unzipSync(await readFile(saved))['word/document.xml']!);
   expect(xml.match(/<w:trHeight[^>]+\/>/gu)).toEqual(declarations.slice(0, 2));
+  expect(xml).not.toContain('<w:vAlign');
   await input.setInputFiles(saved);
   const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-row-heights.docx' });
   await expectHeights(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));

@@ -568,7 +568,9 @@ the table fallback; `{ style: 'hidden' }` maps Word `nil` and suppresses it.
 Zero padding is retained, not treated as missing. `isTableAppearance(value, cell?)`
 validates this portable profile without a DOM. Cells also accept
 `verticalAlign: 'top' | 'center' | 'bottom'`. The editor and reader map
-`center` to CSS `vertical-align: middle`.
+`center` to CSS `vertical-align: middle`. A table with physical appearance
+top-aligns cells that leave this property unset. Other tables use host
+alignment for those cells.
 
 Undefined appearance keeps fresh/legacy Fountain defaults. `{ unit: 'pt' }`
 records that an imported table declared no supported appearance and must not
