@@ -102,7 +102,7 @@ test('keeps native form emptiness custom policy failures and canceled invalid ev
 test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
   await webComponentValidationJourney(page, info);
 });
-import { conversionLabJourney } from './conversion-lab-journey';
+import { conversionLabJourney, conversionPagePreviewJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';
 
@@ -280,6 +280,16 @@ test('preserves registered inert inline source through real typing history and M
 
 test('preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening', async ({ page }, info) => {
   await modelIntegrityJourney(page, info);
+});
+
+test('previews and prints only the current local draft in the conversion lab', async ({ page }, info) => {
+  const pdf = await conversionPagePreviewJourney(page, info);
+  if (pdf) {
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(2);
+    expect(pages[0]).toMatch(/^Lead first.*Lead third$/su);
+    expect(pages[1]).toMatch(/^Section heading.*Body second Added in the lab\.$/su);
+  }
 });
 
 test('imports private files in the conversion lab with reports and export reopen', async ({ page }, info) => {

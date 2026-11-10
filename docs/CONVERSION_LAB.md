@@ -11,6 +11,32 @@ records current failures; successful draft round trips do not resolve those loss
 
 ## Workflow
 
+### Page preview and browser PDF
+
+After importing a file, choose **Build page preview** below the editor. This
+lays out the current draft locally in a read-only preview. The preview uses
+supported paper size and margins from the document. It states when it uses
+Letter with 1-inch margins instead. Header and footer templates reserve their
+measured height. Their original edge offsets can differ. Layout warnings are
+listed beneath the page count, and a preview is limited to 150 pages.
+
+Use **Print / Save PDF** to open the browser's print dialog for that snapshot.
+Edits clear the snapshot and disable printing until it is rebuilt. Switching
+files clears the preview and keeps each draft and its undo history. On narrow
+screens, scroll inside the page preview to inspect the full-width sheets.
+
+The preview uses Fountain’s page layout and may differ from the source
+application. Open the untouched DOCX in Word or LibreOffice to compare the
+original. Use **Export and reopen** separately to check the selected document
+format.
+
+The local browser journey uploads a DOCX with linked paragraphs, edits its body,
+rebuilds the preview and switches to a separate Markdown draft. The Chromium
+PDF contains only the two updated draft pages at the imported paper size.
+Firefox and WebKit checks cover the same preview workflow and print-media
+isolation. This verifies the tested draft, with original-file comparison still
+separate.
+
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing
 position. Unused parts outside that folder stay in the original archive.
@@ -341,7 +367,8 @@ This is not font kerning or native Word appearance certification.
 
 Future: independent original-format previews, reviewed/redacted repro bundles,
 worker execution, deeper attribute-level diffs and separately verified adapters.
-PDF, TeX, ODT, EPUB, spreadsheets and folders are not supported by this first page.
+PDF, TeX, ODT, EPUB, spreadsheets and folders remain outside the lab's import
+formats. Saving the current preview as PDF uses the browser's print dialog.
 
 ## Page settings — 2026-09-12
 

@@ -3,6 +3,78 @@ import { readFile } from 'node:fs/promises';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionPagePreviewJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const paragraph = (lines: string[], keepWithNext = false) => schema.node('paragraph', {
+    layout: { unit: 'pt', lineHeight: 18, lineHeightUnit: 'pt', lineHeightRule: 'exact', keepWithNext },
+  }, lines.flatMap((line, index) => index ? [schema.node('hard_break'), schema.text(line)] : [schema.text(line)]));
+  const fixture = schema.node('doc', {
+    pageSettings: { unit: 'pt', width: 261, height: 153, marginTop: 7.5, marginRight: 7.5, marginBottom: 7.5, marginLeft: 7.5 },
+  }, [paragraph(['Lead first', 'Lead second', 'Lead third']), paragraph(['Section heading'], true),
+    paragraph(['Caption first', 'Caption second'], true), paragraph(['Body first', 'Body second'])]);
+  await page.goto('/conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles([
+    { name: 'pagination.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', buffer: Buffer.from(exportDOCX(fixture).bytes) },
+    { name: 'other.md', mimeType: 'text/markdown', buffer: Buffer.from('# Separate draft\n\nThis text belongs to another file.') },
+  ]);
+  const files = page.getByRole('navigation', { name: 'Imported files' });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: pagination.docx' });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const controls = workspace.getByRole('region', { name: 'Draft pagination' });
+  const build = controls.getByRole('button', { name: 'Build page preview' });
+  const print = controls.getByRole('button', { name: 'Print / Save PDF' });
+  const sheets = controls.locator('.fountain-page-preview__sheet');
+  await expect(print).toBeDisabled();
+  await build.click();
+  await expect(controls).toContainText('2 pages. Using the document’s paper size and margins.');
+  await expect(sheets).toHaveCount(2);
+  await expect(sheets.first()).toContainText('Lead third');
+  await expect(sheets.first()).not.toContainText('Section heading');
+  await expect(sheets.nth(1)).toContainText(/Section heading.*Caption first.*Body second/su);
+
+  await editor.locator('p').filter({ hasText: 'Body second' }).click();
+  await page.keyboard.press('ControlOrMeta+End');
+  await page.keyboard.type(' Added in the lab.');
+  await expect(editor).toContainText('Body second Added in the lab.');
+  await expect(controls).toContainText('The draft changed. Build the page preview again.');
+  await expect(print).toBeDisabled();
+  await expect(sheets).toHaveCount(0);
+  await build.click();
+  await expect(sheets.nth(1)).toContainText('Body second Added in the lab.');
+  await expect(print).toBeEnabled();
+  await controls.screenshot({ path: info.outputPath('conversion-page-preview.png') });
+
+  await page.evaluate(() => { window.print = () => { document.body.dataset.labPrintCalled = 'true'; }; });
+  await print.click();
+  await expect(page.locator('body')).toHaveAttribute('data-lab-print-called', 'true');
+  await page.emulateMedia({ media: 'print' });
+  await expect(editor).toBeHidden();
+  await expect(sheets.first()).toBeVisible();
+  const pdf = info.project.name === 'chromium'
+    ? await page.pdf({ path: info.outputPath('conversion-page-preview.pdf'), preferCSSPageSize: true })
+    : undefined;
+  await page.emulateMedia({ media: 'screen' });
+
+  await files.getByRole('button', { name: 'other.md' }).click();
+  const other = page.getByRole('region', { name: 'Conversion workspace: other.md' }).getByRole('region', { name: 'Draft pagination' });
+  await other.getByRole('button', { name: 'Build page preview' }).click();
+  await expect(other).toContainText('1 page. Using Letter with 1-inch margins.');
+  await expect(other.locator('.fountain-page-preview__sheet')).toContainText('This text belongs to another file.');
+  await expect(page.locator('style[data-fountain-page-print-style]')).toHaveCount(1);
+  await page.setViewportSize({ width: 390, height: 800 });
+  const mobilePreview = other.getByRole('region', { name: 'Paged draft preview' });
+  await mobilePreview.focus();
+  await expect(mobilePreview).toBeFocused();
+  expect(await mobilePreview.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+  await mobilePreview.screenshot({ path: info.outputPath('conversion-page-preview-mobile.png') });
+  await files.getByRole('button', { name: 'pagination.docx' }).click();
+  await expect(editor).toContainText('Added in the lab.');
+  await expect(print).toBeDisabled();
+  await expect(page.locator('style[data-fountain-page-print-style]')).toHaveCount(0);
+  return pdf;
+}
+
 export async function conversionLabJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];
   let externalRequests = 0;
@@ -54,6 +126,10 @@ export async function conversionLabJourney(page: Page, info: TestInfo) {
   expect(await readFile((await (await imageDownload).path())!)).toEqual(Buffer.from(imageSource.split(',')[1], 'base64'));
   await wordWorkspace.locator('.lab-assets').scrollIntoViewIfNeeded();
   await page.screenshot({ path: info.outputPath('recovered-image.png') });
+  await wordWorkspace.getByRole('button', { name: 'Build page preview' }).click();
+  const pagedImage = wordWorkspace.locator('.fountain-page-preview__sheet img[alt="Embedded image proof"]');
+  await expect(pagedImage).toBeVisible();
+  await expect.poll(() => pagedImage.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBe(320);
   await files.getByRole('button', { name: 'unsupported.pdf — not imported', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Not supported');
   await files.getByRole('button', { name: 'broken.json — not imported', exact: true }).click();

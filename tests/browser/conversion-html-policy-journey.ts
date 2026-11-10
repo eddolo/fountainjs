@@ -51,7 +51,7 @@ export async function conversionHTMLPolicyJourney(page: Page, info: TestInfo, fo
   await expect(standard.locator('.lab-import-mode')).toContainText('standard import');
   await page.getByRole('navigation', { name: 'Imported files' }).getByRole('button', { name: retainedName, exact: true }).click();
   await expect(anchor).toHaveText('Section one');
-  await expect(workspace.locator('.lab-import-mode')).toContainText('supported HTML structure preserved');
+  await expect(workspace.locator('.lab-import-mode')).toContainText('supported HTML structure conversion');
   for (const output of ['html', 'json', 'markdown']) {
     await workspace.getByRole('combobox', { name: 'Export format', exact: true }).selectOption(output);
     await workspace.getByRole('button', { name: 'Check round trip', exact: true }).click();
@@ -67,7 +67,7 @@ export async function conversionHTMLPolicyJourney(page: Page, info: TestInfo, fo
   const reportFile = await reportDownload;
   await reportFile.saveAs(info.outputPath('conversion-report.json'));
   const report = JSON.parse(await readFile(info.outputPath('conversion-report.json'), 'utf8'));
-  expect(report.importOptions).toEqual({ preserveHTMLStructure: true });
+  expect(report.importOptions).toEqual({ preserveHTMLStructure: true, commonMarkText: false, retainBlockedAutolinks: false, commonMarkSourceReview: false });
   expect(report.policy).toContain('html-structure');
   expect(report.editedDocument).toBeUndefined();
   expect(report.roundTrip.exactFountainJSONEquality).toBe(true);
