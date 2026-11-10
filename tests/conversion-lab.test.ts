@@ -8,6 +8,16 @@ import { createEditor, EditorState, Schema, StarterKit } from 'fountainjs-editor
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it.each(['', '\uFEFF'])('preserves the original Markdown UTF-8 encoding marker (%j)', marker => {
+    const source = bytes(marker + '# Heading\r\n\r\nA\uFEFFB\r\n');
+    const imported = importLab(source, 'markdown');
+    const options = { markdownBOM: imported.markdownBOM };
+    expect(imported.document.child(0).type.name).toBe('heading');
+    expect(imported.document.child(0).textContent).toBe('Heading');
+    expect(imported.document.child(1).textContent).toBe('A\uFEFFB');
+    expect(exportLab(imported.document, 'markdown', imported.source, undefined, options).bytes).toEqual(source);
+    expect(exportLab(imported.document, 'json', imported.source, undefined, options).bytes[0]).toBe(0x7b);
+  });
   it('recovers only the selected inventoried raster and retains the original bytes', () => {
     const raster = new Uint8Array(readFileSync(new URL('./fixtures/cross-container-figure.png', import.meta.url)));
     const source = exportLab(importLab(bytes('Original body'), 'markdown').document, 'docx');
@@ -95,7 +105,7 @@ describe('public conversion lab adapters', () => {
     expect(types).toEqual(expect.arrayContaining(['html_inert_raw_text', 'html_inert_anchor', 'html_source_eof']));
     expect(importLab(bytes(source), 'markdown').document.textContent).toContain('<script>');
     expect(new TextDecoder().decode(exportLab(result.document, 'markdown', result.source, context).bytes)).toBe(source);
-    const html = exportLab(result.document, 'html', result.source, context, true);
+    const html = exportLab(result.document, 'html', result.source, context, { omitMarkdownCaretHosts: true });
     const reader = new TextDecoder().decode(html.bytes);
     expect(reader).toContain('Content-Security-Policy');
     expect(reader).toContain("default-src 'none'");

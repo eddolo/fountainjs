@@ -4,7 +4,7 @@ import { expect, type Page, type Request, type TestInfo } from '@playwright/test
 
 export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo) {
   const source = [
-    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', '', '# Research draft', '',
+    '\uFEFF<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', '', '# Research draft', '',
     '<script>window.sourceRan = true</script>', '',
     '<javascript:alert(1)> https://example.test <https://example.org>', '',
     '![Remote image](https://example.invalid/review-probe.png)', '',
@@ -93,7 +93,7 @@ export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo)
   await htmlEditor.screenshot({ path: info.outputPath('source-review-reopened-html.png') });
 
   const appendSource = [
-    '<!DOCTYPE HTML>', '', '<script>window.sourceRan = true</script>', '', 'Original _emphasis_.', '',
+    '\uFEFF<!DOCTYPE HTML>', '', '<script>window.sourceRan = true</script>', '', 'Original _emphasis_.', '',
   ].join('\r\n');
   await files.setInputFiles({ name: 'append-source.md', mimeType: 'text/markdown', buffer: Buffer.from(appendSource) });
   const appendWorkspace = page.getByRole('region', { name: 'Conversion workspace: append-source.md' });

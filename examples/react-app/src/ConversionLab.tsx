@@ -128,7 +128,10 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   }
   function convert(save: boolean) {
     try {
-      const output = exportLab(state.doc, format, entry.result?.source, entry.context, omitMarkdownCaretHosts);
+      const output = exportLab(state.doc, format, entry.result?.source, entry.context, {
+        omitMarkdownCaretHosts,
+        markdownBOM: entry.result?.markdownBOM,
+      });
       const reopened = importLab(output.bytes, format, entry.context);
       setCheck({ id: crypto.randomUUID(), document: reopened.document, equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues], format, revision: state.doc, omitMarkdownCaretHosts });
       if (save) download(new Uint8Array(output.bytes), `${entry.file.name}.converted.${output.extension}`, output.mime);

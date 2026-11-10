@@ -84,7 +84,9 @@ function boundedJSON(text: string) {
   visit(value, 0);
   return value;
 }
-export function importLab(bytes: Uint8Array, format: LabFormat, context: LabContext = defaultLabContext): { document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; packageParts?: readonly DOCXPackagePart[] } {
+export function importLab(bytes: Uint8Array, format: LabFormat, context: LabContext = defaultLabContext): {
+  document: Node; issues: LabIssue[]; source?: MarkdownSourceSnapshot; markdownBOM?: boolean; packageParts?: readonly DOCXPackagePart[];
+} {
   const labSchema = context.schema;
   if (bytes.byteLength > (format === 'docx' ? 4 : 1) * 1024 * 1024) throw new Error('Lab limit: 1 MiB per text/JSON file; 4 MiB per DOCX.');
   if (format === 'docx') {
@@ -130,10 +132,18 @@ export function importLab(bytes: Uint8Array, format: LabFormat, context: LabCont
     : context.options.preserveHTMLStructure
     ? 'HTML conversion is enabled for this file. Unsupported HTML can remain literal or lose structure with a report.'
     : 'Raw HTML stays inert.';
-  return { ...result, issues: [{ code: 'markdown-coverage',
+  // TextDecoder consumes the UTF-8 marker before parsing. Retain it as file metadata.
+  const markdownBOM = bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf;
+  return { ...result, markdownBOM, issues: [{ code: 'markdown-coverage',
     message: textPolicy + htmlPolicy + ' Coverage is limited to supported syntax and structure.' }, ...issues] };
 }
-export function exportLab(document: Node, format: LabFormat, source?: MarkdownSourceSnapshot, context: LabContext = defaultLabContext, omitMarkdownCaretHosts = false): {
+export function exportLab(
+  document: Node,
+  format: LabFormat,
+  source?: MarkdownSourceSnapshot,
+  context: LabContext = defaultLabContext,
+  { omitMarkdownCaretHosts = false, markdownBOM = false } = {},
+): {
   bytes: Uint8Array; extension: string; mime: string; issues: LabIssue[];
 } {
   // Keep live import/editing provenance when this file owns the schema. A JSON
@@ -154,7 +164,8 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
       && (result.preservation === 'canonical' || result.preservation === 'frontmatter')) {
       issues.unshift({ code: 'markdown-source-rewritten', message: 'The source-preserving export could not verify this edit. The download uses rewritten Markdown. Compare it with the original before replacing your source.' });
     }
-    return { bytes: new TextEncoder().encode(result.markdown), extension: 'md', mime: 'text/markdown', issues };
+    const text = markdownBOM ? '\uFEFF' + result.markdown : result.markdown;
+    return { bytes: new TextEncoder().encode(text), extension: 'md', mime: 'text/markdown', issues };
   }
   let text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document, { omitMarkdownCaretHosts });
   if (format === 'html' && context.options.commonMarkSourceReview) {
