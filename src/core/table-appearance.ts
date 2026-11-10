@@ -16,6 +16,7 @@ export interface TableAppearance {
   readonly unit: 'pt';
   readonly borders?: Readonly<Partial<Record<TableBorderSide, TableBorder>>>;
   readonly padding?: Readonly<Partial<Record<TableEdgeSide, number>>>;
+  readonly verticalAlign?: 'top' | 'center' | 'bottom';
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -24,7 +25,9 @@ function record(value: unknown): value is Record<string, unknown> {
   return prototype === Object.prototype || prototype === null;
 }
 export function isTableAppearance(value: unknown, cell = false): value is TableAppearance {
-  if (!record(value) || value.unit !== 'pt' || Object.keys(value).some(key => !['unit', 'borders', 'padding'].includes(key))) return false;
+  if (!record(value) || value.unit !== 'pt' || Object.keys(value).some(key => !['unit', 'borders', 'padding', 'verticalAlign'].includes(key))) return false;
+  const alignment = value.verticalAlign;
+  if (alignment !== undefined && (!cell || (alignment !== 'top' && alignment !== 'center' && alignment !== 'bottom'))) return false;
   if (value.padding !== undefined && (!record(value.padding) || Object.entries(value.padding).some(([side, length]) =>
     !TABLE_EDGE_SIDES.includes(side as TableEdgeSide) || typeof length !== 'number' || !Number.isFinite(length) || length < 0 || length > 1000))) return false;
   if (value.borders !== undefined) {
@@ -87,6 +90,7 @@ export function cellAppearanceDOMAttributes(node: Node, context?: NodeDOMContext
   // Native grid widths already include cell borders and margins. Do not add
   // those a second time through the browser's content-box width convention.
   const styles: string[] = ['box-sizing:border-box'];
+  if (own?.verticalAlign) styles.push(`vertical-align:${own.verticalAlign === 'center' ? 'middle' : own.verticalAlign}`);
   for (const side of TABLE_EDGE_SIDES) {
     // Word 'none' permits the table-level fallback; 'nil' (hidden) suppresses it.
     const direct = own?.borders?.[side];

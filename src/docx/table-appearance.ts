@@ -84,7 +84,12 @@ export function readWordTableAppearance(properties: XMLElement | undefined, cell
       warn('unsupported-table-appearance-edge', `Word ${local} table appearance is not represented by the physical-edge profile.`);
     }
   }
-  return { unit: 'pt', ...(Object.keys(borders).length ? { borders } : {}), ...(Object.keys(padding).length ? { padding } : {}) };
+  const alignment = cell ? readWordTableProperty([properties], 'vAlign', warn) : undefined;
+  const value = alignment && attribute(alignment, 'val');
+  const verticalAlign = value === 'top' || value === 'center' || value === 'bottom' ? value : undefined;
+  if (alignment && !verticalAlign) warn('unsupported-table-cell-alignment', 'Word cell vertical alignment is outside the top, center and bottom profile.');
+  return { unit: 'pt', ...(Object.keys(borders).length ? { borders } : {}), ...(Object.keys(padding).length ? { padding } : {}),
+    ...(verticalAlign ? { verticalAlign } : {}) };
 }
 
 /** Export only declared appearance. Undefined means a fresh/legacy Fountain
@@ -107,5 +112,5 @@ export function wordTableAppearanceXML(value: unknown, cell: boolean, warn: Warn
     if (twips / 20 !== padding) warn('table-cell-margin-rounded', `The ${side} cell margin was rounded to Word twentieth-point resolution.`);
     return `<w:${side} w:w="${twips}" w:type="dxa"/>`;
   }).join('');
-  return `${borders ? `<w:${cell ? 'tcBorders' : 'tblBorders'}>${borders}</w:${cell ? 'tcBorders' : 'tblBorders'}>` : ''}${margins ? `<w:${cell ? 'tcMar' : 'tblCellMar'}>${margins}</w:${cell ? 'tcMar' : 'tblCellMar'}>` : ''}`;
+  return `${borders ? `<w:${cell ? 'tcBorders' : 'tblBorders'}>${borders}</w:${cell ? 'tcBorders' : 'tblBorders'}>` : ''}${margins ? `<w:${cell ? 'tcMar' : 'tblCellMar'}>${margins}</w:${cell ? 'tcMar' : 'tblCellMar'}>` : ''}${value.verticalAlign ? `<w:vAlign w:val="${value.verticalAlign}"/>` : ''}`;
 }

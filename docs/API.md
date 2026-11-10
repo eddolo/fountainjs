@@ -561,7 +561,9 @@ Line borders use `{ style: 'solid' | 'double' | 'dotted' | 'dashed', width, colo
 with 0.125–12 pt widths and six-digit RGB colours. `{ style: 'none' }` permits
 the table fallback; `{ style: 'hidden' }` maps Word `nil` and suppresses it.
 Zero padding is retained, not treated as missing. `isTableAppearance(value, cell?)`
-validates this portable profile without a DOM.
+validates this portable profile without a DOM. Cells also accept
+`verticalAlign: 'top' | 'center' | 'bottom'`. The editor and reader map
+`center` to CSS `vertical-align: middle`.
 
 Undefined appearance keeps fresh/legacy Fountain defaults. `{ unit: 'pt' }`
 records that an imported table declared no supported appearance and must not
@@ -571,9 +573,9 @@ Use `editor.state.createTransaction().setNodeAttrs(tablePath, { ...table.attrs,
 appearance })` and dispatch it for an undoable change. The view refreshes cell
 edges from logical span geometry, including unchanged cells after a parent edit.
 JSON and Fountain HTML retain the declarations; DOCX rounds to its native
-eighth-point borders/twip margins with reports. Table-style inheritance and
-native merge-fragment/conflict layout are not yet covered. No style picker is
-added by this API; applications choose their author controls.
+eighth-point borders and twip margins with reports. See the supported table
+style cascade and merge-fragment limits in [DOCX.md](DOCX.md). Applications
+choose their own author controls for these declarations.
 
 The public commands are `addTableRow`, `deleteTableRow`, `addTableColumn`,
 `deleteTableColumn`, `deleteTable`, `moveTableCell`, `mergeTableCells`, `splitTableCell`,

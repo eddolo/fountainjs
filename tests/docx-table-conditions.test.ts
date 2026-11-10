@@ -23,6 +23,19 @@ function fixture(styles: string, look = '<w:tblLook w:val="01E0" w:noHBand="1" w
 const fills = (bytes: Uint8Array) => importDOCX(bytes, schema).document.child(0).content.map(row => row.content.map(cell => cell.attrs.background));
 
 describe('conditional Word table appearance', () => {
+  it('applies conditional alignment per cell and gives direct alignment precedence', () => {
+    const source = style('Child', '<w:tcPr><w:vAlign w:val="top"/></w:tcPr>'
+      + region('firstRow', '<w:vAlign w:val="center"/>'));
+    const rows = row(['<w:vAlign w:val="bottom"/>', '', '', '']) + regular(1);
+    const imported = importDOCX(fixture(source, undefined, rows), schema);
+    const alignments = (document: typeof imported.document) => document.child(0).content.map(row =>
+      row.content.map(cell => (cell.attrs.appearance as { verticalAlign: string }).verticalAlign));
+    expect(alignments(imported.document)).toEqual([
+      ['bottom', 'center', 'center', 'center'], ['top', 'top', 'top', 'top'],
+    ]);
+    expect(alignments(importDOCX(exportDOCX(imported.document).bytes, schema).document)).toEqual(alignments(imported.document));
+  });
+
   it('uses Office region precedence independently of source order and style ancestry', () => {
     const parent = style('Base', region('firstRow', shade('334455')) + region('nwCell', shade('667788')));
     const child = style('Child', region('lastCol', shade('0000AA')) + region('firstCol', shade('0000FF')) + '<w:tcPr>' + shade('EEEEEE') + '</w:tcPr>', 'Base');

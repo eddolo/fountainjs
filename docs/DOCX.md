@@ -64,13 +64,18 @@ nil/none borders and clear/auto fill remain different from missing declarations.
 Missing parents, wrong style kinds, cycles, depth limits and unsupported used
 properties produce diagnostics; ambiguous identities/property roots fail closed.
 
-Conditional cell fill, borders and physical margins are resolved for row/column
+Conditional cell fill, borders, physical margins and vertical alignment are resolved for row/column
 bands, first/last rows and columns, and the four corners. `tblLook` mask/named
 flags control application, including explicit off values and row exceptions.
 Region precedence follows [Office's documented order](https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/2ac331d4-cf1e-4fa0-8bca-6da74411e284),
 not XML declaration order. Style ancestry is resolved within each region before
 regions are combined. The physical grid, including horizontal spans, determines
 column membership; cached `cnfStyle` annotations do not replace current geometry.
+
+Word cell alignment (`w:vAlign`) retains top, center, and bottom through
+the editor, paged preview, Fountain HTML and DOCX export. Direct cell
+declarations override inherited style alignment. Unsupported values appear in
+the conversion report. Automatic row heights still depend on font metrics.
 
 This is a Word-targeted bridge: absent `tblLook` uses Office's `04A0` default;
 an absent row-band size uses Word's zero/no-banding behavior. Explicit band sizes

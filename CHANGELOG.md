@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve top, center, and bottom Word table cell alignment in the editor,
+  page previews, HTML and DOCX. Cell appearance now accepts
+  `verticalAlign` as an optional property.
 - Keep the original Markdown and HTML spelling when appending blocks in source
   review, provided the complete file reparses to the edited document.
 - Keep native disclosures and media controls on visual page sheets out of the

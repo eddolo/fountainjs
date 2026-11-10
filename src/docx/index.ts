@@ -1213,7 +1213,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
           origin.rowspan += 1;
           if (Object.keys(cellAppearance).length > 1 && JSON.stringify(cellAppearance) !== JSON.stringify(origin.appearance)) issues.push({
             code: 'table-merged-continuation-appearance-not-imported', severity: 'warning',
-            message: 'Distinct border or margin declarations on a merged continuation cannot be represented independently by the whole logical cell; the origin appearance remains.', path: [...path, rowIndex, cellIndex],
+            message: 'Distinct appearance on a merged continuation cannot be represented independently by the whole logical cell; the origin appearance remains.', path: [...path, rowIndex, cellIndex],
           });
           if (background !== origin.background) issues.push({ code: 'table-merged-continuation-shading-not-imported', severity: 'warning',
             message: 'Distinct shading on a merged continuation cannot be represented independently by one logical cell; the origin fill remains.', path: [...path, rowIndex, cellIndex] });
@@ -1238,7 +1238,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
       const cellType = scope && schema.nodes.table_header ? schema.nodes.table_header : schema.nodes.table_cell;
       if (scope && !schema.nodes.table_header) issues.push({ code: 'table-header-role-not-imported', severity: 'warning',
         message: 'The receiving schema has no semantic header cell; visible content was retained as ordinary cells.', path: [...path, rowIndex, cellIndex] });
-      if (Object.keys(cellAppearance).length > 1 && !cellType?.spec.attrs?.appearance) issues.push({ code: 'table-cell-appearance-not-imported', severity: 'warning', message: 'The receiving cell schema cannot represent direct border and margin declarations.', path: [...path, rowIndex, cellIndex] });
+      if (Object.keys(cellAppearance).length > 1 && !cellType?.spec.attrs?.appearance) issues.push({ code: 'table-cell-appearance-not-imported', severity: 'warning', message: 'The receiving schema cannot represent the cell appearance.', path: [...path, rowIndex, cellIndex] });
       const mutable: MutableCell = { content, colspan, rowspan: 1, scope, continuation: false, background, colwidth,
         ...(cellType?.spec.attrs?.appearance && Object.keys(cellAppearance).length > 1 ? { appearance: cellAppearance } : {}) };
       cells.push(mutable);
@@ -2243,8 +2243,8 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
       const cellAppearance = wordTableAppearanceXML(cell.attrs.appearance, true, (code, message) => context.issues.push({ code, severity: 'warning', message, path: [...path, rowIndex, sourceIndex - 1] }));
       if (rowspan > 1 && cellAppearance) context.issues.push({ code: 'table-merged-cell-appearance-projection', severity: 'warning',
         message: 'Whole-cell appearance is repeated on native vertical-merge fragments; independent fragment borders/margins and native border conflicts are not certified.', path: [...path, rowIndex, sourceIndex - 1] });
-      // tcBorders precedes shading; tcMar follows it in native tcPr ordering.
-      const paintedAppearance = cellAppearance.replace(/(?=<w:tcMar>)/, shading) + (cellAppearance.includes('<w:tcMar>') ? '' : shading);
+      // Shading follows borders and precedes margins and alignment.
+      const paintedAppearance = cellAppearance.replace(/(?=<w:tcMar>|<w:vAlign\b|$)/u, shading);
       const properties = [
         cellWidthXML(column, colspan),
         colspan > 1 ? `<w:gridSpan w:val="${colspan}"/>` : '',

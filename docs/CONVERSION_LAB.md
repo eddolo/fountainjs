@@ -61,7 +61,14 @@ the regenerated PDF.
 The inline table now uses the document's surrounding paragraph spacing without
 the editor's default table margins. In the same report, the first table header
 moved from 282.5 to 267.5 pt down page two. LibreOffice placed it at 266.8 pt.
-The caption beneath the table still differs in vertical position.
+The rows in this fixture are about 23.8 pt apart in the browser PDF and 25 pt
+apart in LibreOffice. The accumulated difference still shifts the caption
+beneath the table.
+
+A separate tall-row fixture verifies Word's top, center and bottom cell
+alignment in the editor and paged preview. LibreOffice gives all three labels
+the same vertical positions in the original and Fountain-exported DOCX. The
+exported cells still start 6.35 pt farther right in that fixture.
 
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing

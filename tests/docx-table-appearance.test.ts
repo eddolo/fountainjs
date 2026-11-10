@@ -10,6 +10,23 @@ function source(properties = '', cellProperties = '', rowProperties = '') {
 }
 function xml(bytes: Uint8Array) { return strFromU8(unzipSync(bytes)['word/document.xml']!); }
 describe('native direct table borders and margins', () => {
+  it.each(['top', 'center', 'bottom'])('retains %s cell alignment through DOCX reopen', alignment => {
+    const imported = importDOCX(source('', `<w:shd w:val="clear" w:fill="123456"/><w:vAlign w:val="${alignment}"/>`), schema);
+    const cell = imported.document.child(0).child(0).child(0);
+    expect(cell.attrs.appearance).toEqual({ unit: 'pt', verticalAlign: alignment });
+    const output = exportDOCX(imported.document);
+    expect(xml(output.bytes)).toMatch(new RegExp(`<w:shd[^>]+/><w:vAlign w:val="${alignment}"/>`));
+    expect(importDOCX(output.bytes, schema).document.child(0).child(0).child(0).attrs.appearance).toEqual(cell.attrs.appearance);
+    expect(imported.report.issues).toEqual([]);
+  });
+
+  it('reports an unsupported cell alignment without losing content', () => {
+    const imported = importDOCX(source('', '<w:vAlign w:val="both"/>'), schema);
+    expect(imported.document.textContent).toBe('Measured value');
+    expect(imported.document.child(0).child(0).child(0).attrs.appearance).toBeUndefined();
+    expect(imported.report.issues).toContainEqual(expect.objectContaining({ code: 'unsupported-table-cell-alignment', path: [0, 0, 0] }));
+  });
+
   it('does not invent application borders, cell padding or table style for a borderless Word import', () => {
     const imported = importDOCX(source(), schema);
     expect(imported.document.child(0).attrs.appearance).toEqual({ unit: 'pt' });

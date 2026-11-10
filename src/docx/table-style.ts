@@ -111,7 +111,7 @@ export function createWordTableStyleCascade(elements: readonly XMLElement[], max
     const regionalLayers = new Map<WordTableRegion, XMLElement[]>();
     const text: { runs: XMLElement[]; paragraphs: XMLElement[] } = { runs: [], paragraphs: [] };
     const regionalText = new Map<WordTableRegion, { runs: XMLElement[]; paragraphs: XMLElement[] }>();
-    const supported = { tblPr: new Set(['tblBorders', 'tblCellMar', 'shd', 'tblW', 'jc', 'tblLayout', 'tblCellSpacing', 'tblLook', 'tblStyleRowBandSize', 'tblStyleColBandSize']), tcPr: new Set(['tcBorders', 'tcMar', 'shd']) };
+    const supported = { tblPr: new Set(['tblBorders', 'tblCellMar', 'shd', 'tblW', 'jc', 'tblLayout', 'tblCellSpacing', 'tblLook', 'tblStyleRowBandSize', 'tblStyleColBandSize']), tcPr: new Set(['tcBorders', 'tcMar', 'shd', 'vAlign']) };
     for (const element of resolved.chain) {
       const styleId = value(element, 'styleId')!;
       // Word ignores all child declarations of the reserved TableNormal style,

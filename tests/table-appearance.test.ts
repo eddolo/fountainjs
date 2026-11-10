@@ -14,7 +14,7 @@ function fixture(value: TableAppearance | undefined = appearance) {
   const cell = (text: string, own?: TableAppearance) => schema.node('table_cell', { colwidth: [160], appearance: own },
     [schema.node('paragraph', {}, [schema.text(text)])]);
   return schema.node('doc', {}, [schema.node('table', { appearance: value }, [
-    schema.node('table_row', {}, [cell('First'), cell('Second', { unit: 'pt', borders: { top: { style: 'hidden' }, left: { style: 'none' } }, padding: { left: 0 } })]),
+    schema.node('table_row', {}, [cell('First'), cell('Second', { unit: 'pt', borders: { top: { style: 'hidden' }, left: { style: 'none' } }, padding: { left: 0 }, verticalAlign: 'center' })]),
     schema.node('table_row', {}, [cell('Third'), cell('Fourth')]),
   ])]);
 }
@@ -30,6 +30,8 @@ describe('portable table appearance', () => {
   it('distinguishes omitted declarations, explicit none/hidden and zero padding', () => {
     expect(isTableAppearance({ unit: 'pt' })).toBe(true);
     expect(isTableAppearance(appearance)).toBe(true);
+    expect(isTableAppearance({ unit: 'pt', verticalAlign: 'bottom' })).toBe(false);
+    expect(isTableAppearance({ unit: 'pt', verticalAlign: 'middle' }, true)).toBe(false);
     expect(isTableAppearance({ unit: 'pt', borders: { insideH: { style: 'none' } } }, true)).toBe(false);
     expect(fixture({ unit: 'pt' }).child(0).attrs.appearance).toEqual({ unit: 'pt' });
   });
@@ -44,6 +46,7 @@ describe('portable table appearance', () => {
     expect(cells[1]?.style.borderTopStyle).toBe('hidden');
     expect(cells[1]?.style.borderLeft).toBe('0.75pt solid rgb(128, 144, 160)');
     expect(cells[1]?.style.paddingLeft).toBe('0pt');
+    expect(cells[1]?.style.verticalAlign).toBe('middle');
     expect(cells[2]?.style.borderTopStyle).toBe('dotted');
     expect(cells[2]?.style.borderBottomStyle).toBe('double');
     for (const importer of [HTMLImporter, ServerHTMLImporter]) expect(importer.parse(html, schema).toJSON()).toEqual(doc.toJSON());

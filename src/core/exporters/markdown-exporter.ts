@@ -240,7 +240,7 @@ function reportNodeAttributes(
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent explicit row repetition. Use HTML tables to retain it.');
   }
   if (['table', 'table_header', 'table_cell'].includes(name) && node.attrs.appearance !== undefined && context.options.tableFormat !== 'html') {
-    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent table borders, padding or explicit appearance resets.');
+    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent table borders, padding, cell alignment or appearance resets.');
   }
   if (['table_header', 'table_cell'].includes(name)) {
     if (Number(node.attrs.colspan) !== 1 || Number(node.attrs.rowspan) !== 1 || node.attrs.colwidth) {

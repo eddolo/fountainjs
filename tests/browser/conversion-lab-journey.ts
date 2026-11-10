@@ -1,7 +1,58 @@
 import { expect, type Page, type TestInfo } from '@playwright/test';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
+import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
+
+export async function conversionCellAlignmentJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const cell = (lines: string[]) => schema.node('table_cell', {}, lines.map(text =>
+    schema.node('paragraph', {}, [schema.text(text)])));
+  const doc = schema.node('doc', {}, [schema.node('table', {}, [
+    schema.node('table_row', {}, [
+      cell(['Top aligned']), cell(['Center aligned']), cell(['Bottom aligned']),
+      cell(['A tall cell', 'with several', 'paragraphs to', 'make the row', 'tall enough']),
+    ]),
+  ])]);
+  const archive = unzipSync(exportDOCX(doc).bytes);
+  const alignments = ['top', 'center', 'bottom', 'top'];
+  let index = 0;
+  archive['word/document.xml'] = strToU8(strFromU8(archive['word/document.xml']!).replaceAll('</w:tcPr>', closing =>
+    `<w:vAlign w:val="${alignments[index++]}"/>${closing}`));
+  expect(index).toBe(4);
+  const sourcePath = info.outputPath('word-cell-alignment.docx');
+  await writeFile(sourcePath, zipSync(archive));
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(sourcePath);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-cell-alignment.docx' });
+  async function expectAligned(table: ReturnType<Page['locator']>) {
+    await expect(table.locator('td')).toHaveCount(4);
+    const positions = await table.locator('td').evaluateAll(cells => cells.map(cell => ({
+      alignment: getComputedStyle(cell).verticalAlign,
+      top: cell.querySelector('p')!.getBoundingClientRect().top,
+    })));
+    expect(positions.map(cell => cell.alignment)).toEqual(['top', 'middle', 'bottom', 'top']);
+    expect(positions[1]!.top - positions[0]!.top).toBeGreaterThan(15);
+    expect(positions[2]!.top - positions[1]!.top).toBeGreaterThan(15);
+  }
+  await expectAligned(workspace.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
+  const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
+  await pagination.getByRole('button', { name: 'Build page preview' }).click();
+  const sheets = pagination.locator('.fountain-page-preview__sheet');
+  await expectAligned(sheets.locator('table'));
+  await sheets.locator('table').screenshot({ path: info.outputPath('cell-alignment-preview.png') });
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const exportedPath = info.outputPath('fountain-cell-alignment.docx');
+  await (await pending).saveAs(exportedPath);
+  await input.setInputFiles(exportedPath);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-cell-alignment.docx' });
+  await expectAligned(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
+}
 
 export async function conversionScientificPreviewJourney(page: Page, info: TestInfo) {
   await page.goto('/conversion-lab.html');
