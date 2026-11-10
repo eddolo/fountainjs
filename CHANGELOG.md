@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Restore editor selections by looking up their exact DOM paths, avoiding
+  temporary lists of every mounted text or block path.
+
 - Preserve Word nonbreaking and optional hyphens as editable text and restore
   their native DOCX elements on export.
 - Keep Conversion Lab print previews stable when images are unavailable.

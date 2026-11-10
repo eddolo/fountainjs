@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   AllSelection,
   CellSelection,
@@ -32,6 +32,33 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it('finds exact text and block endpoints without enumerating all mounted paths', async () => {
+    const content = Array.from({ length: 128 }, (_, index) => paragraph(`Paragraph ${index}`));
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content } });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    const native = document.getSelection()!;
+    const scans = vi.spyOn(view.dom, 'querySelectorAll');
+    try {
+      view.dom.focus();
+      editor.dispatch(editor.createTransaction().setSelection(Selection.range([1, 0], 2, [126, 0], 3)));
+      await settleSelection();
+      expect(native.anchorNode?.parentElement?.getAttribute('data-fountain-text-path')).toBe('1.0');
+      expect(native.focusNode?.parentElement?.getAttribute('data-fountain-text-path')).toBe('126.0');
+      expect(native.anchorOffset).toBe(2);
+      expect(native.focusOffset).toBe(3);
+      editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [126])));
+      await settleSelection();
+      expect(view.dom.querySelector('[data-fountain-selected-node]')?.getAttribute('data-fountain-path')).toBe('126');
+      expect(scans).not.toHaveBeenCalledWith('[data-fountain-text-path]');
+      expect(scans).not.toHaveBeenCalledWith('[data-fountain-path]');
+    } finally {
+      scans.mockRestore();
+      view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges();
+    }
+  });
+
   it.each([...['after-movement', 'during-keydown'].flatMap(timing => [false, true].map(backward => ({ timing, backward, staleModel: false }))),
     { timing: 'during-keydown', backward: false, staleModel: true }])(
     'preserves pending native selection through metadata ($timing, backward: $backward, stale model: $staleModel)', async ({ timing, backward, staleModel }) => {

@@ -25,6 +25,13 @@ function parseNodePath(element: HTMLElement): number[] {
   return (element.dataset.fountainPath ?? '').split('.').filter(Boolean).map(Number);
 }
 
+function elementAtPath(root: HTMLElement, attribute: 'data-fountain-path' | 'data-fountain-text-path', path: readonly number[]): HTMLElement | null {
+  const value = path.join('.');
+  // Model paths contain only child indexes. Guard the selector even when a
+  // host supplies an invalid path from untyped JavaScript.
+  return /^[0-9.]*$/u.test(value) ? root.querySelector<HTMLElement>(`[${attribute}="${value}"]`) : null;
+}
+
 function textOffsetWithin(root: HTMLElement, node: globalThis.Node, offset: number): number {
   const range = document.createRange();
   range.selectNodeContents(root);
@@ -459,12 +466,8 @@ export class SelectionHandler {
     }
 
     if (!applyDOM) return this.finishSync();
-    const path = selection.path.join('.');
-    const wrappers = Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-text-path]'));
-    const wrapper = wrappers
-      .find((element) => element.dataset.fountainTextPath === path);
-    const endPath = selection.endPath.join('.');
-    const endWrapper = wrappers.find((element) => element.dataset.fountainTextPath === endPath);
+    const wrapper = this.textElement(selection.path);
+    const endWrapper = selection.isSingleText ? wrapper : this.textElement(selection.endPath);
     if (!wrapper || !endWrapper) return this.finishSync();
     const start = locateOffset(wrapper, selection.from);
     const end = locateOffset(endWrapper, selection.to);
@@ -710,15 +713,11 @@ export class SelectionHandler {
   }
 
   private nodeElement(path: readonly number[]): HTMLElement | null {
-    const value = path.join('.');
-    return Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-path]'))
-      .find((element) => element.dataset.fountainPath === value) ?? null;
+    return elementAtPath(this.dom, 'data-fountain-path', path);
   }
 
   private textElement(path: readonly number[]): HTMLElement | null {
-    const value = path.join('.');
-    return Array.from(this.dom.querySelectorAll<HTMLElement>('[data-fountain-text-path]'))
-      .find((element) => element.dataset.fountainTextPath === value) ?? null;
+    return elementAtPath(this.dom, 'data-fountain-text-path', path);
   }
 
   private clearSemanticSelectionMarkers(): void {
