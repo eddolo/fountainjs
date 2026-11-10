@@ -462,7 +462,9 @@ describe('read-only DOM page preview', () => {
     const projection = window.document.createElement('figure');
     projection.id = 'print-widget';
     projection.dataset.fountainPath = 'host-owned';
-    projection.innerHTML = '<figcaption>Printable widget</figcaption><button type="button">Live action</button>';
+    projection.innerHTML = '<figcaption>Printable widget</figcaption><button type="button">Live action</button>'
+      + '<details><summary>Printable details</summary>More information</details>'
+      + '<video controls></video><audio controls></audio><iframe title="Embedded document"></iframe>';
     let seen: unknown;
 
     const result = renderDOMPagePreview(source, target, geometry, snapshot, {
@@ -487,6 +489,10 @@ describe('read-only DOM page preview', () => {
     expect(rendered?.hasAttribute('data-fountain-path')).toBe(false);
     expect(rendered?.contentEditable).toBe('false');
     expect(rendered?.querySelector<HTMLButtonElement>('button')?.disabled).toBe(true);
+    for (const selector of ['details', 'summary', 'video', 'audio', 'iframe']) {
+      expect(rendered?.querySelector(selector)?.getAttribute('tabindex')).toBe('-1');
+      expect(projection.querySelector(selector)?.hasAttribute('tabindex')).toBe(false);
+    }
     expect(projection.id).toBe('print-widget');
     expect(projection.dataset.fountainPath).toBe('host-owned');
     expect(projection.querySelector<HTMLButtonElement>('button')?.disabled).toBe(false);

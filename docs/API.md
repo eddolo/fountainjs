@@ -2385,9 +2385,10 @@ Internal links move focus to their destination within the same copy. Leaving
 the copy restores the sheets, and printing always uses the paged layout.
 Set `includeAccessibleDocument: false` only when the host keeps an equivalent
 accessible document beside the preview; the whole preview is then hidden from
-assistive technology. Cloned IDs are namespaced, form controls are disabled,
-and visual links are removed from keyboard order. The renderer owns no event
-listeners and is safe to call again on the same target.
+assistive technology. Cloned IDs are namespaced and form controls are disabled.
+The visual sheets exclude links, disclosures, native media controls and embeds
+from sequential keyboard navigation. The renderer owns no event listeners and
+is safe to call again on the same target.
 
 Fragment links (`href` and SVG `xlink:href`, including percent-encoded IDs)
 are resolved across the finished visual pages, separately from the continuous

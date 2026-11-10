@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep native disclosures and media controls on visual page sheets out of the
+  tab order. The continuous reading view provides the keyboard controls.
 - Show the continuous reading view when keyboard focus enters a paged
   preview's links. Cross-references keep focus within that view, and printing
   still uses the physical sheets.

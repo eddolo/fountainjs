@@ -1414,9 +1414,96 @@ test('uses a host print renderer without moving or exposing live custom DOM', as
   await expect(projection.locator('button')).toBeDisabled();
   await expect(page.locator('#pages-editor h2')).toHaveText('Measured layout');
   await expect(page.locator('#pages-editor [data-host-print-projection]')).toHaveCount(0);
+  const frame = projection.locator('iframe');
+  await expect(projection.frameLocator('iframe').getByRole('button', { name: 'Embedded action' })).toBeVisible();
+  await expect(frame).toHaveAttribute('tabindex', '-1');
+  const after = page.getByRole('button', { name: 'After host preview' });
+  await projection.evaluate(element => {
+    const button = document.createElement('button');
+    button.textContent = 'After host preview';
+    element.closest('#browser-page-preview')!.after(button);
+  });
+  await after.focus();
+  await page.keyboard.press('Shift+Tab');
+  expect(await frame.evaluate(element => element === document.activeElement)).toBe(false);
   await page.emulateMedia({ media: 'print' });
   await expect(projection).toBeVisible();
   await page.emulateMedia({ media: 'screen' });
+});
+
+test('keeps native disclosure and media controls out of the visual sheets keyboard order', async ({ page, browserName }, info) => {
+  const sampleRate = 8_000;
+  const wav = Buffer.alloc(44 + sampleRate, 128);
+  wav.write('RIFF', 0);
+  wav.writeUInt32LE(wav.length - 8, 4);
+  wav.write('WAVEfmt ', 8);
+  wav.writeUInt32LE(16, 16);
+  wav.writeUInt16LE(1, 20); // PCM
+  wav.writeUInt16LE(1, 22); // mono
+  wav.writeUInt32LE(sampleRate, 24);
+  wav.writeUInt32LE(sampleRate, 28); // bytes per second
+  wav.writeUInt16LE(1, 32); // bytes per sample frame
+  wav.writeUInt16LE(8, 34);
+  wav.write('data', 36);
+  wav.writeUInt32LE(sampleRate, 40);
+  await page.route('**/paged-audio.mp3', route => route.fulfill({ contentType: 'audio/wav', body: wav }));
+  await page.goto('/browser-tests.html?fixture=editable-atomic-pages');
+  const preview = page.locator('#browser-custom-continuation-preview');
+  const render = (includeAccessibleDocument: boolean) => page.evaluate(include => {
+    const result = (globalThis as any).fountainBrowserTest.pages.editable.previewCustomContinuation(include);
+    const target = document.querySelector('#browser-custom-continuation-preview')!;
+    if (!document.querySelector('#before-preview')) {
+      const before = document.createElement('button');
+      before.id = 'before-preview';
+      before.textContent = 'Before preview';
+      target.before(before);
+    }
+    const after = document.createElement('button');
+    after.id = 'after-preview';
+    after.textContent = 'After preview';
+    document.querySelector('#after-preview')?.remove();
+    target.after(after);
+    return result.mounted;
+  }, includeAccessibleDocument);
+  const before = page.locator('#before-preview');
+  const after = page.locator('#after-preview');
+  expect(await render(false)).toBe(true);
+  const sheets = preview.locator('.fountain-page-preview__sheet');
+  const sheetAudio = sheets.locator('audio[controls]');
+  await expect(sheetAudio).toBeVisible();
+  // The headless WebKit media backend here does not decode the WAV fixture.
+  if (browserName !== 'webkit') {
+    await expect.poll(() => sheetAudio.evaluate((audio: HTMLAudioElement) => audio.duration)).toBe(1);
+  }
+  await expect(sheets.locator('details > summary')).toBeVisible();
+  await before.focus();
+  await page.keyboard.press('Tab');
+  await expect(after).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(before).toBeFocused();
+  await sheets.locator('details > summary').click();
+  await expect(sheets.locator('details')).toHaveAttribute('open', '');
+
+  expect(await render(true)).toBe(true);
+  const reading = preview.locator('.fountain-page-preview__accessible');
+  const summary = reading.locator('details > summary');
+  const liveDisclosure = page.getByRole('textbox', { name: 'Atomic and structural page editor' }).locator('details');
+  await before.focus();
+  for (let step = 0; step < 20; step++) {
+    await page.keyboard.press('Tab');
+    expect(await page.evaluate(() => document.activeElement?.closest('.fountain-page-preview__sheet') == null)).toBe(true);
+    if (await summary.evaluate(element => document.activeElement === element)) break;
+  }
+  await expect(summary).toBeFocused();
+  await expect(summary).toBeInViewport();
+  await expect(sheets.first()).toBeHidden();
+  await page.keyboard.press('Enter');
+  await expect(reading.locator('details')).toHaveAttribute('open', '');
+  const disclosureText = reading.getByText('Disclosure paragraph 1 remains inside one model node.');
+  await expect(disclosureText).toBeVisible();
+  await disclosureText.scrollIntoViewIfNeeded();
+  await expect(liveDisclosure).not.toHaveAttribute('open');
+  await page.screenshot({ path: info.outputPath('keyboard-disclosure.png') });
 });
 
 test('projects exact A4 and Letter print sheets in every browser engine', async ({ page }) => {

@@ -1620,6 +1620,12 @@ Object.assign(globalThis, {
             figure.id = 'host-print-heading';
             figure.dataset.hostPrintProjection = 'heading';
             figure.innerHTML = '<figcaption>Host-rendered heading</figcaption><button type="button">Live-only action</button>';
+            const frame = document.createElement('iframe');
+            frame.title = 'Host print frame';
+            frame.srcdoc = '<button type="button">Embedded action</button>';
+            frame.width = '160';
+            frame.height = '40';
+            figure.append(frame);
             return figure;
           },
         },
@@ -1700,7 +1706,7 @@ Object.assign(globalThis, {
           editablePagesFixture.controller.refreshNow('manual');
           return true;
         },
-        previewCustomContinuation: () => {
+        previewCustomContinuation: (includeAccessibleDocument = true) => {
           if (!editablePagesFixture || !editableAtomicPagesFixture) return { mounted: false };
           const { view, editor: pageEditor } = editablePagesFixture;
           const priorStyle = view.dom.style.cssText;
@@ -1726,6 +1732,7 @@ Object.assign(globalThis, {
             target.id = 'browser-custom-continuation-preview';
             document.body.appendChild(target);
             const result = renderDOMPagePreview(view.dom, target, geometry, snapshot, {
+              includeAccessibleDocument,
               renderPlacement: ({ document: owner, placement, source }) => {
                 if (source.dataset.fountainNode !== 'browser_counter') return undefined;
                 const projection = owner.createElement('section');

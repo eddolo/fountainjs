@@ -179,7 +179,9 @@ function prepareClone(
     if (['INPUT', 'BUTTON', 'SELECT', 'TEXTAREA'].includes(element.tagName)) {
       (element as HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement).disabled = true;
     }
-    if (visualOnly && element.localName === 'a') element.setAttribute('tabindex', '-1');
+    if (visualOnly && element.matches('a, area, summary, details, audio[controls], video[controls], iframe, embed, object')) {
+      element.setAttribute('tabindex', '-1');
+    }
   });
   clone.contentEditable = 'false';
   return clone;
