@@ -270,6 +270,42 @@ describe('DOCX interchange', () => {
     expect(imported.document.child(1).content[1]?.attrs).toMatchObject({ src: ONE_PIXEL_DATA_URL, alt: 'Status', width: '24px', height: '24px' });
   });
 
+  it('retains Word run hyperlinks on line breaks and pictures, including image-only paragraphs', () => {
+    const href = 'https://example.com/evidence';
+    const link = schema.mark('link', { href, title: '', target: '_blank' });
+    const picture = schema.node('inline_image', { src: ONE_PIXEL_DATA_URL, alt: 'Evidence', width: '24px', height: '24px' }, [], undefined, [link]);
+    const original = schema.node('doc', {}, [
+      schema.node('paragraph', {}, [schema.text('First line', [link]), schema.node('hard_break', {}, [], undefined, [link]), schema.text('Second line', [link])]),
+      schema.node('paragraph', {}, [picture]),
+    ]);
+    const exported = exportDOCX(original);
+    const archive = unzipSync(exported.bytes);
+    const xml = strFromU8(archive['word/document.xml']!);
+    expect(xml).toMatch(/<w:hyperlink r:id="rId1"[^>]*><w:r>(?:<w:rPr>[^]*?<\/w:rPr>)?<w:br\/><\/w:r><\/w:hyperlink>/u);
+    expect(xml).toMatch(/<wp:docPr [^>]*><a:hlinkClick r:id="rId1"\/><\/wp:docPr>/u);
+    const rels = 'word/_rels/document.xml.rels';
+    expect(strFromU8(archive[rels]!).match(/https:\/\/example\.com\/evidence/gu)).toHaveLength(1);
+    const reopened = importDOCX(exported.bytes, schema).document;
+    expect(reopened.child(0).child(1).marks.find(mark => mark.type.name === 'link')?.attrs.href).toBe(href);
+    const image = reopened.child(1).child(0);
+    expect(image.type.name).toBe('inline_image');
+    expect(image.attrs.src).toBe(ONE_PIXEL_DATA_URL);
+    expect(image.marks.map(mark => mark.toJSON())).toEqual([link.toJSON()]);
+
+    archive['word/document.xml'] = strToU8(xml
+      .replace(/><a:hlinkClick[^>]*\/><\/wp:docPr>/u, '/>')
+      .replace(/<w:r><w:drawing>[\s\S]*?<\/w:drawing><\/w:r>/u, '<w:hyperlink r:id="rId1">$&</w:hyperlink>'));
+    const wrapped = importDOCX(zipSync(archive), schema).document.child(1).child(0);
+    expect(wrapped.marks.map(mark => mark.toJSON())).toEqual([link.toJSON()]);
+
+    archive['word/document.xml'] = strToU8(xml);
+    archive[rels] = strToU8(strFromU8(archive[rels]!).replace(href, 'javascript:alert(1)'));
+    const unsafe = importDOCX(zipSync(archive), schema);
+    expect(unsafe.document.child(1).type.name).toBe('image_super');
+    expect(unsafe.document.child(1).attrs.src).toBe(ONE_PIXEL_DATA_URL);
+    expect(unsafe.report.issues).toContainEqual(expect.objectContaining({ code: 'unsafe-hyperlink-omitted', path: [1] }));
+  });
+
   it('round-trips rich image captions as editable marked content with hyperlinks', () => {
     const strong = schema.marks.strong.create();
     const link = schema.marks.link.create({ href: 'https://example.com/evidence', title: '', target: '_blank' });

@@ -4,6 +4,62 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionWordHyperlinksJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const textURL = 'https://example.com/lines';
+  const imageURL = 'https://example.com/figure';
+  const link = schema.mark('link', { href: textURL });
+  const figure = await readFile(new URL('../fixtures/cross-container-figure.png', import.meta.url));
+  const image = schema.node('inline_image', {
+    src: `data:image/png;base64,${figure.toString('base64')}`, alt: 'Linked evidence', width: '320px', height: '48px',
+  });
+  const original = schema.node('doc', {}, [
+    schema.node('paragraph', {}, [schema.text('First linked line', [link]), schema.node('hard_break'), schema.text('Second linked line', [link])]),
+    schema.node('paragraph', {}, [image]),
+  ]);
+  const archive = unzipSync(exportDOCX(original).bytes);
+  const body = 'word/document.xml';
+  archive[body] = strToU8(strFromU8(archive[body]!)
+    .replace('<w:r><w:br/></w:r>', '<w:hyperlink r:id="rId1"><w:r><w:br/></w:r></w:hyperlink>')
+    .replace(/(<wp:docPr [^>]+)\/>/u, '$1><a:hlinkClick r:id="rIdFigureLink"/></wp:docPr>'));
+  const rels = 'word/_rels/document.xml.rels';
+  archive[rels] = strToU8(strFromU8(archive[rels]!).replace('</Relationships>',
+    `<Relationship Id="rIdFigureLink" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${imageURL}" TargetMode="External"/></Relationships>`));
+  const source = info.outputPath('word-linked-figure.docx');
+  await writeFile(source, zipSync(archive));
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(source);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-linked-figure.docx' });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  async function expectLinks(root: ReturnType<Page['locator']>) {
+    await expect(root.locator(`a[href="${textURL}"] br`)).toHaveCount(1);
+    const linked = root.locator(`a[href="${imageURL}"] img[alt="Linked evidence"]`);
+    await expect(linked).toBeVisible();
+    await expect(linked).toHaveJSProperty('naturalWidth', 400);
+  }
+  await expectLinks(editor);
+  const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
+  await pagination.getByRole('button', { name: 'Build page preview' }).click();
+  const sheet = pagination.locator('.fountain-page-preview__sheet');
+  await expectLinks(sheet);
+  await sheet.screenshot({ path: info.outputPath('linked-figure-preview.png') });
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const saved = info.outputPath('fountain-linked-figure.docx');
+  await (await pending).saveAs(saved);
+  const exported = unzipSync(await readFile(saved));
+  expect(strFromU8(exported[body]!)).toContain('<a:hlinkClick r:id="rId2"/>');
+  expect(strFromU8(exported[rels]!)).toContain(`Target="${imageURL}"`);
+  await input.setInputFiles(saved);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-linked-figure.docx' })
+    .getByRole('textbox', { name: 'Imported document editor' });
+  await expectLinks(reopened);
+}
+
 export async function conversionWordHyphensJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
   const doc = schema.node('doc', {

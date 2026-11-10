@@ -387,6 +387,17 @@ function pxFromEMU(value: string | undefined): string {
 }
 
 const WORD_DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
+const DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main';
+
+function readHyperlink(id: string | undefined, media: ImportMediaContext, issues: DOCXIssue[], path: readonly number[]): string | undefined {
+  if (!id) return;
+  const relationship = media.relationships.get(id);
+  if (relationship?.type !== 'hyperlink' || !relationship.external || !relationship.target) {
+    issues.push({ code: 'missing-hyperlink-relationship', severity: 'warning', message: `Hyperlink ${id} has no readable external target.`, path });
+  } else if (!isSafeURL(relationship.target, { allowEmpty: false })) {
+    issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe Word hyperlink target was omitted while its content was preserved.', path });
+  } else return relationship.target;
+}
 
 function inlineDrawingDistances(drawing: XMLElement, issue: (side: string) => void): InlineDrawingDistances | undefined {
   const inline = elements(drawing, 'inline').find(element => {
@@ -413,6 +424,7 @@ function embeddedImageNode(
   media: ImportMediaContext,
   issues: DOCXIssue[],
   path: readonly number[],
+  hyperlink?: string,
 ): FountainNode | undefined {
   const blip = descendants(element, 'blip')[0];
   const imageData = descendants(element, 'imagedata')[0];
@@ -473,10 +485,15 @@ function embeddedImageNode(
   const retainDistances = schema.nodes.inline_image.spec.attrs?.docxInlineDistances;
   if (distances !== undefined && !retainDistances) issues.push({ code: 'inline-drawing-distances-not-imported', severity: 'warning',
     message: 'The receiving image schema cannot retain Word drawing distances. The image remains.', path, sourcePart });
+  const click = description && elements(description, 'hlinkClick').find(item => expandedName(item) === `${DRAWING_NS}|hlinkClick`);
+  const clickId = click && expandedName(description!) === `${WORD_DRAWING_NS}|docPr`
+    ? Object.entries(click.attrs).find(([name]) => !name.startsWith('xmlns') && expandedName(click, name, true) === `${OFFICE_REL_NS}|id`)?.[1] : undefined;
+  const href = readHyperlink(clickId, media, issues, path) ?? hyperlink;
+  const link = href && mark(schema, 'link', { href, title: '', target: '_blank' });
   const node = schema.node('inline_image', {
     src: source, alt, title, width, height, align: 'center', srcset: '', sizes: '', loading: 'lazy', decoding: 'async',
     ...(retainDistances && distances !== undefined ? { docxInlineDistances: distances } : {}),
-  });
+  }, [], undefined, link ? [link] : []);
   media.importedParts.add(partPath);
   return node;
 }
@@ -543,12 +560,7 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
       return;
     }
     if (name === 'hyperlink') {
-      const id = attr(element, 'id');
-      const relationship = id ? media.relationships.get(id) : undefined;
-      const target = relationship?.type === 'hyperlink' && relationship.external ? relationship.target : undefined;
-      if (id && !target) issues.push({ code: 'missing-hyperlink-relationship', severity: 'warning', message: `Hyperlink ${id} has no readable external target.`, path });
-      const safeTarget = target && isSafeURL(target, { allowEmpty: false }) ? target : undefined;
-      if (target && !safeTarget) issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe Word hyperlink target was omitted while its text was preserved.', path });
+      const safeTarget = readHyperlink(attr(element, 'id'), media, issues, path);
       elements(element).forEach((item) => visit(item, safeTarget));
       return;
     }
@@ -600,7 +612,7 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
         } else if (itemName === 'drawing' || itemName === 'pict' || itemName === 'object') {
           const description = descendants(item, 'docPr')[0];
           const alt = attr(description, 'descr') || attr(description, 'title') || 'Embedded object';
-          const image = embeddedImageNode(item, schema, media, issues, path);
+          const image = embeddedImageNode(item, schema, media, issues, path, hyperlink);
           if (image) {
             output.push(image);
             if (itemName === 'object') issues.push({ code: 'embedded-object-preview', severity: 'warning', message: 'An embedded Word object was omitted and its raster preview was imported.', path });
@@ -754,7 +766,7 @@ function parseParagraph(element: XMLElement, schema: Schema, media: ImportMediaC
     code: 'paragraph-contextual-spacing-not-imported', severity: 'warning', path,
     message: 'Word quote paragraphs become separate isolated quote containers. Spacing intent is retained, but same-style adjacency across those containers is not projected.',
   });
-  if (type === 'paragraph' && !isQuote && content.length === 1 && content[0]?.type.name === 'inline_image' && schema.nodes.image_super) {
+  if (type === 'paragraph' && !isQuote && content.length === 1 && content[0]?.type.name === 'inline_image' && !content[0].marks.length && schema.nodes.image_super) {
     const retained = schema.nodes.image_super.spec.attrs?.imageLayout && layout;
     if (layout && !retained) {
       issues.push({ code: 'image-paragraph-layout-not-imported', severity: 'warning', path,
@@ -1968,6 +1980,18 @@ function imagePixels(value: unknown, fallback: number): number {
   return Math.max(1, Math.min(4096, pixels));
 }
 
+function wordHyperlinkId(href: string | undefined, context: ExportContext, path: readonly number[]): string | undefined {
+  if (!href) return;
+  if (!isSafeURL(href, { allowEmpty: false })) {
+    context.issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe hyperlink target was omitted from Word output while its content was preserved.', path });
+    return;
+  }
+  for (const [id, target] of context.hyperlinks) if (target === href) return id;
+  const id = `rId${context.hyperlinks.size + 1}`;
+  context.hyperlinks.set(id, href);
+  return id;
+}
+
 function imageRun(node: FountainNode, context: ExportContext, path: readonly number[]): string | undefined {
   const media = imageMedia(node, context, path);
   if (!media) return undefined;
@@ -1979,13 +2003,15 @@ function imageRun(node: FountainNode, context: ExportContext, path: readonly num
   const drawingId = context.nextDrawingId++;
   const alt = xmlEscape(node.attrs.alt ?? '');
   const title = xmlEscape(node.attrs.title ?? '');
+  const link = wordHyperlinkId(String(node.marks.find(item => item.type.name === 'link')?.attrs.href ?? ''), context, path);
+  const click = link ? `><a:hlinkClick r:id="${link}"/></wp:docPr>` : '/>';
   const declared = node.attrs.docxInlineDistances;
   if (declared !== undefined && !isInlineDrawingDistances(declared)) context.issues.push({ code: 'invalid-inline-drawing-distance', severity: 'warning',
     message: 'Invalid Word drawing distances were replaced by explicit zeros. The image remains.', path });
   const distances = isInlineDrawingDistances(declared)
     ? INLINE_DRAWING_SIDES.map(side => Object.hasOwn(declared, side) ? ` ${side}="${declared[side]}"` : '').join('')
     : ' distT="0" distB="0" distL="0" distR="0"';
-  return `<w:r><w:drawing><wp:inline${distances}><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${drawingId}" name="${xmlEscape(media.fileName)}" descr="${alt}" title="${title}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${xmlEscape(media.fileName)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${media.relationshipId}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+  return `<w:r><w:drawing><wp:inline${distances}><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${drawingId}" name="${xmlEscape(media.fileName)}" descr="${alt}" title="${title}"${click}<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="${xmlEscape(media.fileName)}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${media.relationshipId}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
 }
 
 function paragraphFontProperties(layout: ParagraphLayout | undefined, issues: DOCXIssue[], path: readonly number[]): { family: string; size: string } {
@@ -2107,12 +2133,12 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
       const math = nativeMath(inline, context, [...path, index]);
       if (math) return math;
     }
-    if (inline.type.name === 'hard_break') return `<w:r>${runProperties(inline.marks, context.issues, [...path, index], false, paragraphFont, defaults).xml}<w:br/></w:r>`;
+    const hardBreak = inline.type.name === 'hard_break';
     if (inline.type.name === 'inline_image') {
       const drawing = imageRun(inline, context, [...path, index]);
       if (drawing) return drawing;
     }
-    if (!inline.isText) {
+    if (!inline.isText && !hardBreak) {
       context.issues.push({ code: 'inline-fallback', severity: 'warning', message: `${inline.type.name} was exported as readable fallback text.`, path: [...path, index] });
     }
     let value = inline.textContent;
@@ -2121,10 +2147,11 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
         message: 'CR/CRLF code line endings became native Word line breaks; reimport uses LF. Retain Fountain JSON for exact original line-ending bytes.' });
       value = value.replace(/\r\n?/g, '\n');
     }
-    const { xml, hyperlink, unsupported } = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont, defaults);
-    unsupported.forEach((name) => context.issues.push({ code: 'unsupported-mark', severity: 'warning', message: `Word export omitted the ${name} mark.`, path: [...path, index] }));
+    const runPath = [...path, index];
+    const { xml, hyperlink, unsupported } = runProperties(inline.marks, context.issues, runPath, !hardBreak && node.attrs.emphasis === 'explicit', paragraphFont, defaults);
+    unsupported.forEach((name) => context.issues.push({ code: 'unsupported-mark', severity: 'warning', message: `Word export omitted the ${name} mark.`, path: runPath }));
     const separators = node.type.name === 'code_block' ? /([\t\n\u00ad\u2011])/ : /([\t\u00ad\u2011])/;
-    const pieces = inline.isText && value === '' ? '<w:t/>'
+    const pieces = hardBreak ? '<w:br/>' : inline.isText && value === '' ? '<w:t/>'
       : value.split(separators).map(part => {
         if (part === '\n' && node.type.name === 'code_block') return '<w:br/>';
         switch (part) {
@@ -2137,14 +2164,8 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
         return `<w:t${preserve}>${xmlEscape(part)}</w:t>`;
       }).join('');
     const run = `<w:r>${xml}${pieces}</w:r>`;
-    if (!hyperlink) return run;
-    if (!isSafeURL(hyperlink, { allowEmpty: false })) {
-      context.issues.push({ code: 'unsafe-hyperlink-omitted', severity: 'warning', message: 'An unsafe hyperlink target was omitted from Word output while its text was preserved.', path: [...path, index] });
-      return run;
-    }
-    let id = [...context.hyperlinks.entries()].find(([, target]) => target === hyperlink)?.[0];
-    if (!id) { id = `rId${context.hyperlinks.size + 1}`; context.hyperlinks.set(id, hyperlink); }
-    return `<w:hyperlink r:id="${id}" w:history="1">${run}</w:hyperlink>`;
+    const id = wordHyperlinkId(hyperlink, context, runPath);
+    return id ? `<w:hyperlink r:id="${id}" w:history="1">${run}</w:hyperlink>` : run;
   }).join('');
 }
 
@@ -2597,7 +2618,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
   if (templateParts.some(part => part.xml.includes('<w:fldSimple'))) issues.push({ code: 'page-field-recalculation-required', severity: 'warning', message: 'Dynamic PAGE/NUMPAGES fields need recalculation by the receiving layout engine. Cached values are placeholders, not verified page numbers.' });
   const section = `<w:sectPr>${templateParts.map(part => `<w:${part.kind}Reference w:type="${part.variant}" r:id="${part.id}"/>`).join('')}${wordPageSettingsXML(node, options, issues)}${firstPages ? '<w:titlePg/>' : ''}</w:sectPr>`;
   const paragraphNamespaces = context.paragraphBridge.roles.length ? ` xmlns:w14="${WORD_PARAGRAPH_ID_NS}" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="w14"` : '';
-  const storyNamespaces = `xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="${WORD_DRAWING_NS}" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}`;
+  const storyNamespaces = `xmlns:w="${WORD_NS}" xmlns:r="${OFFICE_REL_NS}" xmlns:wp="${WORD_DRAWING_NS}" xmlns:a="${DRAWING_NS}" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"${paragraphNamespaces}`;
   const documentXML = `${XML_DECLARATION}<w:document ${storyNamespaces}><w:body>${body}${section}</w:body></w:document>`;
   const resourceRels = [...context.hyperlinks].map(([id, target]) => relationshipXML(id, `${OFFICE_REL_NS}/hyperlink`, target, true)).join('')
     + context.media.map(item => relationshipXML(item.relationshipId, `${OFFICE_REL_NS}/image`, `media/${item.fileName}`)).join('');

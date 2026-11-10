@@ -1,5 +1,17 @@
 # DOCX fidelity checkpoint
 
+Word hyperlinks (2026-11-10, Unreleased) retain external destinations on hard
+line breaks and embedded inline pictures. The reader accepts a Word run
+hyperlink or a DrawingML click link on the picture’s Word drawing properties.
+A linked picture in its own paragraph remains inline so it can carry its
+destination. Unsafe targets are reported and omitted while image bytes remain.
+Chromium, Firefox and WebKit exercised the Conversion Lab import, page preview,
+download and reopen. For this fixture, the original and exported LibreOffice
+24.2.7.2 PDFs have identical page rasters, link destinations and clickable
+rectangles. This check covers the external-link fixture.
+[Word hyperlinks](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.hyperlink)
+· [DrawingML click hyperlinks](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.drawing.hyperlinkonclick)
+
 Word hyphens (2026-11-10, Unreleased) retain native nonbreaking and optional
 hyphens as editable U+2011 and U+00AD text, including the containing run's
 formatting. Native DOCX output writes the corresponding Word run elements.

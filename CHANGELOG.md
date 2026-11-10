@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve DOCX hyperlinks on hard line breaks and embedded inline pictures.
+
 - Preserve custom blocks’ native drag controls when editor selection changes.
 
 - Restore editor selections by looking up their exact DOM paths, avoiding
