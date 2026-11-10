@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve cached Word field results as editable text and report omitted
+  field instructions in the document body.
+
 - Preserve line breaks and structural selections in clipboard history by
   saving the same plain text as ordinary copy and cut.
 

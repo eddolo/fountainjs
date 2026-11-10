@@ -500,6 +500,8 @@ function embeddedImageNode(
 
 function inlineContent(container: XMLElement, schema: Schema, media: ImportMediaContext, issues: DOCXIssue[], path: readonly number[]): FountainNode[] {
   const output: FountainNode[] = [];
+  const sourcePart = media.sourcePart ?? 'word/document.xml';
+  let reportedComplexField = false;
   const paragraphStyle = media.styles ? wordStyleReference(wordStyleChild(container, 'pPr'), 'pStyle') : undefined;
   const projectedMarks = (run: XMLElement, hyperlink?: string) => {
     const effective = media.styles ? projectWordRunStyle(run, paragraphStyle, media.styles, (code, message) => {
@@ -516,14 +518,13 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
   };
   const visit = (element: XMLElement, hyperlink?: string) => {
     const name = localName(element.name);
-    if (name === 'fldSimple' && media.pageTemplate) {
-      const instruction = (attr(element, 'instr') ?? '').trim();
-      const field = /^(PAGE|NUMPAGES)(?:\s+\\\*\s+MERGEFORMAT)?$/i.exec(instruction);
+    if (name === 'fldSimple' && expandedName(element) === `${WORD_NS}|fldSimple`) {
+      const field = media.pageTemplate && /^(PAGE|NUMPAGES)(?:\s+\\\*\s+MERGEFORMAT)?$/i.exec((wordPageAttribute(element, 'instr') ?? '').trim());
       if (field && schema.nodes.page_field) {
         const firstRun = descendants(element, 'r')[0];
         output.push(schema.node('page_field', { kind: field[1]!.toUpperCase() === 'PAGE' ? 'page-number' : 'page-count' }, [], undefined, firstRun ? projectedMarks(firstRun, hyperlink) : []));
       } else {
-        issues.push({ code: 'unsupported-word-field', severity: 'warning', message: 'The Word field was retained only as its cached visible result; its instruction was not executed.', path });
+        issues.push({ code: 'unsupported-word-field', severity: 'warning', message: 'Only the cached result of the Word field, if present, was imported.', path, sourcePart });
         elements(element).forEach(item => visit(item, hyperlink));
       }
       return;
@@ -569,10 +570,14 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
       for (const item of elements(element)) {
         const itemName = localName(item.name);
         if (itemName === 'oMath' || itemName === 'oMathPara') visit(item, hyperlink);
-        else if (itemName === 'instrText' && media.pageTemplate) issues.push({ code: 'unsupported-complex-word-field', severity: 'warning', message: 'A complex Word field instruction was not executed or imported; only any cached result remains. Dynamic field conversion needs a supported simple field.', path });
-        else if (itemName === 't' || itemName === 'delText' || itemName === 'instrText') {
-          // An actual empty native text element retains a caret leaf and its
-          // run formatting. Property-only runs and field instructions do not.
+        else if (itemName === 'instrText' || itemName === 'fldChar') {
+          if (!reportedComplexField && expandedName(item) === `${WORD_NS}|${itemName}`
+            && (itemName === 'instrText' || wordPageAttribute(item, 'fldCharType') === 'begin')) {
+            reportedComplexField = true;
+            issues.push({ code: 'unsupported-complex-word-field', severity: 'warning', message: 'Word field instructions were omitted. Ordinary cached result text remains editable.', path, sourcePart });
+          }
+        } else if (itemName === 't' || itemName === 'delText') {
+          // An actual empty native text element retains a caret leaf and its run formatting.
           appendText(textContent(item), marks, expandedName(item) === `${WORD_NS}|t`);
         }
         else if (itemName === 'tab') appendText('\t', marks);

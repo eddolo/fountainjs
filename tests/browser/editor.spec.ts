@@ -1,4 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
+import { wordBodyWithFields } from '../fixtures/docx-body-fields';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -37,7 +39,6 @@ import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 for (const format of ['html', 'markdown'] as const) test(`keeps per-file HTML conversion settings through ${format} editing and export`, async ({ page }, info) => {
   await conversionHTMLPolicyJourney(page, info, format);
 });
-import { strFromU8, unzipSync } from 'fflate';
 import { withDOCXExportDefaults } from '../fixtures/docx-page-defaults';
 import { runMarkdownSourceBoundariesJourney } from './markdown-source-boundaries-journey';
 import { runMarkdownNestedSourceJourney } from './markdown-nested-source-journey';
@@ -344,6 +345,43 @@ test('prints the edited scientific DOCX in the conversion lab', async ({ page },
 
 test('imports private files in the conversion lab with reports and export reopen', async ({ page }, info) => {
   await conversionLabJourney(page, info);
+});
+
+test('edits cached Word field results without exposing instructions in the conversion lab', async ({ page }, info) => {
+  const part = 'word/document.xml';
+  const source = Buffer.from(zipSync({
+    '[Content_Types].xml': strToU8('<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'),
+    '_rels/.rels': strToU8('<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'),
+    [part]: strToU8(`<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${wordBodyWithFields}</w:body></w:document>`),
+  }));
+  await writeFile(info.outputPath('source.docx'), source);
+  await page.goto('/conversion-lab.html');
+  await page.getByLabel('Choose documents').setInputFiles({
+    name: 'cached-fields.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', buffer: source,
+  });
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: cached-fields.docx', exact: true });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  const paragraphs = editor.locator(':scope > p');
+  await expect(paragraphs.nth(0)).toHaveText('Figure 4');
+  await expect(paragraphs.nth(1)).toHaveText('May 1');
+  await expect(editor).not.toContainText('REF figure1');
+  await expect(workspace.getByText(/Word field instructions were omitted/)).toBeVisible();
+  await expect(workspace.getByText(/Only the cached result of the Word field/)).toBeVisible();
+  await editor.getByText('Figure 4', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' reviewed');
+  await expect(paragraphs.nth(0)).toHaveText('Figure 4 reviewed');
+  await expect(paragraphs.nth(1)).toHaveText('May 1');
+  await editor.screenshot({ path: info.outputPath('cached-field-editor.png') });
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download', { timeout: 10_000 });
+  await workspace.getByRole('button', { name: 'Download export' }).click();
+  const download = await pending;
+  const exportedPath = info.outputPath('reviewed.docx');
+  await download.saveAs(exportedPath);
+  const exported = strFromU8(unzipSync(await readFile(exportedPath))[part]!);
+  expect(exported).toContain('Figure 4 reviewed');
+  expect(exported).not.toMatch(/instrText|fldChar|fldSimple|figure1/);
 });
 
 test('keeps valid and malformed Markdown links distinct through an edit and download', async ({ page }, info) => {

@@ -1,4 +1,5 @@
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
+import { wordBodyWithFields } from './fixtures/docx-body-fields';
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { strToU8, strFromU8, zipSync, unzipSync } from 'fflate';
@@ -93,6 +94,19 @@ describe('native DOCX page templates', () => {
     const result = read(input({ footer: '<w:p><w:fldSimple w:instr="INCLUDETEXT secret.txt"><w:r><w:t>Cached</w:t></w:r></w:fldSimple></w:p>' }));
     expect(result.document.child(2).textContent).toBe('Cached');
     expect(result.report.issues).toContainEqual(expect.objectContaining({ code: 'unsupported-word-field', sourcePart: 'word/footer1.xml' }));
+  });
+
+  it('imports body fields as cached text and reports the omitted instructions', () => {
+    const result = read(input({ body: wordBodyWithFields }));
+    expect(result.document.content.slice(0, 2).map(node => node.textContent)).toEqual(['Figure 4', 'May 1']);
+    expect(result.report.issues.map(({ code, path, sourcePart }) => ({ code, path, sourcePart }))).toEqual([
+      { code: 'unsupported-complex-word-field', path: [0], sourcePart: 'word/document.xml' },
+      { code: 'unsupported-word-field', path: [1], sourcePart: 'word/document.xml' },
+    ]);
+    const exported = exportDOCX(result.document);
+    const body = strFromU8(unzipSync(exported.bytes)['word/document.xml']!);
+    expect(body).not.toMatch(/instrText|fldChar|fldSimple|figure1/);
+    expect(read(exported.bytes).document.content.slice(0, 2).map(node => node.textContent)).toEqual(['Figure 4', 'May 1']);
   });
 
   it('rejects duplicate variants, missing/ambiguous relationships, wrong roots and oversized stories', () => {

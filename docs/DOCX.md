@@ -653,8 +653,10 @@ Simple native `PAGE`/`NUMPAGES` fields, optionally with `MERGEFORMAT`, map to
 placeholder and requires the receiving application to recalculate it. The
 independent browser viewer leaves the fixture's page-number field blank: **field
 structure is verified, displayed page-number fidelity is not**. Complex or other
-field instructions are not executed; only cached visible content is imported
-with a warning. Arbitrary formatting switches and field evaluation remain open.
+field instructions are omitted with a warning. This also applies to unsupported
+fields in the document body and footnotes. Ordinary cached result runs remain
+editable and export as static text. Arbitrary formatting switches, nested
+complex-field structure and field evaluation remain outside this bridge.
 
 The [Microsoft header-reference documentation](https://learn.microsoft.com/en-us/office/open-xml/word/how-to-replace-the-header-in-a-word-processing-document)
 describes the section/variant selection rules used here. Regression evidence:
