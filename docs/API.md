@@ -627,9 +627,10 @@ converge without duplicate trailing blocks. See
 `ClipboardHistoryExtension` is opt-in and memory-only. Compose it after the
 starter extensions, or call `createClipboardHistoryExtension(options)` to set
 `maxEntries`, `maxEntryLength`, a shortcut string/custom matcher, and an optional explicit
-host `persistence` adapter. Only non-empty text copied or cut inside the editor
-is captured; an over-limit entry is ignored and identical text is deduplicated.
-No browser-wide clipboard history is read.
+host `persistence` adapter. The history stores the same non-empty plain text
+that Fountain writes to the clipboard on copy or cut, including line breaks
+and text from structural selections. Over-limit entries are ignored and
+identical text is deduplicated. No browser-wide clipboard history is read.
 
 `getClipboardHistoryState(editor)` returns immutable `{ entries, open }` state.
 Each entry has `id`, `text`, and `copiedAt`. Commands include

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   ClipboardHistoryExtension,
   EditorView,
+  RangeSelection,
   Selection,
   StarterKit,
   clearClipboardHistory,
@@ -32,6 +33,28 @@ function clipboardEvent(type: 'copy' | 'cut' | 'paste', text = ''): ClipboardEve
 }
 
 describe('optional clipboard history', () => {
+  it.each(['copy', 'cut'] as const)('keeps the actual clipboard text of a structural %s', async type => {
+    const kit = composeExtensions([...StarterKit.extensions, ClipboardHistoryExtension]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [
+        { type: 'text', text: 'Line one' }, { type: 'hard_break' }, { type: 'text', text: 'Line two' },
+      ] }, paragraph('After the selection')],
+    } });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const view = new EditorView(mount, editor);
+    try {
+      const doc = editor.state.doc;
+      editor.dispatch(editor.createTransaction().setSelection(new RangeSelection(doc, doc.child(0).nodeSize, 0)));
+      const event = clipboardEvent(type);
+      view.dom.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+      expect(event.clipboardData?.getData('text/plain')).toBe('Line one\nLine two');
+      await waitForCapture();
+      expect(getClipboardHistoryState(editor)?.entries.map(entry => entry.text)).toEqual(['Line one\nLine two']);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); }
+  });
+
   it('captures only editor copy events and deduplicates entries without owning paste', async () => {
     const kit = composeExtensions([...StarterKit.extensions, ClipboardHistoryExtension]);
     const editor = createEditor({

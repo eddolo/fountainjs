@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve line breaks and structural selections in clipboard history by
+  saving the same plain text as ordinary copy and cut.
+
 - Preserve DOCX hyperlinks on hard line breaks and embedded inline pictures.
 
 - Preserve custom blocks’ native drag controls when editor selection changes.

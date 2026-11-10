@@ -30,6 +30,7 @@ import {
   RangeSelection,
 } from '../core';
 import { isCompositionKey } from '../core/composition-key';
+import { clipboardTextObservers } from '../core/clipboard-write';
 import { HTMLExporter } from '../core/exporters/html-exporter';
 import { HTMLImporter } from '../core/importers/html-importer';
 import { comparePaths, getNodeAtPath } from '../core/transaction/path';
@@ -622,6 +623,7 @@ export class InputManager {
     event.clipboardData.setData('text/plain', serialized.text);
     event.clipboardData.setData('text/html', serialized.html);
     event.preventDefault();
+    clipboardTextObservers.get(this.editor)?.(serialized.text);
     return true;
   }
 
@@ -676,6 +678,7 @@ export class InputManager {
     try { event.clipboardData.setData(FOUNTAIN_CLIPBOARD_MIME, JSON.stringify(payload)); }
     catch { /* Standards-based rich HTML remains available to every paste target. */ }
     event.preventDefault();
+    clipboardTextObservers.get(this.editor)?.(plainText);
     return true;
   }
 

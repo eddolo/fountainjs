@@ -1,16 +1,11 @@
 import {
-  AllSelection,
-  CellSelection,
-  NodeSelection,
   Plugin,
   PluginKey,
-  Selection,
   insertPlainText,
-  serializeTableSelection,
   type Editor,
   type EditorState,
 } from '../core';
-import { comparePaths, getNodeAtPath, getTextLeaves } from '../core/transaction/path';
+import { clipboardTextObservers } from '../core/clipboard-write';
 import { defineExtension } from './extension';
 
 const META = 'clipboardHistory$action';
@@ -80,25 +75,6 @@ function nextState(state: ClipboardHistoryState, action?: ClipboardAction): Clip
     if (unique.length === action.maxEntries) break;
   }
   return Object.freeze({ entries: Object.freeze(unique), open: state.open });
-}
-
-function selectionText(editor: Editor): string {
-  const { doc, selection } = editor.state;
-  if (selection instanceof CellSelection) return serializeTableSelection(doc, selection)?.text ?? '';
-  if (selection instanceof AllSelection) return editor.getText();
-  if (selection instanceof NodeSelection) return getNodeAtPath(doc, selection.nodePath).textContent;
-  if (!(selection instanceof Selection) || selection.isCollapsed) return '';
-  const leaves = getTextLeaves(doc);
-  const selected = leaves.filter(({ path }) => comparePaths(path, selection.path) >= 0 && comparePaths(path, selection.endPath) <= 0);
-  let previousParent: string | undefined;
-  return selected.map(({ node, path }) => {
-    const from = comparePaths(path, selection.path) === 0 ? selection.from : 0;
-    const to = comparePaths(path, selection.endPath) === 0 ? selection.to : node.text?.length ?? 0;
-    const parent = path.slice(0, -1).join('.');
-    const prefix = previousParent !== undefined && previousParent !== parent ? '\n' : '';
-    previousParent = parent;
-    return prefix + (node.text ?? '').slice(from, to);
-  }).join('');
 }
 
 function normalizeLoaded(value: readonly ClipboardHistoryEntry[], maxEntries: number, maxEntryLength: number): readonly ClipboardHistoryEntry[] {
@@ -188,8 +164,7 @@ export function clearClipboardHistory(editor: Editor): boolean {
 export function createClipboardHistoryExtension(options: ClipboardHistoryOptions = {}) {
   const maxEntries = Math.max(1, Math.min(100, Math.trunc(options.maxEntries ?? 20)));
   const maxEntryLength = Math.max(1, Math.min(1_000_000, Math.trunc(options.maxEntryLength ?? 100_000)));
-  const addSelection = (editor: Editor): void => {
-    const text = selectionText(editor);
+  const addText = (editor: Editor, text: string): void => {
     if (!text || text.length > maxEntryLength) return;
     const entry = freezeEntry({ id: `${Date.now().toString(36)}-${(entrySequence += 1).toString(36)}`, text, copiedAt: Date.now() });
     // Let the browser finish its native copy/cut before an editor render can replace DOM selection nodes.
@@ -206,14 +181,13 @@ export function createClipboardHistoryExtension(options: ClipboardHistoryOptions
       apply: (transaction, value) => nextState(value, transaction.getMeta<ClipboardAction>(META)),
     },
     props: {
-      handleCopy: (editor) => { addSelection(editor); return false; },
-      handleCut: (editor) => { addSelection(editor); return false; },
       handleKeyDown: (editor, event) => {
         if (options.shortcut === false) return false;
         if (!shortcutMatches(event, options.shortcut ?? 'Mod-Alt-V')) return false;
         return openClipboardHistory(editor);
       },
       onCreate: (editor) => {
+        clipboardTextObservers.set(editor, text => addText(editor, text));
         persistenceByEditor.set(editor, { persistence: options.persistence, onPersistenceError: options.onPersistenceError });
         if (!options.persistence) return;
         try {
@@ -221,7 +195,10 @@ export function createClipboardHistoryExtension(options: ClipboardHistoryOptions
           if (entries.length) dispatchAction(editor, { type: 'replace', entries, maxEntries });
         } catch (error) { options.onPersistenceError?.(error); }
       },
-      onDestroy: (editor) => { persistenceByEditor.delete(editor); },
+      onDestroy: (editor) => {
+        clipboardTextObservers.delete(editor);
+        persistenceByEditor.delete(editor);
+      },
     },
   });
   return defineExtension({

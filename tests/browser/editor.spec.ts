@@ -5196,22 +5196,19 @@ test('edits merged tables, resizes columns, toggles headers, and exchanges sprea
 });
 
 test('keeps normal paste while offering bounded editor-local clipboard slots', async ({ page }) => {
+  const textbox = page.getByRole('textbox', { name: 'Browser contract editor' });
+  await textbox.focus();
   await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
     contract.commands.commands.selectText([0, 0], 0, 5);
   });
-  await page.waitForTimeout(0);
-  const prevented = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
-    const event = new Event('copy', { bubbles: true, cancelable: true });
-    editor.dispatchEvent(event);
-    return event.defaultPrevented;
-  });
-  expect(prevented).toBe(false);
+  await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe('Alpha');
+  await page.keyboard.press('ControlOrMeta+c');
   await expect.poll(() => page.evaluate(() => (
     (globalThis as any).fountainBrowserTest.clipboardHistory()?.entries[0]?.text
   ))).toBe('Alpha');
 
-  await page.getByRole('textbox', { name: 'Browser contract editor' }).press('Control+Alt+v');
+  await textbox.press('ControlOrMeta+Alt+v');
   expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.clipboardHistory()?.open)).toBe(true);
   expect(await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
@@ -5221,7 +5218,7 @@ test('keeps normal paste while offering bounded editor-local clipboard slots', a
   })).toBe(true);
   await expect(page.locator('[data-fountain-path="1"]')).toHaveText('Second paragraphAlpha');
 
-  const normalPaste = await page.getByRole('textbox', { name: 'Browser contract editor' }).evaluate((editor) => {
+  const normalPaste = await textbox.evaluate((editor) => {
     const event = new Event('paste', { bubbles: true, cancelable: true });
     Object.defineProperty(event, 'clipboardData', { value: {
       files: [],
@@ -6134,6 +6131,40 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
   await search.press('Escape');
   await expect(trigger).toBeFocused();
   await expect(paragraph).toHaveText(`${original}${original}`);
+});
+
+test('preserves copied line breaks in the public clipboard-history picker', async ({ page }, info) => {
+  await page.goto('/');
+  const editor = page.getByRole('textbox', { name: 'Rich text editor' });
+  const paragraph = editor.locator('[data-fountain-node="paragraph"]').first();
+  await paragraph.click();
+  await paragraph.evaluate((element) => {
+    const selection = getSelection()!;
+    selection.selectAllChildren(element);
+    selection.collapseToEnd();
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.type(' First copied line');
+  await page.keyboard.press('Shift+Enter');
+  await page.keyboard.type('Second copied line');
+  await expect(paragraph.locator('br')).toHaveCount(1);
+  await paragraph.evaluate((element) => {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const leaves: Text[] = [];
+    for (let current = walker.nextNode(); current; current = walker.nextNode()) leaves.push(current as Text);
+    const first = leaves.find((leaf) => leaf.data.includes('First copied line'))!;
+    const last = leaves.find((leaf) => leaf.data.includes('Second copied line'))!;
+    getSelection()!.setBaseAndExtent(last, last.data.length, first, first.data.indexOf('First copied line'));
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  await page.keyboard.press('ControlOrMeta+c');
+  const trigger = page.getByRole('button', { name: /Clipboard history/ });
+  await expect(trigger).toBeEnabled();
+  await trigger.click();
+  const picker = page.getByRole('dialog', { name: 'Clipboard history' });
+  await picker.locator('summary').click();
+  await expect(picker.locator('pre')).toHaveJSProperty('textContent', 'First copied line\nSecond copied line');
+  await picker.screenshot({ path: info.outputPath('clipboard-history-line-break.png') });
 });
 
 test('keeps the public outline stable, hierarchical, active, and navigable', async ({ page }) => {
