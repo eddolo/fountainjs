@@ -72,6 +72,14 @@ automatic typing paragraph from DOCX downloads. LibreOffice moved the table
 and downloaded DOCX produced identical label coordinates and page rasters in
 LibreOffice for that fixture. Authored blank paragraphs remain in the download.
 
+A three-row fixture checks a 60 pt minimum, an 18 pt exact row, and a row
+without a declared height. All three desktop browser engines retain the
+declarations through preview and DOCX download. LibreOffice produced the
+same label positions and page raster for the original and the downloaded
+DOCX. The exact row clips text in the native render. The browser preview grows
+that row so every line can be read, and may position text differently where
+the source leaves cell alignment implicit.
+
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing
 position. Unused parts outside that folder stay in the original archive.

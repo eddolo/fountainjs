@@ -10,7 +10,7 @@ import { isAutomaticTrailingParagraph } from '../core/editing-provenance';
 import { INLINE_DRAWING_SIDES, isInlineDrawingDistances, type InlineDrawingDistances } from '../core/image-drawing';
 import { tableBackground } from '../core/table-background';
 import { TableMap } from '../core/table-map';
-import { isTablePlacement, tableRowRepeats } from '../core/table-layout';
+import { isTablePlacement, isTableRowHeight, tableRowRepeats, type TableRowHeight } from '../core/table-layout';
 import { normalizeFontFamily, normalizeFontSize, normalizeLetterSpacing } from '../text-style/values';
 import { PAGE_SETTING_LENGTHS, readDocumentPageSettings, type DocumentPageSettings } from '../core/page-settings';
 import { isParagraphLayout, PARAGRAPH_BORDER_SIDES, type ParagraphLayout } from '../core/paragraph-layout';
@@ -1143,7 +1143,8 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   const hasConditions = Boolean(inherited?.regions.size || inherited?.regionalText.size);
   const baseText = readWordTableText(inherited?.text, warnAppearance);
   const rows: MutableCell[][] = [];
-  const repetition: boolean[] = [];
+  const rowAttrs: Array<{ repeatHeader?: boolean; rowHeight?: TableRowHeight }> = [];
+  const rowSpec = schema.nodes.table_row?.spec.attrs;
   let leadingRepeat = true;
   const active = new Map<number, MutableCell>();
   for (const [rowIndex, row] of sourceRows.entries()) {
@@ -1182,11 +1183,25 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
     const header = wordStyleChild(wordStyleChild(row, 'trPr'), 'tblHeader');
     const headerValue = header && wordPageAttribute(header, 'val');
     const rowHeader = Boolean(header) && (headerValue === undefined || ['1', 'true', 'on'].includes(headerValue));
-    repetition.push(rowHeader);
+    const attrs: typeof rowAttrs[number] = rowSpec?.repeatHeader ? { repeatHeader: rowHeader } : {};
+    rowAttrs.push(attrs);
+    const height = readWordTableProperty([offsetProperties], 'trHeight', warnRow);
+    if (height) {
+      const rule = wordPageAttribute(height, 'hRule') ?? 'atLeast';
+      if (rule !== 'auto') {
+        const value = wordPageAttribute(height, 'val') ?? '';
+        const rowHeight = { rule, twips: /^\d+$/u.test(value) ? Number(value) : NaN };
+        if (!isTableRowHeight(rowHeight) || !rowSpec?.rowHeight) warnRow('table-row-height-not-imported', 'Invalid or unsupported Word row height.');
+        else {
+          attrs.rowHeight = rowHeight;
+          if (rule === 'exact') warnRow('table-row-height-browser-minimum', 'Exact Word row heights are minimums in the browser.');
+        }
+      }
+    }
     if (rowHeader && !leadingRepeat) issues.push({ code: 'nonleading-table-repeat', severity: 'warning',
       message: 'The repeat flag is retained, but Word ignores it after a non-repeating row.', path: [...path, rowIndex] });
     if (!rowHeader) leadingRepeat = false;
-    if (rowHeader && !schema.nodes.table_row?.spec.attrs?.repeatHeader) issues.push({ code: 'table-row-repeat-not-imported', severity: 'warning',
+    if (rowHeader && !rowSpec?.repeatHeader) issues.push({ code: 'table-row-repeat-not-imported', severity: 'warning',
       message: 'The receiving row schema cannot retain repeat-on-page intent; cell content and appearance remain.', path: [...path, rowIndex] });
     if (headerValue !== undefined && !['0', 'false', 'off', '1', 'true', 'on'].includes(headerValue)) issues.push({
       code: 'invalid-table-header', severity: 'warning',
@@ -1251,7 +1266,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
     }
     rows.push(cells);
   }
-  const rowNodes = rows.map((row, index) => schema.node('table_row', schema.nodes.table_row?.spec.attrs?.repeatHeader ? { repeatHeader: repetition[index] } : {}, row.map((cell) => schema.node(
+  const rowNodes = rows.map((row, index) => schema.node('table_row', rowAttrs[index], row.map((cell) => schema.node(
     cell.scope && schema.nodes.table_header ? 'table_header' : 'table_cell',
     cell.scope && schema.nodes.table_header
       ? { colspan: cell.colspan, rowspan: cell.rowspan, colwidth: cell.colwidth, background: cell.background, appearance: cell.appearance, scope: cell.scope }
@@ -2279,7 +2294,9 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
     if (!repeats) leadingRepeat = false;
     if (row.attrs.repeatHeader === undefined) context.issues.push({ code: 'table-row-repeat-defaulted', severity: 'info',
       message: 'The legacy all-header-cell host default became explicit row repetition on native reimport.', path: [...path, rowIndex] });
-    const rowProperties = `<w:trPr><w:tblHeader${repeats ? '' : ' w:val="false"'}/></w:trPr>`;
+    const height = row.attrs.rowHeight;
+    const heightXML = isTableRowHeight(height) ? `<w:trHeight w:val="${height.twips}" w:hRule="${height.rule}"/>` : '';
+    const rowProperties = `<w:trPr>${heightXML}<w:tblHeader${repeats ? '' : ' w:val="false"'}/></w:trPr>`;
     return `<w:tr>${rowProperties}${cells.join('')}</w:tr>`;
   }).join('');
   const grid = `<w:tblGrid>${columnTwips.map(width => `<w:gridCol w:w="${width}"/>`).join('')}</w:tblGrid>`;

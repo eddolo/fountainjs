@@ -4,6 +4,57 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionRowHeightJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const rows = [['Minimum row'], ['Exact row', 'Visible line two', 'Visible line three', 'Visible line four'], ['Natural row']];
+  const doc = schema.node('doc', {}, [schema.node('table', {}, rows.map(lines => schema.node('table_row', {}, [
+    schema.node('table_cell', {}, lines.map(text => schema.node('paragraph', {}, [schema.text(text)]))),
+  ])))]);
+  const archive = unzipSync(exportDOCX(doc).bytes);
+  const declarations = ['<w:trHeight w:val="1200" w:hRule="atLeast"/>', '<w:trHeight w:val="360" w:hRule="exact"/>', ''];
+  let index = 0;
+  archive['word/document.xml'] = strToU8(strFromU8(archive['word/document.xml']!).replaceAll('<w:trPr>', open =>
+    open + declarations[index++]));
+  expect(index).toBe(3);
+  const source = info.outputPath('word-row-heights.docx');
+  await writeFile(source, zipSync(archive));
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(source);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-row-heights.docx' });
+  await expect(workspace).toContainText('table-row-height-browser-minimum');
+  async function expectHeights(table: ReturnType<Page['locator']>) {
+    const rows = table.locator('tr');
+    await expect(rows).toHaveCount(3);
+    await expect(rows.nth(0)).toHaveAttribute('data-fountain-row-height', 'atLeast:1200');
+    await expect(rows.nth(1)).toHaveAttribute('data-fountain-row-height', 'exact:360');
+    await expect(rows.nth(2)).not.toHaveAttribute('data-fountain-row-height');
+    const heights = await rows.evaluateAll(items => items.map(row => row.getBoundingClientRect().height));
+    expect(heights[0]).toBeGreaterThanOrEqual(79.5);
+    expect(heights[1]).toBeGreaterThan(48);
+    expect(heights[2]).toBeLessThan(60);
+    await expect(rows.nth(1)).toContainText('Visible line four');
+  }
+  await expectHeights(workspace.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
+  const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
+  await pagination.getByRole('button', { name: 'Build page preview' }).click();
+  const table = pagination.locator('.fountain-page-preview__sheet table');
+  await expectHeights(table);
+  await table.screenshot({ path: info.outputPath('row-height-preview.png') });
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const saved = info.outputPath('fountain-row-heights.docx');
+  await (await pending).saveAs(saved);
+  const xml = strFromU8(unzipSync(await readFile(saved))['word/document.xml']!);
+  expect(xml.match(/<w:trHeight[^>]+\/>/gu)).toEqual(declarations.slice(0, 2));
+  await input.setInputFiles(saved);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-row-heights.docx' });
+  await expectHeights(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
+}
+
 export async function conversionCellAlignmentJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
   const cell = (lines: string[]) => schema.node('table_cell', {}, lines.map(text =>

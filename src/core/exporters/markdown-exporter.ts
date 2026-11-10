@@ -236,8 +236,8 @@ function reportNodeAttributes(
   if (name === 'table' && node.attrs.blockSpacing === 'none' && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot retain table block spacing.');
   }
-  if (name === 'table_row' && node.attrs.repeatHeader !== undefined && context.options.tableFormat !== 'html') {
-    report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent explicit row repetition. Use HTML tables to retain it.');
+  if (name === 'table_row' && (node.attrs.repeatHeader !== undefined || node.attrs.rowHeight !== undefined) && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Pipe Markdown omits explicit row repetition or height.');
   }
   if (['table', 'table_header', 'table_cell'].includes(name) && node.attrs.appearance !== undefined && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent table borders, padding, cell alignment or appearance resets.');

@@ -25,6 +25,23 @@ export const tablePlacementAttribute = {
 
 const TABLE_PLACEMENT_DATA = 'data-fountain-table-placement';
 const TABLE_SPACING_DATA = 'data-fountain-table-spacing';
+const ROW_HEIGHT_DATA = 'data-fountain-row-height';
+
+/** A bounded physical row height in twentieths of a point. */
+export interface TableRowHeight {
+  readonly twips: number;
+  readonly rule: 'atLeast' | 'exact';
+}
+
+export function isTableRowHeight(value: unknown): value is TableRowHeight {
+  if (!value || typeof value !== 'object') return false;
+  const { twips, rule } = value as TableRowHeight;
+  return Object.keys(value).sort().join() === 'rule,twips' && Number.isInteger(twips) && twips <= 31_680
+    && ((rule === 'atLeast' && twips >= 0) || (rule === 'exact' && twips > 0));
+}
+
+export const tableRowHeightAttribute = { default: undefined,
+  validate: (value: unknown) => value === undefined || isTableRowHeight(value) };
 
 export function readTablePlacement(element: { getAttribute(name: string): string | null }): Attributes {
   const value = element.getAttribute(TABLE_PLACEMENT_DATA) ?? element.getAttribute('align')?.trim().toLowerCase();
@@ -33,12 +50,20 @@ export function readTablePlacement(element: { getAttribute(name: string): string
 
 export function readTableRow(element: { getAttribute(name: string): string | null }): Attributes {
   const value = element.getAttribute('data-fountain-repeat-header');
-  return value === 'true' || value === 'false' ? { repeatHeader: value === 'true' } : {};
+  const attrs: Record<string, unknown> = value === 'true' || value === 'false' ? { repeatHeader: value === 'true' } : {};
+  const encoded = /^(atLeast|exact):(\d{1,5})$/u.exec(element.getAttribute(ROW_HEIGHT_DATA) ?? '');
+  if (encoded) {
+    const height = { rule: encoded[1], twips: Number(encoded[2]) };
+    if (isTableRowHeight(height)) attrs.rowHeight = height;
+  }
+  return attrs;
 }
 
 export function tableRowDOMSpec(node: Node): DOMOutputSpec {
+  const height = node.attrs.rowHeight;
   return ['tr', { ...textDirectionDOMAttributes(node.attrs), ...(typeof node.attrs.repeatHeader === 'boolean'
-    ? { 'data-fountain-repeat-header': String(node.attrs.repeatHeader) } : {}) }, 0];
+    ? { 'data-fountain-repeat-header': String(node.attrs.repeatHeader) } : {}),
+    ...(isTableRowHeight(height) ? { [ROW_HEIGHT_DATA]: `${height.rule}:${height.twips}`, style: `height:${height.twips / 20}pt` } : {}) }, 0];
 }
 
 /** A role is the legacy host default, not a replacement for explicit page intent. */

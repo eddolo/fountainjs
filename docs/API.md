@@ -553,6 +553,11 @@ extents; a host must use the matching content-width surface for page fidelity.
 The native layout algorithm may override any preference to satisfy content/grid
 constraints. No 1:1 layout claim follows from retaining the preference.
 
+Rows accept `rowHeight: { twips, rule }` with integer heights from 0 to 31,680
+twips and `rule: 'atLeast' | 'exact'`. Exact heights must be positive.
+Fountain HTML carries the rule and uses CSS row height as a minimum. DOCX
+retains the native rule, and pipe Markdown reports the omission.
+
 Tables and cells may store optional `appearance: TableAppearance`. This is
 validated physical data, not arbitrary CSS: `unit: 'pt'`, optional `padding`
 (`top`, `right`, `bottom`, `left`, 0–1000 pt) and `borders`. Table borders also

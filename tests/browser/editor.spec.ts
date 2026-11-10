@@ -102,7 +102,7 @@ test('keeps native form emptiness custom policy failures and canceled invalid ev
 test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
   await webComponentValidationJourney(page, info);
 });
-import { conversionCellAlignmentJourney, conversionLabJourney, conversionPagePreviewJourney, conversionScientificPreviewJourney } from './conversion-lab-journey';
+import { conversionCellAlignmentJourney, conversionLabJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionScientificPreviewJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';
 
@@ -294,6 +294,10 @@ test('previews and prints only the current local draft in the conversion lab', a
 
 test('keeps Word table cell alignment through editor, page preview and DOCX reopen', async ({ page }, info) => {
   await conversionCellAlignmentJourney(page, info);
+});
+
+test('retains explicit Word row heights through preview and DOCX reopen', async ({ page }, info) => {
+  await conversionRowHeightJourney(page, info);
 });
 
 test('prints the edited scientific DOCX in the conversion lab', async ({ page }, info) => {

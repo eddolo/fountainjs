@@ -13,6 +13,21 @@ function documentWithLayout(layout: 'fixed' | 'auto') {
 }
 
 describe('portable table layout', () => {
+  it('retains a validated row height in JSON and both HTML readers', () => {
+    const doc = documentWithLayout('fixed');
+    const table = doc.child(0);
+    const first = table.child(0);
+    const row = schema.node('table_row', { rowHeight: { twips: 721, rule: 'exact' } }, first.content);
+    const sized = doc.copy([table.copy([row, table.child(1)])]);
+    const html = HTMLExporter.export(sized, { document: false });
+    expect(html).toContain('data-fountain-row-height="exact:721"');
+    expect(html).toContain('height:36.05pt');
+    expect(schema.nodeFromJSON(sized.toJSON()).toJSON()).toEqual(sized.toJSON());
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) expect(importer.parse(html, schema).toJSON()).toEqual(sized.toJSON());
+    expect(MarkdownExporter.exportWithReport(sized).losses.some(loss => loss.detail.includes('row repetition or height'))).toBe(true);
+    expect(() => schema.node('table_row', { rowHeight: { twips: 0, rule: 'exact' } }, first.content)).toThrow();
+  });
+
   it.each(['left', 'center', 'right'] as const)('preserves physical %s placement in HTML and reports pipe-Markdown loss', placement => {
     const table = documentWithLayout('fixed').child(0);
     const doc = schema.node('doc', {}, [schema.node('table', { ...table.attrs, placement, dir: 'rtl' }, table.content)]);

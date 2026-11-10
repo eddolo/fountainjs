@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve Word table row minimum and exact heights in JSON, Fountain HTML
+  and DOCX. The editor and paged preview allow rows to grow to fit text.
 - Add the DOCX export option `omitTrailingCaret`. The Conversion Lab enables
   it so an untouched automatic typing paragraph cannot move a terminal table
   in a native Word reader.

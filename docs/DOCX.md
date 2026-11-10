@@ -75,7 +75,15 @@ column membership; cached `cnfStyle` annotations do not replace current geometry
 Word cell alignment (`w:vAlign`) retains top, center, and bottom through
 the editor, paged preview, Fountain HTML and DOCX export. Direct cell
 declarations override inherited style alignment. Unsupported values appear in
-the conversion report. Automatic row heights still depend on font metrics.
+the conversion report.
+
+Direct `w:trHeight` declarations retain minimum and exact heights in
+twentieths of a point. A missing rule follows Word's minimum-height behavior.
+An automatic rule uses content height. The editor and browser page preview
+let exact-height rows grow to keep all text available and report the difference
+on import. Native DOCX export writes the exact rule back. Automatic row
+heights still depend on font metrics.
+[Microsoft's Word row-height behavior](https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/5919e0bd-e6ce-477e-8d66-0e5282f5c506).
 
 This is a Word-targeted bridge: absent `tblLook` uses Office's `04A0` default;
 an absent row-band size uses Word's zero/no-banding behavior. Explicit band sizes
@@ -93,7 +101,7 @@ reapply the original Word style. Native export does not preserve the style
 library, `tblLook` provenance or original style XML. The import report explicitly
 identifies materialization; retain the untouched source separately when needed.
 
-Broader table text and Normal/default interactions, row heights, conditional
+Broader table text and Normal/default interactions, inherited row heights, conditional
 table-level properties, native border-conflict/layout behavior and RTL table
 projection remain open. Rows with omitted leading/trailing grid positions are
 not assigned guessed conditional appearance. Distinct border/margin/fill on a

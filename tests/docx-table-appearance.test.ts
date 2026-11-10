@@ -10,6 +10,33 @@ function source(properties = '', cellProperties = '', rowProperties = '') {
 }
 function xml(bytes: Uint8Array) { return strFromU8(unzipSync(bytes)['word/document.xml']!); }
 describe('native direct table borders and margins', () => {
+  it.each([
+    ['', 1200, 'atLeast'],
+    [' w:hRule="atLeast"', 1200, 'atLeast'],
+    [' w:hRule="exact"', 600, 'exact'],
+  ])('retains Word row height (%s, %i)', (ruleAttr, twips, rule) => {
+    const imported = importDOCX(source('', '', `<w:trPr><w:trHeight w:val="${twips}"${ruleAttr}/></w:trPr>`), schema);
+    const row = imported.document.child(0).child(0);
+    expect(row.attrs.rowHeight).toEqual({ twips, rule });
+    expect(imported.report.issues.some(issue => issue.code === 'table-row-height-browser-minimum')).toBe(rule === 'exact');
+    const output = exportDOCX(imported.document);
+    expect(xml(output.bytes)).toContain(`<w:trHeight w:val="${twips}" w:hRule="${rule}"/>`);
+    expect(importDOCX(output.bytes, schema).document.child(0).child(0).attrs.rowHeight).toEqual(row.attrs.rowHeight);
+  });
+
+  it.each([
+    ['<w:trHeight w:val="200" w:hRule="auto"/>', false],
+    ['<w:trHeight w:val="0" w:hRule="exact"/>', true],
+    ['<w:trHeight w:val="31681"/>', true],
+    ['<w:trHeight w:val="12.5"/>', true],
+    ['<w:trHeight w:hRule="atLeast"/>', true],
+  ])('handles automatic and invalid native heights (%s)', (height, warned) => {
+    const result = importDOCX(source('', '', `<w:trPr>${height}</w:trPr>`), schema);
+    expect(result.document.child(0).child(0).attrs.rowHeight).toBeUndefined();
+    expect(result.document.textContent).toBe('Measured value');
+    expect(result.report.issues.some(issue => issue.code === 'table-row-height-not-imported')).toBe(warned);
+  });
+
   it.each(['top', 'center', 'bottom'])('retains %s cell alignment through DOCX reopen', alignment => {
     const imported = importDOCX(source('', `<w:shd w:val="clear" w:fill="123456"/><w:vAlign w:val="${alignment}"/>`), schema);
     const cell = imported.document.child(0).child(0).child(0);
