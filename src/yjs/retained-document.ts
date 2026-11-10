@@ -219,7 +219,7 @@ export class RetainedDocumentStore {
   private textPaths = new Map<string, Binding[]>();
   private identityPaths = new Map<string, readonly number[]>();
   private partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
-  private textLocations = new Map<string, { leaf: string; path: readonly number[] }>();
+  private textCandidates = new Map<string, { path: readonly number[]; bindings: readonly Binding[] } | null>();
   private groups = new Map<string, GroupState>();
   private graph?: RetainedNodeProjection;
 
@@ -428,18 +428,8 @@ export class RetainedDocumentStore {
   private normalizeFrame({ projection, partitions, placements }: ProjectionFrame, validate: boolean): Node {
     // Candidates come only from this store's existing model/bindings. Shared
     // data was checked by acquisition or the guarded native-write proof.
-    const previousNodes = new Map<string, Node>();
-    const previousTexts = new Map<string, { node: Node; bindings: readonly Binding[] } | null>();
+    const previousModel = this.model, previousIdentities = this.identityPaths, previousTexts = this.textCandidates;
     const used = new Set<Node>();
-    if (this.model) {
-      for (const [id, path] of this.identityPaths) previousNodes.set(id, getNodeAtPath(this.model, path));
-      for (const [path, bindings] of this.textPaths) {
-        const location = this.textLocations.get(path);
-        if (!location || !bindings.length) continue;
-        const key = bindingKey(bindings, location.leaf), node = getNodeAtPath(this.model, location.path);
-        previousTexts.set(key, previousTexts.has(key) ? null : { node, bindings });
-      }
-    }
     const groupStates = new Map<string, GroupState>();
     const visit = (raw: RetainedNodeProjection): Fragment => {
       if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
@@ -494,30 +484,36 @@ export class RetainedDocumentStore {
       const fragments: Fragment[] = children.map(child => {
         if ('node' in child) return child;
         const previous = previousTexts.get(bindingKey(child.bindings, child.leaf));
-        const candidate = previous && sameBindings(previous.bindings, child.bindings) ? previous.node : undefined;
+        const candidate = previousModel && previous && sameBindings(previous.bindings, child.bindings)
+          ? getNodeAtPath(previousModel, previous.path) : undefined;
         return { node: this.projectionNode(this.schema.nodes.text, child.attrs, [], child.text, child.marks, used, candidate), leaf: child.leaf, bindings: child.bindings };
       });
       const type = this.schema.nodes[raw.type], marks = (raw.marks ?? []).map(mark => this.schema.markFromJSON(mark)), attrs = computeAttrs(type.spec.attrs, raw.attrs ?? {});
-      const node = this.projectionNode(type, attrs, fragments.map(child => child.node), undefined, marks, used, previousNodes.get(raw.id));
+      const path = previousIdentities.get(raw.id);
+      const candidate = previousModel && path ? getNodeAtPath(previousModel, path) : undefined;
+      const node = this.projectionNode(type, attrs, fragments.map(child => child.node), undefined, marks, used, candidate);
       return { node, id: raw.id, children: fragments };
     };
     const result = visit(projection.root);
     if (validate) this.schema.validate(result.node);
     const nodePaths = new Map<string, string>(), textPaths = new Map<string, Binding[]>();
-    const textLocations = new Map<string, { leaf: string; path: readonly number[] }>(), identityPaths = new Map<string, readonly number[]>();
+    const textCandidates = new Map<string, { path: readonly number[]; bindings: readonly Binding[] } | null>();
+    const identityPaths = new Map<string, readonly number[]>();
     const partitionPaths = new Map<string, { path: readonly number[]; binding: Binding }[]>();
     const bind = (fragment: Fragment, path: number[]) => {
       const key = pathKey(path), frozen = Object.freeze(path);
       if (fragment.id) { nodePaths.set(key, fragment.id); identityPaths.set(fragment.id, frozen); }
       if (fragment.bindings) {
-        textPaths.set(key, fragment.bindings); textLocations.set(key, { leaf: fragment.leaf!, path: frozen });
+        textPaths.set(key, fragment.bindings);
+        const candidateKey = bindingKey(fragment.bindings, fragment.leaf!);
+        textCandidates.set(candidateKey, textCandidates.has(candidateKey) ? null : { path: frozen, bindings: fragment.bindings });
         for (const binding of fragment.bindings) {
           const entries = partitionPaths.get(binding.id) ?? []; entries.push({ path: frozen, binding }); partitionPaths.set(binding.id, entries);
         }
       }
       fragment.children?.forEach((child, index) => bind(child, [...path, index]));
     };
-    bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textLocations = textLocations;
+    bind(result, []); this.nodePaths = nodePaths; this.textPaths = textPaths; this.textCandidates = textCandidates;
     this.identityPaths = identityPaths; this.partitionPaths = partitionPaths;
     this.groups = groupStates; this.graph = projection.root; this.model = result.node;
     return result.node;
@@ -976,5 +972,5 @@ export class RetainedDocumentStore {
     return this.finishChange(after, undefined, shared);
   }
 
-  destroy(): void { this.document.off('afterTransaction', this.sharedFrameChanged); this.clearFrame(); this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.textLocations.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
+  destroy(): void { this.document.off('afterTransaction', this.sharedFrameChanged); this.clearFrame(); this.text.destroy(); this.model = undefined; this.graph = undefined; this.groups.clear(); this.textPaths.clear(); this.nodePaths.clear(); this.textCandidates.clear(); this.identityPaths.clear(); this.partitionPaths.clear(); }
 }

@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Build collaboration projection reuse indexes with the existing path bindings
+  to reduce repeated work in large documents.
 - Speed up continued collaborative typing when formatting leaves the final
   text run at a nonzero offset in shared storage. Appending there preserves
   the existing author undo and relative anchors.

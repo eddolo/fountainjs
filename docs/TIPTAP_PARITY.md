@@ -33,8 +33,10 @@ from 340.4 to 99.5 ms. An existing empty-sibling undo failure is also repaired;
 all 48 current default-adapter browser journeys pass across three desktop engines.
 The checked trailing-run append reduces a median eleven-character typing burst
 from 714.9 to 136.0 ms in a back-to-back run at 1,000 paragraphs. Split and
-wrap medians rise about 7% in that pair. Sustained larger-document collaboration
-and release validation remain open.
+wrap medians rise about 7% in that pair. Projection index reuse improves a
+short 5,000-paragraph comparison. A separate 12-cycle run passes collaboration
+and recovery checks at that size, with a 569 ms median typing burst. Large
+document latency and release validation remain open.
 [Endurance diagnostic](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The preceding adoption checkpoint passed 45 recorded default-adapter desktop

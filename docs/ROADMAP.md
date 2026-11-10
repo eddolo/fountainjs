@@ -23,7 +23,11 @@ browser journeys pass across three desktop engines. The follow-up append
 repair reduces the median eleven-character typing burst from 714.9 to 136.0 ms
 in a back-to-back 1,000-paragraph run. Split and wrap medians rise about 7%
 in that pair. The append repair passes 959 Yjs tests and 48 recorded browser
-journeys. Larger sustained collaboration and release validation remain open.
+journeys. At 5,000 paragraphs, reusing projection indexes reduces the observed
+typing burst median from 505 to 439 ms in a four-cycle comparison. The same
+candidate passes merge, undo and recovery in a separate 12-cycle run, with
+a 569 ms median typing burst. Large document latency and release validation
+remain open.
 [Workload and evidence](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The local default collaboration entry now uses retained identities. The six

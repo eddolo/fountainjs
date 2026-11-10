@@ -353,3 +353,41 @@ undo and redo with both editors still connected.
 
 The CommonJS runtime totals 1,449,193 bytes, 199 bytes more than the preceding
 build. The aggregate allowance grows by 192 bytes to cover the checked append.
+
+## Projection indexing at 5,000 paragraphs
+
+In a four-cycle CPU profile of the installed append build, frame
+normalization accounted for 1,637 of 2,067 sampled milliseconds during typing.
+The projection already builds path indexes for anchors and stable identities.
+It now records reuse candidates in that same pass. Each subsequent projection
+resolves matching candidates from the preceding model and validates them
+before reuse. Ambiguous text bindings remain ineligible for reuse.
+
+Both installed packages passed all assertions in the separate unprofiled
+comparison at 5,000 paragraphs, four cycles and a checkpoint every two cycles.
+
+| Action | Append build | With projection index reuse |
+| --- | ---: | ---: |
+| Eleven-character burst median | 505.1 ms | 438.9 ms |
+| Eleven-character burst p95 | 690.3 ms | 533.8 ms |
+| Split median | 659.6 ms | 518.8 ms |
+| Wrap median | 622.0 ms | 525.5 ms |
+| Remote apply p95 | 166.9 ms | 134.2 ms |
+
+The two runs exchanged 216 updates and 56,772 bytes each, including eight
+duplicate deliveries. Both checked offline merges, author undo and redo,
+stable identities, and continued editing after checkpoint reopen. The local
+receipts are `artifacts/yjs-5000-base-20261110.json` and
+`artifacts/yjs-5000-index-20261110.json`.
+
+The candidate also passed a separate 12-cycle run at 5,000 paragraphs with
+two checkpoint reopens. It exchanged 584 updates and 309,657 bytes. The
+typing burst measured 569.3 ms at the median and 893.2 ms at p95. Splitting
+and wrapping measured 726.7 ms and 644.6 ms at the median. This longer run
+qualifies the measured history and recovery behavior on this host. The
+latencies remain an open performance gap. The local receipt is
+`artifacts/yjs-5000-index-endurance-20261110.json`.
+
+The build passes 959 Yjs tests and 48 recorded Chromium, Firefox and WebKit
+journeys. The Firefox capture of the 1,000-paragraph workflow was inspected
+and shows both authors' views agreeing on the edited paragraph and its marks.
