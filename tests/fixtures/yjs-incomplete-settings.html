@@ -18,7 +18,7 @@
 <p id="connections">Transport connections: 0</p>
 <script type="module">
   import * as Y from 'yjs';
-  import { CoreExtension, EditorView, composeExtensions, createEditor, defineExtension, getCollaborationState } from 'fountainjs-editor';
+  import { CoreExtension, EditorView, composeExtensions, createEditor, defineExtension, disconnectCollaboration, getCollaborationState } from 'fountainjs-editor';
   import { defineStructuredAttribute, setStructuredAttribute } from 'fountainjs-editor/structured-attributes';
   import { captureRetainedCheckpoint } from 'fountainjs-editor/experimental/yjs-retained';
   import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs';
@@ -26,6 +26,8 @@
   const parameters = new URLSearchParams(location.search);
   const mapName = parameters.get('map') === 'custom' ? 'incident-settings' : undefined;
   const editOnInstall = parameters.has('edit-on-install');
+  const cancelOnSync = parameters.has('cancel-on-sync');
+  const openInDraft = editOnInstall || cancelOnSync;
   const settings = defineExtension({ name: 'incident-settings', nodes: { settings: { group: 'block', atom: true,
     toDOM: () => ['div', { 'aria-label': 'Incident display settings' }, 'Incident display settings'],
   } } });
@@ -51,7 +53,7 @@
   const status = document.querySelector('#status');
   const partial = document.querySelector('#partial'), complete = document.querySelector('#complete');
   partial.disabled = false;
-  if (editOnInstall) {
+  if (openInDraft) {
     partial.hidden = true;
     complete.disabled = false;
     complete.textContent = 'Open saved room';
@@ -82,11 +84,15 @@
       };
       fragment.observe(restoreDraft);
     }
-    new EditorView(document.querySelector(editOnInstall ? '#draft' : '#recovered'), room, {
-      ariaLabel: editOnInstall ? 'Admission draft editor' : 'Verified settings editor',
+    new EditorView(document.querySelector(openInDraft ? '#draft' : '#recovered'), room, {
+      ariaLabel: openInDraft ? 'Admission draft editor' : 'Verified settings editor',
     });
     room.subscribe(() => {
       const state = getCollaborationState(room);
+      if (cancelOnSync && state.status === 'connecting' && room.state.doc.child(0).textContent === 'Shared incident notes.') {
+        disconnectCollaboration(room);
+      }
+      if (cancelOnSync && state.status === 'disconnected') status.textContent = 'Room opening cancelled. You can keep editing locally.';
       if (state.status === 'error') status.textContent = state.error.message;
       if (state.status !== 'connected') return;
       const { layout, display } = room.state.doc.child(1).attrs;

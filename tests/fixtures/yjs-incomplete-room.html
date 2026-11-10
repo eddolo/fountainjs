@@ -20,17 +20,19 @@
 <p id="starts">Transport connections: 0</p>
 <script type="module">
   import * as Y from 'yjs';
-  import { CoreExtension, EditorView, Selection, composeExtensions, createEditor, getCollaborationState,
+  import { CoreExtension, EditorView, Selection, composeExtensions, createEditor, disconnectCollaboration, getCollaborationState,
     insertText, reconnectCollaboration } from 'fountainjs-editor';
   import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs/legacy';
   import { createRetainedYjsCollaborationExtension } from 'fountainjs-editor/experimental/yjs-retained';
 
-  const legacy = new URLSearchParams(location.search).get('protocol') === 'legacy';
+  const parameters = new URLSearchParams(location.search);
+  const legacy = parameters.get('protocol') === 'legacy';
+  const cancelOnSync = parameters.has('cancel-on-sync');
   document.querySelector('#protocol').textContent = legacy ? 'Legacy XML room' : 'Retained room';
   const factory = legacy ? createYjsCollaborationExtension : createRetainedYjsCollaborationExtension;
-  const create = (document, text, provider) => {
+  const create = (document, text, provider, autoConnect = true) => {
     const kit = composeExtensions([CoreExtension, factory({
-      document, provider, user: { id: 'author', name: 'Author', color: '#7048e8' },
+      document, provider, autoConnect, user: { id: 'author', name: 'Author', color: '#7048e8' },
     })]);
     return createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
       type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
@@ -59,9 +61,21 @@
   };
   retry.onclick = () => { reconnectCollaboration(waiting); report(); };
   open.onclick = () => {
-    const recovered = create(joining, 'Unused fallback.', provider);
+    const recovered = create(joining, 'Unused fallback.', provider, !cancelOnSync);
     new EditorView(document.querySelector('#recovered'), recovered, { ariaLabel: 'Recovered shared editor' });
     open.disabled = true;
+    if (cancelOnSync) {
+      const unsubscribe = recovered.subscribe(state => {
+        if (state.doc.child(0).textContent === 'Unused fallback.') return;
+        unsubscribe();
+        disconnectCollaboration(recovered);
+      });
+      reconnectCollaboration(recovered);
+      status.textContent = getCollaborationState(recovered).status === 'disconnected'
+        ? 'Room opening cancelled. The local draft is still available.'
+        : 'The room is connected.';
+      return;
+    }
     status.textContent = 'Shared room opened. The local draft is still available.';
   };
 </script>

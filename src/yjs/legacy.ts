@@ -584,6 +584,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
         throw new Error('Editor rejected the shared document or selection.');
       }
     }
+    if (this.context !== context) return;
     directionIdentityReleases.get(this)?.();
     directionIdentityReleases.set(this, registerSharedDirectionIdentity(context.editor, path => {
       let element = this.fragment.get(0);
@@ -610,8 +611,7 @@ export class YjsCollaborationAdapter implements CollaborationAdapter {
       this.undoManager.on('stack-item-updated', this.onHistoryItem);
     }
     this.publishLocalSelection(context.editor.state.doc, context.editor.state.selection);
-    this.publishPresences();
-    if (!this.provider?.connect) return undefined;
+    if (this.context !== context || !this.provider?.connect) return;
     if (admittedRoomRoots.has(this.fragment)) this.assertInitialization();
     this.providerActive = true;
     return this.provider.connect();

@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Stop retired Yjs sessions before they can apply shared content or start transport.
+
 - Preserve local drafts that change during a retained Yjs checkpoint install.
 
 - Hide nested Word field values that occur inside another field's instruction.

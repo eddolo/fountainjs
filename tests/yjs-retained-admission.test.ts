@@ -144,6 +144,52 @@ it('aborts a pending admission on disconnect and ignores a late successful respo
  expect(disconnectCollaboration(editor)).toBe(true);expect(signal.aborted).toBe(true);pending.resolve(server.checkpoint);await new Promise(done=>setTimeout(done,20));expect(status(editor)).toBe('disconnected');expect(Y.encodeStateAsUpdate(client)).toEqual(before);expect(provider.connect).not.toHaveBeenCalled();expect(provider.disconnect).not.toHaveBeenCalled();
 });
 
+it('stops room setup when an editor subscriber disconnects during initial sync', async () => {
+  const server = await source();
+  const client = doc();
+  const pending = deferred<RetainedCheckpoint>();
+  const provider = { connect: vi.fn(), disconnect: vi.fn(), on: vi.fn(), off: vi.fn() };
+  const editor = make(client, 'Local template', { provider, ...admission(() => pending.promise) });
+  const unsubscribe = editor.subscribe(state => {
+    if (state.doc.child(0).textContent !== 'Authoritative paper') return;
+    unsubscribe();
+    expect(disconnectCollaboration(editor)).toBe(true);
+  });
+  pending.resolve(server.checkpoint);
+  await settled(editor, 'disconnected');
+  expect(editor.getText()).toBe('Authoritative paper');
+  expect(provider.on).not.toHaveBeenCalled();
+  expect(provider.connect).not.toHaveBeenCalled();
+});
+
+it('keeps a replacement join pending when a Yjs observer restarts room setup', async () => {
+  const server = await source();
+  const client = doc();
+  const retry = deferred<RetainedCheckpoint>();
+  const provider = { connect: vi.fn(), disconnect: vi.fn() };
+  const load = vi.fn().mockResolvedValueOnce(server.checkpoint).mockImplementationOnce(() => retry.promise);
+  const editor = make(client, 'Local template', { provider, ...admission(load) });
+  const fragment = client.getXmlFragment('fountain');
+  let installed = false;
+  const restart = (transaction: Y.Transaction) => {
+    if ([...transaction.changed.keys()].some(type => Object.is(type, fragment))) { installed = true; return; }
+    if (!installed) return;
+    client.off('afterTransaction', restart);
+    expect(reconnectCollaboration(editor)).toBe(true);
+  };
+  client.on('afterTransaction', restart);
+  await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+  expect(status(editor)).toBe('reconnecting');
+  expect(editor.getText()).toBe('Local template');
+  expect(provider.connect).not.toHaveBeenCalled();
+  expect(provider.disconnect).not.toHaveBeenCalled();
+
+  retry.resolve(server.checkpoint);
+  await settled(editor);
+  expect(editor.getText()).toBe('Authoritative paper');
+  expect(provider.connect).toHaveBeenCalledOnce();
+});
+
 it('keeps a newer reconnect intact when the retired admission subsequently fails',async()=>{
  const server=await source(),client=doc(),first=deferred<RetainedCheckpoint>(),second=deferred<RetainedCheckpoint>(),load=vi.fn().mockImplementationOnce(()=>first.promise).mockImplementationOnce(()=>second.promise),provider={connect:vi.fn(),disconnect:vi.fn()},editor=make(client,'Local template',{provider,...admission(load)});
  expect(reconnectCollaboration(editor)).toBe(true);second.resolve(server.checkpoint);await settled(editor);first.reject(new Error('Retired admission failure'));await new Promise(done=>setTimeout(done,20));expect(status(editor)).toBe('connected');expect(provider.connect).toHaveBeenCalledTimes(1);expect(provider.disconnect).not.toHaveBeenCalled();expect(editor.getJSON()).toEqual(server.editor.getJSON());

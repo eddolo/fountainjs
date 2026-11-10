@@ -90,6 +90,11 @@ setting up the room, before showing shared content or opening transport.
 If the draft differs, the editor keeps it editable
 and reports the conflict on retry until the host explicitly resolves it.
 
+A host can cancel or restart a join from a setup or editor subscriber callback.
+The retired session stops before the next setup step. A restart waits for its
+own checkpoint and transport, and a cancelled editor remains locally editable.
+The legacy adapter also stops when a subscriber cancels during initial sync.
+
 ## Existing XML rooms
 
 An application that needs to keep reading or editing its existing XML format can

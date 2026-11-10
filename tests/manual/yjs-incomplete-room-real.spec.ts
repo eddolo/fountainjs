@@ -62,3 +62,29 @@ test('keeps a host-restored draft editable when it changes during checkpoint ins
   await expect(draft).toHaveText('Restored draft. Fallback. Kept and reviewed.');
   await page.screenshot({ path: info.outputPath('draft-after-checkpoint-install.png'), fullPage: true, scale: 'css' });
 });
+
+test('keeps the editor offline when the host cancels during initial room sync', async ({ page }, info) => {
+  await page.goto('/tests/fixtures/yjs-incomplete-settings.html?cancel-on-sync');
+  await page.getByRole('button', { name: 'Open saved room' }).click();
+  await expect(page.getByRole('status')).toHaveText('Room opening cancelled. You can keep editing locally.');
+  await expect(page.getByText('Transport connections: 0')).toBeVisible();
+  const draft = page.getByRole('textbox', { name: 'Admission draft editor' }).locator('p').first();
+  await expect(draft).toHaveText('Shared incident notes.');
+  await draft.click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' Edited offline.');
+  await expect(draft).toHaveText('Shared incident notes. Edited offline.');
+  await expect(page.getByText('Transport connections: 0')).toBeVisible();
+  await page.screenshot({ path: info.outputPath('cancelled-initial-sync.png'), fullPage: true, scale: 'css' });
+});
+
+test('leaves the legacy editor offline when the host cancels its initial room sync', async ({ page }, info) => {
+  await page.goto('/tests/fixtures/yjs-incomplete-room.html?protocol=legacy&cancel-on-sync');
+  await page.getByRole('button', { name: 'Receive the missing room data' }).click();
+  await page.getByRole('button', { name: 'Open the recovered room separately' }).click();
+  await expect(page.getByRole('status')).toHaveText('Room opening cancelled. The local draft is still available.');
+  await expect(page.getByText('Transport connections: 0')).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Local draft editor' })).toHaveText('My local notes.');
+  await expect(page.getByRole('textbox', { name: 'Recovered shared editor' })).toHaveText('Shared incident notes. Reviewed.');
+  await page.screenshot({ path: info.outputPath('cancelled-legacy-sync.png'), fullPage: true, scale: 'css' });
+});

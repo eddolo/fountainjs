@@ -277,9 +277,10 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       throw this.roomConflict;
     }
     if (!fresh || admittedRoomRoots.has(this.fragment)) this.roomId = this.gate();
-    validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
     this.context = context;
     try {
+      validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
+      if (this.context !== context) return;
       this.options.document.transact(() => {
         this.store ??= new RetainedDocumentStore(this.options.document, this.room, context.editor.state.schema, this.allocateIdentity, this.origin);
         if (this.store.schema !== context.editor.state.schema) throw new Error('Retained adapter belongs to another editor schema.');
@@ -295,9 +296,13 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
           this.fragment.insert(0, [gate]); this.roomId = roomId;
         } else this.structured?.initialize(this.store.read());
       }, this.origin);
+      // Host observers can cancel or restart the join during setup.
+      if (this.context !== context) return;
       const value = this.canonical(), selection = restoreSelection(this.store!, value, this.localSelection);
+      if (this.context !== context) return;
       beforeInitialSync?.();
       this.apply(value, selection, 'initial-sync');
+      if (this.context !== context) return;
       this.releaseDirection = registerSharedDirectionIdentity(context.editor, path =>
         retainedDirectionIdentity(this.options.document, this.room, this.roomId, this.store?.identity(path)));
       if (!this.manager) {
@@ -324,13 +329,15 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       }
       this.options.document.on('afterTransaction', this.sharedChanged); this.awareness()?.on('change', this.awarenessChanged);
       this.options.provider?.on?.('status', this.providerStatus);
-      this.onLocalSelection(context.editor.state.doc, context.editor.state.selection); this.presences();
-      if (this.options.provider?.connect) {
+      if (this.context !== context) return;
+      this.onLocalSelection(context.editor.state.doc, context.editor.state.selection);
+      if (this.context === context && this.options.provider?.connect) {
         if (admittedRoomRoots.has(this.fragment)) this.gate();
         this.providerActive = true;
         return this.options.provider.connect();
       }
     } catch (error) {
+      if (this.context !== context) return;
       try { const cleanup = this.disconnect(); if (cleanup) void cleanup.catch(() => undefined); } catch { /* Preserve the connection failure. */ }
       throw error;
     }

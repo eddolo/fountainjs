@@ -2,7 +2,7 @@
 
 import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, composeExtensions, createEditor, getCollaborationState, insertText,
+import { CoreExtension, composeExtensions, createEditor, disconnectCollaboration, getCollaborationState, insertText,
   reconnectCollaboration, undoCollaboration, type NodeJSON } from '../src';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { createYjsCollaborationExtension as legacy } from '../src/yjs/legacy';
@@ -92,4 +92,22 @@ it('keeps host-managed initialized retained rooms usable with a disconnected pro
   expect(getCollaborationState(opened)?.status).toBe('connected');
   expect(provider.connect).toHaveBeenCalledOnce();
   expect(opened.getJSON()).toEqual(source.getJSON());
+});
+
+it('honors a host cancellation during the legacy adapter initial sync', () => {
+  const remote = doc();
+  editor(remote, 'Saved legacy room', legacy);
+  const local = doc();
+  Y.applyUpdate(local, Y.encodeStateAsUpdate(remote));
+  const provider = { connect: vi.fn(), disconnect: vi.fn() };
+  const opened = editor(local, 'Private draft', legacy, { provider, autoConnect: false });
+  const unsubscribe = opened.subscribe(state => {
+    if (state.doc.child(0).textContent !== 'Saved legacy room') return;
+    unsubscribe();
+    expect(disconnectCollaboration(opened)).toBe(true);
+  });
+  expect(reconnectCollaboration(opened)).toBe(true);
+  expect(getCollaborationState(opened)?.status).toBe('disconnected');
+  expect(provider.connect).not.toHaveBeenCalled();
+  expect(provider.disconnect).not.toHaveBeenCalled();
 });
