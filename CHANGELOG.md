@@ -7,6 +7,17 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve Word nonbreaking and optional hyphens as editable text and restore
+  their native DOCX elements on export.
+- Keep Conversion Lab print previews stable when images are unavailable.
+  Printable pages keep captions and omit image editing controls.
+- Preserve the UTF-8 byte-order mark on Markdown round trips in the Conversion
+  Lab and Node.js starter. The starter rejects malformed UTF-8.
+- Let the collaboration demo recover in a new tab after a failed bundle load
+  and let the migration fixture retry blocked local storage without discarding
+  a saved draft.
+- Reduce temporary allocations when checking retained collaboration metadata.
+
 - Name checklist checkboxes from their own task text in the editor, reader
   and standalone HTML. Blank tasks have a fallback name.
 

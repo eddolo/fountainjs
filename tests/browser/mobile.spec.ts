@@ -208,8 +208,10 @@ test('keeps Word export and re-import understandable on a phone viewport', async
     mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     buffer: Buffer.concat(chunks),
   });
-  await expect(page.getByText('mobile-handoff.docx')).toBeVisible();
-  await expect(page.getByText(/Valid document · 2 top-level blocks · bounded DOCX import/)).toBeVisible();
+  await expect(page.getByText('mobile-handoff.docx', { exact: true })).toBeVisible();
+  const status = page.getByRole('status', { name: 'Document import status', exact: true });
+  await expect(status).toHaveText(/Valid document · 2 top-level blocks · bounded DOCX import/);
+  await expect(status).toHaveAttribute('aria-busy', 'false');
   await expect(page.locator('.demo-output pre')).toContainText('bullet_list');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

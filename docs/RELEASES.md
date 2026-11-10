@@ -122,14 +122,14 @@ the repository.
    pnpm test:browser
    pnpm audit:ui
    pnpm dlx publint@0.3.24
-   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./styles.css
-   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular --profile esm-only
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --exclude-entrypoints ./angular ./angular/forms ./styles.css
+   pnpm dlx @arethetypeswrong/cli@0.18.5 --pack . --entrypoints ./angular ./angular/forms --profile esm-only
    pnpm pack --dry-run
    ```
 
    Resolution validation discovers the published export map, including the
    document schema JSON. CSS is a stylesheet asset rather than a JavaScript
-   module. Angular retains its documented ESM-only validation separately. Where
+   module. Both Angular entries use the separate ESM-only profile. Where
    npm is unavailable locally, create a tarball with `pnpm pack` and supply its
    path to the same validator in place of `--pack .`; do not reduce entry-point
    coverage or ignore resolution errors to bypass packing-tool availability.
