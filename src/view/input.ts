@@ -795,7 +795,10 @@ export class InputManager {
     const item = input?.closest<HTMLElement>('[data-fountain-node="task_item"][data-fountain-path]');
     if (!input || !item) return;
     const path = (item.dataset.fountainPath ?? '').split('.').filter(Boolean).map(Number);
+    const documentBefore = this.editor.state.doc;
     setNodeAttributes(this.editor, path, { checked: input.checked });
+    // Restore the rendered value if the browser toggled before an edit was refused.
+    if (this.editor.state.doc === documentBefore) input.checked = input.defaultChecked;
   };
 
   private onPointerDown = (event: PointerEvent): void => {

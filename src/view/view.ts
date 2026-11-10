@@ -156,6 +156,10 @@ export class EditorView {
     Object.entries(options.attributes ?? {}).forEach(([name, value]) => {
       if (!/^on/i.test(name)) this.dom.setAttribute(name, value);
     });
+    if (!editor.editable && this.dom.contentEditable === 'false'
+      && this.dom.getAttribute('role') === 'textbox' && !this.dom.hasAttribute('aria-readonly')) {
+      this.dom.setAttribute('aria-readonly', 'true');
+    }
     if (options.virtualization) {
       const virtualization = options.virtualization === true ? {} : options.virtualization;
       const minimum = virtualization.minimumBlockCount ?? 250;

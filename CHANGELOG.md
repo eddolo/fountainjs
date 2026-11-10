@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Announce read-only editor surfaces as read-only textboxes and show saved task
+  states with disabled checkboxes. In editable documents, refused task edits
+  restore the displayed checkbox value.
+
 - Retain Word row splitting rules, including inherited table defaults and
   explicit overrides, through Fountain HTML and DOCX. The import report flags
   the difference when a row may split in Word and the page preview keeps it

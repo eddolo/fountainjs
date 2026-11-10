@@ -74,6 +74,8 @@ for (const [name, route, readerName] of [
   const reader = page.getByRole('textbox', { name: readerName, exact: true });
   await reader.waitFor();
   assert.equal(await reader.getAttribute('contenteditable'), 'false');
+  await expect(reader).toHaveAttribute('aria-readonly', 'true');
+  for (const checkbox of await reader.getByRole('checkbox').all()) await expect(checkbox).toBeDisabled();
   return { surface: page, capture: reader };
 } });
 scenarios.push({ name: 'comment-saved-reader', route: '/demos/node-markdown.html', async open(page) {

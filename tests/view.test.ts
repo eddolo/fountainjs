@@ -519,6 +519,33 @@ describe('EditorView', () => {
     view.destroy();
   });
 
+  it.each(['reader', 'filtered editor'])('keeps the task checkbox in sync when an edit is unavailable in the %s', mode => {
+    const reader = mode === 'reader';
+    const editor = createEditor({
+      schema: CoreSchemaSpec,
+      editable: !reader,
+      plugins: reader ? [] : [new Plugin({ filterTransaction: transaction => !transaction.docChanged })],
+      content: { type: 'doc', content: [{ type: 'task_list', content: [
+        { type: 'task_item', attrs: { checked: true }, content: [{ type: 'paragraph' }] },
+      ] }] },
+    });
+    const mount = document.body.appendChild(document.createElement('div'));
+    const view = new EditorView(mount, editor);
+    try {
+      const checkbox = view.dom.querySelector<HTMLInputElement>('[data-fountain-task-toggle]')!;
+      expect(view.dom.getAttribute('aria-readonly')).toBe(reader ? 'true' : null);
+      expect(checkbox.disabled).toBe(reader);
+      expect(checkbox.checked).toBe(true);
+      checkbox.click();
+      expect(checkbox.checked).toBe(true);
+      expect(editor.state.doc.child(0).child(0).attrs.checked).toBe(true);
+    } finally {
+      view.destroy();
+      editor.destroy();
+      mount.remove();
+    }
+  });
+
   it('mounts and cleans up interactive node views supplied by extensions', () => {
     let destroyed = false;
     class PollNodeView {

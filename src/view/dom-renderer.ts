@@ -2,6 +2,7 @@ import { DecorationSet, Node, isSafeURL, type Attributes, type Decoration, type 
 import { getNodeAtPath } from '../core/transaction/path';
 import { matchesContentExpression } from '../core/schema/content-expression';
 import type { VirtualBlockLayout, VirtualBlockPlan } from './virtual-layout';
+import type { EditorView } from './view';
 import { applySharedDirectionProjection } from './shared-direction';
 import { applyParagraphSpacingProjection, clearParagraphSpacingProjection } from './paragraph-spacing';
 
@@ -283,6 +284,10 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   applySharedDirectionProjection(dom, node, context.document ?? node);
   if (context.document) applyParagraphSpacingProjection(dom, node, context.document, path);
   if (node.type.spec.atom) dom.contentEditable = 'false';
+  if (!custom && node.type.name === 'task_item' && (context.view as EditorView | undefined)?.editor?.editable === false) {
+    const checkbox = dom.querySelector<HTMLInputElement>('input[data-fountain-task-toggle]');
+    if (checkbox) checkbox.disabled = true;
+  }
   context.decorations?.find(position, position + node.nodeSize, (decoration) => (
     decoration.type === 'node' && decoration.from === position && decoration.to === position + node.nodeSize
   )).forEach((decoration) => applyDecorationAttributes(dom, decoration));

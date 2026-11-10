@@ -1321,6 +1321,14 @@ gate and scoped reload fix are documented above. WebKit scrolling and visual
 findings remain open. No row or percentage
 promotion. See [the evidence](DOCX_FIDELITY_CHECKPOINT.md#headless-file-readiness-follow-up-2026-10-06).
 
+Read-only task follow-up (2026-11-10, Unreleased). Issue and task previews expose
+read-only textbox semantics. Saved checkboxes retain their checked state and
+leave the tab order. When a plugin refuses a task edit, the browser checkbox
+returns to the committed value. Six recorded editor/reader journeys and 12
+automated accessibility states pass across Chromium, Firefox and WebKit.
+Axe leaves workflow navigation contrast for manual review. Screen-reader
+and physical-device verification are still open.
+
 Configuration-control follow-up (2026-10-06, Unreleased): named non-modal forms,
 instance-local trigger ownership, native field key behavior and mutation-safe
 external focus now have recorded keyboard/source-retention evidence. Visual

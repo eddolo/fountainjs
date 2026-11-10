@@ -54,6 +54,19 @@ export async function issueEditorJourney(page: Page, info: TestInfo): Promise<vo
   await previewTab.click();
   const preview = page.getByRole('textbox', { name: 'Issue preview', exact: true });
   await expect(preview).toHaveAttribute('contenteditable', 'false');
+  await expect(preview).toHaveAttribute('aria-readonly', 'true');
+  const readerTasks = preview.getByRole('checkbox');
+  await expect(readerTasks).toHaveCount(2);
+  await expect(readerTasks.nth(0)).toBeDisabled();
+  await expect(readerTasks.nth(0)).not.toBeChecked();
+  await expect(readerTasks.nth(1)).toBeDisabled();
+  await expect(readerTasks.nth(1)).toBeChecked();
+  await readerTasks.nth(1).scrollIntoViewIfNeeded();
+  const box = (await readerTasks.nth(1).boundingBox())!;
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await expect(readerTasks.nth(1)).toBeChecked();
+  await readerTasks.nth(1).evaluate(element => (element as HTMLElement).focus());
+  await expect(readerTasks.nth(1)).not.toBeFocused();
   await expect(preview).toContainText('Verified locally');
   await expectReference(preview);
   await expect(page.getByRole('toolbar', { name: 'Formatting and rich content' })).not.toBeVisible();
@@ -72,6 +85,8 @@ export async function issueEditorJourney(page: Page, info: TestInfo): Promise<vo
   await visualTab.click();
   await expect(page.getByRole('alert')).toHaveCount(0);
   const checkbox = editor.locator('input[type="checkbox"]').first();
+  await expect(editor).not.toHaveAttribute('aria-readonly', 'true');
+  await expect(checkbox).toBeEnabled();
   await checkbox.check();
   await expect(checkbox).toBeChecked();
   await page.getByRole('button', { name: 'Undo', exact: true }).click();

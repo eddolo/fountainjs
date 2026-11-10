@@ -56,6 +56,7 @@ export async function productWorkflowJourney(page: Page, info: TestInfo): Promis
   await pane.getByRole('button', { name: 'Reader preview', exact: true }).click();
   const reader = pane.getByRole('textbox', { name: 'Task description preview', exact: true });
   await expect(reader).toHaveAttribute('contenteditable', 'false');
+  await expect(reader).toHaveAttribute('aria-readonly', 'true');
   await expect(reader).toContainText('Launch approved.');
   await expect(editor).not.toBeVisible();
   await capture('task-reader.png');
