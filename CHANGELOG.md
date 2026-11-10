@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve local drafts that change during a retained Yjs checkpoint install.
+
 - Hide nested Word field values that occur inside another field's instruction.
 
 - Reconnect unreferenced DOCX footnotes at the cursor in the Conversion Lab.

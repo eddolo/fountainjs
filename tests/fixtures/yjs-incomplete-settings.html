@@ -20,9 +20,12 @@
   import * as Y from 'yjs';
   import { CoreExtension, EditorView, composeExtensions, createEditor, defineExtension, getCollaborationState } from 'fountainjs-editor';
   import { defineStructuredAttribute, setStructuredAttribute } from 'fountainjs-editor/structured-attributes';
-  import { captureRetainedCheckpoint, createRetainedYjsCollaborationExtension } from 'fountainjs-editor/experimental/yjs-retained';
+  import { captureRetainedCheckpoint } from 'fountainjs-editor/experimental/yjs-retained';
+  import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs';
 
-  const mapName = new URLSearchParams(location.search).get('map') === 'custom' ? 'incident-settings' : undefined;
+  const parameters = new URLSearchParams(location.search);
+  const mapName = parameters.get('map') === 'custom' ? 'incident-settings' : undefined;
+  const editOnInstall = parameters.has('edit-on-install');
   const settings = defineExtension({ name: 'incident-settings', nodes: { settings: { group: 'block', atom: true,
     toDOM: () => ['div', { 'aria-label': 'Incident display settings' }, 'Incident display settings'],
   } } });
@@ -31,7 +34,7 @@
   const schemaVersion = 'settings-1';
   const doc = text => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] });
   const create = (document, content, definitions, extra) => {
-    const kit = composeExtensions([CoreExtension, settings, createRetainedYjsCollaborationExtension({
+    const kit = composeExtensions([CoreExtension, settings, createYjsCollaborationExtension({
       document, user: { id: 'author', name: 'Author', color: '#7048e8' },
       structuredAttributes: { mapName, definitions }, ...extra,
     })]);
@@ -48,6 +51,12 @@
   const status = document.querySelector('#status');
   const partial = document.querySelector('#partial'), complete = document.querySelector('#complete');
   partial.disabled = false;
+  if (editOnInstall) {
+    partial.hidden = true;
+    complete.disabled = false;
+    complete.textContent = 'Open saved room';
+    document.querySelector('#recovered').closest('section').hidden = true;
+  }
   status.textContent = 'Saved room ready';
   partial.onclick = () => {
     partial.disabled = true;
@@ -63,10 +72,23 @@
   };
   complete.onclick = () => {
     complete.disabled = true;
-    const room = create(new Y.Doc(), doc('Fallback.'), [layout, display], { admission, provider });
-    new EditorView(document.querySelector('#recovered'), room, { ariaLabel: 'Verified settings editor' });
+    const client = new Y.Doc();
+    const room = create(client, doc('Fallback.'), [layout, display], { admission, provider });
+    if (editOnInstall) {
+      const fragment = client.getXmlFragment('fountain');
+      const restoreDraft = () => {
+        fragment.unobserve(restoreDraft);
+        room.dispatch(room.createTransaction().insertText([0, 0], 0, 'Restored draft. '));
+      };
+      fragment.observe(restoreDraft);
+    }
+    new EditorView(document.querySelector(editOnInstall ? '#draft' : '#recovered'), room, {
+      ariaLabel: editOnInstall ? 'Admission draft editor' : 'Verified settings editor',
+    });
     room.subscribe(() => {
-      if (getCollaborationState(room).status !== 'connected') return;
+      const state = getCollaborationState(room);
+      if (state.status === 'error') status.textContent = state.error.message;
+      if (state.status !== 'connected') return;
       const { layout, display } = room.state.doc.child(1).attrs;
       document.querySelector('#settings').textContent = `Columns: ${layout.columns}. Compact view: ${display.compact ? 'On' : 'Off'}.`;
       status.textContent = 'Room opened with both saved fields';

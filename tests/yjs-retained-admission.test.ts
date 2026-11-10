@@ -100,6 +100,41 @@ it('allows a draft that was explicitly undone back to its pre-join state',async(
  editor.dispatch(editor.createTransaction().insertText([0,0],0,'TEMP '));editor.dispatch(editor.createTransaction().replaceDocument(original));pending.resolve(server.checkpoint);await settled(editor);expect(editor.getJSON()).toEqual(server.editor.getJSON());
 });
 
+it.each(['installation', 'room setup'] as const)('preserves a draft edited by a host observer during %s', async phase => {
+  const server = await source();
+  const client = doc();
+  const pending = deferred<RetainedCheckpoint>();
+  const provider = { connect: vi.fn(), disconnect: vi.fn() };
+  const editor = make(client, 'Local template', { provider, ...admission(() => pending.promise) });
+  const fragment = client.getXmlFragment('fountain');
+  let installed = false;
+  const recordDraft = (transaction: Y.Transaction) => {
+    const installing = [...transaction.changed.keys()].some(type => Object.is(type, fragment));
+    if (installing) installed = true;
+    if (!installed || installing !== (phase === 'installation')) return;
+    client.off('afterTransaction', recordDraft);
+    editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'OBSERVER DRAFT '));
+  };
+  client.on('afterTransaction', recordDraft);
+  pending.resolve(server.checkpoint);
+  await settled(editor, 'error');
+  expect(editor.getText()).toBe('OBSERVER DRAFT Local template');
+  expect(getCollaborationState(editor)?.error?.message).toContain('local draft');
+  expect(provider.connect).not.toHaveBeenCalled();
+  expect(provider.disconnect).not.toHaveBeenCalled();
+
+  expect(reconnectCollaboration(editor)).toBe(true);
+  await settled(editor, 'error');
+  expect(editor.getText()).toBe('OBSERVER DRAFT Local template');
+  expect(provider.connect).not.toHaveBeenCalled();
+
+  editor.dispatch(editor.createTransaction().replaceDocument(editor.state.schema.nodeFromJSON(server.editor.getJSON())));
+  expect(reconnectCollaboration(editor)).toBe(true);
+  await settled(editor);
+  expect(editor.getText()).toBe('Authoritative paper');
+  expect(provider.connect).toHaveBeenCalledOnce();
+});
+
 it.each(['throw','reject'] as const)('contains a %s from admission without starting transport or mutating source',async kind=>{
  const client=doc(),before=Y.encodeStateAsUpdate(client),provider={connect:vi.fn(),disconnect:vi.fn()},load=()=>{if(kind==='throw')throw new Error('Admission unavailable');return Promise.reject(new Error('Admission unavailable'));},editor=make(client,'Local template',{provider,...admission(load)});await settled(editor,'error');expect(editor.getText()).toBe('Local template');expect(Y.encodeStateAsUpdate(client)).toEqual(before);expect(provider.connect).not.toHaveBeenCalled();expect(provider.disconnect).not.toHaveBeenCalled();
 });

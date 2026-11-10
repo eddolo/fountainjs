@@ -241,10 +241,15 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       const lease = reference ? Object.freeze({ ...reference, room: this.room, identity: candidate.identity }) : undefined;
       if (lease && this.admissionLease && lease.identity !== this.admissionLease.identity) throw new Error('Authority admission room identity changed; original client preserved.');
       if (lease) { await this.admission!.authority!.bind(lease, controller.signal); if (!current()) return; checkDraft(); }
-      candidate.install(this.repair); if (!current()) return;
+      candidate.install(this.repair);
+      if (!current()) return;
       this.admissionLease = lease;
-      this.joining = false; attaching = true;
-      await this.attach(context, false);
+      attaching = true;
+      await this.attach(context, () => {
+        // Check after the checkpoint and store have notified host observers.
+        checkDraft();
+        this.joining = false;
+      });
       if (current()) { this.admissionController = undefined; this.joinBaseline = undefined; }
     } catch (error) {
       // attach() and the generic lifecycle own transport failures. A rejected
@@ -256,9 +261,9 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     }
   }
 
-  private attach(context: CollaborationAdapterContext, allowSeed = true): void | Promise<void> {
+  private attach(context: CollaborationAdapterContext, beforeInitialSync?: () => void): void | Promise<void> {
     const fresh = this.fragment.length === 0 && this.options.document.getMap(`${this.room}:document`).size === 0;
-    if (fresh && !allowSeed) throw new Error('Admission requires an already initialized retained room.');
+    if (fresh && beforeInitialSync) throw new Error('Admission requires an already initialized retained room.');
     const { store } = this.options.document;
     if (fresh && (store.pendingStructs || store.pendingDs)) {
       // Retrying this adapter after the missing bytes arrive would replace the draft.
@@ -291,6 +296,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
         } else this.structured?.initialize(this.store.read());
       }, this.origin);
       const value = this.canonical(), selection = restoreSelection(this.store!, value, this.localSelection);
+      beforeInitialSync?.();
       this.apply(value, selection, 'initial-sync');
       this.releaseDirection = registerSharedDirectionIdentity(context.editor, path =>
         retainedDirectionIdentity(this.options.document, this.room, this.roomId, this.store?.identity(path)));

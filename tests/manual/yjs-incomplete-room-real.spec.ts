@@ -48,3 +48,17 @@ for (const map of ['default', 'custom']) {
     await page.screenshot({ path: info.outputPath('verified-saved-settings.png'), fullPage: true, scale: 'css' });
   });
 }
+
+test('keeps a host-restored draft editable when it changes during checkpoint installation', async ({ page }, info) => {
+  await page.goto('/tests/fixtures/yjs-incomplete-settings.html?edit-on-install');
+  await page.getByRole('button', { name: 'Open saved room' }).click();
+  await expect(page.getByRole('status')).toContainText('local draft');
+  await expect(page.getByText('Transport connections: 0')).toBeVisible();
+  const draft = page.getByRole('region', { name: 'Local draft' }).getByRole('textbox', { name: 'Admission draft editor' });
+  await expect(draft).toHaveText('Restored draft. Fallback.');
+  await draft.click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' Kept and reviewed.');
+  await expect(draft).toHaveText('Restored draft. Fallback. Kept and reviewed.');
+  await page.screenshot({ path: info.outputPath('draft-after-checkpoint-install.png'), fullPage: true, scale: 'css' });
+});

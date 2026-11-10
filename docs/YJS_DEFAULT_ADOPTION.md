@@ -84,6 +84,12 @@ The retained adapter now refuses an empty local document with a provider before
 seeding or calling that provider. Load an admitted checkpoint first. The host
 still must bind the provider to the correct room and enforce transport fences.
 
+A host observer can restore local text synchronously when the checkpoint arrives.
+The adapter checks the visible draft again after installing the checkpoint and
+setting up the room, before showing shared content or opening transport.
+If the draft differs, the editor keeps it editable
+and reports the conflict on retry until the host explicitly resolves it.
+
 ## Existing XML rooms
 
 An application that needs to keep reading or editing its existing XML format can

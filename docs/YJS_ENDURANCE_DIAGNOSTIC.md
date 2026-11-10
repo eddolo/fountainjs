@@ -481,3 +481,13 @@ All 997 focused model and Yjs tests passed. The public collaboration demo
 passed 21 recorded Chromium, Firefox and WebKit workflows covering offline
 text merges, independent undo, and typing after competing wraps. Package,
 API and bundle budget checks passed.
+
+## Partition map reuse experiment
+
+Reusing the checked native edit's partition map did not produce a repeatable
+typing improvement. Across two run orders at 5,000 paragraphs, the existing
+build's eleven-character burst medians were 411.6 and 407.7 ms. The candidate
+measured 415.2 and 403.2 ms. All four runs converged to the same document digest
+and exchanged 308 updates each. A separate continuous typing probe was also
+mixed. The candidate was discarded. Local reports are in
+`artifacts/yjs-owned-partitions-*.json`.
