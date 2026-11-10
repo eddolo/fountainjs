@@ -11,6 +11,26 @@ const schema = new Schema(StarterKit.schema);
 const ONE_PIXEL_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 const ONE_PIXEL_DATA_URL = `data:image/png;base64,${ONE_PIXEL_PNG}`;
 
+it('round-trips native optional and nonbreaking hyphens as marked Unicode text', () => {
+  const xml = '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:foreign="urn:foreign"><w:body>'
+    + '<w:p><w:r><w:rPr><w:b/></w:rPr><w:t>non</w:t><w:noBreakHyphen/><w:t>breaking</w:t><w:tab/>'
+    + '<w:t>op</w:t><w:softHyphen/><w:t>tional</w:t><foreign:noBreakHyphen/><foreign:softHyphen/><w:t xml:space="preserve">-end </w:t></w:r></w:p>'
+    + '</w:body></w:document>';
+  const original = importDOCX(zipSync({ 'word/document.xml': strToU8(xml) }), schema).document;
+  const text = 'non\u2011breaking\top\u00adtional-end ';
+  expect(original.child(0).child(0).toJSON()).toMatchObject({ type: 'text', text, marks: [{ type: 'strong' }] });
+
+  const exported = exportDOCX(original);
+  const native = strFromU8(unzipSync(exported.bytes)['word/document.xml']!);
+  expect(native).toContain('<w:noBreakHyphen/>');
+  expect(native).toContain('<w:softHyphen/>');
+  expect(native).toContain('<w:t xml:space="preserve">tional-end </w:t>');
+  expect(native).not.toMatch(/[\u00ad\u2011]/u);
+  const reopened = importDOCX(exported.bytes, schema).document.child(0).child(0);
+  expect(reopened.text).toBe(text);
+  expect(reopened.marks.map(mark => mark.type.name)).toContain('strong');
+});
+
 function documentFixture() {
   const strong = schema.marks.strong.create();
   const em = schema.marks.em.create();

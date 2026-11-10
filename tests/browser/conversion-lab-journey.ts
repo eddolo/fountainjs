@@ -4,6 +4,53 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionWordHyphensJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const doc = schema.node('doc', {
+    pageSettings: { unit: 'pt', width: 244, height: 360, marginTop: 36, marginRight: 36, marginBottom: 36, marginLeft: 36 },
+  }, ['Word wrapping sample', 'Layout checks compare NONBREAKING.', 'Layout checks compare OPTIONAL.']
+    .map(text => schema.node('paragraph', {}, [schema.text(text)])));
+  const archive = unzipSync(exportDOCX(doc).bytes);
+  archive['word/document.xml'] = strToU8(strFromU8(archive['word/document.xml']!)
+    .replace('NONBREAKING', 'non</w:t><w:noBreakHyphen/><w:t>breaking')
+    .replace('OPTIONAL', 'inter</w:t><w:softHyphen/><w:t>operability'));
+  const source = info.outputPath('word-hyphens.docx');
+  await writeFile(source, zipSync(archive));
+  const expected = ['Word wrapping sample', 'Layout checks compare non\u2011breaking.', 'Layout checks compare inter\u00adoperability.'];
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(source);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-hyphens.docx' });
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  await expect(editor.locator('p')).toHaveText(expected);
+  await editor.getByText(expected[0]!, { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.type('!');
+  await expect(editor.locator('p').first()).toHaveText(expected[0]! + '!');
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).first().click();
+  await expect(editor.locator('p')).toHaveText(expected);
+  await editor.screenshot({ path: info.outputPath('hyphens-editor.png') });
+
+  const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
+  await pagination.getByRole('button', { name: 'Build page preview' }).click();
+  const sheet = pagination.locator('.fountain-page-preview__sheet');
+  await expect(sheet.locator('p')).toHaveText(expected);
+  await sheet.screenshot({ path: info.outputPath('hyphens-preview.png') });
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const saved = info.outputPath('fountain-hyphens.docx');
+  await (await pending).saveAs(saved);
+  const xml = strFromU8(unzipSync(await readFile(saved))['word/document.xml']!);
+  expect(xml.match(/<w:(?:noBreakHyphen|softHyphen)\/>/gu)).toEqual(['<w:noBreakHyphen/>', '<w:softHyphen/>']);
+  await input.setInputFiles(saved);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-hyphens.docx' })
+    .getByRole('textbox', { name: 'Imported document editor' });
+  await expect(reopened.locator('p')).toHaveText(expected);
+}
+
 export async function conversionRowSplittingJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
   const lead = (text: string, pageBreakBefore = false) => schema.node('paragraph', {

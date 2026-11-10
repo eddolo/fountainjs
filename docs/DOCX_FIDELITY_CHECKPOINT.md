@@ -1,5 +1,16 @@
 # DOCX fidelity checkpoint
 
+Word hyphens (2026-11-10, Unreleased) retain native nonbreaking and optional
+hyphens as editable U+2011 and U+00AD text, including the containing run's
+formatting. Native DOCX output writes the corresponding Word run elements.
+Chromium, Firefox and WebKit passed import, edit, undo, page preview, download
+and reopen. On the tested narrow page, LibreOffice 24.2.7.2 kept the
+nonbreaking compound together and displayed the optional hyphen only at the
+line wrap. The original and exported page rasters match. This covers the two
+explicit run elements in the fixture.
+[Word nonbreaking hyphen](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.nobreakhyphen)
+· [Word optional hyphen](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.softhyphen)
+
 Word row splitting (2026-11-10, Unreleased) retains explicit allow/keep rules
 and ordinary inherited table-style defaults as portable row attributes. A
 direct setting can override either inherited value. Conditional row-style

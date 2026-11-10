@@ -564,6 +564,9 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
           appendText(textContent(item), marks, expandedName(item) === `${WORD_NS}|t`);
         }
         else if (itemName === 'tab') appendText('\t', marks);
+        else if ((itemName === 'noBreakHyphen' || itemName === 'softHyphen') && expandedName(item) === `${WORD_NS}|${itemName}`) {
+          appendText(itemName === 'noBreakHyphen' ? '\u2011' : '\u00ad', marks);
+        }
         else if (itemName === 'footnoteReference' && media.footnotes && expandedName(item) === `${WORD_NS}|footnoteReference`) {
           const id = wordNoteId(wordPageAttribute(item, 'id'));
           if (id !== undefined && media.footnotes.has(id) && !media.sourcePart) {
@@ -2120,9 +2123,19 @@ function textRuns(node: FountainNode, context: ExportContext, path: readonly num
     }
     const { xml, hyperlink, unsupported } = runProperties(inline.marks, context.issues, [...path, index], node.attrs.emphasis === 'explicit', paragraphFont, defaults);
     unsupported.forEach((name) => context.issues.push({ code: 'unsupported-mark', severity: 'warning', message: `Word export omitted the ${name} mark.`, path: [...path, index] }));
-    const preserve = /^\s|\s$|\s{2,}|\t/.test(value) ? ' xml:space="preserve"' : '';
+    const separators = node.type.name === 'code_block' ? /([\t\n\u00ad\u2011])/ : /([\t\u00ad\u2011])/;
     const pieces = inline.isText && value === '' ? '<w:t/>'
-      : value.split(node.type.name === 'code_block' ? /(\t|\n)/ : /(\t)/).map(part => part === '\t' ? '<w:tab/>' : part === '\n' && node.type.name === 'code_block' ? '<w:br/>' : part ? `<w:t${preserve}>${xmlEscape(part)}</w:t>` : '').join('');
+      : value.split(separators).map(part => {
+        if (part === '\n' && node.type.name === 'code_block') return '<w:br/>';
+        switch (part) {
+          case '': return '';
+          case '\t': return '<w:tab/>';
+          case '\u00ad': return '<w:softHyphen/>';
+          case '\u2011': return '<w:noBreakHyphen/>';
+        }
+        const preserve = /^\s|\s$|\s{2,}/.test(part) ? ' xml:space="preserve"' : '';
+        return `<w:t${preserve}>${xmlEscape(part)}</w:t>`;
+      }).join('');
     const run = `<w:r>${xml}${pieces}</w:r>`;
     if (!hyperlink) return run;
     if (!isSafeURL(hyperlink, { allowEmpty: false })) {
