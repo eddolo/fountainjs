@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { Schema } from '../src/core';
 import { exportDOCX, importDOCX } from '../src/docx';
 import { StarterKit } from '../src/extensions';
-import { composeExtensions, createMathExtension } from '../src';
+import { composeExtensions, createEditor, createMathExtension } from '../src';
 
 const schema = new Schema(StarterKit.schema);
 const ONE_PIXEL_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
@@ -46,6 +46,28 @@ function documentFixture() {
 }
 
 describe('DOCX interchange', () => {
+  it('optionally omits only the live editor’s untouched trailing typing paragraph', () => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: documentFixture().toJSON() });
+    try {
+      const mounted = editor.state.doc;
+      const last = mounted.childCount - 1;
+      expect(mounted.child(last - 1).type.name).toBe('table');
+      expect(mounted.child(last).type.name).toBe('paragraph');
+      const reopen = (doc: typeof mounted, omitTrailingCaret = true) =>
+        importDOCX(exportDOCX(doc, { omitTrailingCaret }).bytes, schema).document;
+      const output = exportDOCX(mounted, { omitTrailingCaret: true });
+      expect(output.report.issues).toContainEqual(expect.objectContaining({
+        code: 'automatic-trailing-paragraph-omitted', severity: 'info', path: [last],
+      }));
+      expect(reopen(mounted).content.at(-1)?.type.name).toBe('table');
+      expect(reopen(mounted, false).content.at(-1)?.type.name).toBe('paragraph');
+      expect(reopen(schema.nodeFromJSON(mounted.toJSON())).content.at(-1)?.type.name).toBe('paragraph');
+      expect(editor.state.doc).toBe(mounted);
+      editor.dispatch(editor.state.createTransaction().insertText([last, 0], 0, 'Typed after the table.'));
+      expect(reopen(editor.state.doc).content.at(-1)?.textContent).toBe('Typed after the table.');
+    } finally { editor.destroy(); }
+  });
+
   it('reads independently authored numbering overrides with instance isolation and override precedence', () => {
     const ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
     const numbering = `<w:numbering xmlns:w="${ns}"><w:abstractNum w:abstractNumId="8"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/></w:lvl></w:abstractNum><w:num w:numId="77"><w:abstractNumId w:val="8"/><w:lvlOverride w:ilvl="0"><w:startOverride w:val="7"/></w:lvlOverride></w:num><w:num w:numId="88"><w:abstractNumId w:val="8"/><w:lvlOverride w:ilvl="0"><w:startOverride w:val="0"/><w:lvl w:ilvl="0"><w:start w:val="4"/></w:lvl></w:lvlOverride></w:num></w:numbering>`;

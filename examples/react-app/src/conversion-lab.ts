@@ -142,6 +142,7 @@ export function exportLab(document: Node, format: LabFormat, source?: MarkdownSo
   if (document.type.schema !== context.schema) document = context.schema.nodeFromJSON(document.toJSON());
   if (format === 'docx') {
     const result = exportDOCX(document, {
+      omitTrailingCaret: true,
       resolveMath: node => compileTeXForDOCX(String(node.attrs.latex), node.type.name === 'math_block'),
     });
     return { bytes: result.bytes, extension: 'docx', mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', issues: result.report.issues.map(issue => ({ code: issue.code, message: issue.message, path: issue.path, sourcePart: issue.sourcePart })) };

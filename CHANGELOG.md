@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Add the DOCX export option `omitTrailingCaret`. The Conversion Lab enables
+  it so an untouched automatic typing paragraph cannot move a terminal table
+  in a native Word reader.
 - Preserve top, center, and bottom Word table cell alignment in the editor,
   page previews, HTML and DOCX. Cell appearance now accepts
   `verticalAlign` as an optional property.

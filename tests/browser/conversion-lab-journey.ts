@@ -37,7 +37,9 @@ export async function conversionCellAlignmentJourney(page: Page, info: TestInfo)
     expect(positions[1]!.top - positions[0]!.top).toBeGreaterThan(15);
     expect(positions[2]!.top - positions[1]!.top).toBeGreaterThan(15);
   }
-  await expectAligned(workspace.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  await expectAligned(editor.locator('table'));
+  await expect(editor.locator(':scope > p').last()).toBeEmpty();
   const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
   await pagination.getByRole('button', { name: 'Build page preview' }).click();
   const sheets = pagination.locator('.fountain-page-preview__sheet');
@@ -49,6 +51,9 @@ export async function conversionCellAlignmentJourney(page: Page, info: TestInfo)
   await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
   const exportedPath = info.outputPath('fountain-cell-alignment.docx');
   await (await pending).saveAs(exportedPath);
+  const exported = unzipSync(await readFile(exportedPath));
+  expect(strFromU8(exported['word/document.xml']!)).toMatch(/<\/w:tbl><w:sectPr>/u);
+  await expect(editor.locator(':scope > p').last()).toBeEmpty();
   await input.setInputFiles(exportedPath);
   const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-cell-alignment.docx' });
   await expectAligned(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));

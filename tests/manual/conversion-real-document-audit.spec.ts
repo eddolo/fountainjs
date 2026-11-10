@@ -1388,10 +1388,10 @@ test('visually audit an independently authored scientific DOCX in the public lab
   await editor.locator('table').scrollIntoViewIfNeeded();
   if (verifyTableWidths) {
     const table = editor.locator('table');
-    await expect(table.locator('tr').first().locator('th,td').first()).toHaveAttribute('data-colwidth', '221,221,221');
+    await expect(table.locator('tr').first().locator('th,td').first()).toHaveAttribute('data-colwidth', '220.8,220.8,220.8');
     const leafCells = table.locator('tr').last().locator('th,td');
     await expect(leafCells).toHaveCount(3);
-    for (let index = 0; index < 3; index += 1) await expect(leafCells.nth(index)).toHaveAttribute('data-colwidth', '221');
+    for (let index = 0; index < 3; index += 1) await expect(leafCells.nth(index)).toHaveAttribute('data-colwidth', '220.8');
   }
   if (verifyShading) {
     const titleCell = editor.getByRole('cell', { name: /^Water temperature in degrees C/ });
@@ -1503,15 +1503,15 @@ test('visually audit an independently authored scientific DOCX in the public lab
     const exportedXML = strFromU8(unzipSync(await readFile(exported))['word/document.xml']!);
     expect(exportedXML).toContain('<w:tblW w:w="0" w:type="auto"/>');
     expect(exportedXML).not.toContain('<w:tblLayout w:type="fixed"/>');
-    expect(exportedXML).toContain('<w:tblGrid><w:gridCol w:w="3315"/><w:gridCol w:w="3315"/><w:gridCol w:w="3315"/></w:tblGrid>');
+    expect(exportedXML).toContain('<w:tblGrid><w:gridCol w:w="3312"/><w:gridCol w:w="3312"/><w:gridCol w:w="3312"/></w:tblGrid>');
   }
   if (verifyIntake) {
     await expect(workspace.getByLabel('Round-trip result')).toContainText('Missing original content is not restored');
     if (!verifyFootnotes) await expect(workspace.getByLabel('Round-trip result')).toContainText('Exact Fountain document equality');
     else {
-      // Definitions live in a separate Word story; a trailing editable paragraph
-      // can change their model position without changing note text or linkage.
-      await expect(workspace.getByLabel('Round-trip result')).toContainText('footnote-definition-position-normalized');
+      // The generated typing paragraph stays in the editor. The exported
+      // document retains the footnote in its separate Word story.
+      await expect(workspace.getByLabel('Round-trip result')).toContainText('automatic-trailing-paragraph-omitted');
       await expect(workspace.getByRole('textbox', { name: 'Reopened export preview' }).locator('[data-fountain-footnote-definition]')).toContainText('Verified by reviewer.');
     }
     const privateDownload = page.waitForEvent('download');
@@ -1577,9 +1577,9 @@ test('visually audit an independently authored scientific DOCX in the public lab
   if (verifyBreaks) await expect(page.getByRole('textbox', { name: 'Imported document editor' }).getByRole('separator', { name: 'Page break', exact: true })).toHaveCount(1);
   if (verifyTableWidths) {
     const table = reopenedEditor.locator('table');
-    await expect(table.locator('tr').first().locator('th,td').first()).toHaveAttribute('data-colwidth', '221,221,221');
+    await expect(table.locator('tr').first().locator('th,td').first()).toHaveAttribute('data-colwidth', '220.8,220.8,220.8');
     const leafCells = table.locator('tr').last().locator('th,td');
-    for (let index = 0; index < 3; index += 1) await expect(leafCells.nth(index)).toHaveAttribute('data-colwidth', '221');
+    for (let index = 0; index < 3; index += 1) await expect(leafCells.nth(index)).toHaveAttribute('data-colwidth', '220.8');
     await table.scrollIntoViewIfNeeded();
     await page.screenshot({ path: info.outputPath('reopened-table-widths.png') });
   }

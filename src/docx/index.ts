@@ -6,6 +6,7 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 import { Node as FountainNode, type Mark, type Schema } from '../core/schema';
 import { isSafeURL } from '../core/url';
+import { isAutomaticTrailingParagraph } from '../core/editing-provenance';
 import { INLINE_DRAWING_SIDES, isInlineDrawingDistances, type InlineDrawingDistances } from '../core/image-drawing';
 import { tableBackground } from '../core/table-background';
 import { TableMap } from '../core/table-map';
@@ -112,6 +113,8 @@ export interface DOCXExportOptions extends Pick<DOCXLimits, 'maxMediaBytes' | 'm
   readonly creator?: string;
   readonly description?: string;
   readonly page?: 'a4' | 'letter';
+  /** Omit the live editor's untouched automatic typing paragraph from Word output. */
+  readonly omitTrailingCaret?: boolean;
   /** Resolves non-data image sources without giving the converter network access. */
   readonly resolveImage?: (source: string, node: FountainNode, path: readonly number[]) => DOCXExportImage | undefined;
   /** Experimental native Word math boundary. Supply semantic data, never raw XML.
@@ -2481,8 +2484,14 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     if ((references.get(sourceId) ?? 0) > 1) issues.push({ code: 'repeated-footnote-reference', severity: 'warning', message: 'Multiple references share one footnote definition. Numbering of repeated native Word markers is not certified.', path: definition.path });
     footnotes.set(sourceId, { ...definition, id });
   }
-  const lastBodyIndex = node.content.findLastIndex(item => item.type.name !== 'footnote_definition');
-  if (definitions.size && node.content.some((item, index) => item.type.name === 'footnote_definition' && index < lastBodyIndex)) {
+  const blocks = options.omitTrailingCaret && isAutomaticTrailingParagraph(node.content.at(-1))
+    ? node.content.slice(0, -1) : node.content;
+  if (blocks !== node.content) {
+    issues.push({ code: 'automatic-trailing-paragraph-omitted', severity: 'info', path: [blocks.length],
+      message: 'The untouched automatic typing paragraph was omitted from the Word body.' });
+  }
+  const lastBodyIndex = blocks.findLastIndex(item => item.type.name !== 'footnote_definition');
+  if (definitions.size && blocks.some((item, index) => item.type.name === 'footnote_definition' && index < lastBodyIndex)) {
     issues.push({ code: 'footnote-definition-position-normalized', severity: 'info', message: 'DOCX stores notes separately from body blocks; reimport places definitions after the body rather than retaining their editor block positions.' });
   }
   const context: ExportContext = {
@@ -2492,7 +2501,7 @@ export function exportDOCX(node: FountainNode, options: DOCXExportOptions = {}):
     maxMediaFiles: exportLimit(options.maxMediaFiles, DEFAULT_LIMITS.maxMediaFiles, 'maxMediaFiles'),
     mediaBytes: 0, nextDrawingId: 1, nextControlId: 1, mathSources: [], mathCharacters: 0,
   };
-  const body = node.content.map((block, index) => blockXML(block, context, [index])).join('');
+  const body = blocks.map((block, index) => blockXML(block, context, [index])).join('');
   const noteXML = [...footnotes.values()].map(note => {
     context.sourcePart = 'word/footnotes.xml';
     let content = note.node.content.map((block, index) => blockXML(block, context, [...note.path, index])).join('');

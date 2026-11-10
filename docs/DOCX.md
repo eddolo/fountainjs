@@ -142,6 +142,11 @@ was represented or that original layout is certified. `"lossy"` means one or mor
 warnings/errors were detected; it does not imply all losses were found. DOCX is not Fountain's exact
 persistence format; keep validated Fountain JSON as the source of truth.
 
+Pass `omitTrailingCaret: true` when exporting from a live editor to exclude
+its untouched automatic typing paragraph. The exporter records an information
+issue when it omits that paragraph. Authored blanks and nodes reloaded from
+JSON remain in the output. The Conversion Lab uses this option.
+
 Import also returns immutable `packageParts`: ZIP entry paths, declared expanded
 sizes and handling (`adapter-input`, `imported-image`, `unrepresented-media`,
 `not-interpreted`). Entries are inventoried before conversion; skipped bytes are

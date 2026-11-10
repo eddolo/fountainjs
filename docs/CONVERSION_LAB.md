@@ -66,9 +66,11 @@ apart in LibreOffice. The accumulated difference still shifts the caption
 beneath the table.
 
 A separate tall-row fixture verifies Word's top, center and bottom cell
-alignment in the editor and paged preview. LibreOffice gives all three labels
-the same vertical positions in the original and Fountain-exported DOCX. The
-exported cells still start 6.35 pt farther right in that fixture.
+alignment in the editor and paged preview. The lab omits its untouched
+automatic typing paragraph from DOCX downloads. LibreOffice moved the table
+6.35 pt to the right when that paragraph was present. With the fix, the source
+and downloaded DOCX produced identical label coordinates and page rasters in
+LibreOffice for that fixture. Authored blank paragraphs remain in the download.
 
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing
