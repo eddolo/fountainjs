@@ -32,7 +32,7 @@ function value(element: XMLElement | undefined, local: string): string | undefin
  * appearance decoder reports/coalesces them rather than arbitrarily choosing.
  * No source tree is mutated, and foreign namespace lookalikes never win.
  */
-export function mergeWordTableProperties(local: 'tblPr' | 'tcPr', layers: readonly (XMLElement | undefined)[]): XMLElement | undefined {
+export function mergeWordTableProperties(local: 'tblPr' | 'tcPr' | 'trPr', layers: readonly (XMLElement | undefined)[]): XMLElement | undefined {
   const groups = new Map<string, XMLElement[]>();
   let any = false;
   for (const layer of layers) {
@@ -89,7 +89,7 @@ export function createWordTableStyleCascade(elements: readonly XMLElement[], max
   const cache = new Map<string, { chain: readonly XMLElement[]; problems: readonly [string, string][] }>();
   return (requested: string | undefined, warn: Warn) => {
     const id = requested ?? defaultId;
-    if (id === undefined) return { ids: [] as readonly string[], table: undefined, cell: undefined, regions: new Map<WordTableRegion, XMLElement>(), text: { runs: [], paragraphs: [] } as WordTableTextXML, regionalText: new Map<WordTableRegion, WordTableTextXML>() };
+    if (id === undefined) return { ids: [] as readonly string[], table: undefined, cell: undefined, row: undefined, regions: new Map<WordTableRegion, XMLElement>(), text: { runs: [], paragraphs: [] } as WordTableTextXML, regionalText: new Map<WordTableRegion, WordTableTextXML>() };
     let resolved = cache.get(id);
     if (!resolved) {
       const chain: XMLElement[] = []; const problems: [string, string][] = []; const seen = new Set<string>();
@@ -108,6 +108,7 @@ export function createWordTableStyleCascade(elements: readonly XMLElement[], max
     }
     for (const [code, message] of resolved.problems) warn(code, message);
     const tableLayers: XMLElement[] = []; const cellLayers: XMLElement[] = [];
+    const rowLayers: XMLElement[] = [];
     const regionalLayers = new Map<WordTableRegion, XMLElement[]>();
     const text: { runs: XMLElement[]; paragraphs: XMLElement[] } = { runs: [], paragraphs: [] };
     const regionalText = new Map<WordTableRegion, { runs: XMLElement[]; paragraphs: XMLElement[] }>();
@@ -168,13 +169,17 @@ export function createWordTableStyleCascade(elements: readonly XMLElement[], max
         } else if (local === 'pPr' || local === 'rPr') {
           one(element, local);
           (local === 'pPr' ? text.paragraphs : text.runs).push(property);
-        } else if (local === 'trPr' && children(property).length) {
-          warn('table-style-property-not-imported', `Word table style ${styleId}: row properties are not represented by whole-table appearance.`);
+        } else if (local === 'trPr') {
+          one(element, local);
+          const native = children(property).filter(item => expanded(item).startsWith(`${W}|`));
+          const accepted = native.filter(item => expanded(item) === `${W}|cantSplit`);
+          if (native.length > accepted.length) warn('table-style-property-not-imported', `Word table style ${styleId}: unsupported row properties were omitted.`);
+          if (accepted.length) rowLayers.push({ ...property, children: accepted });
         }
       }
     }
     return { ids: Object.freeze(resolved.chain.map(element => value(element, 'styleId')!)),
-      table: mergeWordTableProperties('tblPr', tableLayers), cell: mergeWordTableProperties('tcPr', cellLayers),
+      table: mergeWordTableProperties('tblPr', tableLayers), cell: mergeWordTableProperties('tcPr', cellLayers), row: mergeWordTableProperties('trPr', rowLayers),
       regions: new Map([...regionalLayers].map(([region, layers]) => [region, mergeWordTableProperties('tcPr', layers)!])),
       text, regionalText };
   };

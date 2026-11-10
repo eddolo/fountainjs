@@ -5,6 +5,7 @@ import { textDirectionAttribute, sharedDirectionGroupAttribute } from '../../cor
 export const tableRow: NodeSpec = {
   content: '(table_header | table_cell)*',
   attrs: { dir: textDirectionAttribute, directionGroup: sharedDirectionGroupAttribute, rowHeight: tableRowHeightAttribute,
+    keepTogether: { default: undefined, validate: value => value === undefined || typeof value === 'boolean' },
     repeatHeader: { default: undefined, validate: value => value === undefined || typeof value === 'boolean' } },
   parseDOM: [{ tag: 'tr', getAttrs: readTableRow }],
   toDOM: tableRowDOMSpec,

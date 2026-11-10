@@ -13,6 +13,21 @@ function documentWithLayout(layout: 'fixed' | 'auto') {
 }
 
 describe('portable table layout', () => {
+  it('retains row break intent in HTML with a corresponding print rule', () => {
+    const doc = documentWithLayout('fixed');
+    const table = doc.child(0);
+    const rows = table.content.map((row, index) =>
+      schema.node('table_row', { keepTogether: index === 0, rowHeight: { rule: 'atLeast', twips: 720 } }, row.content));
+    const sized = doc.copy([table.copy(rows)]);
+    const html = HTMLExporter.export(sized, { document: false });
+    expect(html).toContain('data-fountain-row-keep-together="true"');
+    expect(html).toContain('data-fountain-row-keep-together="false"');
+    expect(html).toContain('height:36pt;break-inside:avoid');
+    expect(html).toContain('height:36pt;break-inside:auto');
+    for (const importer of [HTMLImporter, ServerHTMLImporter]) expect(importer.parse(html, schema).toJSON()).toEqual(sized.toJSON());
+    expect(MarkdownExporter.exportWithReport(sized).losses.some(loss => loss.detail.includes('row break policy'))).toBe(true);
+  });
+
   it('retains a validated row height in JSON and both HTML readers', () => {
     const doc = documentWithLayout('fixed');
     const table = doc.child(0);

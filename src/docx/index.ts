@@ -1159,7 +1159,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   const hasConditions = Boolean(inherited?.regions.size || inherited?.regionalText.size);
   const baseText = readWordTableText(inherited?.text, warnAppearance);
   const rows: MutableCell[][] = [];
-  const rowAttrs: Array<{ repeatHeader?: boolean; rowHeight?: TableRowHeight }> = [];
+  const rowAttrs: Array<{ repeatHeader?: boolean; keepTogether?: boolean; rowHeight?: TableRowHeight }> = [];
   const rowSpec = schema.nodes.table_row?.spec.attrs;
   let leadingRepeat = true;
   const active = new Map<number, MutableCell>();
@@ -1202,6 +1202,17 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
     const rowHeader = Boolean(header) && (headerValue === undefined || ['1', 'true', 'on'].includes(headerValue));
     const attrs: typeof rowAttrs[number] = rowSpec?.repeatHeader ? { repeatHeader: rowHeader } : {};
     rowAttrs.push(attrs);
+    const cantSplit = readWordTableProperty([offsetProperties, inherited?.row], 'cantSplit', warnRow);
+    if (cantSplit) {
+      const flag = wordPageAttribute(cantSplit, 'val') ?? 'on';
+      const enabled = ['1', 'true', 'on'].includes(flag);
+      if (!rowSpec?.keepTogether || (!enabled && !['0', 'false', 'off'].includes(flag))) {
+        warnRow('table-row-splitting-not-imported', 'Invalid or unsupported Word row splitting policy.');
+      } else {
+        attrs.keepTogether = enabled;
+        if (!enabled) warnRow('table-row-splitting-preview-limited', 'DOCX retains the permission to split this row. Fountain page preview uses whole rows and rowspan groups.');
+      }
+    }
     const height = readWordTableProperty([offsetProperties], 'trHeight', warnRow);
     if (height) {
       const rule = wordPageAttribute(height, 'hRule') ?? 'atLeast';
@@ -2314,7 +2325,9 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
       message: 'The legacy all-header-cell host default became explicit row repetition on native reimport.', path: [...path, rowIndex] });
     const height = row.attrs.rowHeight;
     const heightXML = isTableRowHeight(height) ? `<w:trHeight w:val="${height.twips}" w:hRule="${height.rule}"/>` : '';
-    const rowProperties = `<w:trPr>${heightXML}<w:tblHeader${repeats ? '' : ' w:val="false"'}/></w:trPr>`;
+    const keepTogether = row.attrs.keepTogether;
+    const cantSplit = typeof keepTogether === 'boolean' ? `<w:cantSplit${keepTogether ? '' : ' w:val="false"'}/>` : '';
+    const rowProperties = `<w:trPr>${cantSplit}${heightXML}<w:tblHeader${repeats ? '' : ' w:val="false"'}/></w:trPr>`;
     return `<w:tr>${rowProperties}${cells.join('')}</w:tr>`;
   }).join('');
   const grid = `<w:tblGrid>${columnTwips.map(width => `<w:gridCol w:w="${width}"/>`).join('')}</w:tblGrid>`;

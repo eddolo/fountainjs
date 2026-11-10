@@ -34,6 +34,7 @@ const TABLE_INDENT_DATA = 'data-fountain-table-indent';
 const TABLE_PLACEMENT_DATA = 'data-fountain-table-placement';
 const TABLE_SPACING_DATA = 'data-fountain-table-spacing';
 const ROW_HEIGHT_DATA = 'data-fountain-row-height';
+const ROW_KEEP_TOGETHER_DATA = 'data-fountain-row-keep-together';
 
 /** A bounded physical row height in twentieths of a point. */
 export interface TableRowHeight {
@@ -65,6 +66,8 @@ export function readTableIndent(element: { getAttribute(name: string): string | 
 export function readTableRow(element: { getAttribute(name: string): string | null }): Attributes {
   const value = element.getAttribute('data-fountain-repeat-header');
   const attrs: Record<string, unknown> = value === 'true' || value === 'false' ? { repeatHeader: value === 'true' } : {};
+  const keepTogether = element.getAttribute(ROW_KEEP_TOGETHER_DATA);
+  if (keepTogether === 'true' || keepTogether === 'false') attrs.keepTogether = keepTogether === 'true';
   const encoded = /^(atLeast|exact):(\d{1,5})$/u.exec(element.getAttribute(ROW_HEIGHT_DATA) ?? '');
   if (encoded) {
     const height = { rule: encoded[1], twips: Number(encoded[2]) };
@@ -75,9 +78,17 @@ export function readTableRow(element: { getAttribute(name: string): string | nul
 
 export function tableRowDOMSpec(node: Node): DOMOutputSpec {
   const height = node.attrs.rowHeight;
+  const keepTogether = node.attrs.keepTogether;
+  const validHeight = isTableRowHeight(height);
+  const hasBreakPolicy = typeof keepTogether === 'boolean';
+  const styles: string[] = [];
+  if (validHeight) styles.push(`height:${height.twips / 20}pt`);
+  if (hasBreakPolicy) styles.push(`break-inside:${keepTogether ? 'avoid' : 'auto'}`);
   return ['tr', { ...textDirectionDOMAttributes(node.attrs), ...(typeof node.attrs.repeatHeader === 'boolean'
     ? { 'data-fountain-repeat-header': String(node.attrs.repeatHeader) } : {}),
-    ...(isTableRowHeight(height) ? { [ROW_HEIGHT_DATA]: `${height.rule}:${height.twips}`, style: `height:${height.twips / 20}pt` } : {}) }, 0];
+    ...(validHeight ? { [ROW_HEIGHT_DATA]: `${height.rule}:${height.twips}` } : {}),
+    ...(hasBreakPolicy ? { [ROW_KEEP_TOGETHER_DATA]: String(keepTogether) } : {}),
+    ...(styles.length ? { style: styles.join(';') } : {}) }, 0];
 }
 
 /** A role is the legacy host default, not a replacement for explicit page intent. */

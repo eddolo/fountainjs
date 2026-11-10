@@ -10,6 +10,27 @@ function source(properties = '', cellProperties = '', rowProperties = '') {
 }
 function xml(bytes: Uint8Array) { return strFromU8(unzipSync(bytes)['word/document.xml']!); }
 describe('native direct table borders and margins', () => {
+  it.each([['', true], [' w:val="off"', false], [' w:val="1"', true], [' w:val="0"', false]])(
+    'round-trips explicit Word row splitting policy (%s)', (flag, keepTogether) => {
+      const input = source('', '', `<w:trPr><w:cantSplit${flag}/></w:trPr>`);
+      const { document, report } = importDOCX(input, schema);
+      expect(document.child(0).child(0).attrs.keepTogether).toBe(keepTogether);
+      expect(report.issues.some(issue => issue.code === 'table-row-splitting-preview-limited')).toBe(!keepTogether);
+      const output = exportDOCX(document);
+      expect(xml(output.bytes)).toContain(keepTogether ? '<w:cantSplit/>' : '<w:cantSplit w:val="false"/>');
+      expect(importDOCX(output.bytes, schema).document.child(0).child(0).attrs.keepTogether).toBe(keepTogether);
+    },
+  );
+
+  it('keeps unspecified and invalid row policies distinct from explicit false', () => {
+    const invalid = importDOCX(source('', '', '<w:trPr><w:cantSplit w:val="maybe"/></w:trPr>'), schema);
+    expect(invalid.document.child(0).child(0).attrs.keepTogether).toBeUndefined();
+    expect(invalid.report.issues).toContainEqual(expect.objectContaining({ code: 'table-row-splitting-not-imported', path: [0, 0] }));
+    const absent = importDOCX(source(), schema);
+    expect(absent.document.child(0).child(0).attrs.keepTogether).toBeUndefined();
+    expect(xml(exportDOCX(absent.document).bytes)).not.toContain('cantSplit');
+  });
+
   it.each([
     ['', 1200, 'atLeast'],
     [' w:hRule="atLeast"', 1200, 'atLeast'],

@@ -4,6 +4,60 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionRowSplittingJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const lead = (text: string, pageBreakBefore = false) => schema.node('paragraph', {
+    layout: { unit: 'pt', spacingAfter: 246, pageBreakBefore },
+  }, [schema.text(text)]);
+  const table = (prefix: string) => schema.node('table', {}, [
+    schema.node('table_row', {}, [schema.node('table_cell', {},
+      Array.from({ length: 8 }, (_, index) => schema.node('paragraph', {
+        layout: { unit: 'pt', spacingAfter: 9, lineHeight: 16, lineHeightUnit: 'pt', lineHeightRule: 'exact' },
+      }, [schema.text(`${prefix}${index + 1}`)])))]),
+  ]);
+  const doc = schema.node('doc', {
+    pageSettings: { unit: 'pt', width: 360, height: 432, marginTop: 36, marginRight: 36, marginBottom: 36, marginLeft: 36 },
+  }, [lead('Allowed to split'), table('AllowedLine'), lead('Keep row together', true), table('TogetherLine')]);
+  const archive = unzipSync(exportDOCX(doc).bytes);
+  const declarations = ['<w:cantSplit w:val="false"/>', '<w:cantSplit/>'];
+  let index = 0;
+  archive['word/document.xml'] = strToU8(strFromU8(archive['word/document.xml']!).replaceAll('<w:trPr>', open =>
+    open + declarations[index++]));
+  expect(index).toBe(2);
+  const source = info.outputPath('word-row-splitting.docx');
+  await writeFile(source, zipSync(archive));
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(source);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-row-splitting.docx' });
+  await expect(workspace).toContainText('table-row-splitting-preview-limited');
+  async function expectPolicies(rows: ReturnType<Page['locator']>) {
+    await expect(rows).toHaveCount(2);
+    await expect(rows.nth(0)).toHaveAttribute('data-fountain-row-keep-together', 'false');
+    await expect(rows.nth(0)).toHaveCSS('break-inside', 'auto');
+    await expect(rows.nth(1)).toHaveAttribute('data-fountain-row-keep-together', 'true');
+    await expect(rows.nth(1)).toHaveCSS('break-inside', 'avoid');
+  }
+  await expectPolicies(workspace.getByRole('textbox', { name: 'Imported document editor' }).locator('tr'));
+  const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
+  await pagination.getByRole('button', { name: 'Build page preview' }).click();
+  await expectPolicies(pagination.locator('.fountain-page-preview__sheet tr'));
+  await pagination.locator('.fountain-page-preview__sheet').filter({ hasText: 'TogetherLine8' })
+    .screenshot({ path: info.outputPath('row-splitting-preview.png') });
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const saved = info.outputPath('fountain-row-splitting.docx');
+  await (await pending).saveAs(saved);
+  const xml = strFromU8(unzipSync(await readFile(saved))['word/document.xml']!);
+  expect(xml.match(/<w:cantSplit[^>]*\/>/gu)).toEqual(declarations);
+  await input.setInputFiles(saved);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-row-splitting.docx' });
+  await expectPolicies(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('tr'));
+}
+
 export async function conversionTableIndentJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
   const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);

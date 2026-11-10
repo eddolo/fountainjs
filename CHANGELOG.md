@@ -7,6 +7,11 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain Word row splitting rules, including inherited table defaults and
+  explicit overrides, through Fountain HTML and DOCX. The import report flags
+  the difference when a row may split in Word and the page preview keeps it
+  whole.
+
 - Retain signed Word table indents through DOCX and Fountain HTML. The editor
   and page preview apply leading indentation. Native-only placement and
   unsupported indentation declarations are identified in the import report.

@@ -1,5 +1,16 @@
 # DOCX fidelity checkpoint
 
+Word row splitting (2026-11-10, Unreleased) retains explicit allow/keep rules
+and ordinary inherited table-style defaults as portable row attributes. A
+direct setting can override either inherited value. Conditional row-style
+rules remain reported as unsupported. The HTML renderer emits CSS break
+policy, while Fountain's page preview keeps rowspan-safe row groups intact and
+reports the difference for explicit allow rules. In the Conversion Lab fixture,
+LibreOffice splits the allowed row across pages one and two and keeps all eight
+lines of the protected row on page four. All four source/export page images
+match. Chromium, Firefox and WebKit exercise import, preview, download and
+reopen for this fixture.
+
 Table indentation (2026-11-10, Unreleased) preserves signed twip declarations
 from inline left-to-right Word tables through editable JSON, Fountain HTML and
 native DOCX. Direct values override inherited style values. The Conversion Lab

@@ -22,6 +22,16 @@ function fixture(styles: string, tablePr = '<w:tblStyle w:val="Child"/>', cellPr
 }
 
 describe('inherited Word table style appearance', () => {
+  it('retains inherited row splitting and honors a direct false override', () => {
+    const styles = style('Base', '<w:trPr><w:cantSplit/></w:trPr>') + style('Child', '', 'Base');
+    const files = unzipSync(fixture(styles));
+    const inherited = importDOCX(zipSync(files), schema);
+    expect(inherited.document.child(0).child(0).attrs.keepTogether).toBe(true);
+    files['word/document.xml'] = strToU8(strFromU8(files['word/document.xml']!).replace('<w:tr>', '<w:tr><w:trPr><w:cantSplit w:val="0"/></w:trPr>'));
+    const overridden = importDOCX(zipSync(files), schema);
+    expect(overridden.document.child(0).child(0).attrs.keepTogether).toBe(false);
+  });
+
   it('retains inherited table placement and honors a direct override', () => {
     const styles = style('Base', '<w:tblPr><w:jc w:val="center"/></w:tblPr>') + style('Child', '', 'Base');
     expect(importDOCX(fixture(styles), schema).document.child(0).attrs.placement).toBe('center');

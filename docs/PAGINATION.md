@@ -163,6 +163,10 @@ and every real row remain editable. Accessibility-hidden page shells show
 read-only clones of leading repeating rows, and those copies refresh after an
 edit to the canonical header. Oversized rows stay one editable row, expose an
 overflow marker on the affected sheet, and retain edit/undo/redo behavior.
+A Word row's explicit break policy survives DOCX export and is available to
+standalone HTML renderers as a CSS break rule. The editable and read-only
+Fountain page layouts still use whole-row groups, including for rows that may
+split within their cells in a native DOCX reader.
 Overlapping/transitive body rowspans are collapsed into one legal fragment, so
 no continuation can cut through the merged region. A two-row header fixture
 proves preserved header `rowspan`/`colspan`, sanitized copies, continued merged

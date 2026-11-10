@@ -242,6 +242,9 @@ function reportNodeAttributes(
   if (name === 'table_row' && (node.attrs.repeatHeader !== undefined || node.attrs.rowHeight !== undefined) && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Pipe Markdown omits explicit row repetition or height.');
   }
+  if (name === 'table_row' && node.attrs.keepTogether !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Pipe Markdown omits the row break policy.');
+  }
   if (['table', 'table_header', 'table_cell'].includes(name) && node.attrs.appearance !== undefined && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot represent table borders, padding, cell alignment or appearance resets.');
   }
