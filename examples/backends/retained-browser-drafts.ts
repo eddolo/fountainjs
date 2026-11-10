@@ -30,15 +30,34 @@ function committed(transaction: IDBTransaction): Promise<void> {
 
 /** The application supplies a database name and a stable account/room/author
  * scope. This is origin-local recovery storage, not an authorization boundary. */
-export async function openBrowserDrafts<Draft extends object = BrowserDraft>(databaseName: string, scope: string) {
+export async function openBrowserDrafts<Draft extends object = BrowserDraft>(
+  databaseName: string, scope: string, signal?: AbortSignal,
+) {
+  signal?.throwIfAborted();
   const database = await new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open(databaseName, 1);
+    const abort = () => reject(signal?.reason);
+    const detach = () => signal?.removeEventListener('abort', abort);
+    signal?.addEventListener('abort', abort, { once: true });
     request.onupgradeneeded = () => {
+      if (signal?.aborted) {
+        request.transaction?.abort();
+        return;
+      }
       const store = request.result.createObjectStore('drafts', { keyPath: ['scope', 'id'] });
       store.createIndex('scope', 'scope');
     };
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => {
+      detach();
+      reject(request.error);
+    };
+    request.onsuccess = () => {
+      detach();
+      // IndexedDB cannot cancel a pending open. Close a late connection after
+      // the caller has stopped waiting so it cannot hold a database lock.
+      if (signal?.aborted) request.result.close();
+      else resolve(request.result);
+    };
   });
   database.onversionchange = () => database.close();
 

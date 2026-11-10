@@ -3,7 +3,7 @@
 <style>#draft-review h3{margin:12px 0 8px}</style>
 <h1>Live protocol migration · recoverable handoff</h1><p>Actual Node/SQLite authority. Legacy → retained → legacy. Pending old-protocol edits stay separately recoverable.</p>
 <header><button id="retained-only">Try retained-only join</button><label>Retained destination namespace <input id="destination" value="mapped-paper" aria-label="Retained destination namespace"></label><button id="save">Save active edits</button><button id="preflight">Check saved migration</button><button id="migrate">Migrate legacy room</button><button id="retry" disabled>Retry last migration</button><button id="old" disabled>Try old writer</button><button id="retain" disabled>Retain offline edits</button><label>Rollback source <select id="restore"><option value="source-branch">Pending source branch</option><option value="frozen-source">Frozen original</option></select></label><button id="rollback" disabled>Rollback with archive</button><button id="retry-rollback" disabled>Retry last rollback</button><label><input id="drop" type="checkbox">Drop migration acknowledgement (test only)</label></header>
-<div id="message" role="status">Opening…</div><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2><button id="save-exact" type="button" disabled>Save exact offline draft</button></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2><button id="open-exact" type="button" disabled>Open saved offline draft</button> <button id="review-exact" type="button" disabled>Review saved paragraph</button> <button id="open-writer" type="button" disabled>Open outgoing editor draft</button></section></div>
+<div id="message" role="status">Opening…</div><button id="retry-opening" type="button" hidden>Retry opening recovery storage</button><p id="draft-status" aria-live="polite"></p><button id="download-local" type="button" hidden>Download local draft</button><pre id="report"></pre><div class="panes"><section id="offline"><h2>Offline writer · legacy protocol</h2><button id="save-exact" type="button" disabled>Save exact offline draft</button></section><section id="active"><h2 id="active-title">Active editor · legacy protocol</h2></section><section id="archive"><h2 id="archive-title">Recovery archive · read only</h2><button id="open-exact" type="button" disabled>Open saved offline draft</button> <button id="review-exact" type="button" disabled>Review saved paragraph</button> <button id="open-writer" type="button" disabled>Open outgoing editor draft</button></section></div>
 <section id="pending-review" aria-labelledby="pending-review-title" hidden>
  <h2 id="pending-review-title">Paragraph review awaiting confirmation</h2>
  <pre id="pending-review-text"></pre>
@@ -409,44 +409,60 @@ async function reopenSession(saved){
   ?'Local recovery copy reopened · retry the pending handoff'
   :'Local recovery copy reopened';
 }
-try{
- setControlsBusy(true);
- if(nested)document.querySelector('h1').textContent='Move a nested research document';
- const resumed=sessionStorage.getItem(sessionKey);
- boot('open session');
- token=resumed??(await request('open',{nested})).token;
- boot('open local recovery storage');
- drafts=await openBrowserDrafts('fountain-cross-format-recovery-v1',token);
- boot('local recovery storage ready');
- const write=drafts.createAutosaveSlot(token);
- autosave=scheduleBrowserDraftAutosave(async()=>{
-  const writer=active;
-  const [checkpoint,offline]=await Promise.all([captureWriter(writer),captureWriter(original)]);
-  if(writer!==active)throw new Error('Editor changed during draft capture');
-  const {key,epoch,revision,phase,protocol}=current;
-  await write({writer:{epoch:writer.epoch,checkpoint},offline,initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,exactDraft,writerDraft,pendingReview,reviewDraft,
-   acknowledged:{key,epoch,revision,phase,protocol}});
- },(status,error)=>{
-  document.querySelector('#draft-status').textContent=status==='saved'?'Recovery copy saved on this device'
-   :status==='pending'?'Saving recovery copy…':'Recovery copy failed: '+error.message;
- });
- let opened='Ready · edit offline or active, then migrate';
- if(resumed){
-  const saved=(await drafts.list()).find(draft=>draft.id===token);
-  if(!saved)throw new Error('Local recovery copy is missing');
-  opened=await reopenSession(saved);
- }else await seedRoom();
- watchWriter(original);watchWriter(active);
- boot('persist initial recovery');
- await persistOperation();
- sessionStorage.setItem(sessionKey,token);
- setControlsBusy(false);
- report(resumed?'Writer reopened from local recovery':'Legacy room initialized');
- message.textContent=opened;
- boot('ready');
-}catch(error){message.textContent='Opening failed: '+error.message;throw error}
+const retryOpening=document.querySelector('#retry-opening');
+async function openFixture(){
+ retryOpening.hidden=true;
+ try{
+  setControlsBusy(true);
+  if(nested)document.querySelector('h1').textContent='Move a nested research document';
+  const resumed=sessionStorage.getItem(sessionKey);
+  boot('open session');
+  token??=resumed??(await request('open',{nested})).token;
+  boot('open local recovery storage');
+  message.textContent='Opening local recovery storage…';
+  try{
+   drafts=await openBrowserDrafts('fountain-cross-format-recovery-v1',token,AbortSignal.timeout(3000));
+  }catch(error){
+   boot('local recovery storage unavailable');
+   message.textContent=error.name==='TimeoutError'
+    ?'Local recovery storage did not open in time.'
+    :'Could not open local recovery storage: '+error.message;
+   retryOpening.hidden=false;
+   return;
+  }
+  boot('local recovery storage ready');
+  const write=drafts.createAutosaveSlot(token);
+  autosave=scheduleBrowserDraftAutosave(async()=>{
+   const writer=active;
+   const [checkpoint,offline]=await Promise.all([captureWriter(writer),captureWriter(original)]);
+   if(writer!==active)throw new Error('Editor changed during draft capture');
+   const {key,epoch,revision,phase,protocol}=current;
+   await write({writer:{epoch:writer.epoch,checkpoint},offline,initialEpoch,migration,rollback,archiveId,rollbackArchiveId,visibleArchiveId,offlineBatch,exactDraft,writerDraft,pendingReview,reviewDraft,
+    acknowledged:{key,epoch,revision,phase,protocol}});
+  },(status,error)=>{
+   document.querySelector('#draft-status').textContent=status==='saved'?'Recovery copy saved on this device'
+    :status==='pending'?'Saving recovery copy…':'Recovery copy failed: '+error.message;
+  });
+  let opened='Ready · edit offline or active, then migrate';
+  if(resumed){
+   const saved=(await drafts.list()).find(draft=>draft.id===token);
+   if(!saved)throw new Error('Local recovery copy is missing');
+   opened=await reopenSession(saved);
+  }else await seedRoom();
+  watchWriter(original);watchWriter(active);
+  boot('persist initial recovery');
+  await persistOperation();
+  sessionStorage.setItem(sessionKey,token);
+  setControlsBusy(false);
+  report(resumed?'Writer reopened from local recovery':'Legacy room initialized');
+  message.textContent=opened;
+  boot('ready');
+  publishAudit();
+ }catch(error){message.textContent='Opening failed: '+error.message;throw error}
+}
+retryOpening.addEventListener('click',()=>{void openFixture()});
 document.addEventListener('visibilitychange',()=>{
- if(document.visibilityState==='hidden')void autosave.flush().catch(()=>undefined);
+ if(document.visibilityState==='hidden')void autosave?.flush().catch(()=>undefined);
 });
 function showCollaborationFailure(){
  const collaboration=getCollaborationState(active.editor);
@@ -493,6 +509,9 @@ function receiveRepairedUpdate(){
 document.querySelector('#download-local').addEventListener('click',()=>{
  downloadDocumentFile(document,'recovered-draft.fountain.json',JSON.stringify(active.editor.getJSON(),null,2),'application/json');
 });
+function publishAudit(){
 window.audit={snapshot:async()=>{const server=await request('snapshot'),restored=await codec(server.checkpoint).restore(server.checkpoint,schema,version);try{const folder=restored.document.share.get('research-folder');return {folderTitle:folder?.get('title'),folderRoom:folder?.get('documentRoom'),nestedFragment:server.checkpoint.manifest.fragment,activeNested:Boolean(active.fragment?.parent),offline:original.editor.getJSON(),active:active.editor.getJSON(),archive:archived?.editor.getJSON(),server:restored.baseDocument.toJSON(),epoch:server.epoch,revision:server.revision,namespace:server.checkpoint.manifest.room,activeNamespace:active.namespace,archiveNamespace:archived?.namespace,phase:server.phase,protocol:server.protocol,activeProtocol:active.protocol,archiveProtocol:archived?.protocol,archiveId,rollbackArchiveId,lastReplay}}finally{restored.document.destroy()}},batch:(id,revision)=>request('batch',{id,revision}),close:()=>{autosave.stop();drafts.close();return request('close')}};
 Object.assign(window.audit,{dropAdmittedRoot,receiveMalformedUpdate,receiveRepairedUpdate,localRoomWire:()=>encode(Y.encodeStateAsUpdate(active.doc))});
+}
+await openFixture();
 </script></html>

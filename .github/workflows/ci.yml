@@ -131,7 +131,7 @@ jobs:
       - name: Review and recover offline drafts across room migration
         run: >-
           pnpm exec playwright test --config artifacts/yjs-namespace-browser-20261107.config.ts
-          --grep 'recovers a saved legacy paragraph|recovers the exact embedded offline draft|keeps a retained draft across reload'
+          --grep 'recovers a saved legacy paragraph|recovers the exact embedded offline draft|keeps a retained draft across reload|opens after local draft storage is blocked'
           --reporter=list --output artifacts/yjs-migration-recovery-ci
       - uses: actions/upload-artifact@v4
         if: always()

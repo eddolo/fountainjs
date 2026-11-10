@@ -35,8 +35,92 @@ async function dropCommittedReply(page: import('@playwright/test').Page, action:
     await route.abort();
   }, { times: 1 });
 }
-test.beforeEach(async({page},info)=>{const list:string[]=[];errors.set(page,list);page.on('pageerror',error=>list.push(error.message));await page.goto('/artifacts/yjs-namespace-fixture-20261107.html'+(info.tags.includes('@nested')?'?nested':''));await expect(page.getByRole('status')).toContainText('Ready');await info.attach('initial-startup-stages',{body:JSON.stringify(await page.evaluate(()=>(window as any).auditStartup)),contentType:'application/json'});expect((await state(page)).protocol).toBe('legacy');await sampleLayout(page)});
+test.beforeEach(async ({ page }, info) => {
+  const list: string[] = [];
+  errors.set(page, list);
+  page.on('pageerror', error => list.push(error.message));
+  if (info.tags.includes('@storage-startup')) return;
+  await page.goto('/artifacts/yjs-namespace-fixture-20261107.html' + (info.tags.includes('@nested') ? '?nested' : ''));
+  await expect(page.getByRole('status')).toContainText('Ready');
+  await info.attach('initial-startup-stages', {
+    body: JSON.stringify(await page.evaluate(() => (window as any).auditStartup)),
+    contentType: 'application/json',
+  });
+  expect((await state(page)).protocol).toBe('legacy');
+  await sampleLayout(page);
+});
 test.afterEach(async({page},info)=>{const startup=await page.evaluate(()=>({stages:(window as any).auditStartup,status:document.querySelector('#message')?.textContent,ready:Boolean((window as any).audit)}));await info.attach('startup-stages',{body:JSON.stringify(startup),contentType:'application/json'});expect(errors.get(page)).toEqual([]);expect(startup.ready,'Fixture must finish opening before recovery state can be inspected').toBe(true);const result=await state(page),layout=await page.evaluate(()=>(window as any).auditLayout);expect(layout.invalid).toEqual([]);expect(layout.frames).toBeGreaterThan(0);expect(result.protocol).toBe((info.title.startsWith('recovers')||info.title.startsWith('maps'))?'retained':'legacy');expect(result.activeProtocol).toBe(result.protocol);expect(result.activeNamespace).toBe(result.namespace);expect(result.namespace).toBe(result.protocol==='legacy'?'Research / α 😀':info.title.startsWith('maps')?'review-copy':'mapped-paper');await info.attach('cross-format-result',{body:JSON.stringify(result),contentType:'application/json'});await info.attach('layout-samples',{body:JSON.stringify(layout),contentType:'application/json'});await info.attach('runtime-modules',{body:JSON.stringify(await page.evaluate(()=>performance.getEntriesByType('resource').map((entry:any)=>new URL(entry.name).pathname).filter((path:string)=>path.endsWith('.js')||path.startsWith('/src/')))),contentType:'application/json'});await page.evaluate(()=>(window as any).audit.close())});
+
+test('opens after local draft storage is blocked and keeps the recovered draft', { tag: '@storage-startup' }, async ({ page }, info) => {
+  await page.goto('/artifacts/yjs-namespace-fixture-20261107.html');
+  await expect(page.getByRole('status')).toContainText('Ready');
+  await type(page, 'Offline editor', ' Draft saved before storage stalled');
+  await expect(page.locator('#draft-status')).toHaveText('Recovery copy saved on this device');
+  const storagePage = '/storage-blocker.html';
+  await page.context().route('**/storage-blocker.html', route => route.fulfill({
+    contentType: 'text/html', body: '<!doctype html><title>Storage blocker</title>',
+  }));
+  // Let the original editor connection close while keeping its tab session.
+  await page.goto(storagePage);
+  const blocker = await page.context().newPage();
+  try {
+    await blocker.goto(storagePage);
+    await blocker.evaluate(async () => {
+      const name = 'fountain-cross-format-recovery-v1';
+      const connection = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open(name, 1);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      // Hold a real version-change request ahead of the reopened draft's
+      // connection. Abort that upgrade when released to preserve its data.
+      connection.onversionchange = () => { /* Keep the test connection open. */ };
+      const upgrade = indexedDB.open(name, 2);
+      upgrade.onupgradeneeded = () => upgrade.transaction!.abort();
+      (window as any).storageUpgradeStatus = 'waiting';
+      upgrade.onblocked = () => { (window as any).storageUpgradeStatus = 'blocked'; };
+      const done = new Promise<void>((resolve, reject) => {
+        upgrade.onsuccess = () => { upgrade.result.close(); reject(new Error('Test upgrade unexpectedly committed')); };
+        upgrade.onerror = () => {
+          (window as any).storageUpgradeStatus = upgrade.error?.name;
+          if (upgrade.error?.name === 'AbortError') resolve();
+          else reject(upgrade.error);
+        };
+      });
+      (window as any).releaseStorage = () => { connection.close(); return done; };
+    });
+    await expect.poll(() => blocker.evaluate(() => (window as any).storageUpgradeStatus)).toBe('blocked');
+
+    let sessions = 0, initializations = 0;
+    page.on('request', request => {
+      const path = new URL(request.url()).pathname;
+      if (path === '/__handoff/open') sessions++;
+      if (path === '/__handoff/initialize') initializations++;
+    });
+    await page.goto('/artifacts/yjs-namespace-fixture-20261107.html');
+    await expect(page.getByRole('status')).toHaveText('Local recovery storage did not open in time.');
+    const retry = page.getByRole('button', { name: 'Retry opening recovery storage', exact: true });
+    await expect(retry).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Offline editor', exact: true })).toHaveCount(0);
+    expect(initializations).toBe(0);
+    await capture(page, info, 'storage-blocked.png');
+
+    await blocker.evaluate(() => (window as any).releaseStorage());
+    await retry.click();
+    await expect(page.getByRole('status')).toContainText('Local recovery copy reopened');
+    await expect(retry).toBeHidden();
+    expect(sessions).toBe(0);
+    expect(initializations).toBe(0);
+    const offline = page.getByRole('textbox', { name: 'Offline editor', exact: true });
+    await expect(offline).toContainText('Draft saved before storage stalled');
+    await type(page, 'Offline editor', ' and kept editing');
+    await reloadDraft(page);
+    await expect(offline).toContainText('Draft saved before storage stalled and kept editing');
+    await capture(page, info, 'storage-reopened.png');
+  } finally {
+    await blocker.close();
+  }
+});
 
 test('recovers the exact embedded offline draft after a lost save reply and reload', { tag: '@nested' }, async ({ page }, info) => {
   await type(page, 'Offline editor', ' SAVED OFFLINE');

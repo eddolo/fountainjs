@@ -293,8 +293,27 @@ Slow-load and failed-load journeys pass in Chromium, Firefox and WebKit in
 both development and the built `/fountainjs/` preview. Three further WebKit
 production runs pass the failed-load case.
 
-The check covers a failed demo bundle request. The separate migration-fixture
-startup timeout remains open.
+The check covers a failed demo bundle request.
+
+## Migration fixture recovery when local storage is blocked
+
+The older Firefox traces show a 30–37 second gap between opening the server
+session and mounting the source editor. Three fresh Firefox runs opened
+IndexedDB in 49–87 ms. The old traces lack storage-stage timings, so the
+cause of the earlier stalls remains unconfirmed.
+
+The migration fixture now gives the initial local storage open three
+seconds and offers an in-page retry when storage is unavailable. The shared
+draft-storage example accepts an optional abort signal and closes any
+connection that arrives after cancellation. A failed open leaves the saved
+session alone and the editors wait for storage before opening.
+
+The browser regression saves an offline draft, holds a real IndexedDB
+upgrade in another tab and reopens the draft in its original tab. It aborts the upgrade
+before retry, confirms the original session and text reopen without
+initializing another room, then edits and reloads the draft again. The existing
+recovery checks keep their original readiness and document assertions.
+The 21-case CI selection passes locally across Chromium, Firefox and WebKit.
 
 ## Structural latency and empty-sibling follow-up
 
