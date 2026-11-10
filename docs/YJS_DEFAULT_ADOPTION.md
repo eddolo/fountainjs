@@ -276,6 +276,26 @@ the ordinary default. Their content and position assertions remain intact.
 Existing historical evidence applies to the builds and scopes recorded in its
 audits; it does not replace a fresh release run of the combined implementation.
 
+## Homepage recovery after a failed module load
+
+If the homepage collaboration bundle fails to load, its fallback opens the
+demo in a fresh tab. The original tab keeps its editor and draft. The new
+demo starts its own in-memory room.
+
+A WebKit production trace showed that a second tab could reuse the first
+tab's failed module request. The recovery tab imports the same demo source
+through a different lazy bundle URL. The two bundles are about 4.6 kB gzip
+each, and a normal visit requests only its selected variant. Browser tests
+abort the ordinary bundle, enter an unsaved draft, follow the fallback link
+and verify a successful response from the recovery bundle. Typing then
+reaches the second collaborator while the original draft stays intact.
+Slow-load and failed-load journeys pass in Chromium, Firefox and WebKit in
+both development and the built `/fountainjs/` preview. Three further WebKit
+production runs pass the failed-load case.
+
+The check covers a failed demo bundle request. The separate migration-fixture
+startup timeout remains open.
+
 ## Structural latency and empty-sibling follow-up
 
 The later installed-package diagnostic exposes costly full-pool size checks

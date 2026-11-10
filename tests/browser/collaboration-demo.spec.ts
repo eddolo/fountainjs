@@ -47,6 +47,50 @@ test('opens the lazy collaboration demo after a slow module load and shares typi
   } finally { release(); }
 });
 
+test('recovers a failed collaboration load in a new tab without losing the current draft', async ({ page }, info) => {
+  let failedModule = '';
+  await page.route('**/*CollaborationDemo*', route => {
+    failedModule = route.request().url();
+    return route.abort('failed');
+  }, { times: 1 });
+  await page.goto('/#collaboration', { waitUntil: 'domcontentloaded' });
+  const fallback = page.locator('#collaboration');
+  await expect(fallback.getByRole('alert')).toContainText('The collaboration demo could not load');
+  const draft = page.locator('.studio').getByRole('textbox', { name: 'Rich text editor', exact: true });
+  await draft.locator('p').first().click();
+  await expect(draft).toBeFocused();
+  await page.keyboard.press('End');
+  await page.keyboard.type(' Keep this unsaved draft.');
+  await expect(draft).toContainText('Keep this unsaved draft.');
+  const before = await draft.innerText();
+  const retry = fallback.getByRole('link', { name: 'Open the collaboration demo in a new tab', exact: true });
+  await expect(retry).toHaveAttribute('target', '_blank');
+  await fallback.screenshot({ path: info.outputPath('collaboration-load-failure.png') });
+
+  const [reopened, recoveredModule] = await Promise.all([
+    page.context().waitForEvent('page'),
+    page.context().waitForEvent('response', response =>
+      response.url().includes('CollaborationDemo') && response.ok() && response.url() !== failedModule),
+    retry.click(),
+  ]);
+  try {
+    const left = reopened.getByRole('textbox', { name: 'Ada collaborative editor' });
+    const right = reopened.getByRole('textbox', { name: 'Grace collaborative editor' });
+    await left.getByText('Shared launch note', { exact: true }).click();
+    await reopened.keyboard.press('End');
+    await reopened.keyboard.insertText(' after recovery');
+    await expect(right).toContainText('Shared launch note after recovery');
+    await expect(draft).toHaveText(before, { useInnerText: true });
+    await info.attach('collaboration-module-urls', {
+      body: JSON.stringify({ failedModule, recoveredModule: recoveredModule.url() }),
+      contentType: 'application/json',
+    });
+    await reopened.locator('.collaboration-demo__editors').screenshot({ path: info.outputPath('collaboration-recovered.png') });
+  } finally {
+    await reopened.close();
+  }
+});
+
 test('runs the public two-editor collaboration demo with presence and author-local undo', async ({ page }) => {
   await page.goto('/');
   const left = page.getByRole('textbox', { name: 'Ada collaborative editor' });

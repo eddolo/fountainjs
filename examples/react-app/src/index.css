@@ -141,6 +141,8 @@ kbd { padding: 2px 4px; color: #5e43cc; background: #eee9ff; border-radius: 4px;
 .fountain-editor .demo-callout { padding: 16px 18px; margin-block: 1.25em; color: #4d3e79; background: #f1eeff; border: 1px solid #d9d1ff; border-left: 4px solid #6d4aff; border-radius: 9px; }
 
 .collaboration-demo { padding: 115px clamp(24px, 7vw, 118px); background: #e9e5ff; }
+.collaboration-demo__load p { margin-block: 8px; }
+.collaboration-demo__load a { color: #4f369e; text-decoration: underline; text-underline-offset: 3px; }
 .collaboration-demo__intro { display: grid; grid-template-columns: 1fr .82fr; gap: 8vw; max-width: 1400px; margin: auto; }
 .collaboration-demo__intro > div > span { color: #6d4aff; font: 500 11px DM Mono, monospace; letter-spacing: .13em; }
 .collaboration-demo__intro h2 { max-width: 760px; margin: 16px 0 0; font-size: clamp(42px, 5.7vw, 76px); line-height: 1; letter-spacing: -.06em; }

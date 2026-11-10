@@ -382,15 +382,26 @@ const competitors = [
 
 function CollaborationPlaceholder({ failed = false }: { failed?: boolean }) {
   return (
-    <section id="collaboration" className="collaboration-demo" aria-busy={!failed}>
-      {failed ? 'The collaboration demo could not load. Reload the page to try again.' : 'Loading the collaboration demo…'}
+    <section id="collaboration" className="collaboration-demo collaboration-demo__load" aria-busy={!failed}>
+      {failed ? <>
+        <p role="alert">The collaboration demo could not load.</p>
+        <a href="?collaboration-recovery=1#collaboration" target="_blank" rel="noopener">Open the collaboration demo in a new tab</a>
+        <p>Your current draft stays open in this tab.</p>
+      </> : 'Loading the collaboration demo…'}
     </section>
   );
 }
 
-const LazyCollaborationDemo = lazy(() => import('./CollaborationDemo').catch(() => ({
-  default: () => <CollaborationPlaceholder failed />,
-})));
+// A browser can reuse a failed module request across tabs. Give the recovery
+// entry a different URL while bundling it from the same demo source.
+const loadCollaborationRecovery = import.meta.glob<typeof import('./CollaborationDemo')>(
+  './CollaborationDemo.tsx', { query: '?recovery' },
+)['./CollaborationDemo.tsx']!;
+const LazyCollaborationDemo = lazy(() => {
+  const load = new URLSearchParams(window.location.search).has('collaboration-recovery')
+    ? loadCollaborationRecovery : () => import('./CollaborationDemo');
+  return load().catch(() => ({ default: () => <CollaborationPlaceholder failed /> }));
+});
 
 function CollaborationPreview() {
   return <Suspense fallback={<CollaborationPlaceholder />}><LazyCollaborationDemo /></Suspense>;
