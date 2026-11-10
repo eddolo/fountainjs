@@ -160,6 +160,13 @@ the retired provider cannot mutate the new session. The host still owns the
 provider and `Y.Doc` themselves; adapter destruction removes FountainJS
 listeners and history resources rather than destroying shared application data.
 
+An editor subscription may cancel or replace a session when it observes
+`connecting` or `reconnecting`. FountainJS checks that the request is still
+current before starting the adapter. A `disconnected` notification follows
+the call to the retiring adapter's disconnect hook, so a synchronous
+subscriber can request another connection. Providers with asynchronous
+transport teardown still coordinate their own pending transport work.
+
 In React, `useFountain` treats its config as constructor input. Keep the editor
 instance and call `replaceCollaborationAdapter` when a room, `Y.Doc`, provider,
 or account prop changes. The hook coalesces React Strict Mode's duplicate

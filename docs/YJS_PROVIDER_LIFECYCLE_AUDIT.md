@@ -30,6 +30,34 @@ Changing rooms still requires the explicit collaboration-session replacement API
 
 The six retained cases reproduced the defect before the correction. All eight pass with the correction. Together with `yjs-provider-initialization`, `yjs-default-adoption`, `yjs-retained-adapter`, and `yjs-collaboration`, **113 source tests pass** in one worker. Release build, packed-consumer, and native-browser checks are recorded separately by the release audit.
 
+## Status subscriber follow-up
+
+A synchronous editor subscriber could cancel a connection while the
+collaboration core was publishing `connecting`. The adapter could still
+start its provider if the editor and saved room already matched. A mismatch
+instead left the editor in an error state after cancellation. In the reverse
+direction, reconnecting from `disconnected` could invoke the new connection
+before the old disconnect hook ran. A local update that switched rooms could
+also send its subsequent selection to the retired adapter.
+
+The collaboration core now checks session ownership after publishing the
+connection request and after sending a local edit. It retires the old context
+and calls the disconnect hook before announcing disconnection. A room chosen
+by a synchronous subscriber takes precedence over the earlier request.
+
+Six source regressions reproduce these cases against the parent core, including
+two cases using the default Yjs adapter. Nine recorded journeys through the
+homepage verify switching both editors in place, preserving an unsent draft,
+and continuing after an offline merge across Chromium, Firefox and WebKit.
+The package build, bundle budgets, public API, packed imports, headless
+boundary and framework types pass. The first broader source run passed 991
+of 994 tests. Three storage and migration cases hit the default 5-second
+timeout. The three passed against the parent core at the default limit and
+against the candidate in a separate diagnostic run. All 994 passed when the
+full candidate suite was rerun at the original limits.
+[Collaboration tests](../tests/collaboration.test.ts)
+· [Default Yjs startup tests](../tests/yjs-provider-initialization.test.ts)
+
 ## Package boundary review
 
 The current package requires `yjs >=13.6.32 <14` and exports the retained default and explicit XML compatibility entry separately. The packed-package fixture exercises the default class through the ESM and CommonJS entry points; the explicit legacy entry remains separately available. Inspected application examples and packaging scripts do not treat the retained marker fragment as a legacy XML document tree. Existing stored XML still requires an explicit legacy open or an authority-controlled migration, rather than an import-path substitution.

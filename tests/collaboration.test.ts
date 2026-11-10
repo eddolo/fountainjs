@@ -314,4 +314,94 @@ describe('provider-independent collaboration boundary', () => {
     expect(second.connect).toHaveBeenCalledTimes(1);
     editor.destroy();
   });
+
+  it('starts only the replacement requested from a connecting notification', () => {
+    const first = { connect: vi.fn(), disconnect: vi.fn(), destroy: vi.fn(), onLocalSelection: vi.fn() };
+    const second = { connect: vi.fn(), disconnect: vi.fn(), onLocalUpdate: vi.fn() };
+    const kit = composeExtensions([CoreExtension, createCollaborationExtension({ autoConnect: false, adapter: () => first })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const unsubscribe = editor.subscribe(() => {
+      if (getCollaborationState(editor)?.status !== 'connecting') return;
+      unsubscribe();
+      expect(replaceCollaborationAdapter(editor, second)).toBe(true);
+    });
+
+    expect(connectCollaboration(editor)).toBe(true);
+    expect(first.connect).not.toHaveBeenCalled();
+    expect(first.disconnect).not.toHaveBeenCalled();
+    expect(first.destroy).toHaveBeenCalledOnce();
+    expect(first.onLocalSelection).not.toHaveBeenCalled();
+    expect(second.connect).toHaveBeenCalledOnce();
+    expect(getCollaborationState(editor)?.status).toBe('connected');
+    expect(insertText(editor, 'Current room edit')).toBe(true);
+    expect(second.onLocalUpdate).toHaveBeenCalledOnce();
+    editor.destroy();
+  });
+
+  it('finishes disconnecting a provider before a host reconnects from the disconnected notification', () => {
+    let connected = false;
+    const adapter = {
+      connect: vi.fn(() => {
+        if (connected) throw new Error('Provider was not disconnected');
+        connected = true;
+      }),
+      disconnect: vi.fn(() => { connected = false; }),
+    };
+    const kit = composeExtensions([CoreExtension, createCollaborationExtension({ adapter: () => adapter })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const unsubscribe = editor.subscribe(() => {
+      if (getCollaborationState(editor)?.status !== 'disconnected') return;
+      unsubscribe();
+      expect(connectCollaboration(editor)).toBe(true);
+    });
+
+    expect(disconnectCollaboration(editor)).toBe(true);
+    expect(connected).toBe(true);
+    expect(adapter.connect).toHaveBeenCalledTimes(2);
+    expect(adapter.disconnect).toHaveBeenCalledOnce();
+    expect(getCollaborationState(editor)?.status).toBe('connected');
+    editor.destroy();
+  });
+
+  it('does not send selection to an adapter that retired itself while publishing a local edit', () => {
+    const second = { connect: vi.fn(), onLocalSelection: vi.fn() };
+    const first = {
+      connect: vi.fn(),
+      onLocalUpdate: vi.fn(() => { expect(replaceCollaborationAdapter(editor, second)).toBe(true); }),
+      onLocalSelection: vi.fn(),
+    };
+    const kit = composeExtensions([CoreExtension, createCollaborationExtension({ adapter: () => first })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    first.onLocalSelection.mockClear();
+
+    expect(insertText(editor, 'Move to another room')).toBe(true);
+    expect(first.onLocalUpdate).toHaveBeenCalledOnce();
+    expect(first.onLocalSelection).not.toHaveBeenCalled();
+    expect(second.connect).toHaveBeenCalledOnce();
+    expect(second.onLocalSelection).toHaveBeenCalledOnce();
+    editor.destroy();
+  });
+
+  it('keeps a newer room chosen from the replacement notification', () => {
+    const first = { connect: vi.fn(), disconnect: vi.fn(), destroy: vi.fn() };
+    const intermediate = { connect: vi.fn(), disconnect: vi.fn(), destroy: vi.fn() };
+    const latest = { connect: vi.fn(), disconnect: vi.fn(), destroy: vi.fn() };
+    const kit = composeExtensions([CoreExtension, createCollaborationExtension({ adapter: () => first })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const unsubscribe = editor.subscribe(() => {
+      if (getCollaborationState(editor)?.status !== 'disconnected') return;
+      unsubscribe();
+      expect(first.disconnect).toHaveBeenCalledOnce();
+      expect(first.destroy).toHaveBeenCalledOnce();
+      expect(replaceCollaborationAdapter(editor, latest, { connect: true })).toBe(true);
+    });
+
+    expect(replaceCollaborationAdapter(editor, intermediate)).toBe(true);
+    expect(getCollaborationAdapter(editor)).toBe(latest);
+    expect(getCollaborationState(editor)?.status).toBe('connected');
+    expect(intermediate.connect).not.toHaveBeenCalled();
+    expect(intermediate.destroy).toHaveBeenCalledOnce();
+    expect(latest.connect).toHaveBeenCalledOnce();
+    editor.destroy();
+  });
 });

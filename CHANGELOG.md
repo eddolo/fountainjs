@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Honor collaboration cancellation or room replacement requested from an
+  editor status subscriber, and stop publishing selection to retired adapters.
+
 - Keep keyboard focus in the Conversion Lab after removing files or footnotes.
   Removing a file selects the neighboring file.
 
