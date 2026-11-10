@@ -170,6 +170,32 @@ it('reuses unchanged immutable model branches after fresh projection and retains
   } finally { pair.destroy(); }
 });
 
+it.each([false, true])('keeps text anchors and the inline break after offline typing (reverse: %s)', reverse => {
+  const pair = peers({ type: 'doc', content: [{ type: 'paragraph', content: [
+    { type: 'text', text: 'Before', marks: [{ type: 'strong' }] },
+    { type: 'hard_break' },
+    { type: 'text', text: 'After' },
+  ] }] }, reverse);
+  try {
+    const beforeBreak = pair.left.store.textAnchor([0, 0], 6, -1);
+    const afterBreak = pair.left.store.textAnchor([0, 2], 0, 1);
+    const breakId = pair.left.store.identity([0, 1])!;
+    pair.left.store.apply(pair.left.editor.createTransaction().insertText([0, 2], 0, 'Peer '));
+    pair.right.store.apply(pair.right.editor.createTransaction().insertText([0, 0], 0, 'Local '));
+    pair.sync(reverse);
+
+    const left = pair.left.store.read(), right = pair.right.store.read();
+    expect(left.toJSON()).toEqual(right.toJSON());
+    expect(left.child(0).content.map(node => node.isText ? node.text : node.type.name)).toEqual(['Local Before', 'hard_break', 'Peer After']);
+    expect(left.child(0).child(0).marks[0]?.type.name).toBe('strong');
+    for (const { store } of [pair.left, pair.right]) {
+      expect(store.path(breakId)).toEqual([0, 1]);
+      expect(store.resolveTextAnchor(beforeBreak)).toEqual({ path: [0, 0], offset: 12 });
+      expect(store.resolveTextAnchor(afterBreak)).toEqual({ path: [0, 2], offset: 5 });
+    }
+  } finally { pair.destroy(); }
+});
+
 const nestedBindings: { name: string; block: NodeJSON; path: number[] }[] = [
   { name: 'quote', block: { type: 'blockquote', content: [source.content![0]] }, path: [0, 0, 0] },
   { name: 'list', block: { type: 'bullet_list', content: [{ type: 'list_item', content: [source.content![0]] }] }, path: [0, 0, 0, 0] },

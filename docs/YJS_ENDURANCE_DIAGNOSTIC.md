@@ -425,3 +425,31 @@ Firefox, and WebKit. The journeys cover empty siblings, continued formatted
 typing after undo, editing at 1,000 paragraphs, and blank-line selection.
 The Firefox undo capture shows both editors retaining the peer's text and
 its surrounding marks.
+
+## Projection indexing experiment at 5,000 paragraphs
+
+Two installed packages ran six offline editing cycles per trial, with a
+checkpoint every three cycles. The candidate built anchor indexes during
+model projection, removing the separate indexing pass. The second trial
+reversed package order. Every run converged to the same portable document
+digest and exchanged 308 updates.
+
+| Trial | Median 11-character burst | Median wrap | Median checkpoint restore |
+| --- | ---: | ---: | ---: |
+| First baseline | 446.9 ms | 586.2 ms | 1,196.2 ms |
+| First candidate | 460.5 ms | 701.2 ms | 913.6 ms |
+| Reverse candidate | 457.7 ms | 588.4 ms | 981.6 ms |
+| Reverse baseline | 481.5 ms | 601.6 ms | 922.4 ms |
+
+The timing advantage did not repeat in both orders, so the candidate was
+discarded. The retained regression covers disconnected typing on both sides
+of an inline hard break, preserving the break identity, surrounding marks
+and both relative anchors after synchronization in either delivery order.
+
+A separate baseline profile at 5,000 paragraphs sampled 1,318.9 ms in the
+typing bursts. Normalization accounted for 1,028.7 ms of those samples. The
+separate index walk accounted for 210 ms of self time and attribute
+computation for 183 ms. Both are part of full-document normalization. These
+are profile samples from one host. The unprofiled timing receipts are
+`artifacts/yjs-single-projection-{baseline,candidate,rematch-candidate,rematch-baseline}-20261110.json`.
+The raw profile is `artifacts/yjs-current-5000-20261110.cpuprofile`.
