@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain signed Word table indents through DOCX and Fountain HTML. The editor
+  and page preview apply leading indentation. Native-only placement and
+  unsupported indentation declarations are identified in the import report.
+
 - Top-align cells in tables with physical appearance when the cell leaves
   alignment implicit. Explicit alignment stays in control.
 - Preserve Word table row minimum and exact heights in JSON, Fountain HTML

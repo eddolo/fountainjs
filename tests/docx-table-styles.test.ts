@@ -163,13 +163,17 @@ describe('inherited Word table style appearance', () => {
   });
 
   it('reports unsupported used table/cell style properties and obeys the receiving schema boundary', () => {
-    const styles = style('Child', '<w:tblPr><w:tblInd w:w="300" w:type="dxa"/><w:tblCellMar><w:left w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tcPr><w:vAlign w:val="center"/><w:tcMar><w:top w:w="40" w:type="dxa"/></w:tcMar></w:tcPr>');
+    const styles = style('Child', '<w:tblPr><w:tblInd w:w="300" w:type="dxa"/><w:tblCaption w:val="Caption"/><w:tblCellMar><w:left w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tcPr><w:vAlign w:val="center"/><w:tcMar><w:top w:w="40" w:type="dxa"/></w:tcMar></w:tcPr>');
+    const standard = importDOCX(fixture(styles), new Schema(StarterKit.schema));
+    expect(standard.document.child(0).attrs.indentTwips).toBe(300);
+    const reset = importDOCX(fixture(styles, '<w:tblStyle w:val="Child"/><w:tblInd w:w="0" w:type="dxa"/>'), schema);
+    expect(reset.document.child(0).attrs.indentTwips).toBe(0);
     const legacy = new Schema({ ...StarterKit.schema, nodes: { ...StarterKit.schema.nodes,
       table: { ...StarterKit.schema.nodes.table!, attrs: {} }, table_cell: { ...StarterKit.schema.nodes.table_cell!, attrs: { colspan: { default: 1 }, rowspan: { default: 1 }, background: { default: '' }, colwidth: { default: null } } } },
     });
     const result = importDOCX(fixture(styles), legacy);
     expect(result.document.textContent).toBe('Measured value');
-    expect(result.report.issues.map(issue => issue.code)).toEqual(expect.arrayContaining(['table-style-property-not-imported', 'table-appearance-not-imported', 'table-cell-appearance-not-imported']));
+    expect(result.report.issues.map(issue => issue.code)).toEqual(expect.arrayContaining(['table-style-property-not-imported', 'table-appearance-not-imported', 'table-indent-not-imported', 'table-cell-appearance-not-imported']));
     expect(result.document.child(0).attrs.appearance).toBeUndefined();
     expect(result.document.child(0).child(0).child(0).attrs.appearance).toBeUndefined();
   });

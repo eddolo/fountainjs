@@ -10,7 +10,7 @@ import { isAutomaticTrailingParagraph } from '../core/editing-provenance';
 import { INLINE_DRAWING_SIDES, isInlineDrawingDistances, type InlineDrawingDistances } from '../core/image-drawing';
 import { tableBackground } from '../core/table-background';
 import { TableMap } from '../core/table-map';
-import { isTablePlacement, isTableRowHeight, tableRowRepeats, type TableRowHeight } from '../core/table-layout';
+import { isTableIndent, isTablePlacement, isTableRowHeight, tableRowRepeats, type TableRowHeight } from '../core/table-layout';
 import { normalizeFontFamily, normalizeFontSize, normalizeLetterSpacing } from '../text-style/values';
 import { PAGE_SETTING_LENGTHS, readDocumentPageSettings, type DocumentPageSettings } from '../core/page-settings';
 import { isParagraphLayout, PARAGRAPH_BORDER_SIDES, type ParagraphLayout } from '../core/paragraph-layout';
@@ -1121,6 +1121,22 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   if (floating) warnAppearance('table-floating-position-not-imported', 'Word floating table placement and text wrapping are not retained. The table remains in document flow.');
   if (placementElement && !isTablePlacement(placement)) warnAppearance('unsupported-table-placement', 'Word table alignment must be left, center or right; the grid and cell content remain.');
   else if (placement !== undefined && !placementSpec) warnAppearance('table-placement-not-imported', 'The receiving schema cannot retain whole-table placement; cell content remains.');
+  const indentation = readWordTableProperty([properties], 'tblInd', warnAppearance);
+  let indentTwips: number | undefined;
+  if (indentation) {
+    const raw = wordPageAttribute(indentation, 'w')?.trim() ?? '';
+    const amount = /^[+-]?\d{1,5}$/u.test(raw) ? Number(raw) : undefined;
+    const bidi = wordStyleChild(properties, 'bidiVisual');
+    if (wordPageAttribute(indentation, 'type') !== 'dxa' || !isTableIndent(amount)) {
+      warnAppearance('unsupported-table-indent', 'Word table indentation requires a signed 16-bit twip measure.');
+    } else if (!schema.nodes.table?.spec.attrs?.indentTwips || floating || (placementElement && (!placementSpec || !isTablePlacement(placement)))
+      || (bidi && !['0', 'false', 'off'].includes(wordPageAttribute(bidi, 'val') ?? ''))) {
+      warnAppearance('table-indent-not-imported', 'Table indentation is supported on inline left-to-right tables with a compatible schema.');
+    } else {
+      indentTwips = amount === 0 ? 0 : amount;
+      if (placement === 'center' || placement === 'right') warnAppearance('table-indent-placement-not-projected', 'The Word indent declaration remains available for DOCX export. Only leading placement projects indentation in the browser.');
+    }
+  }
   if (styleId && !media.styles) warnAppearance('table-style-appearance-unresolved', 'The associated Word table style has no available internal style definitions; direct appearance remains.');
   const spacing = wordStyleChild(properties, 'tblCellSpacing');
   if (spacing && wordPageAttribute(spacing, 'w') !== '0') warnAppearance('table-cell-spacing-not-imported', 'Nonzero Word table cell spacing is not represented by the collapsed-border view.');
@@ -1170,6 +1186,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
       const margin = wordStyleChild(cell, 'tcMar');
       return margin && cell ? { ...cell, children: [margin] } : undefined;
     });
+    if (wordStyleChild(exceptions, 'tblInd')) warnRow('table-row-indent-exception-not-imported', 'A row-level Word indentation exception has no whole-table mapping.');
     if (wordStyleChild(exceptions, 'tblW')) issues.push({ code: 'table-row-width-exception-not-imported', severity: 'warning', message: 'Row-specific preferred table widths cannot be represented by one whole-table preference.', path: [...path, rowIndex] });
     if (readWordTableProperty([offsetProperties, exceptions], 'jc', warnRow)) warnRow('table-row-placement-not-imported', 'Row-specific alignment cannot be represented by whole-table placement.');
     if (['tblBorders', 'tblCellMar', 'tblCellSpacing'].some(name => wordStyleChild(exceptions, name))) issues.push({
@@ -1283,6 +1300,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   if (!schema.nodes.table?.spec.attrs?.appearance) warnAppearance('table-appearance-not-imported', 'The receiving table schema cannot distinguish source appearance from application defaults.');
   if (preferredWidth && !schema.nodes.table?.spec.attrs?.preferredWidth) warnAppearance('table-preferred-width-not-imported', 'The receiving table schema cannot represent the preferred width; cell grid and content remain.');
   return schema.node('table', { layout, ...(placementSpec && isTablePlacement(placement) ? { placement } : {}),
+    ...(indentTwips === undefined ? {} : { indentTwips }),
     ...(!floating && schema.nodes.table?.spec.attrs?.blockSpacing ? { blockSpacing: 'none' } : {}),
     ...(schema.nodes.table?.spec.attrs?.preferredWidth ? { preferredWidth } : {}), ...(schema.nodes.table?.spec.attrs?.appearance ? { appearance } : {}) }, rowNodes.length ? rowNodes : [schema.node('table_row', {}, [schema.node('table_cell', {}, [schema.node('paragraph')])])]);
 }
@@ -2315,7 +2333,9 @@ function tableXML(node: FountainNode, context: ExportContext, path: readonly num
   const appearanceXML = appearance.replace(/(?=<w:tblCellMar>)/, layoutXML) + (appearance.includes('<w:tblCellMar>') ? '' : layoutXML);
   const placement = node.attrs.placement;
   const justification = isTablePlacement(placement) ? `<w:jc w:val="${placement}"/>` : '';
-  return `<w:tbl><w:tblPr>${tableWidth}${justification}${appearanceXML}</w:tblPr>${grid}${rows}</w:tbl>`;
+  const indent = node.attrs.indentTwips;
+  const indentation = isTableIndent(indent) ? `<w:tblInd w:w="${indent}" w:type="dxa"/>` : '';
+  return `<w:tbl><w:tblPr>${tableWidth}${justification}${indentation}${appearanceXML}</w:tblPr>${grid}${rows}</w:tbl>`;
 }
 
 function blockXML(node: FountainNode, context: ExportContext, path: readonly number[], level = 0, quote: QuoteProjection = false, list?: ExportList, definition?: DefinitionLayout): string {

@@ -23,6 +23,14 @@ export const tablePlacementAttribute = {
   validate: (value: unknown) => value === undefined || isTablePlacement(value),
 };
 
+export function isTableIndent(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= -32_768 && value <= 32_767;
+}
+
+export const tableIndentAttribute = { default: undefined,
+  validate: (value: unknown) => value === undefined || isTableIndent(value) };
+
+const TABLE_INDENT_DATA = 'data-fountain-table-indent';
 const TABLE_PLACEMENT_DATA = 'data-fountain-table-placement';
 const TABLE_SPACING_DATA = 'data-fountain-table-spacing';
 const ROW_HEIGHT_DATA = 'data-fountain-row-height';
@@ -46,6 +54,12 @@ export const tableRowHeightAttribute = { default: undefined,
 export function readTablePlacement(element: { getAttribute(name: string): string | null }): Attributes {
   const value = element.getAttribute(TABLE_PLACEMENT_DATA) ?? element.getAttribute('align')?.trim().toLowerCase();
   return isTablePlacement(value) ? { placement: value } : {};
+}
+
+export function readTableIndent(element: { getAttribute(name: string): string | null }): Attributes {
+  const raw = element.getAttribute(TABLE_INDENT_DATA);
+  const indentTwips = raw && /^-?\d{1,5}$/u.test(raw) ? Number(raw) : undefined;
+  return isTableIndent(indentTwips) ? { indentTwips } : {};
 }
 
 export function readTableRow(element: { getAttribute(name: string): string | null }): Attributes {
@@ -101,12 +115,15 @@ export function tableDOMSpec(node: Node): DOMOutputSpec {
   const paint = tableAppearanceDOMAttributes(node.attrs.appearance);
   const placement = node.attrs.placement;
   const placed = isTablePlacement(placement);
-  const margins = placed ? `margin-left:${placement === 'left' ? '0' : 'auto'};margin-right:${placement === 'right' ? '0' : 'auto'}` : '';
+  const indent = node.attrs.indentTwips;
+  const leadingIndent = isTableIndent(indent) && (placement === undefined || placement === 'left');
+  const margins = leadingIndent ? `margin-left:${indent / 20}pt;margin-right:auto` : placed ? `margin-left:${placement === 'left' ? '0' : 'auto'};margin-right:${placement === 'right' ? '0' : 'auto'}` : '';
   const preference = node.attrs.preferredWidth;
   const flush = node.attrs.blockSpacing === 'none';
   const combinedStyle = [paint.style, preferred.style, margins, flush && 'margin-block:0'].filter(Boolean).join(';');
   const appearance = { ...paint, ...preferred, ...textDirectionDOMAttributes(node.attrs),
     ...(flush ? { [TABLE_SPACING_DATA]: 'none' } : {}),
+    ...(isTableIndent(indent) ? { [TABLE_INDENT_DATA]: String(indent) } : {}),
     ...(placed ? { [TABLE_PLACEMENT_DATA]: placement } : {}), ...(combinedStyle ? { style: combinedStyle } : {}) };
   const style = appearance.style ? `${appearance.style};` : '';
   if (node.attrs.layout !== 'fixed' && node.attrs.layout !== 'auto') return ['table', appearance, ['tbody', 0]];

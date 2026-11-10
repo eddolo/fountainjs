@@ -2,7 +2,7 @@ import type { Attributes, Node, Schema } from '../schema';
 import { readTableAppearance } from '../table-appearance';
 import { tableBackground } from '../table-background';
 import { readTableCellWidths } from '../table-column-width';
-import { readTableLayout, readTablePlacement, readTableRow } from '../table-layout';
+import { readTableIndent, readTableLayout, readTablePlacement, readTableRow } from '../table-layout';
 import { readContainerDirection, readTextAlignmentAttributes, readTextDirection } from '../text-direction';
 
 /** Native table row order: header, body/direct rows, footer; stable within each. */
@@ -84,5 +84,5 @@ export function projectHTMLTable<E extends TableElement>(element: E, schema: Sch
   });
   const placement = schema.nodes.table?.spec.attrs?.placement ? readTablePlacement(element) : {};
   return schema.node('table', { ...readTableLayout(element, Boolean(schema.nodes.table?.spec.attrs?.blockSpacing)),
-    ...placement, ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows);
+    ...placement, ...(schema.nodes.table?.spec.attrs?.indentTwips ? readTableIndent(element) : {}), ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows);
 }

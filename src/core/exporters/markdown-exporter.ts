@@ -233,6 +233,9 @@ function reportNodeAttributes(
   if (name === 'table' && node.attrs.placement !== undefined && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Whole-table placement is not represented by pipe Markdown; use HTML table output to retain it.');
   }
+  if (name === 'table' && node.attrs.indentTwips !== undefined && context.options.tableFormat !== 'html') {
+    report(context, 'attribute', name, path, 'Markdown pipe tables cannot retain table indentation.');
+  }
   if (name === 'table' && node.attrs.blockSpacing === 'none' && context.options.tableFormat !== 'html') {
     report(context, 'attribute', name, path, 'Markdown pipe tables cannot retain table block spacing.');
   }

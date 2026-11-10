@@ -12,6 +12,49 @@ function source(width: string, extra = '') {
   return zipSync({ 'word/document.xml': strToU8(`<w:document xmlns:w="${W}"><w:body><w:tbl><w:tblPr>${width}</w:tblPr><w:tblGrid><w:gridCol w:w="1800"/></w:tblGrid><w:tr>${extra}<w:tc><w:p><w:r><w:t>Source content</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>`) });
 }
 describe('native preferred table width bridge', () => {
+  it.each([-360, 0, 720])('round-trips a signed Word table indent of %i twips', amount => {
+    const declaration = `<w:tblInd w:w="${amount}" w:type="dxa"/>`;
+    const { document, report } = importDOCX(source(declaration), schema);
+    expect(report.issues).toEqual([]);
+    expect(document.child(0).attrs.indentTwips).toBe(amount);
+    const html = HTMLExporter.export(document, { document: false });
+    expect(html).toContain(`margin-left:${amount / 20}pt`);
+    expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(document.toJSON());
+    const output = exportDOCX(document);
+    expect(strFromU8(unzipSync(output.bytes)['word/document.xml']!)).toContain(declaration);
+    expect(importDOCX(output.bytes, schema).document.child(0).attrs.indentTwips).toBe(amount);
+    expect(MarkdownExporter.exportWithReport(document).losses).toContainEqual(expect.objectContaining({ detail: expect.stringContaining('table indentation') }));
+    expect(MarkdownExporter.exportWithReport(document, { tableFormat: 'html' }).markdown).toContain('data-fountain-table-indent');
+  });
+
+  it('retains non-leading indent declarations without claiming matching browser placement', () => {
+    const { document, report } = importDOCX(source('<w:jc w:val="center"/><w:tblInd w:w="720" w:type="dxa"/>'), schema);
+    expect(document.child(0).attrs).toMatchObject({ placement: 'center', indentTwips: 720 });
+    expect(HTMLExporter.export(document, { document: false })).toContain('margin-left:auto;margin-right:auto');
+    expect(report.issues).toContainEqual(expect.objectContaining({ code: 'table-indent-placement-not-projected', path: [0] }));
+  });
+
+  it('reports unsupported indentation units and row overrides and ignores foreign attributes', () => {
+    const { document, report } = importDOCX(source('<w:tblInd xmlns:x="urn:foreign" x:w="300" w:type="dxa"/>',
+      '<w:tblPrEx><w:tblInd w:w="240" w:type="dxa"/></w:tblPrEx>'), schema);
+    expect(document.child(0).attrs.indentTwips).toBeUndefined();
+    expect(report.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ code: 'unsupported-table-indent', path: [0] }),
+      expect.objectContaining({ code: 'table-row-indent-exception-not-imported', path: [0, 0] }),
+    ]));
+    const percentage = importDOCX(source('<w:tblInd w:w="300" w:type="pct"/>'), schema);
+    expect(percentage.report.issues).toContainEqual(expect.objectContaining({ code: 'unsupported-table-indent', path: [0] }));
+  });
+
+  it('reports indentation when the receiving schema cannot retain explicit placement', () => {
+    const table = { ...StarterKit.schema.nodes.table!, attrs: { ...StarterKit.schema.nodes.table!.attrs } };
+    delete table.attrs.placement;
+    const limited = new Schema({ ...StarterKit.schema, nodes: { ...StarterKit.schema.nodes, table } });
+    const { document, report } = importDOCX(source('<w:jc w:val="center"/><w:tblInd w:w="720" w:type="dxa"/>'), limited);
+    expect(document.child(0).attrs.indentTwips).toBeUndefined();
+    expect(report.issues).toContainEqual(expect.objectContaining({ code: 'table-indent-not-imported', path: [0] }));
+  });
+
   it('keeps inline Word tables flush through HTML and native reopening', () => {
     const { document } = importDOCX(source(''), schema);
     expect(document.child(0).attrs.blockSpacing).toBe('none');

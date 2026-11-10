@@ -4,6 +4,57 @@ import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { Schema, StarterKit, MarkdownImporter } from 'fountainjs-editor';
 import { exportDOCX } from 'fountainjs-editor/docx';
 
+export async function conversionTableIndentJourney(page: Page, info: TestInfo) {
+  const schema = new Schema(StarterKit.schema);
+  const paragraph = (text: string) => schema.node('paragraph', {}, [schema.text(text)]);
+  const table = (text: string) => schema.node('table', { preferredWidth: { unit: 'pt', value: 180 } }, [
+    schema.node('table_row', {}, [schema.node('table_cell', { colwidth: [240] }, [paragraph(text)])]),
+  ]);
+  const doc = schema.node('doc', {}, [
+    paragraph('Table placement reference'), table('BaselineCell'), paragraph('An indented table follows'),
+    table('IndentedCell'), paragraph('End of table placement sample'),
+  ]);
+  const archive = unzipSync(exportDOCX(doc).bytes);
+  const declarations = ['<w:tblInd w:w="0" w:type="dxa"/>', '<w:tblInd w:w="720" w:type="dxa"/>'];
+  let index = 0;
+  archive['word/document.xml'] = strToU8(strFromU8(archive['word/document.xml']!).replaceAll('<w:tblBorders>', open =>
+    declarations[index++] + open));
+  expect(index).toBe(2);
+  const source = info.outputPath('word-table-indent.docx');
+  await writeFile(source, zipSync(archive));
+
+  await page.goto('/conversion-lab.html');
+  const input = page.getByLabel('Choose documents');
+  await input.setInputFiles(source);
+  const workspace = page.getByRole('region', { name: 'Conversion workspace: word-table-indent.docx' });
+  async function expectIndent(tables: ReturnType<Page['locator']>) {
+    await expect(tables).toHaveCount(2);
+    await expect(tables.nth(0)).toHaveAttribute('data-fountain-table-indent', '0');
+    await expect(tables.nth(1)).toHaveAttribute('data-fountain-table-indent', '720');
+    const delta = await tables.evaluateAll(([baseline, indented]) =>
+      indented.getBoundingClientRect().left - baseline.getBoundingClientRect().left);
+    expect(delta).toBeCloseTo(48, 0);
+  }
+  const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+  await expectIndent(editor.locator('table'));
+  await editor.screenshot({ path: info.outputPath('table-indent-editor.png') });
+  const pagination = workspace.getByRole('region', { name: 'Draft pagination' });
+  await pagination.getByRole('button', { name: 'Build page preview' }).click();
+  await expectIndent(pagination.locator('.fountain-page-preview__sheet table'));
+  await pagination.locator('.fountain-page-preview__sheet').screenshot({ path: info.outputPath('table-indent-preview.png') });
+
+  await workspace.getByRole('combobox', { name: 'Export format' }).selectOption('docx');
+  const pending = page.waitForEvent('download');
+  await workspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const saved = info.outputPath('fountain-table-indent.docx');
+  await (await pending).saveAs(saved);
+  const xml = strFromU8(unzipSync(await readFile(saved))['word/document.xml']!);
+  expect(xml.match(/<w:tblInd[^>]+\/>/gu)).toEqual(declarations);
+  await input.setInputFiles(saved);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: fountain-table-indent.docx' });
+  await expectIndent(reopened.getByRole('textbox', { name: 'Imported document editor' }).locator('table'));
+}
+
 export async function conversionRowHeightJourney(page: Page, info: TestInfo) {
   const schema = new Schema(StarterKit.schema);
   const rows = [['Minimum row'], ['Exact row', 'Visible line two', 'Visible line three', 'Visible line four'], ['Natural row']];

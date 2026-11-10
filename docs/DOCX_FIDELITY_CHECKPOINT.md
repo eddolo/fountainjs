@@ -1,5 +1,16 @@
 # DOCX fidelity checkpoint
 
+Table indentation (2026-11-10, Unreleased) preserves signed twip declarations
+from inline left-to-right Word tables through editable JSON, Fountain HTML and
+native DOCX. Direct values override inherited style values. The Conversion Lab
+fixture has a 36-point indent, which moves the second table 48 CSS pixels in
+the editor and page preview across Chromium, Firefox and WebKit. The original
+and downloaded DOCX produce identical page images in LibreOffice. Center and
+right declarations survive native export with a browser projection warning.
+Floating and right-to-left layouts, row exceptions and unsupported units
+remain reported boundaries. This fixture covers indentation independently of
+the broader native layout audit.
+
 Declared theme-language repair (2026-11-03, Unreleased): remove the blanket
 rejection of explicit theme languages that caused the scientific document's
 Calibri title/headings to fall back to Arial. Resolve supplemental script fonts
