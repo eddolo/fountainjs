@@ -300,6 +300,9 @@ JSON use existing adapters with the supplied StarterKit + Pages schema. Unsuppor
 formats, invalid inputs and oversized files remain visible as failed imports;
 other files in the batch still work. Switch between files without discarding
 their editing state. Remove a file or clear the session with confirmation.
+Removing a file selects and focuses its next neighbor, or the previous one if
+it was last in the list. Removing the only file or clearing the session returns
+keyboard focus to the file chooser.
 
 Inspect original text above the full-width editable import. DOCX has no original-page
 viewer here: compare its untouched original in Word or LibreOffice yourself.
@@ -310,7 +313,8 @@ the export to reopen manually as another input. The check never replaces the dra
 The local footnote follow-up adds native DOCX notes to the same import, editor and
 preview schema. Footnote controls below the editor insert a reference at the body
 cursor, focus a definition for direct editing, or remove the note and references
-together; ordinary undo restores them. Notes remain editable blocks after the body.
+together. After removal, focus returns to **Insert footnote at cursor**. Undo
+restores the note and references. Notes remain editable blocks after the body.
 DOCX export uses a native note part, not a simulated footer. Note position within
 the Fountain block order can change on reopening and is explicitly reported.
 This does not reproduce original Word styles, page placement or custom numbering.

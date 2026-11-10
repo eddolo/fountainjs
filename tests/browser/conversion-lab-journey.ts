@@ -626,6 +626,8 @@ export async function conversionLabJourney(page: Page, info: TestInfo) {
   page.once('dialog', dialog => dialog.accept());
   await page.getByRole('button', { name: 'Remove selected file', exact: true }).click();
   await expect(files.getByRole('button', { name: 'reopened.json', exact: true })).toHaveCount(0);
+  await expect(files.getByRole('button', { name: 'broken.json — not imported', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await files.getByRole('button', { name: 'private.md', exact: true }).click();
   await page.getByRole('heading', { name: 'Try your own documents.' }).scrollIntoViewIfNeeded();
   await page.screenshot({ path: info.outputPath('conversion-lab.png'), fullPage: false });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);

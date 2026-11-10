@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep keyboard focus in the Conversion Lab after removing files or footnotes.
+  Removing a file selects the neighboring file.
+
 - Stop retired Yjs sessions before they can apply shared content or start transport.
 
 - Preserve local drafts that change during a retained Yjs checkpoint install.

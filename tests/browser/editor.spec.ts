@@ -442,6 +442,65 @@ test('reconnects an imported orphan footnote and exports its native reference', 
   expect(strFromU8(exported['word/footnotes.xml']!)).toContain('they are not measured experimental data.');
   const reopened = workspace.getByRole('textbox', { name: 'Reopened export preview' });
   await expect(reopened.locator('[data-fountain-footnote-reference="1"]')).toBeVisible();
+  await controls.getByRole('button', { name: 'Remove footnote 1', exact: true }).press('Enter');
+  await expect(definition).toHaveCount(0);
+  await expect(reference).toHaveCount(0);
+  await expect(controls.getByRole('button', { name: 'Insert footnote at cursor' })).toBeFocused();
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).press('Enter');
+  await expect(reference).toBeVisible();
+  await expect(definition).toContainText('they are not measured experimental data.');
+});
+
+test('keeps keyboard focus and surviving drafts when removing files from the conversion lab', async ({ page }, info) => {
+  await page.goto('/conversion-lab.html');
+  const chooser = page.getByLabel('Choose documents');
+  await chooser.setInputFiles([
+    { name: 'first.md', mimeType: 'text/markdown', buffer: Buffer.from('First draft.') },
+    { name: 'broken.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', buffer: Buffer.from('Incomplete archive') },
+    { name: 'third.md', mimeType: 'text/markdown', buffer: Buffer.from('Third draft.') },
+  ]);
+  const files = page.getByRole('navigation', { name: 'Imported files' });
+  const first = files.getByRole('button', { name: 'first.md', exact: true });
+  const third = files.getByRole('button', { name: 'third.md', exact: true });
+  const broken = files.getByRole('button', { name: 'broken.docx — not imported', exact: true });
+  const remove = page.getByRole('button', { name: 'Remove selected file', exact: true });
+  await third.press('Enter');
+  const thirdEditor = page.getByRole('region', { name: 'Conversion workspace: third.md' })
+    .getByRole('textbox', { name: 'Imported document editor' });
+  await thirdEditor.getByText('Third draft.', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' Reviewed.');
+  await broken.press('Enter');
+  await expect(broken).toHaveAttribute('aria-pressed', 'true');
+  page.once('dialog', dialog => dialog.dismiss());
+  await remove.press('Enter');
+  await expect(broken).toHaveAttribute('aria-pressed', 'true');
+  await expect(remove).toBeFocused();
+
+  page.once('dialog', dialog => dialog.accept());
+  await remove.press('Enter');
+  await expect(broken).toHaveCount(0);
+  await expect(third).toBeFocused();
+  await expect(third).toHaveAttribute('aria-pressed', 'true');
+  await expect(thirdEditor).toContainText('Third draft. Reviewed.');
+  await page.screenshot({ path: info.outputPath('neighboring-file-focused.png'), scale: 'css' });
+
+  page.once('dialog', dialog => dialog.accept());
+  await remove.press('Enter');
+  await expect(first).toBeFocused();
+  await expect(first).toHaveAttribute('aria-pressed', 'true');
+
+  page.once('dialog', dialog => dialog.accept());
+  await remove.press('Enter');
+  await expect(files).toHaveCount(0);
+  await expect(chooser).toBeFocused();
+
+  await page.getByRole('button', { name: 'Try a sample', exact: true }).press('Enter');
+  await expect(files.getByRole('button', { name: 'sample.md', exact: true })).toBeVisible();
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Clear session', exact: true }).press('Enter');
+  await expect(files).toHaveCount(0);
+  await expect(chooser).toBeFocused();
 });
 
 test('keeps valid and malformed Markdown links distinct through an edit and download', async ({ page }, info) => {

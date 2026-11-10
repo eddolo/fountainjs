@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { createImageNode, EditorState, imageFileToDataURL, NodeSelection, readDocumentPageSettings, type DocumentPageSettings, type Editor, type Node } from 'fountainjs-editor';
 import type { DOCXPackagePart } from 'fountainjs-editor/docx';
 import { FountainComposer, FountainEditor, useFountain, useFountainState, type FountainEditorHandle } from 'fountainjs-editor/react';
@@ -96,6 +96,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
     doc: entry.result!.document, plugins: entry.context.kit.plugins }));
   const editor = useFountain({ schema: entry.context.kit.schema, state: initialState });
   const surface = useRef<FountainEditorHandle>(null);
+  const insertFootnoteButton = useRef<HTMLButtonElement>(null);
   const state = useFountainState(editor)!;
   const [format, setFormat] = useState<LabFormat>(entry.format!);
   const [omitCaretHosts, setOmitCaretHosts] = useState(entry.format === 'markdown' && entry.context.options.commonMarkSourceReview);
@@ -134,6 +135,16 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
     } else {
       setStatus('');
       setError('Place a text cursor in the document body, then reconnect the footnote.');
+    }
+  }
+  function removeNote(id: string) {
+    if (removeFootnote(editor, id)) {
+      insertFootnoteButton.current?.focus();
+      setError('');
+      setStatus('Footnote and its references removed. Undo restores them together.');
+    } else {
+      setStatus('');
+      setError('Could not remove this footnote.');
     }
   }
   function convert(save: boolean) {
@@ -182,7 +193,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
         </form>
       </details>
       <section className="lab-footnotes" aria-label="Page break controls"><h2>Manual page breaks</h2><p>Dashed separators mark explicit page boundaries, not blank lines. This editor is a continuous view, not a page-layout preview. Select a break and press Delete or Backspace to remove it; Undo restores it.</p><button onMouseDown={event => event.preventDefault()} onClick={() => { if (insertPageBreak(editor)) { surface.current?.focus(); setError(''); } else setError('Place the cursor in the document before inserting a page break.'); }}>Insert page break after current block</button><ul>{pageBreakPaths.map((path, index) => <li key={path.join('.')}><button onClick={() => { editor.dispatch(editor.state.createTransaction().setSelection(new NodeSelection(editor.state.doc, path))); surface.current?.focus(); setError(''); }}>Select page break {index + 1}</button></li>)}</ul></section>
-      <section className="lab-footnotes" aria-label="Footnote controls"><h2>Footnotes</h2><p>Notes are editable blocks below the body, linked to numbered references. DOCX export stores them as native footnotes; original page placement and custom numbering are not reproduced here.</p><button onMouseDown={event => event.preventDefault()} onClick={addFootnote}>Insert footnote at cursor</button>
+      <section className="lab-footnotes" aria-label="Footnote controls"><h2>Footnotes</h2><p>Notes are editable blocks below the body, linked to numbered references. DOCX export stores them as native footnotes; original page placement and custom numbering are not reproduced here.</p><button ref={insertFootnoteButton} onMouseDown={event => event.preventDefault()} onClick={addFootnote}>Insert footnote at cursor</button>
         {footnoteReport.definitions.length > 0 && <ul>{footnoteReport.definitions.map(item => {
           const number = footnoteNumbers.get(item.id);
           const label = number ? `footnote ${number}` : `unreferenced footnote ${item.id}`;
@@ -192,7 +203,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
             <span>{number ? `Footnote ${number}` : `Unreferenced footnote ${item.id}`}</span>
             <button onClick={() => editFootnote(item.id)}>Edit {label}</button>
             {canReconnect && <button onMouseDown={event => event.preventDefault()} onClick={() => reconnectNote(item.id)}>Reconnect footnote {item.id} at cursor</button>}
-            <button onClick={() => { if (removeFootnote(editor, item.id)) { setStatus('Footnote and its references removed. Undo restores them together.'); setError(''); } else setError('Could not remove this footnote.'); }}>Remove {label}</button>
+            <button onClick={() => removeNote(item.id)}>Remove {label}</button>
           </li>;
         })}</ul>}
         {footnoteReport.issues.length > 0 && <ul>{footnoteReport.issues.map((issue, index) => <li key={index}>{issue.detail}</li>)}</ul>}
@@ -216,6 +227,36 @@ export function ConversionLab() {
   const [commonMarkSourceReview, setCommonMarkSourceReview] = useState(false);
   const [retainBlockedAutolinks, setRetainBlockedAutolinks] = useState(false);
   const importing = useRef(false);
+  const fileChooser = useRef<HTMLInputElement>(null);
+  const selectedFileButton = useRef<HTMLButtonElement>(null);
+  const restoreFileFocus = useRef(false);
+  useLayoutEffect(() => {
+    if (!restoreFileFocus.current) return;
+    restoreFileFocus.current = false;
+    const target = selectedFileButton.current ?? fileChooser.current;
+    target?.focus();
+  }, [active]);
+
+  function removeSelectedFile() {
+    const index = entries.findIndex(entry => entry.id === active);
+    const selected = entries[index];
+    if (!selected || !window.confirm('Remove this file and its edited draft?')) return;
+    const remaining = entries.filter(entry => entry.id !== selected.id);
+    const next = remaining[index] ?? remaining.at(-1);
+    restoreFileFocus.current = true;
+    setEntries(remaining);
+    setActive(next?.id ?? '');
+    setMessage(`Removed ${selected.file.name}.`);
+  }
+
+  function clearSession() {
+    if (!window.confirm('Clear all local drafts? Download anything you want to keep first.')) return;
+    restoreFileFocus.current = true;
+    setEntries([]);
+    setActive('');
+    setMessage('Local session cleared.');
+  }
+
   async function open(files: File[]) {
     if (importing.current) return;
     if (files.length + entries.length > 8) { setMessage('Keep up to 8 files in this lab. Remove files or clear the session first.'); return; }
@@ -244,7 +285,7 @@ export function ConversionLab() {
   return <main className="conversion-lab">
     <header className="site-header"><a className="brand" href="./"><span>F</span> FountainJS</a><nav aria-label="Primary navigation"><SitePageLink href="./">Home</SitePageLink><SitePageLink href="./demos.html">10 demos</SitePageLink><SitePageLink href="./workflows.html">Workflows</SitePageLink><SitePageLink href="./developers.html">Developers</SitePageLink></nav></header>
     <div className="lab-shell"><nav className="lab-breadcrumb" aria-label="Breadcrumb"><a href="./">Home</a><span> / </span><a href="./demos.html">Demos</a><span> / Conversion lab</span></nav><a href="./demos.html">← Back to demos</a><h1>Try your own documents.</h1><p className="lab-intro">Import, inspect, edit and reopen an export. A working conversion lab—not a guarantee of identical output.</p>
-    <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Try a sample</button><button disabled={busy || !entries.length} onClick={() => { if (window.confirm('Clear all local drafts? Download anything you want to keep first.')) { setEntries([]); setActive(''); setMessage('Local session cleared.'); } }}>Clear session</button></div></section>
+    <section className="lab-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); void open(Array.from(event.dataTransfer.files)); }} aria-label="Local file import"><label>Drop files here, or choose files<input ref={fileChooser} aria-label="Choose documents" type="file" multiple disabled={busy} onChange={event => { void open(Array.from(event.target.files ?? [])); event.target.value = ''; }} /></label><p>Markdown · HTML · DOCX · Fountain JSON. Other formats, including PDF, TeX, ODT and EPUB, are not supported in this first lab.</p><div className="lab-actions"><button disabled={busy || entries.length >= 8} onClick={() => void open([new File(['# Conversion check\n\nA paragraph with **bold text**.\n\n- [ ] Verify the export\n- [x] Keep the original\n'], 'sample.md', { type: 'text/markdown' })])}>Try a sample</button><button disabled={busy || !entries.length} onClick={clearSession}>Clear session</button></div></section>
     <fieldset className="lab-import-options" disabled={busy}>
       <legend>Options for the next files</legend>
       <label className="lab-checkbox"><input type="checkbox" checked={commonMarkSourceReview} onChange={event => setCommonMarkSourceReview(event.target.checked)} /> Use CommonMark source review for Markdown, HTML and Fountain JSON</label>
@@ -256,9 +297,9 @@ export function ConversionLab() {
       <p>Parse leading --- lines as Markdown and leave bare URLs and email addresses as text. Existing drafts keep their original settings.</p>
     </fieldset>
     <p className="lab-privacy">Local processing only. No uploads or automatic storage. External images, media and embedded pages are blocked; their addresses may remain in the document. Following a link is your choice. Reloading or leaving clears these drafts. Up to 8 files / 16 MiB total.</p><p role="status">{message}</p>
-    {entries.length > 0 && <nav className="lab-files" aria-label="Imported files">{entries.map(entry => <button key={entry.id} aria-pressed={active === entry.id} onClick={() => setActive(entry.id)} title={entry.file.name}>{entry.file.name}{entry.error ? ' — not imported' : ''}</button>)}</nav>}
+    {entries.length > 0 && <nav className="lab-files" aria-label="Imported files">{entries.map(entry => <button key={entry.id} ref={active === entry.id ? selectedFileButton : undefined} aria-pressed={active === entry.id} onClick={() => setActive(entry.id)} title={entry.file.name}>{entry.file.name}{entry.error ? ' — not imported' : ''}</button>)}</nav>}
     {entries.map(entry => entry.result ? <FileWorkspace key={entry.id} entry={entry} active={active === entry.id} /> : <section key={entry.id} hidden={active !== entry.id} className="lab-notice"><h2>{entry.file.name}</h2><p role="alert">{entry.error}</p><button onClick={() => download(entry.file, entry.file.name)}>Download untouched original</button></section>)}
-    {entries.length > 0 && <button disabled={busy} onClick={() => { if (window.confirm('Remove this file and its edited draft?')) { const remaining = entries.filter(entry => entry.id !== active); setEntries(remaining); setActive(remaining[0]?.id ?? ''); } }}>Remove selected file</button>}
+    {entries.length > 0 && <button disabled={busy} onClick={removeSelectedFile}>Remove selected file</button>}
     <footer><p>Experimental lab · FountainJS {packageInfo.version} · StarterKit + Pages schema</p><a href="https://github.com/eddolo/fountainjs/blob/master/docs/CONVERSION_LAB.md">How this lab works ↗</a></footer></div>
   </main>;
 }
