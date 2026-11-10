@@ -58,6 +58,11 @@ the scientific report this moved “Recorded temperatures” from 299.0 to
 equations, the two-page layout, and the document edit remained visible in
 the regenerated PDF.
 
+The inline table now uses the document's surrounding paragraph spacing without
+the editor's default table margins. In the same report, the first table header
+moved from 282.5 to 267.5 pt down page two. LibreOffice placed it at 266.8 pt.
+The caption beneath the table still differs in vertical position.
+
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing
 position. Unused parts outside that folder stay in the original archive.

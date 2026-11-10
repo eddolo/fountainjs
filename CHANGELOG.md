@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep inline Word tables free of editor-only outer margins in the editor,
+  HTML and paged output. Report unsupported floating-table positioning.
 - Keep display equations with paragraph layout from adding default renderer
   spacing on top of the imported paragraph spacing.
 - Let figure captions with their own paragraph layout use the document column

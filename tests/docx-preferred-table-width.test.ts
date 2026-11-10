@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { Schema } from '../src/core';
 import { StarterKit } from '../src/extensions';
 import { exportDOCX, importDOCX } from '../src/docx';
+import { HTMLExporter, MarkdownExporter } from '../src';
+import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(StarterKit.schema);
 const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
@@ -10,6 +12,25 @@ function source(width: string, extra = '') {
   return zipSync({ 'word/document.xml': strToU8(`<w:document xmlns:w="${W}"><w:body><w:tbl><w:tblPr>${width}</w:tblPr><w:tblGrid><w:gridCol w:w="1800"/></w:tblGrid><w:tr>${extra}<w:tc><w:p><w:r><w:t>Source content</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>`) });
 }
 describe('native preferred table width bridge', () => {
+  it('keeps inline Word tables flush through HTML and native reopening', () => {
+    const { document } = importDOCX(source(''), schema);
+    expect(document.child(0).attrs.blockSpacing).toBe('none');
+    const html = HTMLExporter.export(document, { document: false });
+    expect(html).toContain('data-fountain-table-spacing="none"');
+    expect(html).toContain('margin-block:0');
+    expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(document.toJSON());
+    expect(importDOCX(exportDOCX(document).bytes, schema).document.child(0).attrs.blockSpacing).toBe('none');
+    expect(MarkdownExporter.exportWithReport(document).losses).toContainEqual(expect.objectContaining({ detail: expect.stringContaining('table block spacing') }));
+    expect(MarkdownExporter.exportWithReport(document, { tableFormat: 'html' }).markdown).toContain('data-fountain-table-spacing="none"');
+  });
+
+  it('reports floating table positioning without inferring flush block spacing', () => {
+    const { document, report } = importDOCX(source('<w:tblpPr w:vertAnchor="page" w:tblpY="120"/>'), schema);
+    expect(document.child(0).attrs.blockSpacing).toBeUndefined();
+    expect(document.child(0).textContent).toBe('Source content');
+    expect(report.issues).toContainEqual(expect.objectContaining({ code: 'table-floating-position-not-imported', path: [0] }));
+  });
+
   it('keeps whole-table and row alignment separate and ignores foreign declarations', () => {
     const input = source('<w:jc w:val="left"/><x:jc xmlns:x="urn:foreign" x:val="center"/>',
       '<w:trPr><w:jc w:val="right"/></w:trPr>');

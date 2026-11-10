@@ -179,7 +179,7 @@ export function withDOCXExportTableWidths(document: NodeJSON): NodeJSON {
     const columns = candidates.map(values => values[0] ?? 160);
     return {
       ...node,
-      attrs: { ...node.attrs, preferredWidth: node.attrs?.preferredWidth ?? (node.attrs?.layout === 'fixed' && candidates.every(values => values.length > 0)
+      attrs: { ...node.attrs, blockSpacing: 'none', preferredWidth: node.attrs?.preferredWidth ?? (node.attrs?.layout === 'fixed' && candidates.every(values => values.length > 0)
         ? { unit: 'pt', value: columns.reduce((sum, width) => sum + width, 0) * 0.75 } : { unit: 'percent', value: 100 }), appearance: node.attrs?.appearance ?? {
         unit: 'pt',
         borders: {

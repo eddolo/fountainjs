@@ -9,6 +9,11 @@ export const tableLayoutAttribute = {
   validate: (value: unknown) => value === undefined || value === 'auto' || value === 'fixed',
 };
 
+export const tableBlockSpacingAttribute = {
+  default: undefined,
+  validate: (value: unknown) => value === undefined || value === 'none',
+};
+
 export function isTablePlacement(value: unknown): value is 'left' | 'center' | 'right' {
   return value === 'left' || value === 'center' || value === 'right';
 }
@@ -19,6 +24,7 @@ export const tablePlacementAttribute = {
 };
 
 const TABLE_PLACEMENT_DATA = 'data-fountain-table-placement';
+const TABLE_SPACING_DATA = 'data-fountain-table-spacing';
 
 export function readTablePlacement(element: { getAttribute(name: string): string | null }): Attributes {
   const value = element.getAttribute(TABLE_PLACEMENT_DATA) ?? element.getAttribute('align')?.trim().toLowerCase();
@@ -58,9 +64,10 @@ export function repeatedDOMTableRows<T extends {
     ? headers : [];
 }
 
-export function readTableLayout(element: { getAttribute(name: string): string | null; style: { tableLayout?: string } }): Attributes {
+export function readTableLayout(element: { getAttribute(name: string): string | null; style: { tableLayout?: string } }, supportsBlockSpacing: boolean): Attributes {
   const value = element.getAttribute('data-fountain-table-layout') || element.style.tableLayout;
-  return { ...readTablePreferredWidth(element), ...(value === 'auto' || value === 'fixed' ? { layout: value } : {}) };
+  return { ...readTablePreferredWidth(element), ...(value === 'auto' || value === 'fixed' ? { layout: value } : {}),
+    ...(supportsBlockSpacing && element.getAttribute(TABLE_SPACING_DATA) === 'none' ? { blockSpacing: 'none' } : {}) };
 }
 
 /** Layout is document state; columns are derived from the existing cell grid. */
@@ -71,8 +78,10 @@ export function tableDOMSpec(node: Node): DOMOutputSpec {
   const placed = isTablePlacement(placement);
   const margins = placed ? `margin-left:${placement === 'left' ? '0' : 'auto'};margin-right:${placement === 'right' ? '0' : 'auto'}` : '';
   const preference = node.attrs.preferredWidth;
-  const combinedStyle = [paint.style, preferred.style, margins].filter(Boolean).join(';');
+  const flush = node.attrs.blockSpacing === 'none';
+  const combinedStyle = [paint.style, preferred.style, margins, flush && 'margin-block:0'].filter(Boolean).join(';');
   const appearance = { ...paint, ...preferred, ...textDirectionDOMAttributes(node.attrs),
+    ...(flush ? { [TABLE_SPACING_DATA]: 'none' } : {}),
     ...(placed ? { [TABLE_PLACEMENT_DATA]: placement } : {}), ...(combinedStyle ? { style: combinedStyle } : {}) };
   const style = appearance.style ? `${appearance.style};` : '';
   if (node.attrs.layout !== 'fixed' && node.attrs.layout !== 'auto') return ['table', appearance, ['tbody', 0]];

@@ -1114,6 +1114,8 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   const placementElement = readWordTableProperty([properties], 'jc', warnAppearance);
   const placement = placementElement && wordPageAttribute(placementElement, 'val');
   const placementSpec = schema.nodes.table?.spec.attrs?.placement;
+  const floating = properties && elements(properties).some(property => expandedName(property) === `${WORD_NS}|tblpPr`);
+  if (floating) warnAppearance('table-floating-position-not-imported', 'Word floating table placement and text wrapping are not retained. The table remains in document flow.');
   if (placementElement && !isTablePlacement(placement)) warnAppearance('unsupported-table-placement', 'Word table alignment must be left, center or right; the grid and cell content remain.');
   else if (placement !== undefined && !placementSpec) warnAppearance('table-placement-not-imported', 'The receiving schema cannot retain whole-table placement; cell content remains.');
   if (styleId && !media.styles) warnAppearance('table-style-appearance-unresolved', 'The associated Word table style has no available internal style definitions; direct appearance remains.');
@@ -1263,6 +1265,7 @@ function parseTable(element: XMLElement, schema: Schema, media: ImportMediaConte
   if (!schema.nodes.table?.spec.attrs?.appearance) warnAppearance('table-appearance-not-imported', 'The receiving table schema cannot distinguish source appearance from application defaults.');
   if (preferredWidth && !schema.nodes.table?.spec.attrs?.preferredWidth) warnAppearance('table-preferred-width-not-imported', 'The receiving table schema cannot represent the preferred width; cell grid and content remain.');
   return schema.node('table', { layout, ...(placementSpec && isTablePlacement(placement) ? { placement } : {}),
+    ...(!floating && schema.nodes.table?.spec.attrs?.blockSpacing ? { blockSpacing: 'none' } : {}),
     ...(schema.nodes.table?.spec.attrs?.preferredWidth ? { preferredWidth } : {}), ...(schema.nodes.table?.spec.attrs?.appearance ? { appearance } : {}) }, rowNodes.length ? rowNodes : [schema.node('table_row', {}, [schema.node('table_cell', {}, [schema.node('paragraph')])])]);
 }
 

@@ -498,6 +498,12 @@ by the recorded table journey; it is not a guarantee that Word will keep empty
 run boundaries after its own editing/saving. JSON remains the complete model
 backup; native export still reports and materializes its documented defaults.
 
+Inline Word tables import with `blockSpacing: "none"` so the editor and page
+projection do not add their default outer table margins. Paragraphs around the
+table retain their own spacing. Fountain JSON, HTML and HTML tables inside
+Markdown preserve the setting. Markdown pipe tables report its omission.
+Floating Word tables stay in document flow and carry a positioning warning.
+
 Unreleased direct table appearance: `appearance` retains table `tblBorders` and
 `tblCellMar`, and direct cell `tcBorders`/`tcMar`. Supported physical sides,
 single/double/dotted/dashed RGB lines, `none`/`nil` and non-negative `dxa` margins

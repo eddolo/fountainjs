@@ -83,5 +83,6 @@ export function projectHTMLTable<E extends TableElement>(element: E, schema: Sch
     return source.inheritRowMarks(row, node);
   });
   const placement = schema.nodes.table?.spec.attrs?.placement ? readTablePlacement(element) : {};
-  return schema.node('table', { ...readTableLayout(element), ...placement, ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows);
+  return schema.node('table', { ...readTableLayout(element, Boolean(schema.nodes.table?.spec.attrs?.blockSpacing)),
+    ...placement, ...readTableAppearance(element), ...readContainerDirection(element, schema) }, rows);
 }

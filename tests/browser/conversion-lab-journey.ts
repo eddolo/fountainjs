@@ -47,7 +47,10 @@ export async function conversionScientificPreviewJourney(page: Page, info: TestI
     const spacingAfter = await equation.evaluate(element => parseFloat(getComputedStyle(element).marginBlockEnd));
     expect(Math.abs(spacingAfter - 28 / 3)).toBeLessThan(0.02);
   }
-  await expect(body.locator('table')).toHaveCount(1);
+  const table = body.locator('table');
+  await expect(table).toHaveCount(1);
+  await expect(table).toHaveCSS('margin-top', '0px');
+  await expect(table).toHaveCSS('margin-bottom', '0px');
   await expect(notes).toHaveCount(1);
   await expect(notes).toContainText('they are not measured experimental data.');
   await expect(sheets.last()).toContainText('END OF REPORT Checked in the lab.');
@@ -95,7 +98,7 @@ export async function conversionPagePreviewJourney(page: Page, info: TestInfo) {
   await page.goto('/conversion-lab.html');
   await page.getByLabel('Choose documents').setInputFiles([
     { name: 'pagination.docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', buffer: Buffer.from(exportDOCX(fixture).bytes) },
-    { name: 'other.md', mimeType: 'text/markdown', buffer: Buffer.from('# Separate draft\n\nThis text belongs to another file.') },
+    { name: 'other.md', mimeType: 'text/markdown', buffer: Buffer.from('# Separate draft\n\nThis text belongs to another file.\n\n| Name |\n| --- |\n| Other file |') },
   ]);
   const files = page.getByRole('navigation', { name: 'Imported files' });
   const workspace = page.getByRole('region', { name: 'Conversion workspace: pagination.docx' });
@@ -140,6 +143,7 @@ export async function conversionPagePreviewJourney(page: Page, info: TestInfo) {
   await other.getByRole('button', { name: 'Build page preview' }).click();
   await expect(other).toContainText('1 page. Using Letter with 1-inch margins.');
   await expect(other.locator('.fountain-page-preview__sheet')).toContainText('This text belongs to another file.');
+  await expect(other.locator('.fountain-page-preview__sheet table')).toHaveCSS('margin-top', '20px');
   await expect(page.locator('style[data-fountain-page-print-style]')).toHaveCount(1);
   await page.setViewportSize({ width: 390, height: 800 });
   const mobilePreview = other.getByRole('region', { name: 'Paged draft preview' });
