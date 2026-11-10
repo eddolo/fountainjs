@@ -179,6 +179,22 @@ lifecycle and no awareness channel, so the application should create and
 destroy it directly. Network and persistence providers can coexist because
 Yjs is network agnostic.
 
+### Private drafts after disconnecting
+
+With the retained adapter, `disconnectCollaboration(editor)` detaches the
+editor from the room. Later edits stay in the local document. Shared undo
+and redo are suspended until the editor rejoins. To keep recording edits in
+Yjs for a later offline merge, leave the adapter attached and pause the
+provider's network transport.
+
+On rejoin, FountainJS checks the local document against the version it last
+left and the shared version it is about to load. If it differs from both,
+the editor keeps the draft and reports a recoverable error before starting
+transport. Repeated attempts keep the draft. A host can offer a JSON download
+with `editor.getJSON()`, then let the author restore the version they left or
+explicitly load the reviewed shared version before reconnecting. After joining,
+the author can reapply reviewed draft changes as ordinary collaborative edits.
+
 ## Provider-free and managed choices
 
 You do not have to host a collaboration service yourself. The application may:

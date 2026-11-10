@@ -58,6 +58,34 @@ full candidate suite was rerun at the original limits.
 [Collaboration tests](../tests/collaboration.test.ts)
 · [Default Yjs startup tests](../tests/yjs-provider-initialization.test.ts)
 
+## Private edits after explicit disconnect
+
+The retained adapter used to take a new baseline when reconnecting, after
+private edits had already been made. A room loaded from an initialized
+`Y.Doc` could replace those edits immediately. Checkpoint admission could
+also treat the private draft as an unchanged opening template. The shared
+UndoManager still accepted commands after the editor had detached.
+
+The adapter now retains the last attached document as the baseline across
+retries. A draft that differs from both that baseline and the incoming room
+blocks the join before the provider starts. The tests check both ways out of
+that state, restoring the last attached document or choosing the current
+shared version. Shared undo and redo are available again after rejoining.
+
+Five source regressions failed on the previous implementation. The compiled
+default package also lost the private text in the Chromium browser
+reproduction. The updated workflow types two different edits, refuses the
+unsafe rejoin, downloads and verifies the private JSON, opens the reviewed
+shared version, and confirms that new typing reaches the other editor.
+The three desktop browsers pass this workflow and the existing room recovery
+matrix for 24 recorded checks. Three additional homepage recordings confirm
+that pausing the network with the adapter attached still merges offline edits.
+The declaration review found three private member changes in each module
+format and identical exported signatures. All 999 collaboration source tests,
+packed imports, headless and framework types, and existing bundle limits pass.
+[Recovery workflow](../tests/manual/yjs-detached-draft-real.spec.ts)
+· [Integration guidance](COLLABORATION.md#private-drafts-after-disconnecting)
+
 ## Package boundary review
 
 The current package requires `yjs >=13.6.32 <14` and exports the retained default and explicit XML compatibility entry separately. The packed-package fixture exercises the default class through the ESM and CommonJS entry points; the explicit legacy entry remains separately available. Inspected application examples and packaging scripts do not treat the retained marker fragment as a legacy XML document tree. Existing stored XML still requires an explicit legacy open or an authority-controlled migration, rather than an import-path substitution.

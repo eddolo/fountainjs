@@ -2,8 +2,9 @@
 
 import { afterEach, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
-import { CoreExtension, composeExtensions, connectCollaboration, createEditor, disconnectCollaboration, getCollaborationState, insertText,
-  reconnectCollaboration, undoCollaboration, type NodeJSON } from '../src';
+import { CoreExtension, canRedoCollaboration, canUndoCollaboration, composeExtensions, connectCollaboration,
+  createEditor, disconnectCollaboration, getCollaborationState, insertText, reconnectCollaboration,
+  redoCollaboration, undoCollaboration, type NodeJSON } from '../src';
 import { createYjsCollaborationExtension } from '../src/yjs';
 import { createYjsCollaborationExtension as legacy } from '../src/yjs/legacy';
 import { createRetainedYjsCollaborationExtension } from '../src/yjs/retained-adapter';
@@ -117,6 +118,60 @@ it.each(['Local draft', 'Stored room'])('cancels a retained provider from connec
   expect(getCollaborationState(opened)?.status).toBe('connected');
   expect(opened.getText()).toBe('Stored room');
   expect(provider.connect).toHaveBeenCalledOnce();
+});
+
+it.each(['previous', 'current'] as const)('keeps a detached draft until the host chooses the %s room state', (resolution) => {
+  const shared = doc(), peer = editor(shared, 'Shared notes');
+  const local = doc();
+  Y.applyUpdate(local, Y.encodeStateAsUpdate(shared));
+  const provider = { connect: vi.fn(), disconnect: vi.fn() };
+  const opened = editor(local, 'Unused template', createYjsCollaborationExtension, { provider });
+  const baseline = opened.state.doc;
+
+  expect(disconnectCollaboration(opened)).toBe(true);
+  expect(insertText(opened, 'Private ')).toBe(true);
+  const draft = opened.getJSON();
+  expect(insertText(peer, 'Peer ')).toBe(true);
+  Y.applyUpdate(local, Y.encodeStateAsUpdate(shared));
+  const before = Y.encodeStateAsUpdate(local);
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    expect(reconnectCollaboration(opened)).toBe(false);
+    expect(getCollaborationState(opened)).toMatchObject({ status: 'error', error: { recoverable: true } });
+    expect(getCollaborationState(opened)?.error?.message).toContain('local draft');
+    expect(opened.getJSON()).toEqual(draft);
+    expect(Y.encodeStateAsUpdate(local)).toEqual(before);
+    expect(provider.connect).toHaveBeenCalledOnce();
+  }
+
+  const choice = resolution === 'previous' ? baseline : opened.state.schema.nodeFromJSON(peer.getJSON());
+  expect(opened.dispatch(opened.createTransaction().replaceDocument(choice))).toBe(true);
+  expect(reconnectCollaboration(opened)).toBe(true);
+  expect(getCollaborationState(opened)?.status).toBe('connected');
+  expect(opened.getJSON()).toEqual(peer.getJSON());
+  expect(provider.connect).toHaveBeenCalledTimes(2);
+  expect(Y.encodeStateAsUpdate(local)).toEqual(before);
+});
+
+it.each(['undo', 'redo'] as const)('suspends shared %s while detached and restores it after reconnect', (direction) => {
+  const document = doc(), opened = editor(document, 'Shared notes');
+  expect(insertText(opened, 'Authored ')).toBe(true);
+  const canAct = direction === 'undo' ? canUndoCollaboration : canRedoCollaboration;
+  const act = direction === 'undo' ? undoCollaboration : redoCollaboration;
+  if (direction === 'redo') expect(undoCollaboration(opened)).toBe(true);
+  expect(canAct(opened)).toBe(true);
+  const visible = opened.getJSON(), bytes = Y.encodeStateAsUpdate(document);
+
+  expect(disconnectCollaboration(opened)).toBe(true);
+  expect(canAct(opened)).toBe(false);
+  expect(act(opened)).toBe(false);
+  expect(opened.getJSON()).toEqual(visible);
+  expect(Y.encodeStateAsUpdate(document)).toEqual(bytes);
+
+  expect(reconnectCollaboration(opened)).toBe(true);
+  expect(canAct(opened)).toBe(true);
+  expect(act(opened)).toBe(true);
+  expect(opened.getText()).toBe(direction === 'undo' ? 'Shared notes' : 'Authored Shared notes');
 });
 
 it('honors a host cancellation during the legacy adapter initial sync', () => {

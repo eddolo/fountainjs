@@ -100,6 +100,35 @@ it('allows a draft that was explicitly undone back to its pre-join state',async(
  editor.dispatch(editor.createTransaction().insertText([0,0],0,'TEMP '));editor.dispatch(editor.createTransaction().replaceDocument(original));pending.resolve(server.checkpoint);await settled(editor);expect(editor.getJSON()).toEqual(server.editor.getJSON());
 });
 
+it('preserves edits made between an admitted connection and its next checkpoint', async () => {
+  const server = await source(), client = doc();
+  const provider = { connect: vi.fn(), disconnect: vi.fn() };
+  let checkpoint = server.checkpoint;
+  const editor = make(client, 'Local template', { provider, ...admission(() => checkpoint) });
+  await settled(editor);
+  const baseline = editor.state.doc;
+  expect(disconnectCollaboration(editor)).toBe(true);
+  editor.dispatch(editor.createTransaction().insertText([0, 0], 0, 'PRIVATE '));
+  const draft = editor.getJSON(), before = Y.encodeStateAsUpdate(client);
+  server.editor.dispatch(server.editor.createTransaction().insertText([0, 0], 0, 'REMOTE '));
+  checkpoint = await captureRetainedCheckpoint(server.document, server.editor.state.schema, version);
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    expect(reconnectCollaboration(editor)).toBe(true);
+    await settled(editor, 'error');
+    expect(getCollaborationState(editor)?.error?.message).toContain('local draft');
+    expect(editor.getJSON()).toEqual(draft);
+    expect(Y.encodeStateAsUpdate(client)).toEqual(before);
+    expect(provider.connect).toHaveBeenCalledOnce();
+  }
+
+  editor.dispatch(editor.createTransaction().replaceDocument(baseline));
+  expect(reconnectCollaboration(editor)).toBe(true);
+  await settled(editor);
+  expect(editor.getJSON()).toEqual(server.editor.getJSON());
+  expect(provider.connect).toHaveBeenCalledTimes(2);
+});
+
 it.each(['installation', 'room setup'] as const)('preserves a draft edited by a host observer during %s', async phase => {
   const server = await source();
   const client = doc();

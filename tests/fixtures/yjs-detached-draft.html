@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resume a collaboration room</title>
+<link rel="stylesheet" href="/dist/styles.css">
+<style>
+  body { max-width: 850px; margin: 48px auto; padding: 0 20px; font: 16px/1.5 system-ui, sans-serif; }
+  section { margin: 16px 0; padding: 16px; border: 1px solid #cbc6dd; border-radius: 8px; }
+  .fountain-editor { min-height: 80px; }
+  button { margin: 0 8px 8px 0; }
+</style>
+<h1>Resume a collaboration room</h1>
+<p id="status" role="status"></p>
+<button id="leave" type="button">Disconnect Ada</button>
+<button id="retry" type="button">Rejoin room</button>
+<button id="save" type="button">Download Ada’s draft</button>
+<button id="open" type="button">Use Grace’s shared version</button>
+<section aria-label="Ada’s document"><h2>Ada</h2><div id="local"></div></section>
+<section aria-label="Grace’s document"><h2>Grace</h2><div id="shared"></div></section>
+<p id="starts"></p>
+<script type="module">
+  import * as Y from 'yjs';
+  import { CoreExtension, EditorView, composeExtensions, createEditor,
+    disconnectCollaboration, getCollaborationState, reconnectCollaboration } from 'fountainjs-editor';
+  import { createYjsCollaborationExtension } from 'fountainjs-editor/yjs';
+
+  const status = document.querySelector('#status'), starts = document.querySelector('#starts');
+  const leave = document.querySelector('#leave'), retry = document.querySelector('#retry');
+  const save = document.querySelector('#save'), open = document.querySelector('#open');
+  const left = new Y.Doc(), right = new Y.Doc();
+  const create = (document, name, provider) => {
+    const kit = composeExtensions([CoreExtension, createYjsCollaborationExtension({
+      document, provider, user: { id: name, name, color: '#7048e8' },
+    })]);
+    return createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Shared incident notes.' }] }],
+    } });
+  };
+  const grace = create(right, 'Grace');
+  const receive = () => Y.applyUpdate(left, Y.encodeStateAsUpdate(right), right);
+  receive();
+  let linked = false, connections = 0;
+  left.on('update', (update, origin) => {
+    if (linked && origin !== right) Y.applyUpdate(right, update, left);
+  });
+  right.on('update', (update, origin) => {
+    if (linked && origin !== left) Y.applyUpdate(left, update, right);
+  });
+  const ada = create(left, 'Ada', {
+    connect() { linked = true; connections++; receive(); },
+    disconnect() { linked = false; },
+  });
+  new EditorView(document.querySelector('#local'), ada, { ariaLabel: 'Ada’s editor' });
+  new EditorView(document.querySelector('#shared'), grace, { ariaLabel: 'Grace’s editor' });
+
+  const report = () => {
+    const state = getCollaborationState(ada);
+    status.textContent = state.error?.message ?? (linked ? 'Both editors are sharing changes.' : 'Ada is editing a private draft.');
+    starts.textContent = 'Ada’s transport starts: ' + connections;
+    leave.disabled = !linked;
+    retry.disabled = linked;
+    save.disabled = open.disabled = state.status !== 'error';
+  };
+  leave.onclick = () => { disconnectCollaboration(ada); report(); };
+  retry.onclick = () => { reconnectCollaboration(ada); report(); };
+  save.onclick = () => {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(ada.getJSON())], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'ada-private-draft.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  open.onclick = () => {
+    receive();
+    ada.dispatch(ada.createTransaction().replaceDocument(ada.state.schema.nodeFromJSON(grace.getJSON())));
+    reconnectCollaboration(ada);
+    report();
+  };
+  report();
+</script>
+</html>

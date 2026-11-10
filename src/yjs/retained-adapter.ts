@@ -78,7 +78,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   private destroyed = false;
   private readonly admission?: RetainedAdmission;
   private admissionController?: AbortController;
-  private joining = false;
+  // Keep the document from the last attached session until a join accepts it.
   private joinBaseline?: Node;
   private admissionLease?: RetainedAdmissionLease;
 
@@ -160,11 +160,11 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     if (this.pendingHistory.after) event.stackItem.meta.set(AFTER, this.pendingHistory.after);
   };
 
-  private canonical(transaction?: Y.Transaction): Node {
+  private canonical(transaction?: Y.Transaction, readOnly = false): Node {
     const store = this.store!, base = transaction ? store.readAfterRemote(transaction) : store.read();
     if (!this.structured) return base;
     const value = store.schema.nodeFromJSON(this.structured.overlay(base));
-    if (!base.eq(value)) {
+    if (!readOnly && !base.eq(value)) {
       const transaction = EditorState.create({ schema: store.schema, doc: base }).createTransaction();
       const visit = (before: Node, after: Node, path: number[]) => {
         if (before.type !== after.type || before.text !== after.text || before.childCount !== after.childCount
@@ -214,12 +214,20 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   connect(context: CollaborationAdapterContext): void | Promise<void> {
     if (this.destroyed || this.context) throw new Error('Retained adapter is destroyed or already connected.');
     if (this.roomConflict) throw this.roomConflict;
+    this.joinBaseline ??= context.editor.state.doc;
     if (this.admission) {
-      this.context = context; this.joining = true; this.joinBaseline ??= context.editor.state.doc;
+      this.context = context;
       const controller = new AbortController(); this.admissionController = controller;
       return this.admit(context, controller);
     }
     return this.attach(context);
+  }
+
+  private checkDraft(context: CollaborationAdapterContext, shared: Node): void {
+    const local = context.editor.state.doc;
+    if (!local.eq(this.joinBaseline!) && !local.eq(shared)) {
+      throw new Error('Unresolved local draft. Save it before rejoining.');
+    }
   }
 
   private async admit(context: CollaborationAdapterContext, controller: AbortController): Promise<void> {
@@ -236,34 +244,29 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
         ? { mapName, definitions: structured.definitions, identityAttribute: structured.identityAttribute } : undefined;
       const candidate = await prepareRetainedAdmission(document, checkpoint, context.editor.state.schema, this.admission!.schemaVersion, this.room, projection);
       if (!current()) return;
-      const checkDraft = () => { if (!context.editor.state.doc.eq(this.joinBaseline!) && !context.editor.state.doc.eq(candidate.document)) throw new Error('Unresolved local draft made while joining; draft preserved. Resolve it explicitly before reconnecting.'); };
-      checkDraft();
+      this.checkDraft(context, candidate.document);
       const lease = reference ? Object.freeze({ ...reference, room: this.room, identity: candidate.identity }) : undefined;
       if (lease && this.admissionLease && lease.identity !== this.admissionLease.identity) throw new Error('Authority admission room identity changed; original client preserved.');
-      if (lease) { await this.admission!.authority!.bind(lease, controller.signal); if (!current()) return; checkDraft(); }
+      if (lease) { await this.admission!.authority!.bind(lease, controller.signal); if (!current()) return; this.checkDraft(context, candidate.document); }
       candidate.install(this.repair);
       if (!current()) return;
       this.admissionLease = lease;
       attaching = true;
-      await this.attach(context, () => {
-        // Check after the checkpoint and store have notified host observers.
-        checkDraft();
-        this.joining = false;
-      });
-      if (current()) { this.admissionController = undefined; this.joinBaseline = undefined; }
+      await this.attach(context);
+      if (current()) this.admissionController = undefined;
     } catch (error) {
       // attach() and the generic lifecycle own transport failures. A rejected
       // retired request must never disconnect a newer session on this adapter.
       if (attaching) throw error;
       if (!current()) return;
-      try { const cleanup = this.disconnect(); if (cleanup) void cleanup.catch(() => undefined); } catch { /* Preserve the admission failure. */ }
+      try { void this.disconnect()?.catch(() => undefined); } catch { /* Preserve the admission failure. */ }
       throw error;
     }
   }
 
-  private attach(context: CollaborationAdapterContext, beforeInitialSync?: () => void): void | Promise<void> {
+  private attach(context: CollaborationAdapterContext): void | Promise<void> {
     const fresh = this.fragment.length === 0 && this.options.document.getMap(`${this.room}:document`).size === 0;
-    if (fresh && beforeInitialSync) throw new Error('Admission requires an already initialized retained room.');
+    if (fresh && this.admission) throw new Error('Admission requires an already initialized retained room.');
     const { store } = this.options.document;
     if (fresh && (store.pendingStructs || store.pendingDs)) {
       // Retrying this adapter after the missing bytes arrive would replace the draft.
@@ -279,6 +282,10 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     if (!fresh || admittedRoomRoots.has(this.fragment)) this.roomId = this.gate();
     this.context = context;
     try {
+      if (!this.admission && this.store && !context.editor.state.doc.eq(this.joinBaseline!)) {
+        // Refuse a known draft conflict before repairing shared structured data.
+        this.checkDraft(context, this.canonical(undefined, true));
+      }
       validateRetainedDocument(context.editor.state.doc, context.editor.state.schema); this.structured?.validate(context.editor.state.doc);
       if (this.context !== context) return;
       this.options.document.transact(() => {
@@ -300,7 +307,8 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       if (this.context !== context) return;
       const value = this.canonical(), selection = restoreSelection(this.store!, value, this.localSelection);
       if (this.context !== context) return;
-      beforeInitialSync?.();
+      this.checkDraft(context, value);
+      this.joinBaseline = undefined;
       this.apply(value, selection, 'initial-sync');
       if (this.context !== context) return;
       this.releaseDirection = registerSharedDirectionIdentity(context.editor, path =>
@@ -338,13 +346,14 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
       }
     } catch (error) {
       if (this.context !== context) return;
-      try { const cleanup = this.disconnect(); if (cleanup) void cleanup.catch(() => undefined); } catch { /* Preserve the connection failure. */ }
+      try { void this.disconnect()?.catch(() => undefined); } catch { /* Preserve the connection failure. */ }
       throw error;
     }
   }
 
   disconnect(): void | Promise<void> {
-    const pending = this.admissionController; this.admissionController = undefined; this.joining = false; pending?.abort();
+    this.joinBaseline ??= this.context?.editor.state.doc;
+    const pending = this.admissionController; this.admissionController = undefined; pending?.abort();
     if (!this.context && !this.providerActive) return;
     const published = this.published !== undefined;
     this.options.document.off('afterTransaction', this.sharedChanged); this.awareness()?.off('change', this.awarenessChanged);
@@ -356,7 +365,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalUpdate(update: CollaborationLocalUpdate): void {
-    if (!this.context || !this.store || this.joining || this.roomConflict) return;
+    if (!this.context || !this.store || this.joinBaseline || this.roomConflict) return;
     try {
       this.gate();
       const updateAttributes = this.structured?.prepareUpdate(update.before, update.document);
@@ -372,7 +381,7 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   onLocalSelection(document: Node, selection: AnySelection): void {
-    if (!this.context || !this.store || this.joining || this.roomConflict) return;
+    if (!this.context || !this.store || this.joinBaseline || this.roomConflict) return;
     this.localSelection = retainSelection(this.store, document, selection);
     if (!this.awareness()) return;
     const value = { user: this.localUser, selection: this.localSelection }, signature = JSON.stringify(value);
@@ -410,8 +419,8 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   undo(): boolean {
-    const manager = this.manager;
-    if (!manager || this.joining || this.roomConflict) return false;
+    const manager = this.sharedHistory();
+    if (!manager) return false;
     while (this.manager === manager) {
       const item = this.popHistory(manager, 'undo');
       if (!item) return false;
@@ -421,8 +430,11 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
   }
 
   redo(): boolean {
-    if (this.joining || this.roomConflict) return false;
-    return Boolean(this.manager && this.popHistory(this.manager, 'redo'));
+    const manager = this.sharedHistory();
+    return Boolean(manager && this.popHistory(manager, 'redo'));
+  }
+  private sharedHistory(): Y.UndoManager | undefined {
+    if (this.context && !this.joinBaseline && !this.roomConflict) return this.manager;
   }
   private popHistory(manager: Y.UndoManager, direction: 'undo' | 'redo') {
     const stack = direction === 'undo' ? manager.undoStack : manager.redoStack;
@@ -434,14 +446,14 @@ export class RetainedYjsCollaborationAdapter implements CollaborationAdapter {
     const pending = this.historyPop;
     return pending?.items[pending.stack.length];
   }
-  canUndo(): boolean { return !this.joining && !this.roomConflict && (this.manager?.canUndo() ?? false); }
-  canRedo(): boolean { return !this.joining && !this.roomConflict && (this.manager?.canRedo() ?? false); }
+  canUndo(): boolean { return this.sharedHistory()?.canUndo() ?? false; }
+  canRedo(): boolean { return this.sharedHistory()?.canRedo() ?? false; }
   stopCapturing(): void { this.manager?.stopCapturing(); }
   destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
-    try { const cleanup = this.disconnect(); if (cleanup) void cleanup.catch(() => undefined); }
-    finally { this.manager?.destroy(); this.store?.destroy(); this.manager = undefined; this.store = undefined; }
+    try { void this.disconnect()?.catch(() => undefined); }
+    finally { this.manager?.destroy(); this.store?.destroy(); this.manager = undefined; this.store = undefined; this.joinBaseline = undefined; }
   }
 }
 

@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep private edits when a detached retained Yjs editor tries to rejoin.
+  Shared undo and redo resume after the room opens again.
+
 - Honor collaboration cancellation or room replacement requested from an
   editor status subscriber, and stop publishing selection to retired adapters.
 
