@@ -18,6 +18,19 @@ export const imageCaptionAttributes = {
   captionLayout: paragraphLayoutAttribute,
 };
 
+export function imageMediaFrameStyle(align: unknown, width: string): string {
+  const left = align === 'left' ? '0' : 'auto';
+  const right = align === 'right' ? '0' : 'auto';
+  return `width:${width};max-width:100%;margin-left:${left};margin-right:${right}`;
+}
+
+/** A caption with its own paragraph layout flows in the surrounding column. */
+export function imageFigureStyles(attrs: Attributes, width: string) {
+  return attrs.captionLayout === undefined
+    ? { figure: `width:${width};max-width:100%`, image: 'width:100%' }
+    : { figure: 'margin-inline:0', image: `display:block;${imageMediaFrameStyle(attrs.align, width)}` };
+}
+
 export function imageCaptionDOMAttributes(attrs: Record<string, unknown>): Attributes {
   const layout = paragraphLayoutDOMAttributes(attrs.captionLayout);
   return { ...layout,

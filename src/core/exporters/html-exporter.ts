@@ -8,7 +8,7 @@ import { INLINE_DRAWING_DATA, isInlineDrawingDistances } from '../image-drawing'
 import { tableBackground } from '../table-background';
 import { quoteDOMAttributes, textBlockDOMAttributes } from '../explicit-emphasis';
 import { isMathExpression } from '../math-expression';
-import { imageCaptionDOMAttributes, imageParagraphDOMAttributes } from '../image-caption';
+import { imageCaptionDOMAttributes, imageFigureStyles, imageParagraphDOMAttributes } from '../image-caption';
 import { tableDOMSpec, tableRowDOMSpec } from '../table-layout';
 import { cellAppearanceDOMAttributes } from '../table-appearance';
 import type { NodeDOMContext } from '../schema';
@@ -332,10 +332,11 @@ function renderNodeContent(node: Node, document: Node, path: readonly number[], 
       const width = imageSize(node.attrs.width, '100%');
       const height = imageSize(node.attrs.height, 'auto');
       const align = ['left', 'center', 'right'].includes(String(node.attrs.align)) ? node.attrs.align : 'center';
+      const styles = imageFigureStyles(node.attrs, width);
       const captionAttributes = Object.entries(imageCaptionDOMAttributes(node.attrs)).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
       const { style: imageStyle, ...imageLayout } = imageParagraphDOMAttributes(node.attrs);
       const imageLayoutAttributes = Object.entries(imageLayout).map(([name, value]) => ` ${name}="${escapeHTML(value)}"`).join('');
-      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="width:${escapeHTML(width)};max-width:100%"><img ${attributes}${imageLayoutAttributes} style="${imageStyle ? `${escapeHTML(imageStyle)};` : ''}width:100%;height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
+      return `<figure data-align="${align}"${node.childCount ? ' data-fountain-rich-caption="true"' : ''} style="${escapeHTML(styles.figure)}"><img ${attributes}${imageLayoutAttributes} style="${escapeHTML(styles.image)};${imageStyle ? `${escapeHTML(imageStyle)};` : ''}height:${escapeHTML(height)}">${caption ? `<figcaption${captionAttributes}>${caption}</figcaption>` : ''}</figure>`;
     }
     case 'audio': {
       const attributes = playbackAttributes(node);

@@ -26,12 +26,12 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   await expect(workspace.locator('li code').filter({ hasText: /^paragraph-contextual-spacing-not-imported$/ })).toHaveCount(0);
   await editor.screenshot({ path: resolve(root, 'imported.png') });
 
-  const figures = editor.locator('figure:has(> img[data-fountain-paragraph-layout])');
+  const figures = editor.locator('figure:has(img[data-fountain-paragraph-layout])');
   await expect(figures).toHaveCount(2);
   const sourceImageLayouts = [];
   const sourceImageCaptionGaps = [];
   for (const figure of await figures.all()) {
-    const image = figure.locator(':scope > img');
+    const image = figure.locator('img');
     const caption = figure.locator(':scope > figcaption');
     await image.scrollIntoViewIfNeeded();
     await expect.poll(() => image.evaluate(element => element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0)).toBe(true);
@@ -183,7 +183,7 @@ test('a researcher edits the actual Word paper and retains spacing through HTML 
   await expect(reopenedParagraphs).toHaveCount(3);
   const nativeReopenGap = await gap(reopenedParagraphs.nth(0), reopenedParagraphs.nth(1));
   expect(nativeReopenGap).toBeCloseTo(0, 1);
-  const reopenedImageLayouts = await reopened.locator('figure > img[data-fountain-paragraph-layout]').evaluateAll(images =>
+  const reopenedImageLayouts = await reopened.locator('figure img[data-fountain-paragraph-layout]').evaluateAll(images =>
     images.map(image => JSON.parse(image.getAttribute('data-fountain-paragraph-layout') ?? 'null')));
   expect(reopenedImageLayouts).toEqual(sourceImageLayouts);
   const reopenedMathLayouts = await reopened.locator('[data-fountain-math="block"]').evaluateAll(elements => elements.map(element =>

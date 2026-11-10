@@ -10,6 +10,19 @@ export async function conversionScientificPreviewJourney(page: Page, info: TestI
   const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
   await expect(editor.locator('img')).toHaveCount(3);
   await expect(editor.locator('[data-fountain-math]')).toHaveCount(2);
+  const firstFigure = editor.locator('figure').filter({ hasText: 'Probe positions in the two vessels' });
+  const firstImage = firstFigure.locator('img');
+  const firstCaption = firstFigure.locator('figcaption');
+  const resize = firstFigure.getByRole('slider', { name: 'Resize image from right' });
+  const widthOf = (locator: typeof firstImage) => locator.evaluate(element => element.getBoundingClientRect().width);
+  const imageWidth = await widthOf(firstImage);
+  const captionWidth = await widthOf(firstCaption);
+  await resize.focus();
+  await resize.press('ArrowLeft');
+  await expect.poll(() => widthOf(firstImage)).toBeCloseTo(Math.round(imageWidth) - 10, 0);
+  expect(await widthOf(firstCaption)).toBeCloseTo(captionWidth, 0);
+  await workspace.getByRole('button', { name: 'Undo', exact: true }).click();
+  await expect.poll(() => widthOf(firstImage)).toBeCloseTo(imageWidth, 0);
   const ending = editor.getByText('END OF REPORT', { exact: true });
   await ending.click();
   await page.keyboard.press('End');
@@ -40,6 +53,14 @@ export async function conversionScientificPreviewJourney(page: Page, info: TestI
   // This fixture declares both edge distances at 36 pt (48 CSS px).
   expect(firstHeader.y - firstSheet.y).toBeCloseTo(48, 0);
   expect(firstSheet.y + firstSheet.height - firstFooter.y - firstFooter.height).toBeCloseTo(48, 0);
+  const caption = body.locator('figcaption').filter({ hasText: 'Probe positions in the two vessels' });
+  const positions = await caption.evaluate(element => {
+    const figure = element.closest('figure')!;
+    const body = element.closest('.fountain-page-preview__body')!;
+    return { caption: element.getBoundingClientRect().left, image: figure.querySelector('img')!.getBoundingClientRect().left, body: body.getBoundingClientRect().left };
+  });
+  expect(positions.caption).toBeCloseTo(positions.body, 0);
+  expect(positions.image - positions.body).toBeGreaterThan(25);
   await expect.poll(() => sheets.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
   await page.setViewportSize({ width: 1280, height: 1460 });
   for (const [index, sheet] of (await sheets.all()).entries()) {

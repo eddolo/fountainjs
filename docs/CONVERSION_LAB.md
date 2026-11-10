@@ -45,8 +45,11 @@ automatic typing paragraph producing a blank final sheet. The projection uses
 the document footer's own styling and skips that generated paragraph. Authored
 blank paragraphs still contribute to layout. The Chromium PDF went from four
 Letter pages to two, matching LibreOffice's page count for the untouched file.
-Both PDF pages and the browser preview were visually inspected. The documents
-still differ in some vertical spacing, caption alignment, and equation styling.
+Both PDF pages and the browser preview were visually inspected. A subsequent
+comparison moved the two figure captions from 93.6 and 86.4 pt to 57.6 pt from
+the page's left edge. LibreOffice placed both at 57.7 pt. In the editor, resizing
+the raster does not resize its independent caption column. Some vertical spacing
+and equation styling still differ.
 
 The DOCX importer follows internal Word image relationships to raster assets
 outside the usual `word/media` folder. A referenced image stays at its drawing

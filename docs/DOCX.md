@@ -191,7 +191,9 @@ unused duplicate metadata remains uninterpreted but appears in the inventory.
   `word/media`, within the same archive and media limits. Supported caption
   runs, marks and safe hyperlinks remain attached as editable image content.
   Independent caption alignment and supported paragraph geometry are retained
-  in `captionAlign` and `captionLayout`; export uses a neutral Caption style;
+  in `captionAlign` and `captionLayout`. A caption with its own paragraph
+  layout flows in the document column while the image keeps its alignment and
+  dimensions. Native export uses a neutral Caption style;
 - linked external images, unsupported image encodings, OLE objects, and other
   drawings as readable alternative text with a path-bearing warning.
 

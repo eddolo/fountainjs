@@ -4,6 +4,7 @@ import { createEditor, Schema } from '../src/core';
 import { HTMLExporter, HTMLImporter, createHistoryPlugin, undo } from '../src';
 import { StarterKit } from '../src/extensions';
 import { ImageNodeView } from '../src/extensions/nodes/image-node-view';
+import { ServerHTMLImporter } from '../src/html/server';
 
 const schema = new Schema(StarterKit.schema);
 const imageLayout = { unit: 'pt', fontFamily: 'Georgia', fontSize: 13, spacingBefore: 2, spacingAfter: 9 };
@@ -13,9 +14,13 @@ const source = () => schema.node('doc', {}, [schema.node('image_super', {
 })]);
 
 describe('live image paragraph appearance', () => {
-  it('retains both contexts through the browser HTML importer', () => {
+  it('retains both contexts through browser and server HTML import', () => {
     const document = source();
-    expect(HTMLImporter.parse(HTMLExporter.export(document, { document: false }), schema).toJSON()).toEqual(document.toJSON());
+    const html = HTMLExporter.export(document, { document: false });
+    expect(html).toContain('style="margin-inline:0"');
+    expect(html).toContain('display:block;width:320px;max-width:100%;margin-left:auto;margin-right:auto');
+    expect(HTMLImporter.parse(html, schema).toJSON()).toEqual(document.toJSON());
+    expect(ServerHTMLImporter.parse(html, schema).toJSON()).toEqual(document.toJSON());
   });
 
   it('updates image styles separately, removes stale values and restores them on undo', () => {

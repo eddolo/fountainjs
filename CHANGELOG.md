@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Let figure captions with their own paragraph layout use the document column
+  in the editor, HTML and page previews while the image keeps its own size.
 - Build a paged preview of the active Conversion Lab draft and print it or save
   it as a PDF. The preview uses supported DOCX header and footer offsets, keeps
   site styling out of the document, and clears when the draft changes.

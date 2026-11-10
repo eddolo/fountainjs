@@ -1,7 +1,7 @@
 import type { NodeSpec } from '../../core';
 import { ImageNodeView } from './image-node-view';
 import { imageAttributes, imageDOMAttributes, imageText } from './image-attributes';
-import { imageCaptionAttributes, imageCaptionDOMAttributes, imageParagraphAttributes, imageParagraphDOMAttributes } from '../../core/image-caption';
+import { imageCaptionAttributes, imageCaptionDOMAttributes, imageFigureStyles, imageParagraphAttributes, imageParagraphDOMAttributes } from '../../core/image-caption';
 
 export const imageSuper: NodeSpec = {
   group: 'block', content: 'inline*', selectable: true,
@@ -17,9 +17,10 @@ export const imageSuper: NodeSpec = {
   }),
   toDOM: (node) => {
     const layout = imageParagraphDOMAttributes(node.attrs);
-    return ['figure', { 'data-align': node.attrs.align, style: `width:${String(node.attrs.width)};max-width:100%` },
+    const styles = imageFigureStyles(node.attrs, String(node.attrs.width));
+    return ['figure', { 'data-align': node.attrs.align, style: styles.figure },
       ['img', { ...imageDOMAttributes(node.attrs), ...layout,
-        style: [layout.style, `width:100%;height:${String(node.attrs.height)}`].filter(Boolean).join(';') }],
+        style: [styles.image, layout.style, `height:${String(node.attrs.height)}`].filter(Boolean).join(';') }],
       ['figcaption', imageCaptionDOMAttributes(node.attrs), 0]];
   },
   nodeView: ImageNodeView,

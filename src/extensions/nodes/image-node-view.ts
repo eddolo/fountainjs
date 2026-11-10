@@ -6,7 +6,7 @@ import {
 } from '../../core';
 import { getNodeAtPath } from '../../core/transaction/path';
 import { imageText } from './image-attributes';
-import { imageCaptionDOMAttributes, imageParagraphDOMAttributes } from '../../core/image-caption';
+import { imageCaptionDOMAttributes, imageMediaFrameStyle, imageParagraphDOMAttributes } from '../../core/image-caption';
 
 const MIN_IMAGE_WIDTH = 50;
 const MAX_IMAGE_WIDTH = 2_000;
@@ -17,6 +17,7 @@ interface ImageEditorView { readonly editor: Editor }
 export class ImageNodeView implements NodeViewLike {
   readonly dom = document.createElement('figure');
   readonly contentDOM = document.createElement('span');
+  private readonly mediaFrame = document.createElement('div');
   private readonly image = document.createElement('img');
   private readonly caption = document.createElement('figcaption');
   private readonly captionInput = document.createElement('textarea');
@@ -73,7 +74,8 @@ export class ImageNodeView implements NodeViewLike {
     this.controls.className = 'fountain-image__resize-controls';
     this.controls.contentEditable = 'false';
     this.controls.append(this.leftHandle, this.rightHandle);
-    this.dom.append(this.image, this.caption, this.error, this.controls);
+    this.mediaFrame.append(this.image, this.controls);
+    this.dom.append(this.mediaFrame, this.caption, this.error);
     this.render();
   }
 
@@ -97,6 +99,7 @@ export class ImageNodeView implements NodeViewLike {
   ignoreMutation(mutation: MutationRecord): boolean {
     if (
       mutation.target === this.image
+      || mutation.target === this.mediaFrame
       || this.captionInput.contains(mutation.target)
       || this.captionText.contains(mutation.target)
       || this.controls.contains(mutation.target)
@@ -125,8 +128,7 @@ export class ImageNodeView implements NodeViewLike {
   private render(): void {
     const attrs = this.current.attrs;
     this.dom.dataset.align = String(attrs.align);
-    this.dom.style.width = String(attrs.width);
-    this.dom.style.maxWidth = '100%';
+    this.setWidth(String(attrs.width));
     this.dom.setAttribute('aria-label', imageText(attrs));
     this.image.alt = String(attrs.alt);
     this.image.title = String(attrs.title);
@@ -170,6 +172,15 @@ export class ImageNodeView implements NodeViewLike {
     [this.leftHandle, this.rightHandle].forEach((handle) => {
       handle.setAttribute('aria-valuenow', String(Number.isFinite(numericWidth) ? Math.round(numericWidth) : MIN_IMAGE_WIDTH));
     });
+  }
+
+  private setWidth(width: string): void {
+    const { align, captionLayout } = this.current.attrs;
+    const independent = captionLayout !== undefined;
+    this.dom.style.width = independent ? '' : width;
+    this.dom.style.maxWidth = '100%';
+    this.dom.style.marginInline = independent ? '0' : '';
+    this.mediaFrame.style.cssText = `position:relative;${independent ? imageMediaFrameStyle(align, width) : ''}`;
   }
 
   private createHandle(side: 'left' | 'right'): HTMLSpanElement {
@@ -262,7 +273,7 @@ export class ImageNodeView implements NodeViewLike {
     this.dragging = true;
     this.dragDirection = direction;
     this.startX = clientX;
-    this.startWidth = Math.max(MIN_IMAGE_WIDTH, Math.round(this.dom.getBoundingClientRect().width || MIN_IMAGE_WIDTH));
+    this.startWidth = Math.max(MIN_IMAGE_WIDTH, Math.round(this.mediaFrame.getBoundingClientRect().width || MIN_IMAGE_WIDTH));
     this.previewWidth = this.startWidth;
     this.dom.dataset.fountainImageResizing = 'true';
     window.addEventListener('pointermove', this.onPointerMove);
@@ -284,7 +295,7 @@ export class ImageNodeView implements NodeViewLike {
     if (!this.dragging) return;
     const delta = (clientX - this.startX) * this.dragDirection;
     this.previewWidth = Math.max(MIN_IMAGE_WIDTH, Math.min(MAX_IMAGE_WIDTH, Math.round(this.startWidth + delta)));
-    this.dom.style.width = `${this.previewWidth}px`;
+    this.setWidth(`${this.previewWidth}px`);
     [this.leftHandle, this.rightHandle].forEach((handle) => handle.setAttribute('aria-valuenow', String(this.previewWidth)));
   }
 
@@ -308,7 +319,7 @@ export class ImageNodeView implements NodeViewLike {
   private onResizeKeyDown = (event: KeyboardEvent): void => {
     let width: number | null = null;
     const configured = /px$/.test(String(this.current.attrs.width)) ? Number.parseFloat(String(this.current.attrs.width)) : 0;
-    const current = Math.max(MIN_IMAGE_WIDTH, Math.round(this.dom.getBoundingClientRect().width || configured || MIN_IMAGE_WIDTH));
+    const current = Math.max(MIN_IMAGE_WIDTH, Math.round(this.mediaFrame.getBoundingClientRect().width || configured || MIN_IMAGE_WIDTH));
     if (event.key === 'ArrowLeft') width = current - (event.shiftKey ? 50 : 10);
     else if (event.key === 'ArrowRight') width = current + (event.shiftKey ? 50 : 10);
     else if (event.key === 'Home') width = MIN_IMAGE_WIDTH;
