@@ -980,6 +980,22 @@ the two local workloads. The browser CommonJS consumer again passed the
 recorded edit and DOCX reopen in Chromium, Firefox, and WebKit. The package,
 declaration, and performance checks also passed.
 
+#### Sharing public class fields and case labels
+
+The CommonJS build shares repeated public class field names with their
+accesses, plus repeated literals in switch labels and concise arrow returns.
+The aggregate fell from 1,449,381 to 1,444,717 bytes across the same 93 chunks.
+The sum of individually gzipped chunks fell by 106 bytes. All 93 top-level
+ESM files were byte-identical. The existing size cap leaves 4,691 bytes of
+CommonJS headroom.
+
+Seven alternating Node process pairs measured a 300-paragraph HTML parse
+at 13.12 ms before and 13.08 ms after. An insert/delete pair in a
+2,000-paragraph document moved from 0.0767 to 0.0783 ms. These medians cover
+the two local workloads. A bundled CommonJS browser consumer retained the
+edited text and its bold mark through DOCX export and reopen in Chromium,
+Firefox, and WebKit. An invalid DOCX still maps to the TypeScript source.
+
 #### Earlier startup work
 
 Rebuilding the approved `f8bff232` checkpoint reproduced its exact CommonJS

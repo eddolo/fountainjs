@@ -84,3 +84,45 @@ exports.result = [result, remove, record.inherited, Object.keys(record), Object.
   expect(exports.result).toEqual([[3, 3, 4, 4], true, true, ['longRepeatedProperty', 'counter'],
     ['longRepeatedMethod', 'longRepeatedProperty', 'getter']]);
 });
+
+it('shares public class fields with their reads and writes while retaining private fields and names', () => {
+  const original = `class Fixture {
+  longRepeatedField = function () {};
+  static longRepeatedStaticField = 3;
+  #longRepeatedField = 4;
+  inspect() {
+    const initialName = this.longRepeatedField.name;
+    this.longRepeatedField = this.#longRepeatedField;
+    return [initialName, this.longRepeatedField, Fixture.longRepeatedStaticField];
+  }
+}
+const fixture = new Fixture();
+exports.result = [fixture.inspect(), Object.keys(fixture), Object.getOwnPropertyDescriptor(Fixture, "longRepeatedStaticField").value];
+exports.inspect = Fixture.prototype.inspect;`;
+  const compacted = compactCommonJsLiterals(original);
+  expect(compacted.code).toMatch(/class Fixture\s*{\s*\[__fountainLiteral\$\d+\] = function/);
+  expect(compacted.code).toContain('static [__fountainLiteral');
+  expect(compacted.code).toContain('#longRepeatedField = 4');
+  expect(compacted.code).toContain('inspect()');
+  const exports: Record<string, unknown> = {};
+  runInNewContext(compacted.code, { exports });
+  expect(exports.result).toEqual([['longRepeatedField', 4, 3], ['longRepeatedField'], 3]);
+});
+
+it('shares repeated case labels and concise arrow returns without changing switch matching', () => {
+  const original = `const originalValue = () => "long-repeated-command-value";
+function run(value) {
+  switch (value) {
+    case "long-repeated-command-value": return "long-repeated-command-value";
+    case "other-command": return "other";
+    default: return "fallback";
+  }
+}
+exports.result = [run(originalValue()), run(new String(originalValue())), run("other-command")];`;
+  const compacted = compactCommonJsLiterals(original);
+  expect(compacted.code).toMatch(/=>\s+__fountainLiteral\$\d+/);
+  expect(compacted.code).toMatch(/case\s+__fountainLiteral\$\d+/);
+  const exports: Record<string, unknown> = {};
+  runInNewContext(compacted.code, { exports });
+  expect(exports.result).toEqual(['long-repeated-command-value', 'fallback', 'other']);
+});

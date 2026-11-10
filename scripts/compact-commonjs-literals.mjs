@@ -16,6 +16,8 @@ function literalValue(node) {
 function canShare(node, parent, code) {
   if (!parent || parent.key === node || parent.id === node) return false;
   if (expressionParents.has(parent.type)) return true;
+  if (parent.type === 'SwitchCase') return parent.test === node;
+  if (parent.type === 'ArrowFunctionExpression') return parent.body === node;
   if (!['CallExpression', 'NewExpression'].includes(parent.type) || !parent.arguments.includes(node)) return false;
   const callee = code.slice(parent.callee.start, parent.callee.end);
   // Keep dependency and export names visible to static analysis.
@@ -46,7 +48,8 @@ function shareableUse(node, parent, moduleBindings, code) {
     const start = node.optional ? node.property.start : node.property.start - 1;
     return { value: node.property.name, start, end: node.property.end, member: true };
   }
-  if (node.type === 'Property' && parent?.type === 'ObjectExpression'
+  const publicField = node.type === 'PropertyDefinition';
+  if ((publicField || (node.type === 'Property' && parent?.type === 'ObjectExpression'))
     && !node.computed && !node.shorthand && node.key.type === 'Identifier'
     && node.key.name.length >= 6 && !staticKeys.has(node.key.name)) {
     return { value: node.key.name, start: node.key.start, end: node.key.end, member: true };
