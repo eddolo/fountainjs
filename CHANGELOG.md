@@ -9,6 +9,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 - Build collaboration projection reuse indexes with the existing path bindings
   to reduce repeated work in large documents.
+- Decode plain collaboration text runs directly and check for empty field
+  aliases only when projecting an empty run.
 - Speed up continued collaborative typing when formatting leaves the final
   text run at a nonzero offset in shared storage. Appending there preserves
   the existing author undo and relative anchors.

@@ -349,14 +349,18 @@ export class RetainedDocumentStore {
   }
 
   private decode(run: RetainedTextRun): { leaf: string; attrs: Attributes; marks: MarkJSON[] } {
-    const fields = run.attributes ?? {}, attrs: Attributes = Object.create(null), marks = new Map<string, MarkJSON>();
+    const fields = run.attributes ?? {}, keys = Object.keys(fields);
     const leaf = fields[LEAF];
-    if (typeof leaf !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/.test(leaf)) throw new Error(`Retained characters need a leaf identity (${Object.keys(fields).join(',')}).`);
+    if (typeof leaf !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$/.test(leaf)) throw new Error(`Retained characters need a leaf identity (${keys.join(',')}).`);
+    if (fields[ORDER] === '[]' && keys.length === 2 && keys.includes(LEAF) && keys.includes(ORDER)) {
+      return { leaf, attrs: EMPTY_ATTRS, marks: [] };
+    }
+    const attrs: Attributes = Object.create(null), marks = new Map<string, MarkJSON>();
     const order: unknown = JSON.parse(fields[ORDER] ?? '[]');
     if (!Array.isArray(order) || order.some(key => typeof key !== 'string')) throw new Error('Invalid retained mark order.');
-    for (const [key, value] of Object.entries(fields).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)) {
+    for (const key of keys.sort()) {
       if (key === LEAF || key === ORDER) continue;
-      const parsed: unknown = JSON.parse(value); validateRetainedMetadata(parsed);
+      const parsed: unknown = JSON.parse(fields[key]!); validateRetainedMetadata(parsed);
       if (key.startsWith('a_')) attrs[keyName(key.slice(2))] = parsed;
       else if (/^m_[a-f0-9]*_\d+$/.test(key) && parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
         marks.set(key, { type: keyName(key.slice(2, key.lastIndexOf('_'))), attrs: parsed as Attributes });
@@ -433,12 +437,9 @@ export class RetainedDocumentStore {
     const groupStates = new Map<string, GroupState>();
     const visit = (raw: RetainedNodeProjection): Fragment => {
       if (!Object.hasOwn(this.schema.nodes, raw.type)) throw new Error(`Unknown retained node type: ${raw.type}`);
-      const activeFields = new Set<string>();
       const ordered = this.orderedChildren(raw, partitions, placements);
-      for (const child of ordered) if (child.type === 'text') {
-        if (partitions.get(child.id)!.runs.some(run => run.text.length)) activeFields.add(child.textLayout!.field);
-      }
-      const emittedEmpty = new Set<string>(), children: (Fragment | TextFragment)[] = [];
+      let occupiedFields: Set<string> | undefined;
+      const children: (Fragment | TextFragment)[] = [];
       const append = (next: Fragment | TextFragment) => {
         const previous = children.at(-1);
         if (previous && 'text' in previous && 'text' in next && previous.leaf === next.leaf
@@ -475,10 +476,18 @@ export class RetainedDocumentStore {
           offset += run.text.length;
         }
         const layout = child.textLayout!;
-        if (!offset && layout.empty && !activeFields.has(layout.field) && !emittedEmpty.has(layout.field)) {
-          emittedEmpty.add(layout.field);
-          appendText('', child.attrs ?? {}, child.marks ?? [], child.id,
-            [{ id: child.id, from: 0, length: 0, modelFrom: 0, leaf: child.id }]);
+        if (!offset && layout.empty) {
+          if (!occupiedFields) {
+            occupiedFields = new Set<string>();
+            for (const sibling of ordered) if (sibling.type === 'text') {
+              if (partitions.get(sibling.id)!.runs.some(run => run.text.length)) occupiedFields.add(sibling.textLayout!.field);
+            }
+          }
+          if (!occupiedFields.has(layout.field)) {
+            occupiedFields.add(layout.field);
+            appendText('', child.attrs ?? {}, child.marks ?? [], child.id,
+              [{ id: child.id, from: 0, length: 0, modelFrom: 0, leaf: child.id }]);
+          }
         }
       }
       const fragments: Fragment[] = children.map(child => {

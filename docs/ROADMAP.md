@@ -26,8 +26,10 @@ in that pair. The append repair passes 959 Yjs tests and 48 recorded browser
 journeys. At 5,000 paragraphs, reusing projection indexes reduces the observed
 typing burst median from 505 to 439 ms in a four-cycle comparison. The same
 candidate passes merge, undo and recovery in a separate 12-cycle run, with
-a 569 ms median typing burst. Large document latency and release validation
-remain open.
+a 569 ms median typing burst. A later 12-cycle comparison measures 523 ms
+before the plain text projection change and 468 ms after it. Both builds
+finish with the same document digest. Large document latency and release
+validation remain open.
 [Workload and evidence](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The local default collaboration entry now uses retained identities. The six

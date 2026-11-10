@@ -35,8 +35,10 @@ The checked trailing-run append reduces a median eleven-character typing burst
 from 714.9 to 136.0 ms in a back-to-back run at 1,000 paragraphs. Split and
 wrap medians rise about 7% in that pair. Projection index reuse improves a
 short 5,000-paragraph comparison. A separate 12-cycle run passes collaboration
-and recovery checks at that size, with a 569 ms median typing burst. Large
-document latency and release validation remain open.
+and recovery checks at that size. A later matched 12-cycle pair measures
+523 ms before the plain text projection change and 468 ms after it, with
+the same final document digest. Large document latency and release validation
+remain open.
 [Endurance diagnostic](YJS_ENDURANCE_DIAGNOSTIC.md).
 
 The preceding adoption checkpoint passed 45 recorded default-adapter desktop

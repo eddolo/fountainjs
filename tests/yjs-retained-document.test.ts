@@ -444,6 +444,17 @@ it('rejects newly malformed shared metadata after a successful reused read and r
   } finally { pair.destroy(); }
 });
 
+it('rejects unknown text metadata even when the mark order is empty', () => {
+  const pair = fixture();
+  try {
+    const field = pair.store.nodes.project().root.content[0].content[0].id;
+    pair.store.text.format(field, 0, 5, { unexpected: 'true' });
+    const before = Y.encodeStateAsUpdate(pair.doc);
+    expect(() => pair.store.read()).toThrow('Unknown retained text format.');
+    expect(Y.encodeStateAsUpdate(pair.doc)).toEqual(before);
+  } finally { pair.destroy(); }
+});
+
 it.each([
   { name: 'prefix insertion', from: 0, to: 0, text: 'X' },
   { name: 'suffix insertion', from: 5, to: 5, text: 'X' },
@@ -833,6 +844,21 @@ it.each([0, 5])('retains an explicit empty side when splitting at %s', offset =>
     pair.editor.dispatch(pair.editor.createTransaction().setSelection(Selection.cursor([0, 0], offset)));
     expect(splitBlock(pair.editor)).toBe(true);
     expect(pair.apply().toJSON()).toEqual(pair.editor.getJSON());
+  } finally { pair.destroy(); }
+});
+
+it('suppresses an earlier empty partition when its field has later text and emits it once when cleared', () => {
+  const pair = fixture();
+  try {
+    const parent = pair.store.identity([0])!;
+    const field = pair.store.nodes.project().root.content[0].content[0].id;
+    const later = pair.store.nodes.create({ type: 'text', textLayout: { field, empty: true } }, parent, 1);
+    pair.store.nodes.setTextLayout(field, { field, empty: true });
+    pair.store.text.split(field, later, 0);
+    expect(pair.store.read().child(0).content.map(node => node.text)).toEqual(['Alpha']);
+
+    pair.store.text.delete(later, 0, 5);
+    expect(pair.store.read().child(0).content.map(node => node.text)).toEqual(['']);
   } finally { pair.destroy(); }
 });
 

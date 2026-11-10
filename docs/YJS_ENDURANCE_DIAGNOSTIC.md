@@ -391,3 +391,37 @@ latencies remain an open performance gap. The local receipt is
 The build passes 959 Yjs tests and 48 recorded Chromium, Firefox and WebKit
 journeys. The Firefox capture of the 1,000-paragraph workflow was inspected
 and shows both authors' views agreeing on the edited paragraph and its marks.
+
+## Plain text projection and empty field handling
+
+The CPU profile of the index build sampled 1,588 ms in frame normalization
+during 2,026 ms of typing work. Decoding retained runs accounted for 116 ms
+within normalization. Ordinary text runs now recognize their exact two-field
+wire shape without parsing an empty mark list. The projection checks which
+fields already have content only when it encounters a potential empty leaf.
+The added regressions check an earlier empty partition sharing a field with
+later content, and rejection of extra text metadata with an empty mark order.
+
+Both installed packages passed all assertions across 12 cycles at 5,000
+paragraphs, with a checkpoint reopen every six cycles.
+
+| Action | Index build | With plain text projection changes |
+| --- | ---: | ---: |
+| Eleven-character burst median | 523.4 ms | 468.0 ms |
+| Eleven-character burst p95 | 572.8 ms | 529.1 ms |
+| Split median | 662.6 ms | 590.7 ms |
+| Wrap median | 626.0 ms | 608.7 ms |
+| Remote apply p95 | 162.0 ms | 151.5 ms |
+
+Both runs ended with the same portable document digest and exchanged 584
+updates. Traffic measured 309,141 and 309,637 bytes, respectively. The fresh
+native peer IDs after checkpoint reopen differ between the runs. Local
+receipts are `artifacts/yjs-5000-plain-base-20261110.json` and
+`artifacts/yjs-5000-plain-new-20261110.json`. Whole-document normalization
+still runs on each edit and remains a cost at this scale.
+
+The change passes 961 Yjs tests and 12 recorded journeys across Chromium,
+Firefox, and WebKit. The journeys cover empty siblings, continued formatted
+typing after undo, editing at 1,000 paragraphs, and blank-line selection.
+The Firefox undo capture shows both editors retaining the peer's text and
+its surrounding marks.
