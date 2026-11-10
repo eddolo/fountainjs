@@ -24,6 +24,9 @@ download/reopen and a separate reader. See [its API guide](ISSUE_EDITOR_DEMO.md)
 [Todoist-style task workspace](https://eddolo.github.io/fountainjs/task-workflow.html):
 three sample tasks, a rich description per task, task switching, due date and
 completion controls, adding tasks, reader preview, and Markdown download/reopen.
+In the unreleased task workspace, the sidebar shows Open or Completed on each
+row. Each task button exposes that status as an accessible description and
+identifies the editor pane it opens.
 Tasks can also be deleted, including the last task. The visible Undo delete
 action restores the last removal with its original draft, metadata and editor
 history. Adding or deleting another task replaces that one-step recovery.
@@ -90,6 +93,13 @@ Implementation: `examples/react-app/src/TaskWorkflow.tsx`, `task-main.tsx`,
 Automated browser journey: `tests/browser/product-workflow-journey.ts`;
 recorded entry: `tests/manual/product-workflow-audit.spec.ts`.
 Browser emulation is not physical-device certification.
+
+Verified 2026-11-10: eight recorded journeys cover the status change,
+pane association and delete/restore across the desktop engines and both
+mobile profiles. Six axe checks of the task reader at desktop and narrow
+widths report no violations. The back-arrow glyph required manual contrast
+review, which measured 8.11:1 in Chromium. Sidebar captures at 1280, 700
+and 390 pixels show the labels beside the task titles.
 
 Verified 2026-11-03: five new recorded journeys pass in Chromium, Firefox,
 WebKit, mobile Chrome and mobile Safari emulations. They check direct-entry

@@ -32,6 +32,10 @@
 .task-sidebar nav { display: grid; gap: 8px; }
 .task-sidebar button { width: 100%; display: flex; gap: 10px; text-align: left; border: 1px solid transparent; background: transparent; color: #253b30; padding: 12px; border-radius: 8px; line-height: 1.5; overflow-wrap: anywhere; }
 .task-sidebar button[aria-pressed=true] { background: white; border-color: #779b89; font-weight: 700; }
+.task-list-row { position: relative; min-width: 0; }
+.task-list-row button { padding-inline-end: 100px; }
+.task-list-status { position: absolute; inset-block-start: 12px; inset-inline-end: 12px; padding: 2px 7px; border-radius: 999px; background: #e5ebe6; color: #344c40; font-size: .75rem; font-weight: 600; white-space: nowrap; pointer-events: none; }
+.task-list-status.is-completed { background: #dcefe5; color: #175b43; }
 .task-sidebar .task-add { margin-top: 20px; color: #11694f; font-weight: 700; }
 .task-panes { min-width: 0; }
 .task-pane { padding: 24px; }

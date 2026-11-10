@@ -28,6 +28,10 @@ export async function productWorkflowJourney(page: Page, info: TestInfo): Promis
   const pane = page.locator('.task-pane:not([hidden])');
   const editor = pane.getByRole('textbox', { name: 'Task description editor', exact: true });
   const tasks = page.getByRole('navigation', { name: 'Tasks', exact: true });
+  const brief = tasks.getByRole('button', { name: 'Write the launch brief', exact: true });
+  await expect(brief).toHaveAccessibleDescription('Open');
+  await expect(tasks.getByRole('button', { name: 'Share the finished draft', exact: true })).toHaveAccessibleDescription('Completed');
+  await expect(brief).toHaveAttribute('aria-controls', await pane.getAttribute('id') ?? 'missing-pane-id');
   const append = async (value: string) => {
     await editor.locator('p').last().click();
     await page.keyboard.press('ControlOrMeta+End');
@@ -52,6 +56,7 @@ export async function productWorkflowJourney(page: Page, info: TestInfo): Promis
   await pane.getByLabel('Due date', { exact: true }).fill('2026-09-20');
   await pane.getByLabel('Completed', { exact: true }).check();
   await expect(page.locator('.task-sidebar')).toContainText('2 of 3 completed');
+  await expect(brief).toHaveAccessibleDescription('Completed');
   await capture('task-editor.png');
   await pane.getByRole('button', { name: 'Reader preview', exact: true }).click();
   const reader = pane.getByRole('textbox', { name: 'Task description preview', exact: true });
@@ -88,6 +93,8 @@ export async function productWorkflowJourney(page: Page, info: TestInfo): Promis
   await expect(editor).toContainText('Verified separately.');
   await tasks.getByRole('button', { name: 'Check the handoff' }).click();
   await expect(editor).toContainText('Ready for review.');
+  await page.setViewportSize({ width: 700, height: 850 });
+  await capture('task-tablet.png');
   await page.setViewportSize({ width: 390, height: 844 });
   await capture('task-mobile.png');
   await pane.getByRole('button', { name: 'Reader preview', exact: true }).click();

@@ -42,6 +42,10 @@ export async function workflowTaskRemovalJourney(page: Page, info: TestInfo): Pr
   await pane.getByLabel('Task title', { exact: true }).fill('Release brief');
   await pane.getByLabel('Due date', { exact: true }).fill('2026-11-10');
   await pane.getByLabel('Completed', { exact: true }).check();
+  const brief = tasks.getByRole('button', { name: 'Release brief', exact: true });
+  await expect(brief).toHaveAccessibleDescription('Completed');
+  const briefPanel = await pane.getAttribute('id') ?? 'missing-pane-id';
+  await expect(brief).toHaveAttribute('aria-controls', briefPanel);
   await append(' Keep this edited draft.');
   await capture('task-before-delete.png');
   await activate(pane.getByRole('button', { name: 'Delete task', exact: true }));
@@ -51,7 +55,10 @@ export async function workflowTaskRemovalJourney(page: Page, info: TestInfo): Pr
   await expect(sidebar).toContainText('1 of 2 completed');
   await expect(editor).toContainText('Technical review');
   await activate(undoDelete);
-  await expect(tasks.getByRole('button', { name: 'Release brief' })).toBeFocused();
+  await expect(brief).toBeFocused();
+  await expect(brief).toHaveAccessibleDescription('Completed');
+  await expect(brief).toHaveAttribute('aria-controls', briefPanel);
+  await expect(pane).toHaveAttribute('id', briefPanel);
   await expect(editor).toContainText('Keep this edited draft.');
   await expect(pane.getByLabel('Due date', { exact: true })).toHaveValue('2026-11-10');
   await expect(pane.getByLabel('Completed', { exact: true })).toBeChecked();
@@ -67,9 +74,11 @@ export async function workflowTaskRemovalJourney(page: Page, info: TestInfo): Pr
   await activate(pane.getByRole('button', { name: 'Delete task', exact: true }));
   await expect(tasks.getByRole('button', { name: 'Share the finished draft' })).toBeFocused();
   await activate(undoDelete);
-  expect(await tasks.getByRole('button').allTextContents()).toEqual([
-    '✓Release brief', '○Review the technical notes', '✓Share the finished draft',
-  ]);
+  const restoredButtons = tasks.getByRole('button');
+  await expect(restoredButtons.nth(0)).toHaveAccessibleName('Release brief');
+  await expect(restoredButtons.nth(1)).toHaveAccessibleName('Review the technical notes');
+  await expect(restoredButtons.nth(1)).toHaveAccessibleDescription('Open');
+  await expect(restoredButtons.nth(2)).toHaveAccessibleName('Share the finished draft');
   await expect(editor).toContainText('Review stays independent.');
   await activate(tasks.getByRole('button', { name: 'Release brief' }));
   await expect(editor).toContainText('Keep this edited draft.');
@@ -81,6 +90,7 @@ export async function workflowTaskRemovalJourney(page: Page, info: TestInfo): Pr
   await expect(page.locator('.task-notice')).toContainText('Deleted Untitled task.');
   await activate(undoDelete);
   await expect(pane.getByLabel('Task title', { exact: true })).toHaveValue('');
+  await expect(page.getByRole('region', { name: 'Task: Untitled task', exact: true })).toBeVisible();
   for (let index = 0; index < 4; index++) await activate(pane.getByRole('button', { name: 'Delete task', exact: true }));
   await expect(tasks.getByRole('button')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'No tasks', exact: true })).toBeVisible();
