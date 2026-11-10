@@ -302,14 +302,14 @@ export class SelectionHandler {
           if (!node.childCount && !node.type.spec.atom) {
             const blockSelection = new NodeSelection(this.editor.state.doc, path);
             if (!blockSelection.eq(this.editor.state.selection)) {
-              this.editor.dispatch(this.editor.state.createTransaction().setSelection(blockSelection));
+              this.editor.dispatch(this.editor.state.createTransaction().setSelection(blockSelection).setMeta('fountain$selectionFromDOM', true));
             }
           }
         } catch { /* A replaced DOM block must not redirect typing. */ }
       }
     }
     if (selection && (!selection.eq(this.editor.state.selection) || wasBackward !== Boolean(direction._b?.eq(selection)))) {
-      this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection));
+      this.editor.dispatch(this.editor.state.createTransaction().setSelection(selection).setMeta('fountain$selectionFromDOM', true));
     }
     return selection;
   }
@@ -353,6 +353,12 @@ export class SelectionHandler {
   requestModelSync(preserveForFocus = false): void {
     this.pendingModelSync = true;
     this.pendingFocusSelection ||= preserveForFocus;
+  }
+
+  /** Preserve an already queued command when a passive redraw completes it
+   * while an external control has focus. Do not create a new selection intent. */
+  preservePendingModelSyncForFocus(): void {
+    this.pendingFocusSelection ||= this.pendingModelSync;
   }
 
   consumeDOMSyncRequest(): boolean {

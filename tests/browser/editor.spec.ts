@@ -5081,10 +5081,12 @@ test('shows verified room setup before the legacy collaboration recipe', async (
   const setup = page.locator('pre').filter({ hasText: 'const bound = await openYjsRoom' });
   await expect(setup).toBeVisible();
   await expect(setup).toContainText('createProvider(bound.document, bound.lease)');
-  const legacy = page.locator('details').filter({ hasText: 'Show the published XML example' });
+  const legacy = page.locator('details').filter({ hasText: 'Show the explicit XML compatibility example' });
+  await expect(legacy.locator('summary')).toBeVisible();
   await expect(legacy.locator('pre')).toBeHidden();
   await legacy.locator('summary').click();
   await expect(legacy.locator('pre')).toContainText('createYjsCollaborationExtension');
+  await expect(legacy.locator('pre')).toContainText('fountainjs-editor/yjs/legacy');
   await expect(legacy.locator('pre')).toBeVisible();
   await setup.screenshot({ path: info.outputPath('verified-room-recipe.png') });
 });
@@ -7006,6 +7008,24 @@ test('turns multi-format and multi-block selections into visible paragraph bound
 test('visibly splits and joins ordinary paragraphs with both deletion directions', async ({ page }) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   const blocks = editor.locator(':scope > p[data-fountain-path]');
+  const expectJoinedContent = async (text: string) => {
+    // This fixture deliberately renders a non-document "Remote" cursor label.
+    // Verify both the visible content and the model without treating that
+    // retained widget as text inserted by the paragraph join.
+    await expect.poll(() => blocks.first().evaluate(element => {
+      const content = element.cloneNode(true) as HTMLElement;
+      content.querySelectorAll('[data-fountain-widget]').forEach(widget => widget.remove());
+      return content.textContent;
+    })).toBe(text);
+    const widget = blocks.first().locator('[data-fountain-widget="remote"]');
+    await expect(widget).toHaveCount(1);
+    await expect(widget).toHaveText('Remote');
+    await expect(widget).toHaveAttribute('contenteditable', 'false');
+    expect(await page.evaluate(() => {
+      const model = (globalThis as any).fountainBrowserTest.editor;
+      return { text: model.state.doc.child(0).textContent, includesWidget: JSON.stringify(model.getJSON()).includes('Remote') };
+    })).toEqual({ text, includesWidget: false });
+  };
   await blocks.first().click();
   await page.keyboard.press('End');
   await page.keyboard.press('Enter');
@@ -7019,13 +7039,13 @@ test('visibly splits and joins ordinary paragraphs with both deletion directions
   await page.keyboard.press('Home');
   await page.keyboard.press('Backspace');
   await expect(blocks).toHaveCount(3);
-  await expect(blocks.first()).toHaveText('Alpha BetaBridge');
+  await expectJoinedContent('Alpha BetaBridge');
 
   await blocks.first().click();
   await page.keyboard.press('End');
   await page.keyboard.press('Delete');
   await expect(blocks).toHaveCount(2);
-  await expect(blocks.first()).toHaveText('Alpha BetaBridgeSecond paragraph');
+  await expectJoinedContent('Alpha BetaBridgeSecond paragraph');
 });
 
 test('deletes an adjacent inline atom without eating surrounding text', async ({ page }) => {

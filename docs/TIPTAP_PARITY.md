@@ -17,9 +17,17 @@ admission. Recovery receipts preserve reviewed drafts through lost replies,
 reload and retries. [Deletion/undo](YJS_RETAINED_DELETION_AUDIT.md),
 [draft review](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
 
-Combined verification passes 5,086 source tests with zero failures/skips,
-45 recorded default-adapter desktop journeys, package/type/headless/server
-checks and existing performance limits. The migration matrix has 17 first-run
+The latest source verification passes 5,134 tests with zero failures/skips.
+Follow-up repairs prevent partially shared capacity failures, bind provider
+sessions to their original documents, and preserve native selection through
+metadata updates. The public browser run passes 57 cases with two existing
+clipboard skips; one Chromium fixture module fails to load with
+`ERR_NO_BUFFER_SPACE`, then its unchanged isolated journey passes. That is not
+a clean first-run matrix. [Selection audit](SELECTION_METADATA_AUDIT.md).
+
+The preceding adoption checkpoint passed 45 recorded default-adapter desktop
+journeys, package/type/headless/server checks and existing performance limits.
+The migration matrix has 17 first-run
 passes and one Firefox startup timeout, which repeats once and later passes
 unchanged in isolation. Preserve that reliability limitation; these changes
 do not establish production parity or a new release.

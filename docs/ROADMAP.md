@@ -5,9 +5,12 @@
 Follow-up reliability work now prevents retained storage/formatting capacity
 failures from partially sharing a transaction, binds pending room admission and
 cleanup to the original provider/document, and cancels abandoned Lean checks.
-The integrated source run passes 5,118 tests. A subsequent public-demo audit
-exposes a Firefox native-caret race during metadata updates; investigation is
-active, so no new release clearance is claimed. See
+The latest integrated source run passes 5,134 tests. The public-demo audit also
+repaired a native-caret race during metadata updates, rapid navigation and
+inline decoration redraws. A rebuilt browser run exposed and then repaired
+stale-DOM capture during nested collaboration notifications. The ordinary
+homepage now exercises the public default entry. No new release clearance is
+claimed. See [native selection evidence](SELECTION_METADATA_AUDIT.md) and
 [capacity and session follow-up](YJS_DEFAULT_ADOPTION.md#capacity-and-session-ownership-follow-up).
 
 The local default collaboration entry now uses retained identities. The six

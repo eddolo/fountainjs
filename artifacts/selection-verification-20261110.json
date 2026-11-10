@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-10",
+  "baseCommit": "f70f9bdc",
+  "scope": "Native selection ownership through metadata, decorations, explicit commands and nested collaboration notifications",
+  "units": {
+    "passed": 5134,
+    "failed": 0,
+    "skipped": 0,
+    "files": 318,
+    "newTests": 16,
+    "report": "artifacts/selection-source-verified-20261110.json"
+  },
+  "checks": {
+    "build": "passed after rendered-document guard",
+    "typescriptSvelteAngular": "passed",
+    "publicDeclarations": 450,
+    "packageESMAndCommonJS": "passed",
+    "headlessModules": 139,
+    "siteBuild": "passed",
+    "otherRuntimeAndFormatGates": "preceding foundation checkpoint only; not rerun for view-only change"
+  },
+  "browser": {
+    "public": {
+      "passed": 57,
+      "failed": 1,
+      "skipped": 2,
+      "output": "artifacts/selection-public-browser-verified-20261110",
+      "failure": "Chromium fixture module request failed with net::ERR_NO_BUFFER_SPACE before editor initialization",
+      "unchangedIsolatedRetry": "1 passed; artifacts/selection-page-startup-retry-20261110"
+    },
+    "nativeInitial": {
+      "passed": 39,
+      "failed": 3,
+      "output": "artifacts/selection-native-browser-20261110",
+      "finding": "Three paragraph-join assertions counted the intentional non-model Remote cursor label; trace JSON proves exact model text"
+    },
+    "nativeCorrection": {
+      "passed": 6,
+      "failed": 0,
+      "output": "artifacts/selection-join-widget-verified-20261110",
+      "scope": "Three original keyboard journeys with independent rendered/model/widget assertions, plus three existing decoration journeys"
+    },
+    "defaultAdapter": {
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0,
+      "output": "artifacts/selection-default-browser-20261110"
+    },
+    "intermediateRegression": {
+      "passedBeforeInterruption": 7,
+      "failure": "Quote click recursion through stale-DOM native capture; recorded 5177 synchronous frames",
+      "output": "artifacts/selection-public-browser-final-20261110",
+      "repair": "Rendered-document identity guard with deterministic subscriber-order regression",
+      "focusedReplay": "1 passed; artifacts/selection-quote-smoke-20261110"
+    }
+  },
+  "visualReview": [
+    "Firefox public partial-bold merged screenshot",
+    "Eight sampled Firefox partial-bold recording frames, including initial load",
+    "Firefox deleted-ancestor restoration screenshot",
+    "Chromium quote smoke screenshot reviewed by implementing agent"
+  ],
+  "capacityKiB": {
+    "esm": 1578.5,
+    "commonjs": 1414.9,
+    "previousCommonjsCap": 1414.25,
+    "newCommonjsCap": 1415,
+    "otherLimitsChanged": false
+  },
+  "installedPackage": {
+    "tarball": "artifacts/fountainjs-selection-20261110.tgz",
+    "tarballSha256": "70d82ed489ac719f60b690e53c7ab9db1b061b617dbc38ebd5912ece696bc3a2",
+    "matchedDistFiles": 998,
+    "matchReport": "artifacts/yjs-endurance-packed-match-20261110.json"
+  },
+  "limitations": [
+    "No publication or deployed-site change.",
+    "Full Linux release CI, native display clipboard workflows and production qualification remain required.",
+    "Earlier Firefox migration-fixture cold-start delay remains unexplained; Chromium module-load failure is separately identified, not erased by a retry.",
+    "Recorded browser checks do not certify physical mobile devices or real IME.",
+    "Generic runtime/heap gates were not repeated for this view-only follow-up.",
+    "A separate actual-Yjs diagnostic now exposes large-document latency; no production performance claim or threshold relaxation."
+  ],
+  "sourceSha256": {
+    "src/view/view.ts": "df4fcfc044a4a9e3c1c690022da52c49023abefa6218d135161fb5729e89b3c1",
+    "src/view/selection-handler.ts": "f578982c67ac86a3b5e84f9f120319dfd047ff826a319e35da29a837fad4e993",
+    "tests/selection-view.test.ts": "6707d273451c2db8bea75a438290e3a1c67f1481ea2921987409b2475e42bcb8",
+    "tests/browser/editor.spec.ts": "1e09060a803ff9c4115e163a5e37e750e97118d1de39249afbdf83c0c7518e4f",
+    "examples/react-app/src/CollaborationDemo.tsx": "f0b26eb739db4383eb3dab5c989046ab747e07e541b6344dca3cbeb771311481"
+  }
+}

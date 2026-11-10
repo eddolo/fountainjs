@@ -4,9 +4,16 @@ import { describe, expect, it } from 'vitest';
 import {
   AllSelection,
   CellSelection,
+  CoreExtension,
+  composeExtensions,
+  defineExtension,
+  Decoration,
+  DecorationSet,
   EditorView,
   GapSelection,
   NodeSelection,
+  Plugin,
+  PluginKey,
   Selection,
   StarterKit,
   createEditor,
@@ -25,6 +32,166 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it.each([...['after-movement', 'during-keydown'].flatMap(timing => [false, true].map(backward => ({ timing, backward, staleModel: false }))),
+    { timing: 'during-keydown', backward: false, staleModel: true }])(
+    'preserves pending native selection through metadata ($timing, backward: $backward, stale model: $staleModel)', async ({ timing, backward, staleModel }) => {
+    const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content: [paragraph('Edit here')] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.dom.focus();
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], staleModel ? 0 : 1)));
+      await settleSelection();
+      const text = view.dom.querySelector('[data-fountain-text-path="0.0"]')!.firstChild!;
+      if (staleModel) native.collapse(text, 1);
+      // Browsers move the native caret before notifying selectionchange. A
+      // presence/status update can run in that interval with the old model.
+      const update = () => editor.dispatch(editor.createTransaction().setMeta('presence-update', []).setMeta('force', true));
+      if (timing === 'during-keydown') {
+        view.dom.addEventListener('keydown', update, { once: true });
+        view.dom.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+      }
+      native.setBaseAndExtent(text, backward ? 5 : 2, text, 2);
+      const range = native.getRangeAt(0);
+      if (timing === 'after-movement') update();
+      await settleSelection();
+      expect(native.focusNode).toBe(text); expect(native.focusOffset).toBe(2);
+      expect(native.anchorOffset).toBe(backward ? 5 : 2);
+      expect(native.getRangeAt(0)).toBe(range);
+      view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'X' }));
+      expect(editor.state.doc.textContent).toBe(backward ? 'EdXhere' : 'EdXit here');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
+  it.each([{ timing: 'after-movement', queuedCommand: false }, { timing: 'during-keydown', queuedCommand: false }, { timing: 'during-keydown', queuedCommand: true }])(
+    'preserves native movement while metadata rerenders inline decorations ($timing, queued command: $queuedCommand)', async ({ timing, queuedCommand }) => {
+    const key = new PluginKey<boolean>('selection-decoration-test');
+    const plugin = new Plugin({ key, state: { init: () => false, apply: (transaction, previous) => transaction.getMeta<boolean>('show-range') ?? previous },
+      props: { decorations: state => key.get(state) ? DecorationSet.create(state.doc, [Decoration.inline(2, 5, { class: 'test-comment-range' })]) : DecorationSet.empty } });
+    const editor = createEditor({ schema: StarterKit.schema, plugins: [plugin], content: { type: 'doc', content: [paragraph('Edit here')] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.dom.focus(); editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], queuedCommand ? 0 : 1)));
+      await settleSelection();
+      if (queuedCommand) editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+      const text = view.dom.querySelector('[data-fountain-text-path="0.0"]')!.firstChild!;
+      const update = () => editor.dispatch(editor.createTransaction().setMeta('show-range', true).setMeta('force', true));
+      if (timing === 'during-keydown') {
+        view.dom.addEventListener('keydown', update, { once: true });
+        view.dom.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+        // Simulate the browser default after a keydown handler changed the DOM.
+        const current = view.dom.querySelector('[data-fountain-text-path="0.0"]')!;
+        native.collapse(current.querySelector('.test-comment-range')!.firstChild!, 1);
+      } else { native.collapse(text, 2); update(); }
+      await settleSelection();
+      expect(view.dom.querySelector('.test-comment-range')).not.toBeNull();
+      view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'X' }));
+      expect(editor.state.doc.textContent).toBe('EdXit here');
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
+  it.each([false, true])('defers a pending command caret when focus moves to an external button before metadata arrives (inline: %s)', async inline => {
+    const key = new PluginKey<boolean>('focus-decoration-test');
+    const plugin = new Plugin({ key, state: { init: () => false, apply: (transaction, previous) => transaction.getMeta<boolean>('presence-update') ?? previous },
+      props: { decorations: state => inline && key.get(state) ? DecorationSet.create(state.doc, [Decoration.inline(2, 5, { class: 'test-comment-range' })]) : DecorationSet.empty } });
+    const editor = createEditor({ schema: StarterKit.schema, plugins: [plugin], content: { type: 'doc', content: [paragraph('Edit here')] } });
+    const mount = document.createElement('div'), button = document.createElement('button'); document.body.append(mount, button);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.dom.focus(); editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+      await settleSelection();
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
+      button.focus();
+      const held = { anchor: native.anchorNode, anchorOffset: native.anchorOffset, focus: native.focusNode, focusOffset: native.focusOffset };
+      editor.dispatch(editor.createTransaction().setMeta('presence-update', true).setMeta('force', true));
+      await settleSelection();
+      expect(document.activeElement).toBe(button);
+      if (!inline) expect({ anchor: native.anchorNode, anchorOffset: native.anchorOffset, focus: native.focusNode, focusOffset: native.focusOffset }).toEqual(held);
+      view.dom.focus(); await settleSelection();
+      const wrapper = view.dom.querySelector('[data-fountain-text-path="0.0"]')!;
+      expect(wrapper.contains(native.focusNode)).toBe(true);
+      const prefix = document.createRange(); prefix.setStart(wrapper, 0); prefix.setEnd(native.focusNode!, native.focusOffset);
+      expect(prefix.toString().length).toBe(3);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); button.remove(); native.removeAllRanges(); }
+  });
+
+  it.each((['selection', 'document'] as const).flatMap(kind => [false, true].map(inline => ({ kind, inline }))))(
+    'still completes a required $kind sync when metadata follows (inline: $inline)', async ({ kind, inline }) => {
+    const key = new PluginKey<boolean>('pending-selection-decoration-test');
+    const plugin = new Plugin({ key, state: { init: () => false, apply: (transaction, previous) => transaction.getMeta<boolean>('presence-update') ?? previous },
+      props: { decorations: state => inline && key.get(state) ? DecorationSet.create(state.doc, [Decoration.inline(2, 5, { class: 'test-comment-range' })]) : DecorationSet.empty } });
+    const editor = createEditor({ schema: StarterKit.schema, plugins: [plugin], content: { type: 'doc', content: [paragraph('Edit here')] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.dom.focus();
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 1)));
+      await settleSelection();
+      const transaction = editor.createTransaction();
+      if (kind === 'document') transaction.insertText([0, 0], 0, 'New ');
+      else transaction.setSelection(Selection.cursor([0, 0], 3));
+      editor.dispatch(transaction);
+      editor.dispatch(editor.createTransaction().setMeta('presence-update', true).setMeta('force', true));
+      await settleSelection();
+      const wrapper = view.dom.querySelector('[data-fountain-text-path="0.0"]')!;
+      expect(wrapper.contains(native.focusNode)).toBe(true);
+      const prefix = document.createRange(); prefix.setStart(wrapper, 0); prefix.setEnd(native.focusNode!, native.focusOffset);
+      expect(prefix.toString().length).toBe(kind === 'document' ? 5 : 3);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
+  it('honors a newer selection dispatched synchronously by a NodeView selection hook', async () => {
+    let selectFromHook = () => {};
+    class RedirectNodeView {
+      dom = document.createElement('section');
+      selectNode() { selectFromHook(); }
+    }
+    const kit = composeExtensions([CoreExtension, defineExtension({ name: 'selection-redirect',
+      nodes: { redirect: { group: 'block', atom: true, nodeView: RedirectNodeView } } })]);
+    const editor = createEditor({ schema: kit.schema, content: { type: 'doc', content: [{ type: 'redirect' }, paragraph('After')] } });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.dom.focus(); editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 1)));
+      await settleSelection();
+      selectFromHook = () => editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([1, 0], 3)));
+      editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [0])));
+      await settleSelection();
+      expect(editor.state.selection).toEqual(Selection.cursor([1, 0], 3));
+      expect(native.focusNode).toBe(view.dom.querySelector('[data-fountain-text-path="1.0"]')!.firstChild!);
+      expect(native.focusOffset).toBe(3);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
+  it('does not capture old DOM paths when presence metadata arrives before a document-change notification', async () => {
+    const plugin = new Plugin({ props: { decorations: state => {
+      const start = state.doc.child(0).type.name === 'blockquote' ? 3 : 2;
+      return DecorationSet.create(state.doc, [Decoration.inline(start, start + 3, { class: 'test-presence-range' })]);
+    } } });
+    const editor = createEditor({ schema: StarterKit.schema, plugins: [plugin], content: { type: 'doc', content: [paragraph('Edit here')] } });
+    // Collaboration subscribes before the view and may synchronously publish
+    // presence while the original document notification is still in flight.
+    let nativeCaptures = 0;
+    const unsubscribe = editor.subscribe((_state, transaction) => {
+      if (transaction.getMeta('fountain$selectionFromDOM') === true && ++nativeCaptures > 6) throw new Error('Repeated capture against unreconciled DOM');
+      if (transaction.docChanged || transaction.selectionSet) editor.dispatch(editor.createTransaction().setMeta('presence-update', true).setMeta('force', true));
+    });
+    const mount = document.createElement('div'); document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    try {
+      view.dom.focus(); editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([0, 0], 3)));
+      await settleSelection(); nativeCaptures = 0;
+      expect(() => toggleQuote(editor)).not.toThrow();
+      await settleSelection();
+      expect(nativeCaptures).toBe(0);
+      expect(view.dom.querySelector('blockquote')?.textContent).toBe('Edit here');
+      expect(editor.state.selection).toEqual(Selection.cursor([0, 0, 0], 3));
+      view.dom.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: 'X' }));
+      expect(editor.state.doc.textContent).toBe('EdiXt here');
+    } finally { unsubscribe(); view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
   it.each(['quote', 'bullet', 'ordered', 'task'].flatMap(kind => [false, true].map(backward => ({ kind, backward }))))(
     'keeps native selection direction while $kind wrapping moves text paths (backward: $backward)', async ({ kind, backward }) => {
       const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: { type: 'doc', content: [

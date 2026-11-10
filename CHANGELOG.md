@@ -7,6 +7,13 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve native caret movement and backward selections during collaboration
+  presence and decoration updates. Capturing a browser selection no longer
+  schedules a stale restoration after the next arrow-key movement; explicit
+  editor commands still restore their intended selection. Structural commands
+  remain responsive when nested presence updates arrive before the new document
+  has rendered.
+
 - Reserve retained collaboration storage for a complete transaction before
   changing shared data. Storage/formatting capacity refusals keep the local
   draft and leave peers unchanged, including multi-step and hidden-text cases.

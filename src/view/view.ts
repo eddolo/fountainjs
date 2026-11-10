@@ -118,6 +118,7 @@ export class EditorView {
   private readonly dropCursor?: DropCursorManager;
   private overlayWidgets?: WidgetOverlayLayer;
   private renderedDecorations = DecorationSet.empty;
+  private renderedDocument?: Node;
   private readonly unsubscribe: () => void;
   private readonly unregisterTableDirectionRoot: () => void;
   private nodeViews: MountedNodeView[] = [];
@@ -128,6 +129,7 @@ export class EditorView {
   private mutationObserver?: MutationObserver;
   private decorations = DecorationSet.empty;
   private destroyed = false;
+  private selectionSyncVersion = 0;
   private readonly virtualLayout?: VirtualBlockLayout;
   private readonly virtualMinimumBlockCount: number = 250;
   private readonly virtualScrollTarget?: HTMLElement | Window;
@@ -276,24 +278,56 @@ export class EditorView {
       || (transaction.selectionSet && transaction.getMeta('fountain$collaborationRemote') !== true);
     const decorations = this.collectDecorations(state);
     const content = decorations.decorations.filter(decoration => !(decoration.type === 'widget' && decoration.spec.overlay));
-    if (transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout))
+    const renderContent = transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout))
       || content.length !== this.renderedDecorations.decorations.length
-      || content.some((decoration, index) => !decoration.eq(this.renderedDecorations.decorations[index]!))) {
+      || content.some((decoration, index) => !decoration.eq(this.renderedDecorations.decorations[index]!));
+    // Claim this reconciliation before NodeView/render hooks can dispatch a
+    // newer transaction synchronously.
+    const syncVersion = renderContent || transaction.selectionSet ? ++this.selectionSyncVersion : this.selectionSyncVersion;
+    const DOMMatchesDocument = this.renderedDocument === state.doc;
+    const restoreNativeSelection = DOMMatchesDocument && !transaction.docChanged
+      && (transaction.getMeta('fountain$selectionFromDOM') === true || renderContent && !transaction.selectionSet);
+    if (renderContent && DOMMatchesDocument && !transaction.docChanged && !transaction.selectionSet
+      && !this.input.composing && this.selections.ownsDOMSelection()) {
+      // A decoration update can arrive between native arrow movement and
+      // selectionchange. Capture that movement before replacing its DOM.
+      this.selections.capture();
+      if (this.editor.state !== state) return;
+    }
+    if (renderContent) {
       this.render(state.doc, decorations, transaction);
     } else this.syncOverlayWidgets(state.doc, decorations);
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);
     this.blockHandles?.syncSelection(state.selection);
+    // Presence/status and overlay-only updates do not own the user's caret.
+    // Native navigation may already have moved ahead of the model snapshot.
+    if (!renderContent && !transaction.selectionSet) return;
+    if (syncVersion !== this.selectionSyncVersion || this.editor.state.doc !== state.doc
+      || !this.editor.state.selection.eq(state.selection)) return;
     const active = this.dom.ownerDocument.activeElement;
     const externalControlFocused = active && active !== this.dom.ownerDocument.body
       && active !== this.dom.ownerDocument.documentElement && !this.dom.contains(active);
+    if (restoreNativeSelection) {
+      // Captured native endpoints (or endpoints replaced by decorations) must
+      // settle before keydown defaults advance them. A later microtask would
+      // overwrite that native movement. sync preserves equivalent DOM ranges.
+      if (externalControlFocused) this.selections.preservePendingModelSyncForFocus();
+      this.selections.sync(state.selection, ownsDOMSelection);
+      return;
+    }
     this.selections.requestModelSync(Boolean(transaction.selectionSet && externalControlFocused
       && transaction.getMeta('fountain$collaborationRemote') !== true));
     queueMicrotask(() => {
-      // A synchronous nested dispatch (for example restoring a resize control)
-      // can supersede this snapshot before its DOM selection task runs.
-      if (!this.destroyed && this.editor.state === state) {
-        this.selections.sync(state.selection, ownsDOMSelection);
+      // Metadata may supersede the state object without changing the required
+      // landing. A newer document or selection still cancels this snapshot.
+      if (!this.destroyed && syncVersion === this.selectionSyncVersion
+        && this.editor.state.doc === state.doc && this.editor.state.selection.eq(state.selection)) {
+        const focused = this.dom.ownerDocument.activeElement;
+        const movedToControl = focused !== active && focused && focused !== this.dom.ownerDocument.body
+          && focused !== this.dom.ownerDocument.documentElement && !this.dom.contains(focused);
+        if (movedToControl) this.selections.requestModelSync(true);
+        this.selections.sync(state.selection, ownsDOMSelection && !movedToControl);
         if (revealVirtualCaret && ownsDOMSelection && state.selection.isCollapsed
           && this.dom.ownerDocument.activeElement === this.dom) this.revealCaret();
       }
@@ -386,6 +420,7 @@ export class EditorView {
     } else {
       this.documentNodes = renderDocument(this.dom, document, context);
     }
+    this.renderedDocument = document;
     refreshSharedDirectionDOM(this.dom, document);
     this.renderedDecorations = contentDecorations;
     const retained = new Set(mounted.map((entry) => entry.nodeView));

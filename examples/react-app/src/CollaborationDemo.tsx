@@ -6,13 +6,12 @@ import {
 } from 'fountainjs-editor';
 import { InMemoryCommentsStore, connectComments, createCommentThread, createCommentsExtension, disconnectComments, getCommentsState, replaceCommentsAdapter } from 'fountainjs-editor/comments';
 import {
-  createRetainedYjsCollaborationExtension, RetainedYjsCollaborationAdapter,
-} from 'fountainjs-editor/experimental/yjs-retained';
+  createYjsCollaborationExtension, YjsCollaborationAdapter, type YjsAwareness,
+} from 'fountainjs-editor/yjs';
 import { FountainComposer, useFountain, useFountainState } from 'fountainjs-editor/react';
 import { FountainComments } from 'fountainjs-editor/react/comments';
 import { createStableNodeIdsExtension } from 'fountainjs-editor/node-ids';
 import { defineStructuredAttribute, insertStructuredAttributeItems, setStructuredAttribute } from 'fountainjs-editor/structured-attributes';
-import type { YjsAwareness } from 'fountainjs-editor/yjs';
 import { downloadDocumentFile } from './math-document-files';
 
 class DemoAwarenessHub {
@@ -136,7 +135,7 @@ function createSession(room: DemoRoom) {
   const rightDocument = new Y.Doc();
   const awareness = new DemoAwarenessHub();
   const content = roomContent(room);
-  const seed = composeExtensions([CoreExtension, collaborationSettingsExtension, createRetainedYjsCollaborationExtension({
+  const seed = composeExtensions([CoreExtension, collaborationSettingsExtension, createYjsCollaborationExtension({
     document: leftDocument, user: ada, structuredAttributes: collaborationStructuredAttributes,
   })]);
   const editor = createEditor({ schema: seed.schema, plugins: seed.plugins, content });
@@ -192,7 +191,7 @@ export default function CollaborationDemo() {
       CoreExtension,
       collaborationSettingsExtension,
       collaborationSettingsIds,
-      createRetainedYjsCollaborationExtension(authorOptions(sessions.launch, author)),
+      createYjsCollaborationExtension(authorOptions(sessions.launch, author)),
       createCommentsExtension({ adapter: () => sessions.launch.comments.createAdapter(), user: { id: author.id, name: author.name } }),
     ]);
     return { sessions, leftKit: kit(ada), rightKit: kit(grace) };
@@ -231,8 +230,8 @@ export default function CollaborationDemo() {
     const session = room.sessions[nextRoom];
     replaceCommentsAdapter(left, session.comments.createAdapter(), { connect: false });
     replaceCommentsAdapter(right, session.comments.createAdapter(), { connect: false });
-    const leftOpened = replaceCollaborationAdapter(left, () => new RetainedYjsCollaborationAdapter(authorOptions(session, ada)));
-    const rightOpened = replaceCollaborationAdapter(right, () => new RetainedYjsCollaborationAdapter(authorOptions(session, grace)));
+    const leftOpened = replaceCollaborationAdapter(left, () => new YjsCollaborationAdapter(authorOptions(session, ada)));
+    const rightOpened = replaceCollaborationAdapter(right, () => new YjsCollaborationAdapter(authorOptions(session, grace)));
     const adaConnected = leftOpened && getCollaborationState(left)?.status === 'connected';
     const graceConnected = rightOpened && getCollaborationState(right)?.status === 'connected';
     if (!adaConnected || !graceConnected) {
@@ -283,7 +282,7 @@ export default function CollaborationDemo() {
       <div className="collaboration-demo__intro">
         <div><span>REAL-TIME COLLABORATION</span><h2>Two editors. <span className="keep-together">One convergent</span> document.</h2></div>
         <div>
-          <p>This preview runs the experimental retained Yjs adapter with two in-memory peers. Each room has its own document. Type or select on either side and watch the other follow.</p>
+          <p>This preview uses the unreleased default Yjs adapter with two in-memory peers. Each room has its own document. Type or select on either side and watch the other follow.</p>
           <p><strong>No FountainJS server or account is required.</strong> Transport, authentication, room access, and persistence stay replaceable.</p>
         </div>
       </div>
@@ -369,7 +368,7 @@ export default function CollaborationDemo() {
         <FountainComments key={activeRoom} editor={left} title="Shared review" onError={(error) => console.error(error)} />
       </div>}
       <div className="collaboration-demo__boundary">
-        <code>fountainjs-editor/experimental/yjs-retained</code>
+        <code>fountainjs-editor/yjs</code>
         <span>CRDT document + nested attributes + relative positions + local-origin undo</span>
         <code>fountainjs-editor/comments</code>
         <span>Mapped anchors + storage operations + permissions</span>

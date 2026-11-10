@@ -175,17 +175,50 @@ undo and redo.
 The subsequent audit fixes rejection after partial shared writes and mutable
 host options redirecting a pending checkpoint or connection cleanup. See
 [transaction capacity](YJS_RETAINED_CAPACITY_AUDIT.md) and
-[session ownership](YJS_PROVIDER_LIFECYCLE_AUDIT.md). The full source run now
-passes **5,118 tests in 318 files**, with zero failures or skips. Build, types,
+[session ownership](YJS_PROVIDER_LIFECYCLE_AUDIT.md). At checkpoint `f70f9bdc`, the full source run
+passed **5,118 tests in 318 files**, with zero failures or skips. Build, types,
 package consumers, server/headless, format checks and existing performance
 limits pass. The CommonJS aggregate allowance increases from 1,409.5 to
 1,414.25 KiB for the measured 1,414.1 KiB build; other limits stay unchanged.
 
 The ordinary public-demo audit exposed a separate Firefox native-caret race
-during metadata updates, before the merge operation. It remains under active
-investigation. Three guide checks also used an obsolete compatibility-example
-label. These browser failures are retained; this is not release clearance.
+during metadata updates, before the merge operation. The subsequent repair is
+recorded below. Three guide checks also used an obsolete compatibility-example
+label. These browser failures are retained; this checkpoint was not release clearance.
 Receipt: `artifacts/yjs-capacity-verification-20261110.json`.
+
+## Native selection follow-up
+
+The view now distinguishes native selection capture from explicit commands and
+passive metadata updates. It preserves pending browser movement, backward ranges,
+decoration redraws, external control focus and nested NodeView selections. Native
+capture requires the DOM to represent the current document, preventing recursive
+presence updates during a structural edit. See [the recorded failure and repair](SELECTION_METADATA_AUDIT.md).
+
+The full source run passes **5,134 tests in 318 files**, with zero failures or
+skips. The public homepage now uses `fountainjs-editor/yjs`, including room
+switches, rather than the equivalent experimental entry. Its three-engine run
+has **57 passes, two existing clipboard skips and one Chromium fixture-startup
+failure**. The trace records `ERR_NO_BUFFER_SPACE` while loading a source module;
+the unchanged isolated case then passes. All six offline editing scenarios,
+including the original Firefox caret failure, pass in all three engines.
+
+The broader native editing run passes 39 checks initially. Three paragraph-join
+checks had counted the fixture's non-document `Remote` widget as document text.
+Trace snapshots prove the model was correct. Stronger assertions require both
+exact rendered/model content and retained non-editable widget state; those three
+checks and three existing decoration checks pass afterward. This preserves the
+original keyboard actions, geometry checks and document expectations.
+
+All **45 default-adapter browser journeys** pass again after the selection
+repair, including offline deletion recovery, author undo, room replacement,
+native navigation and file reopening. The website build and final type/package
+checks pass. Evidence: `artifacts/selection-verification-20261110.json`.
+
+The CommonJS aggregate allowance grows by 0.75 KiB, from 1,414.25 to 1,415 KiB,
+for the measured 1,414.9 KiB build. All other size and runtime limits stay fixed.
+The earlier Firefox migration-fixture cold-start delay is a separate unresolved
+observation. Full release CI and production adoption remain required.
 
 ## Adoption checkpoint verification — 2c28c0ea
 

@@ -678,7 +678,9 @@ const limits = Object.freeze({
   // Whole-transaction retained capacity preflight and stable provider ownership
   // measure 1414.1 KiB. Allow 4.75 KiB for these data-preservation repairs;
   // keep the failed receipt and every other code/CSS/runtime/heap cap unchanged.
-  'all CommonJS runtime code': 1414.25 * kibibyte,
+  // Native selection ownership and deferred command reconciliation measure
+  // 1414.9 KiB. Add 0.75 KiB for this repair; all other limits remain unchanged.
+  'all CommonJS runtime code': 1415 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });
