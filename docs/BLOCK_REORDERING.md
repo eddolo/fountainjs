@@ -115,6 +115,12 @@ overwriting the node background, so dark code and source-owned custom colours
 remain legible. The stronger ring and separate drop rule remain distinct.
 Hosts may replace this CSS treatment; none of it enters document data or exports.
 
+A custom NodeView can use native dragging to transfer host data. Return
+`true` from `stopEvent` for the drag events the NodeView owns. In the unreleased
+build, selection changes preserve draggable attributes supplied by the
+NodeView and restore the editor’s temporary attribute when selection leaves
+the block.
+
 While dragging, only schema-valid targets show a visible before/after rule. The
 rule is a separate overlay from both the target-block highlight and the grabbed
 source state; it answers where the block will land rather than which block is

@@ -4458,6 +4458,41 @@ test('moves a selected top-level block through native drag data', async ({ page 
   ))).toEqual(['Alpha Beta', 'Second paragraph', '', '']);
 });
 
+test('keeps a custom block’s native drag after the editor selects another block', async ({ page }, info) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const counter = editor.locator('[data-browser-counter]');
+  await counter.evaluate(element => {
+    const host = element as HTMLElement;
+    host.draggable = true;
+    host.addEventListener('dragstart', event => event.dataTransfer?.setData('text/plain', 'Counter from host'));
+    const target = document.createElement('div');
+    target.setAttribute('role', 'status');
+    target.setAttribute('aria-label', 'External drop target');
+    target.style.cssText = 'position:fixed;right:24px;top:100px;z-index:1000;padding:24px;border:2px dashed #4160c0;background:white;color:black';
+    target.textContent = 'Drop the custom block here';
+    target.addEventListener('dragover', event => event.preventDefault());
+    target.addEventListener('drop', event => {
+      event.preventDefault();
+      target.textContent = event.dataTransfer?.getData('text/plain') ?? '';
+    });
+    document.body.append(target);
+  });
+  const original = await page.evaluate(() => {
+    const { editor, commands, view } = (globalThis as any).fountainBrowserTest;
+    view.focus();
+    commands.commands.selectNode([0]);
+    return editor.getJSON();
+  });
+  const first = editor.locator('[data-fountain-path="0"]');
+  await expect(first).toHaveAttribute('draggable', 'true');
+  await expect(counter).toHaveAttribute('draggable', 'true');
+  const target = page.getByRole('status', { name: 'External drop target' });
+  await counter.dragTo(target);
+  await expect(target).toHaveText('Counter from host');
+  expect(await page.evaluate(() => (globalThis as any).fountainBrowserTest.editor.getJSON())).toEqual(original);
+  await page.screenshot({ path: info.outputPath('custom-native-drop.png') });
+});
+
 test('shows a host-replaceable drop cursor for inline text and atomic block targets', async ({ page }) => {
   const result = await page.evaluate(() => {
     const editor = document.querySelector<HTMLElement>('[aria-label="Browser contract editor"]');

@@ -12,6 +12,7 @@ import {
   EditorView,
   GapSelection,
   NodeSelection,
+  type Node,
   Plugin,
   PluginKey,
   Selection,
@@ -32,6 +33,46 @@ const paragraph = (value: string) => ({
 const settleSelection = () => new Promise<void>((resolve) => queueMicrotask(resolve));
 
 describe('semantic selection DOM bridge', () => {
+  it('only restores the draggable attribute temporarily set by a node selection', async () => {
+    class DragNodeView {
+      dom = document.createElement('section');
+      constructor(node: Node) {
+        this.dom.setAttribute('draggable', String(node.attrs.draggable));
+        const handle = document.createElement('button');
+        handle.draggable = true;
+        this.dom.append(handle);
+      }
+    }
+    const kit = composeExtensions([CoreExtension, defineExtension({ name: 'native-drag-node',
+      nodes: { drag_node: { group: 'block', atom: true, attrs: { draggable: { default: false } }, nodeView: DragNodeView } } })]);
+    const editor = createEditor({ schema: kit.schema, content: { type: 'doc', content: [
+      { type: 'drag_node', attrs: { draggable: true } }, { type: 'drag_node' }, paragraph('After'),
+    ] } });
+    const mount = document.createElement('div');
+    document.body.append(mount);
+    const view = new EditorView(mount, editor), native = document.getSelection()!;
+    const host = view.dom.querySelector<HTMLElement>('[data-fountain-path="0"]')!;
+    const selected = view.dom.querySelector<HTMLElement>('[data-fountain-path="1"]')!;
+    const selectBlock = () => editor.dispatch(editor.createTransaction().setSelection(new NodeSelection(editor.state.doc, [1])));
+    try {
+      view.dom.focus();
+      selectBlock();
+      await settleSelection();
+      expect(selected.getAttribute('draggable')).toBe('true');
+      expect(host.getAttribute('draggable')).toBe('true');
+      expect(host.querySelector('button')?.draggable).toBe(true);
+      expect(selected.querySelector('button')?.draggable).toBe(true);
+      editor.dispatch(editor.createTransaction().setSelection(Selection.cursor([2, 0], 1)));
+      await settleSelection();
+      expect(selected.getAttribute('draggable')).toBe('false');
+      selectBlock();
+      await settleSelection();
+      view.destroy();
+      expect(selected.getAttribute('draggable')).toBe('false');
+      expect(host.draggable).toBe(true);
+    } finally { view.destroy(); editor.destroy(); mount.remove(); native.removeAllRanges(); }
+  });
+
   it('finds exact text and block endpoints without enumerating all mounted paths', async () => {
     const content = Array.from({ length: 128 }, (_, index) => paragraph(`Paragraph ${index}`));
     const editor = createEditor({ schema: StarterKit.schema, content: { type: 'doc', content } });

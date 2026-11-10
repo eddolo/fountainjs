@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Preserve custom blocks’ native drag controls when editor selection changes.
+
 - Restore editor selections by looking up their exact DOM paths, avoiding
   temporary lists of every mounted text or block path.
 

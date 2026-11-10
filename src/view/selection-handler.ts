@@ -71,6 +71,7 @@ export class SelectionHandler {
   private pendingFocusSelection = false;
   #domSyncRequested = false;
   #releaseViewSelection: () => void;
+  #selectionDrag?: readonly [HTMLElement, string | null];
 
   constructor(
     private readonly editor: Editor,
@@ -397,7 +398,10 @@ export class SelectionHandler {
       const element = this.nodeElement(selection.nodePath) ?? this.textElement(selection.nodePath);
       if (!element) return this.finishSync();
       element.dataset.fountainSelectedNode = 'true';
-      if (selection.nodePath.length === 1) element.draggable = true;
+      if (selection.nodePath.length === 1 && !element.draggable) {
+        this.#selectionDrag = [element, element.getAttribute('draggable')];
+        element.draggable = true;
+      }
       // Updating a selected node must not move the browser caret out of its
       // own native form control. Selecting a different node or explicitly
       // focusing the editor still applies the requested document selection.
@@ -533,6 +537,7 @@ export class SelectionHandler {
   }
 
   destroy(): void {
+    this.#restoreDragSource();
     this.#releaseViewSelection();
     document.removeEventListener('selectionchange', this.onSelectionChange);
     this.dom.removeEventListener('focus', this.onHostFocus);
@@ -721,13 +726,22 @@ export class SelectionHandler {
   }
 
   private clearSemanticSelectionMarkers(): void {
-    this.dom.querySelectorAll<HTMLElement>('[data-fountain-selected-node], [data-fountain-selected-cell], [data-fountain-gap], [draggable="true"]')
+    this.#restoreDragSource();
+    this.dom.querySelectorAll<HTMLElement>('[data-fountain-selected-node], [data-fountain-selected-cell], [data-fountain-gap]')
       .forEach((element) => {
         delete element.dataset.fountainSelectedNode;
         delete element.dataset.fountainSelectedCell;
         delete element.dataset.fountainGap;
-        element.removeAttribute('draggable');
       });
+  }
+
+  #restoreDragSource(): void {
+    const source = this.#selectionDrag;
+    this.#selectionDrag = undefined;
+    if (!source || source[0].getAttribute('draggable') !== 'true') return;
+    const [element, original] = source;
+    if (original === null) element.removeAttribute('draggable');
+    else element.setAttribute('draggable', original);
   }
 
   private applyDOMSelection(domSelection: globalThis.Selection, range: Range): void {
