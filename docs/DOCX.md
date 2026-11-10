@@ -657,8 +657,11 @@ independent browser viewer leaves the fixture's page-number field blank: **field
 structure is verified, displayed page-number fidelity is not**. Complex or other
 field instructions are omitted with a warning. This also applies to unsupported
 fields in the document body and footnotes. Ordinary cached result runs remain
-editable and export as static text. Arbitrary formatting switches, nested
-complex-field structure and field evaluation remain outside this bridge.
+editable and export as static text. A nested field's cached result stays
+hidden while it belongs to an enclosing instruction. Marker pairing spans
+paragraphs within the same story. Unclosed fields leave ordinary runs visible.
+Field evaluation and preservation of dynamic field structure remain open.
+[Word complex field markers](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.fieldchar).
 
 The [Microsoft header-reference documentation](https://learn.microsoft.com/en-us/office/open-xml/word/how-to-replace-the-header-in-a-word-processing-document)
 describes the section/variant selection rules used here. Regression evidence:

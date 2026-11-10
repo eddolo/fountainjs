@@ -1,4 +1,4 @@
-import { expandedXMLName as expanded } from './xml-names';
+import { expandedXMLName as expanded, qualifiedWordAttribute } from './xml-names';
 import type { XMLElement } from './xml-types';
 
 const DRAWING_NS = 'http://schemas.openxmlformats.org/drawingml/2006/main';
@@ -11,10 +11,7 @@ function one(parent: XMLElement | undefined, namespace: string, name: string): X
   return matches[0];
 }
 function wordAttribute(element: XMLElement | undefined, name: string): string | undefined {
-  if (!element) return undefined;
-  const matches = Object.entries(element.attrs).filter(([key]) => key !== 'xmlns' && !key.startsWith('xmlns:') && expanded(element, key, true) === `${WORD_NS}|${name}`);
-  if (matches.length > 1) throw new Error(`Ambiguous Word theme language attribute ${name}.`);
-  return matches[0]?.[1];
+  return element && qualifiedWordAttribute(element, name);
 }
 
 export type ThemeFontResult = { readonly name: string } | { readonly reason: 'unknown-theme-font' | 'missing-theme-font' | 'language-dependent-theme-font' };

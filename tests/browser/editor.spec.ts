@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
-import { wordBodyWithFields } from '../fixtures/docx-body-fields';
+import { wordBodyWithFields, wordBodyWithNestedField } from '../fixtures/docx-body-fields';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -352,7 +352,7 @@ test('edits cached Word field results without exposing instructions in the conve
   const source = Buffer.from(zipSync({
     '[Content_Types].xml': strToU8('<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'),
     '_rels/.rels': strToU8('<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'),
-    [part]: strToU8(`<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${wordBodyWithFields}</w:body></w:document>`),
+    [part]: strToU8(`<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${wordBodyWithFields}${wordBodyWithNestedField}</w:body></w:document>`),
   }));
   await writeFile(info.outputPath('source.docx'), source);
   await page.goto('/conversion-lab.html');
@@ -364,8 +364,11 @@ test('edits cached Word field results without exposing instructions in the conve
   const paragraphs = editor.locator(':scope > p');
   await expect(paragraphs.nth(0)).toHaveText('Figure 4');
   await expect(paragraphs.nth(1)).toHaveText('May 1');
+  await expect(paragraphs.nth(2)).toHaveText('Condition: Equal 7');
   await expect(editor).not.toContainText('REF figure1');
-  await expect(workspace.getByText(/Word field instructions were omitted/)).toBeVisible();
+  const complexFieldWarnings = workspace.getByRole('listitem').filter({ hasText: 'Word field instructions were omitted' });
+  await expect(complexFieldWarnings).toHaveCount(2);
+  await expect(complexFieldWarnings.filter({ hasText: 'Document path: 2' })).toBeVisible();
   await expect(workspace.getByText(/Only the cached result of the Word field/)).toBeVisible();
   await editor.getByText('Figure 4', { exact: true }).click();
   await page.keyboard.press('End');
@@ -381,6 +384,7 @@ test('edits cached Word field results without exposing instructions in the conve
   await download.saveAs(exportedPath);
   const exported = strFromU8(unzipSync(await readFile(exportedPath))[part]!);
   expect(exported).toContain('Figure 4 reviewed');
+  expect(exported).toContain('Condition: Equal 7');
   expect(exported).not.toMatch(/instrText|fldChar|fldSimple|figure1/);
 });
 

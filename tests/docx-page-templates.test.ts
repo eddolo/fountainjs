@@ -109,6 +109,28 @@ describe('native DOCX page templates', () => {
     expect(read(exported.bytes).document.content.slice(0, 2).map(node => node.textContent)).toEqual(['Figure 4', 'May 1']);
   });
 
+  it('keeps nested cached values only inside the visible part of their enclosing field', () => {
+    const marker = (type: string) => `<w:r><w:fldChar w:fldCharType="${type}"/></w:r>`;
+    const run = (value: string) => `<w:r><w:t>${value}</w:t></w:r>`;
+    const code = '<w:r><w:instrText> FIELD </w:instrText></w:r>';
+    const cached = (value: string) => marker('begin') + code + marker('separate') + run(value) + marker('end');
+    const body = '<w:p>' + run('Before') + marker('begin') + code + cached('Hidden argument')
+      + '<w:fldSimple w:instr="DATE">' + run('Hidden simple field') + '</w:fldSimple>'
+      + '</w:p><w:p>' + marker('separate') + run('Result') + cached(' Visible nested result')
+      + marker('end') + run(' After') + '</w:p>'
+      + '<w:p>' + marker('begin') + code + run('Hidden field without a result') + marker('end') + run('Visible') + '</w:p>'
+      + '<w:p>' + marker('begin') + code + run('Literal text in an unclosed field') + '</w:p>';
+    const footer = '<w:p>' + marker('end') + run('Independent story') + marker('begin') + code
+      + cached('Hidden footer argument') + marker('separate') + run(' footer result') + marker('end') + '</w:p>';
+    const result = read(input({ body, footer }));
+    expect(result.document.content.slice(0, 4).map(node => node.textContent)).toEqual([
+      'Before', 'Result Visible nested result After', 'Visible', 'Literal text in an unclosed field',
+    ]);
+    expect(result.document.child(5).textContent).toBe('Independent story footer result');
+    expect(result.report.issues.filter(issue => issue.code === 'unsupported-complex-word-field').map(issue => issue.sourcePart))
+      .toEqual([...Array(4).fill('word/document.xml'), 'word/footer1.xml']);
+  });
+
   it('rejects duplicate variants, missing/ambiguous relationships, wrong roots and oversized stories', () => {
     expect(() => read(input({ section: '<w:headerReference w:type="default" r:id="head"/><w:headerReference w:type="default" r:id="head"/>' }))).toThrow('duplicate');
     expect(() => read(input({ relationships: `<Relationship Id="head" Type="${r}/header" Target="footer1.xml"/>` }))).toThrow('invalid relationship');

@@ -15,8 +15,8 @@ export function expandedXMLName(element: XMLElement, name = element.name, attrib
 export function qualifiedWordAttribute(element: XMLElement, local: string): string | undefined {
   const matches = Object.entries(element.attrs).filter(([name]) => {
     const colon = name.indexOf(':');
-    return colon > 0 && name.slice(colon + 1) === local
-      && element.namespaces[name.slice(0, colon)] === 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+    return colon > 0 && name.slice(colon + 1) === local && !name.startsWith('xmlns:')
+      && expandedXMLName(element, name, true) === `http://schemas.openxmlformats.org/wordprocessingml/2006/main|${local}`;
   });
   if (matches.length > 1) throw new Error(`Ambiguous Word attribute ${local}.`);
   return matches[0]?.[1];

@@ -1,7 +1,7 @@
 import { readWordListLayout, WORD_LIST_MARKER_FORMATS } from './list-layout';
 import { isListLayout, listMarkerAffixes, type ListLayout } from '../core/list-layout';
 import { readWordNumbering as readNumbering, readWordNumberingReference, type WordNumberingLevel as NumberingLevel } from './numbering';
-import { expandedXMLName as expandedName } from './xml-names';
+import { expandedXMLName as expandedName, qualifiedWordAttribute as wordPageAttribute } from './xml-names';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 
 import { Node as FountainNode, type Mark, type Schema } from '../core/schema';
@@ -352,6 +352,7 @@ interface ImportMediaContext {
   readonly sourcePart?: string;
   readonly footnotes?: ReadonlyMap<string, XMLElement>;
   readonly pageTemplate?: boolean;
+  readonly hiddenFieldContent?: WeakSet<XMLElement>;
   readonly themeFonts?: ReturnType<typeof readWordThemeFonts>;
   readonly styles?: ReturnType<typeof readWordStyleSheet>;
   readonly tableText?: WordTableTextFormatting;
@@ -498,6 +499,45 @@ function embeddedImageNode(
   return node;
 }
 
+const fieldContainers = /^(?:p|r|tbl|tr|tc|sdt|sdtContent|ins|hyperlink|fldSimple|smartTag|customXml|dir|bdo)$/;
+
+function hiddenComplexFieldContent(story: XMLElement): WeakSet<XMLElement> | undefined {
+  const boundaries = new Map<XMLElement, number>();
+  const open: [begin: XMLElement, separator?: XMLElement][] = [];
+  function walk(parent: XMLElement, visit: (item: XMLElement, parent: XMLElement) => void) {
+    for (const item of elements(parent)) {
+      visit(item, parent);
+      const name = localName(item.name);
+      if (fieldContainers.test(name) && expandedName(item) === `${WORD_NS}|${name}`) walk(item, visit);
+    }
+  }
+  // Pair markers before hiding anything. An unclosed field leaves its ordinary
+  // runs visible. Story boundaries also prevent an orphan marker hiding a note.
+  walk(story, (item, parent) => {
+    if (localName(item.name) !== 'fldChar' || expandedName(item) !== `${WORD_NS}|fldChar`
+      || expandedName(parent) !== `${WORD_NS}|r`) return;
+    const type = wordPageAttribute(item, 'fldCharType');
+    if (type === 'begin') open.push([item]);
+    else if (type === 'separate') {
+      const field = open.at(-1);
+      if (field) field[1] ??= item;
+    } else if (type === 'end') {
+      const field = open.pop();
+      if (field) {
+        boundaries.set(field[0], 1).set(field[1] ?? item, -1);
+      }
+    }
+  });
+  if (!boundaries.size) return;
+  const hidden = new WeakSet<XMLElement>();
+  let depth = 0;
+  walk(story, item => {
+    depth += boundaries.get(item) ?? 0;
+    if (depth) hidden.add(item);
+  });
+  return hidden;
+}
+
 function inlineContent(container: XMLElement, schema: Schema, media: ImportMediaContext, issues: DOCXIssue[], path: readonly number[]): FountainNode[] {
   const output: FountainNode[] = [];
   const sourcePart = media.sourcePart ?? 'word/document.xml';
@@ -519,6 +559,7 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
   const visit = (element: XMLElement, hyperlink?: string) => {
     const name = localName(element.name);
     if (name === 'fldSimple' && expandedName(element) === `${WORD_NS}|fldSimple`) {
+      if (media.hiddenFieldContent?.has(element)) return;
       const field = media.pageTemplate && /^(PAGE|NUMPAGES)(?:\s+\\\*\s+MERGEFORMAT)?$/i.exec((wordPageAttribute(element, 'instr') ?? '').trim());
       if (field && schema.nodes.page_field) {
         const firstRun = descendants(element, 'r')[0];
@@ -536,6 +577,7 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
       return;
     }
     if (name === 'oMath' || name === 'oMathPara') {
+      if (media.hiddenFieldContent?.has(element)) return;
       const restored = media.restoredMath.get(element);
       if (restored) {
         output.push(restored);
@@ -576,7 +618,8 @@ function inlineContent(container: XMLElement, schema: Schema, media: ImportMedia
             reportedComplexField = true;
             issues.push({ code: 'unsupported-complex-word-field', severity: 'warning', message: 'Word field instructions were omitted. Ordinary cached result text remains editable.', path, sourcePart });
           }
-        } else if (itemName === 't' || itemName === 'delText') {
+        } else if (media.hiddenFieldContent?.has(item)) continue;
+        else if (itemName === 't' || itemName === 'delText') {
           // An actual empty native text element retains a caret leaf and its run formatting.
           appendText(textContent(item), marks, expandedName(item) === `${WORD_NS}|t`);
         }
@@ -909,7 +952,7 @@ function structuralControl(element: XMLElement): { tag: string; content: XMLElem
   if (fields.some(item => !['alias', 'id', 'tag'].some(name => expandedName(item) === `${WORD_NS}|${name}`))) return;
   const tags = fields.filter(item => expandedName(item) === `${WORD_NS}|tag`);
   if (tags.length !== 1) return;
-  const tag = namespacedAttr(tags[0]!, 'val');
+  const tag = wordPageAttribute(tags[0]!, 'val');
   return tag ? { tag, content: contents[0]!, index: children.indexOf(contents[0]!) } : undefined;
 }
 
@@ -1395,12 +1438,6 @@ interface MathSourceRecord {
 
 
 
-function namespacedAttr(element: XMLElement, name: string): string | undefined {
-  const matches = Object.entries(element.attrs).filter(([key]) => !key.startsWith('xmlns') && expandedName(element, key, true) === `${WORD_NS}|${name}`);
-  if (matches.length > 1) throw new Error('Duplicate expanded bookmark attribute.');
-  return matches[0]?.[1];
-}
-
 /** Compare complete expanded-name trees, not flattened mathematical text.
  * Prefix spelling, attribute order and indentation outside math tokens may
  * change; all properties and token content must otherwise remain identical.
@@ -1457,22 +1494,22 @@ function restoreMathSources(document: XMLElement, metadata: XMLElement | undefin
     const startCounts = new Map<string, number>();
     const endCounts = new Map<string, number>();
     for (const start of starts) {
-      const name = namespacedAttr(start, 'name') ?? '';
-      const id = namespacedAttr(start, 'id') ?? '';
+      const name = wordPageAttribute(start, 'name') ?? '';
+      const id = wordPageAttribute(start, 'id') ?? '';
       const named = startsByName.get(name);
       if (named) named.push(start);
       else startsByName.set(name, [start]);
       startCounts.set(id, (startCounts.get(id) ?? 0) + 1);
     }
     for (const end of ends) {
-      const id = namespacedAttr(end, 'id') ?? '';
+      const id = wordPageAttribute(end, 'id') ?? '';
       endCounts.set(id, (endCounts.get(id) ?? 0) + 1);
     }
     const siblings = new Map<XMLElement, readonly XMLChild[]>();
     const collect = (node: XMLElement) => {
       const content = node.children.filter(item => typeof item !== 'string' || item.trim());
       for (const item of elements(node)) {
-        if (localName(item.name) === 'bookmarkStart' && ids.has(namespacedAttr(item, 'name') ?? '')) siblings.set(item, content);
+        if (localName(item.name) === 'bookmarkStart' && ids.has(wordPageAttribute(item, 'name') ?? '')) siblings.set(item, content);
         collect(item);
       }
     };
@@ -1482,7 +1519,7 @@ function restoreMathSources(document: XMLElement, metadata: XMLElement | undefin
         const candidates = startsByName.get(record.id) ?? [];
         if (candidates.length !== 1) throw new Error('Equation bookmark is missing or duplicated.');
         const start = candidates[0]!;
-        const id = namespacedAttr(start, 'id');
+        const id = wordPageAttribute(start, 'id');
         if (!id || startCounts.get(id) !== 1 || endCounts.get(id) !== 1) throw new Error('Equation bookmark IDs are ambiguous.');
         const content = siblings.get(start)!;
         const index = content.indexOf(start);
@@ -1490,7 +1527,7 @@ function restoreMathSources(document: XMLElement, metadata: XMLElement | undefin
         const kind = record.kind === 'math_block' ? 'oMathPara' : 'oMath';
         if (!math || typeof math === 'string' || expandedName(math) !== `${MATH_NS}|${kind}`
           || !end || typeof end === 'string' || expandedName(end) !== `${WORD_NS}|bookmarkEnd`
-          || namespacedAttr(end, 'id') !== id) throw new Error('Equation bookmark no longer encloses exactly its projection.');
+          || wordPageAttribute(end, 'id') !== id) throw new Error('Equation bookmark no longer encloses exactly its projection.');
         const saved = elements(parseXML(record.omml, limits));
         if (saved.length !== 1 || mathTreeKey(math) !== mathTreeKey(saved[0]!)) throw new Error('Equation OMML changed; retained TeX was not restored.');
         const type = schema.nodes[record.kind];
@@ -1678,7 +1715,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     catch (error) { issues.push({ code: 'invalid-math-source-metadata', severity: 'warning', message: error instanceof Error ? error.message : String(error) }); }
   }
   const importedParts = new Set<string>();
-  const media: ImportMediaContext = { readImagePart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge };
+  const media: ImportMediaContext = { readImagePart, relationships, options, restoredMath, importedParts, footnotes, themeFonts, styles, paragraphBridge, hiddenFieldContent: hiddenComplexFieldContent(body) };
   const blocks = parseBlocks(body, schema, media, numbering, issues, []);
   const importedStories = new Set<string>();
   const sections = descendants(body, 'sectPr').filter(item => expandedName(item) === `${WORD_NS}|sectPr`);
@@ -1729,7 +1766,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
           const story = root && elements(root).find(item => expandedName(item) === `${WORD_NS}|${kind === 'header' ? 'hdr' : 'ftr'}`);
           if (!story) throw new Error('Invalid DOCX header/footer root.');
           const start = issues.length;
-          const content = parseBlocks(story, schema, { ...media, pageTemplate: true, sourcePart: target, relationships: relationshipMap(parse(relPart)), restoredMath: new Map() }, numbering, issues, [blocks.length]);
+          const content = parseBlocks(story, schema, { ...media, pageTemplate: true, sourcePart: target, relationships: relationshipMap(parse(relPart)), restoredMath: new Map(), hiddenFieldContent: hiddenComplexFieldContent(story) }, numbering, issues, [blocks.length]);
           for (let index = start; index < issues.length; index++) issues[index] = { ...issues[index]!, sourcePart: target };
           blocks.push(schema.node(`page_${kind}`, { variant }, content.length ? content : [schema.node('paragraph')]));
           importedStories.add(target);
@@ -1749,7 +1786,7 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
     for (const [id, note] of footnotes) {
       if (!referencedIds.has(id)) issues.push({ code: 'unreferenced-footnote-definition', severity: 'warning', message: 'A note without a body reference was retained as an editable definition. Reconnect or remove it before native DOCX export.', sourcePart: footnotePart, path: [blocks.length] });
       const issueStart = issues.length;
-      const content = parseBlocks(note, schema, noteMedia, numbering, issues, [blocks.length]);
+      const content = parseBlocks(note, schema, { ...noteMedia, hiddenFieldContent: hiddenComplexFieldContent(note) }, numbering, issues, [blocks.length]);
       for (let index = issueStart; index < issues.length; index++) issues[index] = { ...issues[index]!, sourcePart: footnotePart };
       blocks.push(schema.node('footnote_definition', { id }, content.length ? content : [schema.node('paragraph')]));
     }
@@ -1799,12 +1836,6 @@ export function importDOCX(input: Uint8Array | ArrayBuffer, schema: Schema, opti
 
 const PAGE_SIZE_KEYS = { width: 'w', height: 'h' } as const;
 const PAGE_MARGIN_KEYS = { marginTop: 'top', marginRight: 'right', marginBottom: 'bottom', marginLeft: 'left', headerDistance: 'header', footerDistance: 'footer', gutter: 'gutter' } as const;
-
-function wordPageAttribute(element: XMLElement, local: string): string | undefined {
-  const matches = Object.entries(element.attrs).filter(([name]) => name !== 'xmlns' && !name.startsWith('xmlns:') && localName(name) === local && expandedName(element, name, true) === `${WORD_NS}|${local}`);
-  if (matches.length > 1) throw new Error(`Ambiguous Word page attribute ${local}.`);
-  return matches[0]?.[1];
-}
 
 function readWordPageSettings(section: XMLElement, issues: DOCXIssue[]): DocumentPageSettings | undefined {
   const result: Record<string, unknown> = { unit: 'pt' };
