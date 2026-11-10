@@ -125,6 +125,59 @@ describe('public conversion lab adapters', () => {
     } finally { editor.destroy(); }
   });
 
+  it.each(['\n', '\r\n'])('preserves the complete mixed source when the author appends a paragraph (%j)', ending => {
+    const context = createLabContext({ commonMarkSourceReview: true });
+    const original = [
+      '<!DOCTYPE HTML>', '', '<script>const historical = 1;</script>', '', 'Original _emphasis_.', '',
+    ].join(ending);
+    const imported = importLab(bytes(original), 'markdown', context);
+    const appended = context.schema.node('paragraph', {}, [context.schema.text('New paragraph.')]);
+    const edited = imported.document.copy([...imported.document.content, appended]);
+    const output = exportLab(edited, 'markdown', imported.source, context);
+    expect(new TextDecoder().decode(output.bytes)).toBe(original + ending + 'New paragraph.');
+    expect(output.issues).toEqual([]);
+    expect(importLab(output.bytes, 'markdown', context).document.toJSON()).toEqual(edited.toJSON());
+
+    const index = imported.document.childCount - 1;
+    const replacement = context.schema.node('paragraph', {}, [context.schema.text('Revised paragraph.')]);
+    const revised = imported.document.copy([...imported.document.content.slice(0, index), replacement, appended]);
+    const saved = exportLab(revised, 'markdown', imported.source, context);
+    const expected = original.replace('Original _emphasis_.', 'Revised paragraph.') + ending + 'New paragraph.';
+    expect(new TextDecoder().decode(saved.bytes)).toBe(expected);
+    expect(saved.issues).toEqual([]);
+    expect(importLab(saved.bytes, 'markdown', context).document.toJSON()).toEqual(revised.toJSON());
+  });
+
+  it('omits the generated typing paragraph when a list is appended to mixed source', () => {
+    const context = createLabContext({ commonMarkSourceReview: true });
+    const original = '<!DOCTYPE HTML>\n\nOriginal _emphasis_.\n\n';
+    const imported = importLab(bytes(original), 'markdown', context);
+    const list = importLab(bytes('- New item'), 'markdown', context).document.child(0);
+    const edited = imported.document.copy([...imported.document.content, list]);
+    const editor = createEditor({ schema: context.kit.schema, state: EditorState.create({
+      schema: context.schema, doc: edited, plugins: context.kit.plugins,
+    }) });
+    try {
+      expect(editor.state.doc.childCount).toBe(edited.childCount + 1);
+      const output = exportLab(editor.state.doc, 'markdown', imported.source, context);
+      expect(new TextDecoder().decode(output.bytes)).toBe(original + '- New item');
+      expect(output.issues).toEqual([]);
+      expect(importLab(output.bytes, 'markdown', context).document.toJSON()).toEqual(edited.toJSON());
+    } finally { editor.destroy(); }
+  });
+
+  it('reports source rewriting if an unfinished HTML token would swallow appended content', () => {
+    const context = createLabContext({ commonMarkSourceReview: true });
+    const original = '<!DOCTYPE HTML>\n\n<div title="unfinished';
+    const imported = importLab(bytes(original), 'markdown', context);
+    const appended = context.schema.node('paragraph', {}, [context.schema.text('Keep the new text.')]);
+    const edited = imported.document.copy([...imported.document.content, appended]);
+    const output = exportLab(edited, 'markdown', imported.source, context);
+    expect(new TextDecoder().decode(output.bytes)).not.toBe(original + '\n\nKeep the new text.');
+    expect(output.issues).toContainEqual(expect.objectContaining({ code: 'markdown-source-rewritten' }));
+    expect(importLab(output.bytes, 'markdown', context).document.textContent).toContain('Keep the new text.');
+  });
+
   it('preserves untouched Markdown after the live editor adds an automatic caret paragraph', () => {
     const context = createLabContext({ preserveHTMLStructure: true });
     const source = '<section id="part">\n<p>Untouched</p>\n<!--note-->\n</section>\n';

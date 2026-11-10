@@ -91,4 +91,29 @@ export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo)
   await expect(htmlEditor.locator('[data-fountain-source-eof]')).toContainText('<div title="unfinished');
   expect(await page.evaluate(() => Reflect.has(window, 'sourceRan'))).toBe(false);
   await htmlEditor.screenshot({ path: info.outputPath('source-review-reopened-html.png') });
+
+  const appendSource = [
+    '<!DOCTYPE HTML>', '', '<script>window.sourceRan = true</script>', '', 'Original _emphasis_.', '',
+  ].join('\r\n');
+  await files.setInputFiles({ name: 'append-source.md', mimeType: 'text/markdown', buffer: Buffer.from(appendSource) });
+  const appendWorkspace = page.getByRole('region', { name: 'Conversion workspace: append-source.md' });
+  const appendEditor = appendWorkspace.getByRole('textbox', { name: 'Imported document editor' });
+  await appendEditor.locator('p').filter({ hasText: 'Original emphasis.' }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('New paragraph.');
+  await expect(appendEditor.locator('p').last()).toHaveText('New paragraph.');
+  await appendWorkspace.getByRole('combobox', { name: 'Export format' }).selectOption('markdown');
+  const appendDownload = page.waitForEvent('download');
+  await appendWorkspace.getByRole('button', { name: 'Download export', exact: true }).click();
+  const appendedPath = info.outputPath('appended-source.md');
+  await (await appendDownload).saveAs(appendedPath);
+  expect(await readFile(appendedPath, 'utf8')).toBe(appendSource + '\r\nNew paragraph.');
+  await files.setInputFiles(appendedPath);
+  const reopenedAppend = page.getByRole('region', { name: 'Conversion workspace: appended-source.md' })
+    .getByRole('textbox', { name: 'Imported document editor' });
+  await expect(reopenedAppend.locator('p').last()).toHaveText('New paragraph.');
+  await expect(reopenedAppend.locator('[data-fountain-inert-raw-text]')).toContainText('window.sourceRan = true');
+  expect(await page.evaluate(() => Reflect.has(window, 'sourceRan'))).toBe(false);
+  await reopenedAppend.screenshot({ path: info.outputPath('appended-source-editor.png') });
 }

@@ -5,7 +5,7 @@ import { MarkdownSourceSnapshot, type MarkdownLineEnding } from '../importers/ma
 import { escapeMarkdownEntityOpeners } from '../markdown-entities';
 import { HTMLExporter } from './html-exporter';
 import { literalLinkAttributes } from '../link-destination';
-import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator, rewriteMarkdownProjection } from '../markdown-source-boundary';
+import { hasMarkdownSourceProjection, markdownReferenceFooterValid, markdownSourceProjectionMatches, markdownSourceProjectionWithReferences, markdownSourceSeparator, rewriteMarkdownProjection, tailSourceSeparator } from '../markdown-source-boundary';
 import { draftMarkdownNestedSource, hasMarkdownNestedSource, renderMarkdownNestedSource } from '../markdown-nested-source';
 import { isAutomaticTrailingParagraph } from '../editing-provenance';
 
@@ -525,18 +525,6 @@ function withSourceFrontmatter(source: MarkdownSourceSnapshot, body: string): st
     ? source.lineEnding
     : '';
   return `${frontmatter}${separator}${body}`;
-}
-
-function tailSourceSeparator(separator: string, lineEnding: MarkdownLineEnding): string {
-  let cursor = separator.length, endings = 0;
-  while (cursor > 0) {
-    const character = separator[--cursor];
-    if (character === ' ' || character === '\t') continue;
-    if (character === '\n') { if (separator[cursor - 1] === '\r') cursor--; endings++; }
-    else if (character === '\r') endings++;
-    else break;
-  }
-  return separator + lineEnding.repeat(Math.max(0, 2 - endings));
 }
 
 function renderBlockSequence(nodes: readonly Node[], context: RenderContext, path: readonly number[], depth = 0): string {

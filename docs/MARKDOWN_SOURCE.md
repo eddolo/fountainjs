@@ -49,6 +49,10 @@ identify by a unique physical span, the source exporter rewrites that span and
 reparses the complete candidate with the original adapter. A successful proof
 retains the other source bytes, including declarations and an unfinished tag
 at EOF. It may omit an unchanged editor-generated trailing caret paragraph.
+Appending blocks keeps the original source when reparsing confirms that the
+new blocks remain separate. Earlier edits to independently owned spans can be
+saved in the same export. If an unfinished HTML token would absorb the
+addition, the exporter uses its reported canonical fallback.
 Ambiguous spans, changes to unowned regions, and failed proofs can still fall
 back to canonical Markdown, which the lab reports separately.
 

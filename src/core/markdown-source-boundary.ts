@@ -1,5 +1,5 @@
 import type { Node } from './schema';
-import type { MarkdownSourceBlockSnapshot, MarkdownSourceSnapshot } from './importers/markdown-importer';
+import type { MarkdownLineEnding, MarkdownSourceBlockSnapshot, MarkdownSourceSnapshot } from './importers/markdown-importer';
 import { isAutomaticTrailingParagraph } from './editing-provenance';
 
 type ParseSource = (source: string) => readonly Node[];
@@ -28,22 +28,34 @@ export function registerMarkdownSourceProjection(source: MarkdownSourceSnapshot,
   projections.set(source, { parse, capture });
 }
 
-/** Whole-document HTML projection can consume or merge source blocks. Edit
- * only independently identified spans, leaving all other source in place. */
+export function tailSourceSeparator(separator: string, lineEnding: MarkdownLineEnding): string {
+  let cursor = separator.length, endings = 0;
+  while (cursor > 0) {
+    const character = separator[--cursor];
+    if (character === ' ' || character === '\t') continue;
+    if (character === '\n') { if (separator[cursor - 1] === '\r') cursor--; endings++; }
+    else if (character === '\r') endings++;
+    else break;
+  }
+  return separator + lineEnding.repeat(Math.max(0, 2 - endings));
+}
+
+/** Propose a source edit for the complete parser to verify. The HTML projection
+ * may merge source blocks, so only independently owned spans can be replaced. */
 export function rewriteMarkdownProjection(source: MarkdownSourceSnapshot, current: Node,
   render: (node: Node, index: number) => string): { body: string; document: Node } | null {
   const entry = projections.get(source)?.capture;
   if (!entry || entry.original.type !== current.type) return null;
   const { original } = entry;
-  const document = current.childCount === original.childCount + 1 && isAutomaticTrailingParagraph(current.content.at(-1))
+  const document = current.childCount > original.childCount && isAutomaticTrailingParagraph(current.content.at(-1))
     ? current.copy(current.content.slice(0, -1)) : current;
-  if (document.childCount !== original.childCount) return null;
-  const changed = document.content.flatMap((node, index) => node.eq(original.child(index)) ? [] : [index]);
-  if (!changed.length) return null;
-  const ranges = entry.ranges ??= entry.capture();
+  if (document.childCount < original.childCount) return null;
+  const changed = original.content.flatMap((node, index) => node.eq(document.child(index)) ? [] : [index]);
+  const added = document.content.slice(original.childCount);
+  if (!changed.length && !added.length) return null;
   const replacements = [];
   for (const index of changed) {
-    const range = ranges.get(index);
+    const range = (entry.ranges ??= entry.capture()).get(index);
     if (!range) return null;
     replacements.push({ ...range, index });
   }
@@ -55,7 +67,12 @@ export function rewriteMarkdownProjection(source: MarkdownSourceSnapshot, curren
     cursor = to;
   }
   chunks.push(source.body.slice(cursor));
-  return { body: chunks.join(''), document };
+  let body = chunks.join('');
+  if (added.length) {
+    const appended = added.map((block, index) => render(block, original.childCount + index));
+    body = tailSourceSeparator(body, source.lineEnding) + appended.join(source.lineEnding.repeat(2));
+  }
+  return { body, document };
 }
 
 export function hasMarkdownSourceProjection(source: MarkdownSourceSnapshot): boolean {

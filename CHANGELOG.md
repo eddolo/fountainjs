@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep the original Markdown and HTML spelling when appending blocks in source
+  review, provided the complete file reparses to the edited document.
 - Keep native disclosures and media controls on visual page sheets out of the
   tab order. The continuous reading view provides the keyboard controls.
 - Show the continuous reading view when keyboard focus enters a paged
