@@ -496,7 +496,7 @@ export function layoutPages(
     if (item.breakBefore && page().placements.length) nextPage(item.id);
 
     const next = normalized[itemIndex + 1];
-    if (item.keepWithNext && next && fragments.length === 1) {
+    if (item.keepWithNext && !item.breakAfter && next && !next.item.breakBefore && fragments.length === 1) {
       const nextOpening = next.fragments.slice(0, next.minimumStart);
       const pairFragments = [fragments[0], ...nextOpening];
       const pairContentHeight = pairFragments.reduce((sum, fragment) => sum + fragment.height, 0);

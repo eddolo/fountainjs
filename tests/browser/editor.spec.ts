@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { runSiteFontJourney } from './site-font-journey';
 import { runNestedSiblingRangeJourney } from './nested-sibling-range-journey';
 import { runCrossContainerAttributesJourney, runCrossContainerRangeJourney } from './cross-container-range-journey';
@@ -1108,6 +1108,36 @@ test('prints a mixed repeated-footnote, merged-table, and manual-break document 
     expect(pageText.join(' ').match(/AFTERBREAK/gu)).toHaveLength(1);
   }
   await page.emulateMedia({ media: 'screen' });
+});
+
+test('starts a new preview sheet at a DOCX paragraph break', async ({ page, browserName }, info) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  const { bytes, preview } = await page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphBreak()
+  ));
+  const docxPath = info.outputPath('paragraph-break.docx');
+  await writeFile(docxPath, Buffer.from(bytes));
+  await info.attach('paragraph-break.docx', {
+    path: docxPath,
+    contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  });
+  const sheets = page.locator('#browser-page-preview .fountain-page-preview__sheet');
+  await page.locator('#browser-page-preview').screenshot({ path: info.outputPath('paragraph-break-preview.png') });
+  expect(preview).toMatchObject({ pageCount: 2, sourceUnchanged: true });
+  await expect(sheets).toHaveCount(2);
+  await expect(sheets.first()).toContainText('First page introduction');
+  await expect(sheets.first()).not.toContainText('Second page opening');
+  await expect(sheets.nth(1)).toContainText('Second page opening');
+  await expect(sheets.nth(1)).toContainText('Second page continuation');
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ path: info.outputPath('paragraph-break-print.pdf'), preferCSSPageSize: true });
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(2);
+    expect(pages[0]).toContain('First page introduction');
+    expect(pages[0]).not.toContain('Second page opening');
+    expect(pages[1]).toContain('Second page opening');
+    expect(pages[1]).toContain('Second page continuation');
+  }
 });
 
 test('paginates imported styled semantic HTML without structural or PDF text loss', async ({ page, browserName }) => {

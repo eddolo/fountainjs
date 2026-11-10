@@ -36,6 +36,22 @@ describe('DOM-independent page layout', () => {
     expect(Object.isFrozen(result.pages)).toBe(true);
   });
 
+  it('honors break-before without moving the preceding heading or creating empty pages', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'intro', height: 55, breakBefore: true },
+      { id: 'heading', height: 15, keepWithNext: true },
+      { id: 'chapter', height: 30, breakBefore: true },
+      { id: 'manual', height: 0, breakAfter: true },
+      { id: 'ending', height: 20, breakBefore: true },
+    ], geometry);
+
+    expect(result.pages.map(page => page.placements.map(item => item.itemId))).toEqual([
+      ['intro', 'heading'], ['chapter', 'manual'], ['ending'],
+    ]);
+    expect(result.warnings).toEqual([]);
+  });
+
   it('splits legal fragments while preserving widow/orphan minima', () => {
     const geometry = createPageGeometry({ size: { width: 100, height: 80 }, margins: 10 });
     const result = layoutPages([{

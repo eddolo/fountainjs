@@ -1,4 +1,5 @@
 import type { Node } from '../core';
+import type { ParagraphLayout } from '../core/paragraph-layout';
 import { repeatedDOMTableRows } from '../core/table-layout';
 import {
   layoutPages,
@@ -1034,7 +1035,7 @@ function measureDOMPageFlowInternal(
     }
 
     let item: PageFlowItem;
-    let sources: readonly DOMPageFragmentSource[] = Object.freeze([]);
+    let sources: readonly DOMPageFragmentSource[];
     const custom = customFragments(
       options.blockContinuation,
       document,
@@ -1049,40 +1050,37 @@ function measureDOMPageFlowInternal(
     const text = !custom && lineTypes.has(node.type.name)
       ? textFragments(element, itemId, path, definitionMeasurements, count)
       : null;
-    if (custom) {
-      item = Object.freeze({
+    const continuation = custom ?? structural;
+    if (continuation) {
+      item = {
         id: itemId,
-        fragments: custom.fragments,
-        ...(custom.minimumStart !== undefined ? { minimumStart: custom.minimumStart } : {}),
-        ...(custom.minimumEnd !== undefined ? { minimumEnd: custom.minimumEnd } : {}),
-        ...(custom.continuationHeight !== undefined ? { continuationHeight: custom.continuationHeight } : {}),
-      });
-      sources = custom.sources;
-    } else if (structural) {
-      item = Object.freeze({
+        fragments: continuation.fragments,
+        ...(custom?.minimumStart !== undefined ? { minimumStart: custom.minimumStart } : {}),
+        ...(custom?.minimumEnd !== undefined ? { minimumEnd: custom.minimumEnd } : {}),
+        ...(continuation.continuationHeight !== undefined ? { continuationHeight: continuation.continuationHeight } : {}),
+      };
+      sources = continuation.sources;
+    } else if (text) {
+      const minimumLines = Math.min(minimumTextLines, text.fragments.length);
+      item = {
         id: itemId,
-        fragments: structural.fragments,
-        ...(structural.continuationHeight !== undefined
-          ? { continuationHeight: structural.continuationHeight }
-          : {}),
-      });
-      sources = structural.sources;
-    }
-    else if (text) item = Object.freeze({
-      id: itemId,
-      fragments: text.fragments,
-      minimumStart: Math.min(minimumTextLines, text.fragments.length),
-      minimumEnd: Math.min(minimumTextLines, text.fragments.length),
-      ...(node.type.name === 'heading' ? { keepWithNext: true } : {}),
-    });
-    else {
+        fragments: text.fragments,
+        minimumStart: minimumLines,
+        minimumEnd: minimumLines,
+        ...(node.type.name === 'heading' ? { keepWithNext: true } : {}),
+      };
+      sources = text.sources;
+    } else {
       const whole = wholeItem(element, itemId, path, definitionMeasurements, count);
       item = node.type.name === 'heading'
-        ? Object.freeze({ ...whole.item, keepWithNext: true })
+        ? { ...whole.item, keepWithNext: true }
         : whole.item;
       sources = whole.sources;
     }
-    if (text && !structural) sources = text.sources;
+    const paragraphLayout = node.attrs.layout as ParagraphLayout | undefined;
+    if (node.type.spec.paragraphFlow === 'text' && paragraphLayout?.pageBreakBefore === true) {
+      item = { ...item, breakBefore: true };
+    }
 
     const heights = item.fragments?.map((fragment) => fragment.height) ?? [item.height];
     const validHeights = heights.every(finiteNonNegative);
@@ -1091,7 +1089,7 @@ function measureDOMPageFlowInternal(
       detail: `Rendered node at ${index} returned a non-finite height and was excluded.`,
     }));
     else {
-      items.push(item);
+      items.push(Object.freeze(item));
       fragmentSources.push(...sources);
     }
 

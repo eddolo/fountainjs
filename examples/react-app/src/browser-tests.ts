@@ -1572,6 +1572,26 @@ Object.assign(globalThis, {
         importedStyledPrintGeometry(),
       ),
       previewImportedStyled: () => renderPagesPreview(importedStyledPrintGeometry(), true),
+      previewDOCXParagraphBreak: () => {
+        const schema = pagesEditor.state.schema;
+        const paragraph = (text: string, pageBreakBefore: boolean) => schema.node('paragraph', {
+          layout: { unit: 'pt', pageBreakBefore },
+        }, [schema.text(text)]);
+        const source = schema.node('doc', {}, [
+          paragraph('First page introduction', false),
+          paragraph('Second page opening', true),
+          paragraph('Second page continuation', false),
+        ]);
+        const bytes = exportDOCX(source).bytes;
+        const imported = importDOCX(bytes, schema).document;
+        pagesEditor.dispatch(pagesEditor.state.createTransaction()
+          .replace(0, pagesEditor.state.doc.childCount, imported.content)
+          .setSelection(Selection.cursor([0, 0], 0)));
+        pagesView.dom.style.boxSizing = 'content-box';
+        pagesView.dom.style.width = '328px';
+        const preview = renderPagesPreview(createPageGeometry({ size: { width: 348, height: 210 }, margins: 10 }), true);
+        return { bytes: Array.from(bytes), preview };
+      },
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({
         size,
         margins: 12.7,

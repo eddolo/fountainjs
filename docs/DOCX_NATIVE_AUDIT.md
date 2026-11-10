@@ -1,5 +1,21 @@
 # Independent native DOCX audit
 
+## Paragraph break before 2026 11 10
+
+DOCX import and export already retained `w:pageBreakBefore`. The Fountain
+page measurement adapter ignored that attribute, so a three-paragraph DOCX
+fixture appeared on one preview sheet even though LibreOffice placed the last
+two paragraphs on a second sheet. The adapter now forwards the break for
+top-level text blocks. An explicit break takes priority over the preceding
+heading's keep-with-next preference. A break on an empty sheet adds no sheet.
+
+Recorded Chromium, Firefox and WebKit checks verify two preview sheets and
+an unchanged source model. The Chromium PDF and a LibreOffice 24.2.7.2 render
+of the same generated DOCX both place the same paragraphs on each page.
+Both PDF page images and the preview were visually inspected. This fixture
+checks page assignment. Paper size, native Word output and nested layout are
+outside this check. The build passes the existing size limits.
+
 ## Footnote separator recovery 2026 11 07
 
 The checked-in scientific source has an ordinary note and its body reference.

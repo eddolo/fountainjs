@@ -881,8 +881,11 @@ warning rather than pretending a normal line break is equivalent.
 
 Nested breaks are written natively but export warns that enclosing list/quote
 identity and table/story layout are not certified. Column and float-clearing
-behaviour is not implemented. Direct `pageBreakBefore` is separately reported as
-unimplemented; style inheritance and Word compatibility flags remain open.
+behaviour is not implemented. `pageBreakBefore` is retained as effective
+paragraph layout, including resolved style inheritance and explicit `false`
+overrides. The Fountain page preview and print projection apply it to top-level
+text blocks. An already empty sheet does not gain another break. Nested
+projection and Word compatibility flags remain open.
 Cached `lastRenderedPageBreak` markers are not promoted to manual breaks.
 See Microsoft's [break model](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.break?view=openxml-3.0.1)
 and [paragraph-mark compatibility rule](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.splitpagebreakandparagraphmark?view=openxml-3.0.1).
