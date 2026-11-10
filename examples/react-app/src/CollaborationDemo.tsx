@@ -199,6 +199,7 @@ export default function CollaborationDemo() {
   const [activeRoom, setActiveRoom] = useState<DemoRoom>('launch');
   const nextRoom = activeRoom === 'launch' ? 'planning' : 'launch';
   const [paused, setPaused] = useState(false);
+  const [roomPreparationError, setRoomPreparationError] = useState<string>();
   const [incompleteSwitch, setIncompleteSwitch] = useState<{ room: DemoRoom; ada: boolean; grace: boolean }>();
   const left = useFountain({ schema: room.leftKit.schema, plugins: room.leftKit.plugins, content: room.sessions.launch.content });
   const right = useFountain({ schema: room.rightKit.schema, plugins: room.rightKit.plugins, content: room.sessions.launch.content });
@@ -228,10 +229,21 @@ export default function CollaborationDemo() {
   const switchRoom = () => {
     if (!canChangeRoom) return;
     const session = room.sessions[nextRoom];
+    let adaAdapter: YjsCollaborationAdapter | undefined;
+    let graceAdapter: YjsCollaborationAdapter;
+    try {
+      adaAdapter = new YjsCollaborationAdapter(authorOptions(session, ada));
+      graceAdapter = new YjsCollaborationAdapter(authorOptions(session, grace));
+    } catch (error) {
+      adaAdapter?.destroy();
+      setRoomPreparationError(error instanceof Error ? error.message : String(error));
+      return;
+    }
+    setRoomPreparationError(undefined);
     replaceCommentsAdapter(left, session.comments.createAdapter(), { connect: false });
     replaceCommentsAdapter(right, session.comments.createAdapter(), { connect: false });
-    const leftOpened = replaceCollaborationAdapter(left, () => new YjsCollaborationAdapter(authorOptions(session, ada)));
-    const rightOpened = replaceCollaborationAdapter(right, () => new YjsCollaborationAdapter(authorOptions(session, grace)));
+    const leftOpened = replaceCollaborationAdapter(left, adaAdapter);
+    const rightOpened = replaceCollaborationAdapter(right, graceAdapter);
     const adaConnected = leftOpened && getCollaborationState(left)?.status === 'connected';
     const graceConnected = rightOpened && getCollaborationState(right)?.status === 'connected';
     if (!adaConnected || !graceConnected) {
@@ -293,6 +305,10 @@ export default function CollaborationDemo() {
           <button onClick={switchRoom} disabled={!canChangeRoom}>Switch both editors to {roomName(nextRoom)} room</button>
           <button onClick={toggleSync} disabled={needsRecovery}>{paused ? 'Resume document sync' : 'Pause document sync'}</button>
         </span>
+        {roomPreparationError !== undefined && !needsRecovery && <div className="collaboration-demo__recovery" role="alert">
+          <strong>Could not prepare the {roomName(nextRoom)} room. Both editors are still in {roomName(activeRoom)}.</strong>
+          <p>{roomPreparationError}</p>
+        </div>}
         {needsRecovery ? <div className="collaboration-demo__recovery">
           <div role="alert">
             <strong>{incompleteSwitch ? 'The editors did not both reach the requested room.' : 'A change could not be shared.'}</strong>

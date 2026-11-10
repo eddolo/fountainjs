@@ -96,6 +96,15 @@ mounted editors and clears the open draft. The Launch and Planning panels
 were inspected in WebKit. The comments source suite verifies late snapshots,
 writes, and mapped-anchor results from a retired provider.
 
+The homepage prepares both destination Yjs adapters before switching either
+editor or its comment store. If either preparation fails, both editors remain
+in the original room with their edits, undo history, and open comment draft.
+The notice identifies the room that stayed open and the switch can be retried
+in place. The browser journey verifies that the draft can still be posted in
+its original room before retrying the switch. The production build passed
+18 recorded Chromium, Firefox and WebKit checks and four mobile-emulation
+checks. Desktop and narrow captures show the retry notice and retained draft.
+
 The homepage lazily loads the collaboration demo in a React Suspense boundary.
 The hook can read its initial document during rendering. Editor plugin startup
 waits for React to commit, so a suspended or discarded render leaves providers

@@ -324,15 +324,27 @@ test('copies a settings card through the real Chromium clipboard before its orig
   await demo.screenshot({ path: info.outputPath('native-settings-paste.png') });
 });
 
-test('identifies both editor copies when the second room connection fails', async ({ page }, info) => {
+test('preserves both editors and the open comment when preparing a room switch fails', async ({ page }, info) => {
   await page.goto('/');
   const demo = page.locator('#collaboration');
+  const ada = demo.getByRole('textbox', { name: 'Ada collaborative editor' });
+  const grace = demo.getByRole('textbox', { name: 'Grace collaborative editor' });
+  const panel = demo.getByLabel('Shared review');
+  const comment = 'Keep this Launch decision';
   const switchRoom = demo.getByRole('button', { name: 'Switch both editors to Planning room' });
   await expect(switchRoom).toBeEnabled();
+  await ada.getByText('Shared launch note', { exact: true }).click();
+  await page.keyboard.press('End');
+  await page.keyboard.insertText(' retained edit');
+  await expect(grace).toContainText('Shared launch note retained edit');
+  await panel.getByRole('button', { name: 'New comment', exact: true }).click();
+  await panel.getByLabel('Comment target').selectOption('document');
+  const draft = panel.getByRole('textbox', { name: 'New comment', exact: true });
+  await draft.fill(comment);
   await page.evaluate(() => {
     const randomUUID = crypto.randomUUID.bind(crypto);
     let attempts = 0;
-    // Fail the second adapter construction after the first has switched.
+    // Fail the second destination adapter's construction.
     Object.defineProperty(crypto, 'randomUUID', { configurable: true, value: () => {
       if (++attempts === 2) {
         Reflect.deleteProperty(crypto, 'randomUUID');
@@ -342,14 +354,30 @@ test('identifies both editor copies when the second room connection fails', asyn
     } });
   });
   await switchRoom.click();
-  await expect(demo.getByText('Room switch incomplete', { exact: true })).toBeVisible();
-  await expect(demo.getByRole('alert')).toContainText('Ada: Planning room. Grace: unverified copy.');
-  await expect(demo.getByRole('alert')).toContainText('Grace: Room connection unavailable');
-  await expect(demo.getByRole('textbox', { name: 'Ada collaborative editor' })).toContainText('Shared planning agenda');
-  await expect(demo.getByRole('textbox', { name: 'Grace collaborative editor' })).toContainText('Shared launch note');
-  await expect(switchRoom).toBeDisabled();
-  await expect(demo.getByLabel('Shared review')).toHaveCount(0);
-  await demo.screenshot({ path: info.outputPath('incomplete-room-switch.png') });
+  await expect(demo.getByRole('alert')).toContainText('Both editors are still in Launch');
+  await expect(demo.getByRole('alert')).toContainText('Room connection unavailable');
+  await expect(demo.getByText('Room: Launch', { exact: true })).toBeVisible();
+  await expect(ada).toContainText('Shared launch note retained edit');
+  await expect(grace).toContainText('Shared launch note retained edit');
+  await expect(panel).toContainText('Could we make the provider boundary even clearer?');
+  await expect(draft).toHaveValue(comment);
+  await expect(panel.getByLabel('Comment target')).toHaveValue('document');
+  await expect(demo.getByRole('button', { name: 'Undo Ada' })).toBeEnabled();
+  await expect(switchRoom).toBeEnabled();
+  await demo.screenshot({ path: info.outputPath('room-switch-ready-to-retry.png') });
+
+  await panel.getByRole('button', { name: 'Create thread' }).click();
+  await expect(panel).toContainText(comment);
+  await switchRoom.click();
+  await expect(demo.getByText('Room: Planning', { exact: true })).toBeVisible();
+  await expect(ada).toContainText('Shared planning agenda');
+  await expect(grace).toContainText('Shared planning agenda');
+  await expect(panel).not.toContainText(comment);
+  await expect(demo.getByRole('alert')).toHaveCount(0);
+  await demo.getByRole('button', { name: 'Switch both editors to Launch room' }).click();
+  await expect(panel).toContainText(comment);
+  await expect(ada).toContainText('Shared launch note retained edit');
+  await expect(grace).toContainText('Shared launch note retained edit');
 });
 
 const offlineActions = [

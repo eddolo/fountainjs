@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep both homepage editors and their open comment in the original room when
+  preparing a room switch fails, so the switch can be retried.
+
 - Keep private edits when a detached retained Yjs editor tries to rejoin.
   Shared undo and redo resume after the room opens again.
 
