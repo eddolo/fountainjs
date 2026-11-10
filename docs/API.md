@@ -2379,7 +2379,10 @@ source. A foreign-document or non-element result fails closed.
 
 The visual sheets are `aria-hidden` because clipped DOM copies otherwise repeat
 off-page text to assistive technology. By default the preview contains one
-visually hidden, continuous, non-editable semantic copy of the source instead.
+continuous, non-editable semantic copy of the source. On screen, keyboard
+focus inside this copy shows the continuous document in place of the sheets.
+Internal links move focus to their destination within the same copy. Leaving
+the copy restores the sheets, and printing always uses the paged layout.
 Set `includeAccessibleDocument: false` only when the host keeps an equivalent
 accessible document beside the preview; the whole preview is then hidden from
 assistive technology. Cloned IDs are namespaced, form controls are disabled,

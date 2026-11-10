@@ -42,13 +42,19 @@ describe('read-only DOM page preview', () => {
       const result = renderDOMPagePreview(source, target, geometry, snapshot, { includeAccessibleDocument });
       expect(result.pages).toHaveLength(2);
       const destination = result.pages[1].querySelector('[id]')!;
+      expect(destination.hasAttribute('tabindex')).toBe(false);
       for (const link of result.pages[0].querySelectorAll('a')) {
         expect(decodeURIComponent((link.getAttribute('href') ?? link.getAttribute('xlink:href'))!.slice(1))).toBe(destination.id);
         expect(link.getAttribute('tabindex')).toBe('-1');
       }
       const accessible = target.querySelector('.fountain-page-preview__accessible');
-      if (accessible) for (const link of accessible.querySelectorAll('a')) {
-        expect(decodeURIComponent((link.getAttribute('href') ?? link.getAttribute('xlink:href'))!.slice(1))).toBe(accessible.querySelector('[id]')!.id);
+      if (accessible) {
+        const readingDestination = accessible.querySelector('[id]')!;
+        expect(readingDestination.getAttribute('tabindex')).toBe('-1');
+        for (const link of accessible.querySelectorAll('a')) {
+          expect(decodeURIComponent((link.getAttribute('href') ?? link.getAttribute('xlink:href'))!.slice(1))).toBe(readingDestination.id);
+          expect(link.getAttribute('tabindex')).toBe(link instanceof window.SVGElement ? '0' : null);
+        }
       }
     }
     const allIds = [source, ...targets].flatMap(root => [...root.querySelectorAll('[id]')].map(node => node.id));
@@ -65,7 +71,7 @@ describe('read-only DOM page preview', () => {
     source.innerHTML = '<header data-fountain-path="0" data-fountain-page-header="default" data-height="10">'
       + '<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="caption"><title id="caption">Diagram</title><defs><path id="shape" d="M0 0L1 1"/><clipPath id="clip"><use href="#shape"/></clipPath></defs><g clip-path="url(#clip)" style="filter:url(#missing)"><use href="#shape"/></g></svg>'
       + '<label for="field">Label</label><input id="field" aria-describedby="caption"></header>'
-      + '<p data-fountain-path="1" data-height="20"><a href="#absent">Missing</a><a href="#bad%zz">Malformed</a><a href="https://example.org/#outside">External</a></p>'
+      + '<p data-fountain-path="1" data-height="20"><a href="#absent">Missing</a><a href="#bad%zz">Malformed</a><a href="https://example.org/#outside">External</a><svg><a href="#missing-svg"><text>Missing SVG</text></a></svg></p>'
       + '<hr data-fountain-path="2" data-fountain-page-break="true" data-height="0">'
       + '<p data-fountain-path="3" data-height="20" data-source="url(#shape)">Second page</p>';
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function measured(this: HTMLElement) {
@@ -88,10 +94,11 @@ describe('read-only DOM page preview', () => {
       expect(header.querySelector('input')!.getAttribute('aria-describedby')).toBe(header.querySelector('title')!.id);
     }
     for (const group of [result.pages[0], target.querySelector('.fountain-page-preview__accessible')!]) {
-      for (const name of ['absent', 'bad%zz']) {
+      for (const name of ['absent', 'bad%zz', 'missing-svg']) {
         const link = group.querySelector(`[data-fountain-unresolved-reference="${name}"]`)!;
         expect(link.hasAttribute('href')).toBe(false);
         expect(link.getAttribute('aria-disabled')).toBe('true');
+        expect(link.getAttribute('tabindex')).not.toBe('0');
       }
       expect(group.querySelector('a[href^="https"]')!.getAttribute('href')).toBe('https://example.org/#outside');
     }
@@ -104,7 +111,8 @@ describe('read-only DOM page preview', () => {
   it('does not link back to a source target omitted by a host print projection', () => {
     const model = schema().nodeFromJSON({ type: 'doc', content: [{ type: 'paragraph' }, { type: 'paragraph' }] });
     const source = window.document.createElement('div');
-    source.innerHTML = '<p data-fountain-path="0"><a href="#omitted">Figure</a></p><p data-fountain-path="1" id="omitted">Interactive figure</p>';
+    source.innerHTML = '<p data-fountain-path="0"><a href="#omitted">Figure</a> <a href="#figure-details">Details</a></p>'
+      + '<p data-fountain-path="1" id="omitted">Interactive figure <a id="figure-details" href="https://example.org/">More details</a></p>';
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(() => rectangle(0, 20));
     const geometry = createPageGeometry({ size: { width: 100, height: 100 }, margins: 10 });
     const snapshot = layoutDOMPages(source, model, geometry, { lineFragmentNodeTypes: [] });
@@ -117,6 +125,9 @@ describe('read-only DOM page preview', () => {
     expect(visualLink.getAttribute('data-fountain-unresolved-reference')).toBe('omitted');
     const accessible = target.querySelector('.fountain-page-preview__accessible')!;
     expect(accessible.querySelector('a')!.getAttribute('href')).toBe(`#${accessible.querySelector('[id]')!.id}`);
+    const details = accessible.querySelector('a[href^="https"]')!;
+    expect(accessible.querySelectorAll('a')[1].getAttribute('href')).toBe(`#${details.id}`);
+    expect(details.hasAttribute('tabindex')).toBe(false);
     expect(source.querySelector('a')!.getAttribute('href')).toBe('#omitted');
   });
 

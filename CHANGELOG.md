@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Show the continuous reading view when keyboard focus enters a paged
+  preview's links. Cross-references keep focus within that view, and printing
+  still uses the physical sheets.
 - Keep inline Word tables free of editor-only outer margins in the editor,
   HTML and paged output. Report unsupported floating-table positioning.
 - Keep display equations with paragraph layout from adding default renderer

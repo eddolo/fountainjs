@@ -83,27 +83,30 @@ class PreviewReferences {
     this.rewrite(elements, id => local.get(id), false);
   }
 
-  finish(roots: readonly HTMLElement[]): void {
+  finish(roots: readonly HTMLElement[], focusableDestinations = false): void {
     const elements = roots.flatMap(elementsIncluding);
     const current = new Map<string, string>();
     const original = new Map<string, string>();
+    const destinations = focusableDestinations ? new Map<string, HTMLElement>() : undefined;
     elements.forEach(element => {
       if (!element.id) return;
       const previous = element.id;
       // Numeric suffixes are URL/CSS safe, including when the source ID isn't.
       element.id = `${this.prefix}${++this.sequence}`;
+      destinations?.set(element.id, element);
       if (!current.has(previous)) current.set(previous, element.id);
       const source = this.originals.get(element);
       if (source && !original.has(source)) original.set(source, element.id);
     });
     this.rewrite(elements, id => current.get(id)
-      ?? original.get(this.aliases.get(id) ?? id), true);
+      ?? original.get(this.aliases.get(id) ?? id), true, destinations);
   }
 
   private rewrite(
     elements: readonly HTMLElement[],
     resolve: (id: string) => string | undefined,
     final: boolean,
+    destinations?: ReadonlyMap<string, HTMLElement>,
   ): void {
     elements.forEach(element => {
       for (const attribute of Array.from(element.attributes)) {
@@ -112,8 +115,12 @@ class PreviewReferences {
           let id = value.slice(1);
           try { id = decodeURIComponent(id); } catch { /* Literal malformed escape. */ }
           const replacement = resolve(id);
-          if (replacement) attribute.value = `#${encodeURIComponent(replacement)}`;
-          else if (final) {
+          if (replacement) {
+            attribute.value = `#${encodeURIComponent(replacement)}`;
+            // Native fragment navigation keeps keyboard focus in the reading copy.
+            const destination = element.localName === 'a' ? destinations?.get(replacement) : undefined;
+            if (destination && destination.tabIndex < 0) destination.setAttribute('tabindex', '-1');
+          } else if (final) {
             element.removeAttributeNode(attribute);
             element.setAttribute('data-fountain-unresolved-reference', id);
             if (element.localName === 'a') element.setAttribute('aria-disabled', 'true');
@@ -557,7 +564,8 @@ export function renderDOMPagePreview(
   references.finish(pages);
   if (options.includeAccessibleDocument !== false) {
     const accessible = prepareClone(sourceRoot.cloneNode(true) as HTMLElement, 0, 0, references, false);
-    references.finish([accessible]);
+    references.finish([accessible], true);
+    accessible.querySelectorAll('svg a[href], svg a[xlink\\:href]').forEach(link => link.setAttribute('tabindex', '0'));
     accessible.className = 'fountain-page-preview__accessible';
     accessible.setAttribute('role', 'document');
     accessible.setAttribute('aria-label', options.ariaLabel ?? 'Document content');

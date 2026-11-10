@@ -56,6 +56,32 @@ export async function mathPagesJourney(page: Page, info: TestInfo, exportPDF = f
   await expect.poll(() => new URL(page.url()).hash).toBe(href);
   const destination = page.locator(`[id="${contract[0].id}"]`);
   await expect(destination).toBeInViewport();
+  // Start before the preview and use the same keyboard navigation as a reader.
+  const readingCopy = preview.locator('.fountain-page-preview__accessible');
+  const readingLink = readingCopy.locator('[data-fountain-math="inline"] a').first();
+  const readingHref = (await readingLink.getAttribute('href'))!;
+  const readingDestination = readingCopy.locator(readingHref);
+  await print.focus();
+  await page.keyboard.press('Tab');
+  // Firefox first exposes the scrollable region as a native tab stop.
+  if (await preview.evaluate(element => document.activeElement === element)) await page.keyboard.press('Tab');
+  await expect(readingLink).toBeFocused();
+  await expect(readingLink).toHaveCSS('outline-width', '2px');
+  await expect(readingLink.locator('[data-hitbox]')).toHaveCSS('stroke-width', '2px');
+  expect(await readingCopy.evaluate(element => element.clientHeight)).toBeGreaterThan(1);
+  await expect(readingLink).toBeInViewport();
+  await expect(sheets.first()).toBeHidden();
+  await page.screenshot({ path: info.outputPath('keyboard-reading-copy.png') });
+  await page.keyboard.press('Enter');
+  await expect.poll(() => new URL(page.url()).hash).toBe(readingHref);
+  await expect(readingDestination).toBeFocused();
+  await expect(readingDestination).toBeInViewport();
+  await page.emulateMedia({ media: 'print' });
+  await expect(readingCopy).toBeHidden();
+  await expect(sheets.first()).toBeVisible();
+  await page.emulateMedia({ media: 'screen' });
+  await print.focus();
+  await expect(sheets.first()).toBeVisible();
   const allIds = await page.locator('[id]').evaluateAll(nodes => nodes.map(node => node.id));
   expect(new Set(allIds).size).toBe(allIds.length);
   // An author edit makes the frozen projection explicitly stale; rebuilding
