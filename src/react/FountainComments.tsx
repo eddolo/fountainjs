@@ -50,30 +50,41 @@ function commentRunner(onError?: FountainCommentsProps['onError']) {
   };
 }
 
+function actionButton(label: string, onClick: () => void) {
+  return <button type="button" onClick={onClick}>{label}</button>;
+}
+
 function CommentBody({
   editor,
   thread,
   comment,
   reactions,
   onError,
+  draft,
+  changeDraft,
+  pending,
 }: {
   editor: Editor;
   thread: CommentThread;
   comment: CommentMessage;
   reactions: readonly string[];
   onError?: (error: unknown) => void;
+  draft?: string;
+  changeDraft: (value?: string, previous?: string) => void;
+  pending: boolean;
 }) {
   const content = contentText(comment.content);
   const timestamp = comment.updatedAt ?? comment.createdAt;
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(content);
-  const message = draft.trim();
+  const editing = draft !== undefined;
+  const message = draft?.trim();
   const run = commentRunner(onError);
   const save = async (event: FormEvent) => {
     event.preventDefault();
-    if (!message) return;
-    await run(() => updateComment(editor, thread.id, comment.id, message));
-    setEditing(false);
+    if (pending || !message) return;
+    await run(async () => {
+      await updateComment(editor, thread.id, comment.id, message);
+      changeDraft(undefined, draft);
+    });
   };
   return <article className="fountain-comment" data-comment-id={comment.id}>
     <header>
@@ -84,11 +95,11 @@ function CommentBody({
       ? <form onSubmit={(event) => void save(event)}>
         <label>
           <span>Edit comment</span>
-          <textarea value={draft} onChange={(event) => setDraft(event.currentTarget.value)} />
+          <textarea value={draft} onChange={(event) => changeDraft(event.currentTarget.value)} />
         </label>
         <div className="fountain-comments__actions">
-          <button type="submit" disabled={!message}>Save</button>
-          <button type="button" onClick={() => { setDraft(content); setEditing(false); }}>Cancel</button>
+          <button type="submit" disabled={pending || !message}>Save</button>
+          {actionButton('Cancel', () => changeDraft())}
         </div>
       </form>
       : <p>{content}</p>}
@@ -105,10 +116,13 @@ function CommentBody({
         >{emoji}{reaction?.userIds.length ? ` ${reaction.userIds.length}` : ''}</button>;
       })}
       {!editing && canComment(editor, 'edit-comment', thread.id, comment.id)
-        ? <button type="button" onClick={() => setEditing(true)}>Edit</button>
+        ? actionButton('Edit', () => changeDraft(content))
         : null}
       {canComment(editor, 'delete-comment', thread.id, comment.id)
-        ? <button type="button" onClick={() => void run(() => removeComment(editor, thread.id, comment.id))}>Delete</button>
+        ? actionButton('Delete', () => void run(async () => {
+          await removeComment(editor, thread.id, comment.id);
+          changeDraft();
+        }))
         : null}
     </div>
   </article>;
@@ -130,7 +144,7 @@ export function FountainComments({
   useEffect(() => {
     if (creating) draftInput.current?.focus();
   }, [creating]);
-  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [drafts, setDrafts] = useState(() => new Map<string, string>());
   const state = editor ? getCommentsState(editor) : undefined;
   const threads = useMemo(
     () => (state?.threads ?? []).filter((thread) => showArchived || !thread.archived),
@@ -140,6 +154,15 @@ export function FountainComments({
 
   const message = draft.trim();
   const run = commentRunner(onError);
+  const changeDraft = (key: string, value?: string, previous?: string) => {
+    setDrafts(current => {
+      if (previous !== undefined && current.get(key) !== previous) return current;
+      const next = new Map(current);
+      if (value === undefined) next.delete(key);
+      else next.set(key, value);
+      return next;
+    });
+  };
   const submitThread = async (event: FormEvent) => {
     event.preventDefault();
     if (!message) return;
@@ -152,11 +175,12 @@ export function FountainComments({
   };
   const submitReply = async (event: FormEvent, thread: CommentThread) => {
     event.preventDefault();
-    const content = replyDrafts[thread.id]?.trim();
+    const reply = drafts.get(thread.id);
+    const content = reply?.trim();
     if (!content) return;
     await run(async () => {
       await addComment(editor, thread.id, { content });
-      setReplyDrafts((current) => ({ ...current, [thread.id]: '' }));
+      changeDraft(thread.id, undefined, reply);
     });
   };
 
@@ -192,7 +216,7 @@ export function FountainComments({
       </label>
       <div className="fountain-comments__actions">
         <button type="submit" disabled={!message}>Create thread</button>
-        <button type="button" onClick={() => setCreating(false)}>Cancel</button>
+        {actionButton('Cancel', () => setCreating(false))}
       </div>
     </form> : null}
     <div className="fountain-comments__list" aria-live="polite">
@@ -201,7 +225,7 @@ export function FountainComments({
         const selected = state.selectedThreadId === thread.id;
         const pending = state.pendingThreadIds.includes(thread.id);
         const anchor = anchorLabel(thread);
-        const replyDraft = replyDrafts[thread.id] ?? '';
+        const replyDraft = drafts.get(thread.id) ?? '';
         return <section
           key={thread.id}
           className={['fountain-comment-thread-card', selected ? 'is-selected' : '', thread.resolved ? 'is-resolved' : '', thread.anchor.status === 'orphaned' ? 'is-orphaned' : ''].filter(Boolean).join(' ')}
@@ -218,23 +242,27 @@ export function FountainComments({
             <span>{thread.resolved ? 'Resolved' : thread.archived ? 'Archived' : 'Open'}</span>
             {pending ? <span role="status">Saving…</span> : null}
           </div>
-          {thread.comments.map((comment) => <CommentBody
-            key={comment.id}
-            editor={editor}
-            thread={thread}
-            comment={comment}
-            reactions={reactions}
-            onError={onError}
-          />)}
+          {thread.comments.map((comment) => {
+            // IDs exclude spaces, so a reply key cannot overlap a comment edit.
+            const key = `${thread.id} ${comment.id}`;
+            return <CommentBody
+              key={comment.id}
+              editor={editor}
+              thread={thread}
+              comment={comment}
+              reactions={reactions}
+              onError={onError}
+              draft={drafts.get(key)}
+              changeDraft={(value, previous) => changeDraft(key, value, previous)}
+              pending={pending}
+            />;
+          })}
           {selected && canComment(editor, 'reply', thread.id) ? <form className="fountain-comments__reply" onSubmit={(event) => void submitReply(event, thread)}>
             <label>
               <span>Reply to thread by {thread.author.name}</span>
               <textarea
                 value={replyDraft}
-                onChange={(event) => {
-                  const value = event.currentTarget.value;
-                  setReplyDrafts((current) => ({ ...current, [thread.id]: value }));
-                }}
+                onChange={(event) => changeDraft(thread.id, event.currentTarget.value)}
                 placeholder="Reply…"
               />
             </label>
@@ -242,16 +270,16 @@ export function FountainComments({
           </form> : null}
           <footer className="fountain-comments__actions">
             {thread.anchor.status === 'orphaned' && canComment(editor, 'reattach-thread', thread.id)
-              ? <button type="button" onClick={() => void run(() => reattachCommentThread(editor, thread.id))}>Reattach to selection</button>
+              ? actionButton('Reattach to selection', () => void run(() => reattachCommentThread(editor, thread.id)))
               : null}
             {canComment(editor, 'resolve-thread', thread.id)
-              ? <button type="button" onClick={() => void run(() => setCommentThreadResolved(editor, thread.id, !thread.resolved))}>{thread.resolved ? 'Reopen' : 'Resolve'}</button>
+              ? actionButton(thread.resolved ? 'Reopen' : 'Resolve', () => void run(() => setCommentThreadResolved(editor, thread.id, !thread.resolved)))
               : null}
             {canComment(editor, 'archive-thread', thread.id)
-              ? <button type="button" onClick={() => void run(() => setCommentThreadArchived(editor, thread.id, !thread.archived))}>{thread.archived ? 'Restore' : 'Archive'}</button>
+              ? actionButton(thread.archived ? 'Restore' : 'Archive', () => void run(() => setCommentThreadArchived(editor, thread.id, !thread.archived)))
               : null}
             {canComment(editor, 'delete-thread', thread.id)
-              ? <button type="button" onClick={() => void run(() => removeCommentThread(editor, thread.id))}>Delete thread</button>
+              ? actionButton('Delete thread', () => void run(() => removeCommentThread(editor, thread.id)))
               : null}
           </footer>
         </section>;

@@ -277,6 +277,12 @@ errors through `role="alert"`, and the full supported thread lifecycle. It is a
 replaceable surface over the same public APIs; DOM, Web Component, Vue, Svelte,
 and Angular products can subscribe and render their own interface.
 
+An unsuccessful save leaves the comment edit open for retry. If the author
+keeps typing during a save, the newer text stays in the editor when that save
+finishes. For room switching, keep a separate panel instance for each room
+and pass `editor={null}` while that room is inactive. This keeps its new
+comments, replies, and edits in memory for the current visit.
+
 ## Using comments with Yjs
 
 Document collaboration and discussion storage are independent:

@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Retain comment edits across homepage room switches and after a failed save.
+  A completed save keeps any newer text entered while it was pending.
+
 - Restore the homepage's new comment and reply drafts when returning to their
   room, including the saved inline selection when the document matches.
 

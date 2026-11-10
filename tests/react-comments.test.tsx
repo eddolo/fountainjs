@@ -2,7 +2,7 @@
 
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { CoreExtension, composeExtensions, createEditor, selectText } from '../src';
 import {
   InMemoryCommentsStore,
@@ -85,5 +85,62 @@ describe('React comments surface', () => {
     await act(async () => root.unmount());
     editor.destroy();
     mount.remove();
+  });
+
+  it('keeps a failed edit and any text entered during a retry', async () => {
+    const store = new InMemoryCommentsStore();
+    const adapter = store.createAdapter();
+    let failed = false;
+    let finishSave: (() => void) | undefined;
+    const onError = vi.fn();
+    const kit = composeExtensions([CoreExtension, createCommentsExtension({
+      user: { id: 'ada', name: 'Ada' },
+      adapter: () => ({
+        ...adapter,
+        async apply(operation) {
+          if (operation.type === 'update-comment' && !failed) {
+            failed = true;
+            throw new Error('Could not save this edit');
+          }
+          if (operation.type === 'update-comment' && !finishSave) {
+            await new Promise<void>(resolve => { finishSave = resolve; });
+          }
+          return adapter.apply(operation);
+        },
+      }),
+    })]);
+    const editor = createEditor({ schema: kit.schema, plugins: kit.plugins });
+    const mount = document.createElement('div');
+    document.body.appendChild(mount);
+    const root = createRoot(mount);
+    const field = () => mount.querySelector<HTMLTextAreaElement>('textarea');
+    const submit = () => field()?.form?.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+    try {
+      await createCommentThread(editor, { type: 'document', content: 'Original comment' });
+      await act(async () => root.render(<FountainComments editor={editor} onError={onError} />));
+      const edit = [...mount.querySelectorAll('button')].find(button => button.textContent === 'Edit');
+      await act(async () => edit?.click());
+      await act(async () => setTextArea(field()!, 'Draft to retry'));
+      await act(async () => { submit(); });
+      expect(onError).toHaveBeenCalledWith(new Error('Could not save this edit'));
+      expect(field()?.value).toBe('Draft to retry');
+      expect(store.snapshot[0].comments[0].content).toBe('Original comment');
+
+      await act(async () => { submit(); });
+      expect(field()?.form?.querySelector<HTMLButtonElement>('button[type="submit"]')?.disabled).toBe(true);
+      await act(async () => setTextArea(field()!, 'Newer draft'));
+      await act(async () => finishSave?.());
+      expect(store.snapshot[0].comments[0].content).toBe('Draft to retry');
+      expect(field()?.value).toBe('Newer draft');
+
+      await act(async () => { submit(); });
+      expect(store.snapshot[0].comments[0].content).toBe('Newer draft');
+      expect(field()).toBeNull();
+      expect(mount.textContent).toContain('Newer draft');
+    } finally {
+      await act(async () => root.unmount());
+      editor.destroy();
+      mount.remove();
+    }
   });
 });

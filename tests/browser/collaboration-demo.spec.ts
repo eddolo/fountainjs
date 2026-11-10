@@ -532,6 +532,7 @@ test('restores separate comment drafts and their targets without remounting the 
   const right = page.getByRole('textbox', { name: 'Grace collaborative editor' });
   const seeded = 'Could we make the provider boundary even clearer?';
   const launchDraft = 'Unsubmitted Launch decision';
+  const editedDecision = 'Updated Launch decision';
   const planningDraft = 'Planning-only decision';
   const launchReply = 'Reply kept with the Launch thread';
   await expect(panel).toContainText(seeded);
@@ -577,6 +578,8 @@ test('restores separate comment drafts and their targets without remounting the 
   await seededThread.getByRole('button', { name: 'Reply', exact: true }).click();
   await expect(seededThread).toContainText(launchReply);
   await panel.screenshot({ path: info.outputPath('launch-discussion.png') });
+  await launchThread.getByRole('button', { name: 'Edit', exact: true }).click();
+  await launchThread.getByRole('textbox', { name: 'Edit comment' }).fill(editedDecision);
 
   await page.getByRole('button', { name: 'Switch both editors to Planning room' }).press('Enter');
   await expect(composer).toHaveValue(planningDraft);
@@ -584,11 +587,22 @@ test('restores separate comment drafts and their targets without remounting the 
   await expect(panel).not.toContainText(seeded);
   await expect(panel).not.toContainText(launchDraft);
   await expect(panel).not.toContainText(launchReply);
+  await expect(panel.getByRole('textbox', { name: 'Edit comment' })).toHaveCount(0);
   await panel.getByRole('button', { name: 'Create thread' }).click();
   const planningThread = panel.getByRole('region', { name: 'Thread by Ada' }).filter({ hasText: planningDraft });
   await expect(planningThread.getByRole('button', { name: 'document Whole document' })).toBeVisible();
   await expect(page.locator('[data-collaboration-editor="grace"]')).toContainText('1 threads');
   await panel.screenshot({ path: info.outputPath('planning-discussion.png') });
+
+  await page.getByRole('button', { name: 'Switch both editors to Launch room' }).press('Enter');
+  const inlineThread = panel.getByRole('region', { name: 'Thread by Ada' }).filter({ has: page.getByRole('button', { name: 'inline note' }) });
+  await expect(inlineThread.getByRole('textbox', { name: 'Edit comment' })).toHaveValue(editedDecision);
+  await panel.screenshot({ path: info.outputPath('restored-launch-edit.png') });
+  await inlineThread.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(inlineThread).toContainText(editedDecision);
+  await expect(inlineThread.getByRole('textbox', { name: 'Edit comment' })).toHaveCount(0);
+  await expect(seededThread).toContainText(launchReply);
+  await expect(panel).not.toContainText(planningDraft);
 });
 
 test('runs shared threaded comments through the public provider-neutral review panel', async ({ page }) => {

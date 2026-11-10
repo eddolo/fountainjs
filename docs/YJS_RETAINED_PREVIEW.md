@@ -55,8 +55,9 @@ Enter to split it. Select **Resume document sync** to merge both changes.
 Ada's Undo removes her typing while Grace's edit stays in both editors.
 Grace's Undo removes her edit while retaining Ada's typing. The pause control
 also hides peer cursors and requires a merge before switching rooms. Each room
-has a separate in-memory comment store. New comments and reply drafts return
-with their room during the same visit, along with posted threads and anchors.
+has a separate in-memory comment store. Drafts for new comments, replies, and
+edits return with their room during the same visit, along with posted threads
+and anchors.
 The open composer keeps its target type. Its saved selection is restored when
 the room document matches the version the author left.
 
@@ -95,10 +96,11 @@ capture and a desktop capture were visually inspected.
 The room comment workflow checks an inline draft in Launch and a whole-document
 draft in Planning. Returning to Launch restores the selected word and keeps
 keyboard focus on the switch button. The author can post to that word and
-return to the original thread to finish an unsubmitted reply. The production
-build passed 18 desktop checks and four mobile-emulation checks. The comments
-source suite passed 46 tests, including late snapshots, writes, and
-mapped-anchor results from a retired provider.
+return to the original thread to finish an unsubmitted reply. The journey also
+checks that an edit to the posted inline comment returns with Launch and saves
+to the same anchor. Source tests cover a failed save, a retry, and typing while
+the retry is pending. The 47 comment source tests and 22 recorded browser
+checks pass, including both mobile emulations.
 
 The homepage prepares both destination Yjs adapters before switching either
 editor or its comment store. If either preparation fails, both editors remain
