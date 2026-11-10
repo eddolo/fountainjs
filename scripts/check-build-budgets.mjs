@@ -684,7 +684,9 @@ const limits = Object.freeze({
   // bytes: 34 bytes above this cap. Add 64 bytes; all other limits stay fixed.
   // The checked trailing-run append totals 1,449,193 bytes, 169 above the
   // preceding limit. Allow 192 bytes for the added wire-offset checks.
-  'all CommonJS runtime code': 1415.25 * kibibyte,
+  // Clipboard picker keyboard focus and result labels measure 1,449,398
+  // bytes, 182 above the preceding limit. Allow 192 bytes for this repair.
+  'all CommonJS runtime code': 1415.4375 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

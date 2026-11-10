@@ -23,6 +23,7 @@ function preview(text: string): string {
 export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenuProps) {
   useFountainState(editor);
   const search = useRef<HTMLInputElement>(null);
+  const returnTarget = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState('');
   const history = editor ? getClipboardHistoryState(editor) : null;
   const entries = useMemo(() => {
@@ -31,12 +32,27 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
   }, [history, query]);
 
   useEffect(() => {
-    if (!history?.open) return;
+    const input = search.current;
+    if (!history?.open || !input) return;
+    const active = input.ownerDocument.activeElement as HTMLElement | null;
+    if (active !== input) returnTarget.current = active;
     setQuery('');
-    queueMicrotask(() => search.current?.focus());
+    input.focus();
   }, [history?.open]);
 
   if (!editor || !history?.open) return null;
+  const returnFocus = () => {
+    const target = returnTarget.current;
+    returnTarget.current = null;
+    if (target?.isConnected) target.focus?.({ preventScroll: true });
+  };
+  const close = () => {
+    closeClipboardHistory(editor);
+    returnFocus();
+  };
+  const paste = (id: string) => {
+    if (pasteClipboardHistoryEntry(editor, id)) returnFocus();
+  };
   const keepFocus = (event: MouseEvent) => event.preventDefault();
   return (
     <section
@@ -44,14 +60,23 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
       role="dialog"
       aria-modal="false"
       aria-label="Clipboard history"
-      onKeyDown={(event) => { if (event.key === 'Escape') closeClipboardHistory(editor); }}
+      onKeyDown={(event) => {
+        if (event.nativeEvent.isComposing) return;
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          close();
+        } else if (event.key === 'Enter' && event.target === search.current && entries.length === 1) {
+          event.preventDefault();
+          paste(entries[0]!.id);
+        }
+      }}
     >
       <header>
         <div>
           <strong>Clipboard history</strong>
           <small>Copied in this editor · stored in memory</small>
         </div>
-        <button type="button" aria-label="Close clipboard history" onClick={() => closeClipboardHistory(editor)}>×</button>
+        <button type="button" aria-label="Close clipboard history" onClick={close}>×</button>
       </header>
       <input
         ref={search}
@@ -70,7 +95,7 @@ export function ClipboardHistoryMenu({ editor, className }: ClipboardHistoryMenu
           </details>
           <div className="fountain-clipboard-history__actions">
             <time dateTime={new Date(entry.copiedAt).toISOString()}>{new Date(entry.copiedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
-            <button type="button" onMouseDown={keepFocus} onClick={() => pasteClipboardHistoryEntry(editor, entry.id)}>Paste</button>
+            <button type="button" aria-label={`Paste ${preview(entry.text)}`} onMouseDown={keepFocus} onClick={() => paste(entry.id)}>Paste</button>
             <button type="button" onMouseDown={keepFocus} onClick={() => removeClipboardHistoryEntry(editor, entry.id)} aria-label={`Remove ${preview(entry.text)}`}>Remove</button>
           </div>
         </article>)}

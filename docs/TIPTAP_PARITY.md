@@ -21,6 +21,12 @@ The latest local release preflight passes 5,163 source tests with zero
 failures or skips. The package and packed types checks pass. The current
 candidate still needs its own hosted matrix.
 [Local release preflight](RELEASES.md#local-release-preflight-2026-11-10).
+
+The clipboard-history picker now restores keyboard focus on close and paste.
+Native keyboard journeys in Chromium, Firefox and WebKit verify Escape from
+search, focus return to the toolbar, shortcut reopening, and Enter pasting one
+matching result at the preserved editor caret. An unmatched query leaves
+search focused. The Chromium baseline reproduced lost focus after Escape.
 Follow-up repairs prevent partially shared capacity failures, bind provider
 sessions to their original documents, and preserve native selection through
 metadata updates. The preceding public browser run passes 57 cases with two existing

@@ -632,6 +632,9 @@ inside an editor. Normal Ctrl/Cmd+C, Ctrl/Cmd+X, and Ctrl/Cmd+V keep their nativ
 behavior. Ctrl/Cmd+Alt+V (or `openClipboardHistory`) opens the supplied React
 picker when it is mounted. Every shortened preview has the complete value in a
 hover title and can be expanded to read the full text before pasting.
+In the current preview, Enter in search pastes a single matching entry.
+Closing the picker or successfully pasting returns focus to the control
+that had it before the picker opened.
 
 ```ts
 const kit = composeExtensions([

@@ -631,6 +631,10 @@ expands, pastes, removes, and clears entries; `FountainToolbar` displays its
 button only when the extension is installed. Non-React hosts subscribe to the
 same plugin state and render their own picker.
 
+The React picker focuses search on open. Enter pastes when the search has
+exactly one result. Escape, the close button, and successful paste return focus
+to the previously focused control when it is still mounted.
+
 Persistence is deliberately synchronous and host-owned:
 
 ```ts

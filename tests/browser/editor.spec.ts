@@ -5767,20 +5767,43 @@ test('opens the searchable clipboard-history picker in the public React toolbar'
     document.dispatchEvent(new Event('selectionchange'));
   });
   await page.keyboard.press('ControlOrMeta+c');
-  await expect.poll(async () => page.getByRole('button', { name: /Clipboard history/ }).isEnabled()).toBe(true);
-  await page.keyboard.press('End');
-  await page.getByRole('button', { name: /Clipboard history/ }).click();
+  const trigger = page.getByRole('button', { name: /Clipboard history/ });
+  await expect(trigger).toBeEnabled();
+  await trigger.focus();
+  await trigger.press('Enter');
 
   const picker = page.getByRole('dialog', { name: 'Clipboard history' });
-  await expect(picker).toBeVisible();
+  const search = picker.getByLabel('Search clipboard history');
+  await expect(search).toBeFocused();
+  await search.press('Escape');
+  await expect(picker).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+
+  await editor.focus();
+  await paragraph.evaluate((element) => {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    const selection = getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    document.dispatchEvent(new Event('selectionchange'));
+  });
+  const original = await paragraph.textContent();
+  await page.keyboard.press('ControlOrMeta+Alt+v');
+  await expect(search).toBeFocused();
   await expect(picker.getByText('Copied in this editor · stored in memory')).toBeVisible();
   await expect(picker.locator('summary')).toContainText('the real npm package, not a picture');
   await expect(picker.locator('summary')).toHaveAttribute('title', /the real npm package, not a picture/);
-  await picker.getByLabel('Search clipboard history').fill('real npm package');
+  await search.fill('no match for this query');
+  await search.press('Enter');
+  await expect(search).toBeFocused();
+  await search.fill('real npm package');
   await expect(picker.locator('[role="listitem"]')).toHaveCount(1);
-  await picker.getByRole('button', { name: 'Paste' }).click();
+  await search.press('Enter');
   await expect(picker).toHaveCount(0);
-  await expect(paragraph).toContainText('the real npm package, not a picture');
+  await expect(editor).toBeFocused();
+  await expect(paragraph).toHaveText(`${original}${original}`);
 });
 
 test('keeps the public outline stable, hierarchical, active, and navigable', async ({ page }) => {
