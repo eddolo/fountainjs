@@ -639,7 +639,7 @@ describe('semantic selection DOM bridge', () => {
     const view = new EditorView(mount, editor);
     const wrapper = view.dom.querySelector<HTMLElement>('[data-fountain-text-path="0.0"]');
     const text = wrapper?.firstChild;
-    if (!wrapper || !text || text.nodeType !== Node.TEXT_NODE) throw new Error('Expected rendered text.');
+    if (!wrapper || !text || text.nodeType !== window.Node.TEXT_NODE) throw new Error('Expected rendered text.');
     const widget = document.createElement('span');
     widget.dataset.fountainWidget = 'page-gap';
     widget.contentEditable = 'false';
