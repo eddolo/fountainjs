@@ -1,5 +1,21 @@
 # Independent native DOCX audit
 
+## Keep with next 2026 11 10
+
+The browser used to leave a two-line caption on page one while moving the
+following paragraph to page two, even with `w:keepNext` enabled. The preview
+now reads the imported setting and measures the entire caption with a legal
+opening of its successor. It tries a shorter legal split before moving the
+successor away. An explicit disabled setting on a heading overrides the
+Fountain heading default. Explicit page breaks still take priority.
+
+The paired DOCX fixture splits the caption and body with the setting off.
+With it enabled, Chromium, Firefox, WebKit, Chromium print PDF and LibreOffice
+24.2.7.2 agree that both blocks start on page two. The preview, both PDF pages
+and the native control were visually inspected. Unit coverage includes a
+three-line successor that cannot legally split and a four-line successor that
+can. Longer keep chains and nested layout are outside this audit.
+
 ## Keep lines together 2026 11 10
 
 The DOCX importer retained `w:keepLines`, but the preview split the same

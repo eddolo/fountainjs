@@ -496,16 +496,18 @@ export function layoutPages(
     if (item.breakBefore && page().placements.length) nextPage(item.id);
 
     const next = normalized[itemIndex + 1];
-    if (item.keepWithNext && !item.breakAfter && next && !next.item.breakBefore && fragments.length === 1) {
-      const nextOpening = next.fragments.slice(0, next.minimumStart);
-      const pairFragments = [fragments[0], ...nextOpening];
+    if (item.keepWithNext && !item.breakAfter && next && !next.item.breakBefore) {
+      const nextOpening = next.minimumStart + next.minimumEnd > next.fragments.length
+        ? next.fragments
+        : next.fragments.slice(0, next.minimumStart);
+      const pairFragments = [...fragments, ...nextOpening];
       const pairContentHeight = pairFragments.reduce((sum, fragment) => sum + fragment.height, 0);
       const pair = pairContentHeight
         + additionalFootnoteHeight(page(), pairFragments, placedFootnotes, pairContentHeight, geometry.bodyHeight);
       if (pair > geometry.bodyHeight) warnings.push(Object.freeze({
         code: 'constraint-relaxed',
         itemId: item.id,
-        detail: `Keep-with-next for ${item.id} exceeds one empty page body and was relaxed.`,
+        detail: `Keep-with-next exceeds page capacity for ${item.id}.`,
       }));
       else if (pair > remaining(page()) && page().placements.length) nextPage(item.id);
     }
@@ -549,24 +551,18 @@ export function layoutPages(
         continue;
       }
 
-      const placed = to - from;
-      const rest = fragments.length - to;
       const firstPlacement = from === 0;
-      const violatesStart = firstPlacement && to < fragments.length && placed < minimumStart;
-      const violatesEnd = rest > 0 && rest < minimumEnd;
-      if ((violatesStart || violatesEnd) && target.placements.length) {
-        nextPage(item.id);
-        continue;
+      const lastLegalSplit = fragments.length - minimumEnd;
+      if (to < fragments.length && to > lastLegalSplit && lastLegalSplit > from
+        && (!firstPlacement || lastLegalSplit - from >= minimumStart)) {
+        to = lastLegalSplit;
       }
-      if (violatesEnd) {
-        const adjusted = to - (minimumEnd - rest);
-        if (adjusted > from && (!firstPlacement || adjusted - from >= minimumStart)) to = adjusted;
-      }
-      const finalPlaced = to - from;
-      const finalRest = fragments.length - to;
-      const relaxedStart = firstPlacement && to < fragments.length && finalPlaced < minimumStart;
-      const relaxedEnd = finalRest > 0 && finalRest < minimumEnd;
-      if (relaxedStart || relaxedEnd) {
+      const rest = fragments.length - to;
+      if (rest && ((firstPlacement && to - from < minimumStart) || rest < minimumEnd)) {
+        if (target.placements.length) {
+          nextPage(item.id);
+          continue;
+        }
         warnings.push(Object.freeze({
           code: 'constraint-relaxed',
           itemId: item.id,

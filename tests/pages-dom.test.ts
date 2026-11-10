@@ -230,12 +230,12 @@ describe('DOM page measurement adapter', () => {
     })).toThrow(/at least two fragment elements/);
   });
 
-  it('keeps a one-line rendered heading with the following block', () => {
+  it.each([undefined, false])('applies the heading keep-with-next default unless explicitly overridden (%s)', keepWithNext => {
     const document = schema().nodeFromJSON({
       type: 'doc',
       content: [
         { type: 'paragraph', content: [{ type: 'text', text: 'Lead' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'One-line heading' }] },
+        { type: 'heading', attrs: { level: 2, layout: keepWithNext === false ? { unit: 'pt', keepWithNext } : undefined }, content: [{ type: 'text', text: 'One-line heading' }] },
         { type: 'paragraph', content: [{ type: 'text', text: 'Following paragraph' }] },
       ],
     });
@@ -259,12 +259,13 @@ describe('DOM page measurement adapter', () => {
     expect(snapshot.measurement.items[1]).toMatchObject({
       id: 'block:1:heading',
       height: 10,
-      keepWithNext: true,
     });
-    expect(snapshot.layout.pages.map((page) => page.placements.map((placement) => placement.itemId))).toEqual([
-      ['block:0:paragraph'],
-      ['block:1:heading', 'block:2:paragraph'],
-    ]);
+    expect(snapshot.measurement.items[1].keepWithNext).toBe(keepWithNext === false ? undefined : true);
+    expect(snapshot.layout.pages.map((page) => page.placements.map((placement) => placement.itemId))).toEqual(
+      keepWithNext === false
+        ? [['block:0:paragraph', 'block:1:heading'], ['block:2:paragraph']]
+        : [['block:0:paragraph'], ['block:1:heading', 'block:2:paragraph']],
+    );
   });
 
   it('measures blockquotes at canonical direct-child boundaries with repeated container overhead', () => {

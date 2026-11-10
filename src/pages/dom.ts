@@ -1067,18 +1067,17 @@ function measureDOMPageFlowInternal(
         fragments: text.fragments,
         minimumStart: paragraphLayout?.keepLinesTogether ? text.fragments.length : minimumLines,
         minimumEnd: minimumLines,
-        ...(node.type.name === 'heading' ? { keepWithNext: true } : {}),
       };
       sources = text.sources;
     } else {
       const whole = wholeItem(element, itemId, path, definitionMeasurements, count);
-      item = node.type.name === 'heading'
-        ? { ...whole.item, keepWithNext: true }
-        : whole.item;
+      item = whole.item;
       sources = whole.sources;
     }
-    if (paragraphLayout?.pageBreakBefore === true) {
-      item = { ...item, breakBefore: true };
+    const keepWithNext = paragraphLayout?.keepWithNext ?? (!continuation && node.type.name === 'heading');
+    const breakBefore = paragraphLayout?.pageBreakBefore === true;
+    if (keepWithNext || breakBefore) {
+      item = { ...item, ...(keepWithNext && { keepWithNext }), ...(breakBefore && { breakBefore }) };
     }
 
     const heights = item.fragments?.map((fragment) => fragment.height) ?? [item.height];

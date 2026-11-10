@@ -119,6 +119,41 @@ describe('DOM-independent page layout', () => {
     expect(result.warnings).toEqual([]);
   });
 
+  it('keeps a multiline block with a legal opening of the following paragraph', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'lead', height: 50 },
+      { id: 'caption', keepWithNext: true, fragments: [{ id: 'a', height: 10 }, { id: 'b', height: 10 }] },
+      {
+        id: 'paragraph', minimumStart: 2, minimumEnd: 2,
+        fragments: ['a', 'b', 'c'].map(id => ({ id, height: 15 })),
+      },
+    ], geometry);
+
+    expect(result.pages.map(page => page.placements.map(item => item.itemId))).toEqual([
+      ['lead'], ['caption', 'paragraph'],
+    ]);
+    expect(result.warnings).toEqual([]);
+  });
+
+  it('takes a shorter legal opening instead of moving the following paragraph away', () => {
+    const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
+    const result = layoutPages([
+      { id: 'lead', height: 45 },
+      { id: 'caption', height: 20, keepWithNext: true },
+      {
+        id: 'paragraph', minimumStart: 2, minimumEnd: 2,
+        fragments: ['a', 'b', 'c', 'd'].map(id => ({ id, height: 10 })),
+      },
+    ], geometry);
+
+    expect(result.pages[0].placements.map(item => item.itemId)).toEqual(['lead', 'caption', 'paragraph']);
+    expect(result.pages.map(page => page.placements.at(-1))).toMatchObject([
+      { fragmentFrom: 0, fragmentTo: 2 }, { fragmentFrom: 2, fragmentTo: 4 },
+    ]);
+    expect(result.warnings).toEqual([]);
+  });
+
   it('reports when keep-with-next cannot fit on an empty page', () => {
     const geometry = createPageGeometry({ size: { width: 100, height: 120 }, margins: 10 });
     const result = layoutPages([

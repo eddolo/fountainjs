@@ -1572,23 +1572,26 @@ Object.assign(globalThis, {
         importedStyledPrintGeometry(),
       ),
       previewImportedStyled: () => renderPagesPreview(importedStyledPrintGeometry(), true),
-      previewDOCXParagraphBreak: (keepLinesTogether?: boolean) => {
+      previewDOCXParagraphFlow: (rule: 'break' | 'keepLinesTogether' | 'keepWithNext', enabled = true) => {
         const schema = pagesEditor.state.schema;
         const paragraph = (text: string, pageBreakBefore: boolean) => schema.node('paragraph', {
           layout: { unit: 'pt', pageBreakBefore },
         }, [schema.text(text)]);
-        const lines = (text: readonly string[], keepTogether: boolean) => schema.node('paragraph', {
-          layout: { unit: 'pt', keepLinesTogether: keepTogether, lineHeight: 18, lineHeightUnit: 'pt', lineHeightRule: 'exact' },
+        const lines = (text: readonly string[], applyRule = false) => schema.node('paragraph', {
+          layout: { unit: 'pt', lineHeight: 18, lineHeightUnit: 'pt', lineHeightRule: 'exact', ...(applyRule && { [rule]: enabled }) },
         }, text.flatMap((line, index) => index ? [schema.node('hard_break'), schema.text(line)] : [schema.text(line)]));
-        const source = keepLinesTogether === undefined ? schema.node('doc', {}, [
+        const height = rule === 'keepWithNext' ? 176 : 152;
+        const source = rule === 'break' ? schema.node('doc', {}, [
           paragraph('First page introduction', false),
           paragraph('Second page opening', true),
           paragraph('Second page continuation', false),
         ]) : schema.node('doc', {
-          pageSettings: { unit: 'pt', width: 261, height: 114, marginTop: 7.5, marginRight: 7.5, marginBottom: 7.5, marginLeft: 7.5 },
+          pageSettings: { unit: 'pt', width: 261, height: height * 0.75, marginTop: 7.5, marginRight: 7.5, marginBottom: 7.5, marginLeft: 7.5 },
         }, [
-          lines(['Lead first', 'Lead second', 'Lead third'], false),
-          lines(['Body first', 'Body second', 'Body third', 'Body fourth'], keepLinesTogether),
+          lines(['Lead first', 'Lead second', 'Lead third']),
+          ...(rule === 'keepWithNext'
+            ? [lines(['Caption first', 'Caption second'], true), lines(['Body first', 'Body second'])]
+            : [lines(['Body first', 'Body second', 'Body third', 'Body fourth'], true)]),
         ]);
         const bytes = exportDOCX(source).bytes;
         const imported = importDOCX(bytes, schema).document;
@@ -1597,8 +1600,7 @@ Object.assign(globalThis, {
           .setSelection(Selection.cursor([0, 0], 0)));
         pagesView.dom.style.boxSizing = 'content-box';
         pagesView.dom.style.width = '328px';
-        const height = keepLinesTogether === undefined ? 210 : 152;
-        const preview = renderPagesPreview(createPageGeometry({ size: { width: 348, height }, margins: 10 }), true);
+        const preview = renderPagesPreview(createPageGeometry({ size: { width: 348, height: rule === 'break' ? 210 : height }, margins: 10 }), true);
         return { bytes: Array.from(bytes), preview };
       },
       previewPhysical: (size: 'a4' | 'letter') => renderPagesPreview(createPageGeometry({

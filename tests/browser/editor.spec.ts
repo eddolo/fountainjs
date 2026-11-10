@@ -1113,7 +1113,7 @@ test('prints a mixed repeated-footnote, merged-table, and manual-break document 
 test('starts a new preview sheet at a DOCX paragraph break', async ({ page, browserName }, info) => {
   await page.goto('/browser-tests.html?fixture=pages-preview');
   const { bytes, preview } = await page.evaluate(() => (
-    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphBreak()
+    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphFlow('break')
   ));
   const docxPath = info.outputPath('paragraph-break.docx');
   await writeFile(docxPath, Buffer.from(bytes));
@@ -1143,7 +1143,7 @@ test('starts a new preview sheet at a DOCX paragraph break', async ({ page, brow
 test('keeps all lines of a DOCX paragraph together when it fits on the next sheet', async ({ page, browserName }, info) => {
   await page.goto('/browser-tests.html?fixture=pages-preview');
   const runPreview = (keepLinesTogether: boolean) => page.evaluate(enabled => (
-    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphBreak(enabled)
+    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphFlow('keepLinesTogether', enabled)
   ), keepLinesTogether);
   const control = await runPreview(false);
   const preview = page.locator('#browser-page-preview');
@@ -1165,6 +1165,37 @@ test('keeps all lines of a DOCX paragraph together when it fits on the next shee
     expect(pages).toHaveLength(2);
     expect(pages[0]).not.toContain('Body first');
     expect(pages[1]).toMatch(/Body first.*Body second.*Body third.*Body fourth/su);
+  }
+});
+
+test('keeps a multiline DOCX caption with the following paragraph', async ({ page, browserName }, info) => {
+  await page.goto('/browser-tests.html?fixture=pages-preview');
+  const runPreview = (keepWithNext: boolean) => page.evaluate(enabled => (
+    (globalThis as any).fountainBrowserTest.pages.previewDOCXParagraphFlow('keepWithNext', enabled)
+  ), keepWithNext);
+  const preview = page.locator('#browser-page-preview');
+  const sheets = preview.locator('.fountain-page-preview__sheet');
+  const caption = /Caption first.*Caption second/su;
+  const body = /Body first.*Body second/su;
+  const control = await runPreview(false);
+  await writeFile(info.outputPath('split-control.docx'), Buffer.from(control.bytes));
+  await expect(sheets.first()).toContainText(caption);
+  await expect(sheets.nth(1)).toContainText(body);
+
+  const enabled = await runPreview(true);
+  await writeFile(info.outputPath('keep-next.docx'), Buffer.from(enabled.bytes));
+  await preview.screenshot({ path: info.outputPath('keep-next-preview.png') });
+  expect(enabled.preview).toMatchObject({ pageCount: 2, sourceUnchanged: true });
+  await expect(sheets.first()).not.toContainText('Caption first');
+  await expect(sheets.nth(1)).toContainText(caption);
+  await expect(sheets.nth(1)).toContainText(body);
+  if (browserName === 'chromium') {
+    const pdf = await page.pdf({ path: info.outputPath('keep-next-print.pdf'), preferCSSPageSize: true });
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(2);
+    expect(pages[0]).not.toContain('Caption first');
+    expect(pages[1]).toMatch(caption);
+    expect(pages[1]).toMatch(body);
   }
 });
 
