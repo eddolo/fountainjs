@@ -102,7 +102,7 @@ test('keeps native form emptiness custom policy failures and canceled invalid ev
 test('validates required documents custom errors and labels through the native form workshop', async ({ page }, info) => {
   await webComponentValidationJourney(page, info);
 });
-import { conversionCellAlignmentJourney, conversionLabJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionRowSplittingJourney, conversionScientificPreviewJourney, conversionTableIndentJourney, conversionWordHyphensJourney } from './conversion-lab-journey';
+import { conversionCellAlignmentJourney, conversionLabJourney, conversionPagePreviewJourney, conversionRowHeightJourney, conversionRowSplittingJourney, conversionScientificPreviewJourney, conversionSlowImagePreviewJourney, conversionTableIndentJourney, conversionWordHyphensJourney } from './conversion-lab-journey';
 import { modelIntegrityJourney } from './model-integrity-journey';
 import { childOffsetJourney } from './child-offset-journey';
 
@@ -294,6 +294,18 @@ test('previews and prints only the current local draft in the conversion lab', a
 
 test('keeps Word table cell alignment through editor, page preview and DOCX reopen', async ({ page }, info) => {
   await conversionCellAlignmentJourney(page, info);
+});
+
+test('conversion lab previews and prints a draft while a linked image stalls', async ({ page }, info) => {
+  const pdf = await conversionSlowImagePreviewJourney(page, info);
+  if (pdf) {
+    const pages = await extractPDFPageText(pdf);
+    expect(pages).toHaveLength(1);
+    for (const text of ['Before the figures', 'Image unavailable: Weather chart', 'Local figure caption', 'After the figures']) {
+      expect(pages[0]).toContain(text);
+    }
+    expect(pages[0]).not.toContain('Add a caption');
+  }
 });
 
 test('conversion lab retains Word row splitting policy through preview and DOCX reopen', async ({ page }, info) => {

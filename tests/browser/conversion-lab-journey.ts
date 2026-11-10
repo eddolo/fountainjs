@@ -423,6 +423,72 @@ export async function conversionPagePreviewJourney(page: Page, info: TestInfo) {
   return pdf;
 }
 
+export async function conversionSlowImagePreviewJourney(page: Page, info: TestInfo) {
+  // Permit one local test fixture so we can exercise a real pending image.
+  // The public page's normal CSP blocks all linked images.
+  await page.route('**/conversion-lab.html', async route => {
+    const response = await route.fetch();
+    await route.fulfill({ response, body: (await response.text()).replace('img-src data: blob:', "img-src 'self' data: blob:") });
+  });
+  await page.goto('/conversion-lab.html');
+  const url = new URL('/slow-preview-figure.png', page.url()).href;
+  const pixels = await readFile(new URL('../fixtures/cross-container-figure.png', import.meta.url));
+  let release = () => {};
+  const held = new Promise<void>(resolve => { release = resolve; });
+  await page.route(url, async route => {
+    await held;
+    await route.fulfill({ contentType: 'image/png', body: pixels });
+  });
+
+  try {
+    const requested = page.waitForRequest(url);
+    const source = `<p>Before the figures</p><figure><img src="${url}" alt="Weather chart" width="266" height="40"></figure>
+      <figure><img src="data:image/png;base64,${pixels.toString('base64')}" alt="Embedded sample" width="160" height="24"><figcaption>Local figure caption</figcaption></figure>
+      <p>After the figures</p>`;
+    await page.getByLabel('Choose documents').setInputFiles({ name: 'figures.html', mimeType: 'text/html', buffer: Buffer.from(source) });
+    const workspace = page.getByRole('region', { name: 'Conversion workspace: figures.html' });
+    const editor = workspace.getByRole('textbox', { name: 'Imported document editor' });
+    const original = editor.locator('img[alt="Weather chart"]');
+    await expect(original).toHaveAttribute('src', url);
+    await original.scrollIntoViewIfNeeded();
+    await requested;
+    const controls = workspace.getByRole('region', { name: 'Draft pagination' });
+    const build = controls.getByRole('button', { name: 'Build page preview' });
+    const sheets = controls.locator('.fountain-page-preview__sheet');
+    const unavailable = sheets.locator('[role="img"][aria-label="Image unavailable: Weather chart"]');
+    await build.click();
+    await expect(sheets.first()).toContainText('After the figures');
+    await expect(unavailable).toBeVisible();
+    await expect(sheets.locator('img[alt="Embedded sample"]')).toHaveJSProperty('naturalWidth', 400);
+    await expect(sheets.locator('figcaption')).toHaveText('Local figure caption');
+    await expect(sheets.locator('.fountain-image__caption-input, .fountain-image__resize-controls, .fountain-image__error')).toHaveCount(0);
+    await expect(sheets.locator('img[srcset], img[alt="Weather chart"]')).toHaveCount(0);
+    await expect(controls.getByRole('button', { name: 'Print / Save PDF' })).toBeEnabled();
+    await controls.getByText('1 layout warning', { exact: true }).click();
+    await expect(controls.getByText('One image was unavailable in this preview.', { exact: false })).toBeVisible();
+    await expect(original).toHaveAttribute('src', url);
+    await sheets.first().screenshot({ path: info.outputPath('preview-with-unavailable-image.png') });
+
+    release();
+    await expect(original).toHaveJSProperty('naturalWidth', 400);
+    await expect(unavailable).toBeVisible();
+    await page.emulateMedia({ media: 'print' });
+    await expect(editor).toBeHidden();
+    await expect(unavailable).toBeVisible();
+    const pdf = info.project.name === 'chromium'
+      ? await page.pdf({ path: info.outputPath('preview-with-unavailable-image.pdf'), preferCSSPageSize: true })
+      : undefined;
+    await page.emulateMedia({ media: 'screen' });
+    await build.click();
+    await expect(sheets.locator('img[alt="Weather chart"]')).toHaveJSProperty('naturalWidth', 400);
+    await expect(unavailable).toHaveCount(0);
+    await sheets.first().screenshot({ path: info.outputPath('preview-after-image-loaded.png') });
+    return pdf;
+  } finally {
+    release();
+  }
+}
+
 export async function conversionLabJourney(page: Page, info: TestInfo) {
   const errors: string[] = [];
   let externalRequests = 0;
@@ -460,7 +526,10 @@ export async function conversionLabJourney(page: Page, info: TestInfo) {
   await editor.click(); await page.keyboard.press('ControlOrMeta+End'); await page.keyboard.type(' Another edit.');
   await expect(workspace.getByLabel('Round-trip result')).toContainText('Outdated check');
   await files.getByRole('button', { name: 'article.html', exact: true }).click();
-  await expect(page.getByRole('region', { name: 'Conversion workspace: article.html', exact: true })).toContainText('unmapped-block-wrapper');
+  const article = page.getByRole('region', { name: 'Conversion workspace: article.html', exact: true });
+  await expect(article).toContainText('unmapped-block-wrapper');
+  await article.getByRole('button', { name: 'Build page preview' }).click();
+  await expect(article.locator('.fountain-page-preview__sheet [aria-label="Image unavailable: Remote image"]')).toBeVisible();
   expect(await page.evaluate(() => (window as any).labInjected)).toBeUndefined();
   expect(externalRequests).toBe(0);
   await files.getByRole('button', { name: 'word.docx', exact: true }).click();
