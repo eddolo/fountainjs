@@ -7,6 +7,8 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Reopen HTML and Fountain JSON downloads from CommonMark source review in
+  the Conversion Lab with the source-review schema.
 - Restore keyboard focus after closing clipboard history or pasting from it.
   Enter in search pastes a single match, and each Paste button names its entry.
   Removing or clearing clips returns focus to search and updates the live

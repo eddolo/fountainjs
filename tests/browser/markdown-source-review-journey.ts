@@ -13,7 +13,7 @@ export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo)
   await page.goto('/conversion-lab.html');
   const files = page.getByLabel('Choose documents');
   const upload = (name: string) => files.setInputFiles({ name, mimeType: 'text/markdown', buffer: Buffer.from(source) });
-  const mode = page.getByRole('checkbox', { name: 'Use CommonMark source review for Markdown', exact: true });
+  const mode = page.getByRole('checkbox', { name: /^Use CommonMark source review for Markdown/ });
   await mode.check();
   await upload('review.md');
   const review = page.getByRole('region', { name: 'Conversion workspace: review.md' });
@@ -37,7 +37,7 @@ export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo)
   await expect(editor).toContainText('Draft body. Reviewed in Fountain.');
   await editor.screenshot({ path: info.outputPath('source-review-editor.png') });
 
-  async function download(format: 'markdown' | 'html', extension: 'md' | 'html') {
+  async function download(format: 'markdown' | 'html' | 'json', extension: 'md' | 'html' | 'json') {
     await review.getByRole('combobox', { name: 'Export format' }).selectOption(format);
     const pending = page.waitForEvent('download');
     await review.getByRole('button', { name: 'Download export', exact: true }).click();
@@ -49,6 +49,8 @@ export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo)
   expect(await readFile(await download('markdown', 'md'), 'utf8')).toBe(
     source.replace('Draft body.', 'Draft body. Reviewed in Fountain.'),
   );
+  const jsonPath = await download('json', 'json');
+  const savedModel = JSON.parse(await readFile(jsonPath, 'utf8'));
   const readerPath = await download('html', 'html');
   await expect(review.getByRole('checkbox', { name: 'Omit Markdown’s editor-only caret paragraphs in HTML' })).toBeChecked();
   const reader = await page.context().newPage();
@@ -69,4 +71,24 @@ export async function runMarkdownSourceReviewJourney(page: Page, info: TestInfo)
     for (const request of remoteRequests) expect(request.failure()?.errorText).toMatch(/csp/i);
     await reader.screenshot({ path: info.outputPath('source-review-reader.png'), fullPage: true });
   } finally { await reader.close(); }
+
+  await mode.check();
+  await files.setInputFiles([jsonPath, readerPath]);
+  const reopened = page.getByRole('region', { name: 'Conversion workspace: source-review.json' });
+  await expect(reopened).toContainText('This file uses CommonMark source review');
+  await expect(reopened.getByRole('textbox', { name: 'Imported document editor' })).toContainText('Draft body. Reviewed in Fountain.');
+  const pending = page.waitForEvent('download');
+  await reopened.getByRole('button', { name: 'Download export', exact: true }).click();
+  const reopenedPath = info.outputPath('reopened-review.json');
+  await (await pending).saveAs(reopenedPath);
+  expect(JSON.parse(await readFile(reopenedPath, 'utf8'))).toEqual(savedModel);
+
+  await page.getByRole('navigation', { name: 'Imported files' }).getByRole('button', { name: 'source-review.html', exact: true }).click();
+  const html = page.getByRole('region', { name: 'Conversion workspace: source-review.html' });
+  const htmlEditor = html.getByRole('textbox', { name: 'Imported document editor' });
+  await expect(htmlEditor.locator('[data-fountain-inert-raw-text]')).toContainText('window.sourceRan = true');
+  await expect(htmlEditor.locator('[data-fountain-inert-anchor]')).toHaveCount(1);
+  await expect(htmlEditor.locator('[data-fountain-source-eof]')).toContainText('<div title="unfinished');
+  expect(await page.evaluate(() => Reflect.has(window, 'sourceRan'))).toBe(false);
+  await htmlEditor.screenshot({ path: info.outputPath('source-review-reopened-html.png') });
 }

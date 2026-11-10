@@ -191,7 +191,10 @@ the original declaration, script spelling, blocked autolink, CRLF endings,
 and unfinished HTML in actual Markdown downloads. Chromium, Firefox and
 WebKit also reopened the separate HTML reader export with the script inactive
 and the external image load blocked. Rewritten Markdown is reported when
-source preservation cannot be verified. [Lab workflow](CONVERSION_LAB.md#workflow).
+source preservation cannot be verified. A follow-up exercises the file picker
+with those HTML and Fountain JSON downloads. The lab now reuses the selected
+source-review schema, and the saved JSON model reopens exactly.
+[Lab workflow](CONVERSION_LAB.md#workflow).
 
 The DOCX bridge now retains omitted and explicit inline drawing distances.
 Three browser downloads of the scientific fixture match both original header

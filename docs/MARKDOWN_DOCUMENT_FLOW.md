@@ -19,14 +19,14 @@ also repairs equivalent DOM-caret synchronization across line-number widgets.
 [Behavior and verification](SERVER_HTML.md#physical-preformatted-breaks-and-native-caret-affinity-2026-11-03-unreleased).
 The v12 checkpoints below are historical evidence.
 
-Latest verification (2026-11-03, Unreleased): the explicit complete-file source
-route reaches **635/652** body-semantic matches, separately enforcing declaration
-and EOF-data retention. The older fragment source route stays 631/652, safe
-optional HTML stays 613/652 and default Markdown stays 563/652. Source capture
-has its own frontmatter policy (633/652); exact native retention and HTML
-canonicalization are reported independently. This is not full CommonMark or
-pixel fidelity. [Current evidence, remaining cases and reproduction](HTML_INERT_SOURCE.md#complete-file-commonmark-verification-2026-11-03-unreleased)
-supersede the dated intermediate counts below.
+Latest verification (2026-11-10, Unreleased): the explicit complete-file
+source-data profile reaches **652/652** body-semantic matches with Markdown-body
+delimiters, literal bare addresses, omission of editor-only caret hosts, and
+inactive URI capture. The gate verifies LF and CRLF with 1,304 separate exact
+source checks. The ordinary complete-file profile matches 635/652, fragment
+source 631/652, safe optional HTML 613/652 and default Markdown 563/652.
+Native JSON equality and safe HTML model reopening have separate checks.
+[Profile options and source-data boundary](MARKDOWN_SOURCE.md).
 
 Unreleased anchor-retention follow-up (2026-11-03): an explicit inert anchor
 adapter retains otherwise unrepresented destinations/attributes in editable
@@ -54,12 +54,11 @@ ambiguous navigation stays rejected; its original spelling can survive only in
 the separate source snapshot. No URL-policy relaxation or CommonMark score
 promotion follows from source retention or better diagnostics.
 
-## Current remaining boundaries (2026-11-03, Unreleased)
+## Compatibility differences in the ordinary complete-file profile
 
-The strongest complete-file source profile matches 635/652 body projections.
-Its seventeen differences are still counted as differences, with the existing
-contracts below. They are not the twenty-two unresolved conversion cases in
-the dated October checkpoint.
+The ordinary complete-file profile matches 635/652 body projections. Its
+seventeen differences follow the policies below. The separate 652-case
+source-data profile uses the explicit options described above.
 
 | Cases | Current contract |
 | --- | --- |
@@ -67,22 +66,19 @@ the dated October checkpoint.
 | 608, 611–612 | Default GFM-style literal-address linking exceeds CommonMark. The existing public `autolinkLiterals: false` import choice leaves bare addresses literal; it is not a certified complete CommonMark mode. |
 | 207, 218, 239–240, 280–284, 315 | Empty documents/list items/quotes receive editable caret paragraphs. The gate separately verifies that this is the only difference and that source/canonical reopening retains content. |
 
-Native-model HTML retention is a different question. Empty heading text leaves
-now survive safe HTML via the explicit writer marker. Exact safe-HTML native
-reopens reach 1,288/1,304, with six plain-code projection cases and two adjacent
-equal-mark text-leaf merging cases remaining. The latter are representation
-canonicalization, not proof of lost visible text. Preformatted rich HTML needs
-a reviewed bridge if its formatting must survive plain-code projection; do not
-silently change the literal-code contract or force Fountain toward another AST.
-Source export also reports its three EOF-envelope model differences. Exact
-Markdown snapshots and native JSON remain independently checked backups.
+Exact safe HTML model reopening passes 1,298/1,304 checks. Examples 148, 187
+and 494 merge adjacent equally marked text leaves on both line endings.
+Keep Fountain JSON when exact model boundaries matter. The separate
+source-data reopening reports 1,292 checks equal apart from source tokens and
+12 further differences. Exact Markdown snapshots and native JSON remain
+independently checked.
 
 Run `node scripts/check-markdown-conformance.mjs
---complete-source-report=artifacts/empty-heading-complete-corpus-20261103.json`
-and then `node artifacts/summarize-empty-heading-corpus-20261103.mjs` to reproduce
-the current case classification. The summary preserves concrete model paths and
-source examples; semantic agreement, model equality and visual fidelity remain
-separate. [Empty heading contract and verification](SERVER_HTML.md#empty-heading-text-retention-2026-11-03-unreleased).
+--complete-source-report=artifacts/source-review-reopen-corpus-20261110.json`
+to reproduce the current profile counts and inspect the reported model paths.
+The public lab also reopens its downloaded JSON and HTML through the file
+picker using the source-review schema.
+[Recorded lab workflow](CONVERSION_LAB.md#workflow).
 
 ## Historical remaining CommonMark work (2026-10-08, Unreleased)
 

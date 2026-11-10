@@ -45,12 +45,14 @@ DOCX contained the original raster bytes and a drawing sized to the chart's
 editor and the actual download rendered by the independent browser viewer
 docx-preview. Native Word and LibreOffice layout were outside this run.
 
-Select **Use CommonMark source review for Markdown** before choosing a
-Markdown file. The mode combines CommonMark delimiter and bare-address
+Select **Use CommonMark source review for Markdown, HTML and Fountain JSON**
+before choosing a Markdown file. The mode combines CommonMark delimiter and bare-address
 rules with source capture. It retains supported HTML declarations, unfinished
 end tags, and `script`, `style`, and `textarea` text as inert data. Blocked
-autolinks keep their destinations as data. The selection applies to the
-next Markdown files, and each draft keeps its original import mode.
+autolinks keep their destinations as data. Each draft keeps its import mode.
+Enable the same option before reopening the draft's downloaded HTML or
+Fountain JSON. JSON restores the saved model, including the source-review
+nodes. Keep Markdown for its original syntax and line endings.
 
 Download **Markdown** to retain original syntax wherever the source proof
 applies. Edits to independently mapped blocks keep the surrounding source,
@@ -60,6 +62,12 @@ rewritten Markdown. The download can contain the author's original HTML. Choose
 external resource loads. Editor-only Markdown caret paragraphs are omitted
 by default in that reader. The import report identifies other HTML that the
 lab could only retain as literal text or project with losses.
+
+Chromium, Firefox and WebKit reopen the downloaded JSON and HTML through the
+file picker. Re-exported JSON matches the saved model exactly. The HTML
+reopens with inert script text, blocked destinations, and the unfinished tag
+visible in the editor. The original Chromium run rejected the downloaded
+JSON because its import schema lacked `html_inert_raw_text`.
 
 With **Preserve supported HTML structure** enabled, select **Preserve blocked
 Markdown autolinks as inactive data** before uploading. The document retains
