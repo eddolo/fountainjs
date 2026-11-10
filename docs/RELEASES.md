@@ -166,6 +166,30 @@ speed improvement or format-parity certification. Fresh full CI is still require
 The release workflow must never publish from an arbitrary branch head or infer
 a version from a GitHub release title.
 
+### Local release preflight, 2026-11-10
+
+Runtime commit `66d976ac` passed the local build, API, package, server runtime,
+headless, CommonMark, math, DOCX, size, performance, framework type and full
+source gates. The source run passed 5,163 tests in 322 files. Packed entry
+resolution passed for the general package and for the Angular ESM entries.
+The host lacked the npm CLI, so the packed type checker read the tarball
+produced by `pnpm pack`. Publint exited successfully with the known DOCX
+format warning. The package smoke check loaded the CommonJS DOCX entry.
+Local logs are under `artifacts/release-preflight-66d976ac/`.
+
+The subsequent site change places the retained-room rollout checklist on the
+developer guide itself. The two previous GitHub guide targets returned 404 on
+the default branch. The site builds under the GitHub Pages path, and the
+rollout link and XML compatibility example pass in Chromium, Firefox and
+WebKit.
+
+The [registry tags](https://registry.npmjs.org/-/package/fountainjs-editor/dist-tags)
+read `latest: 0.4.0-beta.2` and `next: 0.4.0-beta.1` on this date. The latest
+open [draft](https://github.com/eddolo/fountainjs/pull/22) still points to
+`1a9e1640`, whose [hosted CI run](https://github.com/eddolo/fountainjs/actions/runs/42104477777)
+failed. A fresh hosted matrix and release approval remain open for the
+current candidate.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

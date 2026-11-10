@@ -5081,6 +5081,13 @@ test('shows verified room setup before the legacy collaboration recipe', async (
   const setup = page.locator('pre').filter({ hasText: 'const bound = await openYjsRoom' });
   await expect(setup).toBeVisible();
   await expect(setup).toContainText('createProvider(bound.document, bound.lease)');
+  await setup.screenshot({ path: info.outputPath('verified-room-recipe.png') });
+  await page.getByRole('link', { name: 'room rollout checklist' }).click();
+  await expect(page).toHaveURL(/#retained-room-rollout$/);
+  const rollout = page.getByRole('region', { name: 'Roll out retained collaboration' });
+  await expect(rollout.getByRole('heading')).toBeInViewport();
+  await expect(rollout.getByRole('listitem')).toHaveCount(3);
+  await rollout.screenshot({ path: info.outputPath('retained-room-rollout.png') });
   const legacy = page.locator('details').filter({ hasText: 'Show the explicit XML compatibility example' });
   await expect(legacy.locator('summary')).toBeVisible();
   await expect(legacy.locator('pre')).toBeHidden();
@@ -5088,7 +5095,6 @@ test('shows verified room setup before the legacy collaboration recipe', async (
   await expect(legacy.locator('pre')).toContainText('createYjsCollaborationExtension');
   await expect(legacy.locator('pre')).toContainText('fountainjs-editor/yjs/legacy');
   await expect(legacy.locator('pre')).toBeVisible();
-  await setup.screenshot({ path: info.outputPath('verified-room-recipe.png') });
 });
 
 test('keeps headline phrases together and makes full-page navigation explicit', async ({ page }) => {

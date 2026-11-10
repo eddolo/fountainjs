@@ -17,7 +17,10 @@ admission. Recovery receipts preserve reviewed drafts through lost replies,
 reload and retries. [Deletion/undo](YJS_RETAINED_DELETION_AUDIT.md),
 [draft review](YJS_CROSS_FORMAT_HANDOFF_AUDIT.md).
 
-The structural repair passed 5,151 source tests with zero failures or skips.
+The latest local release preflight passes 5,163 source tests with zero
+failures or skips. The package and packed types checks pass. The current
+candidate still needs its own hosted matrix.
+[Local release preflight](RELEASES.md#local-release-preflight-2026-11-10).
 Follow-up repairs prevent partially shared capacity failures, bind provider
 sessions to their original documents, and preserve native selection through
 metadata updates. The preceding public browser run passes 57 cases with two existing
