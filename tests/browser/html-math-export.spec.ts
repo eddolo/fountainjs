@@ -10,7 +10,7 @@ test('edits equations and downloads an offline typeset HTML reader with exact so
   await mkdir(root, { recursive: true });
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/conversion-lab.html');
+  await page.goto('conversion-lab.html');
   const original = '# Research note\n\nThe inline value is $x^{2}$.\n\n$$\n\\frac{a+b}{c}\n$$\n\n$$\n\\notAFountainCommand{x}\n$$\n';
   await page.getByLabel('Choose documents').setInputFiles({ name: 'research.md', mimeType: 'text/markdown', buffer: Buffer.from(original) });
   const workspace = page.getByRole('region', { name: 'Conversion workspace: research.md', exact: true });
