@@ -106,3 +106,10 @@ charts/diagrams, template slots and a whiteboard surface remain post-beta work.
 Physical mobile/IME and assistive-technology evidence, production adoption,
 further format fidelity and remaining parity work stay open. This candidate
 does not establish whole-product parity or a completion percentage.
+
+The main desktop matrix now includes the existing actual-Word research-paper
+workflow. Six CI-mode local repetitions pass across Chromium/Firefox/WebKit,
+with unchanged interactions/assertions and independent evidence per attempt.
+Fourteen policy checks and root TypeScript pass; all 1,008 distribution files
+remain byte-identical. Captured HTML math and page-template fallbacks remain
+explicit limitations. Fresh combined hosted CI is still required.

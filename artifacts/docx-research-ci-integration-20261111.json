@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "f24cb6d8",
+  "change": "Register the existing actual-Word research workflow in all three required desktop projects; retain its manual entry and every original interaction/assertion, isolate each attempt with TestInfo.outputPath, upload downloads/captures/video/trace on CI success or failure.",
+  "inventory": {
+    "manualExactCases": 298,
+    "sameIdentityRegistered": 77,
+    "sameIdentityNotRegistered": 221,
+    "warning": "This baseline file/line/title inventory is not semantic coverage. Shared helpers and dynamically imported journeys run under other test identities. Static import review supplies leads, not proof of equivalent executed interactions."
+  },
+  "validation": {
+    "browser": {
+      "environment": "Windows, CI=true, headless, one worker, no retries, repeat-each=2",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "durationMs": 93602.106
+    },
+    "releasePolicy": {
+      "tests": 14,
+      "files": 2,
+      "passed": true
+    },
+    "rootTypeScript": true,
+    "workflowYAMLAndAlwaysUpload": true,
+    "originalInteractionsAndAssertionsRetainedVerbatim": true,
+    "distributionFilesIdenticalTo19f4dca7Archive": 1008
+  },
+  "visualReview": {
+    "captures": [
+      {
+        "path": "artifacts/docx-research-ci-20261111/docx-research-workflow-a-r-8100a-ML-and-native-export-reopen-chromium/docx-research-workflow/equation-edited.png",
+        "bytes": 3679,
+        "sha256": "d86462cb08c24f1ae93ad7ec045ce4ebb43a1c4a43506f30c835a7b75323df07"
+      },
+      {
+        "path": "artifacts/docx-research-ci-20261111/docx-research-workflow-a-r-8100a-ML-and-native-export-reopen-firefox/docx-research-workflow/table-resized.png",
+        "bytes": 10432,
+        "sha256": "6fbb34d1aca946148a66ce36356548e406817d05f1c9a618d827de6417178a3f"
+      },
+      {
+        "path": "artifacts/docx-research-ci-20261111/docx-research-workflow-a-r-8100a-ML-and-native-export-reopen-webkit/docx-research-workflow/native-export-reopened.png",
+        "bytes": 111473,
+        "sha256": "1c8adc1415a7eb71c53a1380e69f562e4d3e713792836c9f4d39aa5a39096b8e"
+      },
+      {
+        "path": "artifacts/docx-research-ci-20261111/docx-research-workflow-a-r-8100a-ML-and-native-export-reopen-webkit/docx-research-workflow/imported.png",
+        "bytes": 111473,
+        "sha256": "1c8adc1415a7eb71c53a1380e69f562e4d3e713792836c9f4d39aa5a39096b8e"
+      },
+      {
+        "path": "artifacts/docx-research-ci-20261111/docx-research-workflow-a-r-8100a-ML-and-native-export-reopen-webkit/docx-research-workflow/image-caption-restored.png",
+        "bytes": 47376,
+        "sha256": "34f21bdd7fbc252b10cfd2feeb9c841d9c6ee31630b2a7642aac9b760b2a86ab"
+      },
+      {
+        "path": "artifacts/docx-research-ci-20261111/docx-research-workflow-a-r-8100a-ML-and-native-export-reopen-webkit/docx-research-workflow/reader.png",
+        "bytes": 304294,
+        "sha256": "6a63c2fb79f9806266b77c7640a5104aae639060600e9b3dc42a810cb7f21cb7"
+      }
+    ],
+    "scope": "Six captured states, including imported/reopened DOCX viewports and the full standalone HTML reader. No continuous-video review or native Word rendering claimed. HTML equations remain source fallbacks and page templates remain literal; these documented limits were visibly confirmed."
+  },
+  "rawEvidence": [
+    {
+      "path": "artifacts/docx-research-ci-20261111.json",
+      "bytes": 18313,
+      "sha256": "0a88916af789827bbcbf35a542fc43822b95741b387b2b4d9c628783e97e8917"
+    },
+    {
+      "path": "artifacts/docx-research-ci-20261111.log",
+      "bytes": 5144,
+      "sha256": "5d409bf4cb8a2330872df9db5650cdf57e4b666683ab687d617ed513dc52e2a6"
+    },
+    {
+      "path": "artifacts/docx-research-ci-policy-20261111.log",
+      "bytes": 429,
+      "sha256": "445ec0fa20f8f5057601097fe82671cae1b6859cce48b6ec9e4f4d7c3b45cb42"
+    },
+    {
+      "path": "artifacts/docx-research-typecheck-20261111.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/browser-ci-coverage-20261111/collection.json",
+      "bytes": 1356,
+      "sha256": "302a5837e31fdabdfcfd4f05842cdbba0f815648189174c66aec8eef0015eecc"
+    },
+    {
+      "path": "artifacts/browser-ci-coverage-20261111/identity-map.json",
+      "bytes": 68592,
+      "sha256": "ff2f4ac55acaded3c37477f77eb8a1ebd1d19b61df8c497796245d2826dd729a"
+    },
+    {
+      "path": "artifacts/browser-ci-coverage-20261111/shared-source-review.json",
+      "bytes": 12515,
+      "sha256": "8cb80e8c55da85222285ca55a965d07bdedf4582e62ca57e429145fd3e6fe6c2"
+    }
+  ],
+  "pending": [
+    "Hosted Linux CI and native display clipboard checks",
+    "GitHub CLI authentication still absent at the latest check",
+    "Final archive refresh after packaged-documentation changes",
+    "Registry staging/approval and deployment"
+  ],
+  "unchanged": [
+    "Library runtime",
+    "Public API",
+    "Bundle/performance acceptance limits",
+    "Capability ledger",
+    "Full source-test checkpoint remains 1e86e5e0; this is scoped validation, not another full pnpm check"
+  ]
+}

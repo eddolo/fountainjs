@@ -87,6 +87,13 @@ passes eight journeys; the stable production configuration passes all six.
 Fourteen release-policy checks and both configuration/root typechecks pass.
 These validate the new wiring locally; hosted Linux execution is still pending.
 
+The actual Word research-paper journey is also registered in all three main
+desktop projects. Six CI-mode local executions pass without retries, preserving
+caption/math/table editing, line/history behavior and actual download/reopen
+assertions. Its output is isolated per attempt and uploaded by CI. Captured
+HTML math/page-template fallbacks remain documented limits, not visual parity.
+[Research-document evidence](RELEASES.md#research-document-ci-coverage--2026-11-11).
+
 ## Remaining parity work
 
 The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, eight Partial,

@@ -1,0 +1,447 @@
+{
+  "scope": "Static imports only: a shared source is a review lead, not proof of equal executed interactions. Baseline identity collection predates the new research-paper wrapper.",
+  "sharedSourceFiles": [
+    {
+      "file": "tests/manual/angular-campaign-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/angular-campaign-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/conversion-lab-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/conversion-lab-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "sharedSources": [
+        "examples/react-app/src/conversion-lab.ts",
+        "tests/fixtures/docx-page-defaults.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/cross-container-range-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/cross-container-range-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/definition-list-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/definition-list-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-controls-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/docx-controls-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-glossary-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/docx-glossary-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-math-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/docx-math-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-numbering-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/docx-numbering-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-spacing-identity-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/docx-research-workflow-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/firefox-paragraph-recovery-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-paragraph-recovery-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/first-strong-native.spec.ts",
+      "sharedSources": [
+        "src/core/first-strong-direction.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/html-block-format-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/html-block-format-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/html-container-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/html-container-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/html-document-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/html-document-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/issue-editor-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/issue-editor-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/issue-html-source-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/issue-html-source-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/issue-input-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/issue-input-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/issue-table-handoff-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/issue-table-handoff-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/list-empty-marker-probe.spec.ts",
+      "sharedSources": [
+        "src/core/list-layout.ts",
+        "src/core/paragraph-spacing.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/list-marker-visibility-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/list-marker-visibility-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-autolink-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-autolink-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-boundary-repair-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-boundary-repair-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-caret-html-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-caret-html-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-code-endings-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-code-endings-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-code-labels-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-code-labels-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-container-reference-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-container-reference-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-custom-wrapper-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-custom-wrapper-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-document-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-document-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-escape-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-escape-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-frontmatter-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-frontmatter-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-inactive-autolinks-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-inactive-autolinks-journey.ts",
+        "tests/browser/markdown-source-review-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/list-numbering-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-literal-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-literal-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-nested-reference-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-nested-reference-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-nested-source-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-nested-source-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-newline-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-newline-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-paragraph-recovery-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-paragraph-recovery-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-reference-boundaries-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-reference-boundaries-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-scope-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-scope-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-source-boundaries-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-source-boundaries-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/markdown-structural-recovery-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/markdown-structural-recovery-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/math-files-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/math-files-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/math-pages-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/math-pages-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/math-references-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/math-references-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/math-renderer-audit.spec.ts",
+      "sharedSources": [
+        "examples/react-app/src/math-reference-samples.ts",
+        "examples/react-app/src/academic-table-sample.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/math-reorder-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/math-reorder-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/nested-sibling-range-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/nested-sibling-range-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/product-workflow-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/product-workflow-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/site-font-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/site-font-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/suggestion-navigation-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/suggestion-navigation-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/svelte-report-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/svelte-report-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/table-column-side-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/table-column-side-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/text-alignment-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/text-alignment-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/textless-replacement-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/textless-replacement-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/virtual-selection-real.spec.ts",
+      "sharedSources": [
+        "tests/browser/virtual-selection-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/vue-runbook-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/vue-runbook-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/web-component-form-audit.spec.ts",
+      "sharedSources": [
+        "tests/browser/web-component-form-journey.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "sharedSources": [
+        "tests/manual/compiled-runtime-audit.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-legacy-root-conflict-real.spec.ts",
+      "sharedSources": [
+        "tests/manual/compiled-runtime-audit.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "sharedSources": [
+        "tests/manual/compiled-runtime-audit.ts"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-retained-provision-real.spec.ts",
+      "sharedSources": [
+        "tests/manual/compiled-runtime-audit.ts"
+      ]
+    }
+  ],
+  "requiresIndividualReview": [
+    {
+      "file": "tests/manual/cross-format-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/docx-style-numbering-audit.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/legacy-migration-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/paragraph-spacing-marker-probe.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/paragraph-spacing-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/retained-checkpoint-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/retained-migration-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/retained-repair-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/retained-room-store-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/starter-projects.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/yjs-admission-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "sharedSources": []
+    },
+    {
+      "file": "tests/manual/yjs-structured-room-real.spec.ts",
+      "sharedSources": []
+    }
+  ]
+}

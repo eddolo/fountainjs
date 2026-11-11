@@ -1,0 +1,1996 @@
+{
+  "scope": "Exact registered test case/file/line identities only. Similar helper-based workflows can be semantically covered without sharing this identity; this is not a capability or release-completion percentage.",
+  "manualCases": 298,
+  "registeredInRequiredCI": 77,
+  "notRegisteredBySameIdentity": 221,
+  "collections": {
+    "main": {
+      "uniqueCases": 380,
+      "projectExecutions": 1111
+    },
+    "recorded": {
+      "uniqueCases": 8,
+      "projectExecutions": 8
+    },
+    "production": {
+      "uniqueCases": 2,
+      "projectExecutions": 6
+    },
+    "startup": {
+      "uniqueCases": 8,
+      "projectExecutions": 24
+    },
+    "presence": {
+      "uniqueCases": 36,
+      "projectExecutions": 108
+    },
+    "default-yjs": {
+      "uniqueCases": 16,
+      "projectExecutions": 48
+    },
+    "migration": {
+      "uniqueCases": 7,
+      "projectExecutions": 21
+    }
+  },
+  "cases": [
+    {
+      "file": "tests/manual/angular-campaign-audit.spec.ts",
+      "line": 4,
+      "title": "records real Angular editing, attachment controls, image bytes and session resets",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/angular-campaign-audit.spec.ts",
+      "line": 8,
+      "title": "records Angular brief validation, saving, disabling and reset",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-lab-audit.spec.ts",
+      "line": 7,
+      "title": "conversion lab file edit report and export journey",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-lab-audit.spec.ts",
+      "line": 10,
+      "title": "conversion lab phone file journey",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-lab-audit.spec.ts",
+      "line": 28,
+      "title": "recovers an omitted Word image into an undoable draft and native download",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-lab-audit.spec.ts",
+      "line": 81,
+      "title": "imports a linked Word image in place from a different package folder",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 23,
+      "title": "imports table-owned text through actual typing history and native download reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 71,
+      "title": "imports conditional table rules through real author editing history and native reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 124,
+      "title": "imports inherited table appearance from an independent producer through real editing and native reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 173,
+      "title": "keeps Word row repetition separate from semantic header styling through real table controls and reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 244,
+      "title": "explicit font families and sizes survive real editing and DOCX reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 244,
+      "title": "embedded theme font families and sizes survive real editing and DOCX reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 310,
+      "title": "explicit normal emphasis survives backward toolbar selection, typing, and DOCX reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 398,
+      "title": "keeps a Word image caption attached, richly editable, linked, and exportable",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 461,
+      "title": "keeps fixed Word columns stable while editing long content and reopening the export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 542,
+      "title": "preserves direct table borders and padding through real typing, undo, download and reopen (physical width)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 542,
+      "title": "preserves direct table borders and padding through real typing, undo, download and reopen (percentage width)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 619,
+      "title": "default table sizing survives real edit, export and reopen (omitted Word width)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 619,
+      "title": "default table sizing survives real edit, export and reopen (omitted fixed Word width)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 619,
+      "title": "default table sizing survives real edit, export and reopen (fresh full-width Fountain table)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 619,
+      "title": "default table sizing survives real edit, export and reopen (fresh fixed-grid Fountain table)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 685,
+      "title": "native paragraph spacing survives real editing, HTML and DOCX reopen (omitted spacing)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 685,
+      "title": "native paragraph spacing survives real editing, HTML and DOCX reopen (partial inherited spacing)",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 797,
+      "title": "paragraph font context survives empty-line typing, mixed fonts and HTML/DOCX reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 898,
+      "title": "line-break run formatting survives real Shift+Enter, editing and HTML/DOCX reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 982,
+      "title": "character spacing survives backward toolbar editing and HTML/DOCX reopening",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 1193,
+      "title": "visually audits the extended native Word-equation subset through export and reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/conversion-real-document-audit.spec.ts",
+      "line": 1248,
+      "title": "visually audit an independently authored scientific DOCX in the public lab",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cross-container-range-real.spec.ts",
+      "line": 4,
+      "title": "replaces native selections across quote and list ancestors without leaving selected media",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cross-container-range-real.spec.ts",
+      "line": 8,
+      "title": "retains different quote attributes through native replacement and JSON export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cross-format-real.spec.ts",
+      "line": 8,
+      "title": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cross-format-real.spec.ts",
+      "line": 19,
+      "title": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cross-format-real.spec.ts",
+      "line": 24,
+      "title": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cross-format-real.spec.ts",
+      "line": 30,
+      "title": "recovers a lost legacy save acknowledgement and migrates without extra revisions",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: english",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: rtl",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: mixed",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: emoji",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: combining-inside",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: zwj-inside",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: surrogate-inside",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: code",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: empty",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: english-range",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: combining-inside-range",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: zwj-inside-range",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 6,
+      "title": "matches native visual/grapheme navigation and editing: surrogate-inside-range",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 15,
+      "title": "shows a passive remote caret at a mounted empty anchor",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 15,
+      "title": "shows a passive remote caret at a mounted block-gap anchor",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 15,
+      "title": "shows a passive remote caret at a mounted atomic-image anchor",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 15,
+      "title": "shows a passive remote caret at a mounted table anchor",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 19,
+      "title": "paints remote carets through scrolling, transforms and resize without remounting text or taking focus",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 35,
+      "title": "keeps remote name labels inside clipped editors without moving their anchor (ltr)",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/cursor-native-reference.spec.ts",
+      "line": 35,
+      "title": "keeps remote name labels inside clipped editors without moving their anchor (rtl)",
+      "ciCollections": [
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/definition-list-audit.spec.ts",
+      "line": 4,
+      "title": "edits definition lists and reopens a glossary in a reader",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/document-boundary-range-real.spec.ts",
+      "line": 5,
+      "title": "replaces directed text-to-image document boundary ranges in ordinary and virtual documents",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/document-boundary-range-real.spec.ts",
+      "line": 10,
+      "title": "copies and cuts a partial text-to-image range using trusted native clipboard events",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/document-range-formatting-real.spec.ts",
+      "line": 4,
+      "title": "formats directed text-to-image selections through the toolbar with exact history and reader export",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-caption-production-real.spec.ts",
+      "line": 3,
+      "title": "retains the embedded Word image and its rich caption on the production subpath",
+      "ciCollections": [
+        "production"
+      ]
+    },
+    {
+      "file": "tests/manual/docx-controls-audit.spec.ts",
+      "line": 4,
+      "title": "imports and edits Word content controls without losing visible content",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/docx-glossary-audit.spec.ts",
+      "line": 4,
+      "title": "edits and reopens a Word glossary with term and description roles",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/docx-math-audit.spec.ts",
+      "line": 4,
+      "title": "inspect native DOCX equations beside editable source and record viewer disagreements",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/docx-numbering-audit.spec.ts",
+      "line": 4,
+      "title": "compare list numbering in the editor and independent DOCX viewer",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/docx-spacing-identity-real.spec.ts",
+      "line": 12,
+      "title": "a researcher edits the actual Word paper and retains spacing through HTML and native export/reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/docx-style-numbering-audit.spec.ts",
+      "line": 5,
+      "title": "uses real Word style numbering through authoring and native download",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/editor-capabilities-audit.spec.ts",
+      "line": 14,
+      "title": "human multiline equation journey: inspect, edit, undo, export, and reimport",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/editor-capabilities-audit.spec.ts",
+      "line": 54,
+      "title": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/editor-capabilities-audit.spec.ts",
+      "line": 159,
+      "title": "human clipboard journey: external rich document into Fountain and Fountain back out",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/editor-capabilities-audit.spec.ts",
+      "line": 208,
+      "title": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/firefox-paragraph-recovery-audit.spec.ts",
+      "line": 6,
+      "title": "records Firefox selection, paste and Markdown recovery without page replacement",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/first-strong-native.spec.ts",
+      "line": 12,
+      "title": "compares portable first-strong resolution with independent native browser controls",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/history-retention-real.spec.ts",
+      "line": 5,
+      "title": "native split undo and redo preserve later independent host text edits and visible paragraphs",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/html-anchors-real.spec.ts",
+      "line": 10,
+      "title": "edits imported bookmark content and removes an empty bookmark with native input",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/html-block-format-audit.spec.ts",
+      "line": 3,
+      "title": "preserves formatting from a styled release brief through editor and file handoff",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/html-container-audit.spec.ts",
+      "line": 3,
+      "title": "authors sections with properties, empty content, undo and reader preview",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/html-container-audit.spec.ts",
+      "line": 6,
+      "title": "preserves optional section containers through real editing and reader output",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/html-document-audit.spec.ts",
+      "line": 4,
+      "title": "opens a full HTML report through server conversion and edits its retained body",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/inherited-clipboard-real.spec.ts",
+      "line": 10,
+      "title": "inherited node direction survives trusted copy into native and Fountain destinations",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/inherited-clipboard-real.spec.ts",
+      "line": 10,
+      "title": "inherited node direction survives trusted cut into native and Fountain destinations",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/issue-editor-audit.spec.ts",
+      "line": 4,
+      "title": "writes, previews, downloads and reopens an issue without rewriting untouched Markdown",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/issue-html-source-real.spec.ts",
+      "line": 4,
+      "title": "an issue author preserves reference bindings and code through real draft downloads",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/issue-input-real.spec.ts",
+      "line": 4,
+      "title": "keeps full Markdown export out of real large-issue typing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/issue-table-handoff-audit.spec.ts",
+      "line": 4,
+      "title": "preserves headerless and mixed tables through source and file handoff",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/latest-ui-audit.spec.ts",
+      "line": 12,
+      "title": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/latest-ui-audit.spec.ts",
+      "line": 136,
+      "title": "human document-conversion journey: edit, download Word, re-import, and inspect output",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/latest-ui-audit.spec.ts",
+      "line": 207,
+      "title": "human visual-export journey: compare Fountain with an independent DOCX render",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/latest-ui-audit.spec.ts",
+      "line": 234,
+      "title": "human visual-export journey: render the paged editor as a real PDF",
+      "ciCollections": [
+        "recorded"
+      ]
+    },
+    {
+      "file": "tests/manual/legacy-migration-real.spec.ts",
+      "line": 8,
+      "title": "converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/legacy-migration-real.spec.ts",
+      "line": 14,
+      "title": "refuses unclaimed legacy data and retains the prior converted editor and source archive",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/legacy-migration-real.spec.ts",
+      "line": 18,
+      "title": "rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/list-empty-marker-probe.spec.ts",
+      "line": 35,
+      "title": "isolate the missing empty numbered-item paint without changing the editor engine",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/list-marker-visibility-real.spec.ts",
+      "line": 4,
+      "title": "an empty numbered item visibly paints its marker; independent controls detect missing paint",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-autolink-audit.spec.ts",
+      "line": 4,
+      "title": "contact directory: choose literal addresses, export and reopen Word draft",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-boundary-repair-real.spec.ts",
+      "line": 4,
+      "title": "repairs source after native nested heading-to-paragraph changes",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-caret-html-real.spec.ts",
+      "line": 4,
+      "title": "downloads reader HTML and keeps the caret available for native editing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-code-endings-audit.spec.ts",
+      "line": 4,
+      "title": "preserves code endings through source recovery and reader handoff",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-code-labels-audit.spec.ts",
+      "line": 4,
+      "title": "edits opaque code labels and reopens them safely in a reader",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-container-reference-real.spec.ts",
+      "line": 3,
+      "title": "preserves container definitions through real editing quote removal undo and downloads",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-custom-wrapper-audit.spec.ts",
+      "line": 4,
+      "title": "edits registered HTML wrappers after Markdown source recovery",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-document-audit.spec.ts",
+      "line": 3,
+      "title": "converts document-wide HTML scopes with source edit undo and explicit layout differences",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-escape-audit.spec.ts",
+      "line": 4,
+      "title": "regex review: code pipes and literal strikethrough survive draft handoff",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-frontmatter-real.spec.ts",
+      "line": 4,
+      "title": "opens, edits and downloads Markdown under a saved file policy",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-inactive-autolinks-real.spec.ts",
+      "line": 5,
+      "title": "edits and exports inactive Markdown autolinks from the conversion lab",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-inactive-autolinks-real.spec.ts",
+      "line": 9,
+      "title": "reviews CommonMark source and downloads an offline HTML reader",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 4,
+      "title": "zero-based procedure: real clipboard, keyboard outdent, undo, export and reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 42,
+      "title": "table captions remain readable and editable through real paste and Markdown reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 79,
+      "title": "complex figures keep evidence and rich captions through conversion paste editing and reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 135,
+      "title": "nested inert HTML keeps literal source and surrounding Markdown through real editing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 182,
+      "title": "conversion losses are visible before the remaining content is pasted and edited",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 218,
+      "title": "opt-in inline HTML survives a real rich paste edit undo and Markdown reimport",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 258,
+      "title": "raw HTML lexical boundaries preserve visible Markdown formatting through real editing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 296,
+      "title": "unfamiliar wrappers retain editable structure through Markdown conversion and rich clipboard paste",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 350,
+      "title": "one-column pipe Markdown remains an editable table through export and reimport",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 381,
+      "title": "rich table Markdown export keeps structure through the public controls",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 431,
+      "title": "structured table cells survive real copy, editing, and server HTML re-import",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 497,
+      "title": "comment-only HTML does not create editable blank paragraphs during conversion",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 532,
+      "title": "split HTML table becomes a real editable table with history and export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 569,
+      "title": "legacy section order matches native rendering through paste edit history and reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 605,
+      "title": "row-group merged ownership cells survive real paste editing history and HTML reopen",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 642,
+      "title": "failed HTML flow keeps literal closing tags through paste editing undo and export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 683,
+      "title": "HTML deletion scope remains formatted through editing history and Markdown export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 715,
+      "title": "opt-in HTML block conversion becomes editable content and survives canonical export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 762,
+      "title": "inert HTML source remains multiline editable text through the public demos",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 791,
+      "title": "empty formatting survives conversion and controls the next typed text",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 828,
+      "title": "authored blank paragraphs remain visible through Markdown export and reimport",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 874,
+      "title": "nested incident runbook preserves literal definitions through editing and export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 917,
+      "title": "unwrapped clipboard fragment: formatting, surrounding text, edit, and undo",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-list-audit.spec.ts",
+      "line": 943,
+      "title": "numbered runbook: import, rich paste, nested editing, undo, and Markdown export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-literal-audit.spec.ts",
+      "line": 4,
+      "title": "literal issue: visual edit, history, Markdown draft and reader retain text",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-nested-reference-real.spec.ts",
+      "line": 3,
+      "title": "preserves referenced list quote and task source through actual editing and downloads",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-nested-source-real.spec.ts",
+      "line": 4,
+      "title": "a writer edits list and quote source through native typing downloads and undo",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-newline-audit.spec.ts",
+      "line": 4,
+      "title": "incident narrative: literal lines survive edits, history and draft handoff",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-paragraph-recovery-audit.spec.ts",
+      "line": 4,
+      "title": "recovers paragraph HTML into editable blocks and a reopened reader",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-reference-boundaries-real.spec.ts",
+      "line": 4,
+      "title": "a writer inserts text before a referenced terminal fence and reopens actual exports",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-scope-audit.spec.ts",
+      "line": 4,
+      "title": "reads separate retired paragraphs after Markdown HTML scope conversion and handoff",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-source-boundaries-real.spec.ts",
+      "line": 4,
+      "title": "a writer preserves untouched Markdown through real editing downloads and undo",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/markdown-structural-recovery-audit.spec.ts",
+      "line": 4,
+      "title": "recovers nested Markdown lists and quotes through an editor and reader",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/math-files-audit.spec.ts",
+      "line": 3,
+      "title": "save equations, reload, reopen, inspect references and download source",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/math-pages-audit.spec.ts",
+      "line": 4,
+      "title": "open a research document, build pages, follow equations, edit and rebuild",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/math-references-audit.spec.ts",
+      "line": 4,
+      "title": "human labelled-equation journey: read links, reorder, edit, delete, recover and inspect source",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/math-renderer-audit.spec.ts",
+      "line": 5,
+      "title": "human real-renderer journey: edit a typeset equation, inspect a published failure, and recover",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/math-renderer-audit.spec.ts",
+      "line": 47,
+      "title": "human academic table journey: inspect projection losses, edit a value, undo and export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/math-reorder-audit.spec.ts",
+      "line": 4,
+      "title": "human math journey: move the second formula, edit it in place, undo and export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/nested-direction-real.spec.ts",
+      "line": 21,
+      "title": "nested-lift-auto",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/nested-direction-real.spec.ts",
+      "line": 21,
+      "title": "nested-lift-fixed-control",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/nested-direction-real.spec.ts",
+      "line": 21,
+      "title": "indent-under-fixed-item",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/nested-direction-real.spec.ts",
+      "line": 21,
+      "title": "indent-same-context-control",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/nested-sibling-range-real.spec.ts",
+      "line": 4,
+      "title": "replaces selected nested sibling blocks and media through native pointer input",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/paragraph-spacing-marker-probe.spec.ts",
+      "line": 5,
+      "title": "inspect native list marker geometry without changing the editor document",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/paragraph-spacing-real.spec.ts",
+      "line": 12,
+      "title": "a field-review author edits contextual paragraphs and opens the actual exported reader",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/product-workflow-audit.spec.ts",
+      "line": 4,
+      "title": "discover and use issue and task product workflows",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 12,
+      "title": "native offline typing survives Quote, author undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 12,
+      "title": "native offline typing survives Bullet, author undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 12,
+      "title": "native offline typing survives Ordered, author undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 12,
+      "title": "native offline typing survives Task, author undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 12,
+      "title": "native offline typing survives Bold, author undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 12,
+      "title": "native offline typing survives Enter, author undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 67,
+      "title": "native offline typing in an empty sibling survives another author split undo and redo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 133,
+      "title": "native offline Enter survives a deleted ancestor and returns with its author undo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 197,
+      "title": "keeps both drafts after incompatible room data is removed",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 226,
+      "title": "replaces marked text and deletes natively while preserving peer edits through keyboard history",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 260,
+      "title": "edits a thousand-paragraph shared document with native input and independent author history",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 297,
+      "title": "native edits in separate paragraphs preserve untouched rich content and author-only history",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 324,
+      "title": "native typing retains host observer annotations through synchronization and author undo",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 341,
+      "title": "continues native typing and Enter after an observer update without moving the caret",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 353,
+      "title": "right-arrow navigation crosses a remote presence without consuming a character step",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-adapter-real.spec.ts",
+      "line": 358,
+      "title": "native blank lines, backward selection, mounted room replacement, download and reopen",
+      "ciCollections": [
+        "default-yjs",
+        "presence"
+      ]
+    },
+    {
+      "file": "tests/manual/retained-checkpoint-real.spec.ts",
+      "line": 6,
+      "title": "restores an isolated snapshot with media and opaque state then merges later same-room typing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-checkpoint-real.spec.ts",
+      "line": 18,
+      "title": "rejects a concurrent source write and allows a later clean capture",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-checkpoint-real.spec.ts",
+      "line": 23,
+      "title": "rejects damaged bytes without replacing either live editor",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 8,
+      "title": "retains offline edits, installs a fresh room, then restores the old branch while archiving new edits",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 19,
+      "title": "restores the frozen original on explicit choice while preserving the replaced fresh room",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 24,
+      "title": "recovers a lost switch acknowledgement by replaying the durable receipt",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 29,
+      "title": "retries live and retired saves after the server commits but the reply is lost",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 79,
+      "title": "skips an unhelpful compaction and installs a smaller checkpoint after real edits",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 192,
+      "title": "lets the author compare the merged branch with the exact offline draft",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 259,
+      "title": "previews and restores native bold and italic formatting from the saved draft",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 292,
+      "title": "combines both versions in a local formatted paragraph and retains the composition on stale review",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-handoff-real.spec.ts",
+      "line": 337,
+      "title": "uses the saved quote placement while preserving newer live wording and formatting",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-migration-real.spec.ts",
+      "line": 9,
+      "title": "reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-migration-real.spec.ts",
+      "line": 17,
+      "title": "refuses an unclaimed host root without replacing the existing preview",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-migration-real.spec.ts",
+      "line": 21,
+      "title": "rejects a verifier mutation and keeps the prior source and preview usable",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-repair-real.spec.ts",
+      "line": 10,
+      "title": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-repair-real.spec.ts",
+      "line": 16,
+      "title": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-repair-real.spec.ts",
+      "line": 21,
+      "title": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-repair-real.spec.ts",
+      "line": 25,
+      "title": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-room-store-real.spec.ts",
+      "line": 10,
+      "title": "retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-room-store-real.spec.ts",
+      "line": 19,
+      "title": "aborts a prepared freeze and sends retained human edits on the original epoch",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/retained-room-store-real.spec.ts",
+      "line": 24,
+      "title": "rejects malformed wire data then accepts subsequent real typing without replacing the editors",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/shared-direction-copy-real.spec.ts",
+      "line": 10,
+      "title": "native shared-context complete copy",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/shared-direction-copy-real.spec.ts",
+      "line": 10,
+      "title": "native shared-context partial snapshot",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/shared-direction-virtual-real.spec.ts",
+      "line": 10,
+      "title": "refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/shared-direction-weak-real.spec.ts",
+      "line": 12,
+      "title": "weak-only shared auto scope under ltr parent",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/shared-direction-weak-real.spec.ts",
+      "line": 12,
+      "title": "weak-only shared auto scope under rtl parent",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/site-font-real.spec.ts",
+      "line": 4,
+      "title": "can write an issue while optional site fonts are pending",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/starter-projects.spec.ts",
+      "line": 11,
+      "title": "uses a custom block in the installed plain DOM starter",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/starter-projects.spec.ts",
+      "line": 37,
+      "title": "edits and formats a document in the installed React starter",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/structural-wrapping-real.spec.ts",
+      "line": 6,
+      "title": "wraps native text-to-media selections in quotes and lists, retains source data and toggles them off",
+      "ciCollections": [
+        "main"
+      ]
+    },
+    {
+      "file": "tests/manual/suggestion-navigation-audit.spec.ts",
+      "line": 4,
+      "title": "records the active slash option scrolling into view on keyboard wrap",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/suggestion-navigation-audit.spec.ts",
+      "line": 8,
+      "title": "records Tab leaving an open emoji query with its text intact",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/svelte-report-audit.spec.ts",
+      "line": 3,
+      "title": "records a real Svelte report and editor lifecycle journey",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/table-column-side-real.spec.ts",
+      "line": 5,
+      "title": "inserts table columns on the physical left and right: ltr",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/table-column-side-real.spec.ts",
+      "line": 5,
+      "title": "inserts table columns on the physical left and right: rtl-cell-ltr",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/table-column-side-real.spec.ts",
+      "line": 5,
+      "title": "inserts table columns on the physical left and right: auto",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/table-column-side-real.spec.ts",
+      "line": 5,
+      "title": "inserts table columns on the physical left and right: host-css",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/table-column-side-real.spec.ts",
+      "line": 5,
+      "title": "inserts table columns on the physical left and right: rtl-spans",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/text-alignment-audit.spec.ts",
+      "line": 4,
+      "title": "aligns a real meeting report using backward selection, toolbar, history and HTML export",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/textless-replacement-audit.spec.ts",
+      "line": 4,
+      "title": "textless document replacement followed by native typing, lines and history",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/virtual-selection-real.spec.ts",
+      "line": 4,
+      "title": "replaces and restores selections across offscreen document content",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/vue-runbook-audit.spec.ts",
+      "line": 4,
+      "title": "records a real Vue runbook editing and lifecycle journey",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/vue-runbook-audit.spec.ts",
+      "line": 8,
+      "title": "records a Vue review form through typing, submission, disable and reset",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/web-component-form-audit.spec.ts",
+      "line": 3,
+      "title": "submits resets and disables a native form-associated Web Component",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-admission-real.spec.ts",
+      "line": 6,
+      "title": "two delayed clients join one authoritative room and edit without duplicate seeds",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-admission-real.spec.ts",
+      "line": 10,
+      "title": "preserves a typed pending draft until the author explicitly chooses the shared document",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-admission-real.spec.ts",
+      "line": 14,
+      "title": "cancels a pending join without a late response reviving it and reconnects explicitly",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "line": 8,
+      "title": "refuses a frozen snapshot before importing it and joins after explicit unfreeze",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "line": 11,
+      "title": "refuses a freeze between loading and binding without starting the provider",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "line": 14,
+      "title": "fences a retired epoch, retains the draft and opens a new session only on explicit choice",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "line": 17,
+      "title": "keeps refreshed remote edits through local undo and redo before saving the combined paper",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-authority-admission-real.spec.ts",
+      "line": 21,
+      "title": "catches up a newer binding acknowledgement before reporting the provider connected",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 29,
+      "title": "resumes an unsent same-epoch edit after reload and saves it to the authority",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 54,
+      "title": "merges recovered typing into a quote saved by another author before resume",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 87,
+      "title": "keeps a fenced draft available separately after choosing shared and reloading",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 114,
+      "title": "keeps pre-admission typing as a separate draft without native room bytes",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 132,
+      "title": "does not replace the visible draft if its storage transaction aborts",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 154,
+      "title": "rechecks the authority if a displayed resume option becomes stale",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 179,
+      "title": "automatic recovery updates one rolling copy and survives reload without clicking save",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 203,
+      "title": "automatic recovery keeps the last committed draft when the next write aborts and retries the latest edit",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 233,
+      "title": "automatic recovery gives two tabs under the same author separate slots",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 255,
+      "title": "automatic recovery records local Yjs undo instead of reviving the undone text after reload",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-browser-draft-real.spec.ts",
+      "line": 277,
+      "title": "automatic recovery keeps typing made after a retired writer is disconnected",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-detached-draft-real.spec.ts",
+      "line": 7,
+      "title": "keeps and downloads detached edits before deliberately rejoining a changed room",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "line": 10,
+      "title": "shares a duplicate-ID repair and keeps reviewer undo limited to authored typing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "line": 16,
+      "title": "shares an automatic trailing paragraph after a divider without adding reviewer undo",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "line": 21,
+      "title": "repairs duplicate IDs after offline typing on both authors without losing either edit",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "line": 25,
+      "title": "keeps reviewer actions undoable when local ID and trailing repairs are appended",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "line": 33,
+      "title": "keeps neutral review metadata through authored undo and remote typing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-history-policy-real.spec.ts",
+      "line": 39,
+      "title": "keeps imported source outside undo while later author and peer typing remain editable",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 7,
+      "title": "preserves the local draft when incomplete legacy room data arrives out of order",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 7,
+      "title": "preserves the local draft when incomplete retained room data arrives out of order",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 31,
+      "title": "checks saved default settings before connecting a retained room",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 31,
+      "title": "checks saved custom settings before connecting a retained room",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 52,
+      "title": "keeps a host-restored draft editable when it changes during checkpoint installation",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 66,
+      "title": "keeps the editor offline when the host cancels during initial room sync",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-incomplete-room-real.spec.ts",
+      "line": 81,
+      "title": "leaves the legacy editor offline when the host cancels its initial room sync",
+      "ciCollections": [
+        "startup"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-legacy-root-conflict-real.spec.ts",
+      "line": 23,
+      "title": "keeps both independent drafts and exports their exact shared roots after conflict",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 100,
+      "title": "exchanges typing and structural changes automatically after a connection is restored",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 126,
+      "title": "retries a committed insertion after the reply is lost with exactly one durable revision",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 126,
+      "title": "retries a committed deletion after the reply is lost with exactly one durable revision",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 151,
+      "title": "times out a stalled committed write and ignores its late reply",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 193,
+      "title": "retries concurrent writers against the durable authority until both edits are shared",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 224,
+      "title": "stops a retired transport and reopens its locally saved typing after reload",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 250,
+      "title": "saves edits from a migration freeze when the same room reopens",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 294,
+      "title": "renders a native peer selection without writing a document revision and clears it on leave",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 339,
+      "title": "clears the old cursor on reload and renders the new cursor after rejoining",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 369,
+      "title": "expires a silent peer and keeps old presence out of a rotated session",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 392,
+      "title": "delivers one saved revision to overlapping readers",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 429,
+      "title": "sends small receipts for a long document and falls back when a delta is corrupted",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 511,
+      "title": "loads a newer checkpoint when the room advances between load and binding",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 546,
+      "title": "keeps local typing when the write response has no acknowledgement",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 562,
+      "title": "retries an uncommitted insert after a corrupt write receipt and a newer peer revision",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 562,
+      "title": "retries an uncommitted delete after a corrupt write receipt and a newer peer revision",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 621,
+      "title": "delivers presence while the receiving editor is behind the current document revision",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 680,
+      "title": "recovers an offline edit through reload after quote",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 680,
+      "title": "recovers an offline edit through reload after bullet list",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 680,
+      "title": "recovers an offline edit through reload after numbered list",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 680,
+      "title": "recovers an offline edit through reload after task list",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 680,
+      "title": "recovers an offline edit through reload after partial bold",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-live-http-real.spec.ts",
+      "line": 680,
+      "title": "recovers an offline edit through reload after paragraph split",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 54,
+      "title": "opens after local draft storage is blocked and keeps the recovered draft",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 125,
+      "title": "recovers the exact embedded offline draft after a lost save reply and reload",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 154,
+      "title": "migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 165,
+      "title": "restores the frozen legacy original on explicit choice while retaining the replaced retained room",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 170,
+      "title": "recovers a lost migration acknowledgement and archives typing made before reconnection",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 187,
+      "title": "recovers a lost offline archive acknowledgement after reloading without appending twice",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 241,
+      "title": "recovers edits made while the replacement room admission reply is in flight",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 273,
+      "title": "recovers from an admission reply for a different epoch without swapping editors",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 304,
+      "title": "keeps a deletion made during rollback admission and archives it on retry",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 343,
+      "title": "recovers an embedded legacy draft and a committed migration after reload",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 378,
+      "title": "recovers the same frozen source after reload when the freeze reply was lost",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 401,
+      "title": "recovers from local storage failure before letting migration freeze a room",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 434,
+      "title": "keeps a retained draft across reload after a committed rollback loses its reply",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 463,
+      "title": "recovers a saved legacy paragraph into the migrated room after explicit review",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 501,
+      "title": "recovers a saved legacy paragraph selected from multiple changes",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 533,
+      "title": "recovers a saved legacy paragraph after the apply reply is lost and the tab reloads",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 577,
+      "title": "recovers a saved legacy paragraph proposal after a rejected reply and repeated reloads",
+      "ciCollections": [
+        "migration"
+      ]
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 622,
+      "title": "maps an explicit author-selected destination and refuses invalid input before freezing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 628,
+      "title": "maps an embedded room after rehearsing it and refuses a conflicting destination without freezing",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 666,
+      "title": "moves a nested research document and rolls back to the same embedded fragment",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 733,
+      "title": "keeps the draft when the admitted embedded legacy fragment is detached",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 733,
+      "title": "recovers a local draft when the admitted retained root disappears",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 733,
+      "title": "keeps the local legacy draft after an invalid update and peer repair",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-namespace-real.spec.ts",
+      "line": 733,
+      "title": "recovers the local retained draft after an invalid update and peer repair",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-retained-provision-real.spec.ts",
+      "line": 63,
+      "title": "two first joins share one room and reopen both authors\u2019 saved work",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-retained-provision-real.spec.ts",
+      "line": 92,
+      "title": "retrying a frozen room preserves the first room and resumes after unfreeze",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-structured-room-real.spec.ts",
+      "line": 7,
+      "title": "refuses incomplete room definitions and reopens both offline field edits",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-structured-room-real.spec.ts",
+      "line": 7,
+      "title": "preserves unowned fields when a directly connected editor writes",
+      "ciCollections": []
+    },
+    {
+      "file": "tests/manual/yjs-structured-room-real.spec.ts",
+      "line": 7,
+      "title": "requires definitions for a custom named saved room map",
+      "ciCollections": []
+    }
+  ]
+}

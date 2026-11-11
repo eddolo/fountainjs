@@ -735,6 +735,38 @@ samples, the PDF and hashes of local raw evidence. Fresh combined hosted CI,
 Linux display clipboard checks, final package sealing, maintainer approval
 and deployment remain pending. GitHub CLI still reports signed out.
 
+### Research-document CI coverage — 2026-11-11
+
+The browser registration audit finds 298 manual test identities, 77 directly
+registered in required CI and 221 without the same file/line/title identity.
+This is not a capability-coverage percentage: many remaining wrappers call the
+same helpers already executed by the main matrix. Dynamic imports matter too.
+The local inventory and static shared-source review are retained under
+`artifacts/browser-ci-coverage-20261111/`; individual unresolved fixtures need
+review before any additional promotion.
+
+One concrete gap is closed: the actual Word research-paper workflow now runs
+in all three main desktop projects. Its shared journey preserves every prior
+interaction and assertion: caption and equation edits/undo, table cell edits,
+stationary/active resizing, list Enter/deletion/history, actual JSON/HTML/DOCX
+downloads, decoded embedded images and DOCX reopening. Attempt-specific output
+paths replace the old fixed directory so repeats and CI retries cannot collide.
+CI uploads its evidence on success and failure, including videos and traces.
+
+Six local CI-mode executions pass (two per Chromium, Firefox and WebKit), with
+one worker, no retries, no skips or flakes. Fourteen release-policy tests, root
+TypeScript and parsed workflow checks pass. All 1,008 distribution files remain
+byte-identical to the sealed `19f4dca7` archive. Six captured states receive
+visual review, including imported/reopened DOCX viewports and the full HTML
+reader. The HTML reader still shows equation source and literal page-template
+fallbacks; this is retention/editing coverage, not native Word or pixel-fidelity
+certification. The report is
+`artifacts/docx-research-ci-integration-20261111.json`.
+
+No library/API/budget changes or new complete source/matrix run are claimed.
+Hosted Linux CI, authentication and final package/publication checks remain
+pending. The packaged docs have changed since the sealed archive.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

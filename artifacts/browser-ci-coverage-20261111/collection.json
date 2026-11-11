@@ -1,0 +1,70 @@
+[
+  {
+    "name": "all-manual",
+    "args": [
+      "-c",
+      "playwright.audit.config.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "main",
+    "args": [
+      "-c",
+      "playwright.config.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "recorded",
+    "args": [
+      "-c",
+      "playwright.audit.config.ts",
+      "editor-capabilities-audit.spec.ts",
+      "latest-ui-audit.spec.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "production",
+    "args": [
+      "-c",
+      "playwright.production.config.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "startup",
+    "args": [
+      "-c",
+      "playwright.yjs-incomplete-room.config.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "presence",
+    "args": [
+      "-c",
+      "artifacts/cursor-navigation-browser-20261106.config.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "default-yjs",
+    "args": [
+      "-c",
+      "playwright.yjs-default.config.ts"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "migration",
+    "args": [
+      "-c",
+      "artifacts/yjs-namespace-browser-20261107.config.ts",
+      "--grep",
+      "recovers a saved legacy paragraph|recovers the exact embedded offline draft|keeps a retained draft across reload|opens after local draft storage is blocked"
+    ],
+    "exitCode": 0
+  }
+]
