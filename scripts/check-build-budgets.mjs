@@ -690,7 +690,11 @@ const limits = Object.freeze({
   // DOCX complex page fields and the custom numbering fallback measure
   // 1,450,491 bytes against the previous 1,449,408-byte cap.
   // The Vue form field brings the measured total to 1,452,286 bytes.
-  'all CommonJS runtime code': 1418.75 * kibibyte,
+  // Empty text runs share a widget boundary with their next sibling. The
+  // single-owner renderer adds 63 bytes (1,452,853 total), 53 over the prior
+  // cap. Allow 64 bytes for this fix; keep all entry, ESM, CSS, latency and
+  // retention limits unchanged. Preserve the original failed size receipt.
+  'all CommonJS runtime code': 1418.8125 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

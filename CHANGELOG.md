@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Avoid duplicate cursor labels when empty formatted text runs share a position,
+  including after edits across paragraph boundaries.
+
 - Keep document undo and redo shortcuts working when focus returns to a toolbar
   button after an image edit or a configuration panel closes. Native form
   fields retain their own keyboard handling.

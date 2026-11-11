@@ -11,6 +11,7 @@ import '../manual/structural-wrapping-real.spec';
 import '../manual/history-retention-real.spec';
 import { runVirtualSelectionJourney } from './virtual-selection-journey';
 import { expect, test, type Locator } from '@playwright/test';
+import { readDocumentDOMText } from './document-dom-text';
 import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';
 
 test('an empty numbered item visibly paints its marker; independent controls detect missing paint', async ({ page }, info) => {
@@ -4187,6 +4188,23 @@ test('maps decorations through typing without persisting widget content', async 
   await expect(page.getByLabel('Document JSON')).not.toContainText('Remote');
 });
 
+test('distinguishes rendered widget labels from authored document text', async ({ page }) => {
+  const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
+  const paragraph = editor.locator(':scope > p').first();
+  await expect(paragraph.locator('[data-fountain-widget="remote"]')).toHaveText('Remote');
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('Alpha Beta');
+  await page.evaluate(() => {
+    const { commands } = (globalThis as any).fountainBrowserTest;
+    commands.commands.selectText([0, 0], 5);
+    if (!commands.commands.insertText('Remote')) throw new Error('Could not insert authored control text.');
+  });
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('AlphaRemote Beta');
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).textContent
+  ))).toBe('AlphaRemote Beta');
+  await expect(paragraph.locator('[data-fountain-widget="remote"]')).toHaveText('Remote');
+});
+
 test('highlights editable code and updates language metadata through public commands', async ({ page }) => {
   await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
@@ -4586,7 +4604,10 @@ test('wraps, indents, lifts, and exits lists through browser-visible commands an
     contract.view.focus();
   });
   await page.keyboard.press('Backspace');
-  await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+  await expect.poll(() => readDocumentDOMText(editor.locator(':scope > p').first())).toBe('Alpha Beta');
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.child(0).textContent
+  ))).toBe('Alpha Beta');
   await expect(editor.locator(':scope > ol > li')).toHaveCount(1);
 });
 
@@ -7520,7 +7541,7 @@ test('replaces a backward selection made by a real reverse pointer drag', async 
   ))).toBe(expected);
 });
 
-test('turns multi-format and multi-block selections into visible paragraph boundaries', async ({ page }) => {
+test('turns multi-format and multi-block selections into visible paragraph boundaries', async ({ page }, info) => {
   const editor = page.getByRole('textbox', { name: 'Browser contract editor' });
   await page.evaluate(() => {
     const contract = (globalThis as any).fountainBrowserTest;
@@ -7540,7 +7561,7 @@ test('turns multi-format and multi-block selections into visible paragraph bound
   await page.keyboard.press('ControlOrMeta+z');
   await expect(editor.locator(':scope > p')).toHaveCount(3);
   await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
-  await expect(editor.locator(':scope > p').first().locator('strong')).toHaveText('Alpha');
+  await expect.poll(() => readDocumentDOMText(editor.locator(':scope > p').first().locator('strong'))).toBe('Alpha');
 
   await page.reload();
   const freshEditor = page.getByRole('textbox', { name: 'Browser contract editor' });
@@ -7572,10 +7593,21 @@ test('turns multi-format and multi-block selections into visible paragraph bound
   await page.keyboard.press('Enter');
   await expect(freshEditor.locator(':scope > p')).toHaveCount(3);
   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
-  await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText(' paragraph');
+  await info.attach('native-range-enter-state', { contentType: 'application/json', body: JSON.stringify(await freshEditor.evaluate(element => ({
+    html: element.innerHTML,
+    widgetCount: element.querySelectorAll('[data-fountain-widget="remote"]').length,
+    document: (globalThis as any).fountainBrowserTest.editor.getJSON(),
+  })), null, 2) });
+  await expect(freshEditor.locator('[data-fountain-widget="remote"]')).toHaveCount(1);
+  await expect.poll(() => readDocumentDOMText(freshEditor.locator(':scope > p').nth(1))).toBe(' paragraph');
   await page.keyboard.press('ControlOrMeta+z');
   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
-  await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+  await expect.poll(() => readDocumentDOMText(freshEditor.locator(':scope > p').nth(1))).toBe('Second paragraph');
+  await expect(freshEditor.locator('[data-fountain-widget="remote"]')).toHaveCount(1);
+  await expect.poll(() => page.evaluate(() => (
+    (globalThis as any).fountainBrowserTest.editor.state.doc.content
+      .filter((node: any) => node.type.name === 'paragraph').slice(0, 2).map((node: any) => node.textContent)
+  ))).toEqual(['Alpha Beta', 'Second paragraph']);
 });
 
 test('visibly splits and joins ordinary paragraphs with both deletion directions', async ({ page }) => {

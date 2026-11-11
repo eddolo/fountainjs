@@ -189,19 +189,19 @@ function caretPlaceholder(): HTMLBRElement {
   return placeholder;
 }
 
-function renderText(node: Node, path: readonly number[], position: number, context: DOMRenderContext, sharedLink?: Mark): HTMLElement {
+function renderText(node: Node, path: readonly number[], position: number, context: DOMRenderContext, sharedLink?: Mark, ownsWidgets = true): HTMLElement {
   const wrapper = document.createElement('span');
   wrapper.dataset.fountainTextPath = path.join('.');
 
   const value = node.text ?? '';
   const end = position + value.length;
   const inline = context.decorations?.find(position, end, (decoration) => decoration.type === 'inline') ?? [];
-  const widgets = context.decorations?.find(position, end, (decoration) => (
+  const widgets = ownsWidgets ? context.decorations?.find(position, end, (decoration) => (
     decoration.type === 'widget'
       && !decoration.spec.overlay
       && decoration.from >= position
       && (value.length === 0 ? decoration.from === position : decoration.from < end)
-  )) ?? [];
+  )) ?? [] : [];
   const boundaries = [...new Set([
     0,
     value.length,
@@ -305,6 +305,10 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
   let childPosition = position + 1;
   let linkedRun: { mark: Mark; dom: HTMLElement; target: HTMLElement } | undefined;
   node.content.forEach((child, index) => {
+    const childPath = [...path, index];
+    // Empty runs retain their marks but share a position with the next child.
+    // Only the final empty run owns an otherwise unclaimed boundary widget.
+    const ownsWidgets = child.text !== '' || index === node.childCount - 1;
     const hasWidget = context.decorations?.find(childPosition, childPosition + child.nodeSize,
       decoration => decoration.type === 'widget' && !decoration.spec.overlay).length;
     const link = child.isText && !hasWidget ? child.marks.find(mark => mark.type.name === 'link') : undefined;
@@ -319,12 +323,14 @@ export function renderNode(node: Node, path: readonly number[] = [], context: DO
         linkedRun = { mark: link, dom: renderedLink.dom, target: renderedLink.contentDOM ?? renderedLink.dom };
         target.appendChild(linkedRun.dom);
       }
-      linkedRun.target.appendChild(renderText(child, [...path, index], childPosition, context, link));
+      linkedRun.target.appendChild(renderText(child, childPath, childPosition, context, link, ownsWidgets));
     } else {
       if (linkedRun && !linkedRun.dom.textContent?.trim()) linkedRun.dom.removeAttribute('href');
       linkedRun = undefined;
       if (!child.isText) appendWidgets(target, childPosition, context);
-      target.appendChild(renderNode(child, [...path, index], context, childPosition));
+      target.appendChild(child.isText
+        ? renderText(child, childPath, childPosition, context, undefined, ownsWidgets)
+        : renderNode(child, childPath, context, childPosition));
     }
     childPosition += child.nodeSize;
   });
