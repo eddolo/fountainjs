@@ -68,7 +68,7 @@ depends on the evidence above; the new outcomes do not expand this beta.
 | Area | Work still required |
 | --- | --- |
 | Collaboration | Current release validation, sustained storage/history growth, realistic input responsiveness, and production adoption. |
-| Formats and layout | Deeper DOCX/Word fidelity, the remaining ordinary CommonMark cases, and gradual ODT/EPUB support with independent fixtures. |
+| Formats and layout | Deeper DOCX/Word fidelity; clearer adoption of the distinct Markdown profiles, broader GFM coverage and exact model reopening; gradual ODT/EPUB support with independent fixtures. |
 | Browser behavior | Complete cross-browser coverage for the current candidate and diagnosis of intermittent failures. |
 | Mobile and IME | Physical iOS/Android keyboards, composition, autocorrect, selection, and clipboard evidence. |
 | Accessibility | Additional menu and custom-renderer states plus assistive-technology testing. |
@@ -82,6 +82,13 @@ collaboration under representative workloads. Compare the same document and
 operations with ProseMirror plus Tiptap. Current retained-Yjs measurements are
 transaction bursts and in-memory exchanges. The
 [diagnostic](YJS_ENDURANCE_DIAGNOSTIC.md) documents their workload and limits.
+
+Markdown's default profile has 563/652 CommonMark fixture matches; the ordinary
+complete-file profile has 635/652, with 17 documented policy differences. An
+explicit source-data profile reaches 652/652 using inactive URI capture and
+other declared options. That does not establish default editor, safe HTML,
+GFM or exact model-reopening parity. Keep these contracts separate.
+[Profile evidence and remaining boundaries](MARKDOWN_DOCUMENT_FLOW.md).
 
 ## Future work retained
 
