@@ -7600,6 +7600,7 @@ test('turns multi-format and multi-block selections into visible paragraph bound
   })), null, 2) });
   await expect(freshEditor.locator('[data-fountain-widget="remote"]')).toHaveCount(1);
   await expect.poll(() => readDocumentDOMText(freshEditor.locator(':scope > p').nth(1))).toBe(' paragraph');
+  await freshEditor.screenshot({ path: info.outputPath('range-enter-single-widget.png') });
   await page.keyboard.press('ControlOrMeta+z');
   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
   await expect.poll(() => readDocumentDOMText(freshEditor.locator(':scope > p').nth(1))).toBe('Second paragraph');

@@ -44,15 +44,14 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest full local integration checkpoint is `597f5415`, which passed all
-5,257 source tests and the package, Node/workerd, type, performance, retention,
-format, and size gates on November 11. Twelve recorded desktop journeys pass
-after repairing toolbar undo/redo. Default Yjs, startup recovery, migration
-recovery and compiled native-presence batches also pass in all three desktop
-engines. The preceding checkpoint passed real Lean verification in isolation
-after a timeout during simultaneous build load. The full editor/mobile matrix,
-serialized native clipboard batch and hosted CI remain pending. See the
-[checkpoint record](RELEASES.md#toolbar-history-repair-at-597f5415).
+The latest full local integration checkpoint is `7961b966`, which passed all
+5,271 source tests and the package, Node/workerd, type, performance, retention,
+format, and size gates on November 11. A duplicate-widget renderer repair also
+passes 12 recorded desktop checks. Earlier default Yjs, startup, migration and
+native-presence batches passed at `597f5415`; the combined latest candidate
+still needs fresh release validation. The full editor/mobile matrix, serialized
+native clipboard batch and hosted CI remain pending. See the
+[checkpoint record](RELEASES.md#empty-run-widget-repair-at-7961b966).
 
 ## Remaining parity work
 

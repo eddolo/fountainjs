@@ -1,0 +1,103 @@
+diff --git a/package.json b/package.json
+index 1f8fe4f9..9eab5245 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "fountainjs-editor",
+-  "version": "0.4.0-beta.2",
++  "version": "0.5.0-beta.1",
+   "description": "Open-source modular rich-text editor library for React, Vue, Svelte, Angular, Web Components, and plain JavaScript.",
+   "author": "Paolo Cappuccini",
+   "license": "MIT",
+diff --git a/examples/starters/plain-dom/package.json b/examples/starters/plain-dom/package.json
+index fb60ed19..7f2a7fdf 100644
+--- a/examples/starters/plain-dom/package.json
++++ b/examples/starters/plain-dom/package.json
+@@ -4,6 +4,6 @@
+   "type": "module",
+   "engines": { "node": "^20.19.0 || >=22.12.0" },
+   "scripts": { "dev": "vite", "build": "vite build" },
+-  "dependencies": { "fountainjs-editor": "0.4.0-beta.2" },
++  "dependencies": { "fountainjs-editor": "0.5.0-beta.1" },
+   "devDependencies": { "vite": "8.2.2" }
+ }
+diff --git a/examples/starters/react/package.json b/examples/starters/react/package.json
+index 6a724972..5abb9234 100644
+--- a/examples/starters/react/package.json
++++ b/examples/starters/react/package.json
+@@ -5,7 +5,7 @@
+   "engines": { "node": "^20.19.0 || >=22.12.0" },
+   "scripts": { "dev": "vite", "build": "vite build" },
+   "dependencies": {
+-    "fountainjs-editor": "0.4.0-beta.2",
++    "fountainjs-editor": "0.5.0-beta.1",
+     "react": "19.2.8",
+     "react-dom": "19.2.8"
+   },
+diff --git a/examples/starters/node/package.json b/examples/starters/node/package.json
+index e689a79d..9dc3cd85 100644
+--- a/examples/starters/node/package.json
++++ b/examples/starters/node/package.json
+@@ -4,5 +4,5 @@
+   "type": "module",
+   "engines": { "node": ">=20.19.0" },
+   "scripts": { "start": "node convert.mjs" },
+-  "dependencies": { "fountainjs-editor": "0.4.0-beta.2" }
++  "dependencies": { "fountainjs-editor": "0.5.0-beta.1" }
+ }
+diff --git a/examples/react-app/src/Developers.tsx b/examples/react-app/src/Developers.tsx
+index 985ea0f9..9ed108f0 100644
+--- a/examples/react-app/src/Developers.tsx
++++ b/examples/react-app/src/Developers.tsx
+@@ -676,7 +676,7 @@ function Developers() {
+           <section className="dev-section" id="starters">
+             <p className="dev-label">00 · START HERE</p>
+             <h2>Start with a working project.</h2>
+-            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins the published <code>0.4.0-beta.2</code> package. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
++            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins the published <code>0.5.0-beta.1</code> package. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
+             <div className="dev-starters">
+               <article id="starter-plain-dom">
+                 <h3>Plain JavaScript</h3>
+diff --git a/tests/browser/starter-downloads.spec.ts b/tests/browser/starter-downloads.spec.ts
+index b2ba8dc6..50c1825d 100644
+--- a/tests/browser/starter-downloads.spec.ts
++++ b/tests/browser/starter-downloads.spec.ts
+@@ -25,7 +25,7 @@ test('downloads complete standalone projects from the developer guide', async ({
+       expect(strFromU8(files[`${name}/${file}`])).toBe(await readFile(`examples/starters/${kind}/${file}`, 'utf8'));
+     }
+     const manifest = JSON.parse(strFromU8(files[`${name}/package.json`]));
+-    expect(manifest.dependencies['fountainjs-editor']).toBe('0.4.0-beta.2');
++    expect(manifest.dependencies['fountainjs-editor']).toBe('0.5.0-beta.1');
+   }
+   await page.locator('#starters').screenshot({ path: info.outputPath('starter-downloads.png') });
+   for (const { kind, demo, host } of [
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 975405c9..b9d3a258 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,12 +1,19 @@
+ # Changelog
+ 
+-Unreleased default table-width fix: distinguish omitted Word automatic width
+-from a new Fountain table's full-width/complete-fixed-grid defaults. DOCX export
+-reports default-width materialization rather than silently switching sizing
+-policy on reopen. Native layout certification remains outstanding.
+-
+ ## Unreleased
+ 
++## 0.5.0-beta.1 — 2026-11-11
++
++- The default `fountainjs-editor/yjs` entry now uses retained storage.
++  Existing XML rooms require `fountainjs-editor/yjs/legacy` or an explicit
++  migration. Supported Yjs versions start at 13.6.32. Read
++  `docs/YJS_DEFAULT_ADOPTION.md` before upgrading a persisted room.
++
++- Distinguish omitted Word automatic width from a new Fountain table's
++  full-width/complete-fixed-grid defaults. DOCX export reports default-width
++  materialization rather than silently switching sizing policy on reopen.
++  Native layout certification remains outstanding.
++
+ - Avoid duplicate cursor labels when empty formatted text runs share a position,
+   including after edits across paragraph boundaries.
+ 

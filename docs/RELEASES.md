@@ -139,13 +139,22 @@ the repository.
    for clipped controls, invisible state, unexpected scrolling, selection
    discontinuities, or document/output disagreement before approving release.
 
-5. Commit the release, create the exact `v<version>` tag, and publish the GitHub
-   release from that tag.
+5. Commit the release on its reviewed branch, create the exact `v<version>`
+   tag, and publish the GitHub release from that tag.
 6. Inspect the public Publish npm run. If it stages successfully, inspect the
    package name, version, provenance, files, README, and dependency list on npm,
    then approve with maintainer 2FA.
-7. Verify clean installation in an empty consumer and check the live website.
-8. Add the immutable release/run links to the parity ledger.
+7. Verify registry publication and clean installation in an empty consumer.
+8. Merge the verified release source into `master`, wait for the Playground
+   deployment, and check the live website and starter downloads.
+9. Add the immutable release/run links to the parity ledger.
+
+The Playground workflow deploys automatically on a `master` push. Keep release
+preparation on its review branch until the staged package is approved and its
+registry installation passes. This ordering lets the versioned starters and
+website go live after their package becomes installable. A tag can identify the
+verified review-branch commit before the source is merged. Any subsequent code
+change still needs the applicable checks before deployment.
 
 Unmerged validation checkpoint, 2026-11-04: the packed schema-resolution repair
 passes strict analysis of 40 discovered entries, separate Angular ESM analysis,
@@ -333,9 +342,10 @@ must not be counted as additional distinct capabilities. The terminal log is
 `artifacts/release-native-presence-597f5415.log`; sample label-placement screenshots
 received visual review.
 
-The broad five-engine editor run is still running. The serialized native
-clipboard batch remains pending. The completed collaboration batches do not
-certify those remaining checks or hosted CI.
+The subsequent broad five-engine editor diagnostic stopped at its failure
+limit. The completed collaboration batches do not certify a later combined
+release or the separately serialized native clipboard checks. The next section
+records the resulting renderer repair.
 
 The broad run also exposed an ambiguous list-button test query. Its substring
 match selected both `Bullet list` and the lower demo's `Toggle bullet list`.
@@ -351,6 +361,55 @@ The local branch is ahead of the newest draft's `1a9e1640` head. The prepared
 next draft continues `fix/native-focus-intent-20261105`; its description is in
 `artifacts/release-pr-body-20261111.md`. Earlier drafts remain prerequisites,
 and the proposed body must be updated with terminal matrix results before use.
+
+### Empty-run widget repair at 7961b966
+
+The broad `597f5415` diagnostic stopped after five failures: 628 passed, nine
+skipped, one interrupted and 423 did not run. Its three failing scenarios
+included the repaired list-button selector, decoration-sensitive text/mark
+assertions, and a real duplicate view widget after a native cross-paragraph
+Enter. The original terminal log is `artifacts/release-browser-597f5415.log`.
+
+The renderer gave an empty text run and its following sibling ownership of the
+same widget position. A nonfinal empty run now leaves that widget to its next
+sibling; the final empty run still owns a trailing boundary. Source nodes and
+marks remain intact. Fourteen regression cases cover both mapping sides,
+leading/middle/trailing and all-empty runs, an adjacent atom and a hard break.
+The corrected pre-repair fixture fails 12 cases and passes two controls; all
+14 pass after the repair, together with 63 existing view/link/overlay checks.
+
+The browser assertions read rendered document text independently of view-only
+widgets and tolerate decoration-driven mark fragments. A negative control
+requires genuinely authored `Remote` text to survive. The native range case
+also requires exactly one widget and exact restored model text. All 12 recorded
+checks pass across Chromium, Firefox and WebKit, including the previously
+unreached cross-paragraph Enter/undo sequence. The new mid-edit screenshot and
+final restored view received visual review. Recording configuration and results
+are `artifacts/decoration-contract-browser-20261111.config.ts` and
+`artifacts/empty-widget-browser-reviewed-20261111.log`.
+
+The full `pnpm check` at `7961b966` passes 5,271 tests in 323 files plus the
+build, API, package, Node/workerd, headless, format, framework type, performance
+and retention gates. Initial new-fixture typing failures are preserved in the
+preceding `acd27795` log. The final log is
+`artifacts/release-check-7961b966.log`. The renderer adds 63 CommonJS bytes.
+Aggregate capacity increases by 64 bytes, from 1,452,800 to 1,452,864 bytes;
+the measured total is 1,452,853. Per-entry, ESM, CSS, latency and memory limits
+are unchanged. Both original size failure and passing receipt are retained.
+
+A 441-case diagnostic sweep contains cases not passed in the interrupted run,
+including the new controls. Its selection is checked against the current
+1,069-case non-display-clipboard plan and all 628 prior pass identities.
+`artifacts/prepare-browser-remainder-20261111.py` documents the selection.
+This is an iteration aid, not a clean full-matrix release run. Fresh complete
+CI and separately serialized native clipboard evidence remain mandatory.
+
+An unapplied seven-file metadata proposal prepares `0.5.0-beta.1`, its versioned
+changelog and matching starter dependencies/guide/tests. It passes tag/changelog
+validation in an isolated preview. The real manifest still says `0.4.0-beta.2`.
+The proposal is `artifacts/beta-metadata-proposal-20261111.patch`; regenerate it
+after relevant edits and review its date before applying. Publication, registry
+verification and website deployment have not occurred for this candidate.
 
 ## Failure and rollback policy
 

@@ -1,0 +1,173 @@
+[WebServer] (node:23296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:12936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 89% of 7.3s inside plugin hooks (6.5s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (86%, 6.2s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:19112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:17412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:22796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:15188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:24828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (768ms)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (524ms)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (689ms)
+  x   4 [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (5.9s)
+(node:22072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (3.0s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (1.8s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (1.9s)
+  x   8 [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (7.6s)
+(node:22428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (1.3s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (879ms)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (1.0s)
+  x  12 [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (6.5s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+    Expected: " paragraph"
+    Received: "RemoteRemote paragraph"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+        14 × locator resolved to <p data-fountain-path="1" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-active="true" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "RemoteRemote paragraph"
+
+
+      7594 |   await expect(freshEditor.locator(':scope > p')).toHaveCount(3);
+      7595 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
+    > 7596 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText(' paragraph');
+           |                                                          ^
+      7597 |   await page.keyboard.press('ControlOrMeta+z');
+      7598 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+      7599 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7596:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+    Expected: " paragraph"
+    Received: "RemoteRemote paragraph"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+        14 × locator resolved to <p data-fountain-path="1" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-active="true" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "RemoteRemote paragraph"
+
+
+      7594 |   await expect(freshEditor.locator(':scope > p')).toHaveCount(3);
+      7595 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
+    > 7596 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText(' paragraph');
+           |                                                          ^
+      7597 |   await page.keyboard.press('ControlOrMeta+z');
+      7598 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+      7599 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7596:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+    Expected: " paragraph"
+    Received: "RemoteRemote paragraph"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+        13 × locator resolved to <p data-fountain-path="1" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-active="true" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "RemoteRemote paragraph"
+
+
+      7594 |   await expect(freshEditor.locator(':scope > p')).toHaveCount(3);
+      7595 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha');
+    > 7596 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText(' paragraph');
+           |                                                          ^
+      7597 |   await page.keyboard.press('ControlOrMeta+z');
+      7598 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+      7599 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7596:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-decoration-contract-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+    [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+    [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+  9 passed (1.1m)

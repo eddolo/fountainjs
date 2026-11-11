@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App
+
+ ❯ tests/empty-text-widget-boundaries.test.ts (14 tests | 12 failed) 158ms
+   ❯ view widget ownership with side -1 (7)
+     × renders one widget at leading empty run without changing source runs 96ms
+     × renders one widget at multiple leading empty runs without changing source runs 6ms
+     × renders one widget at middle empty run without changing source runs 6ms
+     × renders one widget at multiple trailing empty runs without changing source runs 5ms
+     × renders one widget at only empty runs without changing source runs 5ms
+     × renders one widget at empty run before an atom without changing source runs 5ms
+   ❯ view widget ownership with side 1 (7)
+     × renders one widget at leading empty run without changing source runs 4ms
+     × renders one widget at multiple leading empty runs without changing source runs 3ms
+     × renders one widget at middle empty run without changing source runs 4ms
+     × renders one widget at multiple trailing empty runs without changing source runs 3ms
+     × renders one widget at only empty runs without changing source runs 3ms
+     × renders one widget at empty run before an atom without changing source runs 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side -1 > renders one widget at leading empty run without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side -1 > renders one widget at middle empty run without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side -1 > renders one widget at multiple trailing empty runs without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side -1 > renders one widget at only empty runs without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side -1 > renders one widget at empty run before an atom without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side 1 > renders one widget at leading empty run without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side 1 > renders one widget at middle empty run without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side 1 > renders one widget at multiple trailing empty runs without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side 1 > renders one widget at only empty runs without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side 1 > renders one widget at empty run before an atom without changing source runs
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 2 passed (14)
+   Start at  14:21:19
+   Duration  4.01s (environment 49%, transform 38%, import 8%, tests 4%)
+AssertionError: expected <span …(1)></span>
+<span …(1)></span> to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/empty-text-widget-boundaries.test.ts:38:25
+     36|       for (let pass = 0; pass < 2; pass++) {
+     37|         const widgets = view.dom.querySelectorAll('[data-fountain-widg…
+     38|         expect(widgets).toHaveLength(1);
+       |                         ^
+     39|         expect(widgets[0]?.textContent).toBe('Remote');
+     40|         expect((widgets[0] as HTMLElement | undefined)?.contentEditabl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side -1 > renders one widget at multiple leading empty runs without changing source runs
+ FAIL  tests/empty-text-widget-boundaries.test.ts > view widget ownership with side 1 > renders one widget at multiple leading empty runs without changing source runs
+AssertionError: expected <span …(1)></span>
+…(2) to have a length of 1 but got 3
+
+- Expected
++ Received
+
+- 1
++ 3
+
+ ❯ tests/empty-text-widget-boundaries.test.ts:38:25
+     36|       for (let pass = 0; pass < 2; pass++) {
+     37|         const widgets = view.dom.querySelectorAll('[data-fountain-widg…
+     38|         expect(widgets).toHaveLength(1);
+       |                         ^
+     39|         expect(widgets[0]?.textContent).toBe('Remote');
+     40|         expect((widgets[0] as HTMLElement | undefined)?.contentEditabl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+

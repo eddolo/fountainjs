@@ -1,0 +1,27 @@
+[WebServer] (node:10244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:24540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (775ms)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (734ms)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (862ms)
+  ok  4 [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (1.2s)
+(node:8048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (3.1s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (1.8s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (1.9s)
+  ok  8 [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (2.4s)
+(node:20180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (1.4s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (1.0s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (1.2s)
+  ok 12 [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (2.1s)
+
+  12 passed (30.7s)

@@ -1,0 +1,161 @@
+[WebServer] (node:20092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:21972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:24476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (915ms)
+  ok  2 [chromium] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (707ms)
+  ok  3 [chromium] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (745ms)
+  x   4 [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (6.2s)
+(node:12784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [firefox] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (2.9s)
+  ok  6 [firefox] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (1.5s)
+  ok  7 [firefox] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (2.0s)
+  x   8 [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (8.3s)
+(node:19780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [webkit] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (1.5s)
+  ok 10 [webkit] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (1.1s)
+  ok 11 [webkit] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (1.3s)
+  x  12 [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (7.2s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+    Expected: "Second paragraph"
+    Received: "SecondRemote paragraph"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+        14 × locator resolved to <p data-fountain-path="1" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "SecondRemote paragraph"
+
+
+      7603 |   await page.keyboard.press('ControlOrMeta+z');
+      7604 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+    > 7605 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+           |                                                          ^
+      7606 | });
+      7607 |
+      7608 | test('visibly splits and joins ordinary paragraphs with both deletion directions', async ({ page }) => {
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7605:58
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+    Expected: "Second paragraph"
+    Received: "SecondRemote paragraph"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+        14 × locator resolved to <p data-fountain-path="1" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "SecondRemote paragraph"
+
+
+      7603 |   await page.keyboard.press('ControlOrMeta+z');
+      7604 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+    > 7605 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+           |                                                          ^
+      7606 | });
+      7607 |
+      7608 | test('visibly splits and joins ordinary paragraphs with both deletion directions', async ({ page }) => {
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7605:58
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+    Expected: "Second paragraph"
+    Received: "SecondRemote paragraph"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').nth(1)
+        13 × locator resolved to <p data-fountain-path="1" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "SecondRemote paragraph"
+
+
+      7603 |   await page.keyboard.press('ControlOrMeta+z');
+      7604 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+    > 7605 |   await expect(freshEditor.locator(':scope > p').nth(1)).toHaveText('Second paragraph');
+           |                                                          ^
+      7606 | });
+      7607 |
+      7608 | test('visibly splits and joins ordinary paragraphs with both deletion directions', async ({ page }) => {
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7605:58
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\empty-widget-browser-after-20261111\editor-turns-multi-format--ac163-isible-paragraph-boundaries-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+    [firefox] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+    [webkit] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+  9 passed (49.9s)

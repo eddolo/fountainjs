@@ -29,17 +29,21 @@ persisted room. Portable document JSON has its separate migration contract.
 
 ## Local validation
 
-Runtime `597f5415` passed `pnpm check`, including all 5,257 source tests in 322
+Runtime `7961b966` passed `pnpm check`, including all 5,271 source tests in 323
 files, API/package/runtime/format/type checks and existing size, latency and
-retention limits. The final tarball passed public-entry and Angular ESM type
-analysis plus a clean ESM/CommonJS installation without optional peers or
-browser globals. Publint retains its existing DOCX format warning.
+retention checks. Its duplicate-widget repair adds 63 CommonJS bytes, with
+64 bytes of aggregate capacity and all other limits unchanged. Earlier tarball
+type/consumer analysis passed at `597f5415`; refresh it for the final versioned
+candidate. Publint retains its existing DOCX format warning.
 
-Twelve recorded desktop journeys pass across Chromium, Firefox and WebKit.
-The earlier broad browser run found a reproducible toolbar undo failure in all
-three engines; the repair and its failed controls are retained. The current
-full browser and Yjs runs remain in progress. Update this section with their
-terminal results before opening the prepared review.
+The latest twelve recorded desktop checks pass across Chromium, Firefox and
+WebKit. The broad diagnostic stopped with 628 passes and five failures, leading
+to test-selector/decoration-observation corrections and a real duplicate-widget
+renderer repair. Failed controls and exact one-widget/source-retention checks
+are retained. Earlier default Yjs/startup/migration/native-presence batches
+passed at `597f5415`. A 441-case remaining-case diagnostic is running on the new
+renderer. It does not replace a clean full matrix. Update this section with
+terminal results and final candidate CI before opening the prepared review.
 
 ## Release gates still open
 

@@ -1,0 +1,70 @@
+{
+  "runtimeCommit": "7961b9661c1d07fda50b9424e44fcf278af3b8c5",
+  "date": "2026-11-11",
+  "manifestVersion": "0.4.0-beta.2",
+  "publishedArtifact": false,
+  "fullCheck": {
+    "exitCode": 0,
+    "sourceTests": 5271,
+    "testFiles": 323,
+    "log": "artifacts/release-check-7961b966.log"
+  },
+  "regression": {
+    "name": "Duplicate view widget at a shared empty-text boundary",
+    "before": {
+      "failed": 12,
+      "passedControls": 2,
+      "log": "artifacts/empty-widget-unit-before-corrected-20261111.log"
+    },
+    "focusedAfter": {
+      "passed": 77,
+      "log": "artifacts/empty-widget-unit-after-20261111.log"
+    },
+    "recordedBrowserChecks": 12,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "visualReview": "Mid-edit single-widget and restored-document screenshots",
+    "browserLog": "artifacts/empty-widget-browser-reviewed-20261111.log"
+  },
+  "codeCapacity": {
+    "previousRuntimeBytes": 1452790,
+    "candidateBytes": 1452853,
+    "addedRuntimeBytes": 63,
+    "previousAggregateCjsLimitBytes": 1452800,
+    "aggregateCjsLimitBytes": 1452864,
+    "capacityIncreaseBytes": 64,
+    "otherLimitsChanged": false,
+    "failedReceipt": "artifacts/empty-widget-budget-20261111.log",
+    "passingReceipt": "artifacts/empty-widget-budget-after-20261111.log"
+  },
+  "broadDiagnostic": {
+    "runtimeCommit": "597f5415",
+    "passed": 628,
+    "failed": 5,
+    "skipped": 9,
+    "interrupted": 1,
+    "notRun": 423,
+    "stoppedByFailureLimit": true
+  },
+  "remainingDiagnostic": {
+    "wholePlanCases": 1069,
+    "selectedCases": 441,
+    "previousPassIdentitiesExcluded": 628,
+    "cleanReleaseMatrix": false
+  },
+  "metadataProposal": {
+    "version": "0.5.0-beta.1",
+    "previewTagValidationPassed": true,
+    "applied": false,
+    "patch": "artifacts/beta-metadata-proposal-20261111.patch"
+  },
+  "pending": [
+    "Terminal remaining-case diagnostic and serialized clipboard validation",
+    "Fresh complete matrix and hosted CI on the final versioned candidate",
+    "Final packed-entry types and clean consumer installation",
+    "npm stage approval, registry verification and website deployment"
+  ]
+}

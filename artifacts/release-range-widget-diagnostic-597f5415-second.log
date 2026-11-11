@@ -1,0 +1,61 @@
+[WebServer] (node:23988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:5652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editor.spec.ts:4176:1 › maps decorations through typing without persisting widget content (864ms)
+  ok 2 [chromium] › tests\browser\editor.spec.ts:4191:1 › distinguishes rendered widget labels from authored document text (675ms)
+  ok 3 [chromium] › tests\browser\editor.spec.ts:4581:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (782ms)
+  x  4 [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries (6.3s)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator('[data-fountain-widget="remote"]')
+    Expected: 1
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator('[data-fountain-widget="remote"]')
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      7599 |     document: (globalThis as any).fountainBrowserTest.editor.getJSON(),
+      7600 |   })), null, 2) });
+    > 7601 |   await expect(freshEditor.locator('[data-fountain-widget="remote"]')).toHaveCount(1);
+           |                                                                        ^
+      7602 |   await expect.poll(() => readDocumentDOMText(freshEditor.locator(':scope > p').nth(1))).toBe(' paragraph');
+      7603 |   await page.keyboard.press('ControlOrMeta+z');
+      7604 |   await expect(freshEditor.locator(':scope > p').nth(0)).toHaveText('Alpha Beta');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7601:72
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-range-widget-diagnostic-597f5415-second\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\release-range-widget-diagnostic-597f5415-second\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-range-widget-diagnostic-597f5415-second\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-range-widget-diagnostic-597f5415-second\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-range-widget-diagnostic-597f5415-second\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests\browser\editor.spec.ts:7544:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+  3 passed (14.7s)

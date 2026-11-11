@@ -1,0 +1,895 @@
+[WebServer] (node:17900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:23888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 90% of 7.5s inside plugin hooks (6.7s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (87%, 6.5s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:7576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:6032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:24788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1066 tests using 2 workers
+
+(node:25488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok    1 [chromium] › tests\browser\collaboration-demo.spec.ts:21:1 › opens the lazy collaboration demo after a slow module load and shares typing (2.9s)
+  ok    2 [chromium] › tests\browser\collaboration-demo.spec.ts:50:1 › recovers a failed collaboration load in a new tab without losing the current draft (4.8s)
+  ok    3 [chromium] › tests\browser\collaboration-demo.spec.ts:94:1 › runs the public two-editor collaboration demo with presence and author-local undo (1.9s)
+  ok    5 [chromium] › tests\browser\collaboration-demo.spec.ts:164:1 › replaces both live collaboration documents without remounting the public editors (2.5s)
+  ok    4 [chromium] › tests\browser\collaboration-demo.spec.ts:225:1 › protects a rejected collaboration draft from peer edits and room switching (2.6s)
+  ok    7 [chromium] › tests\browser\collaboration-demo.spec.ts:301:1 › copies a settings card through the real Chromium clipboard before its original (2.1s)
+  ok    6 [chromium] › tests\browser\collaboration-demo.spec.ts:268:1 › merges two offline settings copies without reassigning the original card (2.8s)
+  ok    8 [chromium] › tests\browser\collaboration-demo.spec.ts:327:1 › preserves both editors and the open comment when preparing a room switch fails (2.9s)
+  ok    9 [chromium] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through quote in the public collaboration demo (3.1s)
+  ok   10 [chromium] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through bullet list in the public collaboration demo (3.1s)
+  ok   11 [chromium] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through numbered list in the public collaboration demo (3.2s)
+  ok   12 [chromium] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through task list in the public collaboration demo (3.2s)
+  ok   13 [chromium] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through partial bold in the public collaboration demo (3.4s)
+  ok   14 [chromium] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through paragraph split in the public collaboration demo (3.3s)
+  ok   15 [chromium] › tests\browser\collaboration-demo.spec.ts:461:1 › continues editing after competing offline wraps in the public collaboration demo (3.3s)
+  ok   16 [chromium] › tests\browser\collaboration-demo.spec.ts:492:1 › merges nested collaborative settings through the public two-editor demo (2.2s)
+  ok   18 [chromium] › tests\browser\collaboration-demo.spec.ts:608:1 › runs shared threaded comments through the public provider-neutral review panel (2.4s)
+  ok   17 [chromium] › tests\browser\collaboration-demo.spec.ts:528:1 › restores separate comment drafts and their targets without remounting the editors (4.2s)
+  ok   19 [chromium] › tests\browser\comment-provider.spec.ts:3:1 › posts only the submitted comment while preserving a newer draft and target (1.2s)
+  ok   20 [chromium] › tests\browser\comment-provider.spec.ts:41:1 › keeps a thread saving until both responses arrive and keeps its newest revision (1.2s)
+  ok   22 [chromium] › tests\manual\document-range-formatting-real.spec.ts:4:1 › formats directed text-to-image selections through the toolbar with exact history and reader export (6.7s)
+  ok   21 [chromium] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (17.8s)
+  ok   24 [chromium] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (4.6s)
+  ok   25 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (6.4s)
+  ok   26 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (6.3s)
+  ok   23 [chromium] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (30.4s)
+  ok   27 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (6.6s)
+  ok   28 [chromium] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (6.8s)
+  ok   29 [chromium] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (5.0s)
+  ok   30 [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent (6.7s)
+  ok   32 [chromium] › tests\manual\html-anchors-real.spec.ts:10:1 › edits imported bookmark content and removes an empty bookmark with native input (2.8s)
+  ok   31 [chromium] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent (7.7s)
+  ok   33 [chromium] › tests\browser\editor.spec.ts:16:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint (5.5s)
+  ok   34 [chromium] › tests\browser\editor.spec.ts:40:53 › keeps per-file HTML conversion settings through html editing and export (5.1s)
+  ok   35 [chromium] › tests\browser\editor.spec.ts:40:53 › keeps per-file HTML conversion settings through markdown editing and export (5.8s)
+  ok   36 [chromium] › tests\browser\editor.spec.ts:81:1 › preserves physical preformatted breaks through real import editing and HTML download (9.6s)
+  ok   37 [chromium] › tests\browser\editor.spec.ts:84:1 › retains an empty heading through actual HTML download reopen and native editing (3.9s)
+  ok   39 [chromium] › tests\browser\editor.spec.ts:87:47 › focuses the end empty text source before native typing (2.3s)
+  ok   38 [chromium] › tests\browser\editor.spec.ts:87:47 › focuses the start empty text source before native typing (2.8s)
+  ok   41 [chromium] › tests\browser\editor.spec.ts:96:1 › keeps native form labels names and validation anchors consistent through reconnect (4.0s)
+  ok   40 [chromium] › tests\browser\editor.spec.ts:92:1 › fills replaced childless blocks by native click without adding another block (4.4s)
+  ok   42 [chromium] › tests\browser\editor.spec.ts:100:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (2.0s)
+  ok   43 [chromium] › tests\browser\editor.spec.ts:104:1 › validates required documents custom errors and labels through the native form workshop (5.2s)
+  ok   44 [chromium] › tests\browser\editor.spec.ts:111:1 › keeps distant native edits backward selections and history correct across shared prefixes (4.6s)
+  ok   45 [chromium] › tests\browser\editor.spec.ts:121:1 › retains explicit nested emphasis through native editing history and HTML reopening (5.4s)
+  ok   46 [chromium] › tests\browser\editor.spec.ts:124:1 › retains unfinished EOF source through native literal edits and refuses following content (5.8s)
+  ok   47 [chromium] › tests\browser\editor.spec.ts:128:1 › edits source-empty documents with visible native Enter Backspace history and reopening (6.1s)
+  ok   48 [chromium] › tests\browser\editor.spec.ts:131:1 › retains leading Markdown declarations through native edits and complete source reopening (4.4s)
+  ok   49 [chromium] › tests\browser\editor.spec.ts:134:1 › retains source document envelopes through native edits history and HTML reopening (4.3s)
+  ok   50 [chromium] › tests\browser\editor.spec.ts:138:1 › preserves unsupported anchors through native editing history and safe reopening (4.5s)
+  ok   51 [chromium] › tests\browser\editor.spec.ts:141:1 › inspects and downloads retained HTML source without activating it (4.8s)
+  ok   52 [chromium] › tests\browser\editor.spec.ts:144:1 › retains authored carriage returns through raw source editing and reopening (4.8s)
+  ok   53 [chromium] › tests\browser\editor.spec.ts:162:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (3.8s)
+  ok   54 [chromium] › tests\browser\editor.spec.ts:166:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (5.5s)
+  ok   55 [chromium] › tests\browser\editor.spec.ts:171:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (6.5s)
+  ok   56 [chromium] › tests\browser\editor.spec.ts:171:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (7.4s)
+  ok   57 [chromium] › tests\browser\editor.spec.ts:171:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (7.0s)
+  ok   58 [chromium] › tests\browser\editor.spec.ts:182:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (6.7s)
+  ok   59 [chromium] › tests\browser\editor.spec.ts:182:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (6.0s)
+  ok   60 [chromium] › tests\browser\editor.spec.ts:192:3 › reorders real runbook blocks with native pointer feedback in ltr (4.5s)
+  ok   61 [chromium] › tests\browser\editor.spec.ts:192:3 › reorders real runbook blocks with native pointer feedback in rtl (4.3s)
+  ok   62 [chromium] › tests\browser\editor.spec.ts:196:1 › reorders real runbook blocks with keyboard structural feedback (6.4s)
+  ok   63 [chromium] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: unwrap (4.1s)
+  ok   64 [chromium] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: indent (4.1s)
+  ok   65 [chromium] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (3.8s)
+  ok   66 [chromium] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: contained (3.9s)
+  ok   67 [chromium] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: ltr (3.7s)
+  ok   68 [chromium] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: rtl-cell-ltr (3.8s)
+  ok   69 [chromium] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: auto (3.7s)
+  ok   70 [chromium] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: host-css (4.2s)
+  ok   71 [chromium] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: rtl-spans (3.9s)
+  ok   73 [chromium] › tests\browser\editor.spec.ts:216:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (3.7s)
+  ok   74 [chromium] › tests\browser\editor.spec.ts:220:1 › compares list-first code text-click focus and editing to a plain native surface (2.9s)
+  ok   72 [chromium] › tests\browser\editor.spec.ts:212:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (7.4s)
+  ok   75 [chromium] › tests\browser\editor.spec.ts:224:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (3.9s)
+  ok   76 [chromium] › tests\browser\editor.spec.ts:228:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history (5.2s)
+  ok   77 [chromium] › tests\browser\editor.spec.ts:232:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (4.3s)
+  ok   78 [chromium] › tests\browser\editor.spec.ts:236:1 › separates the homepage framework descenders from the italic extend line (5.0s)
+  ok   79 [chromium] › tests\browser\editor.spec.ts:255:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML (3.8s)
+  ok   80 [chromium] › tests\browser\editor.spec.ts:259:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo (4.9s)
+  ok   81 [chromium] › tests\browser\editor.spec.ts:263:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening (6.4s)
+  ok   83 [chromium] › tests\browser\editor.spec.ts:271:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening (5.6s)
+  ok   82 [chromium] › tests\browser\editor.spec.ts:267:1 › retains HTML link navigation and literal Markdown data through real editing and reopening (10.5s)
+  ok   84 [chromium] › tests\browser\editor.spec.ts:275:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions (3.9s)
+  ok   86 [chromium] › tests\browser\editor.spec.ts:283:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (1.3s)
+  ok   85 [chromium] › tests\browser\editor.spec.ts:279:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening (5.6s)
+  ok   87 [chromium] › tests\browser\editor.spec.ts:287:1 › previews and prints only the current local draft in the conversion lab (4.2s)
+  ok   88 [chromium] › tests\browser\editor.spec.ts:297:1 › keeps Word table cell alignment through editor, page preview and DOCX reopen (2.7s)
+  ok   90 [chromium] › tests\browser\editor.spec.ts:313:1 › conversion lab retains Word row splitting policy through preview and DOCX reopen (2.5s)
+  ok   89 [chromium] › tests\browser\editor.spec.ts:301:1 › conversion lab previews and prints a draft while a linked image stalls (5.8s)
+  ok   91 [chromium] › tests\browser\editor.spec.ts:317:1 › conversion lab preserves Word hyphens through editing, preview and DOCX reopen (2.6s)
+  ok   92 [chromium] › tests\browser\editor.spec.ts:321:1 › conversion lab preserves Word links on line breaks and linked images (2.6s)
+  ok   93 [chromium] › tests\browser\editor.spec.ts:325:1 › conversion lab recalculates complex Word page fields after editing and DOCX reopen (3.7s)
+  ok   94 [chromium] › tests\browser\editor.spec.ts:336:1 › conversion lab preserves Word table indentation in the editor, preview, and reopened DOCX (2.8s)
+  ok   95 [chromium] › tests\browser\editor.spec.ts:340:1 › retains explicit Word row heights through preview and DOCX reopen (3.1s)
+Warning: TT: undefined function: 21
+Warning: TT: invalid function id: 136
+  ok   96 [chromium] › tests\browser\editor.spec.ts:344:1 › prints the edited scientific DOCX in the conversion lab (6.5s)
+  ok   97 [chromium] › tests\browser\editor.spec.ts:358:1 › imports private files in the conversion lab with reports and export reopen (6.5s)
+  ok   98 [chromium] › tests\browser\editor.spec.ts:362:1 › edits cached Word field results without exposing instructions in the conversion lab (2.4s)
+  ok  100 [chromium] › tests\browser\editor.spec.ts:466:1 › keeps keyboard focus and surviving drafts when removing files from the conversion lab (2.6s)
+  ok  101 [chromium] › tests\browser\editor.spec.ts:518:1 › keeps valid and malformed Markdown links distinct through an edit and download (2.1s)
+  ok   99 [chromium] › tests\browser\editor.spec.ts:403:1 › reconnects an imported orphan footnote and exports its native reference (5.3s)
+  ok  103 [chromium] › tests\browser\editor.spec.ts:548:3 › retains partial Markdown em scope through real typing history and canonical reopening (2.1s)
+  ok  104 [chromium] › tests\browser\editor.spec.ts:548:3 › retains partial Markdown strong scope through real typing history and canonical reopening (1.6s)
+  ok  102 [chromium] › tests\browser\editor.spec.ts:543:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen (4.6s)
+  ok  105 [chromium] › tests\browser\editor.spec.ts:553:1 › submits resets and disables a native form-associated Web Component (2.6s)
+  ok  106 [chromium] › tests\browser\editor.spec.ts:557:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences (4.5s)
+  ok  108 [chromium] › tests\browser\editor.spec.ts:565:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard (2.3s)
+  ok  107 [chromium] › tests\browser\editor.spec.ts:561:1 › preserves inert HTML comments through human editing source and reader output (6.3s)
+  ok  109 [chromium] › tests\browser\editor.spec.ts:570:1 › retains cleared anonymous flow through real cut save reopen and continued editing (4.1s)
+  ok  110 [chromium] › tests\browser\editor.spec.ts:574:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output (5.7s)
+  ok  111 [chromium] › tests\browser\editor.spec.ts:578:1 › retains literal flow newlines through actual Markdown export and source reimport (2.8s)
+  ok  112 [chromium] › tests\browser\editor.spec.ts:582:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening (3.9s)
+  ok  113 [chromium] › tests\browser\editor.spec.ts:586:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening (4.6s)
+  ok  114 [chromium] › tests\browser\editor.spec.ts:590:1 › authors sections with properties, empty content, undo and reader preview (4.1s)
+  ok  115 [chromium] › tests\browser\editor.spec.ts:594:1 › preserves optional section containers through real editing and reader output (4.3s)
+  ok  116 [chromium] › tests\browser\editor.spec.ts:598:1 › edits and reopens a Word glossary with term and description roles (5.0s)
+  ok  117 [chromium] › tests\browser\editor.spec.ts:602:1 › imports and edits Word content controls without losing visible content (4.5s)
+  ok  118 [chromium] › tests\browser\editor.spec.ts:625:1 › preserves code endings through source recovery and reader handoff (4.6s)
+  ok  119 [chromium] › tests\browser\editor.spec.ts:629:1 › edits definition lists and reopens a glossary in a reader (4.4s)
+  ok  120 [chromium] › tests\browser\editor.spec.ts:633:1 › edits registered HTML wrappers after Markdown source recovery (2.1s)
+  ok  121 [chromium] › tests\browser\editor.spec.ts:637:1 › retains the complete document through pointer and keyboard output-format changes (8.8s)
+  ok  122 [chromium] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (11.1s)
+  ok  124 [chromium] › tests\browser\editor.spec.ts:650:1 › guards editor actions against page reloads without suppressing failures (1.6s)
+  ok  123 [chromium] › tests\browser\editor.spec.ts:645:1 › edits opaque code labels and reopens them safely in a reader (5.9s)
+  ok  126 [chromium] › tests\browser\editor.spec.ts:664:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff (3.8s)
+  ok  127 [chromium] › tests\browser\editor.spec.ts:668:1 › preserves headerless and mixed tables through source and file handoff (3.9s)
+  ok  128 [chromium] › tests\browser\editor.spec.ts:672:1 › retains HTML block formatting through server import, paste and draft handoff (5.6s)
+  ok  125 [chromium] › tests\browser\editor.spec.ts:660:1 › recovers paragraph HTML into editable blocks and a reopened reader (17.3s)
+  ok  129 [chromium] › tests\browser\editor.spec.ts:676:1 › navigates workflow parents and restores deleted task drafts and histories (11.4s)
+  ok  130 [chromium] › tests\browser\editor.spec.ts:680:1 › discovers product workflows and preserves separate task drafts and histories (9.0s)
+  ok  131 [chromium] › tests\browser\editor.spec.ts:684:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff (3.6s)
+  ok  132 [chromium] › tests\browser\editor.spec.ts:688:1 › retains literal text lines through editing and Markdown handoff (3.4s)
+  ok  133 [chromium] › tests\browser\editor.spec.ts:692:1 › keeps literal syntax unformatted through visual edits and Markdown reopen (3.2s)
+  ok  134 [chromium] › tests\browser\editor.spec.ts:696:1 › chooses literal address import and retains links through DOCX handoff (6.0s)
+  ok  135 [chromium] › tests\browser\editor.spec.ts:700:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview (4.3s)
+  ok  136 [chromium] › tests\browser\editor.spec.ts:704:1 › issue workflow preserves root references and validates local image files (2.6s)
+  ok  137 [chromium] › tests\browser\editor.spec.ts:742:1 › issue workflow preserves reference prefixes and reports container fallback (2.4s)
+  ok  139 [chromium] › tests\browser\editor.spec.ts:770:1 › matches native document parsing for HTML envelopes, recovery, and noscript (1.4s)
+  ok  138 [chromium] › tests\browser\editor.spec.ts:766:1 › reopens a full HTML report without promoting page metadata into editor content (3.1s)
+  ok  141 [chromium] › tests\browser\editor.spec.ts:788:1 › exports independent DOCX list starts and renders the same procedure beside the editor (1.4s)
+  ok  140 [chromium] › tests\browser\editor.spec.ts:784:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export (3.4s)
+  ok  143 [chromium] › tests\browser\editor.spec.ts:796:1 › imports ordered-list starts like the native browser integer parser (1.8s)
+  ok  142 [chromium] › tests\browser\editor.spec.ts:792:1 › retains zero-based list numbers through keyboard outdent history and export (2.8s)
+  ok  145 [chromium] › tests\browser\editor.spec.ts:814:1 › disposes Svelte custom block views before their owned engine (2.2s)
+  ok  144 [chromium] › tests\browser\editor.spec.ts:810:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup (7.4s)
+  ok  146 [chromium] › tests\browser\editor.spec.ts:823:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal (5.0s)
+  ok  148 [chromium] › tests\browser\editor.spec.ts:831:1 › binds rich text to a Vue form through typing, submission, disable and reset (3.7s)
+  ok  147 [chromium] › tests\browser\editor.spec.ts:827:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts (5.6s)
+  ok  149 [chromium] › tests\browser\editor.spec.ts:835:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding (5.2s)
+  ok  151 [chromium] › tests\browser\editor.spec.ts:843:1 › recovers from textless replacement for native typing, lines and history (2.3s)
+  ok  150 [chromium] › tests\browser\editor.spec.ts:839:1 › saves and reopens equation files with source, references and history intact (6.6s)
+  ok  153 [chromium] › tests\browser\editor.spec.ts:851:1 › keeps moved math source attached to its formula through native editing, undo, and export (3.0s)
+  ok  154 [chromium] › tests\browser\editor.spec.ts:855:1 › imports the published TeX table with visible losses and editable numeric values (2.5s)
+  ok  152 [chromium] › tests\browser\editor.spec.ts:847:1 › renders labelled equations and reader links through real editing and recovery (6.9s)
+  ok  156 [chromium] › tests\browser\editor.spec.ts:967:1 › renders, edits, and measures portable page intent in a real browser (1.5s)
+  ok  155 [chromium] › tests\browser\editor.spec.ts:939:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport (2.6s)
+  ok  157 [chromium] › tests\browser\editor.spec.ts:1036:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments (1.6s)
+  ok  159 [chromium] › tests\browser\editor.spec.ts:1238:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss (2.3s)
+  ok  158 [chromium] › tests\browser\editor.spec.ts:1130:1 › continues measured long footnotes through editable and print page projections (4.2s)
+  ok  160 [chromium] › tests\browser\editor.spec.ts:1346:1 › starts a new preview sheet at a DOCX paragraph break (1.8s)
+  ok  161 [chromium] › tests\browser\editor.spec.ts:1376:1 › keeps all lines of a DOCX paragraph together when it fits on the next sheet (1.7s)
+  ok  163 [chromium] › tests\browser\editor.spec.ts:1435:1 › keeps a DOCX heading and caption chain with its body (1.7s)
+  ok  162 [chromium] › tests\browser\editor.spec.ts:1404:1 › keeps a multiline DOCX caption with the following paragraph (2.7s)
+  ok  165 [chromium] › tests\browser\editor.spec.ts:1608:1 › uses a host print renderer without moving or exposing live custom DOM (1.6s)
+Warning: TT: undefined function: 3
+  ok  164 [chromium] › tests\browser\editor.spec.ts:1463:1 › paginates imported styled semantic HTML without structural or PDF text loss (2.7s)
+  ok  167 [chromium] › tests\browser\editor.spec.ts:1718:1 › projects exact A4 and Letter print sheets in every browser engine (2.1s)
+  ok  166 [chromium] › tests\browser\editor.spec.ts:1643:1 › keeps native disclosure and media controls out of the visual sheets keyboard order (3.5s)
+  ok  168 [chromium] › tests\browser\editor.spec.ts:1835:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium (1.7s)
+  ok  169 [chromium] › tests\browser\editor.spec.ts:1875:1 › keeps 1,000-block pagination reflow local to the changed block (1.1s)
+  ok  171 [chromium] › tests\browser\editor.spec.ts:1910:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal (2.6s)
+  ok  170 [chromium] › tests\browser\editor.spec.ts:1887:1 › bounds alternating edge reflow across 5,000 rendered page blocks (2.8s)
+  ok  173 [chromium] › tests\browser\editor.spec.ts:2012:1 › keeps one paragraph editable when its measured lines span page shells (1.9s)
+  ok  172 [chromium] › tests\browser\editor.spec.ts:1936:1 › edits, selects, and composes across guarded page shells in one contenteditable (2.4s)
+  ok  174 [chromium] › tests\browser\editor.spec.ts:2139:1 › maps carets, ranges, and composition around injected paragraph page gaps (2.5s)
+  ok  175 [chromium] › tests\browser\editor.spec.ts:2243:1 › keeps one canonical ordered list editable and numbered across page shells (2.5s)
+  ok  176 [chromium] › tests\browser\editor.spec.ts:2378:52 › honours explicit table repetition independently of cell roles (ordinary) (2.8s)
+  ok  177 [chromium] › tests\browser\editor.spec.ts:2378:52 › honours explicit table repetition independently of cell roles (off) (3.2s)
+  ok  178 [chromium] › tests\browser\editor.spec.ts:2411:1 › keeps one canonical table editable with repeated headers across page shells (2.8s)
+  ok  179 [chromium] › tests\browser\editor.spec.ts:2561:1 › keeps merged header and body rowspans intact across editable table pages (2.4s)
+  ok  180 [chromium] › tests\browser\editor.spec.ts:2627:1 › reports an oversized table row without clipping or splitting its editable model (2.2s)
+  ok  181 [chromium] › tests\browser\editor.spec.ts:2669:1 › keeps canonical page furniture and footnotes editable while projecting every page copy (2.9s)
+  ok  182 [chromium] › tests\browser\editor.spec.ts:2754:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages (2.3s)
+  ok  183 [chromium] › tests\browser\editor.spec.ts:2889:1 › keeps tracked review and Yjs live between list items split across pages (3.0s)
+  ok  185 [chromium] › tests\browser\editor.spec.ts:3032:13 › keeps comments attached and synchronized inside a continued list (1.6s)
+  ok  184 [chromium] › tests\browser\editor.spec.ts:2955:1 › keeps tracked review and Yjs live between table rows split across pages (4.3s)
+  ok  186 [chromium] › tests\browser\editor.spec.ts:3032:13 › keeps comments attached and synchronized inside a continued table (2.2s)
+  ok  187 [chromium] › tests\browser\editor.spec.ts:3086:1 › keeps tracked review and Yjs live inside a paragraph split across pages (2.8s)
+  ok  188 [chromium] › tests\browser\editor.spec.ts:3147:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries (2.5s)
+  ok  189 [chromium] › tests\browser\editor.spec.ts:3222:1 › tracks real browser insertion and replacement with reversible review decisions (1.1s)
+  ok  190 [chromium] › tests\browser\editor.spec.ts:3251:1 › runs the package-backed full-text tracked review panel (2.5s)
+  ok  191 [chromium] › tests\browser\editor.spec.ts:3269:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration (3.0s)
+  ok  192 [chromium] › tests\browser\editor.spec.ts:3299:1 › edits and persists package-backed collapsible details in the public playground (3.4s)
+  ok  193 [chromium] › tests\browser\editor.spec.ts:3325:1 › edits semantic ruby annotations through the package-backed public playground (3.2s)
+  ok  194 [chromium] › tests\browser\editor.spec.ts:3355:1 › converges live and offline Yjs edits and keeps collaborative undo author-local (1.4s)
+  ok  195 [chromium] › tests\browser\editor.spec.ts:3384:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser (1.0s)
+  ok  196 [chromium] › tests\browser\editor.spec.ts:3409:1 › round-trips variable-delimiter Markdown code spans in the browser package (1.1s)
+  ok  198 [chromium] › tests\browser\editor.spec.ts:4007:1 › round-trips marker-relative list containers and exact code whitespace (1.0s)
+  ok  199 [chromium] › tests\browser\editor.spec.ts:4051:1 › preserves raw Markdown and inert frontmatter through the browser package (890ms)
+  ok  200 [chromium] › tests\browser\editor.spec.ts:4077:1 › edits through real beforeinput events and undoes a Markdown input rule (1.2s)
+  ok  197 [chromium] › tests\browser\editor.spec.ts:3977:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items (4.8s)
+  ok  201 [chromium] › tests\browser\editor.spec.ts:4091:1 › groups adjacent browser typing and respects explicit undo boundaries (1.2s)
+  ok  202 [chromium] › tests\browser\editor.spec.ts:4112:3 › preserves replacement formatting across subsequent typing input (1.0s)
+  ok  203 [chromium] › tests\browser\editor.spec.ts:4112:3 › preserves replacement formatting across subsequent composition input (1.1s)
+  ok  204 [chromium] › tests\browser\editor.spec.ts:4143:1 › commits cross-browser composition sequences once and supports replacement input (971ms)
+  ok  205 [chromium] › tests\browser\editor.spec.ts:4175:1 › maps decorations through typing without persisting widget content (1.1s)
+  ok  206 [chromium] › tests\browser\editor.spec.ts:4190:1 › highlights editable code and updates language metadata through public commands (1.3s)
+  ok  207 [chromium] › tests\browser\editor.spec.ts:4221:1 › runs a view-focused chain and checks it without preview side effects (1.2s)
+  ok  208 [chromium] › tests\browser\editor.spec.ts:4242:1 › applies every configured paste-rule match through a browser paste event (1.1s)
+  ok  209 [chromium] › tests\browser\editor.spec.ts:4260:1 › autolinks, safely activates, edits, and removes links in a real browser (1.3s)
+  ok  210 [chromium] › tests\browser\editor.spec.ts:4291:1 › preserves structured rich HTML from a real browser clipboard event (1.0s)
+  ok  211 [chromium] › tests\browser\editor.spec.ts:4312:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting (1.1s)
+  ok  213 [chromium] › tests\browser\editor.spec.ts:4350:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists (1.3s)
+  ok  212 [chromium] › tests\browser\editor.spec.ts:4333:1 › honors strict raw HTML token boundaries in the public Markdown pipeline (2.7s)
+  ok  214 [chromium] › tests\browser\editor.spec.ts:4370:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks (1.3s)
+  ok  215 [chromium] › tests\browser\editor.spec.ts:4393:1 › retains standalone non-collapsible Unicode text during rich paste (1.2s)
+  ok  216 [chromium] › tests\browser\editor.spec.ts:4410:1 › pastes empty formatting and applies it to subsequently typed text (1.1s)
+  ok  218 [chromium] › tests\browser\editor.spec.ts:4434:57 › pastes and edits list-first code without inventing a blank paragraph from its label area (1.2s)
+  ok  217 [chromium] › tests\browser\editor.spec.ts:4434:57 › pastes and edits list-first code without inventing a blank paragraph (2.2s)
+  ok  220 [chromium] › tests\browser\editor.spec.ts:4515:1 › imports an extension-defined HTML node through the schema contract (1.1s)
+  ok  219 [chromium] › tests\browser\editor.spec.ts:4462:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine (1.8s)
+  ok  221 [chromium] › tests\browser\editor.spec.ts:4540:1 › pastes mixed nested HTML lists without flattening their hierarchy (1.1s)
+  ok  223 [chromium] › tests\browser\editor.spec.ts:4593:1 › edits bidirectional and deeply nested text by logical document positions (933ms)
+  ok  224 [chromium] › tests\browser\editor.spec.ts:4620:1 › moves a selected top-level block through native drag data (897ms)
+  ok  225 [chromium] › tests\browser\editor.spec.ts:4638:1 › keeps a custom block’s native drag after the editor selects another block (958ms)
+  ok  226 [chromium] › tests\browser\editor.spec.ts:4673:1 › shows a host-replaceable drop cursor for inline text and atomic block targets (707ms)
+  ok  227 [chromium] › tests\browser\editor.spec.ts:4734:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo (923ms)
+  x   222 [chromium] › tests\browser\editor.spec.ts:4563:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (6.5s)
+  ok  228 [chromium] › tests\browser\editor.spec.ts:4809:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes (2.1s)
+  ok  229 [chromium] › tests\browser\editor.spec.ts:4944:1 › keeps a visible editable paragraph after a terminal non-text block (1.3s)
+(node:11964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  230 [chromium] › tests\browser\editor.spec.ts:4966:1 › uses Ctrl+A as an explicit all-document selection and replaces the document (897ms)
+  ok  231 [chromium] › tests\browser\editor.spec.ts:4978:1 › selects and deletes a block image through real pointer and keyboard input (1.3s)
+  ok  232 [chromium] › tests\browser\editor.spec.ts:5001:1 › edits, aligns, resizes, and undoes a production image through accessible controls (1.2s)
+  ok  233 [chromium] › tests\browser\editor.spec.ts:5057:1 › inserts and removes a true inline image without breaking surrounding text (683ms)
+  ok  235 [chromium] › tests\browser\editor.spec.ts:5075:1 › tracks and cancels browser-native image upload tasks (616ms)
+  ok  236 [chromium] › tests\browser\editor.spec.ts:5115:1 › extends and replaces a rectangular cell selection through real pointer input (666ms)
+  ok  237 [chromium] › tests\browser\editor.spec.ts:5143:1 › keeps mixed-format links intact through backward selection typing and history (1.2s)
+  ok  234 [chromium] › tests\browser\editor.spec.ts:4905:1 › replaces a DOM selection that crosses block boundaries (3.1s)
+  ok  238 [chromium] › tests\browser\editor.spec.ts:5175:1 › reaches overflowing code by keyboard and leaves it without modifying the document (1.6s)
+  ok  239 [chromium] › tests\browser\editor.spec.ts:5221:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph (1.5s)
+  ok  240 [chromium] › tests\browser\editor.spec.ts:5245:1 › announces table resize values through real keyboard, pointer and history workflows (2.2s)
+  ok  241 [chromium] › tests\browser\editor.spec.ts:5298:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids (2.8s)
+  ok  242 [chromium] › tests\browser\editor.spec.ts:5371:1 › keeps normal paste while offering bounded editor-local clipboard slots (844ms)
+  ok  243 [chromium] › tests\browser\editor.spec.ts:5407:1 › renders and types into a structural gap as a new block (1.1s)
+  ok  244 [chromium] › tests\browser\editor.spec.ts:5419:1 › edits Lean without a mandatory server and renders transient provider diagnostics (1.2s)
+  ok  245 [chromium] › tests\browser\editor.spec.ts:5446:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM (1.2s)
+  ok  246 [chromium] › tests\browser\editor.spec.ts:5483:1 › loads the public React playground without console or page errors (5.5s)
+  ok  247 [chromium] › tests\browser\editor.spec.ts:5508:1 › publishes actionable extension authoring, conformance, and doctor guidance (4.5s)
+  ok  249 [chromium] › tests\browser\editor.spec.ts:5547:1 › shows verified room setup before the legacy collaboration recipe (2.2s)
+  ok  248 [chromium] › tests\browser\editor.spec.ts:5526:1 › pairs the optional AI demo with developer recipes for every public workflow (2.6s)
+  ok  250 [chromium] › tests\browser\editor.spec.ts:5569:1 › keeps headline phrases together and makes full-page navigation explicit (3.3s)
+  ok  251 [chromium] › tests\browser\editor.spec.ts:5594:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground (4.4s)
+  ok  252 [chromium] › tests\browser\editor.spec.ts:5655:1 › runs grouped default and product slash commands in the public React playground (5.8s)
+  ok  253 [chromium] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (4.5s)
+  ok  254 [chromium] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (3.5s)
+  ok  255 [chromium] › tests\browser\editor.spec.ts:5694:1 › leaves IME candidate keys alone while the public slash menu is open (4.0s)
+  ok  257 [chromium] › tests\browser\editor.spec.ts:5805:1 › skips unavailable host controls during public toolbar keyboard navigation (3.4s)
+  ok  256 [chromium] › tests\browser\editor.spec.ts:5736:1 › runs accessible bubble and floating menus in the public React playground (4.2s)
+  ok  258 [chromium] › tests\browser\editor.spec.ts:5839:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (3.0s)
+  ok  259 [chromium] › tests\browser\editor.spec.ts:5876:1 › applies the complete text-style suite through the public React toolbar (5.0s)
+  ok  260 [chromium] › tests\browser\editor.spec.ts:5937:1 › uses the public React image workflow for metadata, alignment, and replacement (4.4s)
+  ok  262 [chromium] › tests\browser\editor.spec.ts:6099:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (2.6s)
+  ok  263 [chromium] › tests\browser\editor.spec.ts:6126:1 › keeps table configuration labels legible on pointer hover (3.2s)
+  ok  264 [chromium] › tests\browser\editor.spec.ts:6165:1 › creates and edits a link through the public React toolbar (3.3s)
+  ok  261 [chromium] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (12.1s)
+  ok  266 [chromium] › tests\browser\editor.spec.ts:6211:1 › edits code language and line numbers through the public React toolbar (3.6s)
+  x   265 [chromium] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls (4.3s)
+(node:5468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  267 [chromium] › tests\browser\editor.spec.ts:6230:1 › opens the searchable clipboard-history picker in the public React toolbar (4.4s)
+  ok  268 [chromium] › tests\browser\editor.spec.ts:6351:1 › keeps the public outline stable, hierarchical, active, and navigable (3.2s)
+  ok  269 [chromium] › tests\browser\editor.spec.ts:6376:1 › exposes and explicitly cleans invisible text in the public playground (3.9s)
+  ok  270 [chromium] › tests\browser\editor.spec.ts:6317:1 › preserves copied line breaks in the public clipboard-history picker (5.7s)
+  ok  271 [chromium] › tests\browser\editor.spec.ts:6417:1 › runs the public plain-DOM first-class widget demo (2.7s)
+  ok  273 [chromium] › tests\browser\editor.spec.ts:6502:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo (2.3s)
+  ok  272 [chromium] › tests\browser\editor.spec.ts:6464:1 › runs the public React first-class widget demo without losing control focus (2.9s)
+  ok  274 [chromium] › tests\browser\editor.spec.ts:6516:1 › retains table captions and reports their projected association in the conversion demo (2.7s)
+  ok  275 [chromium] › tests\browser\editor.spec.ts:6533:1 › preserves complex figure content in the public Markdown conversion demo (2.9s)
+  ok  276 [chromium] › tests\browser\editor.spec.ts:6551:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (5.2s)
+  ok  277 [chromium] › tests\browser\editor.spec.ts:6622:1 › preserves parser-owned Markdown source through native editing, type changes and downloads (6.8s)
+  ok  278 [chromium] › tests\browser\editor.spec.ts:6626:1 › preserves nested Markdown source through real list and quote editing (6.3s)
+  ok  279 [chromium] › tests\browser\editor.spec.ts:6630:1 › keeps reference definitions outside a terminal fence after real structural editing (4.6s)
+  ok  280 [chromium] › tests\browser\editor.spec.ts:6634:1 › imports leading Markdown delimiters and literal addresses through edit, download and reopen (4.2s)
+  ok  281 [chromium] › tests\browser\editor.spec.ts:6638:1 › exports untouched empty Markdown containers without dropping authored blank or edited content (4.3s)
+  ok  282 [chromium] › tests\browser\editor.spec.ts:6642:1 › retains blocked Markdown destinations through edits and safe reader downloads (4.1s)
+  ok  284 [chromium] › tests\browser\editor.spec.ts:6650:1 › reopens source-preserved issue drafts with the real HTML table adapter enabled (4.2s)
+  ok  283 [chromium] › tests\browser\editor.spec.ts:6646:1 › reviews CommonMark source and downloads an offline HTML reader (8.5s)
+  ok  285 [chromium] › tests\browser\editor.spec.ts:6654:1 › preserves nested reference Markdown through real list quote and task editing (6.5s)
+  ok  286 [chromium] › tests\browser\editor.spec.ts:6658:1 › preserves container definitions while editing and unwrapping a referenced quote (8.5s)
+  ok  287 [chromium] › tests\browser\editor.spec.ts:6662:1 › records native DOCX viewer disagreements without certifying math fidelity (6.2s)
+  ok  289 [chromium] › tests\browser\editor.spec.ts:6791:1 › renders real KaTeX while reporting published-equation and trust failures without source loss (1.9s)
+  ok  290 [chromium] › tests\browser\editor.spec.ts:6824:1 › edits multiline math without losing line breaks, descriptions, or undo history (2.9s)
+  ok  291 [chromium] › tests\browser\editor.spec.ts:6861:1 › renders and inserts native math in the public DOM integration (2.4s)
+  ok  288 [chromium] › tests\browser\editor.spec.ts:6667:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission (11.2s)
+  ok  292 [chromium] › tests\browser\editor.spec.ts:6918:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (3.1s)
+  ok  293 [chromium] › tests\browser\editor.spec.ts:6966:1 › keeps rich and multiline paste structurally predictable in the public editor (3.1s)
+  ok  294 [chromium] › tests\browser\editor.spec.ts:7039:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML (1.8s)
+  ok  295 [chromium] › tests\browser\editor.spec.ts:7106:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard (2.9s)
+  ok  296 [chromium] › tests\browser\editor.spec.ts:7155:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly (1.8s)
+  ok  297 [chromium] › tests\browser\editor.spec.ts:7242:1 › copies clean semantic Fountain HTML into an external browser editor (2.1s)
+  ok  298 [chromium] › tests\browser\editor.spec.ts:7297:1 › copies readable Fountain text into a plain-text external editor (1.9s)
+  ok  300 [chromium] › tests\browser\editor.spec.ts:7401:1 › renders repeated empty paragraphs and removes each visible line (2.1s)
+  ok  299 [chromium] › tests\browser\editor.spec.ts:7356:1 › copies math to external rich and plain-text editors without renderer controls (2.2s)
+  ok  301 [chromium] › tests\browser\editor.spec.ts:7431:1 › undoes and redoes real typing with both common browser keyboard chords (1.0s)
+  ok  302 [chromium] › tests\browser\editor.spec.ts:7448:1 › keeps a backward DOM selection backward after model synchronization (1.1s)
+  ok  303 [chromium] › tests\browser\editor.spec.ts:7472:1 › preserves a backward selection made with real keyboard input (1.0s)
+  ok  304 [chromium] › tests\browser\editor.spec.ts:7487:1 › replaces a backward selection made by a real reverse pointer drag (1.5s)
+  x   305 [chromium] › tests\browser\editor.spec.ts:7523:1 › turns multi-format and multi-block selections into visible paragraph boundaries (1.4s)
+  ok  306 [chromium] › tests\browser\editor.spec.ts:7581:1 › visibly splits and joins ordinary paragraphs with both deletion directions (1.3s)
+(node:18752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  307 [chromium] › tests\browser\editor.spec.ts:7654:1 › unwraps and exits an inserted quote with ordinary browser keys (2.5s)
+  ok  309 [chromium] › tests\browser\editor.spec.ts:7624:1 › deletes an adjacent inline atom without eating surrounding text (1.0s)
+  ok  308 [chromium] › tests\browser\editor.spec.ts:7683:1 › publishes semantic selection controls and table interaction in the demo gallery (2.0s)
+  ok  310 [chromium] › tests\browser\editor.spec.ts:7700:1 › edits, validates, disables and resets the Angular campaign brief form (4.1s)
+  ok  311 [chromium] › tests\browser\editor.spec.ts:7704:1 › runs campaign images, native media and safe embeds through Angular with honest upload boundaries (4.0s)
+  ok  313 [chromium] › tests\browser\editor.spec.ts:7826:1 › streams an optional AI proposal outside the document until review is ready (3.6s)
+  ok  312 [chromium] › tests\browser\editor.spec.ts:7781:1 › uses the public React media workflow for native playback, provider-gated embeds, and asset uploads (4.6s)
+  ok  314 [chromium] › tests\browser\editor.spec.ts:7851:1 › preserves whitespace when an AI proposal ends at a formatting boundary (3.4s)
+  ok  315 [chromium] › tests\browser\editor.spec.ts:7866:1 › runs a host-owned multi-turn AI conversation with reusable prompts and clear confirmation (3.5s)
+  ok  317 [chromium] › tests\browser\editor.spec.ts:7920:1 › reviews a schema-aware agent tool proposal before one-step apply and undo (2.7s)
+  ok  318 [chromium] › tests\browser\editor.spec.ts:7945:1 › keeps a 1,000-block input update local and paints within budget (1.4s)
+  ok  319 [chromium] › tests\browser\editor.spec.ts:7966:1 › virtualizes 100,000 blocks while preserving scrolling, distant selection, IME, and copy (1.4s)
+  ok  316 [chromium] › tests\browser\editor.spec.ts:7894:1 › reviews generated media before the normal host upload inserts one undoable node (6.6s)
+  ok  320 [chromium] › tests\browser\editor.spec.ts:8024:1 › exports rich tables as HTML Markdown and exposes the compatibility note (2.8s)
+  ok  321 [chromium] › tests\browser\editor.spec.ts:8046:1 › HTML comments do not insert phantom paragraphs in converted Markdown (2.6s)
+  ok  322 [chromium] › tests\browser\editor.spec.ts:8058:1 › imported table section order matches the physically rendered source table (3.0s)
+  ok  323 [chromium] › tests\browser\editor.spec.ts:8089:1 › imports zero-rowspan cells with the same row-group geometry in server and browser (3.2s)
+  ok  324 [chromium] › tests\browser\editor.spec.ts:8120:1 › reconstructs HTML tables across Markdown block boundaries (3.0s)
+  ok  325 [chromium] › tests\browser\editor.spec.ts:8141:1 › applies surrounding HTML formatting without replacing Markdown block content (3.5s)
+  ok  326 [chromium] › tests\browser\editor.spec.ts:8154:1 › converts raw HTML blocks only when the headless demo option is enabled (2.6s)
+  ok  327 [chromium] › tests\browser\editor.spec.ts:8170:1 › projects inline HTML around Markdown nodes only with explicit opt-in and visible fallback (2.7s)
+  ok  328 [chromium] › tests\browser\editor.spec.ts:8195:1 › shows specific discarded HTML and rejected URL losses in both conversion surfaces (2.7s)
+  ok  329 [chromium] › tests\browser\editor.spec.ts:8221:1 › repairs source after native nested heading-to-paragraph changes (5.8s)
+  ok  331 [chromium] › tests\browser\editor.spec.ts:8229:1 › optional site fonts do not block issue editing (2.6s)
+  ok  330 [chromium] › tests\browser\editor.spec.ts:8225:1 › keeps full Markdown export out of real large-issue typing (12.4s)
+  ok  332 [chromium] › tests\browser\editor.spec.ts:8233:1 › replaces selected nested sibling blocks and media through native pointer input (13.7s)
+  ok  333 [chromium] › tests\browser\editor.spec.ts:8237:1 › replaces native selections across quote and list ancestors without leaving selected media (12.8s)
+  ok  334 [chromium] › tests\browser\editor.spec.ts:8241:1 › retains different quote attributes through native replacement and JSON export (8.4s)
+  ok  335 [chromium] › tests\browser\editor.spec.ts:8245:1 › replaces and restores selections across offscreen document content (6.4s)
+(node:9212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  336 [chromium] › tests\browser\starter-downloads.spec.ts:5:1 › downloads complete standalone projects from the developer guide (4.9s)
+(node:23728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  337 [firefox] › tests\browser\collaboration-demo.spec.ts:21:1 › opens the lazy collaboration demo after a slow module load and shares typing (6.5s)
+  ok  339 [firefox] › tests\browser\collaboration-demo.spec.ts:94:1 › runs the public two-editor collaboration demo with presence and author-local undo (3.6s)
+  ok  338 [firefox] › tests\browser\collaboration-demo.spec.ts:50:1 › recovers a failed collaboration load in a new tab without losing the current draft (10.0s)
+  ok  340 [firefox] › tests\browser\collaboration-demo.spec.ts:164:1 › replaces both live collaboration documents without remounting the public editors (4.7s)
+  ok  341 [firefox] › tests\browser\collaboration-demo.spec.ts:225:1 › protects a rejected collaboration draft from peer edits and room switching (3.9s)
+  -   343 [firefox] › tests\browser\collaboration-demo.spec.ts:301:1 › copies a settings card through the real Chromium clipboard before its original
+  ok  342 [firefox] › tests\browser\collaboration-demo.spec.ts:268:1 › merges two offline settings copies without reassigning the original card (4.5s)
+  ok  344 [firefox] › tests\browser\collaboration-demo.spec.ts:327:1 › preserves both editors and the open comment when preparing a room switch fails (5.0s)
+  ok  345 [firefox] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through quote in the public collaboration demo (4.5s)
+  ok  346 [firefox] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through bullet list in the public collaboration demo (4.9s)
+  ok  347 [firefox] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through numbered list in the public collaboration demo (5.1s)
+  ok  348 [firefox] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through task list in the public collaboration demo (5.0s)
+  ok  349 [firefox] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through partial bold in the public collaboration demo (5.3s)
+  ok  350 [firefox] › tests\browser\collaboration-demo.spec.ts:393:3 › keeps offline text through paragraph split in the public collaboration demo (4.9s)
+  ok  351 [firefox] › tests\browser\collaboration-demo.spec.ts:461:1 › continues editing after competing offline wraps in the public collaboration demo (4.6s)
+  ok  352 [firefox] › tests\browser\collaboration-demo.spec.ts:492:1 › merges nested collaborative settings through the public two-editor demo (3.7s)
+  ok  354 [firefox] › tests\browser\collaboration-demo.spec.ts:608:1 › runs shared threaded comments through the public provider-neutral review panel (3.8s)
+  ok  353 [firefox] › tests\browser\collaboration-demo.spec.ts:528:1 › restores separate comment drafts and their targets without remounting the editors (7.4s)
+  ok  355 [firefox] › tests\browser\comment-provider.spec.ts:3:1 › posts only the submitted comment while preserving a newer draft and target (4.6s)
+  ok  356 [firefox] › tests\browser\comment-provider.spec.ts:41:1 › keeps a thread saving until both responses arrive and keeps its newest revision (3.6s)
+  ok  358 [firefox] › tests\manual\document-range-formatting-real.spec.ts:4:1 › formats directed text-to-image selections through the toolbar with exact history and reader export (9.6s)
+  ok  357 [firefox] › tests\manual\document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents (21.3s)
+  ok  360 [firefox] › tests\manual\history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs (6.1s)
+  ok  361 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-auto (8.5s)
+  ok  362 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control (7.3s)
+  ok  359 [firefox] › tests\manual\structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off (32.9s)
+  ok  363 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-under-fixed-item (7.2s)
+  ok  364 [firefox] › tests\manual\nested-direction-real.spec.ts:21:29 › indent-same-context-control (8.3s)
+  ok  365 [firefox] › tests\manual\shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history (9.2s)
+  ok  366 [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent (10.4s)
+  ok  367 [firefox] › tests\manual\shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent (11.5s)
+  ok  368 [firefox] › tests\manual\html-anchors-real.spec.ts:10:1 › edits imported bookmark content and removes an empty bookmark with native input (6.5s)
+  ok  370 [firefox] › tests\browser\editor.spec.ts:40:53 › keeps per-file HTML conversion settings through html editing and export (10.8s)
+  ok  369 [firefox] › tests\browser\editor.spec.ts:16:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint (11.8s)
+  ok  371 [firefox] › tests\browser\editor.spec.ts:40:53 › keeps per-file HTML conversion settings through markdown editing and export (10.1s)
+  ok  373 [firefox] › tests\browser\editor.spec.ts:84:1 › retains an empty heading through actual HTML download reopen and native editing (7.5s)
+  ok  372 [firefox] › tests\browser\editor.spec.ts:81:1 › preserves physical preformatted breaks through real import editing and HTML download (18.9s)
+  ok  374 [firefox] › tests\browser\editor.spec.ts:87:47 › focuses the start empty text source before native typing (5.3s)
+  ok  375 [firefox] › tests\browser\editor.spec.ts:87:47 › focuses the end empty text source before native typing (11.1s)
+  ok  376 [firefox] › tests\browser\editor.spec.ts:92:1 › fills replaced childless blocks by native click without adding another block (9.5s)
+  ok  377 [firefox] › tests\browser\editor.spec.ts:96:1 › keeps native form labels names and validation anchors consistent through reconnect (4.4s)
+  ok  378 [firefox] › tests\browser\editor.spec.ts:100:1 › keeps native form emptiness custom policy failures and canceled invalid events consistent (9.1s)
+  ok  379 [firefox] › tests\browser\editor.spec.ts:104:1 › validates required documents custom errors and labels through the native form workshop (11.6s)
+  ok  380 [firefox] › tests\browser\editor.spec.ts:111:1 › keeps distant native edits backward selections and history correct across shared prefixes (8.5s)
+  ok  381 [firefox] › tests\browser\editor.spec.ts:121:1 › retains explicit nested emphasis through native editing history and HTML reopening (12.3s)
+  ok  382 [firefox] › tests\browser\editor.spec.ts:124:1 › retains unfinished EOF source through native literal edits and refuses following content (11.5s)
+  ok  383 [firefox] › tests\browser\editor.spec.ts:128:1 › edits source-empty documents with visible native Enter Backspace history and reopening (8.6s)
+  ok  384 [firefox] › tests\browser\editor.spec.ts:131:1 › retains leading Markdown declarations through native edits and complete source reopening (9.8s)
+  ok  385 [firefox] › tests\browser\editor.spec.ts:134:1 › retains source document envelopes through native edits history and HTML reopening (9.4s)
+  ok  386 [firefox] › tests\browser\editor.spec.ts:138:1 › preserves unsupported anchors through native editing history and safe reopening (10.5s)
+  ok  387 [firefox] › tests\browser\editor.spec.ts:141:1 › inspects and downloads retained HTML source without activating it (10.9s)
+  ok  388 [firefox] › tests\browser\editor.spec.ts:144:1 › retains authored carriage returns through raw source editing and reopening (10.2s)
+  ok  389 [firefox] › tests\browser\editor.spec.ts:162:1 › reports rejected cross-block HTML links while retaining source and real Markdown editing (9.6s)
+  ok  390 [firefox] › tests\browser\editor.spec.ts:166:1 › reports dropped named anchors in the conversion lab while retaining safe empty hyperlinks (10.8s)
+  ok  391 [firefox] › tests\browser\editor.spec.ts:171:3 › retains technical code reading direction through real settings, editing and downloaded HTML: ltr (12.7s)
+  ok  392 [firefox] › tests\browser\editor.spec.ts:171:3 › retains technical code reading direction through real settings, editing and downloaded HTML: rtl (13.2s)
+  ok  393 [firefox] › tests\browser\editor.spec.ts:171:3 › retains technical code reading direction through real settings, editing and downloaded HTML: auto (12.9s)
+  ok  394 [firefox] › tests\browser\editor.spec.ts:182:3 › retains shared automatic list scope through real convert, typing and downloaded HTML (10.2s)
+  ok  396 [firefox] › tests\browser\editor.spec.ts:192:3 › reorders real runbook blocks with native pointer feedback in ltr (11.0s)
+  ok  395 [firefox] › tests\browser\editor.spec.ts:182:3 › retains shared automatic list scope through real lift, typing and downloaded HTML (17.9s)
+  ok  397 [firefox] › tests\browser\editor.spec.ts:192:3 › reorders real runbook blocks with native pointer feedback in rtl (8.7s)
+  ok  399 [firefox] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: unwrap (8.8s)
+  ok  398 [firefox] › tests\browser\editor.spec.ts:196:1 › reorders real runbook blocks with keyboard structural feedback (13.5s)
+  ok  400 [firefox] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: indent (10.2s)
+  ok  401 [firefox] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: nested-lift (10.1s)
+  ok  403 [firefox] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: ltr (9.5s)
+  ok  402 [firefox] › tests\browser\editor.spec.ts:201:3 › preserves list direction through real transforms and downloaded HTML: contained (11.2s)
+  ok  404 [firefox] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: rtl-cell-ltr (9.0s)
+  ok  405 [firefox] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: auto (9.8s)
+  ok  406 [firefox] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: host-css (11.3s)
+  ok  407 [firefox] › tests\browser\editor.spec.ts:207:3 › inserts table columns on the physical left and right: rtl-spans (11.7s)
+  ok  409 [firefox] › tests\browser\editor.spec.ts:216:1 › imports inherited inline alignment against a native surface and keeps it through real editing and downloaded HTML (8.3s)
+  ok  408 [firefox] › tests\browser\editor.spec.ts:212:1 › retains structural RTL against native source through author controls, physical table editing and downloaded HTML (15.8s)
+  ok  410 [firefox] › tests\browser\editor.spec.ts:220:1 › compares list-first code text-click focus and editing to a plain native surface (9.2s)
+  ok  411 [firefox] › tests\browser\editor.spec.ts:224:1 › retains a shared automatic section direction through first-strong-text editing, history and reader preview (12.0s)
+  ok  412 [firefox] › tests\browser\editor.spec.ts:228:1 › authors physical-left alignment under an RTL host and inherited-auto reader with history (9.4s)
+  ok  413 [firefox] › tests\browser\editor.spec.ts:232:1 › edits RTL blocks with native keyboard selection, direction controls, Enter history and HTML reader export (10.6s)
+  ok  414 [firefox] › tests\browser\editor.spec.ts:236:1 › separates the homepage framework descenders from the italic extend line (12.2s)
+  ok  415 [firefox] › tests\browser\editor.spec.ts:255:1 › keeps consecutive marked quoted and table blank lines visible in reader and saved HTML (10.7s)
+  ok  416 [firefox] › tests\browser\editor.spec.ts:259:1 › fills and reopens a retained childless paragraph using real pointer typing Enter Backspace and undo (9.1s)
+  ok  417 [firefox] › tests\browser\editor.spec.ts:263:1 › edits structured inert block wrappers with actual table navigation Enter Backspace history and safe reopening (16.8s)
+  ok  418 [firefox] › tests\browser\editor.spec.ts:267:1 › retains HTML link navigation and literal Markdown data through real editing and reopening (20.4s)
+  ok  419 [firefox] › tests\browser\editor.spec.ts:271:1 › edits inert script style textarea source with real Enter Backspace history and safe reader reopening (12.0s)
+  ok  420 [firefox] › tests\browser\editor.spec.ts:275:1 › retains unfinished raw HTML as editable Markdown source and discloses direct HTML omissions (8.2s)
+  ok  422 [firefox] › tests\browser\editor.spec.ts:283:1 › preserves immutable snapshots and owned attributes through real typing Enter history and JSON reopening (4.0s)
+  ok  421 [firefox] › tests\browser\editor.spec.ts:279:1 › preserves registered inert inline source through real typing history and Markdown HTML JSON reopening (12.9s)
+  ok  423 [firefox] › tests\browser\editor.spec.ts:287:1 › previews and prints only the current local draft in the conversion lab (8.6s)
+  ok  424 [firefox] › tests\browser\editor.spec.ts:297:1 › keeps Word table cell alignment through editor, page preview and DOCX reopen (7.2s)
+  ok  425 [firefox] › tests\browser\editor.spec.ts:301:1 › conversion lab previews and prints a draft while a linked image stalls (10.4s)
+  ok  426 [firefox] › tests\browser\editor.spec.ts:313:1 › conversion lab retains Word row splitting policy through preview and DOCX reopen (5.6s)
+  ok  427 [firefox] › tests\browser\editor.spec.ts:317:1 › conversion lab preserves Word hyphens through editing, preview and DOCX reopen (6.2s)
+  ok  428 [firefox] › tests\browser\editor.spec.ts:321:1 › conversion lab preserves Word links on line breaks and linked images (6.2s)
+  ok  429 [firefox] › tests\browser\editor.spec.ts:325:1 › conversion lab recalculates complex Word page fields after editing and DOCX reopen (7.1s)
+  ok  430 [firefox] › tests\browser\editor.spec.ts:336:1 › conversion lab preserves Word table indentation in the editor, preview, and reopened DOCX (6.8s)
+  ok  431 [firefox] › tests\browser\editor.spec.ts:340:1 › retains explicit Word row heights through preview and DOCX reopen (6.6s)
+  ok  432 [firefox] › tests\browser\editor.spec.ts:344:1 › prints the edited scientific DOCX in the conversion lab (13.2s)
+  ok  434 [firefox] › tests\browser\editor.spec.ts:362:1 › edits cached Word field results without exposing instructions in the conversion lab (4.3s)
+  ok  433 [firefox] › tests\browser\editor.spec.ts:358:1 › imports private files in the conversion lab with reports and export reopen (14.8s)
+  ok  436 [firefox] › tests\browser\editor.spec.ts:466:1 › keeps keyboard focus and surviving drafts when removing files from the conversion lab (5.9s)
+  ok  435 [firefox] › tests\browser\editor.spec.ts:403:1 › reconnects an imported orphan footnote and exports its native reference (10.4s)
+  ok  437 [firefox] › tests\browser\editor.spec.ts:518:1 › keeps valid and malformed Markdown links distinct through an edit and download (5.7s)
+  ok  439 [firefox] › tests\browser\editor.spec.ts:548:3 › retains partial Markdown em scope through real typing history and canonical reopening (6.1s)
+  ok  438 [firefox] › tests\browser\editor.spec.ts:543:1 › resolves unequal Markdown runs through actual selection editing history download and reader reopen (13.6s)
+  ok  440 [firefox] › tests\browser\editor.spec.ts:548:3 › retains partial Markdown strong scope through real typing history and canonical reopening (5.2s)
+  ok  441 [firefox] › tests\browser\editor.spec.ts:553:1 › submits resets and disables a native form-associated Web Component (7.5s)
+  ok  442 [firefox] › tests\browser\editor.spec.ts:557:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences (12.3s)
+  ok  444 [firefox] › tests\browser\editor.spec.ts:565:1 › copies anonymous flow internally and into an external plain-text editor through real clipboard (6.6s)
+  ok  443 [firefox] › tests\browser\editor.spec.ts:561:1 › preserves inert HTML comments through human editing source and reader output (14.3s)
+  ok  445 [firefox] › tests\browser\editor.spec.ts:570:1 › retains cleared anonymous flow through real cut save reopen and continued editing (11.0s)
+  ok  446 [firefox] › tests\browser\editor.spec.ts:574:1 › retains anonymous HTML flow without extra spacing through real typing Enter deletion and reader output (13.1s)
+  ok  447 [firefox] › tests\browser\editor.spec.ts:578:1 › retains literal flow newlines through actual Markdown export and source reimport (7.4s)
+  ok  448 [firefox] › tests\browser\editor.spec.ts:582:1 › edits protected Markdown images and dividers inside HTML sections through history and reopening (10.9s)
+  ok  449 [firefox] › tests\browser\editor.spec.ts:586:1 › edits protected Markdown tables inside HTML sections through cell navigation history and reopening (12.1s)
+  ok  450 [firefox] › tests\browser\editor.spec.ts:590:1 › authors sections with properties, empty content, undo and reader preview (9.0s)
+  ok  451 [firefox] › tests\browser\editor.spec.ts:594:1 › preserves optional section containers through real editing and reader output (15.1s)
+  ok  452 [firefox] › tests\browser\editor.spec.ts:598:1 › edits and reopens a Word glossary with term and description roles (13.6s)
+  ok  453 [firefox] › tests\browser\editor.spec.ts:602:1 › imports and edits Word content controls without losing visible content (13.6s)
+  ok  454 [firefox] › tests\browser\editor.spec.ts:625:1 › preserves code endings through source recovery and reader handoff (14.2s)
+  ok  456 [firefox] › tests\browser\editor.spec.ts:633:1 › edits registered HTML wrappers after Markdown source recovery (6.3s)
+  ok  455 [firefox] › tests\browser\editor.spec.ts:629:1 › edits definition lists and reopens a glossary in a reader (13.9s)
+  ok  458 [firefox] › tests\browser\editor.spec.ts:641:1 › recovers nested Markdown lists and quotes through an editor and reader (19.9s)
+  ok  457 [firefox] › tests\browser\editor.spec.ts:637:1 › retains the complete document through pointer and keyboard output-format changes (25.9s)
+  ok  460 [firefox] › tests\browser\editor.spec.ts:650:1 › guards editor actions against page reloads without suppressing failures (10.4s)
+  ok  459 [firefox] › tests\browser\editor.spec.ts:645:1 › edits opaque code labels and reopens them safely in a reader (13.2s)
+  ok  462 [firefox] › tests\browser\editor.spec.ts:664:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff (10.2s)
+  ok  463 [firefox] › tests\browser\editor.spec.ts:668:1 › preserves headerless and mixed tables through source and file handoff (7.8s)
+  ok  464 [firefox] › tests\browser\editor.spec.ts:672:1 › retains HTML block formatting through server import, paste and draft handoff (10.2s)
+  ok  461 [firefox] › tests\browser\editor.spec.ts:660:1 › recovers paragraph HTML into editable blocks and a reopened reader (32.0s)
+  ok  466 [firefox] › tests\browser\editor.spec.ts:680:1 › discovers product workflows and preserves separate task drafts and histories (16.6s)
+  ok  465 [firefox] › tests\browser\editor.spec.ts:676:1 › navigates workflow parents and restores deleted task drafts and histories (22.5s)
+  ok  467 [firefox] › tests\browser\editor.spec.ts:684:1 › retains escaped pipes and strikethrough through table edits and Markdown handoff (7.7s)
+  ok  468 [firefox] › tests\browser\editor.spec.ts:688:1 › retains literal text lines through editing and Markdown handoff (9.2s)
+  ok  469 [firefox] › tests\browser\editor.spec.ts:692:1 › keeps literal syntax unformatted through visual edits and Markdown reopen (7.6s)
+  ok  471 [firefox] › tests\browser\editor.spec.ts:700:1 › writes and reopens an issue with visual Markdown source fidelity and reader preview (11.0s)
+  ok  470 [firefox] › tests\browser\editor.spec.ts:696:1 › chooses literal address import and retains links through DOCX handoff (17.4s)
+  ok  472 [firefox] › tests\browser\editor.spec.ts:704:1 › issue workflow preserves root references and validates local image files (6.8s)
+  ok  473 [firefox] › tests\browser\editor.spec.ts:742:1 › issue workflow preserves reference prefixes and reports container fallback (7.8s)
+  ok  474 [firefox] › tests\browser\editor.spec.ts:766:1 › reopens a full HTML report without promoting page metadata into editor content (10.1s)
+  ok  475 [firefox] › tests\browser\editor.spec.ts:770:1 › matches native document parsing for HTML envelopes, recovery, and noscript (5.6s)
+  ok  477 [firefox] › tests\browser\editor.spec.ts:788:1 › exports independent DOCX list starts and renders the same procedure beside the editor (6.9s)
+  ok  476 [firefox] › tests\browser\editor.spec.ts:784:1 › aligns selected paragraphs using backward selection, toolbar, history and HTML export (9.8s)
+  ok  479 [firefox] › tests\browser\editor.spec.ts:796:1 › imports ordered-list starts like the native browser integer parser (7.0s)
+  ok  478 [firefox] › tests\browser\editor.spec.ts:792:1 › retains zero-based list numbers through keyboard outdent history and export (9.5s)
+  ok  481 [firefox] › tests\browser\editor.spec.ts:814:1 › disposes Svelte custom block views before their owned engine (7.7s)
+  ok  482 [firefox] › tests\browser\editor.spec.ts:823:1 › uses first-party Svelte bindings for table editing, history, stores and owner disposal (9.4s)
+  ok  480 [firefox] › tests\browser\editor.spec.ts:810:1 › uses first-party Angular signals and directive for campaign editing and owner cleanup (20.5s)
+  ok  484 [firefox] › tests\browser\editor.spec.ts:831:1 › binds rich text to a Vue form through typing, submission, disable and reset (9.0s)
+  ok  483 [firefox] › tests\browser\editor.spec.ts:827:1 › uses first-party Vue bindings for editing, reactive state, history and view remounts (13.4s)
+  ok  485 [firefox] › tests\browser\editor.spec.ts:835:1 › keeps real SVG equation links inside paged snapshots across editing and rebuilding (13.0s)
+  ok  487 [firefox] › tests\browser\editor.spec.ts:843:1 › recovers from textless replacement for native typing, lines and history (3.9s)
+  ok  486 [firefox] › tests\browser\editor.spec.ts:839:1 › saves and reopens equation files with source, references and history intact (15.3s)
+  ok  489 [firefox] › tests\browser\editor.spec.ts:851:1 › keeps moved math source attached to its formula through native editing, undo, and export (6.4s)
+  ok  488 [firefox] › tests\browser\editor.spec.ts:847:1 › renders labelled equations and reader links through real editing and recovery (13.7s)
+  ok  490 [firefox] › tests\browser\editor.spec.ts:855:1 › imports the published TeX table with visible losses and editable numeric values (8.9s)
+  ok  491 [firefox] › tests\browser\editor.spec.ts:939:1 › keeps comparison names separate from their copy in a mobile desktop-site viewport (4.1s)
+  ok  492 [firefox] › tests\browser\editor.spec.ts:967:1 › renders, edits, and measures portable page intent in a real browser (3.6s)
+  ok  493 [firefox] › tests\browser\editor.spec.ts:1036:1 › measures browser line boxes, list items, rowspan groups, and footnotes as legal page fragments (3.6s)
+  ok  495 [firefox] › tests\browser\editor.spec.ts:1238:1 › prints a mixed repeated-footnote, merged-table, and manual-break document without loss (4.3s)
+  ok  494 [firefox] › tests\browser\editor.spec.ts:1130:1 › continues measured long footnotes through editable and print page projections (8.5s)
+  ok  496 [firefox] › tests\browser\editor.spec.ts:1346:1 › starts a new preview sheet at a DOCX paragraph break (4.9s)
+  ok  497 [firefox] › tests\browser\editor.spec.ts:1376:1 › keeps all lines of a DOCX paragraph together when it fits on the next sheet (5.4s)
+  ok  498 [firefox] › tests\browser\editor.spec.ts:1404:1 › keeps a multiline DOCX caption with the following paragraph (5.4s)
+  ok  499 [firefox] › tests\browser\editor.spec.ts:1435:1 › keeps a DOCX heading and caption chain with its body (6.4s)
+  ok  501 [firefox] › tests\browser\editor.spec.ts:1608:1 › uses a host print renderer without moving or exposing live custom DOM (3.5s)
+  ok  500 [firefox] › tests\browser\editor.spec.ts:1463:1 › paginates imported styled semantic HTML without structural or PDF text loss (10.5s)
+  ok  502 [firefox] › tests\browser\editor.spec.ts:1643:1 › keeps native disclosure and media controls out of the visual sheets keyboard order (4.6s)
+  -   504 [firefox] › tests\browser\editor.spec.ts:1835:1 › emits exact A4 and Letter PDF pages for every projected sheet in Chromium
+  ok  503 [firefox] › tests\browser\editor.spec.ts:1718:1 › projects exact A4 and Letter print sheets in every browser engine (5.4s)
+  ok  505 [firefox] › tests\browser\editor.spec.ts:1875:1 › keeps 1,000-block pagination reflow local to the changed block (3.8s)
+  ok  506 [firefox] › tests\browser\editor.spec.ts:1887:1 › bounds alternating edge reflow across 5,000 rendered page blocks (4.5s)
+  ok  507 [firefox] › tests\browser\editor.spec.ts:1910:1 › keeps 5,000 unchanged page blocks cached through leading insertion and removal (4.6s)
+  ok  508 [firefox] › tests\browser\editor.spec.ts:1936:1 › edits, selects, and composes across guarded page shells in one contenteditable (5.4s)
+  ok  509 [firefox] › tests\browser\editor.spec.ts:2012:1 › keeps one paragraph editable when its measured lines span page shells (7.7s)
+  ok  510 [firefox] › tests\browser\editor.spec.ts:2139:1 › maps carets, ranges, and composition around injected paragraph page gaps (3.0s)
+  ok  511 [firefox] › tests\browser\editor.spec.ts:2243:1 › keeps one canonical ordered list editable and numbered across page shells (5.5s)
+  ok  512 [firefox] › tests\browser\editor.spec.ts:2378:52 › honours explicit table repetition independently of cell roles (ordinary) (5.8s)
+  ok  513 [firefox] › tests\browser\editor.spec.ts:2378:52 › honours explicit table repetition independently of cell roles (off) (6.2s)
+  ok  514 [firefox] › tests\browser\editor.spec.ts:2411:1 › keeps one canonical table editable with repeated headers across page shells (6.8s)
+  ok  515 [firefox] › tests\browser\editor.spec.ts:2561:1 › keeps merged header and body rowspans intact across editable table pages (5.4s)
+  ok  516 [firefox] › tests\browser\editor.spec.ts:2627:1 › reports an oversized table row without clipping or splitting its editable model (5.3s)
+  ok  517 [firefox] › tests\browser\editor.spec.ts:2669:1 › keeps canonical page furniture and footnotes editable while projecting every page copy (6.0s)
+  ok  518 [firefox] › tests\browser\editor.spec.ts:2754:1 › keeps code, media, disclosures, and custom atoms canonical across editable pages (7.7s)
+  ok  519 [firefox] › tests\browser\editor.spec.ts:2889:1 › keeps tracked review and Yjs live between list items split across pages (7.1s)
+  ok  521 [firefox] › tests\browser\editor.spec.ts:3032:13 › keeps comments attached and synchronized inside a continued list (4.0s)
+  ok  520 [firefox] › tests\browser\editor.spec.ts:2955:1 › keeps tracked review and Yjs live between table rows split across pages (10.3s)
+  ok  522 [firefox] › tests\browser\editor.spec.ts:3032:13 › keeps comments attached and synchronized inside a continued table (5.3s)
+  ok  524 [firefox] › tests\browser\editor.spec.ts:3147:1 › keeps tracked review and Yjs collaboration live across automatic page boundaries (4.9s)
+  ok  523 [firefox] › tests\browser\editor.spec.ts:3086:1 › keeps tracked review and Yjs live inside a paragraph split across pages (8.7s)
+  ok  525 [firefox] › tests\browser\editor.spec.ts:3222:1 › tracks real browser insertion and replacement with reversible review decisions (2.5s)
+  ok  526 [firefox] › tests\browser\editor.spec.ts:3251:1 › runs the package-backed full-text tracked review panel (5.3s)
+  ok  527 [firefox] › tests\browser\editor.spec.ts:3269:1 › runs package-backed named versions, exact comparison, preview, and guarded restoration (7.6s)
+  ok  528 [firefox] › tests\browser\editor.spec.ts:3299:1 › edits and persists package-backed collapsible details in the public playground (4.8s)
+  ok  530 [firefox] › tests\browser\editor.spec.ts:3355:1 › converges live and offline Yjs edits and keeps collaborative undo author-local (3.6s)
+  ok  529 [firefox] › tests\browser\editor.spec.ts:3325:1 › edits semantic ruby annotations through the package-backed public playground (5.6s)
+  ok  531 [firefox] › tests\browser\editor.spec.ts:3384:1 › runs reference links, recursive blocks, rich tables, and loss reports in a real browser (2.2s)
+  ok  532 [firefox] › tests\browser\editor.spec.ts:3409:1 › round-trips variable-delimiter Markdown code spans in the browser package (3.9s)
+  ok  534 [firefox] › tests\browser\editor.spec.ts:4007:1 › round-trips marker-relative list containers and exact code whitespace (2.4s)
+  ok  535 [firefox] › tests\browser\editor.spec.ts:4051:1 › preserves raw Markdown and inert frontmatter through the browser package (2.3s)
+  ok  533 [firefox] › tests\browser\editor.spec.ts:3977:1 › types, deletes, and undoes inside imported empty documents, quotes, and list items (9.8s)
+  ok  536 [firefox] › tests\browser\editor.spec.ts:4077:1 › edits through real beforeinput events and undoes a Markdown input rule (3.1s)
+  ok  537 [firefox] › tests\browser\editor.spec.ts:4091:1 › groups adjacent browser typing and respects explicit undo boundaries (3.3s)
+  ok  538 [firefox] › tests\browser\editor.spec.ts:4112:3 › preserves replacement formatting across subsequent typing input (3.2s)
+  ok  539 [firefox] › tests\browser\editor.spec.ts:4112:3 › preserves replacement formatting across subsequent composition input (2.9s)
+  ok  540 [firefox] › tests\browser\editor.spec.ts:4143:1 › commits cross-browser composition sequences once and supports replacement input (3.6s)
+  ok  541 [firefox] › tests\browser\editor.spec.ts:4175:1 › maps decorations through typing without persisting widget content (3.0s)
+  ok  542 [firefox] › tests\browser\editor.spec.ts:4190:1 › highlights editable code and updates language metadata through public commands (4.0s)
+  ok  543 [firefox] › tests\browser\editor.spec.ts:4221:1 › runs a view-focused chain and checks it without preview side effects (2.8s)
+  ok  544 [firefox] › tests\browser\editor.spec.ts:4242:1 › applies every configured paste-rule match through a browser paste event (3.4s)
+  ok  545 [firefox] › tests\browser\editor.spec.ts:4260:1 › autolinks, safely activates, edits, and removes links in a real browser (5.9s)
+  ok  546 [firefox] › tests\browser\editor.spec.ts:4291:1 › preserves structured rich HTML from a real browser clipboard event (4.4s)
+  ok  547 [firefox] › tests\browser\editor.spec.ts:4312:1 › pastes unwrapped inline HTML without dropping surrounding text or formatting (2.4s)
+  ok  549 [firefox] › tests\browser\editor.spec.ts:4350:1 › pastes unfamiliar HTML wrappers without flattening headings, paragraphs, or lists (2.5s)
+  ok  548 [firefox] › tests\browser\editor.spec.ts:4333:1 › honors strict raw HTML token boundaries in the public Markdown pipeline (6.0s)
+  ok  550 [firefox] › tests\browser\editor.spec.ts:4370:1 › pastes structured table cells and edits separate paragraphs without flattening nested blocks (4.8s)
+  ok  551 [firefox] › tests\browser\editor.spec.ts:4393:1 › retains standalone non-collapsible Unicode text during rich paste (3.4s)
+  ok  552 [firefox] › tests\browser\editor.spec.ts:4410:1 › pastes empty formatting and applies it to subsequently typed text (4.0s)
+  ok  553 [firefox] › tests\browser\editor.spec.ts:4434:57 › pastes and edits list-first code without inventing a blank paragraph (5.4s)
+  ok  554 [firefox] › tests\browser\editor.spec.ts:4434:57 › pastes and edits list-first code without inventing a blank paragraph from its label area (2.7s)
+  ok  556 [firefox] › tests\browser\editor.spec.ts:4515:1 › imports an extension-defined HTML node through the schema contract (3.2s)
+  ok  555 [firefox] › tests\browser\editor.spec.ts:4462:1 › normalizes representative Word, Docs, and Excel clipboard payloads in every browser engine (4.8s)
+  ok  557 [firefox] › tests\browser\editor.spec.ts:4540:1 › pastes mixed nested HTML lists without flattening their hierarchy (2.6s)
+  ok  559 [firefox] › tests\browser\editor.spec.ts:4593:1 › edits bidirectional and deeply nested text by logical document positions (3.4s)
+  ok  560 [firefox] › tests\browser\editor.spec.ts:4620:1 › moves a selected top-level block through native drag data (1.8s)
+  ok  561 [firefox] › tests\browser\editor.spec.ts:4638:1 › keeps a custom block’s native drag after the editor selects another block (2.8s)
+  ok  562 [firefox] › tests\browser\editor.spec.ts:4673:1 › shows a host-replaceable drop cursor for inline text and atomic block targets (2.9s)
+  x   558 [firefox] › tests\browser\editor.spec.ts:4563:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys (8.9s)
+  ok  563 [firefox] › tests\browser\editor.spec.ts:4734:1 › reorders nested blocks with accessible controls, drop indicators, drag, and undo (2.4s)
+  ok  564 [firefox] › tests\browser\editor.spec.ts:4905:1 › replaces a DOM selection that crosses block boundaries (2.3s)
+(node:24156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  565 [firefox] › tests\browser\editor.spec.ts:4944:1 › keeps a visible editable paragraph after a terminal non-text block (2.0s)
+  ok  566 [firefox] › tests\browser\editor.spec.ts:4966:1 › uses Ctrl+A as an explicit all-document selection and replaces the document (2.6s)
+  ok  568 [firefox] › tests\browser\editor.spec.ts:4978:1 › selects and deletes a block image through real pointer and keyboard input (2.8s)
+  ok  569 [firefox] › tests\browser\editor.spec.ts:5001:1 › edits, aligns, resizes, and undoes a production image through accessible controls (4.1s)
+  ok  570 [firefox] › tests\browser\editor.spec.ts:5057:1 › inserts and removes a true inline image without breaking surrounding text (3.2s)
+  ok  567 [firefox] › tests\browser\editor.spec.ts:4809:1 › shows one structural block target across paragraphs, headings, lists, tables, media, and custom nodes (9.6s)
+  ok  571 [firefox] › tests\browser\editor.spec.ts:5075:1 › tracks and cancels browser-native image upload tasks (3.1s)
+  ok  572 [firefox] › tests\browser\editor.spec.ts:5115:1 › extends and replaces a rectangular cell selection through real pointer input (3.2s)
+  ok  574 [firefox] › tests\browser\editor.spec.ts:5175:1 › reaches overflowing code by keyboard and leaves it without modifying the document (3.9s)
+  -   575 [firefox] › tests\browser\editor.spec.ts:5221:1 › pastes into tab-focused code through Chromium clipboard without changing the previous paragraph
+  ok  573 [firefox] › tests\browser\editor.spec.ts:5143:1 › keeps mixed-format links intact through backward selection typing and history (5.5s)
+  ok  576 [firefox] › tests\browser\editor.spec.ts:5245:1 › announces table resize values through real keyboard, pointer and history workflows (3.6s)
+  ok  577 [firefox] › tests\browser\editor.spec.ts:5298:1 › edits merged tables, resizes columns, toggles headers, and exchanges spreadsheet grids (2.7s)
+  ok  578 [firefox] › tests\browser\editor.spec.ts:5371:1 › keeps normal paste while offering bounded editor-local clipboard slots (2.8s)
+  ok  579 [firefox] › tests\browser\editor.spec.ts:5407:1 › renders and types into a structural gap as a new block (3.2s)
+  ok  580 [firefox] › tests\browser\editor.spec.ts:5419:1 › edits Lean without a mandatory server and renders transient provider diagnostics (3.9s)
+  ok  581 [firefox] › tests\browser\editor.spec.ts:5446:1 › keeps custom NodeViews live across updates and mapped moves while containing their DOM (3.4s)
+  ok  583 [firefox] › tests\browser\editor.spec.ts:5508:1 › publishes actionable extension authoring, conformance, and doctor guidance (4.6s)
+  ok  582 [firefox] › tests\browser\editor.spec.ts:5483:1 › loads the public React playground without console or page errors (5.0s)
+  ok  584 [firefox] › tests\browser\editor.spec.ts:5526:1 › pairs the optional AI demo with developer recipes for every public workflow (4.1s)
+  ok  585 [firefox] › tests\browser\editor.spec.ts:5547:1 › shows verified room setup before the legacy collaboration recipe (4.4s)
+  ok  586 [firefox] › tests\browser\editor.spec.ts:5569:1 › keeps headline phrases together and makes full-page navigation explicit (6.3s)
+  ok  587 [firefox] › tests\browser\editor.spec.ts:5594:1 › uses package-backed mentions, emoji, typography, and live counting in the public React playground (8.6s)
+  ok  588 [firefox] › tests\browser\editor.spec.ts:5655:1 › runs grouped default and product slash commands in the public React playground (8.0s)
+  ok  589 [firefox] › tests\browser\editor.spec.ts:5686:1 › keeps the active option visible while wrapping through public slash suggestions (5.9s)
+  ok  590 [firefox] › tests\browser\editor.spec.ts:5690:1 › lets Tab leave the editor when public emoji suggestions close (5.7s)
+  ok  591 [firefox] › tests\browser\editor.spec.ts:5694:1 › leaves IME candidate keys alone while the public slash menu is open (6.4s)
+  ok  593 [firefox] › tests\browser\editor.spec.ts:5805:1 › skips unavailable host controls during public toolbar keyboard navigation (5.4s)
+  ok  592 [firefox] › tests\browser\editor.spec.ts:5736:1 › runs accessible bubble and floating menus in the public React playground (7.2s)
+  ok  594 [firefox] › tests\browser\editor.spec.ts:5839:1 › composes and keyboard-navigates the public toolbar by stable group and action IDs (5.7s)
+  ok  595 [firefox] › tests\browser\editor.spec.ts:5876:1 › applies the complete text-style suite through the public React toolbar (9.9s)
+  ok  596 [firefox] › tests\browser\editor.spec.ts:5937:1 › uses the public React image workflow for metadata, alignment, and replacement (5.1s)
+  ok  598 [firefox] › tests\browser\editor.spec.ts:6099:1 › keeps the public native colour field focused while formatting selected text and allows undo in the editor (5.2s)
+  ok  599 [firefox] › tests\browser\editor.spec.ts:6126:1 › keeps table configuration labels legible on pointer hover (4.8s)
+  ok  600 [firefox] › tests\browser\editor.spec.ts:6165:1 › creates and edits a link through the public React toolbar (5.4s)
+  ok  597 [firefox] › tests\browser\editor.spec.ts:5981:1 › opens and cancels public configuration panels with keyboard focus and exact document retention (17.8s)
+  ok  601 [firefox] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls (4.8s)
+  ok  602 [firefox] › tests\browser\editor.spec.ts:6211:1 › edits code language and line numbers through the public React toolbar (6.7s)
+  ok  604 [firefox] › tests\browser\editor.spec.ts:6317:1 › preserves copied line breaks in the public clipboard-history picker (5.6s)
+  ok  603 [firefox] › tests\browser\editor.spec.ts:6230:1 › opens the searchable clipboard-history picker in the public React toolbar (9.8s)
+  ok  605 [firefox] › tests\browser\editor.spec.ts:6351:1 › keeps the public outline stable, hierarchical, active, and navigable (5.6s)
+  ok  606 [firefox] › tests\browser\editor.spec.ts:6376:1 › exposes and explicitly cleans invisible text in the public playground (7.2s)
+  ok  607 [firefox] › tests\browser\editor.spec.ts:6417:1 › runs the public plain-DOM first-class widget demo (5.5s)
+  ok  608 [firefox] › tests\browser\editor.spec.ts:6464:1 › runs the public React first-class widget demo without losing control focus (4.7s)
+  ok  609 [firefox] › tests\browser\editor.spec.ts:6502:1 › makes the quote control discoverable and toggles an existing quote in the Java workflow demo (5.5s)
+  ok  610 [firefox] › tests\browser\editor.spec.ts:6516:1 › retains table captions and reports their projected association in the conversion demo (6.0s)
+  ok  611 [firefox] › tests\browser\editor.spec.ts:6533:1 › preserves complex figure content in the public Markdown conversion demo (6.7s)
+  ok  612 [firefox] › tests\browser\editor.spec.ts:6551:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (7.4s)
+  ok  613 [firefox] › tests\browser\editor.spec.ts:6622:1 › preserves parser-owned Markdown source through native editing, type changes and downloads (7.4s)
+  ok  614 [firefox] › tests\browser\editor.spec.ts:6626:1 › preserves nested Markdown source through real list and quote editing (8.0s)
+  ok  615 [firefox] › tests\browser\editor.spec.ts:6630:1 › keeps reference definitions outside a terminal fence after real structural editing (6.2s)
+  ok  616 [firefox] › tests\browser\editor.spec.ts:6634:1 › imports leading Markdown delimiters and literal addresses through edit, download and reopen (7.3s)
+  ok  617 [firefox] › tests\browser\editor.spec.ts:6638:1 › exports untouched empty Markdown containers without dropping authored blank or edited content (9.3s)
+  ok  618 [firefox] › tests\browser\editor.spec.ts:6642:1 › retains blocked Markdown destinations through edits and safe reader downloads (5.4s)
+  ok  620 [firefox] › tests\browser\editor.spec.ts:6650:1 › reopens source-preserved issue drafts with the real HTML table adapter enabled (6.9s)
+  ok  619 [firefox] › tests\browser\editor.spec.ts:6646:1 › reviews CommonMark source and downloads an offline HTML reader (12.7s)
+  ok  621 [firefox] › tests\browser\editor.spec.ts:6654:1 › preserves nested reference Markdown through real list quote and task editing (8.8s)
+  ok  622 [firefox] › tests\browser\editor.spec.ts:6658:1 › preserves container definitions while editing and unwrapping a referenced quote (9.3s)
+  ok  623 [firefox] › tests\browser\editor.spec.ts:6662:1 › records native DOCX viewer disagreements without certifying math fidelity (12.2s)
+  ok  624 [firefox] › tests\browser\editor.spec.ts:6667:1 › checks actual DOCX retention beside an independent viewer without hiding its header omission (7.1s)
+  ok  625 [firefox] › tests\browser\editor.spec.ts:6791:1 › renders real KaTeX while reporting published-equation and trust failures without source loss (4.5s)
+  ok  626 [firefox] › tests\browser\editor.spec.ts:6824:1 › edits multiline math without losing line breaks, descriptions, or undo history (6.5s)
+  ok  627 [firefox] › tests\browser\editor.spec.ts:6861:1 › renders and inserts native math in the public DOM integration (5.4s)
+  ok  628 [firefox] › tests\browser\editor.spec.ts:6918:1 › makes table sizing, complete deletion, insertion gaps, and highlight colours explicit in the public demo (6.3s)
+  -   630 [firefox] › tests\browser\editor.spec.ts:7039:1 › round-trips a Fountain multi-block selection through Chromium clipboard HTML
+  ok  629 [firefox] › tests\browser\editor.spec.ts:6966:1 › keeps rich and multiline paste structurally predictable in the public editor (4.4s)
+  -   631 [firefox] › tests\browser\editor.spec.ts:7106:1 › round-trips an extension-owned Fountain atom through the Chromium clipboard
+  -   633 [firefox] › tests\browser\editor.spec.ts:7242:1 › copies clean semantic Fountain HTML into an external browser editor
+  -   632 [firefox] › tests\browser\editor.spec.ts:7155:1 › round-trips a complex whole Fountain document through the Chromium clipboard exactly
+  -   635 [firefox] › tests\browser\editor.spec.ts:7356:1 › copies math to external rich and plain-text editors without renderer controls
+  -   634 [firefox] › tests\browser\editor.spec.ts:7297:1 › copies readable Fountain text into a plain-text external editor
+  ok  636 [firefox] › tests\browser\editor.spec.ts:7401:1 › renders repeated empty paragraphs and removes each visible line (4.6s)
+  ok  638 [firefox] › tests\browser\editor.spec.ts:7448:1 › keeps a backward DOM selection backward after model synchronization (1.6s)
+  ok  637 [firefox] › tests\browser\editor.spec.ts:7431:1 › undoes and redoes real typing with both common browser keyboard chords (8.5s)
+  ok  639 [firefox] › tests\browser\editor.spec.ts:7472:1 › preserves a backward selection made with real keyboard input (2.8s)
+  ok  640 [firefox] › tests\browser\editor.spec.ts:7487:1 › replaces a backward selection made by a real reverse pointer drag (3.7s)
+  ok  642 [firefox] › tests\browser\editor.spec.ts:7581:1 › visibly splits and joins ordinary paragraphs with both deletion directions (2.7s)
+  x   641 [firefox] › tests\browser\editor.spec.ts:7523:1 › turns multi-format and multi-block selections into visible paragraph boundaries (3.3s)
+Testing stopped early after 5 maximum allowed failures.
+  x   643 [firefox] › tests\browser\editor.spec.ts:7624:1 › deletes an adjacent inline atom without eating surrounding text (494ms)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:4563:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first()
+    Expected: "Alpha Beta"
+    Received: "AlphaRemote Beta"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first()
+        14 × locator resolved to <p data-fountain-path="0" class="tested-paragraph" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-active="true" data-fountain-decoration="paragraph" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "AlphaRemote Beta"
+
+
+      4587 |   });
+      4588 |   await page.keyboard.press('Backspace');
+    > 4589 |   await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+           |                                                      ^
+      4590 |   await expect(editor.locator(':scope > ol > li')).toHaveCount(1);
+      4591 | });
+      4592 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:4589:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls 
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Bullet list' }) resolved to 2 elements:
+        1) <button type="button" title="Bullet list" aria-pressed="false" aria-label="Bullet list" class="fountain-toolbar__button" data-fountain-toolbar-action="bullet-list">…</button> aka getByRole('button', { name: 'Bullet list', description: 'Bullet list' })
+        2) <button>Toggle bullet list</button> aka getByRole('button', { name: 'Toggle bullet list' })
+
+    Call log:
+      - waiting for getByRole('button', { name: 'Bullet list' })
+
+
+      6202 |   await page.keyboard.press('Home');
+      6203 |   await page.keyboard.press('Shift+End');
+    > 6204 |   await page.getByRole('button', { name: 'Bullet list' }).click();
+           |                                                           ^
+      6205 |   await expect(editor.locator('ul > li').first()).toHaveText(text ?? '');
+      6206 |   await page.getByRole('button', { name: 'Bullet list' }).click();
+      6207 |   await expect(editor.locator('ul > li').filter({ hasText: text ?? '' })).toHaveCount(0);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:6204:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-toggles-a-selected--21969--public-React-list-controls-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-browser-597f5415\editor-toggles-a-selected--21969--public-React-list-controls-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-toggles-a-selected--21969--public-React-list-controls-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-browser-597f5415\editor-toggles-a-selected--21969--public-React-list-controls-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › tests\browser\editor.spec.ts:7523:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first().locator('strong')
+    Expected: "Alpha"
+    Error: strict mode violation: getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first().locator('strong') resolved to 2 elements:
+        1) <strong>Al</strong> aka getByText('Al', { exact: true })
+        2) <strong>pha</strong> aka getByText('pha', { exact: true })
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first().locator('strong')
+
+
+      7541 |   await expect(editor.locator(':scope > p')).toHaveCount(3);
+      7542 |   await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+    > 7543 |   await expect(editor.locator(':scope > p').first().locator('strong')).toHaveText('Alpha');
+           |                                                                        ^
+      7544 |
+      7545 |   await page.reload();
+      7546 |   const freshEditor = page.getByRole('textbox', { name: 'Browser contract editor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7543:72
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox] › tests\browser\editor.spec.ts:4563:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first()
+    Expected: "Alpha Beta"
+    Received: "AlphaRemote Beta"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first()
+        13 × locator resolved to <p data-fountain-path="0" class="tested-paragraph" data-fountain-content-dom="" data-fountain-node="paragraph" data-fountain-block-active="true" data-fountain-decoration="paragraph" data-fountain-block-reorderable="true">…</p>
+           - unexpected value "AlphaRemote Beta"
+
+
+      4587 |   });
+      4588 |   await page.keyboard.press('Backspace');
+    > 4589 |   await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+           |                                                      ^
+      4590 |   await expect(editor.locator(':scope > ol > li')).toHaveCount(1);
+      4591 | });
+      4592 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:4589:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-firefox\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-browser-597f5415\editor-wraps-indents-lifts-d0803-r-visible-commands-and-keys-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox] › tests\browser\editor.spec.ts:7523:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first().locator('strong')
+    Expected: "Alpha"
+    Error: strict mode violation: getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first().locator('strong') resolved to 2 elements:
+        1) <strong>Al</strong> aka getByText('Al', { exact: true })
+        2) <strong>pha</strong> aka getByText('pha', { exact: true })
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Browser contract editor' }).locator(':scope > p').first().locator('strong')
+
+
+      7541 |   await expect(editor.locator(':scope > p')).toHaveCount(3);
+      7542 |   await expect(editor.locator(':scope > p').first()).toHaveText('Alpha Beta');
+    > 7543 |   await expect(editor.locator(':scope > p').first().locator('strong')).toHaveText('Alpha');
+           |                                                                        ^
+      7544 |
+      7545 |   await page.reload();
+      7546 |   const freshEditor = page.getByRole('textbox', { name: 'Browser contract editor' });
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:7543:72
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\release-browser-597f5415\editor-turns-multi-format--ac163-isible-paragraph-boundaries-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [chromium] › tests\browser\editor.spec.ts:4563:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys 
+    [chromium] › tests\browser\editor.spec.ts:6196:1 › toggles a selected block through the public React list controls 
+    [chromium] › tests\browser\editor.spec.ts:7523:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+    [firefox] › tests\browser\editor.spec.ts:4563:1 › wraps, indents, lifts, and exits lists through browser-visible commands and keys 
+    [firefox] › tests\browser\editor.spec.ts:7523:1 › turns multi-format and multi-block selections into visible paragraph boundaries 
+  1 interrupted
+    [firefox] › tests\browser\editor.spec.ts:7624:1 › deletes an adjacent inline atom without eating surrounding text 
+  9 skipped
+  423 did not run
+  628 passed (30.8m)
+  1 error was not a part of any test, see above for details
