@@ -1,0 +1,148 @@
+[WebServer] (node:1160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:10900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (1.0m)
+(node:18560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [firefox] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (1.0m)
+(node:18828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [webkit] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline (1.0m)
+
+
+  1) [chromium] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline 
+
+    Test timeout of 60000ms exceeded while running "beforeEach" hook.
+
+      926 | }
+      927 |
+    > 928 | test.beforeEach(async ({ page, browserName }, testInfo) => {
+          |      ^
+      929 |   if (
+      930 |     browserName !== 'chromium'
+      931 |     && (
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:928:6
+
+    Error: page.waitForFunction: Test timeout of 60000ms exceeded.
+
+      943 |   // dependency discovery can restart the page before the module exposes its API.
+      944 |   // Assert readiness explicitly, without sleeping or retrying failed editing.
+    > 945 |   await page.waitForFunction(() => Boolean((globalThis as any).fountainBrowserTest?.editor));
+          |              ^
+      946 |   await expect(page.getByRole('textbox', { name: 'Browser contract editor', exact: true })).toBeVisible();
+      947 | });
+      948 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:945:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline 
+
+    Test timeout of 60000ms exceeded while running "beforeEach" hook.
+
+      926 | }
+      927 |
+    > 928 | test.beforeEach(async ({ page, browserName }, testInfo) => {
+          |      ^
+      929 |   if (
+      930 |     browserName !== 'chromium'
+      931 |     && (
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:928:6
+
+    Error: page.waitForFunction: Test timeout of 60000ms exceeded.
+
+      943 |   // dependency discovery can restart the page before the module exposes its API.
+      944 |   // Assert readiness explicitly, without sleeping or retrying failed editing.
+    > 945 |   await page.waitForFunction(() => Boolean((globalThis as any).fountainBrowserTest?.editor));
+          |              ^
+      946 |   await expect(page.getByRole('textbox', { name: 'Browser contract editor', exact: true })).toBeVisible();
+      947 | });
+      948 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:945:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline 
+
+    Test timeout of 60000ms exceeded while running "beforeEach" hook.
+
+      926 | }
+      927 |
+    > 928 | test.beforeEach(async ({ page, browserName }, testInfo) => {
+          |      ^
+      929 |   if (
+      930 |     browserName !== 'chromium'
+      931 |     && (
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:928:6
+
+    Error: page.waitForFunction: Test timeout of 60000ms exceeded.
+
+      943 |   // dependency discovery can restart the page before the module exposes its API.
+      944 |   // Assert readiness explicitly, without sleeping or retrying failed editing.
+    > 945 |   await page.waitForFunction(() => Boolean((globalThis as any).fountainBrowserTest?.editor));
+          |              ^
+      946 |   await expect(page.getByRole('textbox', { name: 'Browser contract editor', exact: true })).toBeVisible();
+      947 | });
+      948 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\browser\editor.spec.ts:945:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\caption-production-1e86e5e0\editor-runs-the-public-hea-f7abf-eX-and-server-HTML-pipeline-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline 
+    [firefox] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline 
+    [webkit] › tests\browser\editor.spec.ts:6581:1 › runs the public headless Markdown, LaTeX, and server HTML pipeline 

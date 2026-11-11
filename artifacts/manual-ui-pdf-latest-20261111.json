@@ -1,0 +1,58 @@
+{
+  "pdf": "artifacts/manual-ui-release-region-verified-0ecbb40b/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/fountain-a4-export.pdf",
+  "sha256": "f45cca8669d1c139ca91efddc556e27c1d8fa94ac461dbd02f84153cdc1c5aec",
+  "renderer": "System PDFium 5.5.0 diagnostic rasterization (disagreement retained)",
+  "pages": [
+    {
+      "page": 1,
+      "widthPoints": 594.95996,
+      "heightPoints": 841.91998,
+      "text": "Browser report \u00b7 1\nMeasured layout\nA long measured paragraph wraps into several legal browser line boxes. A long measured\nparagraph wraps into several legal browser line boxes. A long measured paragraph wraps into\nseveral legal browser line boxes. A long measured paragraph wraps into several legal browser line\nboxes. A long measured paragraph wraps into several legal browser line boxes. A long measured\nparagraph wraps into several legal browser line boxes. A long measured paragraph wraps into\nseveral legal browser line boxes. 1 Final words.\nFirst list item\nSecond list item\nThird list item\nName Value\nGrouped\nOne\nTwo\nA measured footnote body.1.",
+      "render": "tmp/pdfs/fountain-ui-20261111/latest-pdfium-1.png",
+      "renderSha256": "4633743985fec0a1f87d172f7b373a9109441bd103854467c7a013b0769efec8"
+    },
+    {
+      "page": 2,
+      "widthPoints": 594.95996,
+      "heightPoints": 841.91998,
+      "text": "Browser report \u00b7 2\nAfter the manual break",
+      "render": "tmp/pdfs/fountain-ui-20261111/latest-pdfium-2.png",
+      "renderSha256": "6ff81b2fdbe32d758d7cb9fdbd896c4daea931a4e13f9d7224e27d90fb6239d2"
+    }
+  ],
+  "currentBundledRenderers": [
+    {
+      "renderer": "PDFium 5.14.0",
+      "page": 1,
+      "path": "tmp/pdfs/fountain-ui-20261111/bundled-pdfium-1.png",
+      "sha256": "2abf93b01e2fada64256b151e79d13c42a1661d4274ecae331d8521ec634dd83",
+      "visuallyReviewed": true,
+      "headerComplete": true
+    },
+    {
+      "renderer": "PDFium 5.14.0",
+      "page": 2,
+      "path": "tmp/pdfs/fountain-ui-20261111/bundled-pdfium-2.png",
+      "sha256": "3b2db4eea4e9915b4564b7dfc49e20cff40338e9cff2013e989be4beeb834621",
+      "visuallyReviewed": true,
+      "headerComplete": true
+    },
+    {
+      "renderer": "Poppler 26.07.0, runtime 26-1110",
+      "page": 1,
+      "path": "tmp/pdfs/fountain-ui-20261111/bundled-poppler-1.png",
+      "sha256": "56871e148cc10d8c302092d29b0de46de4c02139a336c8ca81af7ddb62a2cc62",
+      "visuallyReviewed": true,
+      "headerComplete": true
+    },
+    {
+      "renderer": "Poppler 26.07.0, runtime 26-1110",
+      "page": 2,
+      "path": "tmp/pdfs/fountain-ui-20261111/bundled-poppler-2.png",
+      "sha256": "f8e07a32a421485ee4cf0441a078b4594b7b615687aec5b4e8afec24d4f3ae0e",
+      "visuallyReviewed": true,
+      "headerComplete": true
+    }
+  ],
+  "cause": "Different installed runtime results are observed; no dependency-level or exporter cause is established. Current bundled renderers show both headers."
+}

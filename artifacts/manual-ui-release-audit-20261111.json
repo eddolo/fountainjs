@@ -1,0 +1,226 @@
+{
+  "sourceCommit": "1e86e5e0",
+  "libraryRuntimeBaseline": "024ff8fe",
+  "version": "0.5.0-beta.1",
+  "published": false,
+  "fix": "Imported rich image captions reside in inline children. Preview now uses their text before legacy string caption and alt fallback; no model/conversion mutation.",
+  "collectionRepair": {
+    "before": {
+      "tests": 297,
+      "files": 94,
+      "log": "artifacts/manual-ui-collection-before-0ecbb40b.log"
+    },
+    "after": {
+      "tests": 8,
+      "files": 2,
+      "log": "artifacts/manual-ui-final-selection-20261111.log"
+    },
+    "originalFilesAtConfigCreation": [
+      "editor-capabilities-audit.spec.ts",
+      "latest-ui-audit.spec.ts"
+    ],
+    "historyCommit": "6c4b64d4",
+    "genericConfigChanged": false,
+    "ordinaryBrowserCIChanged": false
+  },
+  "negativeRuns": [
+    {
+      "log": "artifacts/manual-ui-release-0ecbb40b.log",
+      "passed": 6,
+      "failed": 2,
+      "failures": [
+        "Caption preview displays alt text instead of preserved caption",
+        "Stale empty-report expectation rejects six known info entries"
+      ]
+    },
+    {
+      "log": "artifacts/manual-ui-release-after-0ecbb40b.log",
+      "passed": 7,
+      "failed": 1,
+      "failure": "First attempted repair used image.textContent, whose deliberate toText fallback is an image description."
+    },
+    {
+      "log": "artifacts/manual-ui-release-final-0ecbb40b.log",
+      "passed": 7,
+      "failed": 1,
+      "failure": "Caption passes; final console assertion encounters three tracing-instrumentation sandbox messages."
+    },
+    {
+      "log": "artifacts/caption-production-1e86e5e0.log",
+      "failed": 3,
+      "failure": "Invalid production harness: root-only browser-tests beforeEach visits outside /fountainjs/; the requested demo test body never starts."
+    }
+  ],
+  "sandboxControl": {
+    "script": "artifacts/probe-sandbox-tracing-20261111.mjs",
+    "data": "artifacts/sandbox-tracing-control-20261111.json",
+    "untracedErrors": 0,
+    "tracedErrors": 3,
+    "scriptFree": true,
+    "sandboxPermissions": "empty",
+    "acceptance": "Exactly the three native instrumentation messages are required. Both reader frames must remain sandboxed and script-free; any extra error fails."
+  },
+  "checks": {
+    "recordedJourneys": {
+      "stats": {
+        "startTime": "2026-11-11T18:20:25.355Z",
+        "duration": 80182.11099999999,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/manual-ui-release-region-verified-0ecbb40b.log",
+      "rawReportLocalOnly": "artifacts/manual-ui-release-region-verified-0ecbb40b.json",
+      "rawReportSha256": "5d6cb6a960597eb83b6b62a36c5d1f306ad429ad7cabff6a5bd535011cf5626a"
+    },
+    "desktopCaption": {
+      "stats": {
+        "startTime": "2026-11-11T18:14:42.691Z",
+        "duration": 45379.159,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/docx-caption-preview-verified-0ecbb40b.log",
+      "rawReportLocalOnly": "artifacts/docx-caption-preview-verified-0ecbb40b.json",
+      "rawReportSha256": "c61d89d8a8226fa371d3cbc8a6dfd5766a3031dea21e7d81190bcd1211ee8463"
+    },
+    "productionCaption": {
+      "stats": {
+        "startTime": "2026-11-11T18:34:29.650Z",
+        "duration": 25216.408,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "log": "artifacts/caption-production-verified-1e86e5e0.log",
+      "rawReportLocalOnly": "artifacts/caption-production-verified-1e86e5e0.json",
+      "rawReportSha256": "ea523c0afade1344cd7d16c43d1e732ecfe197930494637002d6c92f8aa04f2b"
+    }
+  },
+  "focusedUnit": {
+    "passed": 22,
+    "files": 3,
+    "log": "artifacts/manual-ui-focused-unit-after-0ecbb40b.log"
+  },
+  "fullCheck": {
+    "commit": "1e86e5e0",
+    "exitCode": 0,
+    "passed": 5271,
+    "files": 323,
+    "unitDurationSeconds": 145.24,
+    "log": "artifacts/release-check-1e86e5e0.log"
+  },
+  "productionSpec": {
+    "path": "tests/manual/docx-caption-production-real.spec.ts",
+    "rootTypecheckAfterAddition": "passed",
+    "typecheckLog": "artifacts/manual-ui-production-typecheck-20261111.log",
+    "deployedBase": "/fountainjs/",
+    "testsImageDecodes": true
+  },
+  "libraryDistribution": {
+    "files": 1008,
+    "allByteIdenticalToSealedArchive": true,
+    "previousReceipt": "artifacts/release-preflight-94c0bebc/receipt.json",
+    "budgetsChanged": false,
+    "publicApiChanged": false
+  },
+  "visualReview": {
+    "capturedStates": 34,
+    "recordings": 8,
+    "fullResolutionStatesReviewed": [
+      {
+        "test": "human multiline equation journey: inspect, edit, undo, export, and reimport",
+        "name": "01-multiline-source-intact",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-01-01-multiline-source-intact.png",
+        "sha256": "9825fb7279d2fb5d155da81a87eded9f4fc8b7d7bb522a9209bedba163924476"
+      },
+      {
+        "test": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+        "name": "03-lean-source-and-portable-json",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-05-03-lean-source-and-portable-json.png",
+        "sha256": "61700e68c20783f6f36377d4aa69ac7b3d118d820ad91e1cd043e63329f4360c"
+      },
+      {
+        "test": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+        "name": "03-whole-block-handle-focus",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-13-03-whole-block-handle-focus.png",
+        "sha256": "9f40d8f345a9c2a49c14f0247f70ce10a82ba217ef0532045155fc697bc54992"
+      },
+      {
+        "test": "human document-conversion journey: edit, download Word, re-import, and inspect output",
+        "name": "04-embedded-word-image-reimported",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-30-04-embedded-word-image-reimported.png",
+        "sha256": "99025ecde773dab8d6d1eee5a14c85f30f8bc89e61ba532a0264a719d3f8aa54"
+      },
+      {
+        "test": "human visual-export journey: compare Fountain with an independent DOCX render",
+        "name": "01-fountain-editor",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-31-01-fountain-editor.png",
+        "sha256": "f7d5f5d563707c48a3cd6354113755f4278fa254e462235d700542f9f0c95098"
+      },
+      {
+        "test": "human visual-export journey: compare Fountain with an independent DOCX render",
+        "name": "02-independent-docx-render",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-32-02-independent-docx-render.png",
+        "sha256": "9b0ef77be72884bdaa37bb91230c1ddc3190399c7023e70b9005323d0e15737e"
+      },
+      {
+        "test": "human visual-export journey: render the paged editor as a real PDF",
+        "name": "01-fountain-a4-page-1",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-33-01-fountain-a4-page-1.png",
+        "sha256": "ca5e811fbe204d909e423dae4a43718d85761d3de52c5cff4af39117d1d21704"
+      },
+      {
+        "test": "human visual-export journey: render the paged editor as a real PDF",
+        "name": "01-fountain-a4-page-2",
+        "path": "artifacts/manual-ui-review-1e86e5e0/state-34-01-fountain-a4-page-2.png",
+        "sha256": "360c0a6a66ec3819b8fd10d548792bab41739c36fe216d2e493d339d3ac23c61"
+      }
+    ],
+    "sampledOverviewSheetsReviewed": [
+      "artifacts/manual-ui-review-1e86e5e0/video-01/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-01/overview-2.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-02/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-03/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-04/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-04/overview-2.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-05/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-06/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-06/overview-2.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-06/overview-3.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-07/overview-1.jpg",
+      "artifacts/manual-ui-review-1e86e5e0/video-08/overview-1.jpg"
+    ],
+    "samplingFps": 2,
+    "continuousPlaybackClaimed": false,
+    "inventoryLocalOnly": "artifacts/manual-ui-review-1e86e5e0/inventory.json",
+    "observations": [
+      "Image and caption now appear together in the focused capture.",
+      "Math source lines and Lean source/Unicode remain visible; this demo is source-only, not a typesetting/proof-service claim.",
+      "Whole heading handle focus has structural feedback.",
+      "DOCX viewer preserves image/body but visibly omits table header labels and changes spacing; known viewer limitation remains.",
+      "Both paged-preview sheets show Browser report headers, first-page footnote/table and second-page manual-break content."
+    ]
+  },
+  "pdf": {
+    "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/fountain-a4-export.pdf",
+    "sha256": "f45cca8669d1c139ca91efddc556e27c1d8fa94ac461dbd02f84153cdc1c5aec",
+    "pages": 2,
+    "currentBundledPDFium": "5.14.0: both pages visually reviewed, complete headers",
+    "currentBundledPoppler": "26.07.0 from runtime 26-1110: both pages visually reviewed, complete headers",
+    "otherInstallations": "System PDFium 5.5.0 and Poppler from older runtime 26-1104 omit some header glyphs in batch rendering; older Poppler renders page two correctly alone. Exact dependency-level cause is not established.",
+    "allReaderCompatibilityClaimed": false,
+    "versionedCopy": "artifacts/manual-ui-review-1e86e5e0/fountain-a4-export.pdf",
+    "rendererComparison": "artifacts/manual-ui-pdf-latest-20261111.json"
+  },
+  "remaining": [
+    "Fresh combined hosted CI and Linux display clipboard validation",
+    "Continuous recording playback and broader physical-device/AT evidence",
+    "Known DOCX viewer/format fidelity limits and renderer compatibility",
+    "Final package metadata/archive, GitHub access, npm staging/approval and deployment"
+  ]
+}

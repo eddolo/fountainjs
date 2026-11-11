@@ -1,0 +1,295 @@
+{
+  "captures": [
+    {
+      "test": "human multiline equation journey: inspect, edit, undo, export, and reimport",
+      "name": "01-multiline-source-intact",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-01-01-multiline-source-intact.png",
+      "sha256": "9825fb7279d2fb5d155da81a87eded9f4fc8b7d7bb522a9209bedba163924476"
+    },
+    {
+      "test": "human multiline equation journey: inspect, edit, undo, export, and reimport",
+      "name": "02-edited-equation-and-export",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-02-02-edited-equation-and-export.png",
+      "sha256": "2421c6dbe24dd7b203bec75042d533c80c19de4f09c191812f01b4b13eb00ad7"
+    },
+    {
+      "test": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+      "name": "01-backward-selection-quoted",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-03-01-backward-selection-quoted.png",
+      "sha256": "9ad0ecad91ba3f2ca68bcf7d977d91081314d8933c1bec9f0cb7f67d5df4092a"
+    },
+    {
+      "test": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+      "name": "02-direct-and-new-math",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-04-02-direct-and-new-math.png",
+      "sha256": "1a94bb7d96dfbd1c38a1d2896730aa04fe3ebe9e3a88102fdbd9c03b84598736"
+    },
+    {
+      "test": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+      "name": "03-lean-source-and-portable-json",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-05-03-lean-source-and-portable-json.png",
+      "sha256": "61700e68c20783f6f36377d4aa69ac7b3d118d820ad91e1cd043e63329f4360c"
+    },
+    {
+      "test": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+      "name": "04-labelled-table-options",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-06-04-labelled-table-options.png",
+      "sha256": "8a8093f3ba04ab622cfdfcfe4618879bfe54fc4dcfaa1605d64d795472f5a02a"
+    },
+    {
+      "test": "human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input",
+      "name": "05-newlines-and-real-clipboard-paste",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-07-05-newlines-and-real-clipboard-paste.png",
+      "sha256": "0c8aae16ccc4ef5d07b0173ebcf32b51bcca191946c9f74368c76156e582dd2e"
+    },
+    {
+      "test": "human clipboard journey: external rich document into Fountain and Fountain back out",
+      "name": "01-external-rich-source",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-08-01-external-rich-source.png",
+      "sha256": "d8f1543dbda4273ffd699b2fab9f4dc9396372d194b7854827c8183becbe61d4"
+    },
+    {
+      "test": "human clipboard journey: external rich document into Fountain and Fountain back out",
+      "name": "02-external-rich-content-in-fountain",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-09-02-external-rich-content-in-fountain.png",
+      "sha256": "6a3e274434a60eb164e56929dd65dece0c124e26917b784a8a4b911cbc5b3097"
+    },
+    {
+      "test": "human clipboard journey: external rich document into Fountain and Fountain back out",
+      "name": "03-fountain-rich-content-in-external-editor",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-10-03-fountain-rich-content-in-external-editor.png",
+      "sha256": "e05f5f43717c80d65993cf2cf02ca898feb5f85804878b7fa01c7953f4a0eaf2"
+    },
+    {
+      "test": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+      "name": "01-live-outline-navigation",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-11-01-live-outline-navigation.png",
+      "sha256": "a13ce2901a229b41a8020bb9d0191a228f27f8232602d3675050d7af08967522"
+    },
+    {
+      "test": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+      "name": "02-invisible-character-exposed",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-12-02-invisible-character-exposed.png",
+      "sha256": "71e5d396300c2f188d1d4e802056b41da89733f32eaf4bdcf95b104b6255f69c"
+    },
+    {
+      "test": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+      "name": "03-whole-block-handle-focus",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-13-03-whole-block-handle-focus.png",
+      "sha256": "9f40d8f345a9c2a49c14f0247f70ce10a82ba217ef0532045155fc697bc54992"
+    },
+    {
+      "test": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+      "name": "04-keyboard-grab-active",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-14-04-keyboard-grab-active.png",
+      "sha256": "a7d91e7617fc0955fe35b406d4e57d9aefb7c9f1d0ba82c305c3e4f28db82767"
+    },
+    {
+      "test": "human homepage journey: live outline, invisible text review, and structural drag feedback",
+      "name": "05-separate-pointer-drop-indicator",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-15-05-separate-pointer-drop-indicator.png",
+      "sha256": "4f90b58481d76b2e339be0a6311435547788b94fbcf308ed0b3bd43c08f3b487"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "01-real-writing",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-16-01-real-writing.png",
+      "sha256": "d8958b3d5e68ec33205dba382b087edf177dcb05199582c20659ce1125b08c4a"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "02-streaming-is-read-only",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-17-02-streaming-is-read-only.png",
+      "sha256": "8ec1fdb534d6e2ce3568ad538b3d3e92ab80e292e93040f8574fb5d8dfccad39"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "03-review-before-accept",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-18-03-review-before-accept.png",
+      "sha256": "479d863e357a3ccd4cb5f653f156b8c7312c9bb3b36bddbdc8e0d258ee093083"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "04-accepted-text-proposal",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-19-04-accepted-text-proposal.png",
+      "sha256": "92eb6dda4e5d086c1bdf11406193f2ef99381a5254ab0d87c4d123eb1bde4777"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "05-structured-preview-is-read-only",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-20-05-structured-preview-is-read-only.png",
+      "sha256": "741930ad2bf3e628044218e4dd78591fcc89a75f7c64d4438213e9e4516351c3"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "06-structured-change-accepted",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-21-06-structured-change-accepted.png",
+      "sha256": "0a22d56740198a35bb78bd16ce6e9ec840cefe1fa769f8e996e279a435e075ca"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "07-structured-change-undone",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-22-07-structured-change-undone.png",
+      "sha256": "c4de0baf3fb85b04d8119caf34636a379315091852d68f7c4cd9028cf50d3aff"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "08-conversation-first-turn",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-23-08-conversation-first-turn.png",
+      "sha256": "d89f9da02f1c8c20999b821b24af11d046cf13fc6bb2b15123a8476febdc982b"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "09-conversation-follow-up",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-24-09-conversation-follow-up.png",
+      "sha256": "ec2e10277de02418eb0ff6e92e2fb84481ad0fcacfc65207ba5f2b3ea8140a16"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "10-generated-media-review",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-25-10-generated-media-review.png",
+      "sha256": "a5a771a803a3d1553067f2f6ada023d9e762ed594fc9fa00242c0d0d8cf902bd"
+    },
+    {
+      "test": "human release journey: writing, AI review, conversation, structured tools, and undo",
+      "name": "11-generated-media-inserted",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-26-11-generated-media-inserted.png",
+      "sha256": "59a9de791147f5822deffd7d6e19d9e14f28580981eacda1102ca8be19bce8af"
+    },
+    {
+      "test": "human document-conversion journey: edit, download Word, re-import, and inspect output",
+      "name": "01-edited-source-before-word-export",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-27-01-edited-source-before-word-export.png",
+      "sha256": "ffdf377ed0b019f2141f140c397b640534d8f4a5c8ec69bcc3291ec33f8dd2b9"
+    },
+    {
+      "test": "human document-conversion journey: edit, download Word, re-import, and inspect output",
+      "name": "02-word-import-state-before-file",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-28-02-word-import-state-before-file.png",
+      "sha256": "3ee1c77571f4ee91578dde70bfab2fb7b650a7c73bbb6af606f5d0df3b25a23b"
+    },
+    {
+      "test": "human document-conversion journey: edit, download Word, re-import, and inspect output",
+      "name": "03-word-round-trip-inspected",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-29-03-word-round-trip-inspected.png",
+      "sha256": "564c1256dbfdcd47ef23c5345c5961751dc2a4d475c327864315c8bfabff92e5"
+    },
+    {
+      "test": "human document-conversion journey: edit, download Word, re-import, and inspect output",
+      "name": "04-embedded-word-image-reimported",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-30-04-embedded-word-image-reimported.png",
+      "sha256": "99025ecde773dab8d6d1eee5a14c85f30f8bc89e61ba532a0264a719d3f8aa54"
+    },
+    {
+      "test": "human visual-export journey: compare Fountain with an independent DOCX render",
+      "name": "01-fountain-editor",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-31-01-fountain-editor.png",
+      "sha256": "f7d5f5d563707c48a3cd6354113755f4278fa254e462235d700542f9f0c95098"
+    },
+    {
+      "test": "human visual-export journey: compare Fountain with an independent DOCX render",
+      "name": "02-independent-docx-render",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-32-02-independent-docx-render.png",
+      "sha256": "9b0ef77be72884bdaa37bb91230c1ddc3190399c7023e70b9005323d0e15737e"
+    },
+    {
+      "test": "human visual-export journey: render the paged editor as a real PDF",
+      "name": "01-fountain-a4-page-1",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-33-01-fountain-a4-page-1.png",
+      "sha256": "ca5e811fbe204d909e423dae4a43718d85761d3de52c5cff4af39117d1d21704"
+    },
+    {
+      "test": "human visual-export journey: render the paged editor as a real PDF",
+      "name": "01-fountain-a4-page-2",
+      "path": "artifacts/manual-ui-review-1e86e5e0/state-34-01-fountain-a4-page-2.png",
+      "sha256": "360c0a6a66ec3819b8fd10d548792bab41739c36fe216d2e493d339d3ac23c61"
+    }
+  ],
+  "videos": [
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/editor-capabilities-audit--096fd-an-paste-and-trailing-input/video.webm",
+      "sha256": "89323b47d45d6fda94a325019b1d6868b2891b1f1f2a5e96716e41983cb501cb",
+      "duration": "00:00:09.84",
+      "sampleRate": 2,
+      "sampledFrames": 21,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-01/overview-1.jpg",
+        "artifacts/manual-ui-review-1e86e5e0/video-01/overview-2.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/editor-capabilities-audit--97386-it-undo-export-and-reimport/video.webm",
+      "sha256": "703a2ee966279ac7d106e2ba2e3824b2b5b4d1e2c7b2440a1fab50eaeabe76d2",
+      "duration": "00:00:04.32",
+      "sampleRate": 2,
+      "sampledFrames": 10,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-02/overview-1.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/editor-capabilities-audit--e9265-ntain-and-Fountain-back-out/video.webm",
+      "sha256": "caef99e7168b01a8e5857ae3f9928beb0e1015ceb586137e5056cd60201e3cda",
+      "duration": "00:00:05.20",
+      "sampleRate": 2,
+      "sampledFrames": 12,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-03/overview-1.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/editor-capabilities-audit--e99d6-nd-structural-drag-feedback/video.webm",
+      "sha256": "0380763c52da4cc8ec636c0460dee9e8af1d7235ada96aa60dd869921f9be58d",
+      "duration": "00:00:08.68",
+      "sampleRate": 2,
+      "sampledFrames": 19,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-04/overview-1.jpg",
+        "artifacts/manual-ui-review-1e86e5e0/video-04/overview-2.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/latest-ui-audit-human-docu-5477f-e-import-and-inspect-output/video.webm",
+      "sha256": "6e96769f5379ff2be4459d2001158d8a5277ccfc01ee3058d743d48b8a633f45",
+      "duration": "00:00:06.32",
+      "sampleRate": 2,
+      "sampledFrames": 14,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-05/overview-1.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/latest-ui-audit-human-rele-6714f-n-structured-tools-and-undo/video.webm",
+      "sha256": "058c7ff101bc2ae7b439bf6c8735f28558857785962f13cd3c985ab6d11dfb7e",
+      "duration": "00:00:17.00",
+      "sampleRate": 2,
+      "sampledFrames": 36,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-06/overview-1.jpg",
+        "artifacts/manual-ui-review-1e86e5e0/video-06/overview-2.jpg",
+        "artifacts/manual-ui-review-1e86e5e0/video-06/overview-3.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/latest-ui-audit-human-visu-02491--paged-editor-as-a-real-PDF/video.webm",
+      "sha256": "9a51c8dae8cb1d308cfc03d215f3240239137d82a9b9118d95b39c47b396bcdd",
+      "duration": "00:00:02.00",
+      "sampleRate": 2,
+      "sampledFrames": 6,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-07/overview-1.jpg"
+      ]
+    },
+    {
+      "path": "artifacts/manual-ui-release-region-verified-0ecbb40b/latest-ui-audit-human-visu-7a965--an-independent-DOCX-render/video.webm",
+      "sha256": "88b7b924db91aae0adb6d191887d3a9fd2ed5e75bcb0031e0e87ef1cf1b58f31",
+      "duration": "00:00:05.72",
+      "sampleRate": 2,
+      "sampledFrames": 13,
+      "overviews": [
+        "artifacts/manual-ui-review-1e86e5e0/video-08/overview-1.jpg"
+      ]
+    }
+  ],
+  "method": "Exact stage screenshots plus 2 fps video samples. Continuous playback is not claimed."
+}

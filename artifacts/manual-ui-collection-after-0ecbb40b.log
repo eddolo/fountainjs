@@ -1,0 +1,11 @@
+$ playwright test -c playwright.audit.config.ts editor-capabilities-audit.spec.ts latest-ui-audit.spec.ts "--list"
+Listing tests:
+  editor-capabilities-audit.spec.ts:14:1 › human multiline equation journey: inspect, edit, undo, export, and reimport
+  editor-capabilities-audit.spec.ts:54:1 › human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input
+  editor-capabilities-audit.spec.ts:159:1 › human clipboard journey: external rich document into Fountain and Fountain back out
+  editor-capabilities-audit.spec.ts:208:1 › human homepage journey: live outline, invisible text review, and structural drag feedback
+  latest-ui-audit.spec.ts:12:1 › human release journey: writing, AI review, conversation, structured tools, and undo
+  latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output
+  latest-ui-audit.spec.ts:195:1 › human visual-export journey: compare Fountain with an independent DOCX render
+  latest-ui-audit.spec.ts:212:1 › human visual-export journey: render the paged editor as a real PDF
+Total: 8 tests in 2 files

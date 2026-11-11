@@ -1,0 +1,64 @@
+[
+  {
+    "trace": false,
+    "errors": [],
+    "frames": [
+      {
+        "sandbox": "",
+        "srcdoc": null
+      },
+      {
+        "sandbox": "",
+        "srcdoc": "<!doctype html><html><head><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'\"></head><body><p>Static reader text.</p></body></html>"
+      }
+    ]
+  },
+  {
+    "trace": true,
+    "errors": [
+      {
+        "phase": "mount static sandboxed frames",
+        "text": "Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+        "location": {
+          "url": "about:blank",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "phase": "mount static sandboxed frames",
+        "text": "Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+        "location": {
+          "url": "about:blank",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "phase": "assign script-free srcdoc",
+        "text": "Blocked script execution in 'about:srcdoc' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+        "location": {
+          "url": "about:srcdoc",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      }
+    ],
+    "frames": [
+      {
+        "sandbox": "",
+        "srcdoc": null
+      },
+      {
+        "sandbox": "",
+        "srcdoc": "<!doctype html><html><head><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'\"></head><body><p>Static reader text.</p></body></html>"
+      }
+    ]
+  }
+]

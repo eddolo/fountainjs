@@ -44,8 +44,9 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest local runtime checkpoint is `024ff8fe`, including the virtual-layout
-host-control repair. It passes all 5,271 source tests in 323 files and the
+The latest local source checkpoint is `1e86e5e0`, including the rich image-caption
+preview and recorded-audit repairs. Its library runtime is byte-identical to
+`024ff8fe`, including the virtual-layout host-control repair. It passes all 5,271 source tests in 323 files and the
 package, Node/workerd, type, performance, retention, format and size gates.
 Fresh packed ESM/CommonJS consumers and both type analyses also pass outside
 the repository without browser globals, React, Yjs or jsdom. Publint retains
@@ -70,6 +71,15 @@ native-presence (108), and three production starter-download journeys. All
 executions overlap and do not count as new capabilities; hosted CI must
 refresh these outcomes for the final candidate.
 [Supplementary evidence](RELEASES.md#supplementary-release-validation--2026-11-11).
+
+The caption preview also passes three desktop source-server checks, three
+production-subpath checks, and eight recorded release journeys. Visual review
+covers eight full-resolution states, sampled recording timelines, and both
+PDF pages in current bundled renderers. Continuous playback, older-renderer
+differences and known DOCX viewer omissions remain distinct from these passes.
+The earlier broad browser matrix predates this demo change; fresh combined
+hosted CI remains required.
+[Recorded journey evidence](RELEASES.md#recorded-release-journeys--2026-11-11).
 
 ## Remaining parity work
 

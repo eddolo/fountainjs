@@ -30,9 +30,9 @@
   "packageReceipt": "artifacts/release-preflight-ff11e640/receipt.json",
   "browserHeadlessPlan": 1084,
   "pending": [
-    "Clean hosted browser matrix and Linux display clipboard validation",
-    "Hosted CI and GitHub authentication",
-    "Matched release tag, npm stage and maintainer approval",
+    "Fresh combined hosted CI and Linux display clipboard validation",
+    "Continuous recording playback and broader physical-device/AT evidence",
+    "Final package sealing, GitHub authentication, matched tag and npm staging/approval",
     "Registry installation and website deployment"
   ],
   "browserMatrix": {
@@ -109,5 +109,13 @@
     "doesNotEraseOriginalParallelFailures": true
   },
   "supplementalReleaseChecks": "artifacts/release-supplement-b03ad598.json",
-  "latestPackagedDocumentationReceipt": "artifacts/release-preflight-94c0bebc/receipt.json"
+  "latestPackagedDocumentationReceipt": "artifacts/release-preflight-94c0bebc/receipt.json",
+  "currentDemoToolingCommit": "1e86e5e0",
+  "currentSourceCheck": {
+    "passed": 5271,
+    "files": 323,
+    "exitCode": 0,
+    "log": "artifacts/release-check-1e86e5e0.log"
+  },
+  "recordedReleaseAudit": "artifacts/manual-ui-release-audit-20261111.json"
 }

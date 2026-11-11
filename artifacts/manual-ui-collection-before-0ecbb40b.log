@@ -1,0 +1,300 @@
+$ playwright test -c playwright.audit.config.ts "--list"
+Listing tests:
+  angular-campaign-audit.spec.ts:4:1 › records real Angular editing, attachment controls, image bytes and session resets
+  angular-campaign-audit.spec.ts:8:1 › records Angular brief validation, saving, disabling and reset
+  conversion-lab-audit.spec.ts:7:1 › conversion lab file edit report and export journey
+  conversion-lab-audit.spec.ts:10:1 › conversion lab phone file journey
+  conversion-lab-audit.spec.ts:28:1 › recovers an omitted Word image into an undoable draft and native download
+  conversion-lab-audit.spec.ts:81:1 › imports a linked Word image in place from a different package folder
+  conversion-real-document-audit.spec.ts:23:1 › imports table-owned text through actual typing history and native download reopening
+  conversion-real-document-audit.spec.ts:71:1 › imports conditional table rules through real author editing history and native reopening
+  conversion-real-document-audit.spec.ts:124:1 › imports inherited table appearance from an independent producer through real editing and native reopening
+  conversion-real-document-audit.spec.ts:173:1 › keeps Word row repetition separate from semantic header styling through real table controls and reopening
+  conversion-real-document-audit.spec.ts:244:39 › explicit font families and sizes survive real editing and DOCX reopening
+  conversion-real-document-audit.spec.ts:244:39 › embedded theme font families and sizes survive real editing and DOCX reopening
+  conversion-real-document-audit.spec.ts:310:1 › explicit normal emphasis survives backward toolbar selection, typing, and DOCX reopening
+  conversion-real-document-audit.spec.ts:398:1 › keeps a Word image caption attached, richly editable, linked, and exportable
+  conversion-real-document-audit.spec.ts:461:1 › keeps fixed Word columns stable while editing long content and reopening the export
+  conversion-real-document-audit.spec.ts:542:180 › preserves direct table borders and padding through real typing, undo, download and reopen (physical width)
+  conversion-real-document-audit.spec.ts:542:180 › preserves direct table borders and padding through real typing, undo, download and reopen (percentage width)
+  conversion-real-document-audit.spec.ts:619:4 › default table sizing survives real edit, export and reopen (omitted Word width)
+  conversion-real-document-audit.spec.ts:619:4 › default table sizing survives real edit, export and reopen (omitted fixed Word width)
+  conversion-real-document-audit.spec.ts:619:4 › default table sizing survives real edit, export and reopen (fresh full-width Fountain table)
+  conversion-real-document-audit.spec.ts:619:4 › default table sizing survives real edit, export and reopen (fresh fixed-grid Fountain table)
+  conversion-real-document-audit.spec.ts:685:38 › native paragraph spacing survives real editing, HTML and DOCX reopen (omitted spacing)
+  conversion-real-document-audit.spec.ts:685:38 › native paragraph spacing survives real editing, HTML and DOCX reopen (partial inherited spacing)
+  conversion-real-document-audit.spec.ts:797:1 › paragraph font context survives empty-line typing, mixed fonts and HTML/DOCX reopen
+  conversion-real-document-audit.spec.ts:898:1 › line-break run formatting survives real Shift+Enter, editing and HTML/DOCX reopen
+  conversion-real-document-audit.spec.ts:982:1 › character spacing survives backward toolbar editing and HTML/DOCX reopening
+  conversion-real-document-audit.spec.ts:1193:1 › visually audits the extended native Word-equation subset through export and reopen
+  conversion-real-document-audit.spec.ts:1248:1 › visually audit an independently authored scientific DOCX in the public lab
+  cross-container-range-real.spec.ts:4:1 › replaces native selections across quote and list ancestors without leaving selected media
+  cross-container-range-real.spec.ts:8:1 › retains different quote attributes through native replacement and JSON export
+  cross-format-real.spec.ts:8:1 › migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits
+  cross-format-real.spec.ts:19:1 › restores the frozen legacy original on explicit choice while retaining the replaced retained room
+  cross-format-real.spec.ts:24:1 › recovers a lost migration acknowledgement and archives typing made before reconnection
+  cross-format-real.spec.ts:30:1 › recovers a lost legacy save acknowledgement and migrates without extra revisions
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: english
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: rtl
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: mixed
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: emoji
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: combining-inside
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: zwj-inside
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: surrogate-inside
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: code
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: empty
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: english-range
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: combining-inside-range
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: zwj-inside-range
+  cursor-native-reference.spec.ts:6:204 › matches native visual/grapheme navigation and editing: surrogate-inside-range
+  cursor-native-reference.spec.ts:15:64 › shows a passive remote caret at a mounted empty anchor
+  cursor-native-reference.spec.ts:15:64 › shows a passive remote caret at a mounted block-gap anchor
+  cursor-native-reference.spec.ts:15:64 › shows a passive remote caret at a mounted atomic-image anchor
+  cursor-native-reference.spec.ts:15:64 › shows a passive remote caret at a mounted table anchor
+  cursor-native-reference.spec.ts:19:1 › paints remote carets through scrolling, transforms and resize without remounting text or taking focus
+  cursor-native-reference.spec.ts:35:38 › keeps remote name labels inside clipped editors without moving their anchor (ltr)
+  cursor-native-reference.spec.ts:35:38 › keeps remote name labels inside clipped editors without moving their anchor (rtl)
+  definition-list-audit.spec.ts:4:1 › edits definition lists and reopens a glossary in a reader
+  document-boundary-range-real.spec.ts:5:1 › replaces directed text-to-image document boundary ranges in ordinary and virtual documents
+  document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events
+  document-range-formatting-real.spec.ts:4:1 › formats directed text-to-image selections through the toolbar with exact history and reader export
+  docx-controls-audit.spec.ts:4:1 › imports and edits Word content controls without losing visible content
+  docx-glossary-audit.spec.ts:4:1 › edits and reopens a Word glossary with term and description roles
+  docx-math-audit.spec.ts:4:1 › inspect native DOCX equations beside editable source and record viewer disagreements
+  docx-numbering-audit.spec.ts:4:1 › compare list numbering in the editor and independent DOCX viewer
+  docx-spacing-identity-real.spec.ts:12:1 › a researcher edits the actual Word paper and retains spacing through HTML and native export/reopen
+  docx-style-numbering-audit.spec.ts:5:1 › uses real Word style numbering through authoring and native download
+  editor-capabilities-audit.spec.ts:14:1 › human multiline equation journey: inspect, edit, undo, export, and reimport
+  editor-capabilities-audit.spec.ts:54:1 › human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input
+  editor-capabilities-audit.spec.ts:159:1 › human clipboard journey: external rich document into Fountain and Fountain back out
+  editor-capabilities-audit.spec.ts:208:1 › human homepage journey: live outline, invisible text review, and structural drag feedback
+  firefox-paragraph-recovery-audit.spec.ts:6:1 › records Firefox selection, paste and Markdown recovery without page replacement
+  first-strong-native.spec.ts:12:1 › compares portable first-strong resolution with independent native browser controls
+  history-retention-real.spec.ts:5:1 › native split undo and redo preserve later independent host text edits and visible paragraphs
+  html-anchors-real.spec.ts:10:1 › edits imported bookmark content and removes an empty bookmark with native input
+  html-block-format-audit.spec.ts:3:1 › preserves formatting from a styled release brief through editor and file handoff
+  html-container-audit.spec.ts:3:1 › authors sections with properties, empty content, undo and reader preview
+  html-container-audit.spec.ts:6:1 › preserves optional section containers through real editing and reader output
+  html-document-audit.spec.ts:4:1 › opens a full HTML report through server conversion and edits its retained body
+  inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations
+  inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations
+  issue-editor-audit.spec.ts:4:1 › writes, previews, downloads and reopens an issue without rewriting untouched Markdown
+  issue-html-source-real.spec.ts:4:1 › an issue author preserves reference bindings and code through real draft downloads
+  issue-input-real.spec.ts:4:1 › keeps full Markdown export out of real large-issue typing
+  issue-table-handoff-audit.spec.ts:4:1 › preserves headerless and mixed tables through source and file handoff
+  latest-ui-audit.spec.ts:12:1 › human release journey: writing, AI review, conversation, structured tools, and undo
+  latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output
+  latest-ui-audit.spec.ts:195:1 › human visual-export journey: compare Fountain with an independent DOCX render
+  latest-ui-audit.spec.ts:212:1 › human visual-export journey: render the paged editor as a real PDF
+  legacy-migration-real.spec.ts:8:1 › converts a real backward-selected range, edits and undoes the new editor, and keeps the original archive readable
+  legacy-migration-real.spec.ts:14:1 › refuses unclaimed legacy data and retains the prior converted editor and source archive
+  legacy-migration-real.spec.ts:18:1 › rejects verifier writes, keeps the old editor usable, and converts its next real edit after correction
+  list-empty-marker-probe.spec.ts:35:1 › isolate the missing empty numbered-item paint without changing the editor engine
+  list-marker-visibility-real.spec.ts:4:1 › an empty numbered item visibly paints its marker; independent controls detect missing paint
+  markdown-autolink-audit.spec.ts:4:1 › contact directory: choose literal addresses, export and reopen Word draft
+  markdown-boundary-repair-real.spec.ts:4:1 › repairs source after native nested heading-to-paragraph changes
+  markdown-caret-html-real.spec.ts:4:1 › downloads reader HTML and keeps the caret available for native editing
+  markdown-code-endings-audit.spec.ts:4:1 › preserves code endings through source recovery and reader handoff
+  markdown-code-labels-audit.spec.ts:4:1 › edits opaque code labels and reopens them safely in a reader
+  markdown-container-reference-real.spec.ts:3:1 › preserves container definitions through real editing quote removal undo and downloads
+  markdown-custom-wrapper-audit.spec.ts:4:1 › edits registered HTML wrappers after Markdown source recovery
+  markdown-document-audit.spec.ts:3:1 › converts document-wide HTML scopes with source edit undo and explicit layout differences
+  markdown-escape-audit.spec.ts:4:1 › regex review: code pipes and literal strikethrough survive draft handoff
+  markdown-frontmatter-real.spec.ts:4:1 › opens, edits and downloads Markdown under a saved file policy
+  markdown-inactive-autolinks-real.spec.ts:5:1 › edits and exports inactive Markdown autolinks from the conversion lab
+  markdown-inactive-autolinks-real.spec.ts:9:1 › reviews CommonMark source and downloads an offline HTML reader
+  markdown-list-audit.spec.ts:4:1 › zero-based procedure: real clipboard, keyboard outdent, undo, export and reopen
+  markdown-list-audit.spec.ts:42:1 › table captions remain readable and editable through real paste and Markdown reopen
+  markdown-list-audit.spec.ts:79:1 › complex figures keep evidence and rich captions through conversion paste editing and reopen
+  markdown-list-audit.spec.ts:135:1 › nested inert HTML keeps literal source and surrounding Markdown through real editing
+  markdown-list-audit.spec.ts:182:1 › conversion losses are visible before the remaining content is pasted and edited
+  markdown-list-audit.spec.ts:218:1 › opt-in inline HTML survives a real rich paste edit undo and Markdown reimport
+  markdown-list-audit.spec.ts:258:1 › raw HTML lexical boundaries preserve visible Markdown formatting through real editing
+  markdown-list-audit.spec.ts:296:1 › unfamiliar wrappers retain editable structure through Markdown conversion and rich clipboard paste
+  markdown-list-audit.spec.ts:350:1 › one-column pipe Markdown remains an editable table through export and reimport
+  markdown-list-audit.spec.ts:381:1 › rich table Markdown export keeps structure through the public controls
+  markdown-list-audit.spec.ts:431:1 › structured table cells survive real copy, editing, and server HTML re-import
+  markdown-list-audit.spec.ts:497:1 › comment-only HTML does not create editable blank paragraphs during conversion
+  markdown-list-audit.spec.ts:532:1 › split HTML table becomes a real editable table with history and export
+  markdown-list-audit.spec.ts:569:1 › legacy section order matches native rendering through paste edit history and reopen
+  markdown-list-audit.spec.ts:605:1 › row-group merged ownership cells survive real paste editing history and HTML reopen
+  markdown-list-audit.spec.ts:642:1 › failed HTML flow keeps literal closing tags through paste editing undo and export
+  markdown-list-audit.spec.ts:683:1 › HTML deletion scope remains formatted through editing history and Markdown export
+  markdown-list-audit.spec.ts:715:1 › opt-in HTML block conversion becomes editable content and survives canonical export
+  markdown-list-audit.spec.ts:762:1 › inert HTML source remains multiline editable text through the public demos
+  markdown-list-audit.spec.ts:791:1 › empty formatting survives conversion and controls the next typed text
+  markdown-list-audit.spec.ts:828:1 › authored blank paragraphs remain visible through Markdown export and reimport
+  markdown-list-audit.spec.ts:874:1 › nested incident runbook preserves literal definitions through editing and export
+  markdown-list-audit.spec.ts:917:1 › unwrapped clipboard fragment: formatting, surrounding text, edit, and undo
+  markdown-list-audit.spec.ts:943:1 › numbered runbook: import, rich paste, nested editing, undo, and Markdown export
+  markdown-literal-audit.spec.ts:4:1 › literal issue: visual edit, history, Markdown draft and reader retain text
+  markdown-nested-reference-real.spec.ts:3:1 › preserves referenced list quote and task source through actual editing and downloads
+  markdown-nested-source-real.spec.ts:4:1 › a writer edits list and quote source through native typing downloads and undo
+  markdown-newline-audit.spec.ts:4:1 › incident narrative: literal lines survive edits, history and draft handoff
+  markdown-paragraph-recovery-audit.spec.ts:4:1 › recovers paragraph HTML into editable blocks and a reopened reader
+  markdown-reference-boundaries-real.spec.ts:4:1 › a writer inserts text before a referenced terminal fence and reopens actual exports
+  markdown-scope-audit.spec.ts:4:1 › reads separate retired paragraphs after Markdown HTML scope conversion and handoff
+  markdown-source-boundaries-real.spec.ts:4:1 › a writer preserves untouched Markdown through real editing downloads and undo
+  markdown-structural-recovery-audit.spec.ts:4:1 › recovers nested Markdown lists and quotes through an editor and reader
+  math-files-audit.spec.ts:3:1 › save equations, reload, reopen, inspect references and download source
+  math-pages-audit.spec.ts:4:1 › open a research document, build pages, follow equations, edit and rebuild
+  math-references-audit.spec.ts:4:1 › human labelled-equation journey: read links, reorder, edit, delete, recover and inspect source
+  math-renderer-audit.spec.ts:5:1 › human real-renderer journey: edit a typeset equation, inspect a published failure, and recover
+  math-renderer-audit.spec.ts:47:1 › human academic table journey: inspect projection losses, edit a value, undo and export
+  math-reorder-audit.spec.ts:4:1 › human math journey: move the second formula, edit it in place, undo and export
+  nested-direction-real.spec.ts:21:29 › nested-lift-auto
+  nested-direction-real.spec.ts:21:29 › nested-lift-fixed-control
+  nested-direction-real.spec.ts:21:29 › indent-under-fixed-item
+  nested-direction-real.spec.ts:21:29 › indent-same-context-control
+  nested-sibling-range-real.spec.ts:4:1 › replaces selected nested sibling blocks and media through native pointer input
+  paragraph-spacing-marker-probe.spec.ts:5:1 › inspect native list marker geometry without changing the editor document
+  paragraph-spacing-real.spec.ts:12:1 › a field-review author edits contextual paragraphs and opens the actual exported reader
+  product-workflow-audit.spec.ts:4:1 › discover and use issue and task product workflows
+  retained-adapter-real.spec.ts:12:75 › native offline typing survives Quote, author undo and redo
+  retained-adapter-real.spec.ts:12:75 › native offline typing survives Bullet, author undo and redo
+  retained-adapter-real.spec.ts:12:75 › native offline typing survives Ordered, author undo and redo
+  retained-adapter-real.spec.ts:12:75 › native offline typing survives Task, author undo and redo
+  retained-adapter-real.spec.ts:12:75 › native offline typing survives Bold, author undo and redo
+  retained-adapter-real.spec.ts:12:75 › native offline typing survives Enter, author undo and redo
+  retained-adapter-real.spec.ts:67:1 › native offline typing in an empty sibling survives another author split undo and redo
+  retained-adapter-real.spec.ts:133:1 › native offline Enter survives a deleted ancestor and returns with its author undo
+  retained-adapter-real.spec.ts:197:24 › keeps both drafts after incompatible room data is removed
+  retained-adapter-real.spec.ts:226:1 › replaces marked text and deletes natively while preserving peer edits through keyboard history
+  retained-adapter-real.spec.ts:260:1 › edits a thousand-paragraph shared document with native input and independent author history
+  retained-adapter-real.spec.ts:297:1 › native edits in separate paragraphs preserve untouched rich content and author-only history
+  retained-adapter-real.spec.ts:324:1 › native typing retains host observer annotations through synchronization and author undo
+  retained-adapter-real.spec.ts:341:1 › continues native typing and Enter after an observer update without moving the caret
+  retained-adapter-real.spec.ts:353:1 › right-arrow navigation crosses a remote presence without consuming a character step
+  retained-adapter-real.spec.ts:358:1 › native blank lines, backward selection, mounted room replacement, download and reopen
+  retained-checkpoint-real.spec.ts:6:1 › restores an isolated snapshot with media and opaque state then merges later same-room typing
+  retained-checkpoint-real.spec.ts:18:1 › rejects a concurrent source write and allows a later clean capture
+  retained-checkpoint-real.spec.ts:23:1 › rejects damaged bytes without replacing either live editor
+  retained-handoff-real.spec.ts:8:1 › retains offline edits, installs a fresh room, then restores the old branch while archiving new edits
+  retained-handoff-real.spec.ts:19:1 › restores the frozen original on explicit choice while preserving the replaced fresh room
+  retained-handoff-real.spec.ts:24:1 › recovers a lost switch acknowledgement by replaying the durable receipt
+  retained-handoff-real.spec.ts:29:1 › retries live and retired saves after the server commits but the reply is lost
+  retained-handoff-real.spec.ts:79:1 › skips an unhelpful compaction and installs a smaller checkpoint after real edits
+  retained-handoff-real.spec.ts:192:1 › lets the author compare the merged branch with the exact offline draft
+  retained-handoff-real.spec.ts:259:1 › previews and restores native bold and italic formatting from the saved draft
+  retained-handoff-real.spec.ts:292:1 › combines both versions in a local formatted paragraph and retains the composition on stale review
+  retained-handoff-real.spec.ts:337:1 › uses the saved quote placement while preserving newer live wording and formatting
+  retained-migration-real.spec.ts:9:1 › reopens a fresh candidate with a real backward-selected phrase then edits and undoes it independently
+  retained-migration-real.spec.ts:17:1 › refuses an unclaimed host root without replacing the existing preview
+  retained-migration-real.spec.ts:21:1 › rejects a verifier mutation and keeps the prior source and preview usable
+  retained-repair-real.spec.ts:10:1 › shares a duplicate-ID repair and keeps reviewer undo limited to authored typing
+  retained-repair-real.spec.ts:16:1 › shares an automatic trailing paragraph after a divider without adding reviewer undo
+  retained-repair-real.spec.ts:21:1 › repairs duplicate IDs after offline typing on both authors without losing either edit
+  retained-repair-real.spec.ts:25:1 › keeps reviewer actions undoable when local ID and trailing repairs are appended
+  retained-room-store-real.spec.ts:10:1 › retains real offline typing across a frozen revision and stale epoch then reconciles after reconnect
+  retained-room-store-real.spec.ts:19:1 › aborts a prepared freeze and sends retained human edits on the original epoch
+  retained-room-store-real.spec.ts:24:1 › rejects malformed wire data then accepts subsequent real typing without replacing the editors
+  shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy
+  shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot
+  shared-direction-virtual-real.spec.ts:10:1 › refreshes live direction from an unmounted anchor in 100,000 blocks with native editing and history
+  shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under ltr parent
+  shared-direction-weak-real.spec.ts:12:47 › weak-only shared auto scope under rtl parent
+  site-font-real.spec.ts:4:1 › can write an issue while optional site fonts are pending
+  starter-projects.spec.ts:11:1 › uses a custom block in the installed plain DOM starter
+  starter-projects.spec.ts:37:1 › edits and formats a document in the installed React starter
+  structural-wrapping-real.spec.ts:6:1 › wraps native text-to-media selections in quotes and lists, retains source data and toggles them off
+  suggestion-navigation-audit.spec.ts:4:1 › records the active slash option scrolling into view on keyboard wrap
+  suggestion-navigation-audit.spec.ts:8:1 › records Tab leaving an open emoji query with its text intact
+  svelte-report-audit.spec.ts:3:1 › records a real Svelte report and editor lifecycle journey
+  table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: ltr
+  table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-cell-ltr
+  table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: auto
+  table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: host-css
+  table-column-side-real.spec.ts:5:3 › inserts table columns on the physical left and right: rtl-spans
+  text-alignment-audit.spec.ts:4:1 › aligns a real meeting report using backward selection, toolbar, history and HTML export
+  textless-replacement-audit.spec.ts:4:1 › textless document replacement followed by native typing, lines and history
+  virtual-selection-real.spec.ts:4:1 › replaces and restores selections across offscreen document content
+  vue-runbook-audit.spec.ts:4:1 › records a real Vue runbook editing and lifecycle journey
+  vue-runbook-audit.spec.ts:8:1 › records a Vue review form through typing, submission, disable and reset
+  web-component-form-audit.spec.ts:3:1 › submits resets and disables a native form-associated Web Component
+  yjs-admission-real.spec.ts:6:1 › two delayed clients join one authoritative room and edit without duplicate seeds
+  yjs-admission-real.spec.ts:10:1 › preserves a typed pending draft until the author explicitly chooses the shared document
+  yjs-admission-real.spec.ts:14:1 › cancels a pending join without a late response reviving it and reconnects explicitly
+  yjs-authority-admission-real.spec.ts:8:1 › refuses a frozen snapshot before importing it and joins after explicit unfreeze
+  yjs-authority-admission-real.spec.ts:11:1 › refuses a freeze between loading and binding without starting the provider
+  yjs-authority-admission-real.spec.ts:14:1 › fences a retired epoch, retains the draft and opens a new session only on explicit choice
+  yjs-authority-admission-real.spec.ts:17:1 › keeps refreshed remote edits through local undo and redo before saving the combined paper
+  yjs-authority-admission-real.spec.ts:21:1 › catches up a newer binding acknowledgement before reporting the provider connected
+  yjs-browser-draft-real.spec.ts:29:1 › resumes an unsent same-epoch edit after reload and saves it to the authority
+  yjs-browser-draft-real.spec.ts:54:1 › merges recovered typing into a quote saved by another author before resume
+  yjs-browser-draft-real.spec.ts:87:1 › keeps a fenced draft available separately after choosing shared and reloading
+  yjs-browser-draft-real.spec.ts:114:1 › keeps pre-admission typing as a separate draft without native room bytes
+  yjs-browser-draft-real.spec.ts:132:1 › does not replace the visible draft if its storage transaction aborts
+  yjs-browser-draft-real.spec.ts:154:1 › rechecks the authority if a displayed resume option becomes stale
+  yjs-browser-draft-real.spec.ts:179:1 › automatic recovery updates one rolling copy and survives reload without clicking save
+  yjs-browser-draft-real.spec.ts:203:1 › automatic recovery keeps the last committed draft when the next write aborts and retries the latest edit
+  yjs-browser-draft-real.spec.ts:233:1 › automatic recovery gives two tabs under the same author separate slots
+  yjs-browser-draft-real.spec.ts:255:1 › automatic recovery records local Yjs undo instead of reviving the undone text after reload
+  yjs-browser-draft-real.spec.ts:277:1 › automatic recovery keeps typing made after a retired writer is disconnected
+  yjs-detached-draft-real.spec.ts:7:1 › keeps and downloads detached edits before deliberately rejoining a changed room
+  yjs-history-policy-real.spec.ts:10:1 › shares a duplicate-ID repair and keeps reviewer undo limited to authored typing
+  yjs-history-policy-real.spec.ts:16:1 › shares an automatic trailing paragraph after a divider without adding reviewer undo
+  yjs-history-policy-real.spec.ts:21:1 › repairs duplicate IDs after offline typing on both authors without losing either edit
+  yjs-history-policy-real.spec.ts:25:1 › keeps reviewer actions undoable when local ID and trailing repairs are appended
+  yjs-history-policy-real.spec.ts:33:1 › keeps neutral review metadata through authored undo and remote typing
+  yjs-history-policy-real.spec.ts:39:1 › keeps imported source outside undo while later author and peer typing remain editable
+  yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete legacy room data arrives out of order
+  yjs-incomplete-room-real.spec.ts:7:3 › preserves the local draft when incomplete retained room data arrives out of order
+  yjs-incomplete-room-real.spec.ts:31:3 › checks saved default settings before connecting a retained room
+  yjs-incomplete-room-real.spec.ts:31:3 › checks saved custom settings before connecting a retained room
+  yjs-incomplete-room-real.spec.ts:52:1 › keeps a host-restored draft editable when it changes during checkpoint installation
+  yjs-incomplete-room-real.spec.ts:66:1 › keeps the editor offline when the host cancels during initial room sync
+  yjs-incomplete-room-real.spec.ts:81:1 › leaves the legacy editor offline when the host cancels its initial room sync
+  yjs-legacy-root-conflict-real.spec.ts:23:1 › keeps both independent drafts and exports their exact shared roots after conflict
+  yjs-live-http-real.spec.ts:100:1 › exchanges typing and structural changes automatically after a connection is restored
+  yjs-live-http-real.spec.ts:126:3 › retries a committed insertion after the reply is lost with exactly one durable revision
+  yjs-live-http-real.spec.ts:126:3 › retries a committed deletion after the reply is lost with exactly one durable revision
+  yjs-live-http-real.spec.ts:151:1 › times out a stalled committed write and ignores its late reply
+  yjs-live-http-real.spec.ts:193:1 › retries concurrent writers against the durable authority until both edits are shared
+  yjs-live-http-real.spec.ts:224:1 › stops a retired transport and reopens its locally saved typing after reload
+  yjs-live-http-real.spec.ts:250:1 › saves edits from a migration freeze when the same room reopens
+  yjs-live-http-real.spec.ts:294:1 › renders a native peer selection without writing a document revision and clears it on leave
+  yjs-live-http-real.spec.ts:339:1 › clears the old cursor on reload and renders the new cursor after rejoining
+  yjs-live-http-real.spec.ts:369:1 › expires a silent peer and keeps old presence out of a rotated session
+  yjs-live-http-real.spec.ts:392:1 › delivers one saved revision to overlapping readers
+  yjs-live-http-real.spec.ts:429:1 › sends small receipts for a long document and falls back when a delta is corrupted
+  yjs-live-http-real.spec.ts:511:1 › loads a newer checkpoint when the room advances between load and binding
+  yjs-live-http-real.spec.ts:546:1 › keeps local typing when the write response has no acknowledgement
+  yjs-live-http-real.spec.ts:562:3 › retries an uncommitted insert after a corrupt write receipt and a newer peer revision
+  yjs-live-http-real.spec.ts:562:3 › retries an uncommitted delete after a corrupt write receipt and a newer peer revision
+  yjs-live-http-real.spec.ts:621:1 › delivers presence while the receiving editor is behind the current document revision
+  yjs-live-http-real.spec.ts:680:3 › recovers an offline edit through reload after quote
+  yjs-live-http-real.spec.ts:680:3 › recovers an offline edit through reload after bullet list
+  yjs-live-http-real.spec.ts:680:3 › recovers an offline edit through reload after numbered list
+  yjs-live-http-real.spec.ts:680:3 › recovers an offline edit through reload after task list
+  yjs-live-http-real.spec.ts:680:3 › recovers an offline edit through reload after partial bold
+  yjs-live-http-real.spec.ts:680:3 › recovers an offline edit through reload after paragraph split
+  yjs-namespace-real.spec.ts:54:1 › opens after local draft storage is blocked and keeps the recovered draft
+  yjs-namespace-real.spec.ts:125:1 › recovers the exact embedded offline draft after a lost save reply and reload
+  yjs-namespace-real.spec.ts:154:1 › migrates a legacy editor, retains offline edits, then rolls back while archiving retained edits
+  yjs-namespace-real.spec.ts:165:1 › restores the frozen legacy original on explicit choice while retaining the replaced retained room
+  yjs-namespace-real.spec.ts:170:1 › recovers a lost migration acknowledgement and archives typing made before reconnection
+  yjs-namespace-real.spec.ts:187:1 › recovers a lost offline archive acknowledgement after reloading without appending twice
+  yjs-namespace-real.spec.ts:241:1 › recovers edits made while the replacement room admission reply is in flight
+  yjs-namespace-real.spec.ts:273:1 › recovers from an admission reply for a different epoch without swapping editors
+  yjs-namespace-real.spec.ts:304:1 › keeps a deletion made during rollback admission and archives it on retry
+  yjs-namespace-real.spec.ts:343:1 › recovers an embedded legacy draft and a committed migration after reload
+  yjs-namespace-real.spec.ts:378:1 › recovers the same frozen source after reload when the freeze reply was lost
+  yjs-namespace-real.spec.ts:401:1 › recovers from local storage failure before letting migration freeze a room
+  yjs-namespace-real.spec.ts:434:1 › keeps a retained draft across reload after a committed rollback loses its reply
+  yjs-namespace-real.spec.ts:463:1 › recovers a saved legacy paragraph into the migrated room after explicit review
+  yjs-namespace-real.spec.ts:501:1 › recovers a saved legacy paragraph selected from multiple changes
+  yjs-namespace-real.spec.ts:533:1 › recovers a saved legacy paragraph after the apply reply is lost and the tab reloads
+  yjs-namespace-real.spec.ts:577:1 › recovers a saved legacy paragraph proposal after a rejected reply and repeated reloads
+  yjs-namespace-real.spec.ts:622:1 › maps an explicit author-selected destination and refuses invalid input before freezing
+  yjs-namespace-real.spec.ts:628:1 › maps an embedded room after rehearsing it and refuses a conflicting destination without freezing
+  yjs-namespace-real.spec.ts:666:1 › moves a nested research document and rolls back to the same embedded fragment
+  yjs-namespace-real.spec.ts:733:3 › keeps the draft when the admitted embedded legacy fragment is detached
+  yjs-namespace-real.spec.ts:733:3 › recovers a local draft when the admitted retained root disappears
+  yjs-namespace-real.spec.ts:733:3 › keeps the local legacy draft after an invalid update and peer repair
+  yjs-namespace-real.spec.ts:733:3 › recovers the local retained draft after an invalid update and peer repair
+  yjs-retained-provision-real.spec.ts:63:1 › two first joins share one room and reopen both authors’ saved work
+  yjs-retained-provision-real.spec.ts:92:1 › retrying a frozen room preserves the first room and resumes after unfreeze
+  yjs-structured-room-real.spec.ts:7:13 › refuses incomplete room definitions and reopens both offline field edits
+  yjs-structured-room-real.spec.ts:7:13 › preserves unowned fields when a directly connected editor writes
+  yjs-structured-room-real.spec.ts:7:13 › requires definitions for a custom named saved room map
+Total: 297 tests in 94 files

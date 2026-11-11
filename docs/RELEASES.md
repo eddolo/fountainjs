@@ -664,6 +664,65 @@ tag, release, npm stage or deployment is created by this validation.
 Repack after these packaged-documentation updates. Hosted CI, including
 the unchanged Linux display-backed clipboard workflows, remains mandatory.
 
+### Recorded release journeys — 2026-11-11
+
+The fresh recorded audit finds a real demo regression: imported image captions
+are preserved as editable inline content, but the headless preview only reads
+the legacy caption attribute and displays alt text instead. `1e86e5e0` reads
+caption children before the legacy/alt fallback. The unchanged caption check
+then passes, and the ordinary three-engine browser journey now checks it too.
+The first attempted use of the node's general `textContent` instead returns
+its deliberate `[Image: …]` fallback; that failed repair is retained separately.
+
+The audit command had also grown to collect 297 tests in 94 manual files with
+different fixture servers. Its original two files are confirmed at `6c4b64d4`.
+`pnpm audit:ui` now explicitly selects those files and their eight release
+journeys. The generic recording config, normal browser matrix and CI commands
+stay unchanged. A new production-specific fixture does not leak into that
+selection.
+
+Two audit expectations need separate correction. The DOCX visual fixture now
+requires its six exact existing informational codes/severities/paths rather
+than an empty report. A script-free native iframe control produces zero
+console errors without tracing and the same three sandbox-injection messages
+with Playwright DOM tracing. The recorded conversion journey requires exactly
+those messages and two script-free frames with empty sandbox permissions;
+additional errors fail. No script permission or timeout is added.
+
+Validation passes 22 focused unit checks, all eight recorded journeys, three
+desktop source-server caption journeys, and three production-caption journeys
+at `/fountainjs/`. The latter verifies real PNG decoding and document/visible
+caption retention. Its initial reused harness failed in all three engines
+before the test body because its root-only `browser-tests.html` hook ignored
+the deployment subpath; that failed run remains recorded. The standalone
+production journey fixes fixture ownership without changing those assertions.
+The complete `pnpm check` at `1e86e5e0` passes all 5,271 tests in 323 files,
+alongside package/API/runtime/type/format/size/performance/retention gates.
+Root TypeScript checking also passes after adding the production-only test.
+All 1,008 emitted distribution files still match the previous sealed archive;
+no library API, format, budget or performance acceptance limit changes.
+
+The final recordings contain 34 stage captures and eight videos. Eight
+full-resolution captures and twelve overview sheets sampled at 2 fps are
+visually reviewed. Captures now target the actual image/caption, both DOCX
+panes and each paged-preview sheet. Continuous playback is not claimed.
+The independent DOCX viewer visibly omits table-header labels and changes
+spacing; its known limitation is retained rather than called pixel parity.
+
+Both pages of the final PDF are reviewed using bundled PDFium 5.14.0 and
+Poppler 26.07.0 from runtime `26-1110`: headers, body, table, footnote and manual
+break content appear. System PDFium 5.5.0 and Poppler from the older `26-1104`
+bundle omit some repeated header glyphs in batch rendering, despite retaining
+the text; older Poppler renders page two correctly by itself. The exact
+dependency-level cause is unproven. Preserve that reader/runtime disagreement;
+this sample is not universal PDF-reader or document fidelity certification.
+
+The compact report is `artifacts/manual-ui-release-audit-20261111.json`.
+It identifies successful/failed logs, native controls, screenshots, video
+samples, the PDF and hashes of local raw evidence. Fresh combined hosted CI,
+Linux display clipboard checks, final package sealing, maintainer approval
+and deployment remain pending. GitHub CLI still reports signed out.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

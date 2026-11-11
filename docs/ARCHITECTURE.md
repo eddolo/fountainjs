@@ -1036,19 +1036,19 @@ The suites are organized by boundary:
   a Vite-served editor and the public React playground.
 
 Before a release, run `pnpm check`, `pnpm test:browser`, and the recorded
-`pnpm audit:ui` human journey; watch the resulting video rather than relying on
+`pnpm audit:ui` human journeys; this command explicitly selects the two release
+audit files. Fixture-specific audits use their own configurations or an explicit
+filename with the generic recording configuration. Watch the resulting videos rather than relying on
 its assertions alone. Build the production example through the package
 self-reference, inspect `pnpm pack --dry-run`, smoke-test ESM/CJS imports, and
 lint package exports.
 
 `pnpm test:budget` enforces raw production ceilings for every public entry and
 the complete emitted graph; `scripts/check-build-budgets.mjs` is the
-authoritative list. Current highlights are 111/93 KiB for the ESM/CommonJS
-root, 73/55 KiB for the default React entry, 30/25 KiB for optional Yjs,
-13/11 KiB for headless integrity, 6/5 KiB for its DOM behavior, 12/10 KiB for
-its isolated React inspector, 54/45 KiB for browser pagination, 270/225 KiB for
-the self-contained server HTML parser, 75 KiB for CSS, and aggregate
-1,184/992 KiB ESM/CommonJS ceilings excluding the full emoji catalogue. Yjs
+authoritative list. The command reports each measured entry and its current
+ceiling, including CSS and aggregate ESM/CommonJS limits. Read those values
+from the script/output rather than a copied historical size table. The full
+emoji catalogue has its own entry budget and is excluded from the aggregate. Yjs
 remains an external peer and source maps are excluded. Media lifecycle tests
 also assert that cancelled or discarded upload
 tasks release their editor subscription and that NodeViews detach resources on

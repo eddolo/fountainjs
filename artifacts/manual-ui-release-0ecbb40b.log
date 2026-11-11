@@ -1,0 +1,191 @@
+$ playwright test -c playwright.audit.config.ts editor-capabilities-audit.spec.ts latest-ui-audit.spec.ts "--reporter=list,json" "--output" "artifacts/manual-ui-release-0ecbb40b"
+[WebServer] (node:18792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:19884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 89% of 8.4s inside plugin hooks (7.5s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (87%, 7.3s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:7072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:24968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:24756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:4032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\manual\editor-capabilities-audit.spec.ts:14:1 › human multiline equation journey: inspect, edit, undo, export, and reimport (14.6s)
+  ok 2 tests\manual\editor-capabilities-audit.spec.ts:54:1 › human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input (9.2s)
+  ok 3 tests\manual\editor-capabilities-audit.spec.ts:159:1 › human clipboard journey: external rich document into Fountain and Fountain back out (4.6s)
+  ok 4 tests\manual\editor-capabilities-audit.spec.ts:208:1 › human homepage journey: live outline, invisible text review, and structural drag feedback (8.5s)
+  ok 5 tests\manual\latest-ui-audit.spec.ts:12:1 › human release journey: writing, AI review, conversation, structured tools, and undo (16.9s)
+  x  6 tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output (10.4s)
+(node:13812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 tests\manual\latest-ui-audit.spec.ts:195:1 › human visual-export journey: compare Fountain with an independent DOCX render (4.0s)
+(node:17220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 8 tests\manual\latest-ui-audit.spec.ts:212:1 › human visual-export journey: render the paged editor as a real PDF (1.3s)
+
+
+  1) tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('.headless-image-previews figcaption')
+    Expected: "A verified raster image packaged inside the Word document."
+    Received: "FountainJS violet sample"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('.headless-image-previews figcaption')
+        14 × locator resolved to <figcaption>FountainJS violet sample</figcaption>
+           - unexpected value "FountainJS violet sample"
+
+
+      186 |   await expect(page.getByText('Valid document · 3 top-level blocks · bounded DOCX import')).toBeVisible();
+      187 |   await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
+    > 188 |   await expect(page.locator('.headless-image-previews figcaption')).toHaveText('A verified raster image packaged inside the Word document.');
+          |                                                                     ^
+      189 |   await capture(page, testInfo, '04-embedded-word-image-reimported');
+      190 |   await pause(page, 800);
+      191 |
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\latest-ui-audit.spec.ts:188:69
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\error-context.md
+
+    attachment #7: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\manual\latest-ui-audit.spec.ts:195:1 › human visual-export journey: compare Fountain with an independent DOCX render 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  -  1
+    + Received  + 53
+
+      Object {
+        "docxImages": 1,
+        "docxPages": 1,
+        "fidelity": "bounded",
+        "fountainImages": 1,
+    -   "issues": Array [],
+    +   "issues": Array [
+    +     Object {
+    +       "code": "table-header-role-extension",
+    +       "message": "Semantic cell scope uses a versioned behavior-free Fountain content control, separate from native row repetition. Retention after third-party saves is not certified.",
+    +       "path": Array [
+    +         4,
+    +         0,
+    +         0,
+    +       ],
+    +       "severity": "info",
+    +     },
+    +     Object {
+    +       "code": "table-header-role-extension",
+    +       "message": "Semantic cell scope uses a versioned behavior-free Fountain content control, separate from native row repetition. Retention after third-party saves is not certified.",
+    +       "path": Array [
+    +         4,
+    +         0,
+    +         1,
+    +       ],
+    +       "severity": "info",
+    +     },
+    +     Object {
+    +       "code": "table-row-repeat-defaulted",
+    +       "message": "The legacy all-header-cell host default became explicit row repetition on native reimport.",
+    +       "path": Array [
+    +         4,
+    +         0,
+    +       ],
+    +       "severity": "info",
+    +     },
+    +     Object {
+    +       "code": "table-row-repeat-defaulted",
+    +       "message": "The legacy all-header-cell host default became explicit row repetition on native reimport.",
+    +       "path": Array [
+    +         4,
+    +         1,
+    +       ],
+    +       "severity": "info",
+    +     },
+    +     Object {
+    +       "code": "table-width-defaulted",
+    +       "message": "The standard Fountain full host-width default became a 100% page-text-width DOCX preference; it appears on reimport. Host CSS overrides are not represented.",
+    +       "path": Array [
+    +         4,
+    +       ],
+    +       "severity": "info",
+    +     },
+    +     Object {
+    +       "code": "page-settings-defaulted",
+    +       "message": "Unspecified page settings use export defaults: marginTop, marginRight, marginBottom, marginLeft, headerDistance, footerDistance, gutter. These explicit values appear on reimport.",
+    +       "severity": "info",
+    +     },
+    +   ],
+      }
+
+      200 |   await page.goto('/browser-tests.html');
+      201 |   const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());
+    > 202 |   expect(summary).toMatchObject({ fidelity: 'bounded', issues: [], fountainImages: 1, docxImages: 1, docxPages: 1 });
+          |                   ^
+      203 |   const comparison = page.locator('#browser-docx-visual-comparison');
+      204 |   await expect(comparison.locator('[data-visual-fountain]')).toContainText('Visual export parity');
+      205 |   await expect(comparison.locator('[data-visual-docx]')).toContainText('Visual export parity');
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\latest-ui-audit.spec.ts:202:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-visu-7a965--an-independent-DOCX-render\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-visu-7a965--an-independent-DOCX-render\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-visu-7a965--an-independent-DOCX-render\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-visu-7a965--an-independent-DOCX-render\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\manual-ui-release-0ecbb40b\latest-ui-audit-human-visu-7a965--an-independent-DOCX-render\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output 
+    tests\manual\latest-ui-audit.spec.ts:195:1 › human visual-export journey: compare Fountain with an independent DOCX render 
+  6 passed (1.7m)
+[ELIFECYCLE] Command failed with exit code 1.

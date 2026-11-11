@@ -1,0 +1,18 @@
+[WebServer] (node:23492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:5416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath (11.4s)
+(node:25348) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath (4.1s)
+(node:21860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\manual\docx-caption-production-real.spec.ts:3:1 › retains the embedded Word image and its rich caption on the production subpath (2.8s)
+
+  3 passed (25.2s)

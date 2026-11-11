@@ -1,0 +1,44 @@
+$ playwright test -c playwright.audit.config.ts editor-capabilities-audit.spec.ts latest-ui-audit.spec.ts "--reporter=list,json" "--output" "artifacts/manual-ui-release-verified-0ecbb40b"
+[WebServer] (node:10944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:6764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 7.9s inside plugin hooks (7.2s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (89%, 7.1s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:5148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:16028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:24476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:10236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:16688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\manual\editor-capabilities-audit.spec.ts:14:1 › human multiline equation journey: inspect, edit, undo, export, and reimport (3.8s)
+  ok 2 tests\manual\editor-capabilities-audit.spec.ts:54:1 › human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input (9.0s)
+  ok 3 tests\manual\editor-capabilities-audit.spec.ts:159:1 › human clipboard journey: external rich document into Fountain and Fountain back out (4.6s)
+  ok 4 tests\manual\editor-capabilities-audit.spec.ts:208:1 › human homepage journey: live outline, invisible text review, and structural drag feedback (8.2s)
+  ok 5 tests\manual\latest-ui-audit.spec.ts:12:1 › human release journey: writing, AI review, conversation, structured tools, and undo (17.3s)
+  ok 6 tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output (5.0s)
+  ok 7 tests\manual\latest-ui-audit.spec.ts:205:1 › human visual-export journey: compare Fountain with an independent DOCX render (4.6s)
+  ok 8 tests\manual\latest-ui-audit.spec.ts:231:1 › human visual-export journey: render the paged editor as a real PDF (1.2s)
+
+  8 passed (1.3m)

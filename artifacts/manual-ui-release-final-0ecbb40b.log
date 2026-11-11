@@ -1,0 +1,91 @@
+$ playwright test -c playwright.audit.config.ts editor-capabilities-audit.spec.ts latest-ui-audit.spec.ts "--reporter=list,json" "--output" "artifacts/manual-ui-release-final-0ecbb40b"
+[WebServer] (node:13044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:21956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 90% of 7.6s inside plugin hooks (6.9s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 6.7s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:22156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:20208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:4156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:23220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:19892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:7064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\manual\editor-capabilities-audit.spec.ts:14:1 › human multiline equation journey: inspect, edit, undo, export, and reimport (3.1s)
+  ok 2 tests\manual\editor-capabilities-audit.spec.ts:54:1 › human Go-docs journey: selection, quote, tables, math, Lean, paste, and trailing input (9.0s)
+  ok 3 tests\manual\editor-capabilities-audit.spec.ts:159:1 › human clipboard journey: external rich document into Fountain and Fountain back out (4.5s)
+  ok 4 tests\manual\editor-capabilities-audit.spec.ts:208:1 › human homepage journey: live outline, invisible text review, and structural drag feedback (7.8s)
+  ok 5 tests\manual\latest-ui-audit.spec.ts:12:1 › human release journey: writing, AI review, conversation, structured tools, and undo (18.2s)
+  x  6 tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output (5.3s)
+(node:3528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 tests\manual\latest-ui-audit.spec.ts:195:1 › human visual-export journey: compare Fountain with an independent DOCX render (4.7s)
+  ok 8 tests\manual\latest-ui-audit.spec.ts:221:1 › human visual-export journey: render the paged editor as a real PDF (1.3s)
+
+
+  1) tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 5
+
+    - Array []
+    + Array [
+    +   "Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+    +   "Blocked script execution in 'about:blank' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+    +   "Blocked script execution in 'about:srcdoc' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+    + ]
+
+      190 |   await pause(page, 800);
+      191 |
+    > 192 |   expect(errors).toEqual([]);
+          |                  ^
+      193 | });
+      194 |
+      195 | test('human visual-export journey: compare Fountain with an independent DOCX render', async ({ page }, testInfo) => {
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\latest-ui-audit.spec.ts:192:18
+
+    attachment #5: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-final-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #6: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-final-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\manual-ui-release-final-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\error-context.md
+
+    attachment #8: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\manual-ui-release-final-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\manual-ui-release-final-0ecbb40b\latest-ui-audit-human-docu-5477f-e-import-and-inspect-output\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\manual\latest-ui-audit.spec.ts:136:1 › human document-conversion journey: edit, download Word, re-import, and inspect output 
+  7 passed (1.3m)
+[ELIFECYCLE] Command failed with exit code 1.

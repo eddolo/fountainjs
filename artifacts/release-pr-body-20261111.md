@@ -71,6 +71,16 @@ captures do not establish physical-device, AT or independent Word/PDF coverage.
 
 ## Release gates still open
 
+Latest demo/tooling follow-up `1e86e5e0` restores rich DOCX image-caption
+previews and scopes the recorded command to its two original audit files.
+Its complete source gate passes 5,271 tests; eight recorded journeys, three
+desktop caption checks and three production-subpath checks pass. All 1,008
+library distribution files remain identical. Selected full-resolution states,
+sampled timelines and two PDF pages receive visual review. Continuous playback,
+known DOCX viewer omissions and older-rasterizer differences remain explicit;
+the earlier complete browser runs predate this demo change. Details and native
+tracing controls are in `docs/RELEASES.md` and the compact audit receipt.
+
 - Clean hosted browser/Yjs recovery and Linux display-backed clipboard validation.
   The repaired media-range/export-undo workflow passes in all three desktop
   engines in the current full run. The two Firefox lazy-loading failures and

@@ -2,12 +2,22 @@
 
 ## Current programme status — 2026-11-11
 
-The latest local runtime checkpoint is `024ff8fe`: all 5,271 source tests in
+The latest local source checkpoint is `1e86e5e0`: all 5,271 source tests in
 323 files pass, alongside build, package, type, headless, performance, retention,
 format and size gates. Fresh packed ESM/CommonJS consumers and both type
 analyses pass outside the repository without browser globals or optional
 peers. Publint retains its existing DOCX warning. The candidate remains
 `0.5.0-beta.1`, unpublished.
+
+Its library output remains byte-identical to `024ff8fe`. The current demo
+repairs rich image-caption previews and the recorded UI audit entry point.
+Eight recorded journeys, three desktop caption checks and three built-site
+checks pass. Eight full-resolution states and sampled timelines are reviewed;
+current bundled PDFium/Poppler render both exported pages with full headers.
+Continuous playback, known DOCX viewer omissions, older-rasterizer differences
+and fresh combined hosted CI remain open boundaries. The broad matrix below
+predates this demo change.
+[Recorded journey evidence](RELEASES.md#recorded-release-journeys--2026-11-11).
 
 This includes the reproduced virtual-layout lost-click repair: a measurement
 frame moved a host button during its press. The guard passes 15 recorded
