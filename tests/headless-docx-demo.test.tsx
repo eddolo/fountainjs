@@ -152,7 +152,8 @@ describe('headless DOCX file ownership and readiness', () => {
       const exported = mount.querySelectorAll('[role="status"][aria-label="DOCX export status"]');
       expect(imported).toHaveLength(1); expect(exported).toHaveLength(1);
       expect(imported[0].textContent).toContain('Valid document · 1 top-level blocks');
-      expect(exported[0].textContent).toContain('Downloaded');
+      expect(click).toHaveBeenCalledTimes(1);
+      expect(exported[0].textContent).toMatch(/^DOCX download requested\b/);
       expect(JSON.parse(output()!)).toEqual(request.expected);
     } finally { click.mockRestore(); vi.unstubAllGlobals(); }
   });
