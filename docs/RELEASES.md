@@ -300,6 +300,28 @@ The complete browser/Yjs matrix, hosted CI, versioned release notes and
 publication verification remain open. GitHub CLI sign-in is still pending.
 No npm version or public release status changes at this checkpoint.
 
+### Combined browser validation at 597f5415
+
+All 48 compiled-default Yjs journeys pass across Chromium, Firefox and WebKit.
+The fixture loads the built `/dist/index.js`, `/dist/yjs.js` and explicit legacy
+entry. Its module audit rejects source-module substitution on every passing
+journey. Coverage includes offline typing versus wrapping/formatting/splitting,
+author undo/redo, empty siblings, ancestor deletion, incompatible room data,
+thousand-paragraph native editing, observer annotations, cursor navigation,
+blank lines, mounted room replacement, download and JSON reopening.
+The log is `artifacts/release-yjs-default-597f5415.log`. Sample reopening and
+continued-editing screenshots received visual review.
+
+The broad five-engine editor run and separate startup/migration/presence batches
+are still running. The serialized native clipboard batch remains pending. These
+48 passes do not certify those other batches or the hosted release gate.
+
+Remote review inventory on November 11 still shows stacked draft PRs #8–22.
+The local branch is ahead of the newest draft's `1a9e1640` head. The prepared
+next draft continues `fix/native-focus-intent-20261105`; its description is in
+`artifacts/release-pr-body-20261111.md`. Earlier drafts remain prerequisites,
+and the proposed body must be updated with terminal matrix results before use.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

@@ -49,5 +49,16 @@
     "GitHub CLI sign-in and hosted CI",
     "Final versioned release metadata",
     "npm staging approval and publication verification"
-  ]
+  ],
+  "defaultYjsBrowserChecks": {
+    "passed": 48,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "compiledPublicDefault": true,
+    "log": "artifacts/release-yjs-default-597f5415.log",
+    "visualReview": "Sample reopening and continued-editing screenshots"
+  }
 }
