@@ -1,0 +1,145 @@
+{
+  "date": "2026-11-11",
+  "sourceCheckpoint": "72174160",
+  "buildInfo": {
+    "packageVersion": "0.5.0-beta.1",
+    "sourceCommit": "72174160a39bbe5db394320a4780cd591292a3dc",
+    "modified": false,
+    "publishedVersion": "0.4.0-beta.2",
+    "channel": "development-preview",
+    "registryCheckedAt": "2026-11-11T19:54:23.780Z",
+    "githubSource": false
+  },
+  "changes": [
+    "Generated package/Git/npm build identity on every public HTML entry, before JavaScript and hidden for print",
+    "Source-preview and framework descriptions aligned with actual current examples",
+    "AI and clipboard sample data assertions retained with corrected wording",
+    "Built native HTML equation reader added to production matrix",
+    "Recorded UI server uses the non-opening input-audit configuration"
+  ],
+  "validation": {
+    "completeSourceGate": {
+      "commit": "e15335c7",
+      "testsPassed": 5279,
+      "filesPassed": 323,
+      "unitDurationSeconds": 111.85,
+      "allConstituentChecksPassed": true
+    },
+    "focusedMetadataPolicyTests": 19,
+    "rootAndConfigurationTypeScript": true,
+    "desktopInteractions": {
+      "startTime": "2026-11-11T19:49:51.889Z",
+      "duration": 52696.534,
+      "expected": 6,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "production": {
+      "startTime": "2026-11-11T19:54:20.779Z",
+      "duration": 51714.25,
+      "expected": 15,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "recorded": {
+      "startTime": "2026-11-11T19:55:20.342Z",
+      "duration": 71108.49100000001,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "unchangedDistributionFiles": 1008
+  },
+  "scope": [
+    "20 emitted public HTML files enumerated per engine with JavaScript disabled; 390px bounds and print exclusion checked",
+    "Production tests compare source hash and working-tree status with actual Git, not just a version regex",
+    "No claim of full marketing prerendering; future prerendered root content is allowed",
+    "Three selected final captured states directly reviewed; older dirty-build desktop/narrow captures also reviewed; no continuous video or fresh native Word/AT certification claimed",
+    "Five new metadata unit tests were added after the complete source checkpoint; no full 5284-test run claimed"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/release-check-e15335c7.log",
+      "bytes": 37035,
+      "sha256": "e3a7017920405fc405c2c23847151539637b8c6b2d8de4b65662f38250e0981d"
+    },
+    {
+      "path": "artifacts/site-identity-final-unit-20261111.log",
+      "bytes": 430,
+      "sha256": "35cf8bd511f8ec4bbd2f89ddfce60701b07bfaaa236515f120e0d786690d5a09"
+    },
+    {
+      "path": "artifacts/site-identity-final-types-20261111.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/site-identity-config-types-20261111.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/site-identity-editing-20261111.log",
+      "bytes": 4419,
+      "sha256": "742e87724b4d20a90fddaf490578e77354864d5df5cacd3fff4b4994e9ab2fcd"
+    },
+    {
+      "path": "artifacts/site-identity-editing-20261111.json",
+      "bytes": 11719,
+      "sha256": "34964807e0844ebe42774e9e71b8ccf17d2e237ff6d83449522bc1e376d0f7ed"
+    },
+    {
+      "path": "artifacts/site-equation-production-final-20261111.log",
+      "bytes": 26005,
+      "sha256": "fdd562ef3864071f8aac86f54ad263cef06b0385b1c29fa5b8b033da36ac8f0a"
+    },
+    {
+      "path": "artifacts/site-equation-production-final-20261111.json",
+      "bytes": 35387,
+      "sha256": "b0da6d7a29d1c87fea7ba21664abf7be07ede9e88ffde4c945a894db88a82aa7"
+    },
+    {
+      "path": "artifacts/recorded-site-release-72174160.log",
+      "bytes": 4541,
+      "sha256": "df068cba32fabdaaece1fc0de3246adb87f38475171e3b8a29aa307830fba1d3"
+    },
+    {
+      "path": "artifacts/recorded-site-release-72174160.json",
+      "bytes": 2067149,
+      "sha256": "342e7ad00580f25627fdde7503a41cdf6dd5a99e31caceb3818a6351348c1576"
+    }
+  ],
+  "retainedReview": [
+    {
+      "path": "artifacts/website-identity-review-72174160/build-info.json",
+      "bytes": 272,
+      "sha256": "2cbc645cf94471e38c729b395d6add29aa070a26d2b61f30aca40e640b0183bf"
+    },
+    {
+      "path": "artifacts/website-identity-review-72174160/build-label-no-js-narrow.png",
+      "bytes": 7398,
+      "sha256": "de6635daf53aab1e88e9152e6a788353f520e172c38b669ec694020135c93cff"
+    },
+    {
+      "path": "artifacts/website-identity-review-72174160/compiled-equations-chromium.png",
+      "bytes": 12089,
+      "sha256": "da43b11b9880237f4f7ca76be50f780b2741bf851619cbf92fc5000694f668e8"
+    },
+    {
+      "path": "artifacts/website-identity-review-72174160/compiled-equations-webkit.png",
+      "bytes": 34600,
+      "sha256": "f75048f5f74d66e720e4e2a9a0726efd6dc26c1780b76ba97882d13b5ebcd244"
+    }
+  ],
+  "remainingWebsiteWork": [
+    "Copy failure/manual-copy feedback",
+    "Contrast on dark/pale surfaces",
+    "Measured live-export cost",
+    "Navigation and full marketing prerendering/canonical/social metadata",
+    "Independent onboarding and physical-device/assistive-technology evidence"
+  ],
+  "publication": "Local only. Fresh combined hosted CI, final archive refresh, registry verification/staging/approval and deployment pending. Capability ledger and acceptance limits unchanged."
+}

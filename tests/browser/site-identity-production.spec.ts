@@ -27,7 +27,8 @@ test('identifies every built public page before JavaScript runs and keeps the la
       await expect(banner).toContainText('Examples use this source build.');
       if (metadata.publishedVersion) await expect(banner).toContainText(`npm ${metadata.publishedVersion}`);
       else await expect(banner).toContainText('Check published npm version');
-      expect(await page.locator('#root').innerHTML()).toBe('');
+      // JavaScript is disabled for this context. Prerendered marketing content
+      // is welcome; availability of the build label must not require React.
       const bounds = await banner.boundingBox();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
       expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);

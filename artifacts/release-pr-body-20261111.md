@@ -120,3 +120,13 @@ production ZIP checks, Node conversion/blocked-peer probes, 14 policy tests and
 root/configuration typechecks pass locally. Visual review fixes the two starter
 shells' Windows WebKit font fallback. No library or budget changes; npm CLI,
 registry installation and combined hosted CI remain distinct pending evidence.
+
+Complete local check at e15335c7 passes 5,279 tests/323 files and every existing
+package/runtime/type/format/size/performance gate. Website-only follow-ups add
+five focused identity tests; no new complete 5,284-test run is claimed. The
+source preview now has generated package/commit/npm labels on all 20 pages,
+correct framework copy and a source-accurate sample. Fifteen clean built-site
+checks at 72174160, six ordinary homepage interactions and eight recorded
+release journeys pass. The compiled offline-equation download is included.
+The audit uses a server configuration that disables automatic browser opening.
+Fresh combined hosted CI, final sealing and publication remain pending.

@@ -44,9 +44,9 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest complete local source-check checkpoint is `1e86e5e0`, including the rich image-caption
-preview and recorded-audit repairs. Its library runtime is byte-identical to
-`024ff8fe`, including the virtual-layout host-control repair. It passes all 5,271 source tests in 323 files and the
+The latest complete local source-check checkpoint is `e15335c7`, including the offline
+equation HTML projection and earlier image-caption/recorded-audit repairs. Its library runtime is byte-identical to
+`024ff8fe`, including the virtual-layout host-control repair. It passes all 5,279 source tests in 323 files and the
 package, Node/workerd, type, performance, retention, format and size gates.
 Fresh packed ESM/CommonJS consumers and both type analyses also pass outside
 the repository without browser globals, React, Yjs or jsdom. Publint retains
@@ -106,9 +106,18 @@ The local Conversion Lab additionally offers offline MathML in HTML downloads,
 with original TeX retained, an explicit source-only option and per-equation
 fallback reports. Six desktop journeys and 50 focused checks pass, with captured
 reader states reviewed. Library default HTML remains source-only; font/layout
-and page-template fidelity remain separate. Full-source/production/combined
-hosted checks for this host change are pending.
+and page-template fidelity remain separate. The full local gate and built-site
+equation checks now pass; the combined hosted matrix remains pending.
 [Equation-export evidence](RELEASES.md#offline-equation-html-projection--2026-11-11).
+
+The website now labels its source/package/npm identity on all 20 public pages
+before JavaScript runs, with narrow-screen and print checks. Framework and
+preview copy is reconciled. Nineteen focused checks, six homepage interaction
+checks, 15 built-site checks and eight recorded release journeys pass locally;
+the built metadata names clean source `72174160`. These overlapping executions
+are verification evidence, not new capability counts.
+[Website identity contract](WEBSITE_BUILD_IDENTITY.md). Remaining Copy feedback,
+contrast, export-panel profiling and marketing-page rendering work stays open.
 
 ## Remaining parity work
 

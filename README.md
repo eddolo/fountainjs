@@ -40,7 +40,9 @@ this unreleased work does not certify native Word page fidelity.
 Try the [real-world workflow demos](https://eddolo.github.io/fountainjs/workflows.html):
 a GitLab-style issue editor and a Todoist-style task workspace, with linked
 [API walkthroughs](docs/WORKFLOW_DEMOS.md). These run the current development
-website, which can be ahead of the published package. Check npm's published
+website, which can be ahead of the published package. The local candidate adds a
+[generated build label](docs/WEBSITE_BUILD_IDENTITY.md) showing its source revision,
+package version and build-time verified npm version; this label is not deployed yet. Check npm's published
 versions and distribution tags before choosing a release.
 
 ## What “language agnostic” means

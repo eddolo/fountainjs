@@ -98,8 +98,9 @@ rendering or whole-paper fidelity certification.
 
 The independent `recorded-ui` runner executes the eight `pnpm audit:ui`
 journeys, then `playwright.production.config.ts` builds the website and checks
-starter downloads and rich image-caption import in Chromium, Firefox and
-WebKit at `/fountainjs/` (six production checks). It then prepares the packed
+starter downloads, rich image-caption import, offline equation HTML readers
+and build/framework identity in Chromium, Firefox and WebKit at `/fountainjs/`
+(15 production checks). It then prepares the packed
 candidate in three external starter projects and runs six built-consumer browser
 journeys plus the Node conversion/probe checks.
 [Standalone audit procedure](INSTALLED_STARTER_AUDIT.md). Rebuild-backed runs stay
@@ -830,6 +831,40 @@ always-upload evidence are wired into CI. The compact report is
 `artifacts/html-math-export-integration-20261111.json`. A new full-source check,
 the complete matrix, production build, final archive refresh and hosted release
 checks remain pending; the previous full-source checkpoint remains `1e86e5e0`.
+
+### Website identity and complete local gate — 2026-11-11
+
+`pnpm check` completes at `e15335c7`: all 5,279 tests in 323 files, package/API,
+Node/workerd, headless, conformance, interoperability, type, size, performance
+and retention checks pass. The unit phase takes 111.85 seconds; this is not a
+performance comparison. Library distribution remains byte-identical to the
+sealed `19f4dca7` archive. New website-only work adds five focused metadata tests;
+no claim is made that a subsequent full 5,284-test run has completed.
+
+Source `b1cbdcf6` adds generated build labels and JSON metadata, reconciles
+framework copy and replaces the misleading npm-package wording in the sample.
+Source `72174160` additionally checks compiled equation exports and uses the
+non-opening input-audit server for recordings. Fifteen production checks pass
+against that clean revision. They include all 20 public pages without JavaScript,
+390px wrapping, print exclusion, actual Git identity, framework copy, native
+HTML math downloads/reopening, starter ZIPs and rich image-caption import.
+Metadata records `0.5.0-beta.1`, clean source `72174160a39b`, and build-time npm
+`0.4.0-beta.2`; it does not equate matching versions with identical artifacts.
+
+Nineteen metadata/release-policy checks and root/configuration TypeScript pass.
+Six ordinary desktop clipboard-history/AI-review checks pass after the sample
+copy changes. All eight recorded release journeys also pass in CI mode. These
+batches overlap; they are not additional feature counts. Captured narrow build
+labels and compiled equation readers receive direct visual review. No continuous
+video, new physical-device, assistive-technology or native Word certification
+is claimed. The earlier empty-root assertion is removed so future prerendering
+can add marketing content without breaking the no-JavaScript identity contract.
+
+[Website contract and remaining review findings](WEBSITE_BUILD_IDENTITY.md).
+The compact report is `artifacts/website-identity-integration-20261111.json`.
+The five-project combined hosted matrix, npm-CLI/registry consumption, final
+package sealing, staging/approval and deployment remain pending. The published
+site and npm package are not updated by these local commits.
 
 ## Failure and rollback policy
 
