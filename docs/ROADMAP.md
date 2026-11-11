@@ -47,9 +47,11 @@ The commands and publication procedure are in [RELEASES.md](RELEASES.md).
 The latest full local integration checkpoint is `597f5415`, which passed all
 5,257 source tests and the package, Node/workerd, type, performance, retention,
 format, and size gates on November 11. Twelve recorded desktop journeys pass
-after repairing toolbar undo/redo. The preceding checkpoint also passed real
-Lean verification in isolation after a timeout during simultaneous build load.
-The complete browser/Yjs matrix and hosted CI remain pending. See the
+after repairing toolbar undo/redo. Default Yjs, startup recovery, migration
+recovery and compiled native-presence batches also pass in all three desktop
+engines. The preceding checkpoint passed real Lean verification in isolation
+after a timeout during simultaneous build load. The full editor/mobile matrix,
+serialized native clipboard batch and hosted CI remain pending. See the
 [checkpoint record](RELEASES.md#toolbar-history-repair-at-597f5415).
 
 ## Remaining parity work

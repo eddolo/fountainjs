@@ -323,9 +323,19 @@ screenshots received visual review. A separate Chromium inspection confirmed
 that empty image captions and resize controls have `display: none` and zero
 height in a read-only built-package view. It required no implementation change.
 
-The broad five-engine editor run and 108-case compiled native-presence batch
-are still running. The serialized native clipboard batch remains pending.
-The completed batches do not certify those other checks or hosted CI.
+All 108 compiled native-presence/navigation checks also pass in the three
+desktop engines. This batch compares native text/grapheme behavior with passive
+remote presence, including RTL, emoji, combining sequences, range selection,
+empty and atomic anchors, and long names at narrow/top-edge boundaries. It
+also repeats retained-document editing and recovery checks through the compiled
+canary. Those repeated cases overlap the separate default-adapter batch and
+must not be counted as additional distinct capabilities. The terminal log is
+`artifacts/release-native-presence-597f5415.log`; sample label-placement screenshots
+received visual review.
+
+The broad five-engine editor run is still running. The serialized native
+clipboard batch remains pending. The completed collaboration batches do not
+certify those remaining checks or hosted CI.
 
 The broad run also exposed an ambiguous list-button test query. Its substring
 match selected both `Bullet list` and the lower demo's `Toggle bullet list`.

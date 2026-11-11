@@ -45,7 +45,7 @@
     "base": "/fountainjs/"
   },
   "pending": [
-    "Complete browser and Yjs matrix",
+    "Complete editor/mobile matrix and serialized native clipboard validation",
     "GitHub CLI sign-in and hosted CI",
     "Final versioned release metadata",
     "npm staging approval and publication verification"
@@ -79,5 +79,16 @@
     ],
     "log": "artifacts/release-migration-recovery-597f5415.log",
     "visualReview": "Sample reopened storage and recovered archive screenshots"
+  },
+  "nativePresenceBrowserChecks": {
+    "passed": 108,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "log": "artifacts/release-native-presence-597f5415.log",
+    "includesOverlapWithDefaultBatch": true,
+    "visualReview": "Sample narrow and top-edge label screenshots"
   }
 }
