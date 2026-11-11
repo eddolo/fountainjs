@@ -84,8 +84,8 @@ A release is eligible for npm staging only when all of the following are true:
 10. changes to the reference Lean checker pass `pnpm test:lean-integration`
     against the pinned real Lean toolchain; mocked provider tests alone are not
     release evidence.
-11. the recorded human release journeys and built production-subpath workflows
-    pass in the required `recorded-ui` CI job, with recordings, snapshots and
+11. the recorded human release journeys, built production-subpath workflows
+    and installed standalone starters pass in the required `recorded-ui` CI job, with recordings, snapshots and
     reports retained for review. Automated passes do not replace visual review.
 
 Normal push/PR CI runs every constituent of `pnpm check`, including public API
@@ -99,9 +99,12 @@ rendering or whole-paper fidelity certification.
 The independent `recorded-ui` runner executes the eight `pnpm audit:ui`
 journeys, then `playwright.production.config.ts` builds the website and checks
 starter downloads and rich image-caption import in Chromium, Firefox and
-WebKit at `/fountainjs/` (six production checks). Rebuild-backed runs stay
+WebKit at `/fountainjs/` (six production checks). It then prepares the packed
+candidate in three external starter projects and runs six built-consumer browser
+journeys plus the Node conversion/probe checks.
+[Standalone audit procedure](INSTALLED_STARTER_AUDIT.md). Rebuild-backed runs stay
 sequential within that checkout and separate from the main browser runner.
-Both evidence uploads run even after failure. The reusable CI called by the
+All three evidence uploads run even after failure. The reusable CI called by the
 release workflow includes this required job; actual hosted results remain
 necessary before staging.
 
@@ -766,6 +769,40 @@ certification. The report is
 No library/API/budget changes or new complete source/matrix run are claimed.
 Hosted Linux CI, authentication and final package/publication checks remain
 pending. The packaged docs have changed since the sealed archive.
+
+### Installed standalone starters — 2026-11-11
+
+The earlier starter runner needed manually installed consumer projects and was
+not required by CI. `pnpm audit:starters:prepare` now packs the candidate into a
+fresh external directory, installs plain DOM, React and Node projects, checks
+all 1,008 installed distribution files against the build and verifies unchanged
+starter source except for the explicit local-tarball dependency substitution.
+The browser starters build and run using their own Vite without repository
+aliases. The existing editing/history/JSON journeys now run in required CI,
+with uncaught application errors checked and evidence uploaded on failure too.
+
+Six final CI-mode browser journeys pass across Chromium, Firefox and WebKit,
+with one worker and no retries. Three production-subpath download journeys also
+pass, checking all nine ZIPs against source. The Node starter passes JSON,
+exact untouched Markdown, HTML export/reimport and an explicit no-DOM probe
+with React/React DOM/Yjs/jsdom resolution blocked. An initial assertion that
+React was unresolvable failed because this machine has an ancestor-level React
+installation; the corrected instrumentation blocks those imports before the
+package and CLI load. It does not change the library's optional peer behavior.
+
+Visual review detects serif shell fonts in Windows WebKit. An independent
+native control reproduces the `system-ui`-only fallback; adding `sans-serif`
+to both starter pages corrects it, confirmed in the final captures. Fourteen
+release-policy tests, root/configuration TypeScript and workflow checks pass.
+Existing Vite chunk warnings remain visible. No library/API/acceptance-limit
+changes or new full-source/matrix pass are claimed. Local tools are Node
+24.22.1/pnpm 11.25.0; required hosted CI pins Node 24/pnpm 11.19.0 and has not
+run yet. This proves local archive consumption, not npm CLI or publication.
+
+[Procedure and boundaries](INSTALLED_STARTER_AUDIT.md). The compact report is
+`artifacts/installed-starter-ci-integration-20261111.json`; raw evidence is
+under `artifacts/installed-starters/`. Final package sealing, combined hosted
+CI, registry staging/approval and deployment remain pending.
 
 ## Failure and rollback policy
 

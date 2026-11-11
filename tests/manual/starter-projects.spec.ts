@@ -1,5 +1,18 @@
 import { expect, test, type Page } from '@playwright/test';
 
+const errors = new WeakMap<Page, string[]>();
+test.beforeEach(({ page }) => {
+  const messages: string[] = [];
+  errors.set(page, messages);
+  page.on('pageerror', error => messages.push(error.message));
+});
+test.afterEach(async ({ page }, info) => {
+  await info.attach('uncaught-application-errors', {
+    body: JSON.stringify(errors.get(page) ?? []), contentType: 'application/json',
+  });
+  if (info.status === 'passed') expect(errors.get(page)).toEqual([]);
+});
+
 async function openStarter(page: Page, port: number) {
   const started = performance.now();
   await page.goto(`http://127.0.0.1:${port}/`);

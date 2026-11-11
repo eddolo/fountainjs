@@ -672,7 +672,9 @@
     "test:watch": "vitest",
     "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:math-reference && pnpm test:docx-interoperability && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
     "pack:check": "pnpm pack --dry-run",
-    "prepublishOnly": "pnpm check"
+    "prepublishOnly": "pnpm check",
+    "audit:starters:prepare": "node scripts/installed-starters.mjs prepare",
+    "audit:starters": "playwright test --config playwright.starters.config.ts"
   },
   "peerDependencies": {
     "@angular/core": ">=22 <23",

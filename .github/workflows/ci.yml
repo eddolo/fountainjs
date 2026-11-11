@@ -135,6 +135,21 @@ jobs:
           path: artifacts/production-browser/
           if-no-files-found: warn
           retention-days: 7
+      # The recorded audit already built this checkout. Install its actual
+      # tarball in external consumers; workspace resolution is not sufficient.
+      - name: Install and build standalone candidate starters
+        run: pnpm audit:starters:prepare
+      - name: Exercise installed starter projects in three browsers
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: artifacts/installed-starters/report.json
+        run: pnpm audit:starters --reporter=list,json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installed-starter-evidence
+          path: artifacts/installed-starters/
+          if-no-files-found: warn
+          retention-days: 7
   browser:
     runs-on: ubuntu-latest
     env:

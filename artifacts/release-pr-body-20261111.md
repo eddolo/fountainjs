@@ -113,3 +113,10 @@ with unchanged interactions/assertions and independent evidence per attempt.
 Fourteen policy checks and root TypeScript pass; all 1,008 distribution files
 remain byte-identical. Captured HTML math and page-template fallbacks remain
 explicit limitations. Fresh combined hosted CI is still required.
+
+Required CI now prepares and tests externally installed plain-DOM/React/Node
+starters against the actual local tarball. Six final browser journeys, three
+production ZIP checks, Node conversion/blocked-peer probes, 14 policy tests and
+root/configuration typechecks pass locally. Visual review fixes the two starter
+shells' Windows WebKit font fallback. No library or budget changes; npm CLI,
+registry installation and combined hosted CI remain distinct pending evidence.

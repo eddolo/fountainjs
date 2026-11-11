@@ -94,6 +94,14 @@ assertions. Its output is isolated per attempt and uploaded by CI. Captured
 HTML math/page-template fallbacks remain documented limits, not visual parity.
 [Research-document evidence](RELEASES.md#research-document-ci-coverage--2026-11-11).
 
+Standalone candidate installation is now part of required CI too. Plain DOM
+and React build outside the checkout and pass six desktop editing journeys;
+the Node starter passes conversion and a blocked-optional-peer/no-DOM probe.
+Three production download journeys verify the updated ZIPs. Visual review also
+fixes the Windows WebKit font fallback in both starter shells. These are local
+archive checks; hosted CI and registry consumption remain pending.
+[Installed-starter evidence](RELEASES.md#installed-standalone-starters--2026-11-11).
+
 ## Remaining parity work
 
 The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, eight Partial,

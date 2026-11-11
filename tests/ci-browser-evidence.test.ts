@@ -64,11 +64,16 @@ describe('browser CI retry evidence retention', () => {
     expect(job).toContain('run: pnpm exec playwright install --with-deps');
     expect(job).toMatch(/^        run: pnpm audit:ui --reporter=list,json$/m);
     expect(job).toMatch(/^        run: pnpm exec playwright test --config playwright\.production\.config\.ts --reporter=list,json$/m);
+    expect(job).toMatch(/^        run: pnpm audit:starters:prepare$/m);
+    expect(job).toMatch(/^        run: pnpm audit:starters --reporter=list,json$/m);
     expect(job!.indexOf('run: pnpm install --frozen-lockfile')).toBeLessThan(job!.indexOf('run: pnpm audit:ui'));
     expect(job!.indexOf('run: pnpm audit:ui')).toBeLessThan(job!.indexOf('--config playwright.production.config.ts'));
+    expect(job!.indexOf('--config playwright.production.config.ts')).toBeLessThan(job!.indexOf('run: pnpm audit:starters:prepare'));
+    expect(job!.indexOf('run: pnpm audit:starters:prepare')).toBeLessThan(job!.indexOf('run: pnpm audit:starters --'));
     for (const [name, path] of [
       ['recorded-ui-release-evidence', 'artifacts/manual-ui-audit/'],
       ['production-browser-evidence', 'artifacts/production-browser/'],
+      ['installed-starter-evidence', 'artifacts/installed-starters/'],
     ]) {
       const upload = job!.split('- uses: actions/upload-artifact@v4').find(step => step.includes(`name: ${name}`));
       expect(upload).toContain('if: always()');

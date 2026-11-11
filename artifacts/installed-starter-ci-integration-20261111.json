@@ -1,0 +1,187 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "d3550ec7",
+  "change": "Automate current-candidate packing and external plain-DOM/React/Node consumer installation, build and preview; require these existing native editing journeys and pure-Node conversions in CI. Add a sans-serif fallback to both starter shells after native WebKit comparison.",
+  "localTools": {
+    "node": "v24.22.1",
+    "pnpm": "11.25.0",
+    "hostedCIUses": "Node 24 and pnpm 11.19.0; hosted execution remains pending"
+  },
+  "validation": {
+    "candidateVersion": "0.5.0-beta.1",
+    "auditTarball": {
+      "path": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\fountainjs-editor-0.5.0-beta.1.tgz",
+      "sha256": "372a28852167c9a3e4423ff7fcd867eb417cb12279b2bc7b5ad493a8d01a0e33"
+    },
+    "projects": {
+      "plain-dom": {
+        "path": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\plain-dom",
+        "installed": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\plain-dom\\node_modules\\.pnpm\\fountainjs-editor@file+..+fountainjs-editor-0.5.0-beta.1.tgz\\node_modules\\fountainjs-editor",
+        "identicalDistributionFiles": 1008,
+        "unchangedStarterFiles": [
+          "index.html",
+          "main.js",
+          "README.md"
+        ]
+      },
+      "react": {
+        "path": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\react",
+        "installed": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\react\\node_modules\\.pnpm\\fountainjs-editor@file+..+f_6b36557163f1f4fc852149ac6d3aad6a\\node_modules\\fountainjs-editor",
+        "identicalDistributionFiles": 1008,
+        "unchangedStarterFiles": [
+          "index.html",
+          "main.jsx",
+          "README.md"
+        ]
+      },
+      "node": {
+        "path": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\node",
+        "installed": "C:\\Users\\cappu\\AppData\\Local\\Temp\\fountain-installed-starters-vEE7KQ\\node\\node_modules\\.pnpm\\fountainjs-editor@file+..+fountainjs-editor-0.5.0-beta.1.tgz\\node_modules\\fountainjs-editor",
+        "identicalDistributionFiles": 1008,
+        "unchangedStarterFiles": [
+          "convert.mjs",
+          "README.md",
+          "sample.md"
+        ],
+        "conversion": {
+          "json": true,
+          "exactUntouchedMarkdown": true,
+          "html": true,
+          "htmlReimport": true,
+          "pureNodeWithOptionalPeersBlocked": true
+        }
+      }
+    },
+    "preparationCIEnvironment": true,
+    "browserStats": {
+      "startTime": "2026-11-11T19:18:41.441Z",
+      "duration": 12156.551,
+      "expected": 6,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "productionZIPStats": {
+      "startTime": "2026-11-11T19:19:32.386Z",
+      "duration": 30127.532,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "releasePolicyTests": 14,
+    "rootTypeScript": true,
+    "starterConfigurationTypeScript": true,
+    "workflowYAMLAndAlwaysUpload": true,
+    "distributionFilesIdenticalToSealed19f4dca7": 1008
+  },
+  "negativeEvidence": {
+    "initialProbe": "Failed because an ancestor C:/Users/cappu/node_modules/react was resolvable. This was an invalid isolation assertion, not a Fountain runtime failure. The replacement registers resolution hooks before importing the package and CLI; blocked-import positive controls verify enforcement.",
+    "font": "Original Windows WebKit captures show serif shell text. A standalone native control reproduces it with system-ui alone and renders sans text with a sans-serif fallback. Final captures confirm both starter shells use the fallback."
+  },
+  "visualReview": {
+    "selectedCaptures": [
+      {
+        "path": "artifacts/installed-starters/webkit-native-font-control.png",
+        "bytes": 12554,
+        "sha256": "2074d333cd5c7b7932ca63285f2c0418e380b6eaeba4363fe4094bf169d3547b",
+        "retainedCopy": "artifacts/installed-starter-visual-review-20261111/native-font-control.png"
+      },
+      {
+        "path": "artifacts/installed-starters/browser-before-font-fallback/starter-projects-uses-a-cu-28858-installed-plain-DOM-starter-webkit/plain-dom-starter.png",
+        "bytes": 66901,
+        "sha256": "1cae156326b02426fabe9832d987922e3b2978056b1c16ab5cf73d87441aa004",
+        "retainedCopy": "artifacts/installed-starter-visual-review-20261111/plain-dom-before.png"
+      },
+      {
+        "path": "artifacts/installed-starters/browser-before-font-fallback/starter-projects-edits-and-7884d-the-installed-React-starter-webkit/react-starter.png",
+        "bytes": 86975,
+        "sha256": "8220f0439b3b9a741edff432526d65bdc867f04b78b1f5a51d2ace27500c1dfd",
+        "retainedCopy": "artifacts/installed-starter-visual-review-20261111/react-before.png"
+      },
+      {
+        "path": "artifacts/installed-starters/browser/starter-projects-uses-a-cu-28858-installed-plain-DOM-starter-webkit/plain-dom-starter.png",
+        "bytes": 67134,
+        "sha256": "63c4a797198acbdc573e7c8cc8d4e05168e760ba7724e2b1fb7bf38450987105",
+        "retainedCopy": "artifacts/installed-starter-visual-review-20261111/plain-dom-after.png"
+      },
+      {
+        "path": "artifacts/installed-starters/browser/starter-projects-edits-and-7884d-the-installed-React-starter-webkit/react-starter.png",
+        "bytes": 86981,
+        "sha256": "06d694d39c1564c6fe8f2a0820226628863c7080535ba7ecc6247a2b24669512",
+        "retainedCopy": "artifacts/installed-starter-visual-review-20261111/react-after.png"
+      }
+    ],
+    "scope": "Captured states before/after, plus earlier Chromium plain-DOM and Firefox React views. Videos recorded but continuous playback not claimed."
+  },
+  "rawEvidence": [
+    {
+      "path": "artifacts/installed-starters-prepare-20261111.log",
+      "bytes": 1844,
+      "sha256": "e17cfde0e34a37c580606ee35cf15a1cfa4beebbb08b9b09e231ede55d58c1eb"
+    },
+    {
+      "path": "artifacts/installed-starters-prepare-ci-final-20261111.log",
+      "bytes": 1074,
+      "sha256": "e525675ca6db6e1cd4957b5a2ff4cdf8591237ef52642916481110932004ade6"
+    },
+    {
+      "path": "artifacts/installed-starters-browser-ci-final-20261111.log",
+      "bytes": 1818,
+      "sha256": "cc01548eb4db65809d42cbac4c1a9aca80457c779c635d5d891bedfafb387c6a"
+    },
+    {
+      "path": "artifacts/installed-starters-production-downloads-20261111.log",
+      "bytes": 22998,
+      "sha256": "183cb19ced04afcf1f1c24c9f5029d53ea6e671d778d0e874a33e8c127dedbed"
+    },
+    {
+      "path": "artifacts/installed-starters-policy-20261111.log",
+      "bytes": 429,
+      "sha256": "477ef074716c65938ac3fcfc6093fc15e586f0b42aa7d07c3859810b220d1f7c"
+    },
+    {
+      "path": "artifacts/installed-starters-typecheck-20261111.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/installed-starters-config-typecheck-20261111.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/installed-starters/projects.json",
+      "bytes": 2049,
+      "sha256": "eba35b241ebca44a2e182026c668ab178a4e819303325441795cde8b314d6859"
+    },
+    {
+      "path": "artifacts/installed-starters/report.json",
+      "bytes": 18564,
+      "sha256": "b79cee414b21cc7bcc2b06f9e6f34c284a57707b7087661dacf87f2c95b4fc54"
+    },
+    {
+      "path": "artifacts/installed-starters-production-downloads-20261111.json",
+      "bytes": 9371,
+      "sha256": "c2f201fea3e5eb885705f89816b46932080835ab8d93ebd4e34957784a4daee3"
+    },
+    {
+      "path": "artifacts/installed-starters/node-probe.log",
+      "bytes": 337,
+      "sha256": "cf33ed439de3be5b85a00b1a4630d8cdf8fac6c73cf8f55c2e0b2502f159aa2f"
+    }
+  ],
+  "limits": [
+    "pnpm-installed local candidate archive, not npm-CLI or registry installation",
+    "Production-bundle consumer behavior, not React development lifecycle or complete feature coverage",
+    "Fresh combined hosted Linux CI still required",
+    "Docs changed after the audit archive; final release sealing/staging remains pending",
+    "Vite still reports existing >500-kB chunk warnings for full-feature starter bundles; no warning or acceptance limit was changed"
+  ],
+  "unchanged": [
+    "Library runtime and public API",
+    "Capability ledger and beta scope",
+    "Bundle/performance acceptance limits",
+    "Full pnpm check checkpoint remains 1e86e5e0; current checks are scoped"
+  ]
+}
