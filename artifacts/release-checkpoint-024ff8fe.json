@@ -32,7 +32,7 @@
   "pending": [
     "Clean hosted browser matrix and Linux display clipboard validation",
     "Hosted CI and GitHub authentication",
-    "Final archive after supplemental evidence documentation, matched release tag, npm stage and maintainer approval",
+    "Matched release tag, npm stage and maintainer approval",
     "Registry installation and website deployment"
   ],
   "browserMatrix": {
@@ -108,5 +108,6 @@
     "jsonReportSha256": "d9fff6ebd42422f50467109e9ab88af92ef5296b278f819ddb4b76ba38576597",
     "doesNotEraseOriginalParallelFailures": true
   },
-  "supplementalReleaseChecks": "artifacts/release-supplement-b03ad598.json"
+  "supplementalReleaseChecks": "artifacts/release-supplement-b03ad598.json",
+  "latestPackagedDocumentationReceipt": "artifacts/release-preflight-94c0bebc/receipt.json"
 }

@@ -1,0 +1,19 @@
+{
+  "packageSourceCommit": "94c0bebc",
+  "runtimeCandidateCommit": "024ff8fe3e8d60cacd6c4ca2d4a662137e853cda",
+  "version": "0.5.0-beta.1",
+  "files": 1145,
+  "bytes": 4889388,
+  "sha512": "sha512-hdsemH3tmQCB+QornRq/Q+oS5uGJCB+s5y6SI5ZNJLaVlcsJ+Zs23tk6cMS/0FTnAvhbBkfnCxv52q4l+Ga3iw==",
+  "previousReceipt": "artifacts/release-preflight-2d55f329/receipt.json",
+  "changedArchiveMembers": [
+    "package/docs/RELEASES.md",
+    "package/docs/ROADMAP.md",
+    "package/docs/TIPTAP_PARITY.md"
+  ],
+  "allOtherArchiveMembersByteIdentical": true,
+  "all1008DistFilesByteIdentical": true,
+  "runtimeConsumerEvidence": "artifacts/release-preflight-2d55f329/consumer-verification.log",
+  "note": "Documentation-only repack. No fresh consumer run is claimed for this archive; the installed/tested runtime and every other archive member are identical. Fresh hosted CI and release-stage checks remain required.",
+  "published": false
+}
