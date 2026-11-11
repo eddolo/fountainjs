@@ -676,7 +676,7 @@ function Developers() {
           <section className="dev-section" id="starters">
             <p className="dev-label">00 · START HERE</p>
             <h2>Start with a working project.</h2>
-            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins the published <code>0.4.0-beta.2</code> package. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
+            <p>Download and extract a starter, then run <code>npm install</code> in its folder. Each project pins the published <code>0.5.0-beta.1</code> package. Use Node.js 20.19+ or 22.12+ for the browser starters.</p>
             <div className="dev-starters">
               <article id="starter-plain-dom">
                 <h3>Plain JavaScript</h3>

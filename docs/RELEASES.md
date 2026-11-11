@@ -429,11 +429,13 @@ or skip policy changes. The same unchanged delivery checks remain mandatory
 on CI's Linux display. Logs are `artifacts/native-clipboard-7961b966.log` and
 `artifacts/native-clipboard-capability-windows-7961b966.jsonl`.
 
-An unapplied seven-file metadata proposal prepares `0.5.0-beta.1`, its versioned
-changelog and matching starter dependencies/guide/tests. It passes tag/changelog
-validation in an isolated preview. The real manifest still says `0.4.0-beta.2`.
-The proposal is `artifacts/beta-metadata-proposal-20261111.patch`; regenerate it
-after relevant edits and review its date before applying. Publication, registry
+After the diagnostic runs finish, the reviewed seven-file metadata proposal
+is applied locally: manifest `0.5.0-beta.1`, versioned changelog and matching
+starter dependencies/guide/tests. `check-release.mjs --tag v0.5.0-beta.1` passes
+against these real files, following the isolated-preview check. The original
+proposal is `artifacts/beta-metadata-proposal-20261111.patch`; it is now an
+applied historical receipt and must not be reapplied. The versioned candidate
+requires fresh package/consumer and release CI validation. Publication, registry
 verification and website deployment have not occurred for this candidate.
 
 ## Failure and rollback policy

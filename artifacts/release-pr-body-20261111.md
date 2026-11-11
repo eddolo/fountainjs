@@ -18,9 +18,10 @@ until the combined candidate passes the release gates.
 
 ## Compatibility
 
-The planned release is `0.5.0-beta.1`. The manifest and downloadable starters
-still identify the existing published `0.4.0-beta.2` package during preparation.
-Finalize the versioned manifest, changelog and release notes before tagging.
+The candidate manifest, versioned changelog and downloadable starters now
+identify `0.5.0-beta.1`. Tag/changelog validation passes locally. This version
+is not published; package/consumer checks and full release CI remain required
+before tagging and staging. The existing public package remains `0.4.0-beta.2`.
 
 The default `fountainjs-editor/yjs` storage format changes. Existing XML rooms
 need `fountainjs-editor/yjs/legacy` or an explicit migration. The supported Yjs

@@ -25,7 +25,7 @@ test('downloads complete standalone projects from the developer guide', async ({
       expect(strFromU8(files[`${name}/${file}`])).toBe(await readFile(`examples/starters/${kind}/${file}`, 'utf8'));
     }
     const manifest = JSON.parse(strFromU8(files[`${name}/package.json`]));
-    expect(manifest.dependencies['fountainjs-editor']).toBe('0.4.0-beta.2');
+    expect(manifest.dependencies['fountainjs-editor']).toBe('0.5.0-beta.1');
   }
   await page.locator('#starters').screenshot({ path: info.outputPath('starter-downloads.png') });
   for (const { kind, demo, host } of [

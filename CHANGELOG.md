@@ -1,11 +1,18 @@
 # Changelog
 
-Unreleased default table-width fix: distinguish omitted Word automatic width
-from a new Fountain table's full-width/complete-fixed-grid defaults. DOCX export
-reports default-width materialization rather than silently switching sizing
-policy on reopen. Native layout certification remains outstanding.
-
 ## Unreleased
+
+## 0.5.0-beta.1 — 2026-11-11
+
+- The default `fountainjs-editor/yjs` entry now uses retained storage.
+  Existing XML rooms require `fountainjs-editor/yjs/legacy` or an explicit
+  migration. Supported Yjs versions start at 13.6.32. Read
+  `docs/YJS_DEFAULT_ADOPTION.md` before upgrading a persisted room.
+
+- Distinguish omitted Word automatic width from a new Fountain table's
+  full-width/complete-fixed-grid defaults. DOCX export reports default-width
+  materialization rather than silently switching sizing policy on reopen.
+  Native layout certification remains outstanding.
 
 - Avoid duplicate cursor labels when empty formatted text runs share a position,
   including after edits across paragraph boundaries.

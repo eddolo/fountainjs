@@ -9,7 +9,7 @@ complete editing, review, and conversion workflows.
 
 ## Next beta
 
-The target version is **0.5.0-beta.1**. The next minor version accounts for the
+The local candidate version is **0.5.0-beta.1**, not yet published. The next minor version accounts for the
 change to the default Yjs storage adapter. Existing XML rooms require the legacy
 entry or an explicit migration. The [adoption guide](YJS_DEFAULT_ADOPTION.md)
 explains both routes.
