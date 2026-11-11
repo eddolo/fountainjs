@@ -1000,6 +1000,39 @@ hosted release verification remain required.
 [Controller scope](../integrations/gitlab/README.md#serialized-content-lifecycle).
 Evidence: `artifacts/gitlab-serialized-content-integration-20261111.json`.
 
+### GitLab rendered-resource/reference boundary — 2026-11-11
+
+The private asset resolver implements the actual host callback boundary for
+canonical/display URLs, iframe source/provider data, placeholders, expanded
+references, quick-action explanations and diagram image URLs. It retains safe
+canonical fallbacks, uses the public URL gate, and delegates label localization
+to the host. Inert parse5 inspection has no DOM, layout, script execution or
+resource-loading behavior. The resolver has per-context LRU entry/UTF-8 string
+budgets, retryable failures, and cancellation/disposal including pending work
+already evicted from cache. These are not total-heap or concurrency guarantees.
+
+Thirty-seven focused Node cases pass using twelve immutable upstream HTML
+fixtures with recorded source/license hashes and retained copyright notice.
+Combined resolver/lifecycle checks pass 48 cases; root TypeScript passes. The
+complete unit suite passes **5,348 tests in 329 files**. This does not claim a
+new complete `pnpm check` pipeline or hosted release run. The
+actual private resolver builds as browser ESM at 196,701 raw bytes, including
+parse5 and the URL gate. That optional prototype is not added to the public
+Fountain runtime or counted as a browser human-use journey. No library API,
+runtime, dependency or acceptance-limit changes in this step.
+
+An unauthenticated request to GitLab.com's public Markdown API returns 401.
+[GitLab's API contract](https://docs.gitlab.com/api/markdown/) requires
+authentication. The actual host preview callback also provides quick-action
+metadata; a public REST response is not assumed equivalent. The fixture-based
+checks are not live-service, authorization, upload, document-conversion or
+full-application evidence. Authenticated host integration, the actual dialect
+codec, source retention and complete product workflows remain outstanding.
+
+[Resolver scope](../integrations/gitlab/README.md#rendered-resource-and-reference-resolver).
+Evidence: `artifacts/gitlab-asset-resolver-integration-20261111.json` and
+`artifacts/gitlab-live-render-probe-20261111.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

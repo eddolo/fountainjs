@@ -1,0 +1,7 @@
+{
+  "target": "Private GitLab browser integration prototype",
+  "format": "ESM",
+  "bytes": 196701,
+  "scope": "Browser-targeted Vite bundle of the actual resolver, parse5 and public URL gate; not a running GitLab service or complete product.",
+  "packageRuntimeChanged": false
+}

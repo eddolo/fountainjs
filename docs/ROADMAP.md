@@ -63,6 +63,16 @@ use an explicit ordinary-Markdown codec, not a completed GitLab dialect adapter.
 No library runtime/API or size limit changes in this follow-up.
 [Lifecycle scope and evidence](../integrations/gitlab/README.md#serialized-content-lifecycle).
 
+The GitLab resolver now implements the six rendered-resource/reference
+operations using the host render callback, inert HTML parsing, bounded caching,
+retry and cancellation. Thirty-seven focused Node cases and root TypeScript
+pass; the private browser bundle compiles. Pinned fixture extraction records
+provenance and retains the upstream license. A live public render attempt
+returns 401, so no authenticated service or full-application pass is claimed.
+The subsequent complete unit run passes **5,348 tests in 329 files**; this is
+not a repeat of all packaging/browser/release gates.
+[Resolver scope](../integrations/gitlab/README.md#rendered-resource-and-reference-resolver).
+
 The earlier complete local source-check checkpoint is `e15335c7`, including the offline
 equation HTML projection and earlier image-caption/recorded-audit repairs. Its library runtime is byte-identical to
 `024ff8fe`, including the virtual-layout host-control repair. It passes all 5,279 source tests in 323 files and the

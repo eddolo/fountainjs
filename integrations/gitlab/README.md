@@ -124,6 +124,61 @@ heading/template states receive visual review.
 
 [Lifecycle evidence](../../artifacts/gitlab-serialized-content-integration-20261111.json).
 
+## Rendered-resource and reference resolver
+
+`services/asset_resolver.ts` implements GitLab's six resolver operations:
+canonical-to-display URLs, iframe source/provider data, placeholders, reference
+expansions, quick-action explanations and diagram image URLs. The host supplies
+its actual `renderMarkdown` callback and label-description localizer. Credentials,
+HTTP/CSRF handling, project context, permissions and provider authorization stay
+in the application. The resolver does not create its own network client or
+substitute the public REST endpoint for the internal preview callback.
+
+The implementation uses the existing pinned `parse5` 8.0.1 dependency and the
+public Fountain URL gate. It has no browser `document`, fake DOM, script
+execution or layout dependency. It reads inert parsed data without fetching
+links/images. Canonical input is retained as the safe fallback when URL lookup
+fails; references, placeholders and diagrams use their explicit empty fallback.
+An optional issue callback distinguishes rendering failure, invalid response
+and unsafe returned URL without logging source text or provider error details.
+
+The cache is per resolver/project context, coalesces concurrent identical
+requests and evicts failures for retry. Defaults are 100 LRU entries and 4 MiB
+of retained UTF-8 request/HTML strings; the HTML/input envelope is bounded at
+1 MiB, with 50,000-node/128-depth inspection limits. These are string/structure
+bounds, not a measured total-heap guarantee or a concurrency limit. Clearing or
+disposing cancels tracked requests, including in-flight requests already evicted
+from the LRU. Callers settle even if their provider ignores the optional signal;
+the provider must forward that signal to cancel the underlying transport too.
+Create a new resolver when project/auth context changes.
+
+`fixtures/service-html.json` contains twelve expression-free literals extracted
+from the pinned upstream test module. The extraction script records source and
+license hashes and never executes upstream code. The accompanying
+`fixtures/GITLAB-LICENSE.txt` retains its copyright/license notice. Refresh with
+`node scripts/update-gitlab-service-fixtures.mjs`.
+
+The full unit suite passes 5,348 tests in 329 files and root TypeScript passes.
+Thirty-seven focused Node cases cover the eight upstream reference kinds,
+suffix expansion, wiki/repository/upload/proxy URLs, embeds, placeholders,
+localized quick-action labels, diagram fences, LRU/byte bounds, retry,
+cancellation, unsafe URLs, malformed envelopes and structural/UTF-8 limits.
+The browser-targeted production bundle compiles at 196,701 raw bytes including
+parse5 and the URL gate; it is a private integration prototype, not added bytes
+in the shipped Fountain engine. This is not a browser user journey or a running
+GitLab service check.
+
+The attempted unauthenticated public Markdown render returns HTTP 401. GitLab's
+[API documentation](https://docs.gitlab.com/api/markdown/) requires authentication.
+The actual host callback normalizes `html`/`body` and carries quick-action
+metadata from its preview route. Neither the public endpoint nor local HTML
+fixtures establish that complete contract. Authenticated host-service use,
+document conversion/source retention and end-to-end application verification
+remain required. No public product/showcase action is added from this fixture
+test evidence.
+
+[Resolver evidence](../../artifacts/gitlab-asset-resolver-integration-20261111.json).
+
 ## Full application completion requirements
 
 1. Run a version-pinned GitLab instance and original editor; retain baseline

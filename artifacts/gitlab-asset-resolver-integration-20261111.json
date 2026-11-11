@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "f276ab0e",
+  "status": "Private resolver implemented and fixture/type/build verified; authenticated service and full product integration remain unverified",
+  "implementation": {
+    "file": "integrations/gitlab/services/asset_resolver.ts",
+    "methods": ["resolveUrl", "resolveIframeSrc", "resolvePlaceholder", "resolveReference", "explainQuickAction", "renderDiagram"],
+    "hostBoundaries": ["Actual GitLab renderMarkdown callback", "Project/auth/CSRF and HTTP ownership", "Label explanation localization", "Embed/provider authorization"],
+    "safetyAndLifecycle": ["Inert DOM-free parsing without resource requests", "Canonical safe URL fallback", "Public Fountain URL validation", "Explicit malformed/render/unsafe-URL issues", "Per-instance bounded LRU and concurrent-request coalescing", "Failure eviction and retry", "Cancel/dispose also covers requests evicted while pending", "Caller cancellation settlement independent of transport cooperation", "Diagram fences longer than every source backtick run"],
+    "defaultBounds": { "cacheEntries": 100, "cachedUTF8RequestAndHTMLBytes": 4194304, "inputAndResponseEnvelopeBytes": 1048576, "inspectedNodes": 50000, "inspectedDepth": 128, "totalHeapOrConcurrencyGuarantee": false }
+  },
+  "provenance": {
+    "fixtures": "integrations/gitlab/fixtures/service-html.json", "count": 12,
+    "commit": "d7b9a6176ab4e279465ba3ee09922cde2b74de47",
+    "sourceSHA256": "6a846c90ecfcf82ebf7bccfa4fa5b82987a7c0877593bad01232bb99252aa1e7",
+    "license": "integrations/gitlab/fixtures/GITLAB-LICENSE.txt",
+    "extraction": "AST expression-free string literals only; upstream code not executed",
+    "refreshLog": "artifacts/gitlab-service-fixtures-20261111.log"
+  },
+  "verification": {
+    "focusedResolverCases": 37, "focusedResolverAndLifecyclePassed": 48,
+    "focusedLog": "artifacts/gitlab-asset-resolver-final-20261111.log",
+    "completeUnitSuite": { "passed": 5348, "files": 329, "failed": 0, "log": "artifacts/gitlab-asset-resolver-all-tests-20261111.log", "completeReleasePipelineClaimed": false },
+    "rootTypeScript": { "passed": true, "log": "artifacts/gitlab-asset-resolver-types-20261111.log" },
+    "browserBundle": { "compiled": true, "format": "ESM", "bytes": 196701, "includes": ["Private resolver", "parse5", "Public Fountain URL gate"], "log": "artifacts/gitlab-asset-resolver-browser-build-20261111.log", "script": "artifacts/build-gitlab-asset-resolver-20261111.mjs", "browserUserJourneyClaimed": false },
+    "liveAPI": { "httpStatus": 401, "passClaimed": false, "probe": "artifacts/gitlab-live-render-probe-20261111.json" }
+  },
+  "package": { "libraryRuntimeChanged": false, "publicAPIChanged": false, "dependenciesChanged": false, "acceptanceLimitsChanged": false, "publishedOrDeployed": false },
+  "remaining": ["Actual authenticated GitLab host preview callback use", "GitLab dialect document codec and source retention", "Document/UI use of resolved assets, mentions, embeds and diagrams", "Actual uploads and permission enforcement", "Collaboration seeding/storage adapter", "Complete ContentEditor contract and full application workflows", "Combined hosted release checks and fresh packaged consumers"]
+}

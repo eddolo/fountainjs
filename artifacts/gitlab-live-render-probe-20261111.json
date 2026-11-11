@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-11",
+  "endpoint": "https://gitlab.com/api/v4/markdown",
+  "method": "POST",
+  "authentication": "none",
+  "payload": { "text": "See gitlab-org/gitlab#1 and @root", "gfm": true, "project": "gitlab-org/gitlab" },
+  "httpStatus": 401,
+  "result": "Unauthorized; no live rendering or application integration pass claimed",
+  "documentation": "https://docs.gitlab.com/api/markdown/",
+  "scope": "Read-only Markdown rendering probe with controlled public text; no issues, comments, messages or other application records created",
+  "boundary": "The public REST HTML endpoint is not substituted for GitLab's actual host preview callback, which normalizes body/html and carries quick-action metadata"
+}
