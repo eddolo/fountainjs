@@ -53,7 +53,15 @@
     "wholePlanCases": 1069,
     "selectedCases": 441,
     "previousPassIdentitiesExcluded": 628,
-    "cleanReleaseMatrix": false
+    "cleanReleaseMatrix": false,
+    "exitCode": 1,
+    "passed": 421,
+    "skipped": 19,
+    "failed": 1,
+    "durationMinutes": 19.5,
+    "failure": "Chromium ERR_NO_BUFFER_SPACE loading src/pages/index.ts; test API absent before focus/typing",
+    "unchangedIsolatedRepeatsPassed": 3,
+    "diagnostic": "artifacts/browser-remainder-diagnostic-7961b966.json"
   },
   "metadataProposal": {
     "version": "0.5.0-beta.1",
@@ -62,9 +70,29 @@
     "patch": "artifacts/beta-metadata-proposal-20261111.patch"
   },
   "pending": [
-    "Terminal remaining-case diagnostic and serialized clipboard validation",
+    "Fresh full browser matrix, including Linux display-backed native clipboard validation",
     "Fresh complete matrix and hosted CI on the final versioned candidate",
     "Final packed-entry types and clean consumer installation",
     "npm stage approval, registry verification and website deployment"
-  ]
+  ],
+  "nativeClipboardDiagnostic": {
+    "exitCode": 1,
+    "passed": 19,
+    "failed": 3,
+    "notRun": 5,
+    "stoppedByFailureLimit": true,
+    "chromiumPassed": 9,
+    "firefoxPassed": 9,
+    "webkitPassed": 1,
+    "webkitFailed": 3,
+    "independentWebkitControl": {
+      "observations": 12,
+      "nativeDefaultTransfers": 4,
+      "eventAuthoredTransfers": 0,
+      "eventAuthoredCases": 8,
+      "log": "artifacts/native-clipboard-capability-windows-7961b966.jsonl"
+    },
+    "log": "artifacts/native-clipboard-7961b966.log",
+    "limitations": "Windows WebKit native payload loss remains visible; same assertions require Linux display-backed CI and actual Safari verification."
+  }
 }

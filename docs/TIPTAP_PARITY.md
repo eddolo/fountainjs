@@ -7,8 +7,13 @@ The latest local runtime checkpoint is `7961b966`: all 5,271 source tests in
 retention gates. A real renderer failure discovered during the broad browser
 diagnostic is repaired: adjacent empty text runs no longer render a peer widget
 twice at the same position. Twelve recorded regression journeys pass across
-Chromium, Firefox and WebKit. The remaining-case sweep is still in progress;
-it is not a clean final matrix. Serialized native clipboard checks, fresh
+Chromium, Firefox and WebKit. The 441-case remaining sweep finishes with 421
+passes, 19 skips and one module-loading failure before mobile typing starts.
+The unchanged failed check then passes three isolated runs. The original
+`ERR_NO_BUFFER_SPACE` trace is retained; this is not a clean final matrix.
+The native clipboard batch passes all 18 selected Chromium/Firefox checks;
+Windows WebKit fails three delivery checks, consistent with independent native
+controls. The batch stops at its failure limit. Linux display clipboard checks, fresh
 combined release CI, final packed consumers and publication remain pending.
 [Current release evidence](RELEASES.md#empty-run-widget-repair-at-7961b966).
 

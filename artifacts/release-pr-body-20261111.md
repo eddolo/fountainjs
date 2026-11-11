@@ -41,13 +41,18 @@ WebKit. The broad diagnostic stopped with 628 passes and five failures, leading
 to test-selector/decoration-observation corrections and a real duplicate-widget
 renderer repair. Failed controls and exact one-widget/source-retention checks
 are retained. Earlier default Yjs/startup/migration/native-presence batches
-passed at `597f5415`. A 441-case remaining-case diagnostic is running on the new
-renderer. It does not replace a clean full matrix. Update this section with
-terminal results and final candidate CI before opening the prepared review.
+passed at `597f5415`. The 441-case remaining diagnostic finishes with 421
+passes, 19 skips and one Chromium module-load failure before the mobile editor
+initializes (`ERR_NO_BUFFER_SPACE`). Three unchanged isolated repeats pass;
+the first-run trace stays retained. It does not replace a clean full matrix.
+Update this section with final candidate CI before opening the prepared review.
 
 ## Release gates still open
 
-- Complete browser/Yjs recovery and serialized native clipboard validation.
+- Complete browser/Yjs recovery and Linux display-backed clipboard validation.
+  The local serialized clipboard batch passes all 18 Chromium/Firefox checks;
+  Windows WebKit delivery fails three checks, consistent with independent native
+  controls. The original failure receipts remain retained.
 - Fresh hosted CI for the combined candidate, including Bun, Deno, workerd,
   pinned Lean and the complete browser jobs.
 - Final versioned metadata, matched tag and GitHub release.

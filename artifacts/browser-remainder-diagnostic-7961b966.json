@@ -1,0 +1,62 @@
+{
+  "runtimeCommit": "7961b9661c1d07fda50b9424e44fcf278af3b8c5",
+  "scope": "Remaining-case diagnostic; not a clean full release matrix",
+  "stats": {
+    "startTime": "2026-11-11T14:41:48.537Z",
+    "duration": 1171618.0999999999,
+    "expected": 421,
+    "skipped": 19,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "projects": {
+    "chromium": {
+      "expected": 4
+    },
+    "firefox": {
+      "skipped": 9,
+      "expected": 33
+    },
+    "webkit": {
+      "expected": 327,
+      "skipped": 10
+    },
+    "mobile-chrome": {
+      "expected": 28,
+      "unexpected": 1
+    },
+    "mobile-safari": {
+      "expected": 29
+    }
+  },
+  "failures": [
+    {
+      "project": "mobile-chrome",
+      "title": "focuses the end empty text source on mobile before native typing",
+      "errors": [
+        "Error: page.evaluate: TypeError: Cannot destructure property 'editor' of 'globalThis.fountainBrowserTest' as it is undefined.\n    at eval (eval at evaluate (:311:30), <anonymous>:6:9)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at eval (eval at evaluate (:311:30), <anonymous>:6:9)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at explicitFocusJourney (C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\explicit-focus-journey.ts:9:31)\n    at C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\tests\\browser\\mobile.spec.ts:23:3"
+      ]
+    }
+  ],
+  "failedTrace": "browser-remainder-7961b966/mobile-focuses-the-end-emp-183e0-mobile-before-native-typing-mobile-chrome/trace.zip",
+  "failedConsole": [
+    {
+      "text": "Failed to load resource: net::ERR_NO_BUFFER_SPACE",
+      "location": {
+        "url": "http://127.0.0.1:4173/@fs/C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/src/pages/index.ts",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "time": 1096174.059
+    }
+  ],
+  "unchangedIsolatedRerun": {
+    "passed": 3,
+    "log": "artifacts/mobile-focus-unchanged-7961b966.log"
+  },
+  "visualReview": [
+    "mobile-safari Svelte report: visible table values and readable narrow layout",
+    "mobile-chrome Vue runbook: retained task checkmarks and wrapped toolbar"
+  ],
+  "pending": "Clean hosted full candidate matrix remains required; unchanged reruns do not erase initial resource failure"
+}

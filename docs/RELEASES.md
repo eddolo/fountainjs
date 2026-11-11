@@ -404,6 +404,31 @@ including the new controls. Its selection is checked against the current
 This is an iteration aid, not a clean full-matrix release run. Fresh complete
 CI and separately serialized native clipboard evidence remain mandatory.
 
+The remaining sweep terminates with 421 passes, 19 skips and one failure
+(19.5 minutes). Its failed Android/Chrome-emulation journey never reaches the
+focus or typing action: Chromium reports `net::ERR_NO_BUFFER_SPACE` loading
+`src/pages/index.ts`, leaving `fountainBrowserTest` undefined. The test passes
+three unchanged isolated runs. No assertion or runtime code changes in response.
+The first-run failure remains a local infrastructure reliability limitation;
+the reruns do not turn it into a clean matrix. The terminal log is
+`artifacts/browser-remainder-7961b966.log`, the trace/context are in its matching
+output directory, and the compact diagnostic is
+`artifacts/browser-remainder-diagnostic-7961b966.json`. Actual mobile-Svelte
+table and mobile-Vue task/toolbar screenshots received visual review. These
+are emulated browser surfaces, not physical-device certification.
+
+The separately serialized native clipboard batch passes all nine selected
+Chromium and all nine Firefox workflows. Windows WebKit passes the outbound
+copy/cut event-payload check, then fails three native-destination delivery
+checks; the failure limit leaves five cases unrun. The batch exits nonzero
+(19 passes, three failures). An independent native control records four of
+four default-copy transfers and zero of eight event-authored transfers, including
+plain text alone. That is consistent with the documented Windows WebKit
+limitation, but does not certify these Fountain paths on Safari. No assertion
+or skip policy changes. The same unchanged delivery checks remain mandatory
+on CI's Linux display. Logs are `artifacts/native-clipboard-7961b966.log` and
+`artifacts/native-clipboard-capability-windows-7961b966.jsonl`.
+
 An unapplied seven-file metadata proposal prepares `0.5.0-beta.1`, its versioned
 changelog and matching starter dependencies/guide/tests. It passes tag/changelog
 validation in an isolated preview. The real manifest still says `0.4.0-beta.2`.

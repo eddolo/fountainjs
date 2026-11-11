@@ -1,0 +1,190 @@
+[WebServer] (node:20156) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:20280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 6.7s inside plugin hooks (6.1s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (89%, 5.9s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:15656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:19536) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:5784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:24460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 27 tests using 1 worker
+
+(node:22772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › tests\manual\document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events (2.2s)
+  ok  2 [chromium] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy (3.4s)
+  ok  3 [chromium] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot (3.4s)
+  ok  4 [chromium] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations (1.3s)
+  ok  5 [chromium] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations (1.3s)
+  ok  6 [chromium] › tests\browser\editor.spec.ts:159:1 › pastes native rich research notes with structure, marks, source and undo (1.8s)
+  ok  7 [chromium] › tests\browser\editor.spec.ts:177:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback (3.7s)
+  ok  8 [chromium] › tests\browser\editor.spec.ts:186:3 › copies shared automatic list scope through real internal and external clipboard: convert (2.7s)
+  ok  9 [chromium] › tests\browser\editor.spec.ts:186:3 › copies shared automatic list scope through real internal and external clipboard: lift (3.0s)
+(node:11260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 10 [firefox] › tests\manual\document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events (5.1s)
+  ok 11 [firefox] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy (4.9s)
+  ok 12 [firefox] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot (4.8s)
+  ok 13 [firefox] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations (3.0s)
+  ok 14 [firefox] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted cut into native and Fountain destinations (3.0s)
+  ok 15 [firefox] › tests\browser\editor.spec.ts:159:1 › pastes native rich research notes with structure, marks, source and undo (4.1s)
+  ok 16 [firefox] › tests\browser\editor.spec.ts:177:1 › retains technical code reading direction and disabled line numbers through native copy and HTML fallback (6.2s)
+  ok 17 [firefox] › tests\browser\editor.spec.ts:186:3 › copies shared automatic list scope through real internal and external clipboard: convert (4.9s)
+  ok 18 [firefox] › tests\browser\editor.spec.ts:186:3 › copies shared automatic list scope through real internal and external clipboard: lift (4.4s)
+(node:23228) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 [webkit] › tests\manual\document-boundary-range-real.spec.ts:10:1 › copies and cuts a partial text-to-image range using trusted native clipboard events (3.9s)
+  x  20 [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy (9.8s)
+(node:6288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  21 [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot (10.2s)
+(node:23672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  22 [webkit] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations (7.5s)
+Testing stopped early after 3 maximum allowed failures.
+
+
+  1) [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Native destination')
+    Expected substring: "English member"
+    Received string:    ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Native destination')
+        13 × locator resolved to <div role="textbox" contenteditable="true" aria-label="Native destination"></div>
+           - unexpected value ""
+
+
+      69 |     await native.bringToFront(); await control.click(); await native.keyboard.press('ControlOrMeta+v');
+      70 |     observations.pasteDelivery = await native.evaluate(() => (globalThis as any).__sharedPasteDelivery ?? null);
+    > 71 |     await expect(control).toContainText('English member');
+         |                           ^
+      72 |     await expect(control.locator('blockquote')).toHaveCount(partial ? 1 : 2);
+      73 |     await expect(control.locator('blockquote').last()).toHaveCSS('direction', 'rtl');
+      74 |     observations.nativeHTML = await control.innerHTML();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-copy-real.spec.ts:71:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-clipboard-7961b966\editor-native-shared-context-complete-copy-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-clipboard-7961b966\editor-native-shared-context-complete-copy-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-clipboard-7961b966\editor-native-shared-context-complete-copy-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-clipboard-7961b966\editor-native-shared-context-complete-copy-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Native destination')
+    Expected substring: "English member"
+    Received string:    ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for getByLabel('Native destination')
+        13 × locator resolved to <div role="textbox" contenteditable="true" aria-label="Native destination"></div>
+           - unexpected value ""
+
+
+      69 |     await native.bringToFront(); await control.click(); await native.keyboard.press('ControlOrMeta+v');
+      70 |     observations.pasteDelivery = await native.evaluate(() => (globalThis as any).__sharedPasteDelivery ?? null);
+    > 71 |     await expect(control).toContainText('English member');
+         |                           ^
+      72 |     await expect(control.locator('blockquote')).toHaveCount(partial ? 1 : 2);
+      73 |     await expect(control.locator('blockquote').last()).toHaveCSS('direction', 'rtl');
+      74 |     observations.nativeHTML = await control.innerHTML();
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\shared-direction-copy-real.spec.ts:71:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-clipboard-7961b966\editor-native-shared-context-partial-snapshot-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-clipboard-7961b966\editor-native-shared-context-partial-snapshot-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-clipboard-7961b966\editor-native-shared-context-partial-snapshot-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-clipboard-7961b966\editor-native-shared-context-partial-snapshot-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [webkit] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('textbox', { name: 'Independent destination', exact: true })
+    Expected: "English child"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('textbox', { name: 'Independent destination', exact: true })
+        13 × locator resolved to <div role="textbox" contenteditable="true" aria-label="Independent destination"></div>
+           - unexpected value ""
+
+
+      37 |     const control = native.getByRole('textbox', { name: 'Independent destination', exact: true });
+      38 |     await control.click(); await native.keyboard.press('ControlOrMeta+v');
+    > 39 |     await expect(control).toHaveText('English child');
+         |                           ^
+      40 |     await expect(control.locator('p')).toHaveCSS('direction', 'rtl');
+      41 |     observations.delivered = await native.evaluate(() => (globalThis as any).__inheritedPaste);
+      42 |     expect((observations.delivered as { trusted: boolean }).trusted).toBe(true);
+        at C:\Users\cappu\Desktop\paoloapp\failures\Fountainjs-App\tests\manual\inherited-clipboard-real.spec.ts:39:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts\native-clipboard-7961b966\editor-inherited-node-dire-ccc48-e-and-Fountain-destinations-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts\native-clipboard-7961b966\editor-inherited-node-dire-ccc48-e-and-Fountain-destinations-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts\native-clipboard-7961b966\editor-inherited-node-dire-ccc48-e-and-Fountain-destinations-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace artifacts\native-clipboard-7961b966\editor-inherited-node-dire-ccc48-e-and-Fountain-destinations-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context complete copy 
+    [webkit] › tests\manual\shared-direction-copy-real.spec.ts:10:38 › native shared-context partial snapshot 
+    [webkit] › tests\manual\inherited-clipboard-real.spec.ts:10:39 › inherited node direction survives trusted copy into native and Fountain destinations 
+  5 did not run
+  19 passed (2.1m)
+  1 error was not a part of any test, see above for details
