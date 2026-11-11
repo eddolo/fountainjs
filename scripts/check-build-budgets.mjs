@@ -694,7 +694,10 @@ const limits = Object.freeze({
   // single-owner renderer adds 63 bytes (1,452,853 total), 53 over the prior
   // cap. Allow 64 bytes for this fix; keep all entry, ESM, CSS, latency and
   // retention limits unchanged. Preserve the original failed size receipt.
-  'all CommonJS runtime code': 1418.8125 * kibibyte,
+  // Defer virtual layout while a host control is pressed: +772 CJS bytes,
+  // 1,453,625 total. Add 1 KiB capacity for the verified lost-click repair;
+  // every entry, ESM, CSS, latency and retention ceiling remains unchanged.
+  'all CommonJS runtime code': 1419.8125 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

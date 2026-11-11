@@ -202,6 +202,9 @@ jobs:
             structural-direction-clipboard-results/**/inherited-clipboard-observations.json
             test-results/**/native-rich-paste-*.png
             test-results/**/native-rich-paste-*.json
+            test-results/**/virtual-host-*.png
+            test-results/**/virtual-host-*.json
+            test-results/**/video.webm
             test-results/**/anchor-loss-*.png
             test-results/**/anchor-loss-observations.json
             test-results/**/anchor-loss-export.json

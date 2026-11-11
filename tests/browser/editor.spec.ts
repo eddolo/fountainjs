@@ -1,4 +1,5 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { expect, test, type Locator } from '@playwright/test';
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { wordBodyWithFields, wordBodyWithNestedField } from '../fixtures/docx-body-fields';
 import { suggestionScrollJourney, suggestionTabJourney } from './suggestion-navigation-journey';
@@ -10,7 +11,16 @@ import '../manual/document-range-formatting-real.spec';
 import '../manual/structural-wrapping-real.spec';
 import '../manual/history-retention-real.spec';
 import { runVirtualSelectionJourney } from './virtual-selection-journey';
-import { expect, test, type Locator } from '@playwright/test';
+import { virtualHostControlJourney, type VirtualHostControlMode } from './virtual-host-control-journey';
+
+test.describe('Virtual host controls', () => {
+  test.use({ video: 'on' });
+  for (const mode of ['control', 'release', 'cancel', 'blur'] satisfies VirtualHostControlMode[]) {
+    test(`keeps a host control stable through a virtual measurement frame: ${mode}`, async ({ page }, info) => {
+      await virtualHostControlJourney(page, info, mode);
+    });
+  }
+});
 import { readDocumentDOMText } from './document-dom-text';
 import { listMarkerVisibilityJourney } from './list-marker-visibility-journey';
 

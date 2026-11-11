@@ -141,6 +141,7 @@ export class EditorView {
   private virtualRestoreTimer?: number;
   private virtualPrintResume = false;
   private virtualResizeObserver?: ResizeObserver;
+  private readonly virtualHostPointers = new Set<number>();
 
   constructor(public readonly mount: HTMLElement, public readonly editor: Editor, options: EditorViewOptions = {}) {
     this.onError = options.onError ?? ((error) => console.error(error));
@@ -545,6 +546,10 @@ export class EditorView {
     ownerWindow?.addEventListener('resize', this.onVirtualViewportChange, { passive: true });
     ownerWindow?.addEventListener('beforeprint', this.onVirtualBeforePrint);
     ownerWindow?.addEventListener('afterprint', this.onVirtualAfterPrint);
+    this.dom.ownerDocument.addEventListener('pointerdown', this.onVirtualHostPointerDown, true);
+    this.dom.ownerDocument.addEventListener('pointerup', this.onVirtualHostPointerEnd, true);
+    this.dom.ownerDocument.addEventListener('pointercancel', this.onVirtualHostPointerEnd, true);
+    ownerWindow?.addEventListener('blur', this.onVirtualHostBlur);
     if (typeof ResizeObserver !== 'undefined') {
       this.virtualResizeObserver = new ResizeObserver(this.onVirtualViewportChange);
       this.virtualResizeObserver.observe(this.dom);
@@ -558,6 +563,11 @@ export class EditorView {
     ownerWindow?.removeEventListener('resize', this.onVirtualViewportChange);
     ownerWindow?.removeEventListener('beforeprint', this.onVirtualBeforePrint);
     ownerWindow?.removeEventListener('afterprint', this.onVirtualAfterPrint);
+    this.dom.ownerDocument.removeEventListener('pointerdown', this.onVirtualHostPointerDown, true);
+    this.dom.ownerDocument.removeEventListener('pointerup', this.onVirtualHostPointerEnd, true);
+    this.dom.ownerDocument.removeEventListener('pointercancel', this.onVirtualHostPointerEnd, true);
+    ownerWindow?.removeEventListener('blur', this.onVirtualHostBlur);
+    this.virtualHostPointers.clear();
     this.virtualResizeObserver?.disconnect();
     if (this.virtualRenderFrame !== undefined) ownerWindow?.cancelAnimationFrame(this.virtualRenderFrame);
     if (this.virtualMeasureFrame !== undefined) ownerWindow?.cancelAnimationFrame(this.virtualMeasureFrame);
@@ -606,12 +616,36 @@ export class EditorView {
       ?.scrollIntoView?.({ block: start ? 'start' : 'end', inline: 'nearest' });
   };
 
+  private onVirtualHostPointerDown = (event: PointerEvent): void => {
+    const target = event.target;
+    if (!this.virtualized || event.button !== 0 || !(target instanceof Element)
+      || this.mount.contains(target) || !target.closest('button, input, select, textarea, a[href], [role="button"]')) return;
+    this.virtualHostPointers.add(event.pointerId);
+  };
+
+  private onVirtualHostPointerEnd = (event: PointerEvent): void => {
+    if (this.virtualHostPointers.delete(event.pointerId) && !this.virtualHostPointers.size) this.resumeVirtualHostFrames();
+  };
+
+  private onVirtualHostBlur = (): void => {
+    if (!this.virtualHostPointers.size) return;
+    this.virtualHostPointers.clear();
+    this.resumeVirtualHostFrames();
+  };
+
+  private resumeVirtualHostFrames(): void {
+    this.onVirtualViewportChange();
+    this.queueVirtualMeasurement();
+  }
+
   private onVirtualViewportChange = (): void => {
     if (!this.virtualized || this.virtualRenderFrame !== undefined) return;
     const ownerWindow = this.dom.ownerDocument.defaultView;
     this.virtualRenderFrame = ownerWindow?.requestAnimationFrame(() => {
       this.virtualRenderFrame = undefined;
-      if (this.destroyed) return;
+      // Height reconciliation can move controls below the editor. Keep their
+      // pointer target stable until the native click has been delivered.
+      if (this.destroyed || this.virtualHostPointers.size) return;
       // Default keyboard navigation can move the native caret before keyup /
       // selectionchange reaches the model. A viewport refresh must capture
       // that movement before replacing DOM and restoring a stale selection.
@@ -632,7 +666,7 @@ export class EditorView {
   }
 
   private measureVirtualBlocks(): void {
-    if (!this.virtualized || !this.virtualLayout) return;
+    if (!this.virtualized || !this.virtualLayout || this.virtualHostPointers.size) return;
     const ownerWindow = this.dom.ownerDocument.defaultView;
     const viewport = this.virtualViewport();
     const anchor = this.virtualLayout.indexAt(viewport.offset);

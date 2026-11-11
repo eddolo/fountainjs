@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native host control during virtual measurement</title>
+<style>
+  body { margin: 0; }
+  .fountain-editor { padding: 0 !important; min-height: 0 !important; }
+  .fountain-editor p { height: 40px; min-height: 0; margin: 0 !important; padding: 0; }
+  button { width: 220px; height: 48px; margin: 24px; }
+</style>
+<div id="mount"></div>
+<button id="export">Export document</button><span id="count">0</span>
+<div style="height: 600px"></div>
+<script type="module">
+  import 'fountainjs-editor/styles.css';
+  import { CoreSchemaSpec, createEditor, EditorView } from 'fountainjs-editor';
+  // Control application RAF delivery, keeping real browser DOM/layout/input.
+  // This makes the late measurement frame deterministic without calling
+  // private renderer methods or changing document data during the click.
+  const frames = new Map(); let next = 0, clicks = 0, pointerId;
+  const request = window.requestAnimationFrame.bind(window), cancel = window.cancelAnimationFrame.bind(window);
+  window.requestAnimationFrame = callback => { frames.set(++next, callback); return next; };
+  window.cancelAnimationFrame = id => frames.delete(id);
+  const virtual = new URL(location.href).searchParams.get('virtual') === '1';
+  const editor = createEditor({ schema: CoreSchemaSpec, content: { type: 'doc', content:
+    Array.from({ length: 300 }, (_, index) => ({ type: 'paragraph', content: [{ type: 'text', text: `Paragraph ${index}` }] })) } });
+  const view = new EditorView(document.querySelector('#mount'), editor, { virtualization: virtual
+    ? { minimumBlockCount: 0, estimatedBlockHeight: 48, overscanPx: 0, pinnedOverscanBlocks: 0 } : false });
+  const button = document.querySelector('#export');
+  document.addEventListener('pointerdown', event => { if (event.target === button) pointerId = event.pointerId; });
+  button.onclick = () => { document.querySelector('#count').textContent = String(++clicks); };
+  window.scrollTo(0, button.offsetTop - innerHeight / 2);
+  const snapshot = () => {
+    const rect = button.getBoundingClientRect();
+    return { top: rect.top, left: rect.left, width: rect.width, height: rect.height,
+      scrollY, clicks, pointerId, pendingFrames: frames.size, blocks: editor.state.doc.childCount,
+      mounted: view.dom.querySelectorAll(':scope > [data-fountain-path]').length,
+      rootHeight: view.dom.getBoundingClientRect().height };
+  };
+  Object.assign(window, { virtualFrameAudit: {
+    snapshot,
+    flushFrame() {
+      const before = snapshot(), pending = [...frames.values()]; frames.clear();
+      pending.forEach(callback => callback(performance.now()));
+      return { before, after: snapshot(), callbacks: pending.length };
+    },
+    close() { view.destroy(); editor.destroy(); window.requestAnimationFrame = request; window.cancelAnimationFrame = cancel; return { pendingFrames: frames.size }; },
+  } });
+</script>
