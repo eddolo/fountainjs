@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { CoreSchemaSpec, createEditor, Decoration, DecorationSet, EditorView, HTMLExporter, Plugin, type NodeJSON } from '../src';
+import { CoreSchemaSpec, createEditor, Decoration, DecorationSet, EditorView, HTMLExporter, Plugin, type NodeJSON, type SchemaSpec } from '../src';
 
 const emptyStrong: NodeJSON = { type: 'text', text: '', marks: [{ type: 'strong' }] };
 const emptyEmphasis: NodeJSON = { type: 'text', text: '', marks: [{ type: 'em' }] };
@@ -16,10 +16,10 @@ const cases: { name: string; content: NodeJSON[]; position: number }[] = [
   { name: 'empty runs after a hard break', content: [left, { type: 'hard_break' }, emptyStrong, emptyEmphasis], position: 6 },
 ];
 
-describe.each([-1, 1])('view widget ownership with side %s', side => {
+describe.each([-1, 1] as const)('view widget ownership with side %s', side => {
   it.each(cases)('renders one widget at $name without changing source runs', ({ content, position }) => {
-    const schema = { ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
-      boundary_token: { inline: true, group: 'inline', atom: true, toDOM: () => ['span', 'Token'] as const },
+    const schema: SchemaSpec = { ...CoreSchemaSpec, nodes: { ...CoreSchemaSpec.nodes,
+      boundary_token: { inline: true, group: 'inline', atom: true, toDOM: () => ['span', 'Token'] },
     } };
     const decorations = new Plugin({ props: { decorations: state => DecorationSet.create(state.doc, [
       Decoration.widget(position, () => {
