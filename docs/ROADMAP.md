@@ -44,7 +44,17 @@ The beta remains pending until the candidate has the following evidence.
    npm stage and a registry installation establish publication.
 
 The commands and publication procedure are in [RELEASES.md](RELEASES.md).
-The latest complete local source-check checkpoint is `e15335c7`, including the offline
+The latest complete local source check is the November 11 runtime-editability
+repair: **5,300 tests in 327 files**, with all package, server, type, conformance,
+size, performance and retention gates passing. Three native interaction-mode
+journeys pass on Chromium/Firefox/WebKit. The actual Vue 2 surface bridge passes
+both journeys in Chromium/Firefox on Windows and WebKit on Linux Xvfb; the
+Windows WebKit external-copy failure remains recorded with an independent
+control. This runtime change supersedes earlier archive identity claims: a
+fresh final package and combined hosted checks remain required.
+[Current bridge evidence](../integrations/gitlab/README.md#implemented-integration-primitive).
+
+The earlier complete local source-check checkpoint is `e15335c7`, including the offline
 equation HTML projection and earlier image-caption/recorded-audit repairs. Its library runtime is byte-identical to
 `024ff8fe`, including the virtual-layout host-control repair. It passes all 5,279 source tests in 323 files and the
 package, Node/workerd, type, performance, retention, format and size gates.
@@ -139,7 +149,8 @@ product, physical-device or hosted-release approval.
 The three flagship showcases must meet the [professional reference-product
 requirements](PROFESSIONAL_REFERENCE_PRODUCTS.md). The existing limited issue
 and task workflow labs do not satisfy that requirement. GitLab integration has
-a pinned, reproducible upstream contract inventory; implementation and real
+a pinned, reproducible upstream contract inventory and a tested real Vue 2
+surface component. The complete Markdown/host/service adapters and real
 application verification remain outstanding.
 
 ## Remaining parity work

@@ -620,6 +620,10 @@ export class SelectionHandler {
     if (this.nodeViewPointerActive) return;
     this.pointerSelectionActive = true;
     this.requestDOMSync();
+    if (!this.editor.editable) {
+      const control = target.closest('a[href], button, input, textarea, select, summary, audio[controls], video[controls], [tabindex]');
+      if (!control || control === this.dom) this.dom.focus({ preventScroll: true });
+    }
 
     const cell = target.closest<HTMLElement>('td[data-fountain-path], th[data-fountain-path]');
     if (cell && event.shiftKey) {

@@ -270,17 +270,20 @@ function restore(editor: Editor, snapshot: HistorySnapshot, action: 'undo' | 're
 }
 
 export function canUndo(editor: Editor): boolean {
+  if (!editor.editable) return false;
   const adapter = getCollaborationAdapter(editor);
   if (adapter?.undo) return adapter.canUndo?.() ?? false;
   return (historyKey.get(editor.state)?.done.length ?? 0) > 0;
 }
 export function canRedo(editor: Editor): boolean {
+  if (!editor.editable) return false;
   const adapter = getCollaborationAdapter(editor);
   if (adapter?.redo) return adapter.canRedo?.() ?? false;
   return (historyKey.get(editor.state)?.undone.length ?? 0) > 0;
 }
 
 export function undo(editor: Editor): boolean {
+  if (!editor.editable) return false;
   const adapter = getCollaborationAdapter(editor);
   if (adapter?.undo) return adapter.undo();
   const snapshot = historyKey.get(editor.state)?.done.at(-1);
@@ -288,6 +291,7 @@ export function undo(editor: Editor): boolean {
 }
 
 export function redo(editor: Editor): boolean {
+  if (!editor.editable) return false;
   const adapter = getCollaborationAdapter(editor);
   if (adapter?.redo) return adapter.redo();
   const snapshot = historyKey.get(editor.state)?.undone.at(-1);

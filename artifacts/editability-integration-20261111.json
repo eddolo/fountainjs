@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "d10e094d",
+  "status": "Local runtime and Vue 2 component verification; full GitLab replacement and publication incomplete",
+  "implemented": {
+    "engine": "Runtime Editor.setEditable, preserved document/selection/history, explicit filter-veto and observer semantics",
+    "view": "Existing outer view retained; NodeViews, tasks, drag controls and managed ARIA refreshed; composition cancelled",
+    "bridge": "Actual Vue 2.7.16 SFC and compiler against public package build, host-owned model, mode refusal closes surface and permits recovery",
+    "sources": ["src/core/editor.ts", "src/view/view.ts", "src/view/input.ts", "src/view/selection-handler.ts", "src/extensions/plugins/history.ts", "integrations/gitlab/components/fountain_editor_surface.vue"]
+  },
+  "verification": {
+    "fullCheck": { "passed": true, "tests": 5300, "files": 327, "log": "artifacts/editability-full-check-final-20261111.log" },
+    "sourceNativeMode": { "passed": 3, "failed": 0, "engines": ["chromium", "firefox", "webkit"], "log": "artifacts/editability-final-20261111.log" },
+    "compiledVue2Windows": { "passed": 5, "failed": 1, "log": "artifacts/gitlab-vue2-final2-20261111.log", "failure": "WebKit copy event writes exact 19 characters; external native paste receives zero. Assertion retained." },
+    "compiledVue2LinuxX11": { "passed": 2, "failed": 0, "engine": "webkit", "node": "24.22.1", "playwright": "1.62.1", "os": "Ubuntu 24.04.2 in WSL", "display": "GDK_BACKEND=x11 and xvfb-run", "log": "artifacts/gitlab-vue2-linux-x11-20261111.log", "config": "artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs", "clipboard": "Exact 19 expected characters copied to external textarea by native keyboard actions" },
+    "independentWindowsControl": { "enginesPassed": ["chromium", "firefox"], "enginesFailed": ["webkit"], "source": "artifacts/read-only-clipboard-native-control-20261111.mjs", "results": "artifacts/read-only-clipboard-native-control-20261111/results.json" },
+    "independentLinuxX11Control": { "engine": "webkit", "passed": true, "receivedCharacters": 30, "source": "artifacts/linux-read-only-clipboard-native-control-20261111.mjs", "log": "artifacts/linux-read-only-clipboard-native-control-x11-20261111.log" },
+    "visualReview": [
+      "artifacts/editability-final-20261111/editability-changes-intera-f45fc--or-consuming-document-undo-webkit/read-only-mode.png",
+      "artifacts/editability-final-20261111/editability-changes-intera-f45fc--or-consuming-document-undo-chromium/editing-restored.png",
+      "artifacts/gitlab-vue2-final2-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history-firefox/vue2-remounted-history.png",
+      "artifacts/gitlab-vue2-linux-x11-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/vue2-read-only.png"
+    ],
+    "ciPolicy": { "passed": 3, "failed": 0, "log": "artifacts/editability-ci-final-20261111.log" }
+  },
+  "failuresRetained": [
+    "Initial full check: existing readonly code-region scroll assertion failed. Guard ordering repaired; focused 16 and full 5300 tests subsequently pass.",
+    "Windows WebKit native readonly copy remains failing in component and independent control; exact OS/browser cause not established.",
+    "Initial Linux runs with WSL Wayland available time out on first click. Compositing disablement alone also fails. Explicit X11 passes unchanged cases. Initial logs retained."
+  ],
+  "capacity": { "aggregateCommonJSKiBBefore": 1419.8125, "aggregateCommonJSKiBAfter": 1421.25, "measuredCommonJSKiBRounded": 1421.1, "measuredESMKiBRounded": 1594.6, "otherLimitsChanged": false, "publicDeclarationHashesUpdated": 4, "newPublicRuntimeDependency": false },
+  "notEstablished": [
+    "Full GitLab ContentEditor contract, Markdown/service/extension adapters, actual backend authorization, persistence, uploads, collaboration and end-to-end application workflows",
+    "Read-only state as authorization; explicit host/remote transactions intentionally remain possible",
+    "Physical IME, physical mobile/Safari or assistive-technology certification",
+    "Fresh sealed package/consumer validation, combined hosted CI, registry publication or deployment",
+    "Precise Windows native clipboard failure cause or equivalence to the earlier homepage Clipboard API failure"
+  ]
+}

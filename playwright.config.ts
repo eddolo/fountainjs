@@ -41,6 +41,7 @@ const desktopTests = [
   '**/site-copy-contrast.spec.ts',
   '**/homepage-export.spec.ts',
   '**/homepage-paste.spec.ts',
+  '**/editability.spec.ts',
 ];
 
 export default defineConfig({

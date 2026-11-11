@@ -19,6 +19,10 @@ import {
   StarterKit,
   composeExtensions,
   createEditor,
+  canUndo,
+  canRedo,
+  undo as undoDocument,
+  redo as redoDocument,
   createLeanProvider,
   defineExtension,
   getClipboardHistoryState,
@@ -316,6 +320,7 @@ class BrowserCounterNodeView {
   constructor(node: Node, view: unknown, getPath: () => number[]) {
     nodeViewMetrics.created += 1;
     this.dom.type = 'button';
+    this.dom.disabled = !(view as EditorView).editor.editable;
     this.dom.dataset.browserCounter = '';
     this.render(node);
     this.dom.addEventListener('click', () => {
@@ -413,6 +418,8 @@ const editor = createEditor({
       { type: 'paragraph', content: [{ type: 'text', text: 'Alpha Beta' }] },
       { type: 'paragraph', content: [{ type: 'text', text: 'Second paragraph' }] },
       { type: 'browser_counter', attrs: { count: 0 } },
+      ...(browserFixture === 'editability' ? [{ type: 'task_list', content: [{ type: 'task_item', attrs: { checked: false },
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Mode test task' }] }] }] }] : []),
     ],
   },
 });
@@ -436,6 +443,25 @@ const view = new EditorView(mount, editor, {
   paste: { onReport: (report) => pasteReports.push(report) },
 });
 const commands = view.commandManager(browserKit.commands);
+if (browserFixture === 'editability') {
+  const controls = document.createElement('div');
+  controls.setAttribute('aria-label', 'Interaction mode controls');
+  const mode = document.createElement('button');
+  mode.type = 'button';
+  mode.addEventListener('click', () => editor.setEditable(!editor.editable));
+  const undoButton = document.createElement('button');
+  undoButton.type = 'button'; undoButton.textContent = 'Test undo';
+  undoButton.addEventListener('click', () => undoDocument(editor));
+  const redoButton = document.createElement('button');
+  redoButton.type = 'button'; redoButton.textContent = 'Test redo';
+  redoButton.addEventListener('click', () => redoDocument(editor));
+  const refresh = () => {
+    mode.textContent = editor.editable ? 'Switch to read-only' : 'Switch to editing';
+    undoButton.disabled = !canUndo(editor); redoButton.disabled = !canRedo(editor);
+  };
+  controls.append(mode, undoButton, redoButton);
+  mount.prepend(controls); editor.subscribe(refresh); refresh();
+}
 const leanController = new LeanController(editor, createLeanProvider({
   descriptor: { id: 'browser-one-shot', label: 'Browser one-shot checker', mode: 'one-shot', dataDestination: 'device' },
   check: async () => ({

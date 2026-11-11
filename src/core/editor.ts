@@ -44,11 +44,11 @@ export class Editor {
   private destroyed = false;
   private started = false;
   private commandBatch?: CommandBatch;
-  readonly editable: boolean;
+  private editableValue: boolean;
 
   constructor(state: EditorState, private readonly onUpdate?: EditorConfig['onUpdate'], editable = true, deferStart?: (start: () => void) => void) {
     this.currentState = state;
-    this.editable = editable;
+    this.editableValue = editable;
     if (deferStart) deferStart(() => this.start());
     else this.start();
   }
@@ -60,7 +60,27 @@ export class Editor {
   }
 
   get state(): EditorState { return this.currentState; }
+  get editable(): boolean { return this.editableValue; }
   get isDestroyed(): boolean { return this.destroyed; }
+
+  /** Changes interaction mode without replacing document state or history. */
+  setEditable(editable: boolean): boolean {
+    this.assertAlive();
+    if (typeof editable !== 'boolean') throw new TypeError('Editability must be a boolean.');
+    if (this.commandBatch) throw new Error('Editability cannot change during a command batch.');
+    const previous = this.editableValue;
+    if (previous === editable) return false;
+    const previousState = this.currentState;
+    this.editableValue = editable;
+    try {
+      const accepted = this.dispatch(this.createTransaction().setMeta('force', true).setMeta('addToHistory', false));
+      if (!accepted) this.editableValue = previous;
+      return accepted;
+    } catch (error) {
+      if (this.currentState === previousState) this.editableValue = previous;
+      throw error;
+    }
+  }
 
   createTransaction(): Transaction {
     this.assertAlive();

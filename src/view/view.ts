@@ -130,6 +130,8 @@ export class EditorView {
   private decorations = DecorationSet.empty;
   private destroyed = false;
   private selectionSyncVersion = 0;
+  private editableValue: boolean;
+  private readonly managesReadonlyAttribute: boolean;
   private readonly virtualLayout?: VirtualBlockLayout;
   private readonly virtualMinimumBlockCount: number = 250;
   private readonly virtualScrollTarget?: HTMLElement | Window;
@@ -145,6 +147,8 @@ export class EditorView {
 
   constructor(public readonly mount: HTMLElement, public readonly editor: Editor, options: EditorViewOptions = {}) {
     this.onError = options.onError ?? ((error) => console.error(error));
+    this.editableValue = editor.editable;
+    this.managesReadonlyAttribute = !Object.prototype.hasOwnProperty.call(options.attributes ?? {}, 'aria-readonly');
     this.dom = document.createElement('div');
     this.dom.className = ['fountain-editor', options.className].filter(Boolean).join(' ');
     this.dom.contentEditable = editor.editable ? 'true' : 'false';
@@ -273,6 +277,16 @@ export class EditorView {
 
   private onStateChange = (state: EditorState, transaction: import('../core').Transaction): void => {
     if (this.destroyed) return;
+    const modeChanged = this.editableValue !== this.editor.editable;
+    if (modeChanged) {
+      this.editableValue = this.editor.editable;
+      this.input.cancelComposition();
+      this.dom.contentEditable = this.editableValue ? 'true' : 'false';
+      if (this.managesReadonlyAttribute && this.dom.getAttribute('role') === 'textbox') {
+        if (this.editableValue) this.dom.removeAttribute('aria-readonly');
+        else this.dom.setAttribute('aria-readonly', 'true');
+      }
+    }
     this.selections.mapTransactionSelection(transaction);
     const revealVirtualCaret = this.virtualized && transaction.docChanged
       && state.doc.childCount < transaction.originalDoc.childCount
@@ -283,7 +297,7 @@ export class EditorView {
       || (transaction.selectionSet && transaction.getMeta('fountain$collaborationRemote') !== true);
     const decorations = this.collectDecorations(state);
     const content = decorations.decorations.filter(decoration => !(decoration.type === 'widget' && decoration.spec.overlay));
-    const renderContent = transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout))
+    const renderContent = modeChanged || transaction.docChanged || (transaction.selectionSet && Boolean(this.virtualLayout))
       || content.length !== this.renderedDecorations.decorations.length
       || content.some((decoration, index) => !decoration.eq(this.renderedDecorations.decorations[index]!));
     // Claim this reconciliation before NodeView/render hooks can dispatch a
@@ -300,7 +314,7 @@ export class EditorView {
       if (this.editor.state !== state) return;
     }
     if (renderContent) {
-      this.render(state.doc, decorations, transaction);
+      this.render(state.doc, decorations, transaction, !modeChanged);
     } else this.syncOverlayWidgets(state.doc, decorations);
     this.decorations = decorations;
     this.syncNodeViewSelection(state.selection);

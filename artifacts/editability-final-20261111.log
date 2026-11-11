@@ -1,0 +1,364 @@
+[WebServer] (node:9912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && pnpm build:angular
+[WebServer] (node:3940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [PLUGIN_TIMINGS] Your build spent 91% of 8.1s inside plugin hooks (7.4s).
+[WebServer] Measured inside the callback, so queue time is excluded and time the callback itself awaited is not:
+[WebServer]   - fountain-library-output renderChunk (88%, 7.1s, 187 calls)
+[WebServer] See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+[WebServer] 
+[WebServer] (node:19944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular.json && pnpm build:angular-demo
+[WebServer] (node:25364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:13116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] $ pnpm --dir tools/angular-build exec ngc -p ../../tsconfig.angular-demo.json
+[WebServer] (node:10984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4804) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+[WebServer]   - import "./tools/site-build-info" without a file extension (vite.config.ts:6:37). Add the file extension
+[WebServer] Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+Running 3 tests using 1 worker
+
+(node:25216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\browser\editability.spec.ts:6:1 › changes interaction mode without replacing the editor or consuming document undo (2.0s)
+(node:12092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [firefox] › tests\browser\editability.spec.ts:6:1 › changes interaction mode without replacing the editor or consuming document undo (5.1s)
+(node:25192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [webkit] › tests\browser\editability.spec.ts:6:1 › changes interaction mode without replacing the editor or consuming document undo (3.7s)
+
+  3 passed (37.2s)
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/browser/editability.spec.ts",
+      "--project=chromium",
+      "--project=firefox",
+      "--project=webkit",
+      "--workers=1",
+      "--output=artifacts/editability-final-20261111",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\playwright.config.ts",
+    "rootDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/editability-final-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/editor.spec.ts",
+          "**/collaboration-demo.spec.ts",
+          "**/comment-provider.spec.ts",
+          "**/starter-downloads.spec.ts",
+          "**/docx-research-workflow.spec.ts",
+          "**/html-math-export.spec.ts",
+          "**/site-copy-contrast.spec.ts",
+          "**/homepage-export.spec.ts",
+          "**/homepage-paste.spec.ts",
+          "**/editability.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/editability-final-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/editor.spec.ts",
+          "**/collaboration-demo.spec.ts",
+          "**/comment-provider.spec.ts",
+          "**/starter-downloads.spec.ts",
+          "**/docx-research-workflow.spec.ts",
+          "**/html-math-export.spec.ts",
+          "**/site-copy-contrast.spec.ts",
+          "**/homepage-export.spec.ts",
+          "**/homepage-paste.spec.ts",
+          "**/editability.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/editability-final-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/editor.spec.ts",
+          "**/collaboration-demo.spec.ts",
+          "**/comment-provider.spec.ts",
+          "**/starter-downloads.spec.ts",
+          "**/docx-research-workflow.spec.ts",
+          "**/html-math-export.spec.ts",
+          "**/site-copy-contrast.spec.ts",
+          "**/homepage-export.spec.ts",
+          "**/homepage-paste.spec.ts",
+          "**/editability.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/editability-final-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/mobile.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/editability-final-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "C:/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/mobile.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm build && pnpm exec vite --config vite.input-audit.config.ts --host 127.0.0.1 --port 4173 --strictPort",
+      "url": "http://127.0.0.1:4173/browser-tests.html",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "editability.spec.ts",
+      "file": "editability.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "changes interaction mode without replacing the editor or consuming document undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2004,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:03:59.117Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\editability-final-20261111\\editability-changes-intera-f45fc--or-consuming-document-undo-chromium\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\editability-final-20261111\\editability-changes-intera-f45fc--or-consuming-document-undo-chromium\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d551a8a97491824ee35-d3659b01872f51a56621",
+          "file": "editability.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "changes interaction mode without replacing the editor or consuming document undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5051,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:04:02.647Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\editability-final-20261111\\editability-changes-intera-f45fc--or-consuming-document-undo-firefox\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\editability-final-20261111\\editability-changes-intera-f45fc--or-consuming-document-undo-firefox\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d551a8a97491824ee35-47343a2ace0a0fef062b",
+          "file": "editability.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "changes interaction mode without replacing the editor or consuming document undo",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3720,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:04:09.363Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\editability-final-20261111\\editability-changes-intera-f45fc--or-consuming-document-undo-webkit\\video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\cappu\\Desktop\\paoloapp\\failures\\Fountainjs-App\\artifacts\\editability-final-20261111\\editability-changes-intera-f45fc--or-consuming-document-undo-webkit\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7d551a8a97491824ee35-faaf9b01cba1d8a748a7",
+          "file": "editability.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-11T22:03:36.264Z",
+    "duration": 37156.956000000006,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

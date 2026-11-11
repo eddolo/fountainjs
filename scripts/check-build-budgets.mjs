@@ -698,7 +698,11 @@ const limits = Object.freeze({
   // Shadow DOM paths: +791 CJS bytes, 1,453,644 total. Add 1 KiB capacity
   // for the verified lost-click repair;
   // every entry, ESM, CSS, latency and retention ceiling remains unchanged.
-  'all CommonJS runtime code': 1419.8125 * kibibyte,
+  // Runtime interaction-mode changes, preserved undo, composition cancellation,
+  // and read-only keyboard/focus handling measure 1,455,216 CJS bytes.
+  // Round capacity to the next quarter KiB; all entry/ESM/CSS/performance caps
+  // stay unchanged. Preserve the preceding failed measurement.
+  'all CommonJS runtime code': 1421.25 * kibibyte,
 });
 
 const entries = await readdir('dist', { withFileTypes: true });

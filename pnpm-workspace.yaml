@@ -6,6 +6,7 @@ packages:
   - '.'
   - 'tools/svelte-check'
   - 'tools/angular-build'
+  - 'tools/gitlab-bridge'
 minimumReleaseAgeExclude:
   - '@types/react-dom@19.2.7'
   - '@vitest/mocker@5.0.0'

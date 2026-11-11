@@ -30,7 +30,7 @@ describe('browser CI retry evidence retention', () => {
 
   it('keeps preflight outputs separate so later runs cannot remove their failed attempts', () => {
     const commands = workflow.split('\n').filter(line => line.includes('run:') && line.includes('playwright test'));
-    expect(commands).toHaveLength(10);
+    expect(commands).toHaveLength(11);
     const directories = commands.map(line => {
       const explicit = line.match(/--output=([^\s]+)/)?.[1];
       if (explicit) return explicit;
@@ -47,6 +47,7 @@ describe('browser CI retry evidence retention', () => {
     expect(directories).toContain('artifacts/yjs-incomplete-room-browser');
     expect(directories).toContain('artifacts/virtual-host-browser');
     expect(directories).toContain('artifacts/production-browser');
+    expect(directories).toContain('artifacts/gitlab-vue2-browser');
     // Preserve the disjoint headed clipboard / remaining headless coverage.
     const standard = commands.filter(line => !line.includes('--config'));
     expect(standard).toHaveLength(5);
@@ -64,6 +65,8 @@ describe('browser CI retry evidence retention', () => {
     expect(job).toContain('run: pnpm exec playwright install --with-deps');
     expect(job).toMatch(/^        run: pnpm audit:ui --reporter=list,json$/m);
     expect(job).toMatch(/^        run: xvfb-run --auto-servernum pnpm exec playwright test --config playwright\.production\.config\.ts --headed --reporter=list,json$/m);
+    expect(job).toMatch(/^        run: xvfb-run --auto-servernum pnpm exec playwright test --config playwright\.gitlab-bridge\.config\.ts --headed --reporter=list,json$/m);
+    expect(job).toContain('name: gitlab-vue2-bridge-evidence');
     expect(job).toMatch(/^        run: pnpm audit:starters:prepare$/m);
     expect(job).toMatch(/^        run: pnpm audit:starters --reporter=list,json$/m);
     expect(job!.indexOf('run: pnpm install --frozen-lockfile')).toBeLessThan(job!.indexOf('run: pnpm audit:ui'));

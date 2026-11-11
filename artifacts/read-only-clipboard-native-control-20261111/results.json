@@ -1,0 +1,63 @@
+[
+  {
+    "engine": "chromium",
+    "matches": true,
+    "expectedLength": 30,
+    "receivedLength": 30,
+    "observations": [
+      {
+        "type": "copy",
+        "length": 30
+      },
+      {
+        "type": "paste",
+        "length": 30,
+        "types": [
+          "text/plain",
+          "text/html"
+        ]
+      }
+    ]
+  },
+  {
+    "engine": "firefox",
+    "matches": true,
+    "expectedLength": 30,
+    "receivedLength": 30,
+    "observations": [
+      {
+        "type": "copy",
+        "length": 30
+      },
+      {
+        "type": "paste",
+        "length": 30,
+        "types": [
+          "text/html",
+          "text/plain"
+        ]
+      }
+    ]
+  },
+  {
+    "engine": "webkit",
+    "matches": false,
+    "expectedLength": 30,
+    "receivedLength": 0,
+    "observations": [
+      {
+        "type": "copy",
+        "length": 30
+      },
+      {
+        "type": "paste",
+        "length": 0,
+        "types": [
+          "text/plain",
+          "text/uri-list",
+          "text/html"
+        ]
+      }
+    ]
+  }
+]

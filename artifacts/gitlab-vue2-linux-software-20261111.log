@@ -1,0 +1,253 @@
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:06] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+
+Running 2 tests using 1 worker
+
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:10] "GET /tests/browser/fixtures/gitlab-vue2.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:10] "GET /assets/gitlab-vue2-BJmTmAtX.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:10] "GET /assets/gitlab-vue2-0ISob5Kn.js HTTP/1.1" 200 -
+  ✘  1 tests/browser/gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history (30.2s)
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:43] "GET /tests/browser/fixtures/gitlab-vue2.html?reject-mode=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:43] "GET /assets/gitlab-vue2-BJmTmAtX.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [11/Nov/2026 22:09:43] "GET /assets/gitlab-vue2-0ISob5Kn.js HTTP/1.1" 200 -
+  ✓  2 tests/browser/gitlab-vue2.spec.ts:63:1 › removes the surface when a host filter refuses read-only mode and recovers without losing the document (2.2s)
+
+
+  1) tests/browser/gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })
+        - locator resolved to <div tabindex="0" role="textbox" spellcheck="true" aria-multiline="true" contenteditable="true" class="fountain-editor" aria-label="GitLab Vue 2 bridge editor">…</div>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+
+
+      20 |   await expect(editor).toHaveText('Vue 2 integration.');
+      21 |   await expect(mounts).toHaveText('1');
+    > 22 |   await editor.click(); await page.keyboard.press('End'); await page.keyboard.type('A');
+         |                ^
+      23 |   await expect(editor).toHaveText('Vue 2 integration.A');
+      24 |   await page.getByRole('button', { name: 'Use read-only mode', exact: true }).click();
+      25 |   await expect(editor).toHaveAttribute('contenteditable', 'false');
+        at /mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser/gitlab-vue2.spec.ts:22:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser/gitlab-vue2.spec.ts:4:1 › keeps actual Vue 2 host mode changes and view remounts on one Fountain document history 
+  1 passed (38.7s)
+{
+  "config": {
+    "argv": [
+      "/home/eddolo/.cache/fountainjs-native-audit/node-v24.22.1-linux-x64/bin/node",
+      "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs",
+      "--output=/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111",
+      "--reporter=list,json"
+    ],
+    "configFile": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/playwright.gitlab-vue2-linux-20261111.config.cjs",
+    "rootDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/gitlab-vue2.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "python3 -m http.server 4199 --bind 127.0.0.1",
+      "cwd": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-site",
+      "url": "http://127.0.0.1:4199/tests/browser/fixtures/gitlab-vue2.html",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "gitlab-vue2.spec.ts",
+      "file": "gitlab-vue2.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keeps actual Vue 2 host mode changes and view remounts on one Fountain document history",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30199,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser/gitlab-vue2.spec.ts",
+                        "column": 16,
+                        "line": 22
+                      },
+                      "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'GitLab Vue 2 bridge editor', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <div tabindex=\"0\" role=\"textbox\" spellcheck=\"true\" aria-multiline=\"true\" contenteditable=\"true\" class=\"fountain-editor\" aria-label=\"GitLab Vue 2 bridge editor\">…</div>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  20 |   await expect(editor).toHaveText('Vue 2 integration.');\n  21 |   await expect(mounts).toHaveText('1');\n> 22 |   await editor.click(); await page.keyboard.press('End'); await page.keyboard.type('A');\n     |                ^\n  23 |   await expect(editor).toHaveText('Vue 2 integration.A');\n  24 |   await page.getByRole('button', { name: 'Use read-only mode', exact: true }).click();\n  25 |   await expect(editor).toHaveAttribute('contenteditable', 'false');\n    at /mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/tests/browser/gitlab-vue2.spec.ts:22:16"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:09:09.076Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-keeps-actual-V-1cfcd-e-Fountain-document-history/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "076bc0070f517945042c-0c2d8ebbc46f7ae8bc8a",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "removes the surface when a host filter refuses read-only mode and recovers without losing the document",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2209,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-11T22:09:42.372Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-removes-the-su-f43f6-without-losing-the-document/video.webm"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/mnt/c/Users/cappu/Desktop/paoloapp/failures/Fountainjs-App/artifacts/gitlab-vue2-linux-software-20261111/gitlab-vue2-removes-the-su-f43f6-without-losing-the-document/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "076bc0070f517945042c-ae8025a5c508386fa5ee",
+          "file": "gitlab-vue2.spec.ts",
+          "line": 63,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-11T22:09:06.477Z",
+    "duration": 38670.073,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

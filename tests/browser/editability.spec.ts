@@ -1,0 +1,50 @@
+import { expect, test } from '@playwright/test';
+import { writeFile } from 'node:fs/promises';
+import { readDocumentDOMText } from './document-dom-text';
+
+test.use({ video: 'on', trace: 'on' });
+test('changes interaction mode without replacing the editor or consuming document undo', async ({ page }, info) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/browser-tests.html?fixture=editability');
+  const surface = page.getByRole('textbox', { name: 'Browser contract editor', exact: true });
+  const paragraph = surface.locator(':scope > p').first();
+  const model = page.getByLabel('Document JSON', { exact: true });
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('Alpha Beta');
+  await surface.evaluate(element => { element.setAttribute('data-mode-test-instance', 'original-view'); });
+  await paragraph.click(); await page.keyboard.press('End'); await page.keyboard.type('!');
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('Alpha Beta!');
+  const edited = await model.textContent();
+  await page.getByRole('button', { name: 'Switch to read-only', exact: true }).click();
+  await expect(surface).toHaveAttribute('contenteditable', 'false');
+  await expect(surface).toHaveAttribute('aria-readonly', 'true');
+  await expect(surface).toHaveAttribute('data-mode-test-instance', 'original-view');
+  await expect(surface.getByRole('checkbox')).toBeDisabled();
+  await expect(surface.getByRole('button', { name: 'Count 0', exact: true })).toBeDisabled();
+  await expect(page.locator('#editor').getByRole('button', { name: 'Drag Paragraph block', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Test undo', exact: true })).toBeDisabled();
+  await paragraph.click();
+  await page.keyboard.type('blocked'); await page.keyboard.press('Enter'); await page.keyboard.press('Backspace');
+  await page.keyboard.press('ControlOrMeta+z');
+  expect(await model.textContent()).toBe(edited);
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('Alpha Beta!');
+  await page.locator('#editor').screenshot({ path: info.outputPath('read-only-mode.png') });
+  await page.getByRole('button', { name: 'Switch to editing', exact: true }).click();
+  await expect(surface).toHaveAttribute('contenteditable', 'true');
+  await expect(surface).not.toHaveAttribute('aria-readonly', 'true');
+  await expect(surface).toHaveAttribute('data-mode-test-instance', 'original-view');
+  await paragraph.click(); await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('Alpha Beta');
+  await page.keyboard.press('ControlOrMeta+Shift+z');
+  await expect.poll(() => readDocumentDOMText(paragraph)).toBe('Alpha Beta!');
+  expect(await model.textContent()).toBe(edited);
+  await surface.getByRole('checkbox').check();
+  await expect(surface.getByRole('checkbox')).toBeChecked();
+  await surface.getByRole('button', { name: 'Count 0', exact: true }).click();
+  await expect(surface.getByRole('button', { name: 'Count 1', exact: true })).toBeVisible();
+  await page.locator('#editor').screenshot({ path: info.outputPath('editing-restored.png') });
+  await writeFile(info.outputPath('editability.json'), JSON.stringify({ engine: info.project.name,
+    scope: 'Native keyboard use of source-served browser fixture; task/custom controls and history verified. Not real GitLab, backend authorization, physical IME or AT certification.',
+    blockedEditing: true, historyRetained: true, viewRetained: true, errors }, null, 2));
+  expect(errors).toEqual([]);
+});

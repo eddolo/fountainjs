@@ -919,6 +919,51 @@ Fresh headed Linux CI, the current combined revision gates and final publication
 checks remain pending. The local failed native positive case is not waived for
 release; source/production pass counts above remain explicit.
 
+### Runtime editability and actual Vue 2 bridge — 2026-11-11
+
+The local runtime adds `Editor.setEditable(boolean)` without replacing document,
+selection or undo history. The DOM view retains its outer element, refreshes
+NodeViews and task/drag controls, updates managed read-only accessibility state,
+and discards unfinished composition. Read-only native keys and history commands
+cannot edit the document; explicit host/remote transactions remain possible.
+Mode changes rejected before commit retain the prior mode. Mode changes inside
+a command batch are refused to prevent leaking state across a batch rollback.
+
+The complete local `pnpm check` passes **5,300 tests in 327 files**, plus all
+existing build/API/package, server/headless, format, type, size, performance and
+retention gates. The first full run exposed a read-only source-region scrolling
+regression; preserving the existing specialized code-region key path repairs it,
+with the original assertion unchanged. Three final recorded native mode journeys
+pass in Chromium, Firefox and WebKit. Two captured states receive visual review.
+Synthetic composition coverage does not certify physical IME behavior.
+
+The isolated real Vue 2.7.16 component mounts the public package build and keeps
+history across mode switches and view destruction/remount. A refused read-only
+change removes the surface, emits an error, and can recover. Windows results are
+**five passes, one failure**: WebKit's copy event writes 19 expected characters,
+but the external native paste receives none. A separate plain HTML control
+reproduces this result. Under Ubuntu 24.04/Playwright 1.62.1 WebKit on explicit
+X11/Xvfb, **both component cases pass**, with exactly 19 characters reaching the
+external textarea. The independent control receives its exact 30 characters too.
+The initial WSL display attempts time out on the first click; accelerated-
+compositing disablement alone does not help, while selecting X11 instead of the
+available WSL Wayland display gives the recorded pass. Failures remain recorded.
+No native-copy equality, timeout, retry or skip was weakened. The hosted required
+job retains all six component executions and always uploads recordings/evidence.
+
+Four public declaration hashes are refreshed for the additive API and internal
+view fields. Only the aggregate CommonJS raw ceiling increases, 1419.8125 to
+1421.25 KiB, for measured 1421.1 KiB output. Entry, ESM, CSS, latency and heap
+limits are unchanged. Vue 2/compiler dependencies live only in private integration
+tooling. The earlier sealed archive is stale because library runtime changed.
+
+This is an integration primitive, not a running GitLab replacement. Its actual
+Markdown/services/extensions, authenticated persistence, uploads, collaboration
+and complete application workflows still need implementation and verification.
+Fresh packed consumers, the combined hosted matrix and publication remain open.
+[Integration contract](../integrations/gitlab/README.md).
+Compact evidence: `artifacts/editability-integration-20261111.json`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad

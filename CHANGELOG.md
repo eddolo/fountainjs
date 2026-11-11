@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add `editor.setEditable(boolean)` to change interaction mode without
+  replacing the document, selection or undo history. Views update accessibility
+  state and task/custom controls; unfinished composition is cancelled. Read-only
+  editing/history shortcuts stay blocked, including Backspace browser navigation.
+  Undo/redo commands and availability queries now respect read-only mode.
+  Explicit host/remote document transactions remain possible; interaction mode
+  does not replace backend authorization.
+
 - Paste reports now distinguish refused insertions with `outcome: 'rejected'`
   and an `insertion-rejected` issue instead of falsely reporting inserted text.
   Refused valid rich content is not retried as plain text to bypass editing

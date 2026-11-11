@@ -168,6 +168,14 @@ export class InputManager {
 
   get composing(): boolean { return this.composingValue; }
 
+  cancelComposition(): void {
+    this.clearPendingNativePaste();
+    this.composingValue = false;
+    this.shiftEnterPending = false;
+    this.compositionSelection = undefined;
+    this.compositionHandled = false;
+  }
+
   constructor(
     private readonly editor: Editor,
     private readonly dom: HTMLElement,
@@ -269,6 +277,15 @@ export class InputManager {
     // Leave candidate navigation and confirmation to the input method.
     if (this.composingValue || isCompositionKey(event)) return;
     const codeRegion = this.focusedCodeRegion(event);
+    if (!this.editor.editable && !codeRegion) {
+      const modifier = event.ctrlKey || event.metaKey, key = event.key.toLowerCase();
+      if (modifier && !event.altKey && key === 'a') {
+        event.preventDefault(); selectAll(this.editor);
+      } else if (['Backspace', 'Delete', 'Enter'].includes(event.key)
+        || modifier && !event.altKey && ['z', 'y', 'x', 'v'].includes(key)
+        || !modifier && !event.altKey && event.key.length === 1) event.preventDefault();
+      return;
+    }
     let pluginsChecked = false;
     if (codeRegion) {
       // A tab-focused scrolling region is not a text caret. Capturing the old
@@ -364,7 +381,7 @@ export class InputManager {
     const shiftEnter = this.shiftEnterPending;
     this.shiftEnterPending = false;
     if (this.options.shouldStopEvent?.(event)) return;
-    if (!this.editor.editable) return;
+    if (!this.editor.editable) { event.preventDefault(); return; }
     const codeRegion = this.focusedCodeRegion(event);
     if (codeRegion) {
       if (event.inputType.startsWith('delete')) { event.preventDefault(); return; }
@@ -740,7 +757,7 @@ export class InputManager {
 
   private onCompositionStart = (event: CompositionEvent): void => {
     this.shiftEnterPending = false;
-    if (this.options.shouldStopEvent?.(event)) return;
+    if (!this.editor.editable || this.options.shouldStopEvent?.(event)) return;
     this.composingValue = true;
     this.compositionHandled = false;
     this.selections.capture();
@@ -760,7 +777,7 @@ export class InputManager {
 
   private commitComposition(data: string): boolean {
     let selection = this.compositionSelection;
-    if (this.compositionHandled || !selection || !data) return false;
+    if (!this.editor.editable || this.compositionHandled || !selection || !data) return false;
     if (selection.kind !== 'text') {
       const inserted = this.runGroupedInput('composition', () => insertText(this.editor, data));
       if (inserted) {

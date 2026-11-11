@@ -1047,12 +1047,29 @@ state with the owning schema. To retain a Markdown source snapshot through
 editing, parse with the editor's owning schema, rather than transferring the
 native snapshot between independently constructed schemas.
 
-`Editor` exposes `state`, `editable`, `createTransaction()`, `dispatch()`,
+`Editor` exposes `state`, `editable`, `setEditable(boolean)`, `createTransaction()`, `dispatch()`,
 `runCommandBatch()`, `subscribe()`, `getJSON()`, `getText()`, and `destroy()`.
 `dispatch()` returns `true` only when a transaction is accepted and applied;
 empty or plugin-filtered transactions return `false`.
 `runCommandBatch()` is the low-level atomic transaction boundary used by command
 chains; most applications should use `createCommandManager()` instead.
+
+`setEditable(value)` changes local interaction mode while retaining the document,
+selection, stored marks and history. It returns `true` for an accepted change,
+or `false` for an unchanged value or a plugin-filtered update. A refused change
+retains the prior mode. Non-boolean values, destroyed editors and mode changes
+inside an atomic command batch throw. As with `dispatch`, an observer exception
+can propagate after a change has committed.
+
+Subscribed views update `contenteditable` and their managed `aria-readonly`
+attribute. Their outer editor DOM remains mounted; task and custom NodeView
+controls are rebuilt for the mode. An unfinished composition is cancelled and
+its uncommitted browser text is discarded. Read-only input, undo and redo stay
+blocked, and `canUndo`/`canRedo` report unavailable until editing is enabled.
+Select-all and copying remain available. This mode is host configuration,
+not document JSON or backend authorization: explicit host/remote `dispatch`
+updates can still refresh a read-only document. Hosts should ignore updates
+whose `transaction.docChanged` is false when tracking content changes.
 
 ## Selections and transactions
 

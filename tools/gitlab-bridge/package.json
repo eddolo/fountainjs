@@ -1,0 +1,8 @@
+{
+  "name": "fountain-gitlab-bridge-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "vue": "2.7.16"
+  }
+}
