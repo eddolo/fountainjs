@@ -121,6 +121,7 @@ export async function markdownStructuralRecoveryJourney(page: Page, info: TestIn
   await capture('nested-flow-image-controls.png');
   await imageForm.getByRole('button', { name: 'Save image', exact: true }).click();
   await verify(editor, true, true);
+  await expect(page.getByRole('button', { name: 'Edit selected image', exact: true })).toBeFocused();
   await page.keyboard.press('ControlOrMeta+z');
   await verify(editor, true);
   await page.keyboard.press('ControlOrMeta+Shift+z');

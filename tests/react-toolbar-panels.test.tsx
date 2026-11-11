@@ -9,6 +9,52 @@ import { FountainToolbar, FountainToolbarButton, FountainToolbarRoot } from '../
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 describe('toolbar configuration panel keyboard ownership', () => {
+  it.each([
+    ['Control', { ctrlKey: true }, { key: 'z', ctrlKey: true, shiftKey: true }],
+    ['Command', { metaKey: true }, { key: 'z', metaKey: true, shiftKey: true }],
+    ['Control+Y', { ctrlKey: true }, { key: 'y', ctrlKey: true }],
+  ] as const)('keeps document undo and redo available on a focused toolbar button with %s', async (_name, modifier, redoKeys) => {
+    const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
+      type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Keep this selection' }] }],
+    } });
+    selectText(editor, [0, 0], 0, 4);
+    const original = editor.getJSON();
+    const mount = document.createElement('div'); document.body.append(mount); const root = createRoot(mount);
+    try {
+      await act(async () => root.render(<FountainToolbar editor={editor} />));
+      const bold = mount.querySelector<HTMLButtonElement>('[data-fountain-toolbar-action="bold"]')!;
+      bold.focus();
+      await act(async () => bold.click());
+      const formatted = editor.getJSON();
+      expect(formatted).not.toEqual(original);
+      for (const keys of [{ key: 'z', ...modifier, altKey: true }, { key: 'z', ...modifier, isComposing: true }]) {
+        const ignored = new KeyboardEvent('keydown', { ...keys, bubbles: true, cancelable: true });
+        await act(async () => bold.dispatchEvent(ignored));
+        expect(ignored.defaultPrevented).toBe(false);
+        expect(editor.getJSON()).toEqual(formatted);
+      }
+      const undoKey = new KeyboardEvent('keydown', { key: 'z', ...modifier, bubbles: true, cancelable: true });
+      await act(async () => bold.dispatchEvent(undoKey));
+      expect(undoKey.defaultPrevented).toBe(true);
+      expect(editor.getJSON()).toEqual(original);
+      expect(document.activeElement).toBe(bold);
+      await act(async () => bold.dispatchEvent(new KeyboardEvent('keydown', { ...redoKeys, bubbles: true, cancelable: true })));
+      expect(editor.getJSON()).toEqual(formatted);
+
+      const image = mount.querySelector<HTMLButtonElement>('[data-fountain-toolbar-action="image"]')!;
+      await act(async () => image.click());
+      const input = mount.querySelector<HTMLInputElement>('[aria-label="Image URL"]')!;
+      const fieldUndo = new KeyboardEvent('keydown', { key: 'z', ...modifier, bubbles: true, cancelable: true });
+      await act(async () => input.dispatchEvent(fieldUndo));
+      expect(fieldUndo.defaultPrevented).toBe(false);
+      expect(editor.getJSON()).toEqual(formatted);
+      await act(async () => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+      expect(document.activeElement).toBe(image);
+      await act(async () => image.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ...modifier, bubbles: true, cancelable: true })));
+      expect(editor.getJSON()).toEqual(original);
+    } finally { await act(async () => root.unmount()); editor.destroy(); mount.remove(); }
+  });
+
   it('changes code reading direction through the panel without rewriting source or selection', async () => {
     const editor = createEditor({ schema: StarterKit.schema, plugins: StarterKit.plugins, content: {
       type: 'doc', content: [{ type: 'code_block', attrs: { language: 'python' }, content: [{ type: 'text', text: '# שלום\nprint("مرحبا")' }] }],

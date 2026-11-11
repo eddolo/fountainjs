@@ -7,6 +7,10 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep document undo and redo shortcuts working when focus returns to a toolbar
+  button after an image edit or a configuration panel closes. Native form
+  fields retain their own keyboard handling.
+
 - Keep keyboard-selected slash commands, mentions, and emoji visible in their
   picker, and let Tab dismiss the picker and continue normal navigation.
 

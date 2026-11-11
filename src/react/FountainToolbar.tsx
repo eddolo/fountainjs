@@ -46,7 +46,7 @@ import {
   NodeSelection,
 } from '../core';
 import { getClipboardHistoryState, openClipboardHistory } from '../extensions/clipboard-history';
-import { canRedo, canUndo, redo, undo } from '../extensions/plugins/history';
+import { canRedo, canUndo, historyPlugin, redo, undo } from '../extensions/plugins/history';
 import { editLink, getActiveLink, removeLink } from '../extensions/link-behavior';
 import {
   deleteMedia,
@@ -183,7 +183,7 @@ export function FountainToolbar({
   useEffect(() => {
     if (!panel) return;
     const form = wrapper.current?.querySelector<HTMLFormElement>(`form[id="${panelId}-${panel}"]`);
-    form?.querySelector<HTMLElement>('input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])')?.focus();
+    form?.querySelector<HTMLElement>(':is(input:not([type="hidden"]),select,textarea,button):not(:disabled)')?.focus();
   }, [panel, panelId, editor]);
   const [url, setURL] = useState('');
   const [linkTitle, setLinkTitle] = useState('');
@@ -708,9 +708,15 @@ export function FountainToolbar({
 
   return (
     <div ref={wrapper} className="fountain-toolbar-wrap" onKeyDown={event => {
-      if (panel && event.key === 'Escape' && !event.defaultPrevented && !event.nativeEvent.isComposing) {
-        event.preventDefault(); event.stopPropagation(); closePanel();
-      }
+      if (event.defaultPrevented || event.nativeEvent.isComposing) return;
+      if (panel) {
+        if (event.key !== 'Escape') return;
+        closePanel();
+      // A closed panel returns focus to its button. Reuse editor history keys
+      // there while native fields keep their own undo and composition behavior.
+      } else if (!editor.editable || !(event.target as HTMLElement).closest('[data-fountain-toolbar-action]')
+        || !historyPlugin.spec.props!.handleKeyDown!(editor, event.nativeEvent)) return;
+      event.preventDefault(); event.stopPropagation();
     }}>
       <FountainToolbarRoot className={className} label={toolbarLabel}>
         {visibleGroups.map((group) => groupRenderers[group]())}
