@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review comment delivery</title>
+<style>
+  body { margin: 40px auto; padding: 0 20px; max-width: 640px; font: 16px/1.5 system-ui, sans-serif; }
+  #transport { margin-bottom: 24px; }
+</style>
+<h1>Review comment delivery</h1>
+<section id="transport" aria-label="Comment provider">
+  <p id="requests">Requests: 0</p>
+  <button id="accept" type="button" disabled>Accept pending comment</button>
+  <button id="reject" type="button" disabled>Reject pending comment</button>
+</section>
+<div id="review"></div>
+<script type="module">
+  import { createElement } from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { CoreExtension, composeExtensions, createEditor } from 'fountainjs-editor';
+  import { InMemoryCommentsStore, createCommentsExtension } from 'fountainjs-editor/comments';
+  import { FountainComments } from 'fountainjs-editor/react/comments';
+  import 'fountainjs-editor/styles.css';
+
+  const adapter = new InMemoryCommentsStore().createAdapter();
+  const requests = document.querySelector('#requests');
+  const accept = document.querySelector('#accept'), reject = document.querySelector('#reject');
+  const queue = [];
+  let sent = 0;
+  function report() {
+    requests.textContent = 'Requests: ' + sent;
+    accept.disabled = reject.disabled = queue.length === 0;
+  }
+  accept.onclick = () => { queue.shift()?.accept(); report(); };
+  reject.onclick = () => { queue.shift()?.reject(new Error('The provider declined this comment.')); report(); };
+  const kit = composeExtensions([CoreExtension, createCommentsExtension({
+    user: { id: 'ada', name: 'Ada' },
+    adapter: () => ({
+      ...adapter,
+      apply(operation) {
+        sent++;
+        return new Promise((resolve, reject) => {
+          queue.push({ accept: () => resolve(Promise.resolve().then(() => adapter.apply(operation))), reject });
+          report();
+        });
+      },
+    }),
+  })]);
+  const editor = createEditor({ schema: kit.schema, plugins: kit.plugins, content: {
+    type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Review this paragraph.' }] }],
+  } });
+  createRoot(document.querySelector('#review')).render(createElement(FountainComments, { editor, title: 'Shared review' }));
+</script>
+</html>

@@ -283,6 +283,14 @@ finishes. For room switching, keep a separate panel instance for each room
 and pass `editor={null}` while that room is inactive. This keeps its new
 comments, replies, and edits in memory for the current visit.
 
+While a new comment is posting, the author can change the draft or its
+target. The provider receives the submitted text and target. Its response
+clears only that submitted draft, and a failed send can be retried with the
+latest text and target.
+The browser regression verifies acceptance, duplicate submission protection,
+rejection, and retry in Chromium, Firefox, WebKit, and two mobile emulations.
+[Delayed provider browser test](../tests/browser/comment-provider.spec.ts)
+
 ## Using comments with Yjs
 
 Document collaboration and discussion storage are independent:

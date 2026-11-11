@@ -34,6 +34,7 @@ function patchWindowsFirefoxSxsManifest() {
 patchWindowsFirefoxSxsManifest();
 
 const port = 4173;
+const desktopTests = ['**/editor.spec.ts', '**/collaboration-demo.spec.ts', '**/comment-provider.spec.ts', '**/starter-downloads.spec.ts'];
 
 export default defineConfig({
   testDir: './tests/browser',
@@ -53,9 +54,9 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: 'chromium', testMatch: ['**/editor.spec.ts', '**/collaboration-demo.spec.ts', '**/starter-downloads.spec.ts'], use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', testMatch: ['**/editor.spec.ts', '**/collaboration-demo.spec.ts', '**/starter-downloads.spec.ts'], use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', testMatch: ['**/editor.spec.ts', '**/collaboration-demo.spec.ts', '**/starter-downloads.spec.ts'], use: { ...devices['Desktop Safari'] } },
+    { name: 'chromium', testMatch: desktopTests, use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', testMatch: desktopTests, use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', testMatch: desktopTests, use: { ...devices['Desktop Safari'] } },
     { name: 'mobile-chrome', testMatch: '**/mobile.spec.ts', use: { ...devices['Pixel 7'] } },
     { name: 'mobile-safari', testMatch: '**/mobile.spec.ts', use: { ...devices['iPhone 15'] } },
   ],

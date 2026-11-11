@@ -7,6 +7,9 @@ policy on reopen. Native layout certification remains outstanding.
 
 ## Unreleased
 
+- Keep newer comment text and target changes while a submitted comment is
+  posting, and prevent duplicate sends while waiting for the provider.
+
 - Retain comment edits across homepage room switches and after a failed save.
   A completed save keeps any newer text entered while it was pending.
 

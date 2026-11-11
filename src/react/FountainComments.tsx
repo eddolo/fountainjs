@@ -14,6 +14,7 @@ import {
   setCommentThreadResolved,
   toggleCommentReaction,
   updateComment,
+  type CommentAction,
   type CommentContent,
   type CommentMessage,
   type CommentThread,
@@ -92,7 +93,7 @@ function CommentBody({
       <time dateTime={timestamp}>{new Date(timestamp).toLocaleString()}</time>
     </header>
     {editing
-      ? <form onSubmit={(event) => void save(event)}>
+      ? <form onSubmit={save}>
         <label>
           <span>Edit comment</span>
           <textarea value={draft} onChange={(event) => changeDraft(event.currentTarget.value)} />
@@ -105,15 +106,15 @@ function CommentBody({
       : <p>{content}</p>}
     <div className="fountain-comments__actions">
       {reactions.map((emoji) => {
-        const reaction = comment.reactions.find((value) => value.emoji === emoji);
+        const count = comment.reactions.find((value) => value.emoji === emoji)?.userIds.length;
         return <button
           key={emoji}
           type="button"
-          className={reaction?.userIds.length ? 'has-reactions' : undefined}
+          className={count ? 'has-reactions' : undefined}
           disabled={!canComment(editor, 'react', thread.id, comment.id)}
           aria-label={`React ${emoji} to comment by ${comment.author.name}`}
           onClick={() => void run(() => toggleCommentReaction(editor, thread.id, comment.id, emoji))}
-        >{emoji}{reaction?.userIds.length ? ` ${reaction.userIds.length}` : ''}</button>;
+        >{emoji}{count ? ` ${count}` : ''}</button>;
       })}
       {!editing && canComment(editor, 'edit-comment', thread.id, comment.id)
         ? actionButton('Edit', () => changeDraft(content))
@@ -137,9 +138,11 @@ export function FountainComments({
   onError,
 }: FountainCommentsProps) {
   useFountainState(editor);
-  const [creating, setCreating] = useState(false);
-  const [target, setTarget] = useState<CommentThreadType>('inline');
-  const [draft, setDraft] = useState('');
+  const [composer, setComposer] = useState({ open: false, target: 'inline' as CommentThreadType, text: '' });
+  const { open: creating, target, text: draft } = composer;
+  const [posting, setPosting] = useState(false);
+  const postingRequest = useRef(false);
+  const updateComposer = (change: Partial<typeof composer>) => setComposer(current => ({ ...current, ...change }));
   const draftInput = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (creating) draftInput.current?.focus();
@@ -165,13 +168,19 @@ export function FountainComments({
   };
   const submitThread = async (event: FormEvent) => {
     event.preventDefault();
-    if (!message) return;
-    await run(async () => {
-      const thread = await createCommentThread(editor, { content: message, type: target });
-      selectCommentThread(editor, thread.id, false);
-      setDraft('');
-      setCreating(false);
-    });
+    if (!message || postingRequest.current) return;
+    postingRequest.current = true;
+    setPosting(true);
+    try {
+      await run(async () => {
+        const thread = await createCommentThread(editor, { content: message, type: target });
+        selectCommentThread(editor, thread.id, false);
+        setComposer(current => current === composer ? { open: false, target, text: '' } : current);
+      });
+    } finally {
+      postingRequest.current = false;
+      setPosting(false);
+    }
   };
   const submitReply = async (event: FormEvent, thread: CommentThread) => {
     event.preventDefault();
@@ -185,7 +194,7 @@ export function FountainComments({
   };
 
   return <aside
-    className={['fountain-comments', className].filter(Boolean).join(' ')}
+    className={className ? `fountain-comments ${className}` : 'fountain-comments'}
     aria-label={title}
   >
     <header className="fountain-comments__header">
@@ -197,14 +206,14 @@ export function FountainComments({
         type="button"
         disabled={!canComment(editor, 'create-thread')}
         aria-expanded={creating}
-        onClick={() => setCreating((value) => !value)}
+        onClick={() => updateComposer({ open: !creating })}
       >New comment</button>
     </header>
     {state.error ? <p className="fountain-comments__error" role="alert">{state.error.message}</p> : null}
-    {creating ? <form className="fountain-comments__composer" onSubmit={(event) => void submitThread(event)}>
+    {creating ? <form className="fountain-comments__composer" onSubmit={submitThread}>
       <label>
         <span>Comment target</span>
-        <select value={target} onChange={(event) => setTarget(event.currentTarget.value as CommentThreadType)}>
+        <select value={target} onChange={(event) => updateComposer({ target: event.currentTarget.value as CommentThreadType })}>
           <option value="inline">Current text or cursor</option>
           <option value="block">Current block</option>
           <option value="document">Whole document</option>
@@ -212,11 +221,11 @@ export function FountainComments({
       </label>
       <label>
         <span>New comment</span>
-        <textarea ref={draftInput} value={draft} onChange={(event) => setDraft(event.currentTarget.value)} placeholder="Add context or feedback…" />
+        <textarea ref={draftInput} value={draft} onChange={(event) => updateComposer({ text: event.currentTarget.value })} placeholder="Add context or feedback…" />
       </label>
       <div className="fountain-comments__actions">
-        <button type="submit" disabled={!message}>Create thread</button>
-        {actionButton('Cancel', () => setCreating(false))}
+        <button type="submit" disabled={posting || !message}>{posting ? 'Posting…' : 'Create thread'}</button>
+        {actionButton('Cancel', () => updateComposer({ open: false }))}
       </div>
     </form> : null}
     <div className="fountain-comments__list" aria-live="polite">
@@ -226,9 +235,17 @@ export function FountainComments({
         const pending = state.pendingThreadIds.includes(thread.id);
         const anchor = anchorLabel(thread);
         const replyDraft = drafts.get(thread.id) ?? '';
+        const action = <Args extends unknown[]>(
+          permission: CommentAction,
+          label: string,
+          operation: (editor: Editor, threadId: string, ...args: Args) => Promise<unknown>,
+          ...args: Args
+        ) => canComment(editor, permission, thread.id)
+          ? actionButton(label, () => void run(() => operation(editor, thread.id, ...args)))
+          : null;
         return <section
           key={thread.id}
-          className={['fountain-comment-thread-card', selected ? 'is-selected' : '', thread.resolved ? 'is-resolved' : '', thread.anchor.status === 'orphaned' ? 'is-orphaned' : ''].filter(Boolean).join(' ')}
+          className={`fountain-comment-thread-card${selected ? ' is-selected' : ''}${thread.resolved ? ' is-resolved' : ''}${thread.anchor.status === 'orphaned' ? ' is-orphaned' : ''}`}
           aria-label={`Thread by ${thread.author.name}`}
           data-thread-id={thread.id}
           onPointerEnter={() => hoverCommentThreads(editor, [thread.id])}
@@ -269,18 +286,10 @@ export function FountainComments({
             <button type="submit" disabled={!replyDraft.trim()}>Reply</button>
           </form> : null}
           <footer className="fountain-comments__actions">
-            {thread.anchor.status === 'orphaned' && canComment(editor, 'reattach-thread', thread.id)
-              ? actionButton('Reattach to selection', () => void run(() => reattachCommentThread(editor, thread.id)))
-              : null}
-            {canComment(editor, 'resolve-thread', thread.id)
-              ? actionButton(thread.resolved ? 'Reopen' : 'Resolve', () => void run(() => setCommentThreadResolved(editor, thread.id, !thread.resolved)))
-              : null}
-            {canComment(editor, 'archive-thread', thread.id)
-              ? actionButton(thread.archived ? 'Restore' : 'Archive', () => void run(() => setCommentThreadArchived(editor, thread.id, !thread.archived)))
-              : null}
-            {canComment(editor, 'delete-thread', thread.id)
-              ? actionButton('Delete thread', () => void run(() => removeCommentThread(editor, thread.id)))
-              : null}
+            {thread.anchor.status === 'orphaned' && action('reattach-thread', 'Reattach to selection', reattachCommentThread)}
+            {action('resolve-thread', thread.resolved ? 'Reopen' : 'Resolve', setCommentThreadResolved, !thread.resolved)}
+            {action('archive-thread', thread.archived ? 'Restore' : 'Archive', setCommentThreadArchived, !thread.archived)}
+            {action('delete-thread', 'Delete thread', removeCommentThread)}
           </footer>
         </section>;
       })}
