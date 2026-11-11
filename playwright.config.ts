@@ -37,6 +37,7 @@ const port = 4173;
 const desktopTests = [
   '**/editor.spec.ts', '**/collaboration-demo.spec.ts', '**/comment-provider.spec.ts',
   '**/starter-downloads.spec.ts', '**/docx-research-workflow.spec.ts',
+  '**/html-math-export.spec.ts',
 ];
 
 export default defineConfig({

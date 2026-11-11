@@ -100,7 +100,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const state = useFountainState(editor)!;
   const [format, setFormat] = useState<LabFormat>(entry.format!);
   const [omitCaretHosts, setOmitCaretHosts] = useState(entry.format === 'markdown' && entry.context.options.commonMarkSourceReview);
-  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node; omitMarkdownCaretHosts: boolean }>();
+  const [renderMath, setRenderMath] = useState(true);
+  const [check, setCheck] = useState<{ id: string; document: Node; equal: boolean; issues: LabIssue[]; format: LabFormat; revision: Node; omitMarkdownCaretHosts: boolean; renderHTMLMath: boolean }>();
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [includeContent, setIncludeContent] = useState(false);
@@ -111,7 +112,8 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   const unrepresentedMedia = unrepresentedParts.length;
   const markdownHTML = format === 'html' && entry.format === 'markdown';
   const omitMarkdownCaretHosts = markdownHTML && omitCaretHosts;
-  const stale = check && (check.revision !== state.doc || check.format !== format || check.omitMarkdownCaretHosts !== omitMarkdownCaretHosts);
+  const renderHTMLMath = format === 'html' && renderMath;
+  const stale = check && (check.revision !== state.doc || check.format !== format || check.omitMarkdownCaretHosts !== omitMarkdownCaretHosts || check.renderHTMLMath !== renderHTMLMath);
   const footnoteReport = inspectFootnotes(state.doc);
   const templateReport = inspectPageTemplates(state.doc);
   const pageSettings = readDocumentPageSettings(state.doc);
@@ -150,11 +152,11 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
   function convert(save: boolean) {
     try {
       const output = exportLab(state.doc, format, entry.result?.source, entry.context, {
-        omitMarkdownCaretHosts,
+        omitMarkdownCaretHosts, renderHTMLMath,
         markdownBOM: entry.result?.markdownBOM,
       });
       const reopened = importLab(output.bytes, format, entry.context);
-      setCheck({ id: crypto.randomUUID(), document: reopened.document, equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues], format, revision: state.doc, omitMarkdownCaretHosts });
+      setCheck({ id: crypto.randomUUID(), document: reopened.document, equal: sameLabDocument(state.doc, reopened.document), issues: [...output.issues, ...reopened.issues], format, revision: state.doc, omitMarkdownCaretHosts, renderHTMLMath });
       if (save) download(new Uint8Array(output.bytes), `${entry.file.name}.converted.${output.extension}`, output.mime);
       setError(''); setStatus(save ? 'Export downloaded and reopened below.' : 'Export generated in memory and reopened below. The editable draft was not replaced.');
     } catch (cause) { setCheck(undefined); setError(cause instanceof Error ? cause.message : String(cause)); }
@@ -166,7 +168,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
       importedImages: { represented: images.length, embeddedRaster: images.filter(image => image.embedded).length },
       sourcePackage: packageParts ? { entries: packageParts.length, unrepresentedMedia, parts: includeContent ? packageParts : packageParts.map(({ path: _path, ...part }) => part) } : null,
       importIssues: labReportIssues(entry.result!.issues, includeContent), draftChanged: !sameLabDocument(entry.result!.document, state.doc),
-      roundTrip: check ? { format: check.format, stale: Boolean(stale), exactFountainJSONEquality: check.equal,
+      roundTrip: check ? { format: check.format, renderHTMLMath: check.renderHTMLMath, stale: Boolean(stale), exactFountainJSONEquality: check.equal,
         ...(check.omitMarkdownCaretHosts ? { omitMarkdownCaretHosts: true } : {}), issues: labReportIssues(check.issues, includeContent) } : null,
       fidelity: 'Original-format visual fidelity and exhaustive loss detection are unverified.',
       ...(includeContent ? { fileName: entry.file.name, note, importedDocument: entry.result!.document.toJSON(), editedDocument: state.doc.toJSON(), originalText: entry.sourceText } : {}),
@@ -210,6 +212,7 @@ function FileWorkspace({ entry, active }: { entry: Entry; active: boolean }) {
       </section></section></div>
     {active && <ConversionPagePreview editor={editor} document={state.doc} surface={surface} />}
     <section className="lab-export"><h3>3. Export and reopen</h3><div className="lab-actions"><label>Export format<select value={format} onChange={event => setFormat(event.target.value as LabFormat)}>{formats.map(value => <option key={value} value={value}>{value.toUpperCase()}</option>)}</select></label><button onClick={() => convert(false)}>Check round trip</button><button className="lab-primary" onClick={() => convert(true)}>Download export</button></div><p>Compares the current draft with its generated export reimported through Fountain—not with Word or another independent renderer. JSON equality is stricter than visual similarity.</p>
+      {format === 'html' && <label className="lab-checkbox"><input type="checkbox" checked={renderMath} onChange={event => setRenderMath(event.target.checked)} /> Render equations in the downloaded HTML (offline; original TeX is retained)</label>}
       {markdownHTML && <label className="lab-checkbox"><input type="checkbox" checked={omitCaretHosts} onChange={event => setOmitCaretHosts(event.target.checked)} /> Omit Markdown’s editor-only caret paragraphs in HTML</label>}
       {check && <div className="lab-check" aria-label="Round-trip result"><strong>{stale ? 'Outdated check — run again after your changes.' : check.equal ? 'Exact Fountain document equality after reopening.' : 'The reopened Fountain document differs. Inspect the preview and report.'}</strong><p>This compares only the current Fountain draft, not the original file. Original import findings: {entry.result!.issues.length}. Missing original content is not restored by a successful round trip. Independent visual fidelity: not verified by this check.</p><IssueList issues={check.issues} /><Preview key={check.id} document={check.document} context={entry.context} /></div>}
     </section>

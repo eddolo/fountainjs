@@ -1,0 +1,95 @@
+{
+  "date": "2026-11-11",
+  "baseCommit": "4aefbcc1",
+  "change": "Host-side offline MathML HTML equation export, explicit source-only option and stale-check handling; retain TeX/labels/semantic metadata and per-node fallback reports. No library export/dependency change.",
+  "validation": {
+    "browser": {
+      "startTime": "2026-11-11T19:34:02.598Z",
+      "duration": 79770.458,
+      "expected": 6,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "focusedUnitTests": 50,
+    "rootTypeScript": true,
+    "workflowYAML": true,
+    "byteIdenticalDistributionFiles": 1008
+  },
+  "scope": "Actual Word-paper edit/export/reopen plus new Markdown equation edit/download/native-file/source-only/reopen, each in three desktop engines. All HTTP(S) requests blocked for the new file reader; zero requests observed. Native fonts/layout differ. Four captured states reviewed; not continuous playback.",
+  "negativeEvidence": [
+    "Initial new journey stopped at incorrect exact-label selector; replaced with the existing accessible combobox selector.",
+    "Next run: two passes and a Windows WebKit file-navigation failure with offline=true. Independent plain-file and MathML controls reproduce the flag failure. Final run uses HTTP(S) blocking for all three engines and retains fraction/source/no-network assertions."
+  ],
+  "rawEvidence": [
+    {
+      "path": "artifacts/html-math-browser-20261111.log",
+      "sha256": "efcd4295eeebec011ba712e8ac0e10393a1396ad8144d907389bf1edab37b9ee",
+      "bytes": 3534
+    },
+    {
+      "path": "artifacts/html-math-browser-fixed-20261111.log",
+      "sha256": "c1488757373d36ffb73324b1cd1ef9fa36c037949f65f112cf224173c471f6d7",
+      "bytes": 7797
+    },
+    {
+      "path": "artifacts/html-math-browser-final-20261111.log",
+      "sha256": "9f187d5985faec0b7102afc177091b6eb37ea677e35145920b28165ac27b3fcc",
+      "bytes": 4217
+    },
+    {
+      "path": "artifacts/html-math-browser-final-20261111.json",
+      "sha256": "d444ee6331880a19f5cefb5e4d55bfc2a5a2d5a9b4e728a3b58a9a6c34552ad4",
+      "bytes": 17579
+    },
+    {
+      "path": "artifacts/html-math-final-unit-20261111.log",
+      "sha256": "1a78ee7e4d7a0235bc85afef0f208e70a6b0577085e3a58ae698b9fd17edf530",
+      "bytes": 430
+    },
+    {
+      "path": "artifacts/html-math-final-types-20261111.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/html-math-native-controls-20261111/observations.json",
+      "sha256": "8fe7205b01943c6b0c326aeada4167f42bd4794cfca4462f8b348a988c35353b",
+      "bytes": 765
+    }
+  ],
+  "reviewedCaptures": [
+    {
+      "path": "artifacts/html-math-export-review-20261111/chromium-reader.png",
+      "sha256": "da43b11b9880237f4f7ca76be50f780b2741bf851619cbf92fc5000694f668e8",
+      "bytes": 12089
+    },
+    {
+      "path": "artifacts/html-math-export-review-20261111/editor.png",
+      "sha256": "825cee45b85f4bb8ddecf7adefa6b9f33f9be9dda21f56f1afaf23ed8015fb2b",
+      "bytes": 13043
+    },
+    {
+      "path": "artifacts/html-math-export-review-20261111/firefox-reader.png",
+      "sha256": "ec457365c8bf230bff231c09f7a6aa9c06ea4a75669dd3733a6f8d37d66e87b9",
+      "bytes": 12268
+    },
+    {
+      "path": "artifacts/html-math-export-review-20261111/webkit-reader.png",
+      "sha256": "90d9aa83aa218b09f2774a6414f2e180e6598b79074eb107dad10a5a499e909b",
+      "bytes": 34590
+    }
+  ],
+  "pending": [
+    "New full-source gate",
+    "Complete browser matrix",
+    "Production-site build/check for this host change",
+    "Combined hosted CI",
+    "Archive refresh, registry staging/approval and deployment"
+  ],
+  "unchanged": [
+    "Capability ledger and beta scope",
+    "Library APIs and renderer dependency isolation",
+    "All acceptance limits"
+  ]
+}

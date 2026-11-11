@@ -4,10 +4,60 @@ import { readFileSync } from 'node:fs';
 import { unzipSync, zipSync } from 'fflate';
 import { createLabContext, detectLabFormat, exportLab, importLab, labReportIssues, sameLabDocument, labImages, labSchema } from '../examples/react-app/src/conversion-lab';
 import { recoverLabDOCXImage } from '../examples/react-app/src/conversion-lab-docx-media';
-import { createEditor, EditorState, Schema, StarterKit } from 'fountainjs-editor';
+import { createEditor, EditorState, HTMLExporter, Schema, StarterKit } from 'fountainjs-editor';
 import { withDOCXExportDefaults } from './fixtures/docx-page-defaults';
 const bytes = (text: string) => new TextEncoder().encode(text);
 describe('public conversion lab adapters', () => {
+  it('exports offline inline/display MathML and reopens the exact original equation data', () => {
+    const doc = labSchema.node('doc', {}, [
+      labSchema.node('paragraph', {}, [labSchema.text('Before '), labSchema.node('inline_math', { latex: 'x^{2}', ariaLabel: 'x squared' }), labSchema.text(' after.')]),
+      labSchema.node('math_block', { latex: String.raw`\frac{a+b}{c}`, ariaLabel: 'Ratio', expression: { type: 'fraction', numerator: { type: 'text', value: 'a+b' }, denominator: { type: 'text', value: 'c' } } }),
+    ]);
+    const before = doc.toJSON();
+    const output = exportLab(doc, 'html');
+    const html = new TextDecoder().decode(output.bytes);
+    expect(html).toContain('<mfrac>');
+    expect(html).toContain('<msup>');
+    expect(html.match(/<math /g)).toHaveLength(2);
+    expect(html).not.toMatch(/<script|<link|<iframe|<img/);
+    expect(output.issues.filter(issue => issue.code === 'html-math-source-fallback')).toEqual([]);
+    expect(importLab(output.bytes, 'html').document.toJSON()).toEqual(before);
+    expect(doc.toJSON()).toEqual(before);
+    expect(html.split('<body>')[0]).toBe(HTMLExporter.export(doc).split('<body>')[0]);
+  });
+
+  it('keeps the library HTML source contract and the explicit source-only option unchanged', () => {
+    const doc = labSchema.node('doc', {}, [labSchema.node('math_block', { latex: 'x^2' })]);
+    const source = HTMLExporter.export(doc);
+    expect(source).toContain('<code>x^2</code>');
+    expect(new TextDecoder().decode(exportLab(doc, 'html', undefined, undefined, { renderHTMLMath: false }).bytes)).toBe(source);
+    expect(new TextDecoder().decode(exportLab(labSchema.node('doc', {}, [labSchema.node('paragraph', {}, [labSchema.text('Unchanged prose.')])]), 'html').bytes))
+      .not.toContain('<math');
+  });
+
+  it.each([String.raw`\notAFountainCommand{x}`, String.raw`\href{javascript:alert(1)}{click}`, String.raw`\includegraphics{https://example.com/image.png}`, String.raw`\def\loop{\loop}\loop`])('reports a source-preserving HTML equation fallback for %s', latex => {
+    const doc = labSchema.node('doc', {}, [labSchema.node('math_block', { latex })]);
+    const output = exportLab(doc, 'html');
+    const html = new TextDecoder().decode(output.bytes);
+    expect(html).not.toContain('<math');
+    expect(html).not.toMatch(/<script|<img|(?:href|src)="(?:javascript:|https:)/);
+    expect(output.issues).toContainEqual(expect.objectContaining({ code: 'html-math-source-fallback', path: [0] }));
+    expect(importLab(output.bytes, 'html').document.toJSON()).toEqual(doc.toJSON());
+  });
+
+  it('isolates math macros between equations and reports the bounded document renderer limit', () => {
+    const doc = labSchema.node('doc', {}, [
+      labSchema.node('math_block', { latex: String.raw`\gdef\privateMacro{Q}\privateMacro` }),
+      labSchema.node('math_block', { latex: String.raw`\privateMacro` }),
+      ...Array.from({ length: 127 }, () => labSchema.node('math_block', { latex: 'x' })),
+    ]);
+    const output = exportLab(doc, 'html');
+    const fallbacks = output.issues.filter(issue => issue.code === 'html-math-source-fallback');
+    expect(fallbacks.map(issue => issue.path)).toEqual([[1], [128]]);
+    expect(fallbacks[1].message).toContain('128-equation');
+    expect(importLab(output.bytes, 'html').document.toJSON()).toEqual(doc.toJSON());
+  });
+
   it.each(['', '\uFEFF'])('preserves the original Markdown UTF-8 encoding marker (%j)', marker => {
     const source = bytes(marker + '# Heading\r\n\r\nA\uFEFFB\r\n');
     const imported = importLab(source, 'markdown');

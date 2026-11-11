@@ -6,6 +6,7 @@ import { createHTMLSourceEmptyBodyExtension, createHTMLSourceEOFExtension, creat
 import { createHTMLSourceMarkdownAdapter } from 'fountainjs-editor/html/source';
 import { exportDOCX, importDOCX, type DOCXPackagePart } from 'fountainjs-editor/docx';
 import { compileTeXForDOCX } from './mathjax-docx';
+import { renderLabHTMLMath } from './conversion-html-math';
 
 export type LabFormat = 'markdown' | 'html' | 'docx' | 'json';
 export type LabIssue = { code: string; message: string; type?: string; path?: readonly number[]; sourcePart?: string };
@@ -142,7 +143,7 @@ export function exportLab(
   format: LabFormat,
   source?: MarkdownSourceSnapshot,
   context: LabContext = defaultLabContext,
-  { omitMarkdownCaretHosts = false, markdownBOM = false } = {},
+  { omitMarkdownCaretHosts = false, markdownBOM = false, renderHTMLMath = true } = {},
 ): {
   bytes: Uint8Array; extension: string; mime: string; issues: LabIssue[];
 } {
@@ -168,10 +169,12 @@ export function exportLab(
     return { bytes: new TextEncoder().encode(text), extension: 'md', mime: 'text/markdown', issues };
   }
   let text = format === 'json' ? JSON.stringify(document.toJSON(), null, 2) : HTMLExporter.export(document, { omitMarkdownCaretHosts });
+  const math = format === 'html' && renderHTMLMath ? renderLabHTMLMath(text, document) : undefined;
+  if (math) text = math.html;
   if (format === 'html' && context.options.commonMarkSourceReview) {
     // Insert before authored body content so a standalone reader also stays offline.
     text = text.replace('<meta charset="utf-8">', `$&
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; media-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
   }
-  return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.' }] : [] };
+  return { bytes: new TextEncoder().encode(text), extension: format, mime: format === 'json' ? 'application/json' : 'text/html', issues: format === 'html' ? [{ code: 'html-export-boundary', message: 'HTML export preserves supported physical page settings as inert Fountain body metadata. It does not reproduce native pagination; complete styling, other metadata and extension behaviour are not guaranteed.' }, ...(math?.issues ?? [])] : [] };
 }

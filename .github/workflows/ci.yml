@@ -325,6 +325,17 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
+          name: offline-html-math-evidence
+          path: |
+            test-results/**/html-math-export/**
+            test-results/**/offline-reader-video/**
+            test-results/html-math-export-*/video.webm
+            test-results/html-math-export-*/trace.zip
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
           name: markdown-source-boundary-evidence
           path: |
             test-results/**/source-boundary-journey/**

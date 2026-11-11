@@ -102,6 +102,14 @@ fixes the Windows WebKit font fallback in both starter shells. These are local
 archive checks; hosted CI and registry consumption remain pending.
 [Installed-starter evidence](RELEASES.md#installed-standalone-starters--2026-11-11).
 
+The local Conversion Lab additionally offers offline MathML in HTML downloads,
+with original TeX retained, an explicit source-only option and per-equation
+fallback reports. Six desktop journeys and 50 focused checks pass, with captured
+reader states reviewed. Library default HTML remains source-only; font/layout
+and page-template fidelity remain separate. Full-source/production/combined
+hosted checks for this host change are pending.
+[Equation-export evidence](RELEASES.md#offline-equation-html-projection--2026-11-11).
+
 ## Remaining parity work
 
 The [capability ledger](TIPTAP_PARITY.md) records 61 Delivered, eight Partial,

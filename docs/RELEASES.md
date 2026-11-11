@@ -804,6 +804,33 @@ run yet. This proves local archive consumption, not npm CLI or publication.
 under `artifacts/installed-starters/`. Final package sealing, combined hosted
 CI, registry staging/approval and deployment remain pending.
 
+### Offline equation HTML projection — 2026-11-11
+
+The local Conversion Lab now renders supported equations in its HTML download
+using offline native MathML, retaining original TeX/labels/semantic metadata.
+The option can be disabled for the original source-only output; changing it
+invalidates the old round-trip result. Unsupported/blocked commands and bounded
+host rendering limits retain source and report their paths. This changes the
+example host, not the library HTML contract or renderer dependencies.
+[Contract and limits](CONVERSION_LAB.md#standalone-html-equations).
+
+Fifty focused unit/release-policy checks, root TypeScript and six desktop
+journeys pass. Three of those journeys exercise real edits, rendered/source-only
+downloads, visible native fraction layout, no HTTP(S) requests and actual file
+reopening; three rerun the original Word-paper workflow. An initial selector
+error is corrected before these passes. An independent plain-file/MathML
+control reproduces Windows WebKit’s failure with Playwright’s offline flag;
+the final file-reader check blocks all HTTP(S) traffic instead, without skipping
+WebKit or changing its rendering assertions. Four captured states receive
+visual review. Browser-native fonts differ; pixel parity is not claimed.
+
+All 1,008 distribution files remain identical to the sealed `19f4dca7` library.
+No API, bundle or performance acceptance limit changes. The new journey and
+always-upload evidence are wired into CI. The compact report is
+`artifacts/html-math-export-integration-20261111.json`. A new full-source check,
+the complete matrix, production build, final archive refresh and hosted release
+checks remain pending; the previous full-source checkpoint remains `1e86e5e0`.
+
 ## Failure and rollback policy
 
 npm versions are immutable. Do not overwrite or casually unpublish a bad
