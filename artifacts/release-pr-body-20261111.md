@@ -54,7 +54,9 @@ terminal results and final candidate CI before opening the prepared review.
 - npm staging, maintainer 2FA approval, registry installation and live-site
   verification.
 
-The capability ledger remains 61 Delivered, eight Partial and two Host boundary
-rows. Physical mobile/IME and assistive-technology evidence, production adoption,
+The capability ledger has 61 Delivered, eight Partial, two Host boundary and
+three Missing rows after the November 11 upstream catalogue review. Editable
+charts/diagrams, template slots and a whiteboard surface remain post-beta work.
+Physical mobile/IME and assistive-technology evidence, production adoption,
 further format fidelity and remaining parity work stay open. This candidate
 does not establish whole-product parity or a completion percentage.
