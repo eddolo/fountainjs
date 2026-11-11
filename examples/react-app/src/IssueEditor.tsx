@@ -94,7 +94,7 @@ export function IssueEditor() {
     try {
       download('issue-description.md', mode === 'markdown' ? raw : exportCurrent().markdown, 'text/markdown;charset=utf-8');
       setError('');
-      setMessage('Downloaded description Markdown. Keep the host title separately; this does not create an online issue.');
+      setMessage('Markdown download requested. Keep the host title separately; this does not create an online issue.');
     } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); }
   };
 

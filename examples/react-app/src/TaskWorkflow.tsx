@@ -32,7 +32,7 @@ function TaskPane({ id, task, active, update, remove }: { id: string; task: Task
     const link = document.createElement('a');
     link.href = url; link.download = `${task.id}-description.md`; link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    setMessage('Downloaded this description. Task title, due date and completion are separate host data.');
+    setMessage('Description download requested. Task title, due date and completion are separate host data.');
   };
   const open = async (file: File) => {
     try {

@@ -4,6 +4,10 @@
 
 ## 0.5.0-beta.1 — 2026-11-11
 
+- Demo export messages report a download request rather than claiming the
+  browser completed the download. Actual file delivery remains independently
+  checked in browser journeys.
+
 - The default `fountainjs-editor/yjs` entry now uses retained storage.
   Existing XML rooms require `fountainjs-editor/yjs/legacy` or an explicit
   migration. Supported Yjs versions start at 13.6.32. Read
