@@ -1,10 +1,10 @@
-import { expect, test, type Page, type TestInfo } from '@playwright/test';
+import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 
 const pause = (page: Page, milliseconds = 350) => page.waitForTimeout(milliseconds);
 
-async function capture(page: Page, testInfo: TestInfo, name: string) {
+async function capture(page: Page, testInfo: TestInfo, name: string, region?: Locator) {
   await testInfo.attach(name, {
-    body: await page.screenshot({ fullPage: false }),
+    body: region ? await region.screenshot() : await page.screenshot({ fullPage: false }),
     contentType: 'image/png',
   });
 }
@@ -186,10 +186,22 @@ test('human document-conversion journey: edit, download Word, re-import, and ins
   await expect(page.getByText('Valid document · 3 top-level blocks · bounded DOCX import')).toBeVisible();
   await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
   await expect(page.locator('.headless-image-previews figcaption')).toHaveText('A verified raster image packaged inside the Word document.');
-  await capture(page, testInfo, '04-embedded-word-image-reimported');
+  const imagePreview = page.locator('.headless-image-previews');
+  await imagePreview.scrollIntoViewIfNeeded();
+  await capture(page, testInfo, '04-embedded-word-image-reimported', imagePreview);
   await pause(page, 800);
 
-  expect(errors).toEqual([]);
+  // DOM tracing injects into each sandboxed browsing context. A script-free
+  // native control reproduces these exact three messages with tracing on and
+  // none with tracing off (artifacts/probe-sandbox-tracing-20261111.mjs).
+  const readers = page.locator('#markdown-document-audit iframe');
+  await expect(readers).toHaveCount(2);
+  expect(await readers.evaluateAll(frames => frames.map(frame => ({
+    sandbox: frame.getAttribute('sandbox'),
+    scripts: new DOMParser().parseFromString(frame.getAttribute('srcdoc') ?? '', 'text/html').querySelectorAll('script').length,
+  })))).toEqual([{ sandbox: '', scripts: 0 }, { sandbox: '', scripts: 0 }]);
+  const blockedTrace = (url: string) => `Blocked script execution in '${url}' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.`;
+  expect(errors).toEqual([blockedTrace('about:blank'), blockedTrace('about:blank'), blockedTrace('about:srcdoc')]);
 });
 
 test('human visual-export journey: compare Fountain with an independent DOCX render', async ({ page }, testInfo) => {
@@ -199,12 +211,22 @@ test('human visual-export journey: compare Fountain with an independent DOCX ren
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.goto('/browser-tests.html');
   const summary = await page.evaluate(() => (globalThis as any).fountainBrowserTest.docxVisual.render());
-  expect(summary).toMatchObject({ fidelity: 'bounded', issues: [], fountainImages: 1, docxImages: 1, docxPages: 1 });
+  expect(summary).toMatchObject({ fidelity: 'bounded', fountainImages: 1, docxImages: 1, docxPages: 1 });
+  expect(summary.issues.map((issue: { code: string; severity: string; path?: number[] }) =>
+    ({ code: issue.code, severity: issue.severity, path: issue.path }))).toEqual([
+    { code: 'table-header-role-extension', severity: 'info', path: [4, 0, 0] },
+    { code: 'table-header-role-extension', severity: 'info', path: [4, 0, 1] },
+    { code: 'table-row-repeat-defaulted', severity: 'info', path: [4, 0] },
+    { code: 'table-row-repeat-defaulted', severity: 'info', path: [4, 1] },
+    { code: 'table-width-defaulted', severity: 'info', path: [4] },
+    { code: 'page-settings-defaulted', severity: 'info', path: undefined },
+  ]);
   const comparison = page.locator('#browser-docx-visual-comparison');
   await expect(comparison.locator('[data-visual-fountain]')).toContainText('Visual export parity');
   await expect(comparison.locator('[data-visual-docx]')).toContainText('Visual export parity');
   await expect(comparison.locator('img')).toHaveCount(2);
-  await capture(page, testInfo, '01-fountain-and-independent-docx-render');
+  await capture(page, testInfo, '01-fountain-editor', comparison.locator('[data-visual-fountain]'));
+  await capture(page, testInfo, '02-independent-docx-render', comparison.locator('[data-visual-docx]'));
   await pause(page, 1000);
   expect(errors).toEqual([]);
 });
@@ -221,8 +243,13 @@ test('human visual-export journey: render the paged editor as a real PDF', async
     (globalThis as any).fountainBrowserTest.pages.previewPhysical('a4')
   ));
   expect(preview.pageCount).toBeGreaterThan(1);
-  await page.locator('#browser-page-preview').scrollIntoViewIfNeeded();
-  await capture(page, testInfo, '01-fountain-a4-page-preview');
+  const sheets = page.locator('#browser-page-preview .fountain-page-preview__sheet');
+  await expect(sheets).toHaveCount(preview.pageCount);
+  for (let index = 0; index < preview.pageCount; index += 1) {
+    const sheet = sheets.nth(index);
+    await expect(sheet.locator('.fountain-page-preview__header')).toHaveText(`Browser report · ${index + 1}`);
+    await capture(page, testInfo, `01-fountain-a4-page-${index + 1}`, sheet);
+  }
 
   const pdfPath = testInfo.outputPath('fountain-a4-export.pdf');
   await page.emulateMedia({ media: 'print' });

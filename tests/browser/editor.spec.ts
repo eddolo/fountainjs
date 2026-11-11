@@ -6646,6 +6646,7 @@ test('runs the public headless Markdown, LaTeX, and server HTML pipeline', async
   await expect(output).toContainText('FountainJS violet sample');
   await expect(output).toContainText('A verified raster image packaged inside the Word document.');
   await expect(page.getByRole('img', { name: 'FountainJS violet sample' })).toBeVisible();
+  await expect(page.locator('.headless-image-previews figcaption')).toHaveText('A verified raster image packaged inside the Word document.');
   await page.locator('.headless-surface').screenshot({ path: info.outputPath('headless-docx-image-preview.png') });
 });
 

@@ -667,7 +667,7 @@
     "test:browser": "playwright test",
     "test:browser:chromium": "playwright test --project=chromium",
     "test:browser:cold-import": "playwright test --config playwright.cold-input-audit.config.ts --grep \"edits registered HTML wrappers\"",
-    "audit:ui": "playwright test -c playwright.audit.config.ts",
+    "audit:ui": "playwright test -c playwright.audit.config.ts editor-capabilities-audit.spec.ts latest-ui-audit.spec.ts",
     "test:lean-integration": "node scripts/test-lean-loopback.mjs",
     "test:watch": "vitest",
     "check": "pnpm build && pnpm test:api && pnpm test:package && pnpm test:server-runtimes && pnpm test:headless && pnpm test:markdown-conformance && pnpm test:math-reference && pnpm test:docx-interoperability && pnpm test:budget && pnpm test:performance && pnpm typecheck && pnpm test",
